@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "Bannerlord": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\$(GameBinariesFolder)\\Bannerlord.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*$(ModuleId)*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\$(GameBinariesFolder)",
+      "nativeDebugging": false
+    },
+    "BLSE Bannerlord": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\$(GameBinariesFolder)\\Bannerlord.BLSE.Standalone.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*$(ModuleId)*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\$(GameBinariesFolder)"
+    }
+  }
+}
