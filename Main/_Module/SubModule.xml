@@ -45,5 +45,21 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
+		<!-- XSLT transformations to rename vanilla clans to TAOM names -->
+		<XmlNode>
+			<XmlName id="Factions" path="spclans"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<!-- XSLT transformations to rename vanilla lords to TAOM names -->
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="splords"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
 	</Xmls>
 </Module>

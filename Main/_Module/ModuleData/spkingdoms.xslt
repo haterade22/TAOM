@@ -27,7 +27,7 @@
 			short_name="{{=TAOM_dunland_short}}Dunland"
 			title="{{=TAOM_dunland_title}}Clans of Dunland"
 			ruler_title="{{=TAOM_dunland_ruler}}Brenin"
-			text="{{=aEfsyVH4}}Many of the oldest families of the Empire live in the north. They came here as marcher lords, granted vast tracts of land by their colleagues in the Senate to keep 'pacified' northern tribes in check and hold the frontiers against Battanian, Sturgian, and Khuzait raiders. They drained marshes and turned the river floodplains into wheatfields, cut back forests and turned the hillsides into pasture. But as the republic became an empire and as emperors became more and more dependent on money and lands to reward their loyal soldiers, the nobility here began to fear that their estates would one day be seized by some cash-starved tyrant. Consequently, in the ongoing imperial civil war they have become some of the strongest champions of Lucon, who sees a Senate of established property-holders as the supreme authority and the emperor as its servant.">
+			text="{{=TAOM_dunland_desc}}Dunland, a rugged and untamed land of rolling hills and dense forests, is home to the fierce and independent Dunlendings. Often marginalized and at odds with their neighbors, the people of Dunland are hardened by centuries of struggle and survival. Their chieftains lead through strength and cunning, uniting clans under a shared banner of vengeance and freedom. Known for their ferocious warriors and skilled hunters, the Dunlendings favor axes, spears, and bows, fighting with a tenacity born from their deep connection to their ancestral lands. Though their ways may seem primitive to others, the Dunlendings are proud and resourceful, ready to reclaim their rightful place in Middle-earth.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.khuzait"
@@ -59,7 +59,7 @@
 			short_name="{{=TAOM_gondor_short}}Gondor"
 			title="{{=TAOM_gondor_title}}Stewardship of Gondor"
 			ruler_title="{{=TAOM_gondor_ruler}}Steward"
-			text="{{=mOZsbV8j}}According to tradition, the first Calradians entered the continent as exiles, coming from lands across the western ocean. But the Empire's center of gravity moved east and south, and their original heartland has, for the most part, been lost to the Vlandians. The west of the Empire today, a warm green land of oak forests and volcanic outcrops, was mostly conquered from the Palaic tribes. They have intermarried with Calradian colonists and today their old languages and customs are mostly forgotten. Service in the legions has traditionally been a path out of rural poverty and many an ambitious general has drawn his most loyal recruits from this region. The landowners here have naturally gravitated towards Garios, the partisan of soldiers and soldiers' interests, in the ongoing civil war.">
+			text="{{=TAOM_gondor_desc}}Gondor stands as a proud bastion of strength and resilience in Middle-earth, known for its towering white stone cities, ancient lineage, and skilled armies. Founded by Elendil and his sons after the fall of Numenor, Gondor has long guarded the realms of men against the growing darkness in the east. With Minas Tirith as its capital, the kingdom is renowned for its valor, discipline, and loyalty to the Free Peoples. While beset by years of conflict with Mordor, Gondor's warriors and Stewards have kept hope alive, awaiting the return of the king to restore its former glory.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.battania"
@@ -91,7 +91,7 @@
 			short_name="{{=TAOM_mordor_short}}Mordor"
 			title="{{=TAOM_mordor_title}}Dominion of Mordor"
 			ruler_title="{{=TAOM_mordor_ruler}}Mouth of Sauron"
-			text="{{=Xtyb9Dyr}}The lands that are now the southern Empire were once ruled by proud independent city-states controlling trading routes over the Perassic Sea and the steppe. They invited the Empire into their internal feuds and one by one they were absorbed, some by treaty, some by conquest. Calradian aristocrats intermarried with merchant princes and nomad chiefs, many of whom claimed descent from the kings, champions and demigods of eastern legends. In recent generations, as these towns grew to become some of the richest and most populous in the continent, many Senatorial families elsewhere became suspicious that the southerners would someday try to make one of their own into a hereditary monarch. The southern nobility's support for Rhagaea, an unapolegetic advocate of the dynastic principle, would seem to confirm these fears.">
+			text="{{=TAOM_mordor_desc}}Mordor is a dark, desolate realm forged in shadow and ruled by the Dark Lord Sauron. Nestled behind the towering black mountains, this kingdom brims with orc armies, ruthless trolls, and fiery forges crafting weapons of war. From his fortress in Barad-dur, Sauron commands an unstoppable force, poised to spread his dominion across Middle-earth. Mordor's skies are clouded with ash, and its lands are barren, a fitting domain for Sauron's twisted ambition and dark magic.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.aserai"
@@ -123,7 +123,7 @@
 			short_name="{{=TAOM_dale_short}}Dale"
 			title="{{=TAOM_dale_title}}Kingdom of Dale"
 			ruler_title="{{=TAOM_dale_ruler}}King"
-			text="{{=bVihnRUu}}The confederation of small kingdoms that is now the Principality of Sturgia came into being only a century ago. As boomtowns sprung up alongside the bays and lakes of the north, the local tribal leaders forged marriage pacts with Nords and other adventurers, hiring their swords to subdue their neighbors. Under pressure from the empire, they elected a prince to lead them in war, and eventually the princes became a hereditary office. But the idea of monarchy has never sat easily with the independence-minded boyars, and the potential for rebellion always lurks under the surface of Sturgian politics.">
+			text="{{=TAOM_dale_desc}}Where the waters of the Running River meet the shadow of the Lonely Mountain, stands Dale. The City of Men had been rebuilt from ruin in the aftermath of the Battle of the Five Armies. Once a place of music and merriment, of trade and golden market halls, Dale prospered under the protection of Erebor. Its merchants sailed swift boats down the Celduin, its streets rang with laughter, and its people knew peace. But peace was shattered when the dragon came. Smaug, the winged death from the North, descended upon Erebor in flame and fury, and Dale was the first to suffer. The city burned, her people fled, and for nearly two centuries, the proud, domed towers stood silent and broken, a monument to sorrow. Yet ruin is not the end of Dale's tale. With the death of the dragon, Bard the Bowman raised his banner once more and called his people home. From ash and stone rose Dale again, not as it once was, but greater. Under King Bard and his son Bain, the city thrives anew, her walls strong, her people proud, and her gaze ever vigilant. The Men of Dale are not mighty in number, nor ancient in magic, but they are steadfast and true.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.vlandia"
@@ -151,7 +151,7 @@
 			short_name="{{=TAOM_harad_short}}Harad"
 			title="{{=TAOM_harad_title}}Taskralan of Harwan"
 			ruler_title="{{=TAOM_harad_ruler}}Taskral"
-			text="{{=qggtvf8Y}}The Empire always preferred not to send its legions into the army-devouring wastes of the Nahasa. Instead, it projected its power into this borderland by cultivating client rulers among the clans, who competed in an endless dance of power. Those clans that could secure a hold on the oases won an imperial subsidy to protect passing caravans and grew rich. Those who could not were pushed into the desert, left to raise goats and raid caravans until they could plot a comeback. Today, with the waning of the empire, the Aserai have agreed to form a confederacy under a sultan chosen from richest of the clans, the Banu Hulyan. But everyone knows that the dance has only temporarily been stopped, and at the right moment it will begin again.">
+			text="{{=TAOM_harad_desc}}Harad, a vast and diverse region south of Gondor, encompasses arid deserts, lush jungles, and fertile oases. Its geography is as varied as its people, with sprawling dunes giving way to dense forests and rivers teeming with life. Harad's history is steeped in ancient lore, with grand cities and fortresses dotting the landscape, built by rulers whose legacies echo through the ages. The Great Desert of Haradwaith separates its northern frontier from the heartland, while its southern coasts are bustling with trade and piracy. United under the banners of Sauron, Harad's many tribes and kingdoms channel their deep-rooted traditions into their war efforts, transforming this vibrant land into a powerhouse of culture and conflict.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.empire_s"
@@ -179,7 +179,7 @@
 			short_name="{{=TAOM_rohan_short}}Rohan"
 			title="{{=TAOM_rohan_title}}Kingdom of Rohan"
 			ruler_title="{{=TAOM_rohan_ruler}}King"
-			text="{{=IudGLWQZ}}The Vlandian monarchy descends from Osric Iron-Arm, a warlord who seized the western coasts of the Empire and was recognized as king by the emperors as the price of peace. He in turn recognized his lieutenants as barons and counts, granting them suzerainty over their lands in exchange for rallying to his banner in war. Some Vlandian kings have sought to expand the powers of the kingship; others have allowed the barons to feud among themselves so long as the money and manpower was there when needed.">
+			text="{{=TAOM_rohan_desc}}Known as the Riddermark, Rohan is a vast and sweeping kingdom of open plains and rolling hills, where the mighty Rohirrim—skilled horsemen and fierce warriors—dwell. Founded by Eorl the Young after his legendary ride to Gondor's aid, Rohan has long stood as a steadfast ally of Gondor against the darkness of Mordor. From the golden halls of Meduseld in Edoras, its kings rule over a proud and resilient people who live by the bond of horse and rider. The Rohirrim are famed for their cavalry charges, their songs of valor, and their unwavering courage. Though the shadow of Saruman has threatened their borders, the sons and daughters of Rohan remain ever ready to answer the call to arms, defending their homeland and the free peoples of Middle-earth.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.sturgia"
@@ -207,7 +207,7 @@
 			short_name="{{=TAOM_khand_short}}Khand"
 			title="{{=TAOM_khand_title}}Windriders of Khand"
 			ruler_title="{{=TAOM_khand_ruler}}Khudriag"
-			text="{{=ZjaaAoxd}}From time immemorial there has been a High King of Battania, crowned with great ceremony on the sacred hill of Dunthanach. Ask any Battanian chieftain, however, whose kingdom he lives in, and he will look around at his hall and his fields and his pastures, his flocks and his retainers, and answer Mine, of course. Only lately, following the example of the Empire, have the High Kings made any effort to exert their authority. Such unruly cattle as my people require a strong herdsman's hand to steer them from the ravine and protect them from the wolf, said one recent high king, just before he was betrayed by a jealous cousin and taken in chains to the nearest imperial outpost.">
+			text="{{=TAOM_khand_desc}}Khand, a rugged land of rolling steppes and arid plains, lies southeast of Mordor and serves as a critical corridor between the east and west. Its people, the Variags, are fierce and nomadic, known for their swift horses and deadly curved blades. Living in a harsh environment, they have honed their skills as raiders and warriors, often clashing with their neighbors and serving as mercenaries for the highest bidder. Khand's allegiance has long been courted by the Dark Lord, and many of its warriors have ridden to war under the shadow of Mordor. Yet the Variags are a proud and independent people, loyal first to their clans and chieftains, who rule from fortified encampments scattered across the windswept plains.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.empire_w"
@@ -235,7 +235,7 @@
 			short_name="{{=TAOM_rhun_short}}Rhun"
 			title="{{=TAOM_rhun_title}}Golden Realm of Rhun"
 			ruler_title="{{=TAOM_rhun_ruler}}Loke-Kan"
-			text="{{=fGNdo1BK}}For centuries, the tribes in the vast steppe east of the Empire were content to live as nomads, venturing into the imperial lands to raid and trade, and then returning to their ancestral freedom. Two generations ago, however, something happened far away to the east - a change in the winds, perhaps, or some terrible but distant conqueror - and the horse clans were set in motion. Urkhun the Khuzait led the nomads nearest the Empire into its far eastern provinces, conquering the towns and forming a khanate. He imposed discipline on the unruly clans, forcing them to ride to war on his command instead of simply when they wished. But after his death, the spirit of unity that he inspired was lost. His descendants still rule the khanate. But some of the other Khuzait leaders chafe under the authority of the current khan, Monchug, and others dream of becoming khan themselves.">
+			text="{{=TAOM_rhun_desc}}Far beyond the Sea of Rhûn, past the withered steppes and the red dust of forgotten empires, lies the vast and veiled East. Here dwell the Easterlings, a proud and ancient people whose history predates even the rise of Gondor. Their lands stretch endlessly beneath wide skies, from the shores of the inland sea to the shadowed mountains that mark the edge of the known world. The Easterlings are no single nation, but a tapestry of tribes and kingdoms, united only in their reverence for strength and their long memory of grievance against the West. Some have served the Dark Lord willingly, drawn by promises of power and vengeance; others resist, clinging to old ways and older gods. Their warriors are feared for their discipline and their mastery of chariot and bow, and their golden armor gleams like fire beneath the eastern sun.">
 			<relationships>
 				<relationship
 					kingdom="Kingdom.empire"
