@@ -9,7 +9,8 @@
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM/**)"
     ],
     "additionalDirectories": [
-      "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData"
+      "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
+      "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData"
     ]
   }
 }

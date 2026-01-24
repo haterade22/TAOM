@@ -44,7 +44,7 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
-		<!-- Add LOTR-themed kingdoms and cultures -->
+		<!-- Add TAOM-themed kingdoms and cultures -->
 		<XmlNode>
 			<XmlName id="Kingdoms" path="TAOM_spkingdoms"/>
 			<IncludedGameTypes>
