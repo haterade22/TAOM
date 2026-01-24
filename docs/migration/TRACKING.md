@@ -10,8 +10,12 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
 | Category | Total | Complete | Remaining |
 |----------|-------|----------|-----------|
-| Module XML | 1 | 0 | 1 |
-| Culture XML | 1 | 0 | 1 |
+| Module XML | 1 | 1 | 0 |
+| XSLT Transformations | 4 | 4 | 0 |
+| Culture XML | 1 | 1 | 0 |
+| Kingdom XML | 1 | 1 | 0 |
+| Clan XML | 1 | 1 | 0 |
+| Lords XML | 1 | 1 | 0 |
 | Settlement XML | 1 | 0 | 1 |
 | Troop XML | 2 | 0 | 2 |
 | Item XML | 1 | 0 | 1 |
@@ -24,7 +28,33 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
 | File | Status | Notes |
 |------|--------|-------|
-| `SubModule.xml` | NOT STARTED | Update module_version, dependencies |
+| `SubModule.xml` | COMPLETE | Updated with XSLT entries for kingdoms, cultures, clans, lords |
+
+---
+
+## XSLT Transformations
+
+TAOM uses XSLT transformations to modify vanilla XML at load time, renaming entities with LOTR-themed names while preserving vanilla structure.
+
+| File | Status | Transforms | Notes |
+|------|--------|------------|-------|
+| `spkingdoms.xslt` | COMPLETE | 8 kingdoms | Dunland, Gondor, Mordor, Dale, Harad, Rohan, Khand, Rhûn |
+| `spcultures.xslt` | COMPLETE | 6 cultures | Dunlending, Barding, Haradrim, Rohirrim, Variag, Easterling |
+| `spclans.xslt` | COMPLETE | 73 clans | All noble clans across 8 kingdoms |
+| `splords.xslt` | COMPLETE | ~350 lords | All lords across 6 base kingdoms |
+
+### XSLT Mapping Reference
+
+| Vanilla Kingdom | TAOM Name | Vanilla Culture | TAOM Culture |
+|-----------------|-----------|-----------------|--------------|
+| empire | Dunland | empire | Dunlending |
+| empire_w | Gondor | - | - |
+| empire_s | Mordor | - | - |
+| sturgia | Dale | sturgia | Barding |
+| aserai | Harad | aserai | Haradrim |
+| vlandia | Rohan | vlandia | Rohirrim |
+| battania | Khand | battania | Variag |
+| khuzait | Rhûn | khuzait | Easterling |
 
 ---
 
@@ -32,13 +62,13 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
 | File | Status | Notes |
 |------|--------|-------|
-| `spcultures.xml` | NOT STARTED | Primary culture definitions |
+| `spcultures.xslt` | COMPLETE | Renames 6 main cultures via XSLT transformation |
 
 ### Culture Schema Changes (1.2 → 1.3)
-- [ ] Verify `default_face_key` format
-- [ ] Check new required attributes
-- [ ] Update culture bonuses format
-- [ ] Verify troop tree references
+- [x] Verify `default_face_key` format - unchanged
+- [x] Check new required attributes - `default_stealth_equipment_roster` now required
+- [x] Update culture bonuses format - unchanged
+- [x] Verify troop tree references - unchanged
 
 ---
 
@@ -56,18 +86,44 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
 ---
 
+## Kingdom XML
+
+| File | Status | Notes |
+|------|--------|-------|
+| `spkingdoms.xslt` | COMPLETE | Renames 8 kingdoms via XSLT transformation |
+
+### Kingdom Schema Changes (1.2 → 1.3)
+- [x] `initial_home_settlement` now REQUIRED
+- [x] `label_color` deprecated but still works
+- [x] `alternative_color` deprecated but still works
+- [x] `alternative_color2` deprecated but still works
+
+---
+
+## Clan XML
+
+| File | Status | Notes |
+|------|--------|-------|
+| `spclans.xslt` | COMPLETE | Renames 73 noble clans via XSLT transformation |
+
+### Clan Schema Changes (1.2 → 1.3)
+- [x] No significant schema changes detected
+- [x] Backward compatible with 1.2 format
+
+---
+
 ## Troop XML
 
 | File | Status | Notes |
 |------|--------|-------|
 | `spnpccharacters.xml` | NOT STARTED | Non-lord characters |
-| `lords.xml` | NOT STARTED | Lord characters |
+| `splords.xslt` | COMPLETE | Renames ~350 lords via XSLT transformation |
 
 ### Troop Schema Changes (1.2 → 1.3)
-- [ ] Verify skill format changes
-- [ ] Check equipment set references
-- [ ] Update face_key format if needed
-- [ ] Verify upgrade path syntax
+- [x] `BodyProperties version` changed from 3 to 4
+- [x] `preferred_upgrade_formation` attribute added (optional)
+- [ ] Verify skill format changes - pending for spnpccharacters
+- [ ] Check equipment set references - pending for spnpccharacters
 
 ---
 
@@ -140,7 +196,17 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
 ### Migration Session Log
 
-**2026-01-24**: Initial tracking setup. Migration not yet started.
+**2026-01-24 (Session 2)**: Completed XSLT transformations for all entity types:
+- Created `spclans.xslt` with 73 clan name transformations
+- Created `splords.xslt` with ~350 lord name transformations across all 6 kingdoms
+- Updated `SubModule.xml` with XmlNode entries for clans and lords
+- Created `XML-SCHEMA-CHANGES.md` documenting 1.2→1.3 schema differences
+- Build verified successful
+
+**2026-01-24 (Session 1)**: Initial tracking setup. Created XSLT transformations for kingdoms and cultures:
+- Created `spkingdoms.xslt` with 8 kingdom transformations
+- Created `spcultures.xslt` with 6 culture transformations
+- Updated `SubModule.xml` with XSLT entries
 
 ---
 
