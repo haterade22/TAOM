@@ -5,7 +5,8 @@
       "Bash(tree:*)",
       "Bash(dir:*)",
       "Bash(xargs:*)",
-      "WebFetch(domain:moddocs.bannerlord.com)"
+      "WebFetch(domain:moddocs.bannerlord.com)",
+      "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM/**)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData"

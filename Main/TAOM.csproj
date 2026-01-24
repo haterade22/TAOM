@@ -8,6 +8,8 @@
 		<Nullable>enable</Nullable>
 		<Deterministic>true</Deterministic>
 		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
+		<ModuleId>$(MSBuildProjectName)</ModuleId>
+		<ModuleName>$(MSBuildProjectName)</ModuleName>
 		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
 		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
 		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
@@ -63,7 +65,7 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
-	<Target Name="CopyBinariesToModuleFolder" AfterTargets="Build">
+	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
 		<!-- Create directories if they don't exist -->
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\')" />
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Win64_Shipping_Client\')" />
