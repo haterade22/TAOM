@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>0.1.0</Version>
+		<TargetFramework>net472</TargetFramework>
+		<Platforms>x64</Platforms>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<Deterministic>true</Deterministic>
+		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
+		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
+		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
+		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625</NoWarn>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(GameFolder)\Modules\Native\bin\$(GameBinariesFolder)\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(GameFolder)\Modules\SandBox\bin\$(GameBinariesFolder)\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(GameFolder)\Modules\SandBoxCore\bin\$(GameBinariesFolder)\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(GameFolder)\Modules\CustomBattle\bin\$(GameBinariesFolder)\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="_Module\bin\**" />
+		<EmbeddedResource Remove="_Module\bin\**" />
+		<None Remove="_Module\bin\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.129">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Lib.Harmony" Version="2.3.3" IncludeAssets="compile" />
+		<PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+		<PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+	</ItemGroup>
+
+	<Target Name="CopyBinariesToModuleFolder" AfterTargets="Build">
+		<!-- Create directories if they don't exist -->
+		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\')" />
+		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Win64_Shipping_Client\')" />
+
+		<!-- Copy to Gaming.Desktop.x64_Shipping_Client -->
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
+
+		<!-- Copy to Win64_Shipping_Client -->
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
+	</Target>
+
+</Project>

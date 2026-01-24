@@ -1,0 +1,23 @@
+# Build outputs
+bin/
+obj/
+_Module/bin/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.csproj.user
+
+# Rider
+.idea/
+
+# NuGet
+packages/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

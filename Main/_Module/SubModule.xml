@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
+	<Id value="TAOM" />
+	<Name value="TAOM" />
+	<Version value="v0.1.0" />
+	<DefaultModule value="false" />
+	<ModuleCategory value="Singleplayer"/>
+	<ModuleType value="Community" />
+	<DependedModules>
+		<DependedModule Id="Native" />
+		<DependedModule Id="SandBoxCore" />
+		<DependedModule Id="Sandbox" />
+		<DependedModule Id="CustomBattle" />
+	</DependedModules>
+	<DependedModuleMetadatas>
+		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Native" order="LoadBeforeThis" version="e1.3.0.*" />
+		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+	</DependedModuleMetadatas>
+	<SubModules>
+		<SubModule>
+			<Name value="TAOM" />
+			<DLLName value="TAOM.dll" />
+			<SubModuleClassType value="TAOM.SubModule" />
+			<Tags />
+		</SubModule>
+	</SubModules>
+	<Xmls>
+		<!-- Add custom XML nodes here as needed -->
+	</Xmls>
+</Module>
