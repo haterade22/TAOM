@@ -29,7 +29,7 @@
 		</SubModule>
 	</SubModules>
 	<Xmls>
-		<!-- XSLT transformations to remove native kingdoms and cultures -->
+		<!-- XSLT transformations to replace vanilla kingdoms with TAOM versions -->
 		<XmlNode>
 			<XmlName id="Kingdoms" path="spkingdoms"/>
 			<IncludedGameTypes>
@@ -37,23 +37,9 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
+		<!-- XSLT transformations to rename vanilla cultures to TAOM names -->
 		<XmlNode>
 			<XmlName id="SPCultures" path="spcultures"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<!-- Add TAOM-themed kingdoms and cultures -->
-		<XmlNode>
-			<XmlName id="Kingdoms" path="TAOM_spkingdoms"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<XmlNode>
-			<XmlName id="SPCultures" path="TAOM_spcultures"/>
 			<IncludedGameTypes>
 				<GameType value="Campaign"/>
 				<GameType value="CampaignStoryMode"/>
