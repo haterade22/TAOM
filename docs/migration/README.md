@@ -11,6 +11,25 @@ The migration from 1.2 to 1.3 involves:
 3. **Dependency Updates** - NuGet packages, Harmony version
 4. **Runtime Behavior Changes** - Game engine behavior differences
 
+## XSLT Transformation Approach
+
+TAOM uses XSLT transformations to modify vanilla Bannerlord XML at load time. This approach:
+
+- **Preserves vanilla structure** - No need to maintain full copies of game XML
+- **Enables themed renaming** - Kingdoms, cultures, clans, lords renamed
+- **Adds biographical content** - Hero lore text added via transformation
+- **Minimizes maintenance** - Only name/text changes, not structural
+
+### Current XSLT Files
+
+| File | Purpose | Count |
+|------|---------|-------|
+| `spkingdoms.xslt` | Kingdom name transformations | 8 |
+| `spcultures.xslt` | Culture name transformations | 6 |
+| `spclans.xslt` | Clan name transformations | 73 |
+| `splords.xslt` | Lord name transformations | ~350 |
+| `spheroes.xslt` | Hero biographical text | 415 |
+
 ## Quick Links
 
 | Document | Purpose |
@@ -18,10 +37,28 @@ The migration from 1.2 to 1.3 involves:
 | [TRACKING.md](./TRACKING.md) | Migration status tracker |
 | [v1.3-api-changes.md](./v1.3-api-changes.md) | Summary of key API changes |
 | [xml-migration-strategy.md](./xml-migration-strategy.md) | Step-by-step XML migration |
+| [XML-SCHEMA-CHANGES.md](./XML-SCHEMA-CHANGES.md) | 1.2 to 1.3 schema differences |
+| [ROT-CORE-ANALYSIS.md](./ROT-CORE-ANALYSIS.md) | ROT-Core DLL compatibility analysis |
 
 ## Migration Status
 
 See [TRACKING.md](./TRACKING.md) for current status of all migration tasks.
+
+### Completed
+- Module XML (SubModule.xml)
+- XSLT Transformations (5/5 files)
+- Kingdom names
+- Culture names
+- Clan names
+- Lord names
+- Hero biographies
+
+### Remaining
+- Settlement XML
+- Troop XML (spnpccharacters)
+- Item XML
+- Equipment XML
+- Code changes (Harmony patches, GameModels, CampaignBehaviors)
 
 ## Priority Order
 

@@ -19,6 +19,7 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 | Heroes XML | 1 | 1 | 0 |
 | Settlement XML | 1 | 0 | 1 |
 | Troop XML | 2 | 0 | 2 |
+| LOTRAOM Troop Files | 13 | 13 | 0 |
 | Item XML | 1 | 0 | 1 |
 | Equipment XML | 1 | 0 | 1 |
 | Code Changes | TBD | 0 | TBD |
@@ -143,6 +144,44 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 
 ---
 
+## LOTRAOM Troop Files
+
+Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/` to `Main/_Module/ModuleData/troops/`.
+
+**Status:** STAGED (copied but NOT registered in SubModule.xml)
+
+| File | Status | Lines | Culture | Notes |
+|------|--------|-------|---------|-------|
+| `troops_rohan.xml` | STAGED | 5,803 | vlandia | Horse archers, Riders of Rohan |
+| `troops_gondor.xml` | STAGED | 6,955 | gondor* | Tower Guard, Knights, Rangers |
+| `troops_harad.xml` | STAGED | 1,911 | aserai | Haradrim warriors |
+| `troops_mordor.xml` | STAGED | 4,300 | custom* | Orcs, Trolls, Black Númenóreans |
+| `troops_isengard.xml` | STAGED | 5,045 | custom* | Uruk-hai |
+| `troops_rhun.xml` | STAGED | 2,041 | khuzait | Easterling warriors |
+| `troops_dunland.xml` | STAGED | 3,137 | empire | Dunlending hillmen |
+| `troops_erebor.xml` | STAGED | 6,249 | custom* | Dwarves of Erebor |
+| `troops_rivendell.xml` | STAGED | 7,169 | custom* | Elves of Rivendell |
+| `troops_mirkwood.xml` | STAGED | 951 | custom* | Wood Elves, Spiders |
+| `troops_gundabad.xml` | STAGED | 1,943 | custom* | Goblins, Orcs |
+| `troops_umbar.xml` | STAGED | 2,139 | custom* | Corsairs of Umbar |
+| `troops_dolguldur.xml` | STAGED | 7,622 | custom* | Necromancer forces |
+
+*\*Custom cultures require new culture definitions before activation*
+
+### Schema Verification
+- [x] No `BodyProperties version` attributes (uses `face_key_template` references)
+- [x] XML well-formed
+- [ ] Item references need verification (custom LOTRAOM items)
+- [ ] Culture references need custom culture definitions
+
+### To Activate These Troops
+1. Create custom culture XMLs for non-vanilla cultures (gondor, mordor, erebor, etc.)
+2. Add item XMLs for referenced custom equipment
+3. Register troop files in `SubModule.xml` with `<XmlNode>` entries
+4. Update culture `basic_troop`, `elite_basic_troop`, etc. references
+
+---
+
 ## Item XML
 
 | File | Status | Notes |
@@ -211,6 +250,12 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 ## Notes
 
 ### Migration Session Log
+
+**2026-01-24 (Session 4)**: Migrated LOTRAOM troop files:
+- Copied 13 troops_*.xml files (~55,265 lines total) to `Main/_Module/ModuleData/troops/`
+- Files staged but NOT registered in SubModule.xml (per request)
+- No BodyProperties version updates needed (files use face_key_template references)
+- Build verified successful
 
 **2026-01-24 (Session 3)**: Completed Heroes biographical XSLT transformation:
 - Created `spheroes.xslt` with biographical text for all 415 heroes

@@ -4,7 +4,64 @@ Step-by-step process for migrating XML files from Bannerlord 1.2 to 1.3.
 
 ---
 
-## General Approach
+## TAOM XSLT Transformation Approach
+
+TAOM uses XSLT transformations instead of maintaining full XML copies. This allows us to:
+
+1. **Transform vanilla XML at load time** - Modify names/text without copying entire files
+2. **Preserve vanilla structure** - Inherit all 1.3 schema changes automatically
+3. **Minimize maintenance** - Only maintain the transformations, not full XML
+
+### XSLT Pattern Used
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output omit-xml-declaration="no" indent="yes"/>
+
+    <!-- Identity transformation - copy everything by default -->
+    <xsl:template match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <!-- Selective override - modify specific elements -->
+    <xsl:template match="Kingdom[@id='empire']">
+        <xsl:copy>
+            <xsl:apply-templates select="@*[local-name() != 'name']"/>
+            <xsl:attribute name="name">{=TAOM_dunland}Dunland</xsl:attribute>
+            <xsl:apply-templates select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>
+```
+
+### SubModule.xml Registration
+
+```xml
+<XmlNode>
+    <XmlName id="Kingdoms" path="spkingdoms"/>
+    <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+    </IncludedGameTypes>
+</XmlNode>
+```
+
+### Current XSLT Files
+
+| File | XmlName id | Transforms |
+|------|------------|------------|
+| `spkingdoms.xslt` | Kingdoms | 8 kingdom names |
+| `spcultures.xslt` | SPCultures | 6 culture names |
+| `spclans.xslt` | Factions | 73 clan names |
+| `splords.xslt` | NPCCharacters | ~350 lord names |
+| `spheroes.xslt` | Heroes | 415 hero biographies |
+
+---
+
+## General Approach (For Non-XSLT Files)
 
 1. **Backup** original files before any changes
 2. **Reference** vanilla 1.3 XML for correct schema

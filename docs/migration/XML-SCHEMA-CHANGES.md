@@ -208,6 +208,34 @@ This document tracks XML schema changes between Bannerlord versions to ensure TA
 | `BodyProperties version` | 3 | 4 | New face system version |
 | `preferred_upgrade_formation` | Not present | New | Optional upgrade preference |
 
+### Troops (Soldiers/NPCCharacters)
+
+| Change | 1.2.x | 1.3.x | Impact |
+|--------|-------|-------|--------|
+| `BodyProperties version` | 3 | 4 | Only if inline BodyProperties used |
+| `skill_template` | Old format | Updated references | Verify skill set names |
+| `preferred_upgrade_formation` | Not present | New (optional) | No action needed |
+
+**LOTRAOM Troop Files Note:** The LOTRAOM troop files use `<face_key_template>` references (e.g., `BodyProperty.fighter_rohan`) instead of inline `<BodyProperties>` elements. This means no version attribute updates are needed for these files. Example:
+
+```xml
+<NPCCharacter id="rohan_wold_recruit" culture="Culture.vlandia" ...>
+    <face>
+        <face_key_template value="BodyProperty.fighter_rohan" />
+    </face>
+    <skills>
+        <skill id="Athletics" value="54" />
+        ...
+    </skills>
+    <upgrade_targets>
+        <upgrade_target id="NPCCharacter.rohan_wold_scout" />
+    </upgrade_targets>
+    <Equipments>
+        <EquipmentRoster>...</EquipmentRoster>
+    </Equipments>
+</NPCCharacter>
+```
+
 ### Clans (spclans.xml)
 
 | Change | 1.2.x | 1.3.x | Impact |

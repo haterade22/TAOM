@@ -66,6 +66,21 @@ TAOM/
 
 This mod is being migrated from Bannerlord v1.2 to v1.3. See [docs/migration/TRACKING.md](docs/migration/TRACKING.md) for current status.
 
+### XSLT Transformation Approach
+
+TAOM uses XSLT transformations to modify vanilla XML at load time, allowing us to:
+- Rename factions, cultures, clans, and characters with themed names
+- Add biographical text to heroes
+- Preserve vanilla structure for maximum compatibility
+
+| XSLT File | Transforms | Status |
+|-----------|------------|--------|
+| `spkingdoms.xslt` | 8 kingdoms (Dunland, Gondor, Mordor, Dale, Harad, Rohan, Khand, Rhun) | Complete |
+| `spcultures.xslt` | 6 cultures (Dunlending, Barding, Haradrim, Rohirrim, Variag, Easterling) | Complete |
+| `spclans.xslt` | 73 noble clans | Complete |
+| `splords.xslt` | ~350 lord names | Complete |
+| `spheroes.xslt` | 415 hero biographies | Complete |
+
 ## Documentation
 
 - [CLAUDE.md](CLAUDE.md) - AI assistant guidance and quick reference

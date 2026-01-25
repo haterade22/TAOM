@@ -49,7 +49,20 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Adapters | `Main/Adapters/` | Wraps sealed types |
 | Core | `Main/Core/` | Core infrastructure |
 | XML config | `Main/_Module/ModuleData/` | Game configuration |
+| XSLT files | `Main/_Module/ModuleData/*.xslt` | Vanilla XML transformations |
 | **TaleWorlds DLLs** | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` | Decompile on demand |
+
+## XSLT Transformations
+
+TAOM uses XSLT to transform vanilla Bannerlord XML at load time:
+
+| File | Purpose |
+|------|---------|
+| `spkingdoms.xslt` | Kingdom names (8) |
+| `spcultures.xslt` | Culture names (6) |
+| `spclans.xslt` | Clan names (73) |
+| `splords.xslt` | Lord names (~350) |
+| `spheroes.xslt` | Hero biographies (415) |
 
 ## TaleWorlds Research Protocol (CRITICAL)
 
