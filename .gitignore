@@ -21,3 +21,6 @@ packages/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Windows NUL device artifact (created when running Windows commands in bash)
+nul

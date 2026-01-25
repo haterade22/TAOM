@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TAOM Additional Clans - All Cultures -->
+<!-- NOT registered in SubModule.xml - staged for future activation -->
+<Factions>
+
+	<!-- ============================================== -->
+	<!-- DUNLAND CLANS (empire culture)                 -->
+	<!-- Naming style: [Name]-lûth (Clan suffix)        -->
+	<!-- ============================================== -->
+
+	<!-- Baedd-lûth (Boar Clan) - mountain stronghold holders -->
+	<Faction
+		id="clan_taom_dunland_1"
+		initial_home_settlement="Settlement.town_EN1"
+		name="{=TAOM_clan_d1}Baedd-lûth"
+		tier="5"
+		owner="Hero.lord_taom_dunland_1"
+		culture="Culture.empire"
+		super_faction="Kingdom.empire"
+		is_noble="true"
+		banner_key="11.116.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
+		text="{=TAOM_clan_d1_desc}The Baedd-lûth trace their lineage to the ancient kings of Dunland. Their warriors are known for their ferocity in battle and their hatred of the horse-lords to the south." />
+
+	<!-- Gwrach-lûth (Witch Clan) - mystics and seers -->
+	<Faction
+		id="clan_taom_dunland_2"
+		initial_home_settlement="Settlement.town_EN2"
+		name="{=TAOM_clan_d2}Gwrach-lûth"
+		tier="4"
+		owner="Hero.lord_taom_dunland_5"
+		culture="Culture.empire"
+		super_faction="Kingdom.empire"
+		is_noble="true"
+		banner_key="11.116.116.1536.1536.764.764.1.0.0.433.128.128.350.350.764.764.0.0.0"
+		text="{=TAOM_clan_d2_desc}The Gwrach-lûth are keepers of the old ways. Their chieftains consult with seers and druids before any battle, and their warriors paint themselves with woad." />
+
+	<!-- Eryr-lûth (Eagle Clan) - highland raiders -->
+	<Faction
+		id="clan_taom_dunland_3"
+		initial_home_settlement="Settlement.castle_EN1"
+		name="{=TAOM_clan_d3}Eryr-lûth"
+		tier="4"
+		owner="Hero.lord_taom_dunland_9"
+		culture="Culture.empire"
+		super_faction="Kingdom.empire"
+		is_noble="true"
+		banner_key="11.116.116.1536.1536.764.764.1.0.0.427.128.128.380.380.764.764.0.0.0"
+		text="{=TAOM_clan_d3_desc}The Eryr-lûth hold the mountain passes of Dunland. Their warriors are stubborn defenders who never yield ground once taken." />
+
+	<!-- ============================================== -->
+	<!-- DALE CLANS (sturgia culture)                   -->
+	<!-- Naming style: House of [Name]                  -->
+	<!-- ============================================== -->
+
+	<!-- House of the River - merchants and traders -->
+	<Faction
+		id="clan_taom_dale_1"
+		initial_home_settlement="Settlement.town_S1"
+		name="{=TAOM_clan_dale1}House of the River"
+		tier="5"
+		owner="Hero.lord_taom_dale_1"
+		culture="Culture.sturgia"
+		super_faction="Kingdom.sturgia"
+		is_noble="true"
+		banner_key="11.8.116.1536.1536.764.764.1.0.0.503.128.128.380.380.764.764.0.0.0"
+		text="{=TAOM_clan_dale1_desc}The House of the River controls the trade routes along the Running River. Their wealth comes from the caravans that pass between Dale, Erebor, and the lands beyond." />
+
+	<!-- House of the Archers - renowned bowmen -->
+	<Faction
+		id="clan_taom_dale_2"
+		initial_home_settlement="Settlement.town_S2"
+		name="{=TAOM_clan_dale2}House of the Archers"
+		tier="4"
+		owner="Hero.lord_taom_dale_5"
+		culture="Culture.sturgia"
+		super_faction="Kingdom.sturgia"
+		is_noble="true"
+		banner_key="11.8.116.1536.1536.764.764.1.0.0.516.128.128.350.350.764.764.0.0.0"
+		text="{=TAOM_clan_dale2_desc}The House of the Archers produces the finest bowmen in Dale. Their longbowmen are legendary for the accuracy of their shots and the range of their weapons." />
+
+	<!-- House of Long Lake - defenders of Esgaroth -->
+	<Faction
+		id="clan_taom_dale_3"
+		initial_home_settlement="Settlement.castle_S1"
+		name="{=TAOM_clan_dale3}House of Long Lake"
+		tier="4"
+		owner="Hero.lord_taom_dale_9"
+		culture="Culture.sturgia"
+		super_faction="Kingdom.sturgia"
+		is_noble="true"
+		banner_key="11.8.116.1536.1536.764.764.1.0.0.519.128.128.360.360.764.764.0.0.0"
+		text="{=TAOM_clan_dale3_desc}The House of Long Lake guards the approaches to Esgaroth. Their warriors are trained in defensive warfare and have held the gates against many foes." />
+
+	<!-- ============================================== -->
+	<!-- HARAD CLANS (aserai culture)                   -->
+	<!-- Naming style: Tribe of the [Name]              -->
+	<!-- ============================================== -->
+
+	<!-- Tribe of the Serpent - warriors of the South -->
+	<Faction
+		id="clan_taom_harad_1"
+		initial_home_settlement="Settlement.town_A1"
+		name="{=TAOM_clan_h1}Tribe of the Serpent"
+		tier="5"
+		owner="Hero.lord_taom_harad_1"
+		culture="Culture.aserai"
+		super_faction="Kingdom.aserai"
+		is_noble="true"
+		banner_key="11.142.116.1536.1536.764.764.1.0.0.429.128.128.400.400.764.764.0.0.0"
+		text="{=TAOM_clan_h1_desc}The Tribe of the Serpent rules the central deserts of Harad. Their warriors are renowned for their skill with the curved blades of the South and their deadly poison-tipped arrows." />
+
+	<!-- Tribe of the Mumakil - war elephant masters -->
+	<Faction
+		id="clan_taom_harad_2"
+		initial_home_settlement="Settlement.town_A2"
+		name="{=TAOM_clan_h2}Tribe of the Mumakil"
+		tier="5"
+		owner="Hero.lord_taom_harad_5"
+		culture="Culture.aserai"
+		super_faction="Kingdom.aserai"
+		is_noble="true"
+		banner_key="11.142.116.1536.1536.764.764.1.0.0.425.128.128.380.380.764.764.0.0.0"
+		text="{=TAOM_clan_h2_desc}The Tribe of the Mumakil breeds and trains the great war elephants of Far Harad. Their Mumakil are feared by all the enemies of the South." />
+
+	<!-- Tribe of the Scarlet - elite guard -->
+	<Faction
+		id="clan_taom_harad_3"
+		initial_home_settlement="Settlement.castle_A1"
+		name="{=TAOM_clan_h3}Tribe of the Scarlet"
+		tier="4"
+		owner="Hero.lord_taom_harad_9"
+		culture="Culture.aserai"
+		super_faction="Kingdom.aserai"
+		is_noble="true"
+		banner_key="11.142.116.1536.1536.764.764.1.0.0.430.128.128.360.360.764.764.0.0.0"
+		text="{=TAOM_clan_h3_desc}The Tribe of the Scarlet provides the elite bodyguards of the Haradrim lords. Their warriors wear crimson robes and are fanatically loyal to their masters." />
+
+	<!-- ============================================== -->
+	<!-- ROHAN CLANS (vlandia culture)                  -->
+	<!-- Naming style: House of [Family]-ing            -->
+	<!-- ============================================== -->
+
+	<!-- House of Heoruring - royal house companions -->
+	<Faction
+		id="clan_taom_rohan_1"
+		initial_home_settlement="Settlement.town_V1"
+		name="{=TAOM_clan_r1}House of Heoruring"
+		tier="5"
+		owner="Hero.lord_taom_rohan_1"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
+		text="{=TAOM_clan_r1_desc}The House of Heoruring has served the Kings of Rohan since the founding of the Mark. Their riders are the finest in all the Riddermark, and their loyalty to the throne is absolute." />
+
+	<!-- House of Westfolding - defenders of the Gap -->
+	<Faction
+		id="clan_taom_rohan_2"
+		initial_home_settlement="Settlement.town_V2"
+		name="{=TAOM_clan_r2}House of Westfolding"
+		tier="5"
+		owner="Hero.lord_taom_rohan_5"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.519.128.128.380.380.764.764.0.0.0"
+		text="{=TAOM_clan_r2_desc}The House of Westfolding guards the Gap of Rohan against Dunlending raids. Their warriors are hardened by constant battle with the hill folk." />
+
+	<!-- House of Eastemnetring - horse breeders -->
+	<Faction
+		id="clan_taom_rohan_3"
+		initial_home_settlement="Settlement.castle_V1"
+		name="{=TAOM_clan_r3}House of Eastemnetring"
+		tier="4"
+		owner="Hero.lord_taom_rohan_9"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.503.128.128.360.360.764.764.0.0.0"
+		text="{=TAOM_clan_r3_desc}The House of Eastemnetring breeds the finest horses in all of Rohan. Their mearas are descended from the legendary Felarof." />
+
+	<!-- ============================================== -->
+	<!-- KHAND CLANS (battania culture)                 -->
+	<!-- Naming style: [Eastern Name]                   -->
+	<!-- ============================================== -->
+
+	<!-- Zulkârim - assassins and scouts -->
+	<Faction
+		id="clan_taom_khand_1"
+		initial_home_settlement="Settlement.town_B1"
+		name="{=TAOM_clan_k1}Zulkârim"
+		tier="5"
+		owner="Hero.lord_taom_khand_1"
+		culture="Culture.battania"
+		super_faction="Kingdom.battania"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
+		text="{=TAOM_clan_k1_desc}The Zulkârim serves as the eyes and ears of Khand. Their assassins and scouts move unseen through enemy lands, gathering intelligence and eliminating threats to the realm." />
+
+	<!-- Razûlak - elite warriors -->
+	<Faction
+		id="clan_taom_khand_2"
+		initial_home_settlement="Settlement.town_B2"
+		name="{=TAOM_clan_k2}Razûlak"
+		tier="5"
+		owner="Hero.lord_taom_khand_5"
+		culture="Culture.battania"
+		super_faction="Kingdom.battania"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.519.128.128.380.380.764.764.0.0.0"
+		text="{=TAOM_clan_k2_desc}The Razûlak produces the finest swordsmen in all of Khand. Their curved blades are forged using secret techniques passed down through generations." />
+
+	<!-- Dorûmak - swift raiders -->
+	<Faction
+		id="clan_taom_khand_3"
+		initial_home_settlement="Settlement.castle_B1"
+		name="{=TAOM_clan_k3}Dorûmak"
+		tier="4"
+		owner="Hero.lord_taom_khand_9"
+		culture="Culture.battania"
+		super_faction="Kingdom.battania"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.503.128.128.360.360.764.764.0.0.0"
+		text="{=TAOM_clan_k3_desc}The Dorûmak rides the hot winds of Khand. Their swift raids strike without warning and vanish before any pursuit can be mounted." />
+
+	<!-- ============================================== -->
+	<!-- RHUN CLANS (khuzait culture)                   -->
+	<!-- Naming style: [Eastern Name]-ian               -->
+	<!-- ============================================== -->
+
+	<!-- Balchothian - heavy cavalry -->
+	<Faction
+		id="clan_taom_rhun_1"
+		initial_home_settlement="Settlement.town_K1"
+		name="{=TAOM_clan_rh1}Balchothian"
+		tier="5"
+		owner="Hero.lord_taom_rhun_1"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
+		text="{=TAOM_clan_rh1_desc}The Balchothian fields the heaviest cavalry in all of Rhun. Their armored riders crash through enemy lines like an avalanche of steel, leaving nothing but ruin in their wake." />
+
+	<!-- Wainriderian - elite warriors -->
+	<Faction
+		id="clan_taom_rhun_2"
+		initial_home_settlement="Settlement.town_K2"
+		name="{=TAOM_clan_rh2}Wainriderian"
+		tier="5"
+		owner="Hero.lord_taom_rhun_5"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.519.128.128.380.380.764.764.0.0.0"
+		text="{=TAOM_clan_rh2_desc}The Wainriderian claims descent from the great warlords of the First Age. Their banner, a golden serpent on crimson, is feared throughout the West." />
+
+	<!-- Sagarthian - horse archers -->
+	<Faction
+		id="clan_taom_rhun_3"
+		initial_home_settlement="Settlement.castle_K1"
+		name="{=TAOM_clan_rh3}Sagarthian"
+		tier="4"
+		owner="Hero.lord_taom_rhun_9"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.149.116.1536.1536.764.764.1.0.0.503.128.128.360.360.764.764.0.0.0"
+		text="{=TAOM_clan_rh3_desc}The Sagarthian are the finest horse archers in Rhun. Born in the saddle, they can loose arrows with deadly accuracy at full gallop." />
+
+</Factions>
