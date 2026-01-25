@@ -53,9 +53,9 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
-		<!-- XSLT transformations to rename vanilla lords to TAOM names -->
+		<!-- XSLT transformations to rename vanilla lords to TAOM names and add BodyProperties -->
 		<XmlNode>
-			<XmlName id="NPCCharacters" path="splords"/>
+			<XmlName id="NPCCharacters" path="lords"/>
 			<IncludedGameTypes>
 				<GameType value="Campaign"/>
 				<GameType value="CampaignStoryMode"/>
@@ -63,7 +63,7 @@
 		</XmlNode>
 		<!-- XSLT transformations to add TAOM biographical text to heroes -->
 		<XmlNode>
-			<XmlName id="Heroes" path="spheroes"/>
+			<XmlName id="Heroes" path="heroes"/>
 			<IncludedGameTypes>
 				<GameType value="Campaign"/>
 				<GameType value="CampaignStoryMode"/>

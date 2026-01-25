@@ -61,8 +61,18 @@ TAOM uses XSLT to transform vanilla Bannerlord XML at load time:
 | `spkingdoms.xslt` | Kingdom names (8) |
 | `spcultures.xslt` | Culture names (6) |
 | `spclans.xslt` | Clan names (73) |
-| `splords.xslt` | Lord names (~350) |
-| `spheroes.xslt` | Hero biographies (415) |
+| `lords.xslt` | Lords - name, default_group, is_female, BodyProperties, skills, traits (380) |
+| `heroes.xslt` | Hero biographies (415) |
+
+## Additional XML Files
+
+New entities not in vanilla Bannerlord are added via direct XML (not XSLT):
+
+| File | Purpose |
+|------|---------|
+| `characters/lords.xml` | New LOTRAOM lords not in vanilla (504) - staged |
+| `characters/heroes.xml` | New LOTRAOM heroes not in vanilla - staged |
+| `characters/clans.xml` | New LOTRAOM clans not in vanilla (18) - staged |
 
 ## TaleWorlds Research Protocol (CRITICAL)
 

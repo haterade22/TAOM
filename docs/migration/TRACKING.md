@@ -43,8 +43,18 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 | `spkingdoms.xslt` | COMPLETE | 8 kingdoms | Dunland, Gondor, Mordor, Dale, Harad, Rohan, Khand, Rhûn |
 | `spcultures.xslt` | COMPLETE | 6 cultures | Dunlending, Barding, Haradrim, Rohirrim, Variag, Easterling |
 | `spclans.xslt` | COMPLETE | 73 clans | All noble clans across 8 kingdoms |
-| `splords.xslt` | COMPLETE | ~350 lords | All lords across 6 base kingdoms |
-| `spheroes.xslt` | COMPLETE | 415 heroes | Biographical text for all heroes |
+| `lords.xslt` | COMPLETE | 380 lords | Consolidated templates with name, default_group, is_female, BodyProperties, skills, traits |
+| `heroes.xslt` | COMPLETE | 415 heroes | Biographical text for all heroes |
+
+### Lords XSLT Structure (Refactored)
+
+Each lord template now contains ALL transformations in one place:
+- `name` attribute with LOTRAOM name
+- `default_group` attribute (Infantry, Cavalry, HorseArcher, etc.)
+- `is_female` attribute where applicable
+- `face/BodyProperties` with weight, build, and key
+- Complete `skills` section (16 skills)
+- Complete `Traits` section (personality and political traits)
 
 ### XSLT Mapping Reference
 
@@ -126,6 +136,19 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 - [x] Heroes.xml contains faction references
 - [x] `text` attribute holds biographical descriptions
 - [x] Hero IDs match lord IDs (lord_X_Y pattern)
+- [x] `heroes.xslt` now applies family relationships from LOTRAOM data
+
+---
+
+## Additional Lords (New LOTRAOM Lords)
+
+Lords that exist in LOTRAOM but NOT in vanilla Bannerlord are added via direct XML (not XSLT).
+
+| File | Status | Count | Notes |
+|------|--------|-------|-------|
+| `characters/lords.xml` | COMPLETE | 504 lords | New LOTRAOM lords not in vanilla |
+
+These lords include custom cultures: gondor, mordor, erebor, rivendell, mirkwood, lothlorien, isengard, gundabad, umbar, dolguldur.
 
 ---
 
@@ -134,7 +157,7 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 | File | Status | Notes |
 |------|--------|-------|
 | `spnpccharacters.xml` | NOT STARTED | Non-lord characters |
-| `splords.xslt` | COMPLETE | Renames ~350 lords via XSLT transformation |
+| `lords.xslt` | COMPLETE | Transforms 380 vanilla lords with LOTRAOM data |
 
 ### Troop Schema Changes (1.2 → 1.3)
 - [x] `BodyProperties version` changed from 3 to 4
@@ -250,6 +273,23 @@ Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/`
 ## Notes
 
 ### Migration Session Log
+
+**2026-01-24 (Session 6)**: Heroes XSLT family relationships:
+- Updated `heroes.xslt` to include `spouse`, `father`, and `mother` attributes for all heroes
+- Extracted family relationship data from LOTRAOM `heroes.xml`
+- Added bidirectional spouse relationships (both partners reference each other)
+- Added parent-child relationships (children reference father/mother)
+- Updated templates for all 6 kingdoms: Empire (Dunland/Gondor/Mordor), Sturgia (Dale), Aserai (Harad), Vlandia (Rohan), Battania (Khand), Khuzait (Rhun)
+- Also updated dead lords with family attributes where applicable
+- Build verified successful
+
+**2026-01-24 (Session 5)**: Lords XSLT refactoring and new lords:
+- Refactored `lords.xslt` with consolidated templates (380 vanilla lords)
+- Each lord template now includes: name, default_group, is_female, BodyProperties, skills, traits
+- Created `characters/lords.xml` with 504 new LOTRAOM lords not in vanilla
+- Renamed `splords.xslt` → `lords.xslt` and `spheroes.xslt` → `heroes.xslt` for clarity
+- Updated SubModule.xml paths accordingly
+- Fixed Mouth of Sauron (lord_1_14) gender: is_female="false"
 
 **2026-01-24 (Session 4)**: Migrated LOTRAOM troop files:
 - Copied 13 troops_*.xml files (~55,265 lines total) to `Main/_Module/ModuleData/troops/`
