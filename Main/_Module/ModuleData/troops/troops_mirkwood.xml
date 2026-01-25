@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCCharacters>
+
+    <NPCCharacter
+        id="mirkwood_recruit"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_mirkwood_recruit_name}[Mirkwood] Silvan Levy"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="180" />
+            <skill
+                id="Riding"
+                value="250" />
+            <skill
+                id="OneHanded"
+                value="250" />
+            <skill
+                id="TwoHanded"
+                value="250" />
+            <skill
+                id="Polearm"
+                value="250" />
+            <skill
+                id="Bow"
+                value="250" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="250" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_woodsman" />
+            <upgrade_target
+                id="NPCCharacter.mirkwood_guards" />
+            <upgrade_target
+                id="NPCCharacter.mirkwood_wardens" />
+            <upgrade_target
+                id="NPCCharacter.mirkwood_sentinels" />
+            <upgrade_target
+                id="NPCCharacter.mirkwood_rochenlas" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_woodsman"
+        default_group="Infantry"
+        level="41"
+        name="{=aom_mirkwood_woodsman_name}[Mirkwood] Greenwood Woodsman"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="190" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="285" />
+            <skill
+                id="TwoHanded"
+                value="285" />
+            <skill
+                id="Polearm"
+                value="285" />
+            <skill
+                id="Bow"
+                value="200" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_glaivesman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_glaive_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t3_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_guards"
+        default_group="Infantry"
+        level="41"
+        name="{=aom_mirkwood_guards_name}[Mirkwood] Greenwood Guards"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="120" />
+            <skill
+                id="Riding"
+                value="320" />
+            <skill
+                id="OneHanded"
+                value="286" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="287" />
+            <skill
+                id="Bow"
+                value="200" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_swordsman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_bronze" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_bronze" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_bronze" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_bronze" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_wardens"
+        default_group="Infantry"
+        level="41"
+        name="{=aom_mirkwood_wardens_name}[Mirkwood] Greenwood Wardens"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="200" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="320" />
+            <skill
+                id="TwoHanded"
+                value="320" />
+            <skill
+                id="Polearm"
+                value="320" />
+            <skill
+                id="Bow"
+                value="320" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="320" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_guardians" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_palace_t1_helmet_green_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mirkwood_shoulder" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mirkwood_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_sentinels"
+        default_group="Ranged"
+        level="41"
+        name="{=aom_mirkwood_sentinels_name}[Mirkwood] Silvan Sentinels"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="200" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="240" />
+            <skill
+                id="TwoHanded"
+                value="240" />
+            <skill
+                id="Polearm"
+                value="200" />
+            <skill
+                id="Bow"
+                value="265" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_borderwardens" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mirkwood_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_rochenlas"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_mirkwood_rochenlas_name}[Mirkwood] Mirkwood Róchenlas"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="220" />
+            <skill
+                id="Riding"
+                value="310" />
+            <skill
+                id="OneHanded"
+                value="285" />
+            <skill
+                id="TwoHanded"
+                value="300" />
+            <skill
+                id="Polearm"
+                value="305" />
+            <skill
+                id="Bow"
+                value="200" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_beleglas" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf2_t3_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.noble_horse_southern" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.saddle_of_aeneas" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_beleglas"
+        default_group="Cavalry"
+        level="46"
+        name="{=aom_mirkwood_beleglas_name}[Mirkwood] Mirkwood Béleglas"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="230" />
+            <skill
+                id="Riding"
+                value="315" />
+            <skill
+                id="OneHanded"
+                value="305" />
+            <skill
+                id="TwoHanded"
+                value="305" />
+            <skill
+                id="Polearm"
+                value="315" />
+            <skill
+                id="Bow"
+                value="220" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf2_t4_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.noble_horse_southern" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.saddle_of_aeneas" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_borderwardens"
+        default_group="Ranged"
+        level="46"
+        name="{=aom_mirkwood_borderwardens_name}[Mirkwood] Silvan Borderwarden"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="225" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="200" />
+            <skill
+                id="TwoHanded"
+                value="200" />
+            <skill
+                id="Polearm"
+                value="200" />
+            <skill
+                id="Bow"
+                value="285" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_thingolheir" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mirkwood_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t3_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_guardians"
+        default_group="Infantry"
+        level="46"
+        name="{=aom_mirkwood_guardians_name}[Mirkwood] Guardians of Felegoth"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="200" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="250" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="250" />
+            <skill
+                id="Bow"
+                value="200" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mirkwood_palaceguard" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_palace_t2_helmet_green_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mirkwood_shoulder" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mirkwood_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_glaivesman"
+        default_group="Infantry"
+        level="46"
+        name="{=aom_mirkwood_glaivesman_name}[Mirkwood] Glaivesman of Amon"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="220" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="300" />
+            <skill
+                id="TwoHanded"
+                value="310" />
+            <skill
+                id="Polearm"
+                value="300" />
+            <skill
+                id="Bow"
+                value="200" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_glaive_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t4_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_swordsman"
+        default_group="Infantry"
+        level="46"
+        name="{=aom_mirkwood_swordsman_name}[Mirkwood] Greenwood Swordsman"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="220" />
+            <skill
+                id="Riding"
+                value="300" />
+            <skill
+                id="OneHanded"
+                value="310" />
+            <skill
+                id="TwoHanded"
+                value="285" />
+            <skill
+                id="Polearm"
+                value="280" />
+            <skill
+                id="Bow"
+                value="200" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf3_t4_helmet_gold_hc" />
+				<equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_bronze" />
+				<equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_bronze" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_palaceguard"
+        default_group="Infantry"
+        level="51"
+        name="{=aom_mirkwood_palaceguard_name}[Mirkwood] Palace Guard"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="230" />
+            <skill
+                id="Riding"
+                value="250" />
+            <skill
+                id="OneHanded"
+                value="305" />
+            <skill
+                id="TwoHanded"
+                value="305" />
+            <skill
+                id="Polearm"
+                value="315" />
+            <skill
+                id="Bow"
+                value="300" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_palace_t3_helmet_green_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mirkwood_shoulder" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mirkwood_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mirkwood_thingolheir"
+        default_group="Ranged"
+        level="51"
+        name="{=aom_mirkwood_thingolheir_name}[Mirkwood] Thingol's Heirs"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="220" />
+            <skill
+                id="Riding"
+                value="150" />
+            <skill
+                id="OneHanded"
+                value="250" />
+            <skill
+                id="TwoHanded"
+                value="250" />
+            <skill
+                id="Polearm"
+                value="200" />
+            <skill
+                id="Bow"
+                value="300" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="200" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mirkwood_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t4_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+</NPCCharacters>

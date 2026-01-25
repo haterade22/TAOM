@@ -11,11 +11,12 @@ Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 | Category | Total | Complete | Remaining |
 |----------|-------|----------|-----------|
 | Module XML | 1 | 1 | 0 |
-| XSLT Transformations | 4 | 4 | 0 |
+| XSLT Transformations | 5 | 5 | 0 |
 | Culture XML | 1 | 1 | 0 |
 | Kingdom XML | 1 | 1 | 0 |
 | Clan XML | 1 | 1 | 0 |
 | Lords XML | 1 | 1 | 0 |
+| Heroes XML | 1 | 1 | 0 |
 | Settlement XML | 1 | 0 | 1 |
 | Troop XML | 2 | 0 | 2 |
 | Item XML | 1 | 0 | 1 |
@@ -42,6 +43,7 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 | `spcultures.xslt` | COMPLETE | 6 cultures | Dunlending, Barding, Haradrim, Rohirrim, Variag, Easterling |
 | `spclans.xslt` | COMPLETE | 73 clans | All noble clans across 8 kingdoms |
 | `splords.xslt` | COMPLETE | ~350 lords | All lords across 6 base kingdoms |
+| `spheroes.xslt` | COMPLETE | 415 heroes | Biographical text for all heroes |
 
 ### XSLT Mapping Reference
 
@@ -109,6 +111,20 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 ### Clan Schema Changes (1.2 → 1.3)
 - [x] No significant schema changes detected
 - [x] Backward compatible with 1.2 format
+
+---
+
+## Heroes XML
+
+| File | Status | Notes |
+|------|--------|-------|
+| `spheroes.xslt` | COMPLETE | Adds LOTR-themed biographical text for all 415 heroes |
+
+### Heroes Schema Notes
+- [x] Heroes.xml contains family relationships (spouse, father, mother)
+- [x] Heroes.xml contains faction references
+- [x] `text` attribute holds biographical descriptions
+- [x] Hero IDs match lord IDs (lord_X_Y pattern)
 
 ---
 
@@ -195,6 +211,11 @@ TAOM uses XSLT transformations to modify vanilla XML at load time, renaming enti
 ## Notes
 
 ### Migration Session Log
+
+**2026-01-24 (Session 3)**: Completed Heroes biographical XSLT transformation:
+- Created `spheroes.xslt` with biographical text for all 415 heroes
+- LOTR-themed descriptions for clan leaders, spouses, heirs, and dead lords
+- Updated `SubModule.xml` with Heroes XmlNode entry
 
 **2026-01-24 (Session 2)**: Completed XSLT transformations for all entity types:
 - Created `spclans.xslt` with 73 clan name transformations

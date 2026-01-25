@@ -61,5 +61,13 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
+		<!-- XSLT transformations to add TAOM biographical text to heroes -->
+		<XmlNode>
+			<XmlName id="Heroes" path="spheroes"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
 	</Xmls>
 </Module>
