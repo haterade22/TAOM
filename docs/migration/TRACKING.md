@@ -2,7 +2,7 @@
 
 Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-01-25
 
 ---
 
@@ -273,6 +273,21 @@ Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/`
 ## Notes
 
 ### Migration Session Log
+
+**2026-01-25 (Session 8)**: Lords skill templates:
+- Added `skill_template` attribute to all 504 custom lords in `characters/lords.xml`
+- Created PowerShell script `scripts/add-skill-templates.ps1` for batch updates
+- Random variety approach: Multiple template options per category (e.g., Infantry can get shock_troop, phalanx, berserker, or swordsman)
+- Rookie variants assigned to lords under age 25
+- Template distribution: 25 unique templates used across lords
+- Build verified successful
+
+**2026-01-25 (Session 7)**: Lords face tags:
+- Added `hair_tags`, `beard_tags`, and `tattoo_tags` to all 504 custom lords in `characters/lords.xml`
+- Created PowerShell script `scripts/add-face-tags.ps1` for batch updates
+- Culture-appropriate tags assigned (e.g., rivendell → battania, dolguldur → empire)
+- Female lords correctly exclude `beard_tags`
+- Build verified successful
 
 **2026-01-24 (Session 6)**: Heroes XSLT family relationships:
 - Updated `heroes.xslt` to include `spouse`, `father`, and `mother` attributes for all heroes
