@@ -72,7 +72,7 @@ New entities not in vanilla Bannerlord are added via direct XML (not XSLT):
 |------|---------|
 | `characters/lords.xml` | New LOTRAOM lords not in vanilla (504) - staged |
 | `characters/heroes.xml` | New LOTRAOM heroes not in vanilla - staged |
-| `characters/clans.xml` | New LOTRAOM clans not in vanilla (18) - staged |
+| `characters/clans.xml` | New LOTRAOM clans not in vanilla (~101) - staged |
 
 ## TaleWorlds Research Protocol (CRITICAL)
 

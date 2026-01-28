@@ -2,7 +2,7 @@
 
 Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
-**Last Updated:** 2026-01-25
+**Last Updated:** 2026-01-28
 
 ---
 
@@ -122,6 +122,36 @@ Each lord template now contains ALL transformations in one place:
 ### Clan Schema Changes (1.2 → 1.3)
 - [x] No significant schema changes detected
 - [x] Backward compatible with 1.2 format
+
+---
+
+## Additional Clans (New LOTRAOM Clans)
+
+Clans that exist in LOTRAOM but NOT in vanilla Bannerlord are added via direct XML (not XSLT).
+
+| File | Status | Count | Notes |
+|------|--------|-------|-------|
+| `characters/clans.xml` | COMPLETE | ~101 clans | Extended kingdom clans, Middle-Earth factions, minor factions, bandits |
+
+### Clan Breakdown
+
+| Category | Count | Details |
+|----------|-------|---------|
+| Extended Kingdom Clans | 39 | Empire West 10-18, Empire South 10-18, Vlandia 12-22, Khuzait 10-19 |
+| Middle-Earth Factions | 39 | Erebor, Rivendell, Mirkwood, Lothlorien, Isengard, Gundabad, Umbar, Dol Guldur |
+| Minor Factions | 14 | Including forest_people (Shadowkin), eleftheroi (Guardians of Tharbad) |
+| Bandit Clans | 9 | Including gondor_bandits, pale_uruk_bandits |
+
+### Extended Kingdom Clan IDs
+
+| Kingdom | TAOM Name | Clan IDs | Count |
+|---------|-----------|----------|-------|
+| empire_w | Gondor | clan_empire_west_10 through 18 | 9 |
+| empire_s | Mordor | clan_empire_south_10 through 18 | 9 |
+| vlandia | Rohan | clan_vlandia_12 through 22 | 11 |
+| khuzait | Rhun | clan_khuzait_10 through 19 | 10 |
+
+*Note: Vanilla clans 1-9 (or 1-11 for Vlandia) are handled by `spclans.xslt`. Extended clans 10+ are NEW in LOTRAOM and defined in `clans.xml`.*
 
 ---
 
@@ -273,6 +303,14 @@ Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/`
 ## Notes
 
 ### Migration Session Log
+
+**2026-01-28 (Session 9)**: Clan migration completion:
+- Removed 18 placeholder `clan_taom_*` clans from `characters/clans.xml`
+- Added 39 extended kingdom clans: Empire West 10-18, Empire South 10-18, Vlandia 12-22, Khuzait 10-19
+- Added 2 missing minor factions: `forest_people` (Shadowkin), `eleftheroi` (Guardians of Tharbad)
+- All clan definitions sourced from LOTRAOM `LOTRAOM_spclans.xml` with matching IDs and names
+- GitHub Issue #1 created and closed documenting the change
+- Final clans.xml count: ~101 clans (39 extended + 39 Middle-Earth + 14 minor factions + 9 bandits)
 
 **2026-01-25 (Session 8)**: Lords skill templates:
 - Added `skill_template` attribute to all 504 custom lords in `characters/lords.xml`
