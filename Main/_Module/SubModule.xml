@@ -69,5 +69,54 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
+
+		<!-- ============================================== -->
+		<!-- TAOM Additional XML Files (non-XSLT)          -->
+		<!-- ============================================== -->
+
+		<!-- TAOM custom cultures (erebor, rivendell, mirkwood, etc.) -->
+		<XmlNode>
+			<XmlName id="SPCultures" path="taom_spcultures"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<!-- TAOM custom kingdoms -->
+		<XmlNode>
+			<XmlName id="Kingdoms" path="taom_spkingdoms"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<!-- TAOM additional clans (extended vanilla + custom cultures) -->
+		<XmlNode>
+			<XmlName id="Factions" path="characters/clans"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<!-- TAOM additional heroes -->
+		<XmlNode>
+			<XmlName id="Heroes" path="characters/heroes"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<!-- TAOM additional lords (NPCCharacters) -->
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="characters/lords"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
 	</Xmls>
 </Module>
