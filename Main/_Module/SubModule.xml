@@ -118,5 +118,151 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
+
+		<!-- Custom Troops -->
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_rohan"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_dunland"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_gondor"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<!-- Mordor -->
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_mordor"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_erebor"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_isengard"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_harad"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_rhun"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_rhun_new"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_rivendell"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_mirkwood"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_gundabad"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_dolguldur"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="troops_umbar"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>	
+		
+		
 	</Xmls>
 </Module>
