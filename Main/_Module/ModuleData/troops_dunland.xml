@@ -1,0 +1,3138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCCharacters>
+
+    <!--Dunland Main Line-->
+
+    <NPCCharacter
+        id="dunland_peasant"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_dunland_peasant_name}[Dunland] Peasant"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="32" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="27" />
+            <skill
+                id="TwoHanded"
+                value="18" />
+            <skill
+                id="Polearm"
+                value="27" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="10" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_raider" />
+            <upgrade_target
+                id="NPCCharacter.dunland_hunter" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sturgia_axe_2_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_javelin_1_t2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.empire_cape_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.battania_civil_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_leather_boots" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_raider"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_dunland_raider_name}[Dunland] Tribal Raider"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="47" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="63" />
+            <skill
+                id="TwoHanded"
+                value="63" />
+            <skill
+                id="Polearm"
+                value="79" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_spearman" />
+            <upgrade_target
+                id="NPCCharacter.dunland_swordsman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.battania_axe_1_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Head"
+                    id="Item.leather_studdedhelm" />
+                <equipment
+                    slot="Body"
+                    id="Item.nordic_sloven_leather" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_leather_boots" />
+                <equipment
+                    slot="Cape"
+                    id="Item.battania_civil_cape" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_hunter"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_dunland_hunter_name}[Dunland] Tribal Hunter"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="45" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="29" />
+            <skill
+                id="TwoHanded"
+                value="30" />
+            <skill
+                id="Polearm"
+                value="30" />
+            <skill
+                id="Bow"
+                value="45" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_skirmisher" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highland_ranger_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.small_spurred_axe_t2" />
+                <equipment
+                    slot="Head"
+                    id="Item.battania_civil_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.sleeveless_padded_coat" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.guarded_padded_vambrace" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_leather_boots" />
+                <equipment
+                    slot="Cape"
+                    id="Item.battania_woodland_cloak" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_skirmisher"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_dunland_skirmisher_name}[Dunland] Tribal Skirmisher"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="85" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="68" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="40" />
+            <skill
+                id="Bow"
+                value="68" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.lowland_longbow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Head"
+                    id="Item.imperial_open_mail_coif" />
+                <equipment
+                    slot="Body"
+                    id="Item.leather_scale_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.guarded_padded_vambrace" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_leather_boots" />
+                <equipment
+                    slot="Cape"
+                    id="Item.fur_cloak_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_spearman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dunland_spearman_name}[Dunland] Tribal Spearman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="81" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="86" />
+            <skill
+                id="TwoHanded"
+                value="86" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_veteran_spearman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.western_spear_3_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Head"
+                    id="Item.tall_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.battania_woodland_outfit" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.highland_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_leather_boots" />
+                <equipment
+                    slot="Cape"
+                    id="Item.battania_civil_cape" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_swordsman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dunland_swordsman_name}[Dunland] Tribal Swordsman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="81" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="86" />
+            <skill
+                id="TwoHanded"
+                value="86" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_veteran_swordman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.empire_sword_5_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Head"
+                    id="Item.tall_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.battania_woodland_outfit" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.highland_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_leather_boots" />
+                <equipment
+                    slot="Cape"
+                    id="Item.battania_civil_cape" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_veteran_spearman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dunland_veteran_spearman_name}[Dunland] Wild-man Spearman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="74" />
+            <skill
+                id="Polearm"
+                value="101" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="90" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highland_spear_3_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.battania_large_shield_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Body"
+                    id="Item.battania_woodland_chainmail" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.highland_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.battania_woodland_boots" />
+                <equipment
+                    slot="Head"
+                    id="Item.plumed_helmet" />
+                <equipment
+                    slot="Cape"
+                    id="Item.battania_shoulder_strap_cloak" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_veteran_swordman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dunland_veteran_swordman_name}[Dunland] Wild-man Swordman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_a" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="74" />
+            <skill
+                id="Polearm"
+                value="101" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="90" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.battania_sword_4_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.battania_large_shield_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.western_javelin_1_t2" />
+                <equipment
+                    slot="Body"
+                    id="Item.battanian_chainmail_armor_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.turndown_leather_boots" />
+                <equipment
+                    slot="Head"
+                    id="Item.helmet_with_faceguard" />
+                <equipment
+                    slot="Cape"
+                    id="Item.battania_shoulder_furr" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Dunland Wolf/Bear/Stag/Lizard Line-->
+
+    <!--Combined Clan Line (Wolf, Bear, Stag, Lizard)-->
+
+    <NPCCharacter
+        id="dunland_noble_son"
+        default_group="Infantry"
+        level="11"
+        is_basic_troop="true"
+        name="{=aom_dunland_noble_son_name}[Dunland] Blaidd-lûth Noble Son"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="47" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="63" />
+            <skill
+                id="TwoHanded"
+                value="63" />
+            <skill
+                id="Polearm"
+                value="79" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_clan_warrior" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_light_f" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_2_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_medium_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_light_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_cape_short_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_clan_warrior"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dunland_clan_warrior_name}[Dunland] Blaidd-lûth Warrior"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="81" />
+            <skill
+                id="Riding"
+                value="30" />
+            <skill
+                id="OneHanded"
+                value="86" />
+            <skill
+                id="TwoHanded"
+                value="86" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_wolf_raider" />
+            <upgrade_target
+                id="NPCCharacter.dunland_bear_chosen" />
+            <upgrade_target
+                id="NPCCharacter.dunland_stag_lancer" />
+            <upgrade_target
+                id="NPCCharacter.dunland_lizard_horseman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_light_e" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_2_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_medium_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_heavy_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_medium_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_medium_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_cape_long_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Wolf Clan Branch (Axe and Shield, Infantry)-->
+
+    <NPCCharacter
+        id="dunland_wolf_raider"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dunland_wolf_raider_name}[Dunland] Blaidd-lûth Raider"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="74" />
+            <skill
+                id="Polearm"
+                value="101" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_wolf_axeman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_medium_f" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_2_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_heavy_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_medium_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_medium_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_short_d" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_wolf_axeman"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_dunland_wolf_axeman_name}[Dunland] Blaidd-lûth Axeman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="181" />
+            <skill
+                id="TwoHanded"
+                value="76" />
+            <skill
+                id="Polearm"
+                value="143" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_wolf_champion" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_e" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_2_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_short_d" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_wolf_champion"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dunland_wolf_champion_name}[Dunland] Blaidd-lûth Champion"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="170" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="213" />
+            <skill
+                id="TwoHanded"
+                value="187" />
+            <skill
+                id="Polearm"
+                value="213" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_f" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_lord_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_d" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Bear Clan Branch (Two-Handed Axe, Infantry)-->
+
+    <NPCCharacter
+        id="dunland_bear_chosen"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dunland_bear_chosen_name}[Dunland] Arth-lûth Chosen"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="74" />
+            <skill
+                id="Polearm"
+                value="101" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_bear_berserker" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_2h_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_heavy_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_medium_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_medium_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_short_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_bear_berserker"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_dunland_bear_berserker_name}[Dunland] Arth-lûth Berserker"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="181" />
+            <skill
+                id="TwoHanded"
+                value="76" />
+            <skill
+                id="Polearm"
+                value="143" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_bear_executioner" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_2h_c" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_elite_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_short_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_bear_executioner"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dunland_bear_executioner_name}[Dunland] Arth-lûth Executioner"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="170" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="213" />
+            <skill
+                id="TwoHanded"
+                value="187" />
+            <skill
+                id="Polearm"
+                value="213" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_2h_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_elite_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_lord_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Stag Clan Branch (Cavalry Lancers, Cavalry)-->
+
+    <NPCCharacter
+        id="dunland_stag_lancer"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_dunland_stag_lancer_name}[Dunland] Caru-lûth Lancer"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="60" />
+            <skill
+                id="Riding"
+                value="90" />
+            <skill
+                id="OneHanded"
+                value="60" />
+            <skill
+                id="TwoHanded"
+                value="50" />
+            <skill
+                id="Polearm"
+                value="100" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_stag_rider" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.vlandia_lance_1_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_cape_b_cape" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_vlandia_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.stripped_leather_harness" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_stag_rider"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_dunland_stag_rider_name}[Dunland] Caru-lûth Rider"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="120" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="60" />
+            <skill
+                id="Polearm"
+                value="130" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_stag_noble_lancer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.empire_lance_2_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_caerdh_shield_elite_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_medium_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_cape_long_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_empire_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.half_mail_and_plate_barding" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_stag_noble_lancer"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_dunland_stag_noble_lancer_name}[Dunland] Caru-lûth Noble Lancer"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="170" />
+            <skill
+                id="OneHanded"
+                value="80" />
+            <skill
+                id="TwoHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="160" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.vlandia_lance_2_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_caerdh_shield_elite_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_lord_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_elite_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t3_empire_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.chain_horse_harness" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Lizard Clan Branch (Horsemen with Two-Handed Axes, Cavalry)-->
+
+    <NPCCharacter
+        id="dunland_lizard_horseman"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_dunland_lizard_horseman_name}[Dunland] Avanc-lûth Horseman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="60" />
+            <skill
+                id="Riding"
+                value="90" />
+            <skill
+                id="OneHanded"
+                value="50" />
+            <skill
+                id="TwoHanded"
+                value="100" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_lizard_outrider" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_2h_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_heavy_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_light_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_battania_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.northern_noble_harness" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_lizard_outrider"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_dunland_lizard_outrider_name}[Dunland] Avanc-lûth Outrider"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="70" />
+            <skill
+                id="Riding"
+                value="110" />
+            <skill
+                id="OneHanded"
+                value="60" />
+            <skill
+                id="TwoHanded"
+                value="130" />
+            <skill
+                id="Polearm"
+                value="70" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_lizard_noble_cavalry" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_2h_c" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_caerdh_shield_elite_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_elite_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_medium_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_elite_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_battania_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.steppe_half_barding" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_lizard_noble_cavalry"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_dunland_lizard_noble_cavalry_name}[Dunland] Avanc-lûth Noble Cavalry"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_b" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="80" />
+            <skill
+                id="Riding"
+                value="130" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="160" />
+            <skill
+                id="Polearm"
+                value="80" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_2h_d" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_caerdh_shield_lord_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_lord_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_lord_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_heavy_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_elite_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_battania_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.studded_steppe_barding" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Combined Clan Line (Raven and Falcon)-->
+
+    <NPCCharacter
+        id="dunland_raven_noble_son"
+        default_group="Infantry"
+        level="11"
+        is_basic_troop="true"
+        name="{=aom_dunland_raven_noble_son_name}[Dunland] Cigfran-lûth Hunter"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="47" />
+            <skill
+                id="Riding"
+                value="30" />
+            <skill
+                id="OneHanded"
+                value="63" />
+            <skill
+                id="TwoHanded"
+                value="63" />
+            <skill
+                id="Polearm"
+                value="79" />
+            <skill
+                id="Bow"
+                value="50" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_raven_warrior" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highland_ranger_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_raven_warrior"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_dunland_raven_warrior_name}[Dunland] Cigfran-lûth Skirmisher"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="85" />
+            <skill
+                id="Riding"
+                value="40" />
+            <skill
+                id="OneHanded"
+                value="68" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="40" />
+            <skill
+                id="Bow"
+                value="68" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_raven_archer" />
+            <upgrade_target
+                id="NPCCharacter.dunland_falcon_archer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.lowland_longbow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_heavy_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Raven Clan Branch (Longbow Archers, Ranged)-->
+
+    <NPCCharacter
+        id="dunland_raven_archer"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_dunland_raven_archer_name}[Dunland] Cigfran-lûth Archer"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="75" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="83" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="40" />
+            <skill
+                id="Bow"
+                value="105" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_raven_ranger" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.lowland_longbow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_light_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_raven_ranger"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_dunland_raven_ranger_name}[Dunland] Cigfran-lûth Ranger"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="88" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="50" />
+            <skill
+                id="Polearm"
+                value="50" />
+            <skill
+                id="Bow"
+                value="144" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_raven_master_ranger" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.woodland_longbow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_heavy_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_fur_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_raven_master_ranger"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_dunland_raven_master_ranger_name}[Dunland] Cigfran-lûth Master Ranger"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="104" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="144" />
+            <skill
+                id="TwoHanded"
+                value="60" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="176" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.woodland_longbow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_lord_h" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_heavy_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_fur_d" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Falcon Clan Branch (Horse Archers, Cavalry)-->
+
+    <NPCCharacter
+        id="dunland_falcon_archer"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_dunland_falcon_archer_name}[Dunland] Hebog-lûth Scout"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="60" />
+            <skill
+                id="Riding"
+                value="90" />
+            <skill
+                id="OneHanded"
+                value="50" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="40" />
+            <skill
+                id="Bow"
+                value="100" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_falcon_wildrider" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.steppe_heavy_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_heavy_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_sturgia_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.battania_horse_harness" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_falcon_wildrider"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_dunland_falcon_wildrider_name}[Dunland] Hebog-lûth Horse Archer"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="70" />
+            <skill
+                id="Riding"
+                value="110" />
+            <skill
+                id="OneHanded"
+                value="60" />
+            <skill
+                id="TwoHanded"
+                value="50" />
+            <skill
+                id="Polearm"
+                value="50" />
+            <skill
+                id="Bow"
+                value="130" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_falcon_noble_horse_archer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.composite_steppe_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_heavy_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_elite_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_medium_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_fur_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_sturgia_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.battania_horse_harness_halfscaled" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_falcon_noble_horse_archer"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_dunland_falcon_noble_horse_archer_name}[Dunland] Hebog-lûth Noble Horse Archer"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_c" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="80" />
+            <skill
+                id="Riding"
+                value="150" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="60" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="160" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.composite_steppe_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_axe_1h_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_elite_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_heavy_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_fur_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+            <equipment
+                slot="Horse"
+                id="Item.t2_sturgia_horse" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.battania_horse_harness_scaled" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Combined Clan Line (Boar, Ox, Dragon)-->
+
+    <NPCCharacter
+        id="dunland_boar_noble_son"
+        default_group="Infantry"
+        level="11"
+        is_basic_troop="true"
+        name="{=aom_dunland_boar_noble_son_name}[Dunland] Turch-lûth Noble Son"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="47" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="63" />
+            <skill
+                id="TwoHanded"
+                value="63" />
+            <skill
+                id="Polearm"
+                value="79" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_boar_warrior" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_light_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_2_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_medium_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_light_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_light_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_cape_short_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_boar_warrior"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dunland_boar_warrior_name}[Dunland] Turch-lûth Tuskrunner"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="81" />
+            <skill
+                id="Riding"
+                value="30" />
+            <skill
+                id="OneHanded"
+                value="86" />
+            <skill
+                id="TwoHanded"
+                value="86" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_boar_spearman" />
+            <upgrade_target
+                id="NPCCharacter.dunland_ox_pikeman" />
+            <upgrade_target
+                id="NPCCharacter.dunland_dragon_crossbowman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_axe_1h_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_light_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_2_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_medium_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_medium_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_medium_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_cape_long_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Boar Clan Branch (Sword, Spear, and Shield, Infantry)-->
+
+    <NPCCharacter
+        id="dunland_boar_spearman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dunland_boar_spearman_name}[Dunland] Turch-lûth Goreblade"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="74" />
+            <skill
+                id="Polearm"
+                value="101" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_boar_boar_warrior" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_medium_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_heavy_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_heavy_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_short_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_boar_boar_warrior"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_dunland_boar_boar_warrior_name}[Dunland] Turch-lûth Ironhide"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="181" />
+            <skill
+                id="TwoHanded"
+                value="76" />
+            <skill
+                id="Polearm"
+                value="143" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_boar_warlord" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_elite_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_elite_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_boar_warlord"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dunland_boar_warlord_name}[Dunland] Turch-lûth Huskarl"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="170" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="213" />
+            <skill
+                id="TwoHanded"
+                value="187" />
+            <skill
+                id="Polearm"
+                value="213" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.dunland_caerdh_spear_c" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_lord_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_lord_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Ox Clan Branch (Pikemen, Infantry)-->
+
+    <NPCCharacter
+        id="dunland_ox_pikeman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dunland_ox_pikeman_name}[Dunland] Uch-lûth Pikeman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="74" />
+            <skill
+                id="Polearm"
+                value="101" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_ox_guard" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.vlandia_pike_1_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_medium_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_heavy_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_heavy_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_medium_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_medium_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_cape_long_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_ox_guard"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_dunland_ox_guard_name}[Dunland] Uch-lûth Bodyguard"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="181" />
+            <skill
+                id="TwoHanded"
+                value="76" />
+            <skill
+                id="Polearm"
+                value="143" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_ox_iron_wall" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.thamaskene_pike_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_elite_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_elite_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_short_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_ox_iron_wall"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dunland_ox_iron_wall_name}[Dunland] Uch-lûth Iron Wall"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="170" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="213" />
+            <skill
+                id="TwoHanded"
+                value="187" />
+            <skill
+                id="Polearm"
+                value="213" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.fine_pike_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.dunland_wulf_shield_heavy_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.northern_javelin_3_t4" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_wulf_helmet_lord_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_wulf_scalemail_lord_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_wulf_boots_heavy_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_wulf_bracer_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_wulf_pauldron_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!--Dragon Clan Branch (Crossbowmen, Ranged)-->
+
+    <NPCCharacter
+        id="dunland_dragon_crossbowman"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_dunland_dragon_crossbowman_name}[Dunland] Draig-lûth Crossbowman"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="75" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="83" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="40" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="105" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_dragon_firebolt" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.crossbow_e" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bolt_e" />
+                <equipment
+                    slot="Item2"
+                    id="Item.dunland_caerdh_axe_1h_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_shield_light_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_heavy_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_heavy_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_light_cape_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_dragon_firebolt"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_dunland_dragon_firebolt_name}[Dunland] Draig-lûth Firebolt"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="88" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="50" />
+            <skill
+                id="Polearm"
+                value="50" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="144" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.dunland_dragon_sniper" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.crossbow_f" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bolt_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.dunland_caerdh_axe_1h_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_shield_heavy_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_heavy_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_heavy_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_medium_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron_heavy_cape_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dunland_dragon_sniper"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_dunland_dragon_sniper_name}[Dunland] Draig-lûth Sharpshooter"
+        occupation="Soldier"
+        culture="Culture.empire">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dunland_d" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="104" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="144" />
+            <skill
+                id="TwoHanded"
+                value="60" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="176" />
+            <skill
+                id="Throwing"
+                value="120" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.crossbow_d" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bolt_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.dunland_caerdh_axe_1h_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.dunland_caerdh_shield_elite_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.dunland_caerdh_helmet_elite_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.dunland_caerdh_chainmail_heavy_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.dunland_caerdh_bracer_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.dunland_caerdh_pauldron__elite_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+</NPCCharacters>
