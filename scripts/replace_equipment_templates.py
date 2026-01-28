@@ -29,6 +29,7 @@ PREFIX_MAP = {
     'khamul_':    'khu_',
     'witch_king_':'emp_',
     'dain_':      'stu_',
+    'umbar_':     'khu_',
 }
 
 # Vanilla prefixes that should NOT be replaced

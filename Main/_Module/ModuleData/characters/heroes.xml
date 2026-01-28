@@ -525,6 +525,41 @@
 		faction="Faction.clan_isengard_11"
 		text="{=zargoth_description}Zargoth, the ferocious warlord, leads his Uruk-hai with a savage intensity that terrifies all who face him. His absolute loyalty to Saruman drives his relentless pursuit of victory, his troops a devastating force honed by his brutal leadership. Zargoth's lack of mercy and keen tactical mind make him a scourge on the battlefield, his victories piling corpses at Isengard's gates. With every enemy crushed, he strengthens the Black Maw's fearsome reputation, serving Saruman's dark vision without hesitation." />
 
+	<!-- Female Isengard Lords (1 per clan, for child generation) -->
+	<Hero id="lord_I1_9"
+		faction="Faction.clan_isengard_1"
+		text="{=lord_I1_9_text}Gashnak is a fierce Uruk-hai warrior who earned her place through brutal combat. She commands the breeding pits of Isengard with ruthless efficiency." />
+	<Hero id="lord_I2_9"
+		faction="Faction.clan_isengard_2"
+		text="{=lord_I2_9_text}Muzgura rose through the ranks of the Red Echelon by her cunning and ferocity. She oversees the war preparations of her company." />
+	<Hero id="lord_I3_4"
+		faction="Faction.clan_isengard_3"
+		text="{=lord_I3_4_text}Sharlug is a battle-hardened lieutenant of the Black Echelon. Her tactical instincts have saved her company from ambush many times." />
+	<Hero id="lord_I4_5"
+		faction="Faction.clan_isengard_4"
+		text="{=lord_I4_5_text}Thraka serves the Black Maw as quartermaster and enforcer. Her iron discipline keeps the supply lines running even under siege." />
+	<Hero id="lord_I1_10"
+		faction="Faction.clan_isengard_5"
+		text="{=lord_I1_10_text}Krazdra leads scouting parties for the Iron Fist. Her knowledge of the terrain surrounding Isengard is unmatched." />
+	<Hero id="lord_I1_13"
+		faction="Faction.clan_isengard_6"
+		text="{=lord_I1_13_text}Ughasha commands the Blood Guard's forward sentries. Her vigilance has foiled many attempts to infiltrate Isengard's defenses." />
+	<Hero id="lord_I2_10"
+		faction="Faction.clan_isengard_7"
+		text="{=lord_I2_10_text}Radzga orchestrates raids for the Shadow Reavers. She strikes without warning and vanishes before the enemy can regroup." />
+	<Hero id="lord_I1_14"
+		faction="Faction.clan_isengard_8"
+		text="{=lord_I1_14_text}Bolga is the Skull Crushers' champion, having bested every challenger in the fighting pits. Her strength is legendary among the Uruk-hai." />
+	<Hero id="lord_I2_12"
+		faction="Faction.clan_isengard_9"
+		text="{=lord_I2_12_text}Lugara trains the warg packs of the War Hounds. Her beasts follow her commands with unwavering obedience." />
+	<Hero id="lord_I1_15"
+		faction="Faction.clan_isengard_10"
+		text="{=lord_I1_15_text}Snarla keeps the forges of the Ash Guard burning day and night. Her weapons arm the armies that march from Isengard." />
+	<Hero id="lord_I3_5"
+		faction="Faction.clan_isengard_11"
+		text="{=lord_I3_5_text}Grisha engineers the siege weapons of the Stone Breakers. Her constructions have brought down many a fortress wall." />
+
 	<!-- ============================================== -->
 	<!-- GUNDABAD HEROES (gundabad culture)             -->
 	<!-- ============================================== -->
@@ -769,6 +804,11 @@
 		id="lord_U1_13"
 		father="Hero.lord_U1_1"
 		faction="Faction.clan_umbar_1" />
+
+	<!-- Female Umbar Lord (for child generation) -->
+	<Hero id="lord_U1_2"
+		faction="Faction.clan_umbar_1"
+		text="{=lord_U1_2_text}Zimraphel, a descendant of the Black Númenóreans, commands the Corsair fleet with cunning and grace. Her knowledge of the sea and its treacherous currents is unrivaled among the captains of Umbar." />
 
 	<!-- ============================================== -->
 	<!-- DOLGULDUR HEROES (dolguldur culture)           -->

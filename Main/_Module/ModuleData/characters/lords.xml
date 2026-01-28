@@ -12459,6 +12459,249 @@
             <EquipmentSet id="stu_civ_template_default" civilian="true" />
         </Equipments>
     </NPCCharacter>
+    <!-- Female Isengard Lords (1 per clan, for child generation) -->
+    <NPCCharacter id="lord_I1_9" name="{=aom_lord_I1_9_name}Gashnak" age="25" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+        <face>
+            <BodyProperties version="4" age="30" weight="0.5" build="0.8" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Honor" value="-1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I2_9" name="{=aom_lord_I2_9_name}Muzgura" age="24" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+        <face>
+            <BodyProperties version="4" age="28" weight="0.4" build="0.7" key="00030006C00016029A7A7961AB0103D841B0830030ECF700921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I3_4" name="{=aom_lord_I3_4_name}Sharlug" age="23" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="27" weight="0.6" build="0.75" key="00040006C00016029A7B7961AC0103D841B0830030ECF800921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Honor" value="-1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Mercy" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I4_5" name="{=aom_lord_I4_5_name}Thraka" age="22" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="26" weight="0.3" build="0.85" key="00050006C00016029A7C7961AD0103D841B0830030ECF900921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Calculating" value="-1" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Honor" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I1_10" name="{=aom_lord_I1_10_name}Krazdra" age="21" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="25" weight="0.45" build="0.7" key="00060006C00016029A7D7961AE0103D841B0830030ECFA00921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Honor" value="-2" />
+            <Trait id="Calculating" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I1_13" name="{=aom_lord_I1_13_name}Ughasha" age="26" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="30" weight="0.55" build="0.8" key="00070006C00016029A7E7961AF0103D841B0830030ECFB00921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="-2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I2_10" name="{=aom_lord_I2_10_name}Radzga" age="20" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="24" weight="0.35" build="0.65" key="00080006C00016029A7F7961A00103D841B0830030ECFC00921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Honor" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I1_14" name="{=aom_lord_I1_14_name}Bolga" age="27" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="31" weight="0.5" build="0.75" key="00090006C00016029A807961A10103D841B0830030ECFD00921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Honor" value="-1" />
+            <Trait id="Generosity" value="-2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I2_12" name="{=aom_lord_I2_12_name}Lugara" age="23" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="27" weight="0.4" build="0.8" key="000A0006C00016029A817961A20103D841B0830030ECFE00921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Honor" value="-2" />
+            <Trait id="Valor" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I1_15" name="{=aom_lord_I1_15_name}Snarla" age="24" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="28" weight="0.6" build="0.7" key="000B0006C00016029A827961A30103D841B0830030ECE600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Honor" value="-1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Calculating" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_I3_5" name="{=aom_lord_I3_5_name}Grisha" age="22" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.isengard" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="26" weight="0.45" build="0.85" key="000C0006C00016029A837961A40103D841B0830030ECE700921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Honor" value="-2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
     <!-- Culture.khuzait -->
     <NPCCharacter id="lord_6_15_1" name="{=aom_lord_6_15_1_name}Khorijin" age="37" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
         <face>
@@ -16969,7 +17212,7 @@
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
 			/-->
-            <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <BodyProperties version="4" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -16995,6 +17238,30 @@
             <Trait id="Egalitarian" value="0" />
             <Trait id="Oligarchic" value="1" />
             <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Female Umbar Lord (for child generation) -->
+    <NPCCharacter id="lord_U1_2" name="{=aom_lord_U1_2_name}Zimraphel" age="24" is_female="true" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="28" weight="0.4" build="0.6" key="000D0006C00016029A847961A50103D841B0830030ECE800921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Generosity" value="1" />
         </Traits>
         <Equipments>
             <EquipmentSet id="khu_bat_template_medium" />
