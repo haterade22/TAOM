@@ -775,10 +775,7 @@
 	<!-- ============================================== -->
 
 	<!-- Shadow Tower Clan (Khamul's Clan) -->
-	<Hero
-		id="lord_1_48"
-		faction="Faction.clan_dolguldur_1"
-		text="{=khamul_description}Khamûl, the Shadow of the East, is second only to the Witch-king among the Nazgûl. Known for his relentless pursuit of the One Ring, Khamûl is a master tracker and enforcer of Sauron's will in the eastern lands. His presence inspires dread, and his ability to sense the Ring's power makes him a key player in Sauron's schemes. Khamûl's loyalty to the Dark Lord is unwavering, and his shadow looms large over all who oppose Mordor." />
+	<!-- lord_1_48 (Khamûl) is defined in vanilla heroes.xml and transformed by heroes.xslt -->
 	<Hero
 		id="lord_D1_2"
 		faction="Faction.clan_dolguldur_1"
