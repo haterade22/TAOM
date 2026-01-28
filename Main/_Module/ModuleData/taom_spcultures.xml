@@ -24,6 +24,7 @@
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    prosperity_bonus="1"
     encounter_background_mesh="encounter_sturgia"
     faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_erebor_desc}The Longbeards of Erebor are a proud and industrious race, dwelling in the halls of the Lonely Mountain. Masters of craftsmanship and mining, they are renowned for their skill in forging weapons, armor, and treasures of unrivaled beauty. Led by their King under the Mountain, the dwarves of Erebor are a resilient people, fiercely protective of their homeland and its riches."
@@ -83,9 +84,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_erebor_male_name_1}Berling" />
       <name name="{=aom_erebor_male_name_2}Drúlin" />
@@ -190,20 +200,156 @@
       <name name="{=aom_erebor_female_name_49}Zalwyn" />
       <name name="{=aom_erebor_female_name_50}Frinda" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_erebor_clan_1}Longbeards" />
+      <name name="{=aom_erebor_clan_2}Ironfoot" />
+      <name name="{=aom_erebor_clan_3}Stonehelm" />
+      <name name="{=aom_erebor_clan_4}Broadbeam" />
+      <name name="{=aom_erebor_clan_5}Firebeard" />
+      <name name="{=aom_erebor_clan_6}Stiffbeard" />
+      <name name="{=aom_erebor_clan_7}Blacklock" />
+      <name name="{=aom_erebor_clan_8}Ironfist" />
+      <name name="{=aom_erebor_clan_9}Goleli" />
+      <name name="{=aom_erebor_clan_10}Silveraxe" />
+      <name name="{=aom_erebor_clan_11}Oakenshield" />
+      <name name="{=aom_erebor_clan_12}Hammerfell" />
+      <name name="{=aom_erebor_clan_13}Deepdelver" />
+      <name name="{=aom_erebor_clan_14}Stonepick" />
+      <name name="{=aom_erebor_clan_15}Greybeard" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
-  <!-- RIVENDELL - Ñoldor Elves of Imladris            -->
+  <!-- RIVENDELL - Noldor Elves of Imladris           -->
   <!-- ============================================== -->
   <Culture
     id="rivendell"
@@ -286,9 +432,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_rivendell_male_name_1}Calenion" />
       <name name="{=aom_rivendell_male_name_2}Erelion" />
@@ -402,16 +557,152 @@
       <name name="{=aom_rivendell_female_name_49}Nimindiel" />
       <name name="{=aom_rivendell_female_name_50}Silvariel" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_rivendell_clan_1}House of Elrond" />
+      <name name="{=aom_rivendell_clan_2}House of Feanor" />
+      <name name="{=aom_rivendell_clan_3}House of Fingolfin" />
+      <name name="{=aom_rivendell_clan_4}House of Finarfin" />
+      <name name="{=aom_rivendell_clan_5}House of Turgon" />
+      <name name="{=aom_rivendell_clan_6}Gwaith-i-Mirdain" />
+      <name name="{=aom_rivendell_clan_7}House of Celebrimbor" />
+      <name name="{=aom_rivendell_clan_8}House of Gildor" />
+      <name name="{=aom_rivendell_clan_9}House of Glorfindel" />
+      <name name="{=aom_rivendell_clan_10}House of Erestor" />
+      <name name="{=aom_rivendell_clan_11}Lambengolmor" />
+      <name name="{=aom_rivendell_clan_12}House of Lindir" />
+      <name name="{=aom_rivendell_clan_13}House of Arwen" />
+      <name name="{=aom_rivendell_clan_14}House of Gil-galad" />
+      <name name="{=aom_rivendell_clan_15}House of Cirdan" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
@@ -498,9 +789,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_mirkwood_male_name_1}Tharion" />
       <name name="{=aom_mirkwood_male_name_2}Eryndir" />
@@ -605,16 +905,152 @@
       <name name="{=aom_mirkwood_female_name_49}Aelinor" />
       <name name="{=aom_mirkwood_female_name_50}Nimindriel" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_mirkwood_clan_1}House of Thranduil" />
+      <name name="{=aom_mirkwood_clan_2}Tawarwaith" />
+      <name name="{=aom_mirkwood_clan_3}Greenwood Guard" />
+      <name name="{=aom_mirkwood_clan_4}Silvan Watch" />
+      <name name="{=aom_mirkwood_clan_5}Woodmen of Dale" />
+      <name name="{=aom_mirkwood_clan_6}Galion's Fellowship" />
+      <name name="{=aom_mirkwood_clan_7}Forest Wardens" />
+      <name name="{=aom_mirkwood_clan_8}Oakbough Clan" />
+      <name name="{=aom_mirkwood_clan_9}Starlight Sentinels" />
+      <name name="{=aom_mirkwood_clan_10}Emyn Duir Watch" />
+      <name name="{=aom_mirkwood_clan_11}Amon Lanc Guard" />
+      <name name="{=aom_mirkwood_clan_12}Silverthorn Clan" />
+      <name name="{=aom_mirkwood_clan_13}Elvenking's Kin" />
+      <name name="{=aom_mirkwood_clan_14}River Running Folk" />
+      <name name="{=aom_mirkwood_clan_15}Greenleaf Clan" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
@@ -701,9 +1137,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_lothlorien_male_name_1}Caladion" />
       <name name="{=aom_lothlorien_male_name_2}Thalirion" />
@@ -808,16 +1253,152 @@
       <name name="{=aom_lothlorien_female_name_49}Aelinor" />
       <name name="{=aom_lothlorien_female_name_50}Nimindriel" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_lothlorien_clan_1}House of Galadriel" />
+      <name name="{=aom_lothlorien_clan_2}House of Celeborn" />
+      <name name="{=aom_lothlorien_clan_3}Galadhrim Guard" />
+      <name name="{=aom_lothlorien_clan_4}Marchwardens" />
+      <name name="{=aom_lothlorien_clan_5}Mallorn Circle" />
+      <name name="{=aom_lothlorien_clan_6}Naith Wardens" />
+      <name name="{=aom_lothlorien_clan_7}Caras Galadhon Folk" />
+      <name name="{=aom_lothlorien_clan_8}Nimrodel's Kin" />
+      <name name="{=aom_lothlorien_clan_9}Amroth's Legacy" />
+      <name name="{=aom_lothlorien_clan_10}Silverstream Clan" />
+      <name name="{=aom_lothlorien_clan_11}Goldenwood Fellowship" />
+      <name name="{=aom_lothlorien_clan_12}Cerin Amroth Watch" />
+      <name name="{=aom_lothlorien_clan_13}Starweaver Clan" />
+      <name name="{=aom_lothlorien_clan_14}House of Haldir" />
+      <name name="{=aom_lothlorien_clan_15}Lothlann Guard" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
@@ -844,6 +1425,7 @@
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    prosperity_bonus="1"
     encounter_background_mesh="encounter_sturgia"
     faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_isengard_desc}The people of Isengard are Saruman's legions, forged through industry and fueled by a dark vision of domination. Centered around the impenetrable tower of Orthanc, Isengard is home to the Uruk-hai, bred for strength, endurance, and obedience. With machines of war and the cunning of their master, they crush all opposition with ruthless precision."
@@ -903,9 +1485,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_isengard_male_name_1}Grashnakh" />
       <name name="{=aom_isengard_male_name_2}Tharzog" />
@@ -1010,16 +1601,152 @@
       <name name="{=aom_isengard_female_name_49}Lurzia" />
       <name name="{=aom_isengard_female_name_50}Vorlia" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_isengard_clan_1}White Hand" />
+      <name name="{=aom_isengard_clan_2}Fighting Uruk-hai" />
+      <name name="{=aom_isengard_clan_3}Isengard Vanguard" />
+      <name name="{=aom_isengard_clan_4}Warg Riders" />
+      <name name="{=aom_isengard_clan_5}Berserker Band" />
+      <name name="{=aom_isengard_clan_6}Orthanc Guard" />
+      <name name="{=aom_isengard_clan_7}Iron Fist Legion" />
+      <name name="{=aom_isengard_clan_8}Dunlending Allies" />
+      <name name="{=aom_isengard_clan_9}Nan Curunir Warband" />
+      <name name="{=aom_isengard_clan_10}Pit Fighters" />
+      <name name="{=aom_isengard_clan_11}Saruman's Chosen" />
+      <name name="{=aom_isengard_clan_12}Tower Watch" />
+      <name name="{=aom_isengard_clan_13}Fangorn Reavers" />
+      <name name="{=aom_isengard_clan_14}Westfold Raiders" />
+      <name name="{=aom_isengard_clan_15}Black Iron Clan" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
@@ -1046,6 +1773,7 @@
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    prosperity_bonus="1"
     encounter_background_mesh="encounter_sturgia"
     faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_gundabad_desc}The Gundabad Orcs of the Misty Mountains are savage and relentless. From the ancient stronghold of Mount Gundabad, they raid the surrounding lands, driven by a thirst for vengeance and conquest. Under the rule of powerful chieftains, they amass legions of goblins, wargs, and trolls. Gundabad's warriors are brutish and cunning, masters of ambush and overwhelming force."
@@ -1105,9 +1833,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_gundabad_male_name_1}Azgar" />
       <name name="{=aom_gundabad_male_name_2}Drozmak" />
@@ -1212,16 +1949,152 @@
       <name name="{=aom_gundabad_female_name_49}Zorga" />
       <name name="{=aom_gundabad_female_name_50}Narlia" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_gundabad_clan_1}Mount Gundabad Tribe" />
+      <name name="{=aom_gundabad_clan_2}Goblin-town Clan" />
+      <name name="{=aom_gundabad_clan_3}Misty Mountain Wolves" />
+      <name name="{=aom_gundabad_clan_4}Warg Pack" />
+      <name name="{=aom_gundabad_clan_5}Stone Giant Horde" />
+      <name name="{=aom_gundabad_clan_6}Moria Remnants" />
+      <name name="{=aom_gundabad_clan_7}Cirith Ungol Brood" />
+      <name name="{=aom_gundabad_clan_8}Angmar's Children" />
+      <name name="{=aom_gundabad_clan_9}Carn Dum Warband" />
+      <name name="{=aom_gundabad_clan_10}Grey Mountain Raiders" />
+      <name name="{=aom_gundabad_clan_11}Ettenmoors Horde" />
+      <name name="{=aom_gundabad_clan_12}Snaga Band" />
+      <name name="{=aom_gundabad_clan_13}Bolg's Kin" />
+      <name name="{=aom_gundabad_clan_14}Blacktooth Clan" />
+      <name name="{=aom_gundabad_clan_15}Iron Hills Scourge" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
@@ -1248,6 +2121,7 @@
     militia_party_template="PartyTemplate.militia_aserai_template"
     rebels_party_template="PartyTemplate.rebels_aserai_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_aserai"
+    prosperity_bonus="1"
     encounter_background_mesh="encounter_aserai"
     faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_umbar_desc}The people of Umbar are seafaring warriors and corsairs, masters of the seas south of Gondor. Descended from Númenórean exiles, they are known for their cunning and ferocity in battle. Under black sails, their fleets raid the coasts, striking fear into the hearts of their enemies. While their allegiances lie with Sauron, the Corsairs of Umbar are fiercely independent, valuing strength and cunning above all."
@@ -1307,9 +2181,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_umbar_male_name_1}Khareld" />
       <name name="{=aom_umbar_male_name_2}Vardun" />
@@ -1414,16 +2297,152 @@
       <name name="{=aom_umbar_female_name_49}Jorvaya" />
       <name name="{=aom_umbar_female_name_50}Arakara" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_umbar_clan_1}Black Sail Fleet" />
+      <name name="{=aom_umbar_clan_2}Corsair Brotherhood" />
+      <name name="{=aom_umbar_clan_3}Sons of Castamir" />
+      <name name="{=aom_umbar_clan_4}Haradrim Allies" />
+      <name name="{=aom_umbar_clan_5}Serpent Guard" />
+      <name name="{=aom_umbar_clan_6}Storm Lords" />
+      <name name="{=aom_umbar_clan_7}Red Tide Raiders" />
+      <name name="{=aom_umbar_clan_8}Haven Watch" />
+      <name name="{=aom_umbar_clan_9}Dark Numenoreans" />
+      <name name="{=aom_umbar_clan_10}Southron Alliance" />
+      <name name="{=aom_umbar_clan_11}Sea Wolf Clan" />
+      <name name="{=aom_umbar_clan_12}Bay of Belfalas Reavers" />
+      <name name="{=aom_umbar_clan_13}Pelargir Exiles" />
+      <name name="{=aom_umbar_clan_14}Dol Amroth Scourge" />
+      <name name="{=aom_umbar_clan_15}Windlord Clan" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
   <!-- ============================================== -->
@@ -1450,6 +2469,7 @@
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    prosperity_bonus="1"
     encounter_background_mesh="encounter_sturgia"
     faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_dolguldur_desc}Dol Guldur is a fortress of shadow and malice. Once a stronghold of Sauron in Mirkwood, it is now ruled by the Necromancer's dark lieutenants. The armies of Dol Guldur are a fearsome blend of orcs, wargs, and dark sorcery. This bastion of evil corrupts the forest around it, spreading decay and despair. The warriors of Dol Guldur are relentless, driven by the will of their dark master."
@@ -1509,9 +2529,18 @@
       <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
-    <vassal_reward_items />
-    <banner_bearer_replacement_weapons />
-    <default_policies />
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
     <male_names>
       <name name="{=aom_dolguldur_male_name_1}Thrangul" />
       <name name="{=aom_dolguldur_male_name_2}Morgulash" />
@@ -1616,16 +2645,152 @@
       <name name="{=aom_dolguldur_female_name_49}Thalka" />
       <name name="{=aom_dolguldur_female_name_50}Vorla" />
     </female_names>
-    <clan_names />
-    <cultural_feats />
-    <possible_clan_banner_icon_ids />
-    <notable_templates />
-    <lord_templates />
-    <rebellion_hero_templates />
-    <tournament_team_templates_one_participant />
-    <tournament_team_templates_two_participant />
-    <tournament_team_templates_four_participant />
-    <basic_mercenary_troops />
+    <clan_names>
+      <name name="{=aom_dolguldur_clan_1}Necromancer's Thralls" />
+      <name name="{=aom_dolguldur_clan_2}Shadow Host" />
+      <name name="{=aom_dolguldur_clan_3}Dol Guldur Garrison" />
+      <name name="{=aom_dolguldur_clan_4}Morgul Warband" />
+      <name name="{=aom_dolguldur_clan_5}Mirkwood Stalkers" />
+      <name name="{=aom_dolguldur_clan_6}Spider Riders" />
+      <name name="{=aom_dolguldur_clan_7}Dark Sorcerer's Guard" />
+      <name name="{=aom_dolguldur_clan_8}Amon Lanc Brood" />
+      <name name="{=aom_dolguldur_clan_9}Fell Beast Keepers" />
+      <name name="{=aom_dolguldur_clan_10}Shadow Scouts" />
+      <name name="{=aom_dolguldur_clan_11}Corruption's Edge" />
+      <name name="{=aom_dolguldur_clan_12}Dark Forest Horde" />
+      <name name="{=aom_dolguldur_clan_13}Spectral Guard" />
+      <name name="{=aom_dolguldur_clan_14}Khamul's Servants" />
+      <name name="{=aom_dolguldur_clan_15}Twilight Reavers" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
   </Culture>
 
 </SPCultures>
