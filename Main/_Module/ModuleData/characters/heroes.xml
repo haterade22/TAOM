@@ -1090,10 +1090,18 @@
 		spouse="Hero.lord_1_59_1"
 		faction="Faction.clan_empire_west_10" />
 	<Hero
+		id="lord_1_59_1"
+		spouse="Hero.lord_1_59"
+		faction="Faction.clan_empire_west_10" />
+	<Hero
 		id="lord_1_60"
 		spouse="Hero.lord_1_60_1"
 		faction="Faction.clan_empire_west_11"
 		text="{=tirnelion_description}Born into the noble line of the House of Elatanionath, Tirnelion can trace his mighty ancestry back to the ancient island kingdom of Númenor and has ever been a most noble and honorable vassal of Lord Denethor. Now, as the shadow in the east grows longer and his days grow old, he once again must take up arms, defend his liege and be the northernmost bulwark against the incoming tidal wave of darkness. And yet, through these dark days, hope remains and the banners of Lord Tirnelion may fly high once more." />
+	<Hero
+		id="lord_1_60_1"
+		spouse="Hero.lord_1_60"
+		faction="Faction.clan_empire_west_11" />
 	<Hero
 		id="lord_EW_1"
 		faction="Faction.clan_empire_west_13" />
@@ -1129,6 +1137,10 @@
 	<Hero
 		id="lord_4_29"
 		spouse="Hero.lord_4_29_1"
+		faction="Faction.clan_vlandia_12" />
+	<Hero
+		id="lord_4_29_1"
+		spouse="Hero.lord_4_29"
 		faction="Faction.clan_vlandia_12" />
 	<Hero
 		id="lord_rohan_13_1"
