@@ -1,0 +1,1526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <!-- ============================================== -->
+  <!-- EREBOR - Dwarves of the Lonely Mountain        -->
+  <!-- ============================================== -->
+  <Culture
+    id="erebor"
+    name="{=aom_erebor_name}Dwarves"
+    is_main_culture="true"
+    color="0xFF23432D"
+    color2="0xFFB5913E"
+    cloth_alternative_color1="0xFF0A5730"
+    cloth_alternative_color2="0xFFFFD700"
+    elite_basic_troop="NPCCharacter.sturgian_warrior_son"
+    basic_troop="NPCCharacter.sturgian_recruit"
+    melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
+    ranged_militia_troop="NPCCharacter.sturgian_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_sturgia_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
+    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    militia_party_template="PartyTemplate.militia_sturgia_template"
+    rebels_party_template="PartyTemplate.rebels_sturgia_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_erebor_desc}The Longbeards of Erebor are a proud and industrious race, dwelling in the halls of the Lonely Mountain. Masters of craftsmanship and mining, they are renowned for their skill in forging weapons, armor, and treasures of unrivaled beauty. Led by their King under the Mountain, the dwarves of Erebor are a resilient people, fiercely protective of their homeland and its riches."
+    tournament_master="NPCCharacter.tournament_master_sturgia"
+    villager="NPCCharacter.villager_sturgia"
+    caravan_master="NPCCharacter.caravan_master_sturgia"
+    armed_trader="NPCCharacter.armed_trader_sturgia"
+    caravan_guard="NPCCharacter.caravan_guard_sturgia"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
+    prison_guard="NPCCharacter.prison_guard_sturgia"
+    guard="NPCCharacter.guard_sturgia"
+    blacksmith="NPCCharacter.blacksmith_sturgia"
+    weaponsmith="NPCCharacter.weaponsmith_sturgia"
+    townswoman="NPCCharacter.townswoman_sturgia"
+    townswoman_infant="NPCCharacter.townswoman_infant_sturgia"
+    townswoman_child="NPCCharacter.townswoman_child_sturgia"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_sturgia"
+    townsman="NPCCharacter.townsman_sturgia"
+    townsman_infant="NPCCharacter.townsman_infant_sturgia"
+    townsman_child="NPCCharacter.townsman_child_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
+    village_woman="NPCCharacter.village_woman_sturgia"
+    villager_male_child="NPCCharacter.villager_child_sturgia"
+    villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
+    villager_female_child="NPCCharacter.village_woman_child_sturgia"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    ransom_broker="NPCCharacter.ransom_broker_sturgia"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
+    merchant_notary="NPCCharacter.merchant_notary_sturgia"
+    artisan_notary="NPCCharacter.artisan_notary_sturgia"
+    preacher_notary="NPCCharacter.preacher_notary_sturgia"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_sturgia"
+    shop_worker="NPCCharacter.shop_worker_sturgia"
+    tavernkeeper="NPCCharacter.tavernkeeper_sturgia"
+    taverngamehost="NPCCharacter.taverngamehost_sturgia"
+    musician="NPCCharacter.musician_sturgia"
+    tavern_wench="NPCCharacter.tavern_wench_sturgia"
+    armorer="NPCCharacter.armorer_sturgia"
+    horseMerchant="NPCCharacter.horseMerchant_sturgia"
+    barber="NPCCharacter.barber_sturgia"
+    merchant="NPCCharacter.merchant_sturgia"
+    beggar="NPCCharacter.beggar_sturgia"
+    female_beggar="NPCCharacter.female_beggar_sturgia"
+    female_dancer="NPCCharacter.female_dancer_sturgia"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
+    gear_dummy="NPCCharacter.gear_dummy_sturgia"
+    default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    board_game_type="Konane">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_erebor_male_name_1}Berling" />
+      <name name="{=aom_erebor_male_name_2}Drúlin" />
+      <name name="{=aom_erebor_male_name_3}Gorwin" />
+      <name name="{=aom_erebor_male_name_4}Norin" />
+      <name name="{=aom_erebor_male_name_5}Balrik" />
+      <name name="{=aom_erebor_male_name_6}Khorin" />
+      <name name="{=aom_erebor_male_name_7}Rundrin" />
+      <name name="{=aom_erebor_male_name_8}Hanar" />
+      <name name="{=aom_erebor_male_name_9}Galar" />
+      <name name="{=aom_erebor_male_name_10}Dorvin" />
+      <name name="{=aom_erebor_male_name_11}Tuldor" />
+      <name name="{=aom_erebor_male_name_12}Garlin" />
+      <name name="{=aom_erebor_male_name_13}Khaldun" />
+      <name name="{=aom_erebor_male_name_14}Gloni" />
+      <name name="{=aom_erebor_male_name_15}Thargrim" />
+      <name name="{=aom_erebor_male_name_16}Harvor" />
+      <name name="{=aom_erebor_male_name_17}Bryndal" />
+      <name name="{=aom_erebor_male_name_18}Olfar" />
+      <name name="{=aom_erebor_male_name_19}Drakkar" />
+      <name name="{=aom_erebor_male_name_20}Vorgin" />
+      <name name="{=aom_erebor_male_name_21}Kaldan" />
+      <name name="{=aom_erebor_male_name_22}Farin" />
+      <name name="{=aom_erebor_male_name_23}Thalrin" />
+      <name name="{=aom_erebor_male_name_24}Haldin" />
+      <name name="{=aom_erebor_male_name_25}Fundin" />
+      <name name="{=aom_erebor_male_name_26}Skorgrim" />
+      <name name="{=aom_erebor_male_name_27}Brogrim" />
+      <name name="{=aom_erebor_male_name_28}Thalfar" />
+      <name name="{=aom_erebor_male_name_29}Túbi" />
+      <name name="{=aom_erebor_male_name_30}Gamil" />
+      <name name="{=aom_erebor_male_name_31}Rulvin" />
+      <name name="{=aom_erebor_male_name_32}Thorgran" />
+      <name name="{=aom_erebor_male_name_33}Dari" />
+      <name name="{=aom_erebor_male_name_34}Bardrin" />
+      <name name="{=aom_erebor_male_name_35}Zarvin" />
+      <name name="{=aom_erebor_male_name_36}Orinor" />
+      <name name="{=aom_erebor_male_name_37}Karnil" />
+      <name name="{=aom_erebor_male_name_38}Thalgrim" />
+      <name name="{=aom_erebor_male_name_39}Frondin" />
+      <name name="{=aom_erebor_male_name_40}Dror" />
+      <name name="{=aom_erebor_male_name_41}Haldor" />
+      <name name="{=aom_erebor_male_name_42}Weggir" />
+      <name name="{=aom_erebor_male_name_43}Jarn" />
+      <name name="{=aom_erebor_male_name_44}Ûni" />
+      <name name="{=aom_erebor_male_name_45}Orran" />
+      <name name="{=aom_erebor_male_name_46}Bardorn" />
+      <name name="{=aom_erebor_male_name_47}Tharan" />
+      <name name="{=aom_erebor_male_name_48}Nûrun" />
+      <name name="{=aom_erebor_male_name_49}Hamisar" />
+      <name name="{=aom_erebor_male_name_50}Gormar" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_erebor_female_name_1}Bryndis" />
+      <name name="{=aom_erebor_female_name_2}Kharla" />
+      <name name="{=aom_erebor_female_name_3}Gorla" />
+      <name name="{=aom_erebor_female_name_4}Thaldis" />
+      <name name="{=aom_erebor_female_name_5}Faldira" />
+      <name name="{=aom_erebor_female_name_6}Hilda" />
+      <name name="{=aom_erebor_female_name_7}Norwynn" />
+      <name name="{=aom_erebor_female_name_8}Dorna" />
+      <name name="{=aom_erebor_female_name_9}Zarlin" />
+      <name name="{=aom_erebor_female_name_10}Karna" />
+      <name name="{=aom_erebor_female_name_11}Runa" />
+      <name name="{=aom_erebor_female_name_12}Loritha" />
+      <name name="{=aom_erebor_female_name_13}Tharva" />
+      <name name="{=aom_erebor_female_name_14}Balda" />
+      <name name="{=aom_erebor_female_name_15}Fritha" />
+      <name name="{=aom_erebor_female_name_16}Dralda" />
+      <name name="{=aom_erebor_female_name_17}Vorla" />
+      <name name="{=aom_erebor_female_name_18}Kyrnis" />
+      <name name="{=aom_erebor_female_name_19}Grenda" />
+      <name name="{=aom_erebor_female_name_20}Halwynn" />
+      <name name="{=aom_erebor_female_name_21}Brynis" />
+      <name name="{=aom_erebor_female_name_22}Morna" />
+      <name name="{=aom_erebor_female_name_23}Kildra" />
+      <name name="{=aom_erebor_female_name_24}Zylna" />
+      <name name="{=aom_erebor_female_name_25}Thrandis" />
+      <name name="{=aom_erebor_female_name_26}Orrina" />
+      <name name="{=aom_erebor_female_name_27}Dranna" />
+      <name name="{=aom_erebor_female_name_28}Naldra" />
+      <name name="{=aom_erebor_female_name_29}Galda" />
+      <name name="{=aom_erebor_female_name_30}Tylva" />
+      <name name="{=aom_erebor_female_name_31}Zarvyn" />
+      <name name="{=aom_erebor_female_name_32}Korla" />
+      <name name="{=aom_erebor_female_name_33}Vorrin" />
+      <name name="{=aom_erebor_female_name_34}Thyra" />
+      <name name="{=aom_erebor_female_name_35}Frynna" />
+      <name name="{=aom_erebor_female_name_36}Drisla" />
+      <name name="{=aom_erebor_female_name_37}Bralda" />
+      <name name="{=aom_erebor_female_name_38}Orlith" />
+      <name name="{=aom_erebor_female_name_39}Tirla" />
+      <name name="{=aom_erebor_female_name_40}Morna" />
+      <name name="{=aom_erebor_female_name_41}Gwynla" />
+      <name name="{=aom_erebor_female_name_42}Ylrin" />
+      <name name="{=aom_erebor_female_name_43}Kilna" />
+      <name name="{=aom_erebor_female_name_44}Zandra" />
+      <name name="{=aom_erebor_female_name_45}Drisna" />
+      <name name="{=aom_erebor_female_name_46}Haldira" />
+      <name name="{=aom_erebor_female_name_47}Karril" />
+      <name name="{=aom_erebor_female_name_48}Thylla" />
+      <name name="{=aom_erebor_female_name_49}Zalwyn" />
+      <name name="{=aom_erebor_female_name_50}Frinda" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- RIVENDELL - Ñoldor Elves of Imladris          -->
+  <!-- ============================================== -->
+  <Culture
+    id="rivendell"
+    name="{=aom_rivendell_name}Ñoldor Elves"
+    is_main_culture="true"
+    color="0xff1A1A1A"
+    color2="0xff2000AF"
+    cloth_alternative_color1="0xff1A1A1A"
+    cloth_alternative_color2="0xff223C5E"
+    elite_basic_troop="NPCCharacter.imperial_vigla_recruit"
+    basic_troop="NPCCharacter.imperial_recruit"
+    melee_militia_troop="NPCCharacter.imperial_militia_spearman"
+    ranged_militia_troop="NPCCharacter.imperial_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.imperial_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.imperial_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_empire_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
+    caravan_party_template="PartyTemplate.caravan_template_empire"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_empire"
+    militia_party_template="PartyTemplate.militia_empire_template"
+    rebels_party_template="PartyTemplate.rebels_empire_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_empire"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_empire"
+    faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_rivendell_desc}The Noldor Elves of Rivendell are a wise and ancient people, renowned for their unmatched knowledge, artistry, and valor. Under the guidance of Lord Elrond, they preserve the fading beauty and lore of the Elder Days within the hidden sanctuary of Imladris. Masters of both the sword and the bow, the Noldor combine martial skill with the grace and precision of their kind."
+    tournament_master="NPCCharacter.tournament_master_empire"
+    villager="NPCCharacter.villager_empire"
+    caravan_master="NPCCharacter.caravan_master_empire"
+    armed_trader="NPCCharacter.armed_trader_empire"
+    caravan_guard="NPCCharacter.caravan_guard_empire"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_empire"
+    prison_guard="NPCCharacter.prison_guard_empire"
+    guard="NPCCharacter.guard_empire"
+    blacksmith="NPCCharacter.blacksmith_empire"
+    weaponsmith="NPCCharacter.weaponsmith_empire"
+    townswoman="NPCCharacter.townswoman_empire"
+    townswoman_infant="NPCCharacter.townswoman_infant_empire"
+    townswoman_child="NPCCharacter.townswoman_child_empire"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_empire"
+    townsman="NPCCharacter.townsman_empire"
+    townsman_infant="NPCCharacter.townsman_infant_empire"
+    townsman_child="NPCCharacter.townsman_child_empire"
+    townsman_teenager="NPCCharacter.townsman_teenager_empire"
+    village_woman="NPCCharacter.village_woman_empire"
+    villager_male_child="NPCCharacter.villager_child_empire"
+    villager_male_teenager="NPCCharacter.villager_teenager_empire"
+    villager_female_child="NPCCharacter.village_woman_child_empire"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_empire"
+    ransom_broker="NPCCharacter.ransom_broker_empire"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_empire"
+    merchant_notary="NPCCharacter.merchant_notary_empire"
+    artisan_notary="NPCCharacter.artisan_notary_empire"
+    preacher_notary="NPCCharacter.preacher_notary_empire"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_empire"
+    shop_worker="NPCCharacter.shop_worker_empire"
+    tavernkeeper="NPCCharacter.tavernkeeper_empire"
+    taverngamehost="NPCCharacter.taverngamehost_empire"
+    musician="NPCCharacter.musician_empire"
+    tavern_wench="NPCCharacter.tavern_wench_empire"
+    armorer="NPCCharacter.armorer_empire"
+    horseMerchant="NPCCharacter.horseMerchant_empire"
+    barber="NPCCharacter.barber_empire"
+    merchant="NPCCharacter.merchant_empire"
+    beggar="NPCCharacter.beggar_empire"
+    female_beggar="NPCCharacter.female_beggar_empire"
+    female_dancer="NPCCharacter.female_dancer_empire"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_empire"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_empire"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_empire"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_empire"
+    gear_dummy="NPCCharacter.gear_dummy_empire"
+    default_battle_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
+    board_game_type="Tablut">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_rivendell_male_name_1}Calenion" />
+      <name name="{=aom_rivendell_male_name_2}Erelion" />
+      <name name="{=aom_rivendell_male_name_3}Amarion" />
+      <name name="{=aom_rivendell_male_name_4}Nolindir" />
+      <name name="{=aom_rivendell_male_name_5}Thalion" />
+      <name name="{=aom_rivendell_male_name_6}Lindir" />
+      <name name="{=aom_rivendell_male_name_7}Saranion" />
+      <name name="{=aom_rivendell_male_name_8}Ithralion" />
+      <name name="{=aom_rivendell_male_name_9}Valendil" />
+      <name name="{=aom_rivendell_male_name_10}Orodin" />
+      <name name="{=aom_rivendell_male_name_11}Aeglir" />
+      <name name="{=aom_rivendell_male_name_12}Ethirion" />
+      <name name="{=aom_rivendell_male_name_13}Anarion" />
+      <name name="{=aom_rivendell_male_name_14}Celethir" />
+      <name name="{=aom_rivendell_male_name_15}Falinor" />
+      <name name="{=aom_rivendell_male_name_16}Elrodir" />
+      <name name="{=aom_rivendell_male_name_17}Aradion" />
+      <name name="{=aom_rivendell_male_name_18}Vorendil" />
+      <name name="{=aom_rivendell_male_name_19}Melianar" />
+      <name name="{=aom_rivendell_male_name_20}Tathrin" />
+      <name name="{=aom_rivendell_male_name_21}Galion" />
+      <name name="{=aom_rivendell_male_name_22}Eledir" />
+      <name name="{=aom_rivendell_male_name_23}Mardil" />
+      <name name="{=aom_rivendell_male_name_24}Silonar" />
+      <name name="{=aom_rivendell_male_name_25}Nimlothon" />
+      <name name="{=aom_rivendell_male_name_26}Ciryandir" />
+      <name name="{=aom_rivendell_male_name_27}Arthon" />
+      <name name="{=aom_rivendell_male_name_28}Elmirion" />
+      <name name="{=aom_rivendell_male_name_29}Caradion" />
+      <name name="{=aom_rivendell_male_name_30}Fingalor" />
+      <name name="{=aom_rivendell_male_name_31}Erendur" />
+      <name name="{=aom_rivendell_male_name_32}Tirion" />
+      <name name="{=aom_rivendell_male_name_33}Velandor" />
+      <name name="{=aom_rivendell_male_name_34}Alathion" />
+      <name name="{=aom_rivendell_male_name_35}Minrandir" />
+      <name name="{=aom_rivendell_male_name_36}Galdorion" />
+      <name name="{=aom_rivendell_male_name_37}Lothanor" />
+      <name name="{=aom_rivendell_male_name_38}Tirandir" />
+      <name name="{=aom_rivendell_male_name_39}Ereglin" />
+      <name name="{=aom_rivendell_male_name_40}Thaladir" />
+      <name name="{=aom_rivendell_male_name_41}Anarindor" />
+      <name name="{=aom_rivendell_male_name_42}Calinor" />
+      <name name="{=aom_rivendell_male_name_43}Suilon" />
+      <name name="{=aom_rivendell_male_name_44}Elarion" />
+      <name name="{=aom_rivendell_male_name_45}Rilion" />
+      <name name="{=aom_rivendell_male_name_46}Thalorin" />
+      <name name="{=aom_rivendell_male_name_47}Velanor" />
+      <name name="{=aom_rivendell_male_name_48}Cathanor" />
+      <name name="{=aom_rivendell_male_name_49}Aranion" />
+      <name name="{=aom_rivendell_male_name_50}Lathion" />
+      <name name="{=aom_rivendell_male_name_51}Maedhros" />
+      <name name="{=aom_rivendell_male_name_52}Maglor" />
+      <name name="{=aom_rivendell_male_name_53}Curufin" />
+      <name name="{=aom_rivendell_male_name_54}Caranthir" />
+      <name name="{=aom_rivendell_male_name_55}Celegorm" />
+      <name name="{=aom_rivendell_male_name_56}Amras" />
+      <name name="{=aom_rivendell_male_name_57}Amrod" />
+      <name name="{=aom_rivendell_male_name_58}Finwe" />
+      <name name="{=aom_rivendell_male_name_59}Feanor" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_rivendell_female_name_1}Anariel" />
+      <name name="{=aom_rivendell_female_name_2}Elenna" />
+      <name name="{=aom_rivendell_female_name_3}Calenwen" />
+      <name name="{=aom_rivendell_female_name_4}Nimrielle" />
+      <name name="{=aom_rivendell_female_name_5}Tathriel" />
+      <name name="{=aom_rivendell_female_name_6}Amariel" />
+      <name name="{=aom_rivendell_female_name_7}Valwen" />
+      <name name="{=aom_rivendell_female_name_8}Elariel" />
+      <name name="{=aom_rivendell_female_name_9}Lothiriel" />
+      <name name="{=aom_rivendell_female_name_10}Silwen" />
+      <name name="{=aom_rivendell_female_name_11}Ithrelle" />
+      <name name="{=aom_rivendell_female_name_12}Galadwen" />
+      <name name="{=aom_rivendell_female_name_13}Melinna" />
+      <name name="{=aom_rivendell_female_name_14}Suilwen" />
+      <name name="{=aom_rivendell_female_name_15}Calyndra" />
+      <name name="{=aom_rivendell_female_name_16}Ardien" />
+      <name name="{=aom_rivendell_female_name_17}Velindra" />
+      <name name="{=aom_rivendell_female_name_18}Ethiriel" />
+      <name name="{=aom_rivendell_female_name_19}Thaliel" />
+      <name name="{=aom_rivendell_female_name_20}Caraniel" />
+      <name name="{=aom_rivendell_female_name_21}Minlothwen" />
+      <name name="{=aom_rivendell_female_name_22}Aeliriel" />
+      <name name="{=aom_rivendell_female_name_23}Falinwen" />
+      <name name="{=aom_rivendell_female_name_24}Tiriel" />
+      <name name="{=aom_rivendell_female_name_25}Idriel" />
+      <name name="{=aom_rivendell_female_name_26}Elvanna" />
+      <name name="{=aom_rivendell_female_name_27}Ciryawen" />
+      <name name="{=aom_rivendell_female_name_28}Lindalwen" />
+      <name name="{=aom_rivendell_female_name_29}Erethiel" />
+      <name name="{=aom_rivendell_female_name_30}Silmariel" />
+      <name name="{=aom_rivendell_female_name_31}Galadien" />
+      <name name="{=aom_rivendell_female_name_32}Aelinor" />
+      <name name="{=aom_rivendell_female_name_33}Thalwin" />
+      <name name="{=aom_rivendell_female_name_34}Ethirwen" />
+      <name name="{=aom_rivendell_female_name_35}Arweniel" />
+      <name name="{=aom_rivendell_female_name_36}Suilenna" />
+      <name name="{=aom_rivendell_female_name_37}Nolwin" />
+      <name name="{=aom_rivendell_female_name_38}Tathwen" />
+      <name name="{=aom_rivendell_female_name_39}Calindriel" />
+      <name name="{=aom_rivendell_female_name_40}Ithriel" />
+      <name name="{=aom_rivendell_female_name_41}Velwen" />
+      <name name="{=aom_rivendell_female_name_42}Aelinna" />
+      <name name="{=aom_rivendell_female_name_43}Faliniel" />
+      <name name="{=aom_rivendell_female_name_44}Erelle" />
+      <name name="{=aom_rivendell_female_name_45}Cariel" />
+      <name name="{=aom_rivendell_female_name_46}Lothanna" />
+      <name name="{=aom_rivendell_female_name_47}Elarielle" />
+      <name name="{=aom_rivendell_female_name_48}Galwynn" />
+      <name name="{=aom_rivendell_female_name_49}Nimindiel" />
+      <name name="{=aom_rivendell_female_name_50}Silvariel" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- MIRKWOOD - Silvan Elves of the Woodland Realm -->
+  <!-- ============================================== -->
+  <Culture
+    id="mirkwood"
+    name="{=aom_mirkwood_name}Silvan Elves"
+    is_main_culture="true"
+    color="0xFF234028"
+    color2="0xFF8A734C"
+    cloth_alternative_color1="0xFF122814"
+    cloth_alternative_color2="0xffBCCB85"
+    elite_basic_troop="NPCCharacter.imperial_vigla_recruit"
+    basic_troop="NPCCharacter.imperial_recruit"
+    melee_militia_troop="NPCCharacter.imperial_militia_spearman"
+    ranged_militia_troop="NPCCharacter.imperial_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.imperial_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.imperial_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_empire_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
+    caravan_party_template="PartyTemplate.caravan_template_empire"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_empire"
+    militia_party_template="PartyTemplate.militia_empire_template"
+    rebels_party_template="PartyTemplate.rebels_empire_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_empire"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_empire"
+    faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_mirkwood_desc}The Silvan Elves of Mirkwood, also known as the Woodland Realm, are a proud and resilient people who call the vast forest their home. Ruled by King Thranduil, they are skilled hunters and warriors, navigating the shadowed woods with unmatched agility and precision. The Mirkwood Elves are masters of the bow, striking swiftly and silently from the trees."
+    tournament_master="NPCCharacter.tournament_master_empire"
+    villager="NPCCharacter.villager_empire"
+    caravan_master="NPCCharacter.caravan_master_empire"
+    armed_trader="NPCCharacter.armed_trader_empire"
+    caravan_guard="NPCCharacter.caravan_guard_empire"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_empire"
+    prison_guard="NPCCharacter.prison_guard_empire"
+    guard="NPCCharacter.guard_empire"
+    blacksmith="NPCCharacter.blacksmith_empire"
+    weaponsmith="NPCCharacter.weaponsmith_empire"
+    townswoman="NPCCharacter.townswoman_empire"
+    townswoman_infant="NPCCharacter.townswoman_infant_empire"
+    townswoman_child="NPCCharacter.townswoman_child_empire"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_empire"
+    townsman="NPCCharacter.townsman_empire"
+    townsman_infant="NPCCharacter.townsman_infant_empire"
+    townsman_child="NPCCharacter.townsman_child_empire"
+    townsman_teenager="NPCCharacter.townsman_teenager_empire"
+    village_woman="NPCCharacter.village_woman_empire"
+    villager_male_child="NPCCharacter.villager_child_empire"
+    villager_male_teenager="NPCCharacter.villager_teenager_empire"
+    villager_female_child="NPCCharacter.village_woman_child_empire"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_empire"
+    ransom_broker="NPCCharacter.ransom_broker_empire"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_empire"
+    merchant_notary="NPCCharacter.merchant_notary_empire"
+    artisan_notary="NPCCharacter.artisan_notary_empire"
+    preacher_notary="NPCCharacter.preacher_notary_empire"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_empire"
+    shop_worker="NPCCharacter.shop_worker_empire"
+    tavernkeeper="NPCCharacter.tavernkeeper_empire"
+    taverngamehost="NPCCharacter.taverngamehost_empire"
+    musician="NPCCharacter.musician_empire"
+    tavern_wench="NPCCharacter.tavern_wench_empire"
+    armorer="NPCCharacter.armorer_empire"
+    horseMerchant="NPCCharacter.horseMerchant_empire"
+    barber="NPCCharacter.barber_empire"
+    merchant="NPCCharacter.merchant_empire"
+    beggar="NPCCharacter.beggar_empire"
+    female_beggar="NPCCharacter.female_beggar_empire"
+    female_dancer="NPCCharacter.female_dancer_empire"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_empire"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_empire"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_empire"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_empire"
+    gear_dummy="NPCCharacter.gear_dummy_empire"
+    default_battle_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
+    board_game_type="Tablut">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_mirkwood_male_name_1}Tharion" />
+      <name name="{=aom_mirkwood_male_name_2}Eryndir" />
+      <name name="{=aom_mirkwood_male_name_3}Calenhir" />
+      <name name="{=aom_mirkwood_male_name_4}Lotharion" />
+      <name name="{=aom_mirkwood_male_name_5}Nimhir" />
+      <name name="{=aom_mirkwood_male_name_6}Galendir" />
+      <name name="{=aom_mirkwood_male_name_7}Taurandir" />
+      <name name="{=aom_mirkwood_male_name_8}Elenar" />
+      <name name="{=aom_mirkwood_male_name_9}Sildarion" />
+      <name name="{=aom_mirkwood_male_name_10}Orophar" />
+      <name name="{=aom_mirkwood_male_name_11}Aerlindor" />
+      <name name="{=aom_mirkwood_male_name_12}Caranor" />
+      <name name="{=aom_mirkwood_male_name_13}Thaliondir" />
+      <name name="{=aom_mirkwood_male_name_14}Velanar" />
+      <name name="{=aom_mirkwood_male_name_15}Lindorion" />
+      <name name="{=aom_mirkwood_male_name_16}Thrandir" />
+      <name name="{=aom_mirkwood_male_name_17}Erilion" />
+      <name name="{=aom_mirkwood_male_name_18}Silmir" />
+      <name name="{=aom_mirkwood_male_name_19}Eredar" />
+      <name name="{=aom_mirkwood_male_name_20}Galionor" />
+      <name name="{=aom_mirkwood_male_name_21}Nimladir" />
+      <name name="{=aom_mirkwood_male_name_22}Calenor" />
+      <name name="{=aom_mirkwood_male_name_23}Taurenion" />
+      <name name="{=aom_mirkwood_male_name_24}Aradir" />
+      <name name="{=aom_mirkwood_male_name_25}Elendar" />
+      <name name="{=aom_mirkwood_male_name_26}Rothion" />
+      <name name="{=aom_mirkwood_male_name_27}Doralin" />
+      <name name="{=aom_mirkwood_male_name_28}Veladan" />
+      <name name="{=aom_mirkwood_male_name_29}Thalos" />
+      <name name="{=aom_mirkwood_male_name_30}Eryndor" />
+      <name name="{=aom_mirkwood_male_name_31}Galrandir" />
+      <name name="{=aom_mirkwood_male_name_32}Anarhir" />
+      <name name="{=aom_mirkwood_male_name_33}Lothandor" />
+      <name name="{=aom_mirkwood_male_name_34}Erionor" />
+      <name name="{=aom_mirkwood_male_name_35}Calirion" />
+      <name name="{=aom_mirkwood_male_name_36}Nimrion" />
+      <name name="{=aom_mirkwood_male_name_37}Tharlindor" />
+      <name name="{=aom_mirkwood_male_name_38}Carathir" />
+      <name name="{=aom_mirkwood_male_name_39}Siladan" />
+      <name name="{=aom_mirkwood_male_name_40}Velionor" />
+      <name name="{=aom_mirkwood_male_name_41}Arvelion" />
+      <name name="{=aom_mirkwood_male_name_42}Lindarion" />
+      <name name="{=aom_mirkwood_male_name_43}Thrandar" />
+      <name name="{=aom_mirkwood_male_name_44}Aerinor" />
+      <name name="{=aom_mirkwood_male_name_45}Rilendir" />
+      <name name="{=aom_mirkwood_male_name_46}Taurielan" />
+      <name name="{=aom_mirkwood_male_name_47}Calarnor" />
+      <name name="{=aom_mirkwood_male_name_48}Galradir" />
+      <name name="{=aom_mirkwood_male_name_49}Velothar" />
+      <name name="{=aom_mirkwood_male_name_50}Tharandir" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_mirkwood_female_name_1}Calenwen" />
+      <name name="{=aom_mirkwood_female_name_2}Lothriel" />
+      <name name="{=aom_mirkwood_female_name_3}Erynniel" />
+      <name name="{=aom_mirkwood_female_name_4}Thariel" />
+      <name name="{=aom_mirkwood_female_name_5}Velindra" />
+      <name name="{=aom_mirkwood_female_name_6}Nimlothwen" />
+      <name name="{=aom_mirkwood_female_name_7}Galadwen" />
+      <name name="{=aom_mirkwood_female_name_8}Aeriniel" />
+      <name name="{=aom_mirkwood_female_name_9}Sildriel" />
+      <name name="{=aom_mirkwood_female_name_10}Tauriel" />
+      <name name="{=aom_mirkwood_female_name_11}Elenwen" />
+      <name name="{=aom_mirkwood_female_name_12}Rilwen" />
+      <name name="{=aom_mirkwood_female_name_13}Caraniel" />
+      <name name="{=aom_mirkwood_female_name_14}Erilwen" />
+      <name name="{=aom_mirkwood_female_name_15}Anariel" />
+      <name name="{=aom_mirkwood_female_name_16}Velarwen" />
+      <name name="{=aom_mirkwood_female_name_17}Thalionwen" />
+      <name name="{=aom_mirkwood_female_name_18}Erynwen" />
+      <name name="{=aom_mirkwood_female_name_19}Nimriel" />
+      <name name="{=aom_mirkwood_female_name_20}Galindiriel" />
+      <name name="{=aom_mirkwood_female_name_21}Aelindis" />
+      <name name="{=aom_mirkwood_female_name_22}Calyndra" />
+      <name name="{=aom_mirkwood_female_name_23}Tathriel" />
+      <name name="{=aom_mirkwood_female_name_24}Elenis" />
+      <name name="{=aom_mirkwood_female_name_25}Thalindis" />
+      <name name="{=aom_mirkwood_female_name_26}Lothis" />
+      <name name="{=aom_mirkwood_female_name_27}Anarith" />
+      <name name="{=aom_mirkwood_female_name_28}Eredriel" />
+      <name name="{=aom_mirkwood_female_name_29}Caranwen" />
+      <name name="{=aom_mirkwood_female_name_30}Velanis" />
+      <name name="{=aom_mirkwood_female_name_31}Silwen" />
+      <name name="{=aom_mirkwood_female_name_32}Galoriel" />
+      <name name="{=aom_mirkwood_female_name_33}Thaliris" />
+      <name name="{=aom_mirkwood_female_name_34}Nimlothis" />
+      <name name="{=aom_mirkwood_female_name_35}Aelwen" />
+      <name name="{=aom_mirkwood_female_name_36}Riliel" />
+      <name name="{=aom_mirkwood_female_name_37}Calanis" />
+      <name name="{=aom_mirkwood_female_name_38}Lindariel" />
+      <name name="{=aom_mirkwood_female_name_39}Eredwen" />
+      <name name="{=aom_mirkwood_female_name_40}Thalindriel" />
+      <name name="{=aom_mirkwood_female_name_41}Velindis" />
+      <name name="{=aom_mirkwood_female_name_42}Sildis" />
+      <name name="{=aom_mirkwood_female_name_43}Taurenis" />
+      <name name="{=aom_mirkwood_female_name_44}Galadnis" />
+      <name name="{=aom_mirkwood_female_name_45}Anarwen" />
+      <name name="{=aom_mirkwood_female_name_46}Caranis" />
+      <name name="{=aom_mirkwood_female_name_47}Lothenis" />
+      <name name="{=aom_mirkwood_female_name_48}Eryndis" />
+      <name name="{=aom_mirkwood_female_name_49}Aelinor" />
+      <name name="{=aom_mirkwood_female_name_50}Nimindriel" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- LOTHLORIEN - Galadhrim Elves of the Golden Wood -->
+  <!-- ============================================== -->
+  <Culture
+    id="lothlorien"
+    name="{=aom_lothlorien_name}Galadhrim Elves"
+    is_main_culture="true"
+    color="0xFF998C5E"
+    color2="0xFFE8E6D5"
+    cloth_alternative_color1="0xff14382C"
+    cloth_alternative_color2="0xff99C9A0"
+    elite_basic_troop="NPCCharacter.imperial_vigla_recruit"
+    basic_troop="NPCCharacter.imperial_recruit"
+    melee_militia_troop="NPCCharacter.imperial_militia_spearman"
+    ranged_militia_troop="NPCCharacter.imperial_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.imperial_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.imperial_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_empire_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
+    caravan_party_template="PartyTemplate.caravan_template_empire"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_empire"
+    militia_party_template="PartyTemplate.militia_empire_template"
+    rebels_party_template="PartyTemplate.rebels_empire_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_empire"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_empire"
+    faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_lothlorien_desc}The Elves of Lothlórien, known as the Galadhrim, are a noble and enigmatic people dwelling in the Golden Wood. Guided by the wisdom and power of Lady Galadriel and Lord Celeborn, they are guardians of one of the last bastions of elven beauty and tranquility in Middle-earth. The Galadhrim are unmatched archers, blending seamlessly with the golden Mallorn trees of their homeland."
+    tournament_master="NPCCharacter.tournament_master_empire"
+    villager="NPCCharacter.villager_empire"
+    caravan_master="NPCCharacter.caravan_master_empire"
+    armed_trader="NPCCharacter.armed_trader_empire"
+    caravan_guard="NPCCharacter.caravan_guard_empire"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_empire"
+    prison_guard="NPCCharacter.prison_guard_empire"
+    guard="NPCCharacter.guard_empire"
+    blacksmith="NPCCharacter.blacksmith_empire"
+    weaponsmith="NPCCharacter.weaponsmith_empire"
+    townswoman="NPCCharacter.townswoman_empire"
+    townswoman_infant="NPCCharacter.townswoman_infant_empire"
+    townswoman_child="NPCCharacter.townswoman_child_empire"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_empire"
+    townsman="NPCCharacter.townsman_empire"
+    townsman_infant="NPCCharacter.townsman_infant_empire"
+    townsman_child="NPCCharacter.townsman_child_empire"
+    townsman_teenager="NPCCharacter.townsman_teenager_empire"
+    village_woman="NPCCharacter.village_woman_empire"
+    villager_male_child="NPCCharacter.villager_child_empire"
+    villager_male_teenager="NPCCharacter.villager_teenager_empire"
+    villager_female_child="NPCCharacter.village_woman_child_empire"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_empire"
+    ransom_broker="NPCCharacter.ransom_broker_empire"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_empire"
+    merchant_notary="NPCCharacter.merchant_notary_empire"
+    artisan_notary="NPCCharacter.artisan_notary_empire"
+    preacher_notary="NPCCharacter.preacher_notary_empire"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_empire"
+    shop_worker="NPCCharacter.shop_worker_empire"
+    tavernkeeper="NPCCharacter.tavernkeeper_empire"
+    taverngamehost="NPCCharacter.taverngamehost_empire"
+    musician="NPCCharacter.musician_empire"
+    tavern_wench="NPCCharacter.tavern_wench_empire"
+    armorer="NPCCharacter.armorer_empire"
+    horseMerchant="NPCCharacter.horseMerchant_empire"
+    barber="NPCCharacter.barber_empire"
+    merchant="NPCCharacter.merchant_empire"
+    beggar="NPCCharacter.beggar_empire"
+    female_beggar="NPCCharacter.female_beggar_empire"
+    female_dancer="NPCCharacter.female_dancer_empire"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_empire"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_empire"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_empire"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_empire"
+    gear_dummy="NPCCharacter.gear_dummy_empire"
+    default_battle_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
+    board_game_type="Tablut">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_lothlorien_male_name_1}Caladion" />
+      <name name="{=aom_lothlorien_male_name_2}Thalirion" />
+      <name name="{=aom_lothlorien_male_name_3}Eryndor" />
+      <name name="{=aom_lothlorien_male_name_4}Galadion" />
+      <name name="{=aom_lothlorien_male_name_5}Nimdor" />
+      <name name="{=aom_lothlorien_male_name_6}Aelindir" />
+      <name name="{=aom_lothlorien_male_name_7}Carathion" />
+      <name name="{=aom_lothlorien_male_name_8}Velanor" />
+      <name name="{=aom_lothlorien_male_name_9}Taurion" />
+      <name name="{=aom_lothlorien_male_name_10}Elendor" />
+      <name name="{=aom_lothlorien_male_name_11}Sildarion" />
+      <name name="{=aom_lothlorien_male_name_12}Tharion" />
+      <name name="{=aom_lothlorien_male_name_13}Anarion" />
+      <name name="{=aom_lothlorien_male_name_14}Rilindir" />
+      <name name="{=aom_lothlorien_male_name_15}Calyndir" />
+      <name name="{=aom_lothlorien_male_name_16}Lindirion" />
+      <name name="{=aom_lothlorien_male_name_17}Eredor" />
+      <name name="{=aom_lothlorien_male_name_18}Galendir" />
+      <name name="{=aom_lothlorien_male_name_19}Falinor" />
+      <name name="{=aom_lothlorien_male_name_20}Tatharion" />
+      <name name="{=aom_lothlorien_male_name_21}Velandir" />
+      <name name="{=aom_lothlorien_male_name_22}Aelendor" />
+      <name name="{=aom_lothlorien_male_name_23}Silion" />
+      <name name="{=aom_lothlorien_male_name_24}Tirion" />
+      <name name="{=aom_lothlorien_male_name_25}Orodion" />
+      <name name="{=aom_lothlorien_male_name_26}Nimlothon" />
+      <name name="{=aom_lothlorien_male_name_27}Ciryandir" />
+      <name name="{=aom_lothlorien_male_name_28}Lotharion" />
+      <name name="{=aom_lothlorien_male_name_29}Anarhir" />
+      <name name="{=aom_lothlorien_male_name_30}Thalion" />
+      <name name="{=aom_lothlorien_male_name_31}Arandir" />
+      <name name="{=aom_lothlorien_male_name_32}Caranor" />
+      <name name="{=aom_lothlorien_male_name_33}Veladan" />
+      <name name="{=aom_lothlorien_male_name_34}Rilion" />
+      <name name="{=aom_lothlorien_male_name_35}Galionor" />
+      <name name="{=aom_lothlorien_male_name_36}Elenor" />
+      <name name="{=aom_lothlorien_male_name_37}Taurandir" />
+      <name name="{=aom_lothlorien_male_name_38}Thrandir" />
+      <name name="{=aom_lothlorien_male_name_39}Lothanor" />
+      <name name="{=aom_lothlorien_male_name_40}Suilion" />
+      <name name="{=aom_lothlorien_male_name_41}Elarion" />
+      <name name="{=aom_lothlorien_male_name_42}Tathalion" />
+      <name name="{=aom_lothlorien_male_name_43}Calanor" />
+      <name name="{=aom_lothlorien_male_name_44}Velionor" />
+      <name name="{=aom_lothlorien_male_name_45}Eryndir" />
+      <name name="{=aom_lothlorien_male_name_46}Lindarion" />
+      <name name="{=aom_lothlorien_male_name_47}Aerlindir" />
+      <name name="{=aom_lothlorien_male_name_48}Caradion" />
+      <name name="{=aom_lothlorien_male_name_49}Galrandir" />
+      <name name="{=aom_lothlorien_male_name_50}Tharlindor" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_lothlorien_female_name_1}Calenwen" />
+      <name name="{=aom_lothlorien_female_name_2}Lothriel" />
+      <name name="{=aom_lothlorien_female_name_3}Eryndis" />
+      <name name="{=aom_lothlorien_female_name_4}Thariel" />
+      <name name="{=aom_lothlorien_female_name_5}Velindra" />
+      <name name="{=aom_lothlorien_female_name_6}Nimlothwen" />
+      <name name="{=aom_lothlorien_female_name_7}Galadwen" />
+      <name name="{=aom_lothlorien_female_name_8}Aelindis" />
+      <name name="{=aom_lothlorien_female_name_9}Sildriel" />
+      <name name="{=aom_lothlorien_female_name_10}Tauriel" />
+      <name name="{=aom_lothlorien_female_name_11}Elenwen" />
+      <name name="{=aom_lothlorien_female_name_12}Rilwen" />
+      <name name="{=aom_lothlorien_female_name_13}Caraniel" />
+      <name name="{=aom_lothlorien_female_name_14}Erilwen" />
+      <name name="{=aom_lothlorien_female_name_15}Anariel" />
+      <name name="{=aom_lothlorien_female_name_16}Velarwen" />
+      <name name="{=aom_lothlorien_female_name_17}Thalionwen" />
+      <name name="{=aom_lothlorien_female_name_18}Erynwen" />
+      <name name="{=aom_lothlorien_female_name_19}Nimriel" />
+      <name name="{=aom_lothlorien_female_name_20}Galindiriel" />
+      <name name="{=aom_lothlorien_female_name_21}Aeliriel" />
+      <name name="{=aom_lothlorien_female_name_22}Calyndra" />
+      <name name="{=aom_lothlorien_female_name_23}Tathriel" />
+      <name name="{=aom_lothlorien_female_name_24}Elenis" />
+      <name name="{=aom_lothlorien_female_name_25}Thalindis" />
+      <name name="{=aom_lothlorien_female_name_26}Lothis" />
+      <name name="{=aom_lothlorien_female_name_27}Anarith" />
+      <name name="{=aom_lothlorien_female_name_28}Eredriel" />
+      <name name="{=aom_lothlorien_female_name_29}Caranwen" />
+      <name name="{=aom_lothlorien_female_name_30}Velanis" />
+      <name name="{=aom_lothlorien_female_name_31}Silwen" />
+      <name name="{=aom_lothlorien_female_name_32}Galoriel" />
+      <name name="{=aom_lothlorien_female_name_33}Thaliris" />
+      <name name="{=aom_lothlorien_female_name_34}Nimlothis" />
+      <name name="{=aom_lothlorien_female_name_35}Aelwen" />
+      <name name="{=aom_lothlorien_female_name_36}Riliel" />
+      <name name="{=aom_lothlorien_female_name_37}Calanis" />
+      <name name="{=aom_lothlorien_female_name_38}Lindariel" />
+      <name name="{=aom_lothlorien_female_name_39}Eredwen" />
+      <name name="{=aom_lothlorien_female_name_40}Thalindriel" />
+      <name name="{=aom_lothlorien_female_name_41}Velindis" />
+      <name name="{=aom_lothlorien_female_name_42}Sildis" />
+      <name name="{=aom_lothlorien_female_name_43}Taurenis" />
+      <name name="{=aom_lothlorien_female_name_44}Galadnis" />
+      <name name="{=aom_lothlorien_female_name_45}Anarwen" />
+      <name name="{=aom_lothlorien_female_name_46}Caranis" />
+      <name name="{=aom_lothlorien_female_name_47}Lothenis" />
+      <name name="{=aom_lothlorien_female_name_48}Eryndis" />
+      <name name="{=aom_lothlorien_female_name_49}Aelinor" />
+      <name name="{=aom_lothlorien_female_name_50}Nimindriel" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- ISENGARD - Saruman's Uruk-hai                 -->
+  <!-- ============================================== -->
+  <Culture
+    id="isengard"
+    name="{=aom_isengard_name}Isengard"
+    is_main_culture="true"
+    color="0xFF2B2B2B"
+    color2="0xFF8C8C8C"
+    cloth_alternative_color1="0xff707070"
+    cloth_alternative_color2="0xff3A3A3A"
+    elite_basic_troop="NPCCharacter.sturgian_warrior_son"
+    basic_troop="NPCCharacter.sturgian_recruit"
+    melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
+    ranged_militia_troop="NPCCharacter.sturgian_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_sturgia_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
+    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    militia_party_template="PartyTemplate.militia_sturgia_template"
+    rebels_party_template="PartyTemplate.rebels_sturgia_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_isengard_desc}The people of Isengard are Saruman's legions, forged through industry and fueled by a dark vision of domination. Centered around the impenetrable tower of Orthanc, Isengard is home to the Uruk-hai, bred for strength, endurance, and obedience. With machines of war and the cunning of their master, they crush all opposition with ruthless precision."
+    tournament_master="NPCCharacter.tournament_master_sturgia"
+    villager="NPCCharacter.villager_sturgia"
+    caravan_master="NPCCharacter.caravan_master_sturgia"
+    armed_trader="NPCCharacter.armed_trader_sturgia"
+    caravan_guard="NPCCharacter.caravan_guard_sturgia"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
+    prison_guard="NPCCharacter.prison_guard_sturgia"
+    guard="NPCCharacter.guard_sturgia"
+    blacksmith="NPCCharacter.blacksmith_sturgia"
+    weaponsmith="NPCCharacter.weaponsmith_sturgia"
+    townswoman="NPCCharacter.townswoman_sturgia"
+    townswoman_infant="NPCCharacter.townswoman_infant_sturgia"
+    townswoman_child="NPCCharacter.townswoman_child_sturgia"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_sturgia"
+    townsman="NPCCharacter.townsman_sturgia"
+    townsman_infant="NPCCharacter.townsman_infant_sturgia"
+    townsman_child="NPCCharacter.townsman_child_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
+    village_woman="NPCCharacter.village_woman_sturgia"
+    villager_male_child="NPCCharacter.villager_child_sturgia"
+    villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
+    villager_female_child="NPCCharacter.village_woman_child_sturgia"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    ransom_broker="NPCCharacter.ransom_broker_sturgia"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
+    merchant_notary="NPCCharacter.merchant_notary_sturgia"
+    artisan_notary="NPCCharacter.artisan_notary_sturgia"
+    preacher_notary="NPCCharacter.preacher_notary_sturgia"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_sturgia"
+    shop_worker="NPCCharacter.shop_worker_sturgia"
+    tavernkeeper="NPCCharacter.tavernkeeper_sturgia"
+    taverngamehost="NPCCharacter.taverngamehost_sturgia"
+    musician="NPCCharacter.musician_sturgia"
+    tavern_wench="NPCCharacter.tavern_wench_sturgia"
+    armorer="NPCCharacter.armorer_sturgia"
+    horseMerchant="NPCCharacter.horseMerchant_sturgia"
+    barber="NPCCharacter.barber_sturgia"
+    merchant="NPCCharacter.merchant_sturgia"
+    beggar="NPCCharacter.beggar_sturgia"
+    female_beggar="NPCCharacter.female_beggar_sturgia"
+    female_dancer="NPCCharacter.female_dancer_sturgia"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
+    gear_dummy="NPCCharacter.gear_dummy_sturgia"
+    default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    board_game_type="Konane">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_isengard_male_name_1}Grashnakh" />
+      <name name="{=aom_isengard_male_name_2}Tharzog" />
+      <name name="{=aom_isengard_male_name_3}Lurdag" />
+      <name name="{=aom_isengard_male_name_4}Urzak" />
+      <name name="{=aom_isengard_male_name_5}Varkul" />
+      <name name="{=aom_isengard_male_name_6}Durgath" />
+      <name name="{=aom_isengard_male_name_7}Mordruk" />
+      <name name="{=aom_isengard_male_name_8}Zogash" />
+      <name name="{=aom_isengard_male_name_9}Narzug" />
+      <name name="{=aom_isengard_male_name_10}Thrask" />
+      <name name="{=aom_isengard_male_name_11}Durmash" />
+      <name name="{=aom_isengard_male_name_12}Groshnak" />
+      <name name="{=aom_isengard_male_name_13}Urbash" />
+      <name name="{=aom_isengard_male_name_14}Ghorzul" />
+      <name name="{=aom_isengard_male_name_15}Kazruk" />
+      <name name="{=aom_isengard_male_name_16}Vorzog" />
+      <name name="{=aom_isengard_male_name_17}Tugrath" />
+      <name name="{=aom_isengard_male_name_18}Zorgrak" />
+      <name name="{=aom_isengard_male_name_19}Narzugh" />
+      <name name="{=aom_isengard_male_name_20}Drulak" />
+      <name name="{=aom_isengard_male_name_21}Gragnor" />
+      <name name="{=aom_isengard_male_name_22}Tharnak" />
+      <name name="{=aom_isengard_male_name_23}Urzrog" />
+      <name name="{=aom_isengard_male_name_24}Dargash" />
+      <name name="{=aom_isengard_male_name_25}Zogrul" />
+      <name name="{=aom_isengard_male_name_26}Vorash" />
+      <name name="{=aom_isengard_male_name_27}Durash" />
+      <name name="{=aom_isengard_male_name_28}Lurzar" />
+      <name name="{=aom_isengard_male_name_29}Narshak" />
+      <name name="{=aom_isengard_male_name_30}Thargash" />
+      <name name="{=aom_isengard_male_name_31}Zargrath" />
+      <name name="{=aom_isengard_male_name_32}Morgash" />
+      <name name="{=aom_isengard_male_name_33}Durkash" />
+      <name name="{=aom_isengard_male_name_34}Thrarnak" />
+      <name name="{=aom_isengard_male_name_35}Gorzugh" />
+      <name name="{=aom_isengard_male_name_36}Kazlur" />
+      <name name="{=aom_isengard_male_name_37}Urbrog" />
+      <name name="{=aom_isengard_male_name_38}Narzul" />
+      <name name="{=aom_isengard_male_name_39}Thurzak" />
+      <name name="{=aom_isengard_male_name_40}Lurgrok" />
+      <name name="{=aom_isengard_male_name_41}Durnak" />
+      <name name="{=aom_isengard_male_name_42}Vorgash" />
+      <name name="{=aom_isengard_male_name_43}Morzag" />
+      <name name="{=aom_isengard_male_name_44}Thorzok" />
+      <name name="{=aom_isengard_male_name_45}Urzluk" />
+      <name name="{=aom_isengard_male_name_46}Gragnar" />
+      <name name="{=aom_isengard_male_name_47}Kazgul" />
+      <name name="{=aom_isengard_male_name_48}Vorzug" />
+      <name name="{=aom_isengard_male_name_49}Narbul" />
+      <name name="{=aom_isengard_male_name_50}Durmug" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_isengard_female_name_1}Grishna" />
+      <name name="{=aom_isengard_female_name_2}Tharza" />
+      <name name="{=aom_isengard_female_name_3}Urzra" />
+      <name name="{=aom_isengard_female_name_4}Vorgula" />
+      <name name="{=aom_isengard_female_name_5}Durlia" />
+      <name name="{=aom_isengard_female_name_6}Mordrith" />
+      <name name="{=aom_isengard_female_name_7}Zarnasha" />
+      <name name="{=aom_isengard_female_name_8}Narza" />
+      <name name="{=aom_isengard_female_name_9}Thrasha" />
+      <name name="{=aom_isengard_female_name_10}Durgra" />
+      <name name="{=aom_isengard_female_name_11}Grishka" />
+      <name name="{=aom_isengard_female_name_12}Urbazia" />
+      <name name="{=aom_isengard_female_name_13}Gorla" />
+      <name name="{=aom_isengard_female_name_14}Kazra" />
+      <name name="{=aom_isengard_female_name_15}Vorla" />
+      <name name="{=aom_isengard_female_name_16}Durshka" />
+      <name name="{=aom_isengard_female_name_17}Zorlia" />
+      <name name="{=aom_isengard_female_name_18}Narshka" />
+      <name name="{=aom_isengard_female_name_19}Thurza" />
+      <name name="{=aom_isengard_female_name_20}Lurgra" />
+      <name name="{=aom_isengard_female_name_21}Morlina" />
+      <name name="{=aom_isengard_female_name_22}Dulgra" />
+      <name name="{=aom_isengard_female_name_23}Vorliza" />
+      <name name="{=aom_isengard_female_name_24}Grilra" />
+      <name name="{=aom_isengard_female_name_25}Zarzha" />
+      <name name="{=aom_isengard_female_name_26}Narzulra" />
+      <name name="{=aom_isengard_female_name_27}Tharzia" />
+      <name name="{=aom_isengard_female_name_28}Durva" />
+      <name name="{=aom_isengard_female_name_29}Kazliza" />
+      <name name="{=aom_isengard_female_name_30}Thrulra" />
+      <name name="{=aom_isengard_female_name_31}Urzala" />
+      <name name="{=aom_isengard_female_name_32}Vorgulia" />
+      <name name="{=aom_isengard_female_name_33}Mordria" />
+      <name name="{=aom_isengard_female_name_34}Durgan" />
+      <name name="{=aom_isengard_female_name_35}Lurgulia" />
+      <name name="{=aom_isengard_female_name_36}Narshka" />
+      <name name="{=aom_isengard_female_name_37}Zornia" />
+      <name name="{=aom_isengard_female_name_38}Tharlia" />
+      <name name="{=aom_isengard_female_name_39}Kazria" />
+      <name name="{=aom_isengard_female_name_40}Urbazia" />
+      <name name="{=aom_isengard_female_name_41}Griliza" />
+      <name name="{=aom_isengard_female_name_42}Durrina" />
+      <name name="{=aom_isengard_female_name_43}Vorzha" />
+      <name name="{=aom_isengard_female_name_44}Narvila" />
+      <name name="{=aom_isengard_female_name_45}Thrulia" />
+      <name name="{=aom_isengard_female_name_46}Gorlia" />
+      <name name="{=aom_isengard_female_name_47}Durzia" />
+      <name name="{=aom_isengard_female_name_48}Kazula" />
+      <name name="{=aom_isengard_female_name_49}Lurzia" />
+      <name name="{=aom_isengard_female_name_50}Vorlia" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- GUNDABAD - Gundabad Orcs                      -->
+  <!-- ============================================== -->
+  <Culture
+    id="gundabad"
+    name="{=aom_gundabad_name}Gundabad Orcs"
+    is_main_culture="true"
+    color="0xFF1E1E1E"
+    color2="0xFF6A3E1E"
+    cloth_alternative_color1="0xff282828"
+    cloth_alternative_color2="0xff4C4C4C"
+    elite_basic_troop="NPCCharacter.sturgian_warrior_son"
+    basic_troop="NPCCharacter.sturgian_recruit"
+    melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
+    ranged_militia_troop="NPCCharacter.sturgian_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_sturgia_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
+    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    militia_party_template="PartyTemplate.militia_sturgia_template"
+    rebels_party_template="PartyTemplate.rebels_sturgia_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_gundabad_desc}The Gundabad Orcs of the Misty Mountains are savage and relentless. From the ancient stronghold of Mount Gundabad, they raid the surrounding lands, driven by a thirst for vengeance and conquest. Under the rule of powerful chieftains, they amass legions of goblins, wargs, and trolls. Gundabad's warriors are brutish and cunning, masters of ambush and overwhelming force."
+    tournament_master="NPCCharacter.tournament_master_sturgia"
+    villager="NPCCharacter.villager_sturgia"
+    caravan_master="NPCCharacter.caravan_master_sturgia"
+    armed_trader="NPCCharacter.armed_trader_sturgia"
+    caravan_guard="NPCCharacter.caravan_guard_sturgia"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
+    prison_guard="NPCCharacter.prison_guard_sturgia"
+    guard="NPCCharacter.guard_sturgia"
+    blacksmith="NPCCharacter.blacksmith_sturgia"
+    weaponsmith="NPCCharacter.weaponsmith_sturgia"
+    townswoman="NPCCharacter.townswoman_sturgia"
+    townswoman_infant="NPCCharacter.townswoman_infant_sturgia"
+    townswoman_child="NPCCharacter.townswoman_child_sturgia"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_sturgia"
+    townsman="NPCCharacter.townsman_sturgia"
+    townsman_infant="NPCCharacter.townsman_infant_sturgia"
+    townsman_child="NPCCharacter.townsman_child_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
+    village_woman="NPCCharacter.village_woman_sturgia"
+    villager_male_child="NPCCharacter.villager_child_sturgia"
+    villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
+    villager_female_child="NPCCharacter.village_woman_child_sturgia"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    ransom_broker="NPCCharacter.ransom_broker_sturgia"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
+    merchant_notary="NPCCharacter.merchant_notary_sturgia"
+    artisan_notary="NPCCharacter.artisan_notary_sturgia"
+    preacher_notary="NPCCharacter.preacher_notary_sturgia"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_sturgia"
+    shop_worker="NPCCharacter.shop_worker_sturgia"
+    tavernkeeper="NPCCharacter.tavernkeeper_sturgia"
+    taverngamehost="NPCCharacter.taverngamehost_sturgia"
+    musician="NPCCharacter.musician_sturgia"
+    tavern_wench="NPCCharacter.tavern_wench_sturgia"
+    armorer="NPCCharacter.armorer_sturgia"
+    horseMerchant="NPCCharacter.horseMerchant_sturgia"
+    barber="NPCCharacter.barber_sturgia"
+    merchant="NPCCharacter.merchant_sturgia"
+    beggar="NPCCharacter.beggar_sturgia"
+    female_beggar="NPCCharacter.female_beggar_sturgia"
+    female_dancer="NPCCharacter.female_dancer_sturgia"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
+    gear_dummy="NPCCharacter.gear_dummy_sturgia"
+    default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    board_game_type="Konane">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_gundabad_male_name_1}Azgar" />
+      <name name="{=aom_gundabad_male_name_2}Drozmak" />
+      <name name="{=aom_gundabad_male_name_3}Kargoth" />
+      <name name="{=aom_gundabad_male_name_4}Thrazak" />
+      <name name="{=aom_gundabad_male_name_5}Ulgrim" />
+      <name name="{=aom_gundabad_male_name_6}Zorgath" />
+      <name name="{=aom_gundabad_male_name_7}Gragor" />
+      <name name="{=aom_gundabad_male_name_8}Durmash" />
+      <name name="{=aom_gundabad_male_name_9}Vorgoth" />
+      <name name="{=aom_gundabad_male_name_10}Mugzun" />
+      <name name="{=aom_gundabad_male_name_11}Lurzok" />
+      <name name="{=aom_gundabad_male_name_12}Zorgha" />
+      <name name="{=aom_gundabad_male_name_13}Thrumak" />
+      <name name="{=aom_gundabad_male_name_14}Nargoth" />
+      <name name="{=aom_gundabad_male_name_15}Borzak" />
+      <name name="{=aom_gundabad_male_name_16}Druznar" />
+      <name name="{=aom_gundabad_male_name_17}Kragloth" />
+      <name name="{=aom_gundabad_male_name_18}Vurzag" />
+      <name name="{=aom_gundabad_male_name_19}Narlog" />
+      <name name="{=aom_gundabad_male_name_20}Thalrug" />
+      <name name="{=aom_gundabad_male_name_21}Urzul" />
+      <name name="{=aom_gundabad_male_name_22}Gralthak" />
+      <name name="{=aom_gundabad_male_name_23}Vorgrim" />
+      <name name="{=aom_gundabad_male_name_24}Mazkor" />
+      <name name="{=aom_gundabad_male_name_25}Bolgath" />
+      <name name="{=aom_gundabad_male_name_26}Lurthak" />
+      <name name="{=aom_gundabad_male_name_27}Thrugol" />
+      <name name="{=aom_gundabad_male_name_28}Narzuk" />
+      <name name="{=aom_gundabad_male_name_29}Kruznor" />
+      <name name="{=aom_gundabad_male_name_30}Thrazgul" />
+      <name name="{=aom_gundabad_male_name_31}Durzak" />
+      <name name="{=aom_gundabad_male_name_32}Zulgoth" />
+      <name name="{=aom_gundabad_male_name_33}Vorzak" />
+      <name name="{=aom_gundabad_male_name_34}Krogar" />
+      <name name="{=aom_gundabad_male_name_35}Thrunak" />
+      <name name="{=aom_gundabad_male_name_36}Grazar" />
+      <name name="{=aom_gundabad_male_name_37}Narzog" />
+      <name name="{=aom_gundabad_male_name_38}Ulgrim" />
+      <name name="{=aom_gundabad_male_name_39}Vurlak" />
+      <name name="{=aom_gundabad_male_name_40}Borzak" />
+      <name name="{=aom_gundabad_male_name_41}Durzor" />
+      <name name="{=aom_gundabad_male_name_42}Muzrag" />
+      <name name="{=aom_gundabad_male_name_43}Gralthor" />
+      <name name="{=aom_gundabad_male_name_44}Tharzog" />
+      <name name="{=aom_gundabad_male_name_45}Vrognak" />
+      <name name="{=aom_gundabad_male_name_46}Karnak" />
+      <name name="{=aom_gundabad_male_name_47}Borzak" />
+      <name name="{=aom_gundabad_male_name_48}Narzul" />
+      <name name="{=aom_gundabad_male_name_49}Thrulgoth" />
+      <name name="{=aom_gundabad_male_name_50}Druzmok" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_gundabad_female_name_1}Gralza" />
+      <name name="{=aom_gundabad_female_name_2}Thurka" />
+      <name name="{=aom_gundabad_female_name_3}Zulgara" />
+      <name name="{=aom_gundabad_female_name_4}Vorzha" />
+      <name name="{=aom_gundabad_female_name_5}Durga" />
+      <name name="{=aom_gundabad_female_name_6}Nargra" />
+      <name name="{=aom_gundabad_female_name_7}Thrulza" />
+      <name name="{=aom_gundabad_female_name_8}Muzra" />
+      <name name="{=aom_gundabad_female_name_9}Kralza" />
+      <name name="{=aom_gundabad_female_name_10}Ulzara" />
+      <name name="{=aom_gundabad_female_name_11}Borza" />
+      <name name="{=aom_gundabad_female_name_12}Zargra" />
+      <name name="{=aom_gundabad_female_name_13}Grusha" />
+      <name name="{=aom_gundabad_female_name_14}Dursha" />
+      <name name="{=aom_gundabad_female_name_15}Thalra" />
+      <name name="{=aom_gundabad_female_name_16}Vorla" />
+      <name name="{=aom_gundabad_female_name_17}Nargul" />
+      <name name="{=aom_gundabad_female_name_18}Thurka" />
+      <name name="{=aom_gundabad_female_name_19}Ulsha" />
+      <name name="{=aom_gundabad_female_name_20}Muzrak" />
+      <name name="{=aom_gundabad_female_name_21}Kralsha" />
+      <name name="{=aom_gundabad_female_name_22}Gralsha" />
+      <name name="{=aom_gundabad_female_name_23}Dursha" />
+      <name name="{=aom_gundabad_female_name_24}Thranza" />
+      <name name="{=aom_gundabad_female_name_25}Nargra" />
+      <name name="{=aom_gundabad_female_name_26}Ulzira" />
+      <name name="{=aom_gundabad_female_name_27}Borlia" />
+      <name name="{=aom_gundabad_female_name_28}Zorgla" />
+      <name name="{=aom_gundabad_female_name_29}Durla" />
+      <name name="{=aom_gundabad_female_name_30}Muzsha" />
+      <name name="{=aom_gundabad_female_name_31}Thrulga" />
+      <name name="{=aom_gundabad_female_name_32}Narsha" />
+      <name name="{=aom_gundabad_female_name_33}Kralga" />
+      <name name="{=aom_gundabad_female_name_34}Grinza" />
+      <name name="{=aom_gundabad_female_name_35}Thalzia" />
+      <name name="{=aom_gundabad_female_name_36}Vorgla" />
+      <name name="{=aom_gundabad_female_name_37}Ulzila" />
+      <name name="{=aom_gundabad_female_name_38}Durzha" />
+      <name name="{=aom_gundabad_female_name_39}Nargula" />
+      <name name="{=aom_gundabad_female_name_40}Thrugla" />
+      <name name="{=aom_gundabad_female_name_41}Muzla" />
+      <name name="{=aom_gundabad_female_name_42}Gralna" />
+      <name name="{=aom_gundabad_female_name_43}Tharka" />
+      <name name="{=aom_gundabad_female_name_44}Ulzara" />
+      <name name="{=aom_gundabad_female_name_45}Kralza" />
+      <name name="{=aom_gundabad_female_name_46}Durka" />
+      <name name="{=aom_gundabad_female_name_47}Thruna" />
+      <name name="{=aom_gundabad_female_name_48}Borza" />
+      <name name="{=aom_gundabad_female_name_49}Zorga" />
+      <name name="{=aom_gundabad_female_name_50}Narlia" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- UMBAR - Corsairs of Umbar                     -->
+  <!-- ============================================== -->
+  <Culture
+    id="umbar"
+    name="{=aom_umbar_name}Umbar"
+    is_main_culture="true"
+    color="0xFF3A1F1F"
+    color2="0xFFB5913E"
+    cloth_alternative_color1="0xff5A2C09"
+    cloth_alternative_color2="0xffC28C61"
+    elite_basic_troop="NPCCharacter.aserai_mamluke_soldier"
+    basic_troop="NPCCharacter.aserai_recruit"
+    melee_militia_troop="NPCCharacter.aserai_militia_spearman"
+    ranged_militia_troop="NPCCharacter.aserai_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.aserai_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.aserai_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_aserai_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"
+    encounter_background_mesh="encounter_aserai"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_aserai"
+    caravan_party_template="PartyTemplate.caravan_template_aserai"
+    militia_party_template="PartyTemplate.militia_aserai_template"
+    rebels_party_template="PartyTemplate.rebels_aserai_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_aserai"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_umbar_desc}The people of Umbar are seafaring warriors and corsairs, masters of the seas south of Gondor. Descended from Númenórean exiles, they are known for their cunning and ferocity in battle. Under black sails, their fleets raid the coasts, striking fear into the hearts of their enemies. While their allegiances lie with Sauron, the Corsairs of Umbar are fiercely independent, valuing strength and cunning above all."
+    tournament_master="NPCCharacter.tournament_master_aserai"
+    villager="NPCCharacter.villager_aserai"
+    caravan_master="NPCCharacter.caravan_master_aserai"
+    armed_trader="NPCCharacter.armed_trader_aserai"
+    caravan_guard="NPCCharacter.caravan_guard_aserai"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_aserai"
+    prison_guard="NPCCharacter.prison_guard_aserai"
+    guard="NPCCharacter.guard_aserai"
+    blacksmith="NPCCharacter.blacksmith_aserai"
+    weaponsmith="NPCCharacter.weaponsmith_aserai"
+    townswoman="NPCCharacter.townswoman_aserai"
+    townswoman_infant="NPCCharacter.townswoman_infant_aserai"
+    townswoman_child="NPCCharacter.townswoman_child_aserai"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_aserai"
+    townsman="NPCCharacter.townsman_aserai"
+    townsman_infant="NPCCharacter.townsman_infant_aserai"
+    townsman_child="NPCCharacter.townsman_child_aserai"
+    townsman_teenager="NPCCharacter.townsman_teenager_aserai"
+    village_woman="NPCCharacter.village_woman_aserai"
+    villager_male_child="NPCCharacter.villager_child_aserai"
+    villager_male_teenager="NPCCharacter.villager_teenager_aserai"
+    villager_female_child="NPCCharacter.village_woman_child_aserai"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_aserai"
+    ransom_broker="NPCCharacter.ransom_broker_aserai"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_aserai"
+    merchant_notary="NPCCharacter.merchant_notary_aserai"
+    artisan_notary="NPCCharacter.artisan_notary_aserai"
+    preacher_notary="NPCCharacter.preacher_notary_aserai"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_aserai"
+    shop_worker="NPCCharacter.shop_worker_aserai"
+    tavernkeeper="NPCCharacter.tavernkeeper_aserai"
+    taverngamehost="NPCCharacter.taverngamehost_aserai"
+    musician="NPCCharacter.musician_aserai"
+    tavern_wench="NPCCharacter.tavern_wench_aserai"
+    armorer="NPCCharacter.armorer_aserai"
+    horseMerchant="NPCCharacter.horseMerchant_aserai"
+    barber="NPCCharacter.barber_aserai"
+    merchant="NPCCharacter.merchant_aserai"
+    beggar="NPCCharacter.beggar_aserai"
+    female_beggar="NPCCharacter.female_beggar_aserai"
+    female_dancer="NPCCharacter.female_dancer_aserai"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_aserai"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_aserai"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_aserai"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_aserai"
+    gear_dummy="NPCCharacter.gear_dummy_aserai"
+    default_battle_equipment_roster="EquipmentRoster.ase_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.ase_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.ase_duel_preset_template"
+    board_game_type="Seega">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_umbar_male_name_1}Khareld" />
+      <name name="{=aom_umbar_male_name_2}Vardun" />
+      <name name="{=aom_umbar_male_name_3}Rashid" />
+      <name name="{=aom_umbar_male_name_4}Zarash" />
+      <name name="{=aom_umbar_male_name_5}Malkir" />
+      <name name="{=aom_umbar_male_name_6}Tharzon" />
+      <name name="{=aom_umbar_male_name_7}Jorvin" />
+      <name name="{=aom_umbar_male_name_8}Rohzar" />
+      <name name="{=aom_umbar_male_name_9}Nazrin" />
+      <name name="{=aom_umbar_male_name_10}Khalim" />
+      <name name="{=aom_umbar_male_name_11}Ashkar" />
+      <name name="{=aom_umbar_male_name_12}Darion" />
+      <name name="{=aom_umbar_male_name_13}Zaryth" />
+      <name name="{=aom_umbar_male_name_14}Farim" />
+      <name name="{=aom_umbar_male_name_15}Bahran" />
+      <name name="{=aom_umbar_male_name_16}Suldir" />
+      <name name="{=aom_umbar_male_name_17}Mordhak" />
+      <name name="{=aom_umbar_male_name_18}Zulfar" />
+      <name name="{=aom_umbar_male_name_19}Azrak" />
+      <name name="{=aom_umbar_male_name_20}Harum" />
+      <name name="{=aom_umbar_male_name_21}Ramlis" />
+      <name name="{=aom_umbar_male_name_22}Tarnis" />
+      <name name="{=aom_umbar_male_name_23}Havrim" />
+      <name name="{=aom_umbar_male_name_24}Zorin" />
+      <name name="{=aom_umbar_male_name_25}Malrid" />
+      <name name="{=aom_umbar_male_name_26}Vothar" />
+      <name name="{=aom_umbar_male_name_27}Aramdir" />
+      <name name="{=aom_umbar_male_name_28}Nazar" />
+      <name name="{=aom_umbar_male_name_29}Selrad" />
+      <name name="{=aom_umbar_male_name_30}Tazrin" />
+      <name name="{=aom_umbar_male_name_31}Jorhad" />
+      <name name="{=aom_umbar_male_name_32}Bazrin" />
+      <name name="{=aom_umbar_male_name_33}Haradim" />
+      <name name="{=aom_umbar_male_name_34}Shazur" />
+      <name name="{=aom_umbar_male_name_35}Zafrid" />
+      <name name="{=aom_umbar_male_name_36}Kalzar" />
+      <name name="{=aom_umbar_male_name_37}Rhamir" />
+      <name name="{=aom_umbar_male_name_38}Tarnid" />
+      <name name="{=aom_umbar_male_name_39}Virdak" />
+      <name name="{=aom_umbar_male_name_40}Dornak" />
+      <name name="{=aom_umbar_male_name_41}Marzun" />
+      <name name="{=aom_umbar_male_name_42}Azril" />
+      <name name="{=aom_umbar_male_name_43}Selkar" />
+      <name name="{=aom_umbar_male_name_44}Zulrin" />
+      <name name="{=aom_umbar_male_name_45}Nazrah" />
+      <name name="{=aom_umbar_male_name_46}Rahzir" />
+      <name name="{=aom_umbar_male_name_47}Talmir" />
+      <name name="{=aom_umbar_male_name_48}Bardum" />
+      <name name="{=aom_umbar_male_name_49}Jorvim" />
+      <name name="{=aom_umbar_male_name_50}Arakaz" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_umbar_female_name_1}Selara" />
+      <name name="{=aom_umbar_female_name_2}Vazrah" />
+      <name name="{=aom_umbar_female_name_3}Raniyah" />
+      <name name="{=aom_umbar_female_name_4}Zahara" />
+      <name name="{=aom_umbar_female_name_5}Malira" />
+      <name name="{=aom_umbar_female_name_6}Thazia" />
+      <name name="{=aom_umbar_female_name_7}Jorina" />
+      <name name="{=aom_umbar_female_name_8}Rahzirah" />
+      <name name="{=aom_umbar_female_name_9}Nazira" />
+      <name name="{=aom_umbar_female_name_10}Kalima" />
+      <name name="{=aom_umbar_female_name_11}Ashna" />
+      <name name="{=aom_umbar_female_name_12}Darira" />
+      <name name="{=aom_umbar_female_name_13}Zarina" />
+      <name name="{=aom_umbar_female_name_14}Fahira" />
+      <name name="{=aom_umbar_female_name_15}Bahlia" />
+      <name name="{=aom_umbar_female_name_16}Sulina" />
+      <name name="{=aom_umbar_female_name_17}Mordhira" />
+      <name name="{=aom_umbar_female_name_18}Zulfara" />
+      <name name="{=aom_umbar_female_name_19}Azriya" />
+      <name name="{=aom_umbar_female_name_20}Harima" />
+      <name name="{=aom_umbar_female_name_21}Ralmira" />
+      <name name="{=aom_umbar_female_name_22}Tazira" />
+      <name name="{=aom_umbar_female_name_23}Havina" />
+      <name name="{=aom_umbar_female_name_24}Zorina" />
+      <name name="{=aom_umbar_female_name_25}Malaya" />
+      <name name="{=aom_umbar_female_name_26}Vothira" />
+      <name name="{=aom_umbar_female_name_27}Aramira" />
+      <name name="{=aom_umbar_female_name_28}Nazirah" />
+      <name name="{=aom_umbar_female_name_29}Selina" />
+      <name name="{=aom_umbar_female_name_30}Tazina" />
+      <name name="{=aom_umbar_female_name_31}Jorana" />
+      <name name="{=aom_umbar_female_name_32}Bazira" />
+      <name name="{=aom_umbar_female_name_33}Haradya" />
+      <name name="{=aom_umbar_female_name_34}Shazira" />
+      <name name="{=aom_umbar_female_name_35}Zafina" />
+      <name name="{=aom_umbar_female_name_36}Kalzira" />
+      <name name="{=aom_umbar_female_name_37}Rhamina" />
+      <name name="{=aom_umbar_female_name_38}Tarnia" />
+      <name name="{=aom_umbar_female_name_39}Virina" />
+      <name name="{=aom_umbar_female_name_40}Dornya" />
+      <name name="{=aom_umbar_female_name_41}Marzila" />
+      <name name="{=aom_umbar_female_name_42}Azriya" />
+      <name name="{=aom_umbar_female_name_43}Selzira" />
+      <name name="{=aom_umbar_female_name_44}Zulfara" />
+      <name name="{=aom_umbar_female_name_45}Nazhra" />
+      <name name="{=aom_umbar_female_name_46}Rahzara" />
+      <name name="{=aom_umbar_female_name_47}Talzira" />
+      <name name="{=aom_umbar_female_name_48}Bardina" />
+      <name name="{=aom_umbar_female_name_49}Jorvaya" />
+      <name name="{=aom_umbar_female_name_50}Arakara" />
+    </female_names>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- DOLGULDUR - Dol Guldur Orcs                   -->
+  <!-- ============================================== -->
+  <Culture
+    id="dolguldur"
+    name="{=aom_dolguldur_name}Dol Guldur Orcs"
+    is_main_culture="true"
+    color="0xFF2F2A2A"
+    color2="0xFF5C7352"
+    cloth_alternative_color1="0xff482914"
+    cloth_alternative_color2="0xff866345"
+    elite_basic_troop="NPCCharacter.sturgian_warrior_son"
+    basic_troop="NPCCharacter.sturgian_recruit"
+    melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
+    ranged_militia_troop="NPCCharacter.sturgian_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
+    can_have_settlement="true"
+    town_edge_number="16"
+    villager_party_template="PartyTemplate.villager_sturgia_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
+    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    militia_party_template="PartyTemplate.militia_sturgia_template"
+    rebels_party_template="PartyTemplate.rebels_sturgia_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    text="{=aom_dolguldur_desc}Dol Guldur is a fortress of shadow and malice. Once a stronghold of Sauron in Mirkwood, it is now ruled by the Necromancer's dark lieutenants. The armies of Dol Guldur are a fearsome blend of orcs, wargs, and dark sorcery. This bastion of evil corrupts the forest around it, spreading decay and despair. The warriors of Dol Guldur are relentless, driven by the will of their dark master."
+    tournament_master="NPCCharacter.tournament_master_sturgia"
+    villager="NPCCharacter.villager_sturgia"
+    caravan_master="NPCCharacter.caravan_master_sturgia"
+    armed_trader="NPCCharacter.armed_trader_sturgia"
+    caravan_guard="NPCCharacter.caravan_guard_sturgia"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
+    prison_guard="NPCCharacter.prison_guard_sturgia"
+    guard="NPCCharacter.guard_sturgia"
+    blacksmith="NPCCharacter.blacksmith_sturgia"
+    weaponsmith="NPCCharacter.weaponsmith_sturgia"
+    townswoman="NPCCharacter.townswoman_sturgia"
+    townswoman_infant="NPCCharacter.townswoman_infant_sturgia"
+    townswoman_child="NPCCharacter.townswoman_child_sturgia"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_sturgia"
+    townsman="NPCCharacter.townsman_sturgia"
+    townsman_infant="NPCCharacter.townsman_infant_sturgia"
+    townsman_child="NPCCharacter.townsman_child_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
+    village_woman="NPCCharacter.village_woman_sturgia"
+    villager_male_child="NPCCharacter.villager_child_sturgia"
+    villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
+    villager_female_child="NPCCharacter.village_woman_child_sturgia"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    ransom_broker="NPCCharacter.ransom_broker_sturgia"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
+    merchant_notary="NPCCharacter.merchant_notary_sturgia"
+    artisan_notary="NPCCharacter.artisan_notary_sturgia"
+    preacher_notary="NPCCharacter.preacher_notary_sturgia"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_sturgia"
+    shop_worker="NPCCharacter.shop_worker_sturgia"
+    tavernkeeper="NPCCharacter.tavernkeeper_sturgia"
+    taverngamehost="NPCCharacter.taverngamehost_sturgia"
+    musician="NPCCharacter.musician_sturgia"
+    tavern_wench="NPCCharacter.tavern_wench_sturgia"
+    armorer="NPCCharacter.armorer_sturgia"
+    horseMerchant="NPCCharacter.horseMerchant_sturgia"
+    barber="NPCCharacter.barber_sturgia"
+    merchant="NPCCharacter.merchant_sturgia"
+    beggar="NPCCharacter.beggar_sturgia"
+    female_beggar="NPCCharacter.female_beggar_sturgia"
+    female_dancer="NPCCharacter.female_dancer_sturgia"
+    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
+    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
+    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
+    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
+    gear_dummy="NPCCharacter.gear_dummy_sturgia"
+    default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    board_game_type="Konane">
+    <vassal_reward_items />
+    <banner_bearer_replacement_weapons />
+    <default_policies />
+    <male_names>
+      <name name="{=aom_dolguldur_male_name_1}Thrangul" />
+      <name name="{=aom_dolguldur_male_name_2}Morgulash" />
+      <name name="{=aom_dolguldur_male_name_3}Drazgor" />
+      <name name="{=aom_dolguldur_male_name_4}Zarkash" />
+      <name name="{=aom_dolguldur_male_name_5}Gorzag" />
+      <name name="{=aom_dolguldur_male_name_6}Ulthrak" />
+      <name name="{=aom_dolguldur_male_name_7}Vorthak" />
+      <name name="{=aom_dolguldur_male_name_8}Narzugh" />
+      <name name="{=aom_dolguldur_male_name_9}Durkar" />
+      <name name="{=aom_dolguldur_male_name_10}Thrargol" />
+      <name name="{=aom_dolguldur_male_name_11}Kazrag" />
+      <name name="{=aom_dolguldur_male_name_12}Zorgrul" />
+      <name name="{=aom_dolguldur_male_name_13}Morzag" />
+      <name name="{=aom_dolguldur_male_name_14}Druzhak" />
+      <name name="{=aom_dolguldur_male_name_15}Thalruk" />
+      <name name="{=aom_dolguldur_male_name_16}Lorgath" />
+      <name name="{=aom_dolguldur_male_name_17}Nargrash" />
+      <name name="{=aom_dolguldur_male_name_18}Urzok" />
+      <name name="{=aom_dolguldur_male_name_19}Vorzul" />
+      <name name="{=aom_dolguldur_male_name_20}Gralzuk" />
+      <name name="{=aom_dolguldur_male_name_21}Durmorg" />
+      <name name="{=aom_dolguldur_male_name_22}Thorzag" />
+      <name name="{=aom_dolguldur_male_name_23}Krozar" />
+      <name name="{=aom_dolguldur_male_name_24}Zulgath" />
+      <name name="{=aom_dolguldur_male_name_25}Thurnak" />
+      <name name="{=aom_dolguldur_male_name_26}Vargul" />
+      <name name="{=aom_dolguldur_male_name_27}Darnash" />
+      <name name="{=aom_dolguldur_male_name_28}Lurzag" />
+      <name name="{=aom_dolguldur_male_name_29}Muzkar" />
+      <name name="{=aom_dolguldur_male_name_30}Throrgash" />
+      <name name="{=aom_dolguldur_male_name_31}Gorvash" />
+      <name name="{=aom_dolguldur_male_name_32}Narduk" />
+      <name name="{=aom_dolguldur_male_name_33}Zulgor" />
+      <name name="{=aom_dolguldur_male_name_34}Dulruk" />
+      <name name="{=aom_dolguldur_male_name_35}Thrugash" />
+      <name name="{=aom_dolguldur_male_name_36}Kargul" />
+      <name name="{=aom_dolguldur_male_name_37}Ulzar" />
+      <name name="{=aom_dolguldur_male_name_38}Vorgrash" />
+      <name name="{=aom_dolguldur_male_name_39}Durzag" />
+      <name name="{=aom_dolguldur_male_name_40}Grornak" />
+      <name name="{=aom_dolguldur_male_name_41}Lurgash" />
+      <name name="{=aom_dolguldur_male_name_42}Narzul" />
+      <name name="{=aom_dolguldur_male_name_43}Thargol" />
+      <name name="{=aom_dolguldur_male_name_44}Morkash" />
+      <name name="{=aom_dolguldur_male_name_45}Zorthak" />
+      <name name="{=aom_dolguldur_male_name_46}Durgrak" />
+      <name name="{=aom_dolguldur_male_name_47}Kazgul" />
+      <name name="{=aom_dolguldur_male_name_48}Thrurg" />
+      <name name="{=aom_dolguldur_male_name_49}Zarlug" />
+      <name name="{=aom_dolguldur_male_name_50}Muzrak" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_dolguldur_female_name_1}Thrulza" />
+      <name name="{=aom_dolguldur_female_name_2}Narsha" />
+      <name name="{=aom_dolguldur_female_name_3}Grasha" />
+      <name name="{=aom_dolguldur_female_name_4}Durzha" />
+      <name name="{=aom_dolguldur_female_name_5}Zargra" />
+      <name name="{=aom_dolguldur_female_name_6}Thalka" />
+      <name name="{=aom_dolguldur_female_name_7}Morgra" />
+      <name name="{=aom_dolguldur_female_name_8}Ulzra" />
+      <name name="{=aom_dolguldur_female_name_9}Vorzha" />
+      <name name="{=aom_dolguldur_female_name_10}Kazria" />
+      <name name="{=aom_dolguldur_female_name_11}Nargula" />
+      <name name="{=aom_dolguldur_female_name_12}Lurgra" />
+      <name name="{=aom_dolguldur_female_name_13}Druzhka" />
+      <name name="{=aom_dolguldur_female_name_14}Tharzia" />
+      <name name="{=aom_dolguldur_female_name_15}Zulgara" />
+      <name name="{=aom_dolguldur_female_name_16}Durla" />
+      <name name="{=aom_dolguldur_female_name_17}Narzia" />
+      <name name="{=aom_dolguldur_female_name_18}Thrulna" />
+      <name name="{=aom_dolguldur_female_name_19}Ulsha" />
+      <name name="{=aom_dolguldur_female_name_20}Vorgla" />
+      <name name="{=aom_dolguldur_female_name_21}Muzra" />
+      <name name="{=aom_dolguldur_female_name_22}Gralza" />
+      <name name="{=aom_dolguldur_female_name_23}Kazla" />
+      <name name="{=aom_dolguldur_female_name_24}Narsha" />
+      <name name="{=aom_dolguldur_female_name_25}Thalka" />
+      <name name="{=aom_dolguldur_female_name_26}Ulza" />
+      <name name="{=aom_dolguldur_female_name_27}Durzia" />
+      <name name="{=aom_dolguldur_female_name_28}Lurzha" />
+      <name name="{=aom_dolguldur_female_name_29}Zorla" />
+      <name name="{=aom_dolguldur_female_name_30}Thrulra" />
+      <name name="{=aom_dolguldur_female_name_31}Vorza" />
+      <name name="{=aom_dolguldur_female_name_32}Narzulra" />
+      <name name="{=aom_dolguldur_female_name_33}Muzgra" />
+      <name name="{=aom_dolguldur_female_name_34}Durgra" />
+      <name name="{=aom_dolguldur_female_name_35}Nargra" />
+      <name name="{=aom_dolguldur_female_name_36}Tharzia" />
+      <name name="{=aom_dolguldur_female_name_37}Kazria" />
+      <name name="{=aom_dolguldur_female_name_38}Gralzia" />
+      <name name="{=aom_dolguldur_female_name_39}Urzara" />
+      <name name="{=aom_dolguldur_female_name_40}Druznia" />
+      <name name="{=aom_dolguldur_female_name_41}Vorgria" />
+      <name name="{=aom_dolguldur_female_name_42}Thrulzia" />
+      <name name="{=aom_dolguldur_female_name_43}Zulgora" />
+      <name name="{=aom_dolguldur_female_name_44}Narzia" />
+      <name name="{=aom_dolguldur_female_name_45}Kaznia" />
+      <name name="{=aom_dolguldur_female_name_46}Lurzia" />
+      <name name="{=aom_dolguldur_female_name_47}Durla" />
+      <name name="{=aom_dolguldur_female_name_48}Gralnia" />
+      <name name="{=aom_dolguldur_female_name_49}Thalka" />
+      <name name="{=aom_dolguldur_female_name_50}Vorla" />
+    </female_names>
+  </Culture>
+</SPCultures>

@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Kingdoms>
+    <!--Erebor - Dwarven Kingdom-->
+    <Kingdom
+        id="erebor"
+        owner="Hero.lord_E1_1"
+        initial_home_settlement="Settlement.town_erebor"
+        banner_key="11.164.164.1528.1528.764.764.1.0.0.17338.2000.171.700.700.764.764.0.0.0"
+        primary_banner_color="0xff0A5730"
+        secondary_banner_color="0xffFFD700"
+        label_color="FF0A3A2A"
+        color="FF004D26"
+        color2="FFB8860B"
+        alternative_color="FF002A1E"
+        alternative_color2="FFDAA520"
+        culture="Culture.erebor"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_erebor_name}Erebor"
+        short_name="{=taom_erebor_short_name}Erebor"
+        title="{=taom_erebor_title}Kingdom of Erebor"
+        ruler_title="{=taom_erebor_ruler_title}King"
+        text="{=taom_erebor_desc}The Lonely Mountain, Erebor, stands as the greatest of the Dwarven kingdoms in the north. Rich in gold and mithril, it is home to the line of Durin. The Dwarves of Erebor are renowned craftsmen and fierce warriors, their halls echoing with the songs of their ancestors.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Rivendell - Noldor Elves-->
+    <Kingdom
+        id="rivendell"
+        owner="Hero.lord_R1_1"
+        initial_home_settlement="Settlement.town_rivendell"
+        banner_key="11.116.149.3000.3000.764.764.1.0.0.503.40.90.400.400.765.765.0.0.0.503.146.90.374.374.765.765.0.0.0.503.102.90.336.336.765.765.0.0.0.503.78.90.300.300.765.765.0.0.0.503.40.90.267.267.765.765.0.0.0.503.116.90.239.239.765.765.0.0.0"
+        primary_banner_color="0xff1A1A1A"
+        secondary_banner_color="0xff2000AF"
+        label_color="0xff3A1F1F"
+        color="0xff1A1A1A"
+        color2="0xff2000AF"
+        alternative_color="0xff1A1A1A"
+        alternative_color2="0xff223C5E"
+        culture="Culture.rivendell"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_rivendell_name}Imladris"
+        short_name="{=taom_rivendell_short_name}Imladris"
+        title="{=taom_rivendell_title}Refuge of Imladris"
+        ruler_title="{=taom_rivendell_ruler_title}Lord"
+        text="{=taom_rivendell_desc}Hidden deep within the clefts of the Misty Mountains, Rivendell is the Last Homely House East of the Sea. Founded by Elrond Half-elven, it is a refuge against the gathering dark, a place of healing, lore, and quiet strength.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="1"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Mirkwood - Silvan Elves-->
+    <Kingdom
+        id="mirkwood"
+        owner="Hero.lord_M1_1"
+        initial_home_settlement="Settlement.town_mirkwood"
+        banner_key="11.129.75.4345.4345.764.764.1.0.0.505.2.100.500.500.764.764.0.1.45.505.40.100.471.471.764.764.0.1.45.505.2.100.447.447.764.764.0.1.45"
+        primary_banner_color="0xff2D5A29"
+        secondary_banner_color="0xff9DBF60"
+        label_color="0xff1F3B19"
+        color="0xff164021"
+        color2="0xffA8C47C"
+        alternative_color="0xff122814"
+        alternative_color2="0xffBCCB85"
+        culture="Culture.mirkwood"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_mirkwood_name}Lasgalen"
+        short_name="{=taom_mirkwood_short_name}Lasgalen"
+        title="{=taom_mirkwood_title}Kingdom of Lasgalen"
+        ruler_title="{=taom_mirkwood_ruler_title}Aran"
+        text="{=taom_mirkwood_desc}The Woodland Realm of Mirkwood has endured much hardship over the years. Under the leadership of Thranduil, the Woodelves have become reclusive and wary of strangers. Yet in the heart of Thranduil lingers a fire kindled in the ancient days of the First Age.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="1"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Lothlorien - Galadhrim Elves-->
+    <Kingdom
+        id="lothlorien"
+        owner="Hero.lord_L1_1"
+        initial_home_settlement="Settlement.town_lothlorien"
+        banner_key="11.40.149.3000.3000.764.764.1.0.0.512.116.90.1030.644.764.764.0.0.0.512.40.90.1005.628.764.764.0.0.0"
+        primary_banner_color="0xff315A49"
+        secondary_banner_color="0xffA8D1A6"
+        label_color="0xff204B39"
+        color="0xff184031"
+        color2="0xffC0E3B5"
+        alternative_color="0xff14382C"
+        alternative_color2="0xff99C9A0"
+        culture="Culture.lothlorien"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_lothlorien_name}Lothlorien"
+        short_name="{=taom_lothlorien_short_name}Lothlorien"
+        title="{=taom_lothlorien_title}Kingdom of Lothlorien"
+        ruler_title="{=taom_lothlorien_ruler_title}Lady"
+        text="{=taom_lothlorien_desc}The Golden Wood lies nestled between the Silverlode and the mighty Anduin. Guarded by the will of Galadriel and Celeborn, it stands as a bastion of Elven grace and defiance - a land untouched by time, where the leaves do not fall.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="1"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Isengard - Uruk-hai-->
+    <Kingdom
+        id="isengard"
+        owner="Hero.lord_I1_1"
+        initial_home_settlement="Settlement.town_isengard"
+        banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17224.172.171.700.700.764.764.0.0.0"
+        primary_banner_color="0xff000000"
+        secondary_banner_color="0xffFFFFFF"
+        label_color="0xff2B2B2B"
+        color="0xff303030"
+        color2="0xff5A5A5A"
+        alternative_color="0xff707070"
+        alternative_color2="0xff3A3A3A"
+        culture="Culture.isengard"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_isengard_name}Isengard"
+        short_name="{=taom_isengard_short_name}Isengard"
+        title="{=taom_isengard_title}Overlordship of Isengard"
+        ruler_title="{=taom_isengard_ruler_title}Warlord"
+        text="{=taom_isengard_desc}Isengard, the stronghold of the White Wizard Saruman, stands as a bastion of power and ambition. The Uruk-hai march forth under the banner of the White Hand, their discipline and savagery unmatched.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Gundabad - Orc Stronghold-->
+    <Kingdom
+        id="gundabad"
+        owner="Hero.lord_G1_1"
+        initial_home_settlement="Settlement.town_gundabad"
+        banner_key="11.2011.2011.1528.1528.764.764.1.0.0.17320.327.171.483.483.764.764.0.0.0"
+        primary_banner_color="0xff2D2D2D"
+        secondary_banner_color="0xff585858"
+        label_color="0xff1A1A1A"
+        color="0xff343434"
+        color2="0xff707070"
+        alternative_color="0xff282828"
+        alternative_color2="0xff4C4C4C"
+        culture="Culture.gundabad"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_gundabad_name}Gundabad"
+        short_name="{=taom_gundabad_short_name}Gundabad"
+        title="{=taom_gundabad_title}Gundabad"
+        ruler_title="{=taom_gundabad_ruler_title}Warlord"
+        text="{=taom_gundabad_desc}Gundabad, the ancient and foreboding stronghold of the Orcs, stands as a bastion of savagery and domination. The Orcs of Gundabad, bred for war and chaos, rally under bloodied banners.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Umbar - Corsairs-->
+    <Kingdom
+        id="umbar"
+        owner="Hero.lord_U1_1"
+        initial_home_settlement="Settlement.town_umbar"
+        banner_key="11.149.149.2059.1496.768.764.1.1.0.505.0.108.10.866.469.764.0.0.-1.505.0.108.10.866.1061.764.0.0.-1"
+        primary_banner_color="0xff8B4513"
+        secondary_banner_color="0xffCD853F"
+        label_color="0xff5F370D"
+        color="0xff6A4513"
+        color2="0xffD9A673"
+        alternative_color="0xff5A2C09"
+        alternative_color2="0xffC28C61"
+        culture="Culture.umbar"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_umbar_name}Umbar"
+        short_name="{=taom_umbar_short_name}Umbar"
+        title="{=taom_umbar_title}Haven of Umbar"
+        ruler_title="{=taom_umbar_ruler_title}Corsair King"
+        text="{=taom_umbar_desc}Umbar, the dark haven of the Corsairs, is a realm steeped in maritime power and treacherous ambition. The Corsairs raid the coasts of Middle-earth, spreading fear with their swift ships.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Dol Guldur - Necromancer's Fortress-->
+    <Kingdom
+        id="dolguldur"
+        owner="Hero.lord_D1_1"
+        initial_home_settlement="Settlement.town_dolguldur"
+        banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17180.2002.171.700.700.764.764.0.0.0"
+        primary_banner_color="0xff4F321A"
+        secondary_banner_color="0xff7B5234"
+        label_color="0xff3A2510"
+        color="0xff5C3A1E"
+        color2="0xff9A7352"
+        alternative_color="0xff482914"
+        alternative_color2="0xff866345"
+        culture="Culture.dolguldur"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_dolguldur_name}Dol Guldur"
+        short_name="{=taom_dolguldur_short_name}Dol Guldur"
+        title="{=taom_dolguldur_title}Necromancy of Dol Guldur"
+        ruler_title="{=taom_dolguldur_ruler_title}Dread-Lord"
+        text="{=taom_dolguldur_desc}Dol Guldur, the fortress of shadow and despair, stands as a menacing beacon of the Necromancer's dark will. The Orcs and foul creatures that inhabit its depths strike fear into the hearts of all.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+</Kingdoms>

@@ -1039,6 +1039,43 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.dolguldur -->
+    <NPCCharacter id="lord_1_48" name="{=aom_lord_1_48_name}Khamûl, the Easterling" default_group="Infantry" age="20" race="nazghul" voice="earnest" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <BodyProperties version="4" age="22.19" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="320" />
+            <skill id="TwoHanded" value="320" />
+            <skill id="Polearm" value="320" />
+            <skill id="Bow" value="280" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="360" />
+            <skill id="Riding" value="320" />
+            <skill id="Athletics" value="305" />
+            <skill id="Crafting" value="450" />
+            <skill id="Scouting" value="480" />
+            <skill id="Tactics" value="420" />
+            <skill id="Charm" value="90" />
+            <skill id="Leadership" value="440" />
+            <skill id="Trade" value="450" />
+            <skill id="Steward" value="630" />
+            <skill id="Medicine" value="470" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khamul_template" />
+            <EquipmentSet id="khamul_template_civ" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
     <NPCCharacter id="lord_D1_2" race="dg_uruk" name="{=aom_lord_D1_2_name}Thrangul" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
@@ -18852,4 +18889,1703 @@
             <EquipmentSet id="vla_noncom_template_default" civilian="true" />
         </Equipments>
     </NPCCharacter>
+    <!-- Culture.battania (Dunland TAOM) -->
+    <NPCCharacter id="lord_taom_dunland_1" name="{=taom_lord_taom_dunland_1_name}Cadoc the Grim" age="48" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="50.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_medium" />
+            <EquipmentSet id="bat_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_2" name="{=taom_lord_taom_dunland_2_name}Morwen" age="38" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="40.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_lady" />
+            <EquipmentSet id="bat_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_3" name="{=taom_lord_taom_dunland_3_name}Fenrik Tuskhewer" age="21" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="23.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_medium" />
+            <EquipmentSet id="bat_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_4" name="{=taom_lord_taom_dunland_4_name}Eira Boarsong" age="20" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="22.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_lady" />
+            <EquipmentSet id="bat_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_5" name="{=taom_lord_taom_dunland_5_name}Draug the Seer" age="48" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="50.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_medium" />
+            <EquipmentSet id="bat_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_6" name="{=taom_lord_taom_dunland_6_name}Gwynn Ravenhair" age="52" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="54.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_lady" />
+            <EquipmentSet id="bat_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_7" name="{=taom_lord_taom_dunland_7_name}Branoc Feathershaft" age="24" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_medium" />
+            <EquipmentSet id="bat_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_8" name="{=taom_lord_taom_dunland_8_name}Aelwen the Wise" age="18" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="20.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_lady" />
+            <EquipmentSet id="bat_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_9" name="{=taom_lord_taom_dunland_9_name}Haldric Talonstrike" age="41" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="43.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_medium" />
+            <EquipmentSet id="bat_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_10" name="{=taom_lord_taom_dunland_10_name}Sifra Stoneheart" age="46" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="48.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_lady" />
+            <EquipmentSet id="bat_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_11" name="{=taom_lord_taom_dunland_11_name}Torvin Highclaw" age="26" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="28.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_medium" />
+            <EquipmentSet id="bat_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dunland_12" name="{=taom_lord_taom_dunland_12_name}Yrla Ghostpelt" age="26" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="28.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="bat_bat_template_lady" />
+            <EquipmentSet id="bat_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Culture.sturgia (Dale TAOM) -->
+    <NPCCharacter id="lord_taom_dale_1" name="{=taom_lord_taom_dale_1_name}Galden Rivermaster" age="41" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="43.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="sturgia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_2" name="{=taom_lord_taom_dale_2_name}Sigrid Goldweaver" age="47" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="49.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_lady" />
+            <EquipmentSet id="stu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_3" name="{=taom_lord_taom_dale_3_name}Osven Riverson" age="18" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="20.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="sturgia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_4" name="{=taom_lord_taom_dale_4_name}Svana Riversdaughter" age="24" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_lady" />
+            <EquipmentSet id="stu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_5" name="{=taom_lord_taom_dale_5_name}Vidar Longshot" age="42" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="44.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="sturgia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_6" name="{=taom_lord_taom_dale_6_name}Vitomira Truearrow" age="41" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="43.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_lady" />
+            <EquipmentSet id="stu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_7" name="{=taom_lord_taom_dale_7_name}Lashonek Swiftbow" age="19" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="sturgia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_8" name="{=taom_lord_taom_dale_8_name}Zorika Keeneye" age="24" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_lady" />
+            <EquipmentSet id="stu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_9" name="{=taom_lord_taom_dale_9_name}Svedorn Gatewarden" age="43" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="45.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="sturgia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_10" name="{=taom_lord_taom_dale_10_name}Izdenka Shieldmaiden" age="47" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="49.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_lady" />
+            <EquipmentSet id="stu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_11" name="{=taom_lord_taom_dale_11_name}Alvar Irongate" age="18" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="20.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="sturgia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_medium" />
+            <EquipmentSet id="stu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_dale_12" name="{=taom_lord_taom_dale_12_name}Milanka Lakeborn" age="25" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="27.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="stu_bat_template_lady" />
+            <EquipmentSet id="stu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Culture.aserai (Harad TAOM) -->
+    <NPCCharacter id="lord_taom_harad_1" name="{=taom_lord_taom_harad_1_name}Suladan the Golden" age="52" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="54.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="aserai" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_medium" />
+            <EquipmentSet id="ase_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_2" name="{=taom_lord_taom_harad_2_name}Zephara Sandrose" age="39" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="41.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_lady" />
+            <EquipmentSet id="ase_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_3" name="{=taom_lord_taom_harad_3_name}Hasharin Serpentfang" age="23" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="25.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="aserai" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_medium" />
+            <EquipmentSet id="ase_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_4" name="{=taom_lord_taom_harad_4_name}Sahra Moonveil" age="21" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="23.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_lady" />
+            <EquipmentSet id="ase_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_5" name="{=taom_lord_taom_harad_5_name}Inkara Elephantlord" age="38" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="40.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="aserai" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_medium" />
+            <EquipmentSet id="ase_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_6" name="{=taom_lord_taom_harad_6_name}Nala Beastwhisper" age="41" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="43.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_lady" />
+            <EquipmentSet id="ase_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_7" name="{=taom_lord_taom_harad_7_name}Turak Mahudson" age="19" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="aserai" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_medium" />
+            <EquipmentSet id="ase_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_8" name="{=taom_lord_taom_harad_8_name}Amara Sunbloom" age="19" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_lady" />
+            <EquipmentSet id="ase_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_9" name="{=taom_lord_taom_harad_9_name}Razak Bloodblade" age="42" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="44.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="aserai" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_medium" />
+            <EquipmentSet id="ase_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_10" name="{=taom_lord_taom_harad_10_name}Yasmin Redveil" age="48" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="50.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_lady" />
+            <EquipmentSet id="ase_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_11" name="{=taom_lord_taom_harad_11_name}Khaled Scarletson" age="20" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="22.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="aserai" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_medium" />
+            <EquipmentSet id="ase_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_harad_12" name="{=taom_lord_taom_harad_12_name}Fatima Crimsonguard" age="23" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="25.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="aserai" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="ase_bat_template_lady" />
+            <EquipmentSet id="ase_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Culture.vlandia (Rohan TAOM) -->
+    <NPCCharacter id="lord_taom_rohan_1" name="{=taom_lord_taom_rohan_1_name}Elfhelm" age="48" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="50.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_2" name="{=taom_lord_taom_rohan_2_name}Hild Shieldmaiden" age="49" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="51.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_lady" />
+            <EquipmentSet id="vla_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_3" name="{=taom_lord_taom_rohan_3_name}Herubrand Horsemaster" age="20" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="22.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_4" name="{=taom_lord_taom_rohan_4_name}Luowynn Steelflower" age="21" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="23.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_lady" />
+            <EquipmentSet id="vla_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_5" name="{=taom_lord_taom_rohan_5_name}Cuthrod" age="45" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="47.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_6" name="{=taom_lord_taom_rohan_6_name}Eadgifu Stoneheart" age="42" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="44.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_lady" />
+            <EquipmentSet id="vla_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_7" name="{=taom_lord_taom_rohan_7_name}Siegeberht Gapwarden" age="23" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="25.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_8" name="{=taom_lord_taom_rohan_8_name}Elfhild Westdaughter" age="21" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="23.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_lady" />
+            <EquipmentSet id="vla_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_9" name="{=taom_lord_taom_rohan_9_name}Eothain Meararider" age="50" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="52.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_10" name="{=taom_lord_taom_rohan_10_name}Sunnifa Horsebinder" age="44" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="46.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_lady" />
+            <EquipmentSet id="vla_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_11" name="{=taom_lord_taom_rohan_11_name}Ulfeytel Swiftsteed" age="19" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rohan_12" name="{=taom_lord_taom_rohan_12_name}Wulfwynn Sunmane" age="23" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="25.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_lady" />
+            <EquipmentSet id="vla_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Culture.khuzait (Khand TAOM) -->
+    <NPCCharacter id="lord_taom_khand_1" name="{=taom_lord_taom_khand_1_name}Vazir Shadowblade" age="48" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="50.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_2" name="{=taom_lord_taom_khand_2_name}Nywin Nightwhisper" age="44" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="46.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_lady" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_3" name="{=taom_lord_taom_khand_3_name}Ranaon Silentfoot" age="20" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="22.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_4" name="{=taom_lord_taom_khand_4_name}Eilidh Duskdancer" age="20" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="22.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_lady" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_5" name="{=taom_lord_taom_khand_5_name}Pryndor Steelcurve" age="49" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="51.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_6" name="{=taom_lord_taom_khand_6_name}Floraidh Ironwill" age="46" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="48.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_lady" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_7" name="{=taom_lord_taom_khand_7_name}Aradwyr Swiftedge" age="24" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_8" name="{=taom_lord_taom_khand_8_name}Beitrin Bladesong" age="24" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_lady" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_9" name="{=taom_lord_taom_khand_9_name}Luichan Windracer" age="41" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="43.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_10" name="{=taom_lord_taom_khand_10_name}Seonag Duststorm" age="46" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="48.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_lady" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_11" name="{=taom_lord_taom_khand_11_name}Fenagan Sandrider" age="19" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_khand_12" name="{=taom_lord_taom_khand_12_name}Beathag Swifthoof" age="19" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_lady" />
+            <EquipmentSet id="khu_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Culture.empire (Rhun TAOM) -->
+    <NPCCharacter id="lord_taom_rhun_1" name="{=taom_lord_taom_rhun_1_name}Khamul Ironhelm" age="48" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="50.0" weight="0.5" build="0.5" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_2" name="{=taom_lord_taom_rhun_2_name}Ergene Steelqueen" age="50" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="52.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_lady" />
+            <EquipmentSet id="emp_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_3" name="{=taom_lord_taom_rhun_3_name}Bagai Ironrider" age="19" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_4" name="{=taom_lord_taom_rhun_4_name}Tilun Shieldbearer" age="24" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_lady" />
+            <EquipmentSet id="emp_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_5" name="{=taom_lord_taom_rhun_5_name}Amdur Dragonlord" age="46" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="48.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_6" name="{=taom_lord_taom_rhun_6_name}Chambui Goldenmane" age="46" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="48.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_lady" />
+            <EquipmentSet id="emp_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_7" name="{=taom_lord_taom_rhun_7_name}Yesum Dragonson" age="19" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_8" name="{=taom_lord_taom_rhun_8_name}Sokhatai Serpentdaughter" age="26" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="28.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_lady" />
+            <EquipmentSet id="emp_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_9" name="{=taom_lord_taom_rhun_9_name}Valathmir Steppekhan" age="50" voice="earnest" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" age="52.0" weight="0.5" build="0.5" key="001AF80FC000000C00006800000000000000000000000000000000000000000000C006150E57A12A00000000000000000000000000000000000000000064346042" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_10" name="{=taom_lord_taom_rhun_10_name}Sevin Bowmaiden" age="43" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="45.0" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="10" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Manager" value="6" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_lady" />
+            <EquipmentSet id="emp_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_11" name="{=taom_lord_taom_rhun_11_name}Altu Swiftarrow" age="22" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="24.0" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_taom_rhun_12" name="{=taom_lord_taom_rhun_12_name}Mela Windrider" age="20" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+        <face>
+            <BodyProperties version="4" age="22.0" weight="0.5" build="0.5" key="001CD80FC000300089AC87D1876967AB56D3D3E56A535A6768838D5A567445E401A776130685634100000000000000000000000000000000000000006ACC40C3" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Manager" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_lady" />
+            <EquipmentSet id="emp_noncom_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

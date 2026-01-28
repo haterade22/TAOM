@@ -135,4 +135,1040 @@
 	<Hero id="lord_taom_rhun_11" father="Hero.lord_taom_rhun_9" mother="Hero.lord_taom_rhun_10" faction="Faction.clan_taom_rhun_3" text="{=TAOM_hero_rh11}Altu Swiftarrow may be the finest horse archer ever born to the Sagarthian. He can loose three arrows before the first has found its mark." />
 	<Hero id="lord_taom_rhun_12" father="Hero.lord_taom_rhun_9" mother="Hero.lord_taom_rhun_10" faction="Faction.clan_taom_rhun_3" text="{=TAOM_hero_rh12}Mela Windrider loves nothing more than racing across the open steppe. She is young but already commands her own squadron of scouts." />
 
+	<!-- ============================================== -->
+	<!-- EREBOR HEROES (erebor culture)                 -->
+	<!-- ============================================== -->
+
+	<!-- Bit Durin -->
+	<Hero
+		id="lord_E1_1"
+		faction="Faction.clan_erebor_1"
+		text="{=dain_ironfoot_description}Dáin Ironfoot, the stalwart and unyielding King under the Mountain, stands as a paragon of dwarven resilience and valor. Renowned for his unwavering determination and tactical prowess, Dáin is a battle-hardened leader who inspires loyalty and courage in his kin. A veteran of countless conflicts, he led the dwarves of the Iron Hills with unmatched strength, bringing stability and prosperity to his people. His resolve in the face of adversity and his dedication to the defense of Erebor and its allies ensure that the legacy of Durin's folk endures through the darkest days of the Third Age." />
+	<Hero
+		id="lord_E1_2"
+		father="Hero.lord_E1_1"
+		mother="Hero.lord_E1_6"
+		faction="Faction.clan_erebor_1" />
+	<Hero
+		id="lord_E1_3"
+		spouse="Hero.lord_E1_2"
+		faction="Faction.clan_erebor_1" />
+	<Hero
+		id="lord_E1_4"
+		father="Hero.lord_E1_1"
+		mother="Hero.lord_E1_6"
+		faction="Faction.clan_erebor_1" />
+	<Hero
+		id="lord_E1_5"
+		father="Hero.lord_E1_2"
+		mother="Hero.lord_E1_3"
+		faction="Faction.clan_erebor_1" />
+	<Hero
+		id="lord_E1_6"
+		spouse="Hero.lord_E1_1"
+		faction="Faction.clan_erebor_1" />
+	<Hero
+		id="lord_E1_11"
+		father="Hero.lord_E1_4"
+		faction="Faction.clan_erebor_1" />
+
+	<!-- Bit Lóni -->
+	<Hero
+		id="lord_E2_1"
+		faction="Faction.clan_erebor_2" />
+	<Hero
+		id="lord_E2_2"
+		spouse="Hero.lord_E2_1"
+		faction="Faction.clan_erebor_2" />
+	<Hero
+		id="lord_E2_3"
+		father="Hero.lord_E2_1"
+		mother="Hero.lord_E2_2"
+		faction="Faction.clan_erebor_2" />
+	<Hero
+		id="lord_E2_4"
+		father="Hero.lord_E2_1"
+		mother="Hero.lord_E2_2"
+		faction="Faction.clan_erebor_2" />
+	<Hero
+		id="lord_E2_11"
+		father="Hero.lord_E2_3"
+		faction="Faction.clan_erebor_2" />
+
+	<!-- Bit Rár -->
+	<Hero
+		id="lord_E3_1"
+		spouse="Hero.lord_E3_2"
+		faction="Faction.clan_erebor_3" />
+	<Hero
+		id="lord_E3_2"
+		spouse="Hero.lord_E3_1"
+		faction="Faction.clan_erebor_3" />
+	<Hero
+		id="lord_E3_3"
+		father="Hero.lord_E3_1"
+		mother="Hero.lord_E3_2"
+		faction="Faction.clan_erebor_3" />
+	<Hero
+		id="lord_E3_4"
+		father="Hero.lord_E3_1"
+		mother="Hero.lord_E3_2"
+		faction="Faction.clan_erebor_3" />
+	<Hero
+		id="lord_E3_5"
+		father="Hero.lord_E3_1"
+		mother="Hero.lord_E3_2"
+		faction="Faction.clan_erebor_3" />
+	<Hero
+		id="lord_E3_11"
+		father="Hero.lord_E3_4"
+		faction="Faction.clan_erebor_3" />
+
+	<!-- Bit Gror -->
+	<Hero
+		id="lord_E4_1"
+		spouse="Hero.lord_E4_2"
+		faction="Faction.clan_erebor_4" />
+	<Hero
+		id="lord_E4_2"
+		spouse="Hero.lord_E4_1"
+		faction="Faction.clan_erebor_4" />
+	<Hero
+		id="lord_E4_3"
+		father="Hero.lord_E4_1"
+		mother="Hero.lord_E4_2"
+		faction="Faction.clan_erebor_4" />
+	<Hero
+		id="lord_E4_4"
+		father="Hero.lord_E4_1"
+		mother="Hero.lord_E4_2"
+		faction="Faction.clan_erebor_4" />
+	<Hero
+		id="lord_E4_11"
+		father="Hero.lord_E4_3"
+		faction="Faction.clan_erebor_4" />
+
+	<!-- Bit Górli -->
+	<Hero
+		id="lord_E5_1"
+		spouse="Hero.lord_E5_2"
+		faction="Faction.clan_erebor_5" />
+	<Hero
+		id="lord_E5_2"
+		spouse="Hero.lord_E5_1"
+		faction="Faction.clan_erebor_5" />
+	<Hero
+		id="lord_E5_3"
+		father="Hero.lord_E5_1"
+		mother="Hero.lord_E5_2"
+		faction="Faction.clan_erebor_5" />
+	<Hero
+		id="lord_E5_4"
+		father="Hero.lord_E5_1"
+		mother="Hero.lord_E5_2"
+		faction="Faction.clan_erebor_5" />
+	<Hero
+		id="lord_E5_5"
+		father="Hero.lord_E5_1"
+		mother="Hero.lord_E5_2"
+		faction="Faction.clan_erebor_5" />
+	<Hero
+		id="lord_E5_11"
+		father="Hero.lord_E5_5"
+		faction="Faction.clan_erebor_5" />
+
+	<!-- Bit Róri -->
+	<Hero
+		id="lord_E6_1"
+		spouse="Hero.lord_E6_2"
+		faction="Faction.clan_erebor_6" />
+	<Hero
+		id="lord_E6_2"
+		spouse="Hero.lord_E6_1"
+		alive="false"
+		faction="Faction.clan_erebor_6" />
+	<Hero
+		id="lord_E6_3"
+		father="Hero.lord_E6_1"
+		mother="Hero.lord_E6_2"
+		faction="Faction.clan_erebor_6" />
+	<Hero
+		id="lord_E6_4"
+		father="Hero.lord_E6_1"
+		mother="Hero.lord_E6_2"
+		faction="Faction.clan_erebor_6" />
+	<Hero
+		id="lord_E6_11"
+		father="Hero.lord_E6_4"
+		faction="Faction.clan_erebor_6" />
+
+	<!-- Bit Nórin-->
+	<Hero
+		id="lord_E7_1"
+		faction="Faction.clan_erebor_7" />
+	<Hero
+		id="lord_E7_11"
+		father="Hero.lord_E7_1"
+		faction="Faction.clan_erebor_7" />
+
+	<!-- ============================================== -->
+	<!-- RIVENDELL HEROES (rivendell culture)           -->
+	<!-- ============================================== -->
+
+	<!-- Nos Peredhel -->
+	<Hero
+		id="lord_R1_1"
+		spouse="Hero.lord_R1_2"
+		faction="Faction.clan_rivendell_1"
+		text="{=elrond_description}Elrond, the Lord of Rivendell, is a figure of unmatched wisdom, healing, and foresight. As a descendant of both Elves and Men, he bridges the two worlds with grace and understanding. Rivendell, under his guidance, stands as a sanctuary of knowledge and refuge for all who seek aid in their struggle against the shadow. Elrond's insight shapes the great councils of the Free Peoples, and his stewardship over the Last Homely House ensures that the light of the Eldar continues to shine. In both counsel and action, he exemplifies the timeless strength and resilience of the Elves." />
+	<Hero
+		id="lord_R1_2"
+		spouse="Hero.lord_R1_1"
+		faction="Faction.clan_rivendell_1" />
+	<Hero
+		id="lord_R1_3"
+		father="Hero.lord_R1_1"
+		mother="Hero.lord_R1_2"
+		faction="Faction.clan_rivendell_1" />
+	<Hero
+		id="lord_R1_4"
+		father="Hero.lord_R1_1"
+		mother="Hero.lord_R1_2"
+		faction="Faction.clan_rivendell_1" />
+	<Hero
+		id="lord_R1_5"
+		father="Hero.lord_R1_1"
+		mother="Hero.lord_R1_2"
+		faction="Faction.clan_rivendell_1" />
+	<Hero
+		id="lord_R1_11"
+		father="Hero.lord_R1_4"
+		faction="Faction.clan_rivendell_1" />
+
+	<!-- Nos Glorfindel -->
+	<Hero
+		id="lord_R2_1"
+		faction="Faction.clan_rivendell_2" />
+	<Hero
+		id="lord_R2_11"
+		father="Hero.lord_R2_1"
+		faction="Faction.clan_rivendell_2" />
+
+	<!-- ============================================== -->
+	<!-- MIRKWOOD HEROES (mirkwood culture)             -->
+	<!-- ============================================== -->
+
+	<!-- Nos Lasgalen -->
+	<Hero
+		id="lord_M1_1"
+		faction="Faction.clan_mirkwood_1"
+		text="{=thranduil_description}Thranduil, the Elvenking of the Woodland Realm, is a wise and stern ruler, embodying the grace and resilience of the Sindar elves from Tolkien's lore. As the son of Oropher, he guards Mirkwood against the encroaching shadows of Dol Guldur, leading with a keen strategic mind and unyielding defense of his forested domain, ever vigilant in the face of Sauron's growing threat." />
+	<Hero
+		id="lord_M1_2"
+		spouse="Hero.lord_M1_1"
+		faction="Faction.clan_mirkwood_1"
+		text="{=lothuial_description}Lothuial, consort to Thranduil, draws from the elegant elven queens in Middle-earth's tales, providing counsel and healing wisdom to the royal house. Her presence strengthens the bonds of Nos Lasgalen, fostering unity among the Wood-elves as they confront the darkness spreading through Mirkwood." />
+	<Hero
+		id="lord_M1_3"
+		faction="Faction.clan_mirkwood_1"
+		text="{=feren_description}Feren, a loyal captain in Thranduil's guard, reflects the steadfast warriors seen in the films, patrolling the borders with unmatched archery skill. His devotion to the Elvenking ensures the safety of the halls, warding off spiders and orcs with precision and valor." />
+	<Hero
+		id="lord_M1_4"
+		faction="Faction.clan_mirkwood_1"
+		text="{=galion_description}Galion, the royal butler and advisor, evokes the merry yet dutiful elves in The Hobbit, managing the feasts and stores of the Woodland Realm. His resourcefulness supports the clan's endurance, blending mirth with the serious defense against encroaching evils." />
+	<Hero
+		id="lord_M1_5"
+		faction="Faction.clan_mirkwood_1"
+		text="{=nimrodel_description}Nimrodel, named after the legendary elf-maid from lore, serves as a healer and scout in Nos Lasgalen, her knowledge of herbs and paths aiding in the protection of Mirkwood's ancient secrets." />
+	<Hero
+		id="lord_M1_11"
+		father="Hero.lord_M1_1"
+		mother="Hero.lord_M1_2"
+		faction="Faction.clan_mirkwood_1"
+		text="{=legolas_description}Legolas, son of Thranduil, is a masterful archer and scout, as depicted in both books and films, venturing beyond Mirkwood to aid the Free Peoples with his keen senses and unerring aim against the forces of darkness." />
+	<Hero
+		id="lord_M1_12"
+		father="Hero.lord_M1_1"
+		mother="Hero.lord_M1_2"
+		faction="Faction.clan_mirkwood_1"
+		text="{=placeholder_description}This placeholder child ensures game stability for Nos Lasgalen, representing the enduring lineage of Thranduil's house in the shadowed woods of Mirkwood." />
+
+	<!-- Nos Oropher -->
+	<Hero
+		id="lord_M2_1"
+		faction="Faction.clan_mirkwood_2"
+		text="{=oropherion_description}Oropherion, leader of Nos Oropher, honors the legacy of Thranduil's father Oropher, slain in the Last Alliance, by commanding veteran Sindar warriors in defense of Mirkwood's northern borders against Angmar's remnants." />
+	<Hero
+		id="lord_M2_2"
+		spouse="Hero.lord_M2_1"
+		faction="Faction.clan_mirkwood_2"
+		text="{=ailinel_description}Ailinel, spouse to Oropherion, embodies the graceful Sindar nobility, her strategic insights aiding in the clan's ancient rituals and alliances within the Woodland Realm." />
+	<Hero
+		id="lord_M2_3"
+		faction="Faction.clan_mirkwood_2"
+		text="{=beleg_description}Beleg, a strong bowman of Nos Oropher, draws from the lore of Beleg Strongbow, friend to Túrin, excelling in forest ambushes against orc incursions." />
+	<Hero
+		id="lord_M2_4"
+		faction="Faction.clan_mirkwood_2"
+		text="{=anairë_description}Anairë, a wise counselor in the clan, reflects the steadfast elven women in Tolkien's tales, guiding the kindred with visions of starlit paths." />
+	<Hero
+		id="lord_M2_5"
+		faction="Faction.clan_mirkwood_2"
+		text="{=daeron_description}Daeron, a loremaster of Nos Oropher, preserves the songs and histories of the Sindar migration, using knowledge to bolster the clan's resilience against Mirkwood's corruption." />
+
+	<!-- Nos Taurion -->
+	<Hero
+		id="lord_M3_1"
+		faction="Faction.clan_mirkwood_3"
+		text="{=taurion_description}Taurion, warden of Nos Taurion, oversees the Forest River's defenses, inspired by the enchanted waters in The Hobbit, protecting trade and borders from southern threats." />
+	<Hero
+		id="lord_M3_2"
+		spouse="Hero.lord_M3_1"
+		faction="Faction.clan_mirkwood_3"
+		text="{=finduilas_description}Finduilas, consort to Taurion, channels the tragic beauty of her namesake from the Silmarillion, her healing arts sustaining river guardians against Dol Guldur's poisons." />
+	<Hero
+		id="lord_M3_3"
+		faction="Faction.clan_mirkwood_3"
+		text="{=haldir_description}Haldir, a border sentinel, mirrors the Lórien marchwardens in the books, patrolling with silent precision to thwart spider nests along the riverbanks." />
+	<Hero
+		id="lord_M3_4"
+		faction="Faction.clan_mirkwood_3"
+		text="{=aredhel_description}Aredhel, a bold huntress of the clan, evokes the White Lady of Noldor from lore, leading swift strikes against encroaching shadows in Mirkwood's depths." />
+
+	<!-- Nos Galengrim -->
+	<Hero
+		id="lord_M4_1"
+		faction="Faction.clan_mirkwood_4"
+		text="{=galenor_description}Galenor, chieftain of Nos Galengrim, focuses on Mirkwood's green heart, combating the forest's decay with wards akin to those against Sauron's influence in the books." />
+	<Hero
+		id="lord_M4_2"
+		spouse="Hero.lord_M4_1"
+		faction="Faction.clan_mirkwood_4"
+		text="{=amarië_description}Amarië, spouse to Galenor, represents the enduring love themes in elven tales, her songs revitalizing the clan's spirits amid the growing gloom." />
+	<Hero
+		id="lord_M4_3"
+		faction="Faction.clan_mirkwood_4"
+		text="{=rumil_description}Rumil, a scholar and warrior, preserves ancient grimoires, using knowledge to forge defenses against the Necromancer's curses." />
+	<Hero
+		id="lord_M4_4"
+		faction="Faction.clan_mirkwood_4"
+		text="{=nellas_description}Nellas, a woodland guide, draws from the elf who aided Túrin, her tracking skills uncovering hidden paths and threats in the tangled woods." />
+	<Hero
+		id="lord_M4_5"
+		faction="Faction.clan_mirkwood_4"
+		text="{=orophin_description}Orophin, a vigilant archer, stands watch like the border guards in films, his arrows felling beasts corrupted by Mirkwood's shadows." />
+
+	<!-- Nos Alenwé -->
+	<Hero
+		id="lord_M5_1"
+		faction="Faction.clan_mirkwood_5"
+		text="{=alenon_description}Alenon, leader of Nos Alenwé, venerates the stars as the first elves did at Cuiviénen, using celestial lore to navigate and predict dangers in the star-obscured forest." />
+	<Hero
+		id="lord_M5_2"
+		spouse="Hero.lord_M5_1"
+		faction="Faction.clan_mirkwood_5"
+		text="{=calathiel_description}Calathiel, consort to Alenon, embodies the starlight grace of Varda, her visions aiding the clan in evading Sauron's watchful gaze." />
+	<Hero
+		id="lord_M5_3"
+		faction="Faction.clan_mirkwood_5"
+		text="{=thalion_description}Thalion, a mighty warrior, channels the strength of ancient heroes, defending the clan's star-gazing clearings from nocturnal assaults." />
+	<Hero
+		id="lord_M5_4"
+		faction="Faction.clan_mirkwood_5"
+		text="{=arien_description}Arien, named after the sun-maia, brings fiery resolve to Nos Alenwé, her leadership piercing the darkness like dawn's first light." />
+
+	<!-- Nos Iminyé -->
+	<Hero
+		id="lord_M6_1"
+		faction="Faction.clan_mirkwood_6"
+		text="{=iminyar_description}Iminyar, elder of Nos Iminyé, traces lineage to the first-awakened elves, preserving primal Silvan traditions against Mirkwood's taint." />
+	<Hero
+		id="lord_M6_2"
+		spouse="Hero.lord_M6_1"
+		faction="Faction.clan_mirkwood_6"
+		text="{=elbereth_description}Elbereth, invoking Varda's name, leads with celestial hymns, her clan drawing strength from ancient Avari roots in the deep woods." />
+	<Hero
+		id="lord_M6_3"
+		faction="Faction.clan_mirkwood_6"
+		text="{=dagnir_description}Dagnir, a slayer of shadows, embodies the enduring spirit of the Firstborn, combating ancient evils lurking since the world's awakening." />
+	<Hero
+		id="lord_M6_4"
+		faction="Faction.clan_mirkwood_6"
+		text="{=arindor_description}Arindor, a wise navigator, guides the clan through forgotten paths, his knowledge rooted in the migrations of the Eldar." />
+	<Hero
+		id="lord_M6_5"
+		faction="Faction.clan_mirkwood_6"
+		text="{=nimrien_description}Nimrien, a swift messenger, carries tidings across Mirkwood, her agility evoking the fleet-footed elves of old lore." />
+
+	<!-- ============================================== -->
+	<!-- LOTHLORIEN HEROES (lothlorien culture)         -->
+	<!-- ============================================== -->
+
+	<Hero
+		id="lord_L1_1"
+		faction="Faction.clan_lothlorien_1"
+		spouse="Hero.lord_L1_2"
+		text="{=galadriel_description}Galadriel, the Lady of Lothlórien, is a being of extraordinary grace, wisdom, and power. As one of the eldest and most revered Elves in Middle-earth, she wields unmatched foresight and a profound connection to the unseen world. Galadriel's strength lies not in martial might but in her unwavering resolve to preserve beauty and hope against the encroaching shadow. Her leadership transforms Lothlórien into a haven of serenity and light, and her guidance inspires unity and courage among the Free Peoples of Middle-earth. Through her wisdom and the radiance of Nenya, she embodies the enduring spirit of resistance against darkness." />
+	<Hero
+		id="lord_L1_2"
+		spouse="Hero.lord_L1_1"
+		faction="Faction.clan_lothlorien_1"
+		text="{=celeborn_description}Celeborn, the wise and noble Lord of Lothlórien, stands as a stalwart defender of his realm and people. Renowned for his calm demeanor and keen insight, he is a master of strategy and diplomacy, a complement to the ethereal power of Galadriel. Celeborn's presence in Lothlórien is a beacon of stability and strength, providing wise counsel to those who seek guidance. While his sword remains ever ready to protect his homeland, his true strength lies in his enduring patience and deep understanding of the struggles facing Middle-earth. Celeborn's leadership ensures that Lothlórien remains a bastion of hope amidst a world in turmoil." />
+	<Hero
+		id="lord_L1_3"
+		faction="Faction.clan_lothlorien_1" />
+	<Hero
+		id="lord_L2_1"
+		faction="Faction.clan_lothlorien_1"
+		text="{=caurmínas_description}A noble Elf-lord of Lothlórien, born beneath the golden boughs of the mallorn trees. Wise beyond his years, he served as a warden of the Golden Wood and counselor to Lady Galadriel. His keen mind and steadfast heart earned him renown among the Galadhrim. Though he seldom drew his blade, his presence alone inspired calm and courage. Caurmínas was said to walk often beneath moonlit leaves, speaking softly to the trees of ancient days. When the Shadow rose once more, he stood unbroken, a guardian of light and memory, ever faithful to the spirit of Lothlórien." />
+
+	<!-- ============================================== -->
+	<!-- ISENGARD HEROES (isengard culture)             -->
+	<!-- ============================================== -->
+
+	<!-- White Hand Clan -->
+	<Hero
+		id="lord_I1_1"
+		faction="Faction.clan_isengard_1"
+		text="{=ugluk_description}Uglúk, the ruthless and cunning warlord of Isengard, commands Saruman's fearsome Uruk-hai with brutal efficiency. Fiercely loyal to his master, Uglúk embodies the relentless discipline and savagery that define the White Wizard's armies. Known for his harsh demeanor and unyielding resolve, he leads his troops with a mix of intimidation and tactical prowess, ensuring their dominance on the battlefield. Uglúk's disdain for weakness and his willingness to crush any opposition make him a fearsome figure among both his allies and enemies. Under his command, Isengard's forces strike terror into the hearts of the Free Peoples of Middle-earth, advancing Saruman's dark ambitions with every victory." />
+	<Hero
+		id="lord_I1_11"
+		father="Hero.lord_I1_1"
+		faction="Faction.clan_isengard_1" />
+	<Hero
+		id="lord_I2_2"
+		faction="Faction.clan_isengard_1"
+		text="{=zorlag_description}Zorlag, a cunning and relentless warlord of the White Hand, drives Isengard's Uruk-hai with a fierce blend of strategy and savagery. His loyalty to Saruman is absolute, and his sharp mind ensures that every maneuver serves the White Wizard's grand designs. Zorlag's calculating nature makes him a master of exploiting enemy weaknesses, while his harsh leadership inspires both fear and obedience in his ranks. With a cold disdain for mercy, he crushes opposition with brutal precision, cementing his reputation as a formidable commander whose victories bolster Isengard's growing dominion." />
+	<Hero
+		id="lord_I1_31"
+		father="Hero.lord_I1_3"
+		faction="Faction.clan_isengard_1" />
+
+	<!-- Red Echelon Clan -->
+	<Hero
+		id="lord_I2_1"
+		faction="Faction.clan_isengard_2"
+		text="{=mauhur_description}Mauhúr, captain of the Red Echelon, is a relentless tactician forged in the blood pits beneath Isengard. Clad in iron, he commands the vanguard of Saruman's war host with ruthless precision. Mauhúr believes victory is won not by strength alone, but by the cold execution of orders. His warband is always first into the breach, driving fear into the hearts of men with disciplined aggression and merciless efficiency. To Mauhúr, hesitation is failure—and failure is death. Under his command, the Red Echelon carves a path of destruction worthy of the White Hand." />
+	<Hero
+		id="lord_I2_11"
+		father="Hero.lord_I2_1"
+		faction="Faction.clan_isengard_2" />
+	<Hero
+		id="lord_I2_31"
+		father="Hero.lord_I2_3"
+		faction="Faction.clan_isengard_2" />
+
+	<!-- Black Echelon Clan -->
+	<Hero
+		id="lord_I3_1"
+		faction="Faction.clan_isengard_3"
+		text="{=lugdush_description}Lugdush, grim commander of the Black Echelon, is a brutal enforcer of Saruman's doctrine. Towering and iron-clad, he drills his soldiers into a wall of shields and steel, smashing opposition with unflinching discipline. Unlike his berserker kin, Lugdush values structure over rage—his warriors are trained, not frenzied. He speaks little but strikes decisively, and his presence on the battlefield signals a cold, inevitable advance. Among the Uruk-hai, Lugdush is feared not for his voice, but for the silence that follows his command." />
+	<Hero
+		id="lord_I3_11"
+		father="Hero.lord_I3_1"
+		faction="Faction.clan_isengard_3" />
+	<Hero
+		id="lord_I3_2"
+		faction="Faction.clan_isengard_3"
+		text="{=rukthar_description}Rukthar, a grim and indomitable warlord of the Black Echelon, leads his Uruk-hai with a chilling blend of discipline and cruelty. His unwavering devotion to Saruman fuels his relentless campaigns, his forces striking with precision and terror under his command. Rukthar's disdain for weakness and his strategic brilliance make him a fearsome adversary, his troops a scourge upon Middle-earth's Free Peoples. With a heart as cold as Isengard's forges, he advances Saruman's ambitions, leaving only ruin in his wake." />
+	<Hero
+		id="lord_I3_21"
+		father="Hero.lord_I3_2"
+		faction="Faction.clan_isengard_3" />
+	<Hero
+		id="lord_I3_31"
+		father="Hero.lord_I3_3"
+		faction="Faction.clan_isengard_3" />
+
+	<!-- Black Maw Clan -->
+	<Hero
+		id="lord_I4_1"
+		faction="Faction.clan_isengard_4"
+		text="{=lurtz_description}Lurtz, the savage chieftain of the Black Maw, is the embodiment of raw Uruk ferocity. Bred for strength and domination, he leads his berserker warband with a thirst for slaughter unmatched even among the White Hand. Lurtz scorns restraint—his warriors fight in brutal packs, tearing through enemy ranks with overwhelming violence. Though he lacks the finesse of Saruman's other captains, few can rival his battlefield presence. Driven by fury and instinct, Lurtz and the Black Maw are loosed only when Saruman demands utter annihilation." />
+	<Hero
+		id="lord_I4_11"
+		father="Hero.lord_I4_1"
+		faction="Faction.clan_isengard_4" />
+	<Hero
+		id="lord_I4_21"
+		father="Hero.lord_I4_2"
+		faction="Faction.clan_isengard_4" />
+	<Hero
+		id="lord_I4_3"
+		faction="Faction.clan_isengard_4"
+		text="{=drugash_description}Drûgash, a cunning and iron-willed leader of the Black Maw, commands his Uruk-hai with a blend of calculated strategy and raw aggression. His devotion to Saruman fuels his relentless drive, his forces sweeping across Middle-earth with disciplined savagery. Drûgash's sharp intellect and scorn for weakness make him a formidable commander, his troops a relentless engine of destruction. Under his leadership, the Black Maw carves a path of ruin, advancing Isengard's dark ambitions with every bloody triumph." />
+	<Hero
+		id="lord_I4_31"
+		father="Hero.lord_I4_3"
+		faction="Faction.clan_isengard_4" />
+	<Hero
+		id="lord_I4_4"
+		faction="Faction.clan_isengard_4"
+		text="{=thrakul_description}Thrakul, a towering and merciless warlord of the Black Maw, rules his Uruk-hai with an unyielding grip, his loyalty to Saruman matched only by his thirst for slaughter. His commanding presence and brutal tactics ensure that his forces strike with overwhelming force, leaving no survivors in their wake. Thrakul's disdain for mercy and his strategic prowess make him a terror to Middle-earth's defenders, his victories a testament to Isengard's might. With the Black Maw at his back, he drives Saruman's war machine forward, crushing all opposition." />
+	<Hero
+		id="lord_I4_41"
+		father="Hero.lord_I4_4"
+		faction="Faction.clan_isengard_4" />
+
+	<!-- Additional Isengard Clans 5-11 -->
+	<Hero id="lord_I1_4"
+		faction="Faction.clan_isengard_5"
+		text="{=lord_I1_4_text}Grishnak earned his command through brutality and cunning during countless raids. His knowledge of Rohan's borderlands makes him invaluable for lightning strikes against enemy supply lines." />
+	<Hero id="lord_I1_7"
+		faction="Faction.clan_isengard_5"
+		text="{=lord_I1_7_text}Krûklash maintains discipline among the Uruk-hai with an iron fist. Those who disobey his orders rarely live to regret their mistake." />
+	<Hero id="lord_I1_5"
+		faction="Faction.clan_isengard_6"
+		text="{=lord_I1_5_text}Muzgash leads the feared berserker units of Isengard. His warriors paint themselves with the blood of enemies before battle, striking terror into those who face them." />
+	<Hero id="lord_I1_6"
+		faction="Faction.clan_isengard_6"
+		text="{=lord_I1_6_text}Morgash rose through the ranks as master of reconnaissance. His scouts range far ahead of Isengard's armies, marking targets for destruction." />
+	<Hero id="lord_I2_4"
+		faction="Faction.clan_isengard_7"
+		text="{=lord_I2_4_text}Shank can track prey across any terrain. His hunters never return empty-handed, whether pursuing game or fleeing enemies." />
+	<Hero id="lord_I2_6"
+		faction="Faction.clan_isengard_7"
+		text="{=lord_I2_6_text}Ufthak leads devastating mounted raids deep into enemy territory. His warg riders strike without warning and vanish before retaliation arrives." />
+	<Hero id="lord_I1_8"
+		faction="Faction.clan_isengard_8"
+		text="{=lord_I1_8_text}Dûshrat proved his worth in single combat against dozens of challengers. He now leads the elite guard of the White Hand." />
+	<Hero id="lord_I2_7"
+		faction="Faction.clan_isengard_8"
+		text="{=lord_I2_7_text}Gragnor trains the warg packs of Isengard. His beasts are said to understand commands as well as any soldier." />
+	<Hero id="lord_I2_5"
+		faction="Faction.clan_isengard_9"
+		text="{=lord_I2_5_text}Urbash's bloodlust is legendary even among the Uruk-hai. He collects the heads of worthy opponents as trophies of his victories." />
+	<Hero id="lord_I2_8"
+		faction="Faction.clan_isengard_9"
+		text="{=lord_I2_8_text}Narzug commands the largest warg pack in Isengard's armies. His riders form the vanguard of every major assault." />
+	<Hero
+		id="lord_I1_3"
+		faction="Faction.clan_isengard_10"
+		text="{=vrothgar_description}Gurzod, a towering figure of the White Hand, leads his Uruk-hai with unyielding authority and a thirst for conquest. His devotion to Saruman fuels his relentless pursuit of victory, commanding his forces with a disciplined ferocity that leaves no room for failure. Vrothgar's strategic acumen and commanding presence make him a cornerstone of Isengard's war machine, his troops marching with grim resolve under his banner. Known for his scorn of weakness, he forges his warriors into an unstoppable force, striking dread into the hearts of Middle-earth's defenders." />
+	<Hero
+		id="lord_I2_3"
+		faction="Faction.clan_isengard_10"
+		text="{=gurzod_description}Sharku, a fierce and calculating leader, commands his Uruk-hai with a blend of brute force and sharp intellect. His allegiance to Saruman drives him to crush any who oppose Isengard's might, his troops forged into a relentless war machine under his exacting standards. Gurzod's cold pragmatism and utter lack of pity make him a dreaded foe, his strategies leaving enemies broken and scattered. With every triumph, he strengthens Isengard's grip, embodying the Red Echelon's merciless resolve." />
+	<Hero
+		id="lord_I3_3"
+		faction="Faction.clan_isengard_11"
+		text="{=bruzgash_description}Tharzog, a shrewd and savage leader, commands his Uruk-hai with a ruthless efficiency that embodies Isengard's dark might. His loyalty to Saruman is matched by his cunning, orchestrating battles with a keen eye for exploiting any flaw in his enemies' defenses. Bruzgash's harsh demeanor and unrelenting drive inspire dread in both allies and foes, his forces a relentless tide of destruction. Under his banner, the Black Echelon spreads fear, furthering Saruman's dominion with every brutal conquest." />
+	<Hero
+		id="lord_I4_2"
+		faction="Faction.clan_isengard_11"
+		text="{=zargoth_description}Zargoth, the ferocious warlord, leads his Uruk-hai with a savage intensity that terrifies all who face him. His absolute loyalty to Saruman drives his relentless pursuit of victory, his troops a devastating force honed by his brutal leadership. Zargoth's lack of mercy and keen tactical mind make him a scourge on the battlefield, his victories piling corpses at Isengard's gates. With every enemy crushed, he strengthens the Black Maw's fearsome reputation, serving Saruman's dark vision without hesitation." />
+
+	<!-- ============================================== -->
+	<!-- GUNDABAD HEROES (gundabad culture)             -->
+	<!-- ============================================== -->
+
+	<!-- Gundabad Clan 1 -->
+	<Hero
+		id="lord_G1_1"
+		faction="Faction.clan_gundabad_1"
+		text="{=azgar_description}Azgar, the Warlord of Gundabad, is a fearsome orc chieftain who rules the northern orc stronghold with an iron fist, echoing the dark legacy of Azog and Bolg from Tolkien's tales. Towering and scarred from countless battles, he unites the clans through sheer brutality and cunning, harboring a deep-seated grudge against the Dwarves who once claimed Gundabad as their own. As the primary leader, Azgar plots to reclaim the Misty Mountains' peaks, serving the growing shadow in the East while crushing any dissent among his kin." />
+	<Hero
+		id="lord_G1_2"
+		faction="Faction.clan_gundabad_1"
+		text="{=drozmak_description}Drozmak is a savage orc captain in Gundabad, known for his relentless raids on Dwarven outposts, much like the orc hordes that assailed Erebor in the books. His tactical ferocity and loyalty to Azgar make him a key enforcer, ensuring clan unity through intimidation and bloodshed, ever eager to spill the blood of Elves and Men encroaching on orc territories." />
+	<Hero
+		id="lord_G1_3"
+		faction="Faction.clan_gundabad_1"
+		text="{=kargoth_description}Kargoth, a brutal orc warrior of Gundabad, embodies the merciless spirit of Tolkien's orcs, forged in the pits of Angband's descendants. He leads scouting parties into the wilds, ambushing travelers and gathering intelligence for Azgar's campaigns, his hatred for the Free Peoples burning as fiercely as the forges beneath the mountains." />
+	<Hero
+		id="lord_G1_4"
+		faction="Faction.clan_gundabad_1"
+		text="{=thrazak_description}Thrazak serves as a hardened orc lieutenant in Gundabad, drawing from the lore of orcish hordes that plagued the North. His skill in siege warfare and unyielding aggression make him indispensable in assaults on fortified positions, always striving to expand Gundabad's domain under the Warlord's command." />
+	<Hero
+		id="lord_G1_5"
+		faction="Faction.clan_gundabad_1"
+		text="{=ulgrim_description}Ulgrim is a cunning orc tactician within Gundabad's ranks, reminiscent of the sly and treacherous orcs in The Hobbit. He orchestrates ambushes and traps, using the misty terrain to his advantage, and his loyalty to the clan fuels his desire to eradicate the lingering influence of Durin's Folk." />
+	<Hero
+		id="lord_G1_6"
+		faction="Faction.clan_gundabad_1"
+		text="{=zorgath_description}Zorgath, a ferocious orc berserker, channels the raw fury of Tolkien's orc legions that clashed at the Battle of Five Armies. In Gundabad, he charges into the fray with reckless abandon, inspiring fear in enemies and respect among allies, all in service to Azgar's vision of orc supremacy." />
+	<Hero
+		id="lord_G1_7"
+		faction="Faction.clan_gundabad_1"
+		text="{=gragor_description}Gragor acts as a ruthless orc overseer in Gundabad, enforcing discipline akin to the taskmasters in Mordor's armies from the books. His role in managing the clan's forges and slaves ensures a steady supply of weapons, bolstering the horde's readiness for the impending wars." />
+	<Hero
+		id="lord_G1_8"
+		faction="Faction.clan_gundabad_1"
+		spouse="Hero.lord_G1_9"
+		text="{=durmash_description}Durmash is a stalwart orc guardian of Gundabad's halls, evoking the vigilant orcs that guarded the passes in Middle-earth's lore. His defensive prowess protects the stronghold from intruders, while his alliance with clan members strengthens the internal bonds against external threats." />
+	<Hero
+		id="lord_G1_9"
+		faction="Faction.clan_gundabad_1"
+		spouse="Hero.lord_G1_8"
+		text="{=gralza_description}Gralza, a fierce orc matron of Gundabad, draws from the implied shadowy breeders in Tolkien's world, overseeing the rearing of new warriors with iron resolve. Her strategic mind aids in clan politics, ensuring the survival and proliferation of orc kind amidst the northern perils." />
+	<Hero
+		id="lord_G1_10"
+		faction="Faction.clan_gundabad_1"
+		text="{=thurka_description}Thurka is a cunning orc scout and assassin in Gundabad, embodying the stealthy prowlers that haunted the woods in the tales. Her role in espionage and sabotage weakens foes before the main assaults, contributing to Azgar's overarching strategy of domination." />
+
+	<!-- Gundabad Clan 2 -->
+	<Hero
+		id="lord_G2_1"
+		faction="Faction.clan_gundabad_2"
+		spouse="Hero.lord_G2_9"
+		text="{=vorgoth_description}Vorgoth leads a sub-clan in Gundabad, a brutal orc chieftain inspired by the infighting orc captains in Tolkien's narratives. His ambition drives raids into Angmar's remnants, seeking artifacts of power to elevate his status within the greater horde." />
+	<Hero
+		id="lord_G2_2"
+		faction="Faction.clan_gundabad_2"
+		text="{=mugzun_description}Mugzun is a heavy-handed orc enforcer, reminiscent of the whip-wielding orcs in the books' slave pits. In Gundabad, he maintains order among the ranks, crushing rebellions and ensuring unwavering obedience to the clan's directives." />
+	<Hero
+		id="lord_G2_3"
+		faction="Faction.clan_gundabad_2"
+		text="{=lurzok_description}Lurzok, an orc archer captain, draws from the bow-wielding orcs that harried travelers in Middle-earth lore. His volleys from the mountain heights defend Gundabad's approaches, picking off scouts from Dwarven or Elven parties." />
+	<Hero
+		id="lord_G2_4"
+		faction="Faction.clan_gundabad_2"
+		text="{=zorgha_description}Zorgha serves as a shamanic orc advisor, echoing the dark rituals hinted at in Tolkien's orc culture. His omens and curses bolster the clan's morale, invoking the spirits of ancient evils to aid in their conquests." />
+	<Hero
+		id="lord_G2_5"
+		faction="Faction.clan_gundabad_2"
+		text="{=thrumak_description}Thrumak is a forge-master orc, forging weapons in the style of those used by Azog's forces in the movies and books. His craftsmanship arms Gundabad's warriors, turning raw ore into instruments of war and destruction." />
+	<Hero
+		id="lord_G2_6"
+		faction="Faction.clan_gundabad_2"
+		text="{=nargoth_description}Nargoth, a raiding orc warlord, embodies the pillaging hordes that sacked settlements in the North. His expeditions bring back slaves and spoils, enriching the clan and fueling the endless cycle of orcish aggression." />
+	<Hero
+		id="lord_G2_7"
+		faction="Faction.clan_gundabad_2"
+		text="{=borzak_description}Borzak acts as a beast-tamer in Gundabad, handling wargs and trolls akin to those allied with orcs in Tolkien's battles. His command over these creatures enhances the clan's military might in assaults." />
+	<Hero
+		id="lord_G2_8"
+		faction="Faction.clan_gundabad_2"
+		text="{=druznar_description}Druznar is a veteran orc fighter, scarred from clashes reminiscent of the Battle of Azanulbizar. In Gundabad, he trains new recruits, instilling the hatred and skills needed to confront the Dwarves once more." />
+	<Hero
+		id="lord_G2_9"
+		faction="Faction.clan_gundabad_2"
+		spouse="Hero.lord_G2_1"
+		text="{=zulgara_description}Zulgara, a shrewd orc overseer, reflects the harsh survival instincts of orc females in lore. She manages the clan's breeding pits, ensuring a constant supply of warriors for the impending shadow wars." />
+	<Hero
+		id="lord_G2_10"
+		faction="Faction.clan_gundabad_2"
+		text="{=vorzha_description}Vorzha is an orc healer of sorts, using crude remedies drawn from the dark knowledge in Tolkien's world. Her role sustains the wounded, allowing Gundabad's forces to recover and strike again." />
+
+	<!-- Gundabad Clan 3 -->
+	<Hero
+		id="lord_G3_1"
+		faction="Faction.clan_gundabad_3"
+		text="{=kragloth_description}Kragloth commands a Gundabad sub-clan with the ferocity of Bolg's lieutenants in The Hobbit. His focus on mountain warfare makes him a master of ambushes in the high passes, targeting trade routes." />
+	<Hero
+		id="lord_G3_2"
+		faction="Faction.clan_gundabad_3"
+		text="{=vurzag_description}Vurzag is an orc saboteur, planting traps like those that ensnared Thorin's company. In Gundabad, his guerrilla tactics disrupt enemy movements, sowing chaos among the Free Peoples." />
+	<Hero
+		id="lord_G3_3"
+		faction="Faction.clan_gundabad_3"
+		text="{=narlog_description}Narlog, a lore-keeper orc, recites tales of ancient grudges against Dwarves, inspired by Tolkien's deep orc history. He rallies the clan with stories of past glories and future vengeance." />
+	<Hero
+		id="lord_G3_4"
+		faction="Faction.clan_gundabad_3"
+		text="{=thalrug_description}Thalrug serves as a cavalry orc rider, commanding warg packs akin to those in the Battle of Five Armies. His swift strikes harass foes from afar, extending Gundabad's reach." />
+	<Hero
+		id="lord_G3_5"
+		faction="Faction.clan_gundabad_3"
+		text="{=urzul_description}Urzul is a siege engineer orc, building engines of war reminiscent of Sauron's forces. In Gundabad, his contraptions batter down gates, preparing for assaults on fortified holds." />
+	<Hero
+		id="lord_G3_6"
+		faction="Faction.clan_gundabad_3"
+		text="{=gralthak_description}Gralthak, an orc duelist, thrives in single combats like the orc champions in lore. His prowess in challenges asserts clan dominance in internal disputes and external battles." />
+	<Hero
+		id="lord_G3_7"
+		faction="Faction.clan_gundabad_3"
+		spouse="Hero.lord_G3_9"
+		text="{=vorgrim_description}Vorgrim acts as a supply master orc, hoarding resources much like the stockpiles in orc strongholds from the books. His management sustains prolonged campaigns against the North." />
+	<Hero
+		id="lord_G3_8"
+		faction="Faction.clan_gundabad_3"
+		text="{=mazkor_description}Mazkor is a tracker orc, hunting prey with the keen senses of Tolkien's orc hunters. In Gundabad, he pursues escaped slaves and spies, maintaining the clan's security." />
+	<Hero
+		id="lord_G3_9"
+		faction="Faction.clan_gundabad_3"
+		spouse="Hero.lord_G3_7"
+		text="{=durga_description}Durga, a resilient orc warrior-female, embodies the tough endurance of orc kind in harsh environments. She guards the inner sanctums, ensuring the clan's core remains unbreached." />
+	<Hero
+		id="lord_G3_10"
+		faction="Faction.clan_gundabad_3"
+		text="{=nargra_description}Nargra is an orc poisoner, crafting toxins inspired by the foul arts in Middle-earth lore. Her venoms weaken enemies before battles, tilting the odds in Gundabad's favor." />
+
+	<!-- Gundabad Clan 4 -->
+	<Hero
+		id="lord_G4_1"
+		faction="Faction.clan_gundabad_4"
+		text="{=bolgath_description}Bolgath leads his clan with the vengeful spirit of Bolg from The Hobbit, seeking to avenge ancient defeats. His aggressive expansion pushes Gundabad's borders southward." />
+	<Hero
+		id="lord_G4_2"
+		faction="Faction.clan_gundabad_4"
+		text="{=lurthak_description}Lurthak is a brawler orc, engaging in pit fights that mirror the brutal orc recreations in the tales. His strength bolsters the clan's frontline in massive melees." />
+	<Hero
+		id="lord_G4_3"
+		faction="Faction.clan_gundabad_4"
+		text="{=thrugol_description}Thrugol, an orc smith, hammers armor echoing the dark forges of Isengard. In Gundabad, his works clad warriors in impenetrable plates for the coming wars." />
+	<Hero
+		id="lord_G4_4"
+		faction="Faction.clan_gundabad_4"
+		text="{=narzuk_description}Narzuk serves as a messenger orc, carrying decrees swiftly like the runners in Sauron's armies. His speed ensures coordinated strikes across the mountains." />
+	<Hero
+		id="lord_G4_5"
+		faction="Faction.clan_gundabad_4"
+		spouse="Hero.lord_G4_9"
+		text="{=kruznor_description}Kruznor is a strategist orc, planning incursions with the cunning of Grishnákh from the books. His schemes exploit weaknesses in Dwarven defenses." />
+	<Hero
+		id="lord_G4_6"
+		faction="Faction.clan_gundabad_4"
+		text="{=thrazgul_description}Thrazgul, a tormentor orc, extracts information from captives, akin to the interrogators in Tolkien's dark realms. His methods yield valuable intelligence for the clan." />
+	<Hero
+		id="lord_G4_7"
+		faction="Faction.clan_gundabad_4"
+		text="{=durzak_description}Durzak is a vanguard orc, leading charges with the fury of Uglúk's band. In Gundabad, his boldness breaks enemy lines in pivotal battles." />
+	<Hero
+		id="lord_G4_8"
+		faction="Faction.clan_gundabad_4"
+		text="{=zulgoth_description}Zulgoth acts as a ritualist orc, performing sacrifices to dark powers as hinted in orc customs. His rites invoke strength for the clan's endeavors." />
+	<Hero
+		id="lord_G4_9"
+		faction="Faction.clan_gundabad_4"
+		spouse="Hero.lord_G4_5"
+		text="{=thrulza_description}Thrulza, a vigilant orc sentinel, watches the passes like the guards of Cirith Ungol. Her alertness thwarts infiltrations into Gundabad's depths." />
+	<Hero
+		id="lord_G4_10"
+		faction="Faction.clan_gundabad_4"
+		text="{=muzra_description}Muzra is an orc herbalist, brewing potions from foul ingredients in Middle-earth's corrupted lands. Her elixirs enhance warriors' endurance in prolonged fights." />
+
+	<!-- Gundabad Clan 5 -->
+	<Hero
+		id="lord_G5_1"
+		faction="Faction.clan_gundabad_5"
+		text="{=vorzak_description}Vorzak commands his clan with the ambition of rising orc lords, aspiring to greater power under Sauron's shadow. His alliances forge stronger ties within Gundabad." />
+	<Hero
+		id="lord_G5_2"
+		faction="Faction.clan_gundabad_5"
+		text="{=krogar_description}Krogar is a marauder orc, leading pillaging bands reminiscent of those that ravaged the Shire's borders. His hauls sustain the clan's war machine." />
+	<Hero
+		id="lord_G5_3"
+		faction="Faction.clan_gundabad_5"
+		text="{=thrunak_description}Thrunak, an orc infiltrator, sneaks into enemy camps like the spies in Tolkien's wars. His sabotage undermines foes from within." />
+	<Hero
+		id="lord_G5_4"
+		faction="Faction.clan_gundabad_5"
+		text="{=grazar_description}Grazar serves as a beast-master, taming giant spiders akin to those in Mirkwood. In Gundabad, his pets guard tunnels and ensnare intruders." />
+	<Hero
+		id="lord_G5_5"
+		faction="Faction.clan_gundabad_5"
+		text="{=narzog_description}Narzog is a harasser orc, using hit-and-run tactics from the lore of orc skirmishers. His mobility keeps pressure on neighboring realms." />
+	<Hero
+		id="lord_G5_6"
+		faction="Faction.clan_gundabad_5"
+		text="{=ulgrim_description}Ulgrim, a duplicate-named but distinct orc veteran, fights with the experience of long campaigns against Elves. His wisdom guides younger warriors." />
+	<Hero
+		id="lord_G5_7"
+		faction="Faction.clan_gundabad_5"
+		spouse="Hero.lord_G5_9"
+		text="{=vurlak_description}Vurlak acts as a quartermaster orc, distributing gear like the logisticians in large orc armies. His efficiency keeps the clan battle-ready." />
+	<Hero
+		id="lord_G5_8"
+		faction="Faction.clan_gundabad_5"
+		text="{=borzak_description}Borzak is a defender orc, fortifying positions echoing the barricades at Helm's Deep. In Gundabad, his walls repel invasions from the deep." />
+	<Hero
+		id="lord_G5_9"
+		faction="Faction.clan_gundabad_5"
+		spouse="Hero.lord_G5_7"
+		text="{=kralza_description}Kralza, a commanding orc female, oversees training grounds with the authority of a captain. Her drills produce relentless fighters for the horde." />
+	<Hero
+		id="lord_G5_10"
+		faction="Faction.clan_gundabad_5"
+		text="{=ulzara_description}Ulzara is an orc seer, interpreting signs from the dark lords as in Tolkien's prophetic elements. Her visions direct the clan's fateful actions." />
+
+	<!-- ============================================== -->
+	<!-- UMBAR HEROES (umbar culture)                   -->
+	<!-- ============================================== -->
+
+	<Hero
+		id="lord_U1_1"
+		faction="Faction.clan_umbar_1"
+		text="{=zarakbal_description}Ar-Gimilkhâd, the enigmatic and ruthless leader of Umbar, commands the Corsairs with unmatched cunning and ambition. A master strategist and a shrewd manipulator, Ar-Gimilkhâd wields both the sword and the mind with deadly precision. Under his rule, Umbar thrives as a haven for raiders and seafarers, its dark ships spreading fear across the coasts of Middle-earth. Ar-Gimilkhâd's vision of dominance extends beyond the seas, as he forges alliances with the forces of shadow and prepares to unleash the might of Umbar against the Free Peoples. His charisma and iron-fisted rule ensure loyalty among his captains, while his name strikes terror into the hearts of his enemies." />
+	<Hero
+		id="lord_U1_11"
+		father="Hero.lord_U1_1"
+		faction="Faction.clan_umbar_1" />
+	<Hero
+		id="lord_U1_12"
+		father="Hero.lord_U1_1"
+		faction="Faction.clan_umbar_1" />
+	<Hero
+		id="lord_U1_13"
+		father="Hero.lord_U1_1"
+		faction="Faction.clan_umbar_1" />
+
+	<!-- ============================================== -->
+	<!-- DOLGULDUR HEROES (dolguldur culture)           -->
+	<!-- ============================================== -->
+
+	<!-- Shadow Tower Clan (Khamul's Clan) -->
+	<Hero
+		id="lord_1_48"
+		faction="Faction.clan_dolguldur_1"
+		text="{=khamul_description}Khamûl, the Shadow of the East, is second only to the Witch-king among the Nazgûl. Known for his relentless pursuit of the One Ring, Khamûl is a master tracker and enforcer of Sauron's will in the eastern lands. His presence inspires dread, and his ability to sense the Ring's power makes him a key player in Sauron's schemes. Khamûl's loyalty to the Dark Lord is unwavering, and his shadow looms large over all who oppose Mordor." />
+	<Hero
+		id="lord_D1_2"
+		faction="Faction.clan_dolguldur_1"
+		spouse="Hero.lord_D1_3"
+		text="{=thrangul_description}Thrangul, a twisted orc chieftain in the Shadow Tower Clan, serves Khamul with brutal efficiency, leading raids that echo the orc assaults in Tolkien's tales, sowing fear among the Wood-elves of Mirkwood." />
+	<Hero
+		id="lord_D1_3"
+		faction="Faction.clan_dolguldur_1"
+		spouse="Hero.lord_D1_2"
+		text="{=morgulash_description}Morgulash, a shadowy sorceress, weaves dark spells in Dol Guldur, her arts reminiscent of the necromancy that corrupted the hill fortress in the books, aiding Khamul in summoning undead minions." />
+	<Hero
+		id="lord_D1_4"
+		faction="Faction.clan_dolguldur_1"
+		text="{=drazgor_description}Drazgor, a wraith-like commander, haunts the borders of Mirkwood, his ethereal form striking terror like the Nazgûl in the films, enforcing Sauron's will through fear and illusion." />
+	<Hero
+		id="lord_D1_5"
+		faction="Faction.clan_dolguldur_1"
+		text="{=zarkash_description}Zarkash, a fell beast handler, commands winged horrors from Dol Guldur, evoking the dread steeds of the Ringwraiths in lore, scouting and assaulting from the skies." />
+	<Hero
+		id="lord_D1_6"
+		faction="Faction.clan_dolguldur_1"
+		text="{=gorzag_description}Gorzag, an orc warlord, rallies hordes for Khamul, his ferocity mirroring the orc captains in The Hobbit, pushing incursions into elven territories." />
+	<Hero
+		id="lord_D1_7"
+		faction="Faction.clan_dolguldur_1"
+		text="{=ulthrak_description}Ulthrak, a spider tamer, unleashes arachnid swarms, drawing from the giant spiders of Mirkwood in the books, trapping and poisoning foes in webs of darkness." />
+	<Hero
+		id="lord_D1_8"
+		faction="Faction.clan_dolguldur_1"
+		text="{=vorthak_description}Vorthak, a cursed guardian, defends the tower with undead vigor, his role akin to the barrow-wights influenced by Sauron's power in Middle-earth lore." />
+	<Hero
+		id="lord_D1_9"
+		faction="Faction.clan_dolguldur_1"
+		text="{=thrulza_description}Thrulza, a venomous assassin, strikes from shadows, her methods evoking the stealthy orcs that captured Thorin's company in The Hobbit." />
+	<Hero
+		id="lord_D1_10"
+		faction="Faction.clan_dolguldur_1"
+		text="{=narsha_description}Narsha, a dark enchantress, curses enemies with sorcery, her magic reflecting the corrupting influence of Dol Guldur on the forest in the tales." />
+
+	<!-- Necromancer's Legion -->
+	<Hero
+		id="lord_D2_1"
+		faction="Faction.clan_dolguldur_2"
+		spouse="Hero.lord_D2_2"
+		text="{=narzugh_description}Narzugh, overlord of the Necromancer's Legion, summons undead legions, embodying Sauron's necromantic experiments in Dol Guldur from the appendices." />
+	<Hero
+		id="lord_D2_2"
+		faction="Faction.clan_dolguldur_2"
+		spouse="Hero.lord_D2_1"
+		text="{=durkar_description}Durkar, a spectral lieutenant, aids in raising wraiths, her presence chilling like the fear induced by the Necromancer in Mirkwood's lore." />
+	<Hero
+		id="lord_D2_3"
+		faction="Faction.clan_dolguldur_2"
+		text="{=thrargol_description}Thrargol, a grave robber, desecrates tombs for Khamul, fueling the undead hordes as hinted in Sauron's dark arts." />
+	<Hero
+		id="lord_D2_4"
+		faction="Faction.clan_dolguldur_2"
+		text="{=kazrag_description}Kazrag, a curse-bringer, afflicts foes with plagues, mirroring the sickness that befell Greenwood in the books." />
+	<Hero
+		id="lord_D2_5"
+		faction="Faction.clan_dolguldur_2"
+		text="{=zorgrul_description}Zorgrul, an animating sorcerer, revives fallen warriors, his craft akin to Sauron's dominion over death." />
+	<Hero
+		id="lord_D2_6"
+		faction="Faction.clan_dolguldur_2"
+		text="{=morzag_description}Morzag, a bone collector, crafts totems of power, drawing from the foul rituals in Dol Guldur's shadows." />
+	<Hero
+		id="lord_D2_7"
+		faction="Faction.clan_dolguldur_2"
+		text="{=druzhak_description}Druzhak, a spirit caller, summons ghosts, evoking the haunted aura of the fortress in lore." />
+	<Hero
+		id="lord_D2_8"
+		faction="Faction.clan_dolguldur_2"
+		text="{=grasha_description}Grasha, a death whisperer, demoralizes enemies, her voice like the chilling winds from Dol Guldur in the films." />
+	<Hero
+		id="lord_D2_9"
+		faction="Faction.clan_dolguldur_2"
+		text="{=kzha_description}Kzha, a lich-like mage, extends unlife, reflecting Sauron's immortality pursuits." />
+	<Hero
+		id="lord_D2_10"
+		faction="Faction.clan_dolguldur_2"
+		text="{=durzha_description}Durzha, a resurrectionist, revives the slain, bolstering Khamul's endless armies." />
+
+	<!-- Black Spider Horde -->
+	<Hero
+		id="lord_D3_1"
+		faction="Faction.clan_dolguldur_3"
+		spouse="Hero.lord_D3_2"
+		text="{=lorgath_description}Lorgath, master of the Black Spider Horde, breeds giant spiders, directly inspired by the arachnids of Mirkwood in The Hobbit." />
+	<Hero
+		id="lord_D3_2"
+		faction="Faction.clan_dolguldur_3"
+		spouse="Hero.lord_D3_1"
+		text="{=nargrash_description}Nargrash, a web weaver, ensnares prey for Khamul, her tactics mimicking the spider ambushes in the books." />
+	<Hero
+		id="lord_D3_3"
+		faction="Faction.clan_dolguldur_3"
+		text="{=urzok_description}Urzok, a venom lord, poisons wells and arrows, spreading corruption like the spiders' taint in lore." />
+	<Hero
+		id="lord_D3_4"
+		faction="Faction.clan_dolguldur_3"
+		text="{=vorzul_description}Vorzul, a nest guardian, protects spider lairs, ensuring the horde's multiplication in Dol Guldur's depths." />
+	<Hero
+		id="lord_D3_5"
+		faction="Faction.clan_dolguldur_3"
+		text="{=gralzuk_description}Gralzuk, a silk harvester, crafts traps from webs, aiding in capturing elven scouts as in film scenes." />
+	<Hero
+		id="lord_D3_6"
+		faction="Faction.clan_dolguldur_3"
+		text="{=durmorg_description}Durmorg, a brood keeper, raises spiderlings, bolstering Khamul's creepy allies." />
+	<Hero
+		id="lord_D3_7"
+		faction="Faction.clan_dolguldur_3"
+		text="{=thorzag_description}Thorzag, a fang master, commands spider assaults, echoing the battles in Mirkwood." />
+	<Hero
+		id="lord_D3_8"
+		faction="Faction.clan_dolguldur_3"
+		text="{=krozar_description}Krozar, a lurker chief, ambushes from trees, like the spiders that ensnared Bilbo's company." />
+	<Hero
+		id="lord_D3_9"
+		faction="Faction.clan_dolguldur_3"
+		text="{=zargra_description}Zargra, a poison mistress, brews venoms, enhancing the clan's deadly arsenal." />
+	<Hero
+		id="lord_D3_10"
+		faction="Faction.clan_dolguldur_3"
+		text="{=thalka_description}Thalka, a web strategist, plans entanglements, trapping foes in Dol Guldur's schemes." />
+
+	<!-- Wraith Shadow Clan -->
+	<Hero
+		id="lord_D4_1"
+		faction="Faction.clan_dolguldur_4"
+		spouse="Hero.lord_D4_2"
+		text="{=urzara_description}Urzara, sovereign of the Wraith Shadow Clan, manipulates shadows, akin to the Ringwraiths' terror in lore." />
+	<Hero
+		id="lord_D4_2"
+		faction="Faction.clan_dolguldur_4"
+		spouse="Hero.lord_D4_1"
+		text="{=druznia_description}Druznia, a spectral consort, haunts dreams, her influence spreading fear like the Nazgûl's Black Breath." />
+	<Hero
+		id="lord_D4_3"
+		faction="Faction.clan_dolguldur_4"
+		text="{=vorgria_description}Vorgria, a phantom stalker, pursues enemies unseen, evoking the relentless hunt of the Nine." />
+	<Hero
+		id="lord_D4_4"
+		faction="Faction.clan_dolguldur_4"
+		text="{=thrulzia_description}Thrulzia, a ghost whisperer, communes with spirits, summoning aid from beyond the grave." />
+	<Hero
+		id="lord_D4_5"
+		faction="Faction.clan_dolguldur_4"
+		text="{=zulgora_description}Zulgora, a shade weaver, crafts illusions, deceiving foes as Sauron's deceptions in the tales." />
+	<Hero
+		id="lord_D4_6"
+		faction="Faction.clan_dolguldur_4"
+		text="{=narzia_description}Narzia, a wraith binder, enslaves souls, bolstering Khamul's ethereal forces." />
+	<Hero
+		id="lord_D4_7"
+		faction="Faction.clan_dolguldur_4"
+		text="{=kazria_description}Kazria, a fear monger, instills dread, mirroring the morale-crushing presence of the Nazgûl." />
+	<Hero
+		id="lord_D4_8"
+		faction="Faction.clan_dolguldur_4"
+		text="{=gralzia_description}Gralzia, a shadow infiltrator, spies in darkness, like the unseen agents of Sauron." />
+	<Hero
+		id="lord_D4_9"
+		faction="Faction.clan_dolguldur_4"
+		text="{=urzok_description}Urzok, a void caller, summons voids, engulfing light as Dol Guldur's gloom." />
+	<Hero
+		id="lord_D4_10"
+		faction="Faction.clan_dolguldur_4"
+		text="{=vorzul_description}Vorzul, a phantom reaper, harvests souls, feeding Khamul's insatiable hunger." />
+
+	<!-- Fell Beast Tribe -->
+	<Hero
+		id="lord_D5_1"
+		faction="Faction.clan_dolguldur_5"
+		spouse="Hero.lord_D5_2"
+		text="{=throrgash_description}Throrgash, chieftain of the Fell Beast Tribe, breeds winged terrors, inspired by the fell beasts ridden by Nazgûl in books and films." />
+	<Hero
+		id="lord_D5_2"
+		faction="Faction.clan_dolguldur_5"
+		spouse="Hero.lord_D5_1"
+		text="{=gorvash_description}Gorvash, a beast mistress, tames draconic horrors, her command echoing the dread steeds' shrieks." />
+	<Hero
+		id="lord_D5_3"
+		faction="Faction.clan_dolguldur_5"
+		text="{=narduk_description}Narduk, a sky scourge, leads aerial assaults, diving upon foes like the Nazgûl attacks in lore." />
+	<Hero
+		id="lord_D5_4"
+		faction="Faction.clan_dolguldur_5"
+		text="{=zulgor_description}Zulgor, a wing breeder, hatches fell eggs, expanding Khamul's airborne dominion." />
+	<Hero
+		id="lord_D5_5"
+		faction="Faction.clan_dolguldur_5"
+		text="{=dulruk_description}Dulruk, a terror rider, patrols from above, spotting and striking with precision." />
+	<Hero
+		id="lord_D5_6"
+		faction="Faction.clan_dolguldur_5"
+		text="{=thrugash_description}Thrugash, a screech caller, unnerves enemies, her beasts' cries breaking morale as in battles." />
+	<Hero
+		id="lord_D5_7"
+		faction="Faction.clan_dolguldur_5"
+		text="{=kargul_description}Kargul, a claw master, trains beasts for combat, rending armor like the fell beasts' talons." />
+	<Hero
+		id="lord_D5_8"
+		faction="Faction.clan_dolguldur_5"
+		text="{=ulzar_description}Ulzar, a nest guardian, protects lairs, ensuring the tribe's monstrous proliferation." />
+	<Hero
+		id="lord_D5_9"
+		faction="Faction.clan_dolguldur_5"
+		text="{=morgra_description}Morgra, a venom spitter, enhances beasts with poisons, deadly as Sauron's corrupted creatures." />
+	<Hero
+		id="lord_D5_10"
+		faction="Faction.clan_dolguldur_5"
+		text="{=ulzra_description}Ulzra, a flight commander, coordinates dives, overwhelming ground forces from the skies." />
+
+	<!-- Dark Sorcerer's Guard -->
+	<Hero
+		id="lord_D6_1"
+		faction="Faction.clan_dolguldur_6"
+		spouse="Hero.lord_D6_2"
+		text="{=thrurg_description}Thrurg, head of the Dark Sorcerer's Guard, wields forbidden magics, guarding Khamul with spells akin to Sauron's sorcery in lore." />
+	<Hero
+		id="lord_D6_2"
+		faction="Faction.clan_dolguldur_6"
+		spouse="Hero.lord_D6_1"
+		text="{=zarlug_description}Zarlug, an arcane warden, erects barriers of shadow, protecting Dol Guldur as the Necromancer's illusions in the books." />
+	<Hero
+		id="lord_D6_3"
+		faction="Faction.clan_dolguldur_6"
+		text="{=muzrak_description}Muzrak, a curse caster, afflicts intruders, his hexes weakening foes like Sauron's debilitating influence." />
+	<Hero
+		id="lord_D6_4"
+		faction="Faction.clan_dolguldur_6"
+		text="{=kaznia_description}Kaznia, a rune scribe, inscribes wards, fortifying the tower with dark enchantments." />
+	<Hero
+		id="lord_D6_5"
+		faction="Faction.clan_dolguldur_6"
+		text="{=lurzia_description}Lurzia, a spell sentinel, detects magic, countering elven sorcery in Mirkwood's conflicts." />
+	<Hero
+		id="lord_D6_6"
+		faction="Faction.clan_dolguldur_6"
+		text="{=durla_description}Durla, a shadow binder, manipulates darkness, concealing guards as in Dol Guldur's veiled assaults." />
+	<Hero
+		id="lord_D6_7"
+		faction="Faction.clan_dolguldur_6"
+		text="{=gralnia_description}Gralnia, a necromantic healer, sustains the wounded, twisting life to unlife for Khamul's service." />
+	<Hero
+		id="lord_D6_8"
+		faction="Faction.clan_dolguldur_6"
+		text="{=thalka_description}Thalka, a ritual master, performs sacrifices, empowering the clan with Sauron's dark rites." />
+	<Hero
+		id="lord_D6_9"
+		faction="Faction.clan_dolguldur_6"
+		text="{=vorla_description}Vorla, a divination seer, foresees threats, guiding the guard against Wood-elf ambushes." />
+	<Hero
+		id="lord_D6_10"
+		faction="Faction.clan_dolguldur_6"
+		text="{=kazla_description}Kazla, a arcane enforcer, punishes disloyalty, maintaining order in Khamul's shadowed halls." />
+
 </Heroes>

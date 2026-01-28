@@ -3,7 +3,7 @@
     "Bannerlord": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\$(GameBinariesFolder)\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*$(ModuleId)*_MODULES_",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*TAOM_Map*$(ModuleId)*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\$(GameBinariesFolder)",
       "nativeDebugging": false
     },
