@@ -624,7 +624,7 @@
     <!--Dol Guldur - Necromancer's Fortress-->
     <Kingdom
         id="dolguldur"
-        owner="Hero.lord_D1_1"
+        owner="Hero.lord_1_48"
         initial_home_settlement="Settlement.town_dolguldur"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff4F321A"

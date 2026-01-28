@@ -1035,4 +1035,137 @@
 		faction="Faction.clan_dolguldur_6"
 		text="{=kazla_description}Kazla, a arcane enforcer, punishes disloyalty, maintaining order in Khamul's shadowed halls." />
 
+	<!-- ========== GONDOR (EMPIRE WEST) - Additional Heroes ========== -->
+	<Hero
+		id="lord_1_9_5"
+		faction="Faction.clan_empire_west_2" />
+	<Hero
+		id="lord_1_52_4"
+		faction="Faction.clan_empire_west_6" />
+	<Hero
+		id="lord_1_71_1"
+		faction="Faction.clan_empire_west_8" />
+	<Hero
+		id="lord_1_59"
+		spouse="Hero.lord_1_59_1"
+		faction="Faction.clan_empire_west_10" />
+	<Hero
+		id="lord_1_60"
+		spouse="Hero.lord_1_60_1"
+		faction="Faction.clan_empire_west_11"
+		text="{=tirnelion_description}Born into the noble line of the House of Elatanionath, Tirnelion can trace his mighty ancestry back to the ancient island kingdom of Númenor and has ever been a most noble and honorable vassal of Lord Denethor. Now, as the shadow in the east grows longer and his days grow old, he once again must take up arms, defend his liege and be the northernmost bulwark against the incoming tidal wave of darkness. And yet, through these dark days, hope remains and the banners of Lord Tirnelion may fly high once more." />
+	<Hero
+		id="lord_EW_1"
+		faction="Faction.clan_empire_west_13" />
+	<Hero
+		id="lord_EW_6"
+		faction="Faction.clan_empire_west_14" />
+	<Hero
+		id="lord_EW_9"
+		faction="Faction.clan_empire_west_15" />
+	<Hero
+		id="lord_EW_14"
+		faction="Faction.clan_empire_west_16" />
+	<Hero
+		id="lord_EW_23"
+		faction="Faction.clan_empire_west_17" />
+	<Hero
+		id="lord_EW_20"
+		faction="Faction.clan_empire_west_18" />
+
+	<!-- ========== ROHAN (VLANDIA) - Additional Heroes ========== -->
+	<Hero
+		id="lord_4_3_3"
+		faction="Faction.clan_vlandia_2" />
+	<Hero
+		id="lord_4_16_2"
+		faction="Faction.clan_vlandia_4" />
+	<Hero
+		id="lord_4_21_4"
+		faction="Faction.clan_vlandia_5" />
+	<Hero
+		id="lord_rohan_10_1"
+		faction="Faction.clan_vlandia_10" />
+	<Hero
+		id="lord_4_29"
+		spouse="Hero.lord_4_29_1"
+		faction="Faction.clan_vlandia_12" />
+	<Hero
+		id="lord_rohan_13_1"
+		faction="Faction.clan_vlandia_13" />
+	<Hero
+		id="lord_rohan_14_1"
+		faction="Faction.clan_vlandia_14" />
+	<Hero
+		id="lord_rohan_15_1"
+		faction="Faction.clan_vlandia_15" />
+	<Hero
+		id="lord_rohan_16_1"
+		faction="Faction.clan_vlandia_16" />
+	<Hero
+		id="lord_rohan_17_1"
+		faction="Faction.clan_vlandia_17" />
+	<Hero
+		id="lord_rohan_21_1"
+		faction="Faction.clan_vlandia_21" />
+	<Hero
+		id="lord_rohan_22_1"
+		faction="Faction.clan_vlandia_22" />
+
+	<!-- ========== MORDOR (EMPIRE SOUTH) - Additional Heroes ========== -->
+	<Hero
+		id="lord_M10_1"
+		faction="Faction.clan_empire_south_10" />
+	<Hero
+		id="lord_M11_1"
+		faction="Faction.clan_empire_south_11" />
+	<Hero
+		id="lord_M12_1"
+		faction="Faction.clan_empire_south_12" />
+	<Hero
+		id="lord_M13_1"
+		faction="Faction.clan_empire_south_13" />
+	<Hero
+		id="lord_M14_1"
+		faction="Faction.clan_empire_south_14" />
+	<Hero
+		id="lord_M15_1"
+		faction="Faction.clan_empire_south_15" />
+	<Hero
+		id="lord_M16_1"
+		faction="Faction.clan_empire_south_16" />
+	<Hero
+		id="lord_M17_1"
+		faction="Faction.clan_empire_south_17" />
+	<Hero
+		id="lord_M18_1"
+		faction="Faction.clan_empire_south_18" />
+
+	<!-- ========== RHUN (KHUZAIT) - Additional Heroes ========== -->
+	<Hero
+		id="lord_6_25"
+		faction="Faction.clan_khuzait_14"
+		text="{=ethacali_description}Ethacali Cilzeron, a diplomatic envoy of Rhûn, negotiates treaties and alliances in the Third Age to expand Sauron's influence. His eloquence and cunning secure vital pacts. Ethacali's words weave a net of loyalty around the Easterling clans." />
+	<Hero
+		id="lord_6_26"
+		faction="Faction.clan_khuzait_15"
+		text="{=leordinoth_description}Leôrdinoth Kalkian, a veteran campaigner of Rhûn, leads seasoned warriors into battle during the Third Age for Sauron. His experience turns the tide in many conflicts. Leôrdinoth's tactical genius maximizes the Easterlings' martial prowess." />
+	<Hero
+		id="lord_6_27"
+		faction="Faction.clan_khuzait_16"
+		text="{=neida_description}Neida Zorian, a spiritual guide of Rhûn, inspires fanatical devotion to Sauron among her clan in the Third Age. Her rituals strengthen the warriors' resolve. Neida's faith unites the Easterlings in unholy purpose." />
+	<Hero
+		id="lord_6_28"
+		faction="Faction.clan_khuzait_17"
+		text="{=tulrok_description}Tulrok Mithruntai, an innovative tactician of Rhûn, develops new warfare methods in the Third Age to serve Sauron. His inventions surprise and overwhelm enemies. Tulrok's ingenuity gives the Easterlings an edge in their campaigns." />
+	<Hero
+		id="lord_6_29"
+		faction="Faction.clan_khuzait_18"
+		text="{=yurzal_description}Yurzal Vazevian, a charismatic orator of Rhûn, rallies the masses to Sauron's banner in the Third Age. His speeches ignite passion for conquest. Yurzal's rhetoric transforms reluctant tribes into fervent warriors." />
+	<Hero
+		id="lord_6_30"
+		faction="Faction.clan_khuzait_19"
+		text="{=rurazaur_description}Rurazaur Bozorganith, a beast-master of Rhûn, commands fearsome creatures in battle during the Third Age for Sauron. His bond with wild beasts sows chaos among foes. Rurazaur's monstrous allies amplify the terror of the Easterling assaults." />
+
 </Heroes>
+

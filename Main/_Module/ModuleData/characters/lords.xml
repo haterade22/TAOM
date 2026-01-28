@@ -18853,4 +18853,281 @@
         </Equipments>
     </NPCCharacter>
 
+    <!-- ========== GONDOR (EMPIRE WEST) - New Clan Leaders ========== -->
+    <NPCCharacter id="lord_1_59" name="{=aom_lord_1_59_name}Borhador the Old" age="35" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+        <face>
+            <BodyProperties version="4" age="50.08" weight="0.0486" build="0.3611" key="00025C04001403030B82005700C07504944685853CB98070BB79530E7ECBFEA200B516030B3BB5731F6410605020004000000000000017670000000043647003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="6" />
+            <Trait id="Commander" value="3" />
+            <Trait id="Politician" value="9" />
+            <Trait id="Manager" value="7" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="2" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_1_60" name="{=aom_lord_1_60_name}Tirnelion" age="40" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+        <face>
+            <BodyProperties version="4" weight="0.1" build="0.98" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="6" />
+            <Trait id="Commander" value="3" />
+            <Trait id="Politician" value="9" />
+            <Trait id="Manager" value="7" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="2" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="emp_bat_template_medium" />
+            <EquipmentSet id="emp_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ========== ROHAN (VLANDIA) - New Clan Leaders ========== -->
+    <NPCCharacter id="lord_4_29" name="{=aom_lord_4_29_name}Eadfrith Ælfwiging" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
+        <face>
+            <BodyProperties version="4" age="45.16" weight="0" build="0.5926" key="00056005400012C3308166EF1A6B90598049BB608F98FF004006000F3C072660009906030919FD8C00000000000000000000000000000000000000003F2C4002" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="vlandia" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="KnightFightingSkills" value="6" />
+            <Trait id="Commander" value="2" />
+            <Trait id="Manager" value="9" />
+            <Trait id="Politician" value="8" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="vla_bat_template_medium" />
+            <EquipmentSet id="vla_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ========== RHUN (KHUZAIT) - New Clan Leaders ========== -->
+    <NPCCharacter id="lord_6_25" name="{=aom_lord_6_25_name}Ethacali Cilzeron" age="31" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="CavalryFightingSkills" value="7" />
+            <Trait id="Commander" value="7" />
+            <Trait id="Manager" value="3" />
+            <Trait id="Politician" value="6" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Honor" value="-2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_6_26" name="{=aom_lord_6_26_name}Leôrdinoth Kalkian" age="32" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="CavalryFightingSkills" value="4" />
+            <Trait id="Commander" value="3" />
+            <Trait id="Manager" value="5" />
+            <Trait id="Politician" value="3" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_6_27" name="{=aom_lord_6_27_name}Neida Zorian" age="41" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="CavalryFightingSkills" value="9" />
+            <Trait id="Commander" value="8" />
+            <Trait id="Manager" value="4" />
+            <Trait id="Politician" value="4" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="2" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_6_28" name="{=aom_lord_6_28_name}Tulrok Mithruntai" age="37" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="CavalryFightingSkills" value="6" />
+            <Trait id="Commander" value="6" />
+            <Trait id="Manager" value="6" />
+            <Trait id="Politician" value="6" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="2" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_6_29" name="{=aom_lord_6_29_name}Yurzal Vazevian" age="36" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="CavalryFightingSkills" value="4" />
+            <Trait id="Commander" value="4" />
+            <Trait id="Manager" value="10" />
+            <Trait id="Politician" value="9" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="2" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_6_30" name="{=aom_lord_6_30_name}Rurazaur Bozorganith" age="31" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+        <face>
+            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <hair_tags>
+                <hair_tag name="khuzait" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="khuzait" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills />
+        <Traits>
+            <Trait id="CavalryFightingSkills" value="6" />
+            <Trait id="Commander" value="4" />
+            <Trait id="Manager" value="7" />
+            <Trait id="Politician" value="7" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="2" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="khu_bat_template_medium" />
+            <EquipmentSet id="khu_civ_template_default" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

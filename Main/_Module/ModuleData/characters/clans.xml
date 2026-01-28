@@ -10,6 +10,7 @@
 
 	<Faction
 		id="clan_empire_west_10"
+		initial_home_settlement="Settlement.town_EW1"
 		name="{=aom_clan_empire_west_10_name}House of Barahirionath"
 		tier="3"
 		owner="Hero.lord_1_59"
@@ -20,6 +21,7 @@
 	<Faction
 		id="clan_empire_west_11"
 		name="{=aom_clan_empire_west_11_name}House of Elatanionath"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="1"
 		owner="Hero.lord_1_60"
 		culture="Culture.empire"
@@ -29,6 +31,7 @@
 	<Faction
 		id="clan_empire_west_12"
 		name="{=aom_clan_empire_west_12_name}House of Faramirionath"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
 		owner="Hero.lord_1_34"
 		culture="Culture.empire"
@@ -38,6 +41,7 @@
 	<Faction
 		id="clan_empire_west_13"
 		name="{=aom_clan_empire_west_13_name}House of Vinginturion"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
 		owner="Hero.lord_EW_1"
 		culture="Culture.empire"
@@ -47,6 +51,7 @@
 	<Faction
 		id="clan_empire_west_14"
 		name="{=aom_clan_empire_west_14_name}House of Telemírionath"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
 		owner="Hero.lord_EW_6"
 		culture="Culture.empire"
@@ -56,6 +61,7 @@
 	<Faction
 		id="clan_empire_west_15"
 		name="{=aom_clan_empire_west_15_name}House of Imlothiath"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="4"
 		owner="Hero.lord_EW_9"
 		culture="Culture.empire"
@@ -65,6 +71,7 @@
 	<Faction
 		id="clan_empire_west_16"
 		name="{=aom_clan_empire_west_16_name}House of Duneglan"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="4"
 		owner="Hero.lord_EW_14"
 		culture="Culture.empire"
@@ -74,6 +81,7 @@
 	<Faction
 		id="clan_empire_west_17"
 		name="{=aom_clan_empire_west_17_name}House of Axanturionath"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="4"
 		owner="Hero.lord_EW_23"
 		culture="Culture.empire"
@@ -83,6 +91,7 @@
 	<Faction
 		id="clan_empire_west_18"
 		name="{=aom_clan_empire_west_18_name}House of Celebhatol"
+		initial_home_settlement="Settlement.town_EW1"
 		tier="4"
 		owner="Hero.lord_EW_20"
 		culture="Culture.empire"
@@ -97,7 +106,8 @@
 
 	<Faction
 		id="clan_empire_south_10"
-		name="{=aom_clan_empire_south_10_name}�>rd"
+		name="{=aom_clan_empire_south_10_name}Ûrd"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M10_1"
 		culture="Culture.empire"
@@ -107,6 +117,7 @@
 	<Faction
 		id="clan_empire_south_11"
 		name="{=aom_clan_empire_south_11_name}Krahjân"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M11_1"
 		culture="Culture.empire"
@@ -116,6 +127,7 @@
 	<Faction
 		id="clan_empire_south_12"
 		name="{=aom_clan_empire_south_12_name}Rashâg-Hai"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M12_1"
 		culture="Culture.empire"
@@ -125,6 +137,7 @@
 	<Faction
 		id="clan_empire_south_13"
 		name="{=aom_clan_empire_south_13_name}Dûrub-Hai"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M13_1"
 		culture="Culture.empire"
@@ -134,6 +147,7 @@
 	<Faction
 		id="clan_empire_south_14"
 		name="{=aom_clan_empire_south_14_name}Blogmal-Hai"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M14_1"
 		culture="Culture.empire"
@@ -143,6 +157,7 @@
 	<Faction
 		id="clan_empire_south_15"
 		name="{=aom_clan_empire_south_15_name}Môr-Hai"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M15_1"
 		culture="Culture.empire"
@@ -152,6 +167,7 @@
 	<Faction
 		id="clan_empire_south_16"
 		name="{=aom_clan_empire_south_16_name}Ghâsh-Hai"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M16_1"
 		culture="Culture.empire"
@@ -160,7 +176,8 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17334.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_17"
-		name="{=aom_clan_empire_south_17_name}�,rki"
+		name="{=aom_clan_empire_south_17_name}Ârki"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M17_1"
 		culture="Culture.empire"
@@ -169,7 +186,8 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17244.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_18"
-		name="{=aom_clan_empire_south_18_name}�"von"
+		name="{=aom_clan_empire_south_18_name}Ôvon"
+		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M18_1"
 		culture="Culture.empire"
@@ -184,7 +202,8 @@
 
 	<Faction
 		id="clan_vlandia_12"
-		name="{=aom_clan_vlandia_12_name}House of �?lfwiging"
+		name="{=aom_clan_vlandia_12_name}House of Ælfwiging"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_4_29"
 		culture="Culture.vlandia"
@@ -194,6 +213,7 @@
 	<Faction
 		id="clan_vlandia_13"
 		name="{=aom_clan_vlandia_13_name}House of Celmunding"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_13_1"
 		culture="Culture.vlandia"
@@ -203,6 +223,7 @@
 	<Faction
 		id="clan_vlandia_14"
 		name="{=aom_clan_vlandia_14_name}House of Widmunding"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_14_1"
 		culture="Culture.vlandia"
@@ -212,6 +233,7 @@
 	<Faction
 		id="clan_vlandia_15"
 		name="{=aom_clan_vlandia_15_name}House of Ordgaring"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_15_1"
 		culture="Culture.vlandia"
@@ -221,6 +243,7 @@
 	<Faction
 		id="clan_vlandia_16"
 		name="{=aom_clan_vlandia_16_name}House of Hunthelming"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_16_1"
 		culture="Culture.vlandia"
@@ -230,6 +253,7 @@
 	<Faction
 		id="clan_vlandia_17"
 		name="{=aom_clan_vlandia_17_name}House of Bregdaning"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_17_1"
 		culture="Culture.vlandia"
@@ -239,6 +263,7 @@
 	<Faction
 		id="clan_vlandia_18"
 		name="{=aom_clan_vlandia_18_name}House of Deáfringas"
+		initial_home_settlement="Settlement.town_V1"
 		tier="4"
 		owner="Hero.lord_V11_l"
 		culture="Culture.vlandia"
@@ -248,6 +273,7 @@
 	<Faction
 		id="clan_vlandia_19"
 		name="{=aom_clan_vlandia_19_name}House of Marhad"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_4_23"
 		culture="Culture.vlandia"
@@ -257,6 +283,7 @@
 	<Faction
 		id="clan_vlandia_20"
 		name="{=aom_clan_vlandia_20_name}House of Morcargas"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_4_28"
 		culture="Culture.vlandia"
@@ -266,6 +293,7 @@
 	<Faction
 		id="clan_vlandia_21"
 		name="{=aom_clan_vlandia_21_name}House of Halethring"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_21_1"
 		culture="Culture.vlandia"
@@ -275,6 +303,7 @@
 	<Faction
 		id="clan_vlandia_22"
 		name="{=aom_clan_vlandia_22_name}House of Rungaring"
+		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_rohan_22_1"
 		culture="Culture.vlandia"
@@ -290,6 +319,7 @@
 	<Faction
 		id="clan_khuzait_10"
 		name="{=aom_clan_khuzait_10_name}Illnoria"
+		initial_home_settlement="Settlement.town_K1"
 		tier="3"
 		owner="Hero.lord_6_21"
 		culture="Culture.khuzait"
@@ -299,6 +329,7 @@
 	<Faction
 		id="clan_khuzait_11"
 		name="{=aom_clan_khuzait_11_name}Shakhalian"
+		initial_home_settlement="Settlement.town_K2"
 		tier="3"
 		owner="Hero.lord_6_22"
 		culture="Culture.khuzait"
@@ -308,6 +339,7 @@
 	<Faction
 		id="clan_khuzait_12"
 		name="{=aom_clan_khuzait_12_name}Hûz"
+		initial_home_settlement="Settlement.town_K3"
 		tier="2"
 		owner="Hero.lord_6_23"
 		culture="Culture.khuzait"
@@ -317,6 +349,7 @@
 	<Faction
 		id="clan_khuzait_13"
 		name="{=aom_clan_khuzait_13_name}Adekig"
+		initial_home_settlement="Settlement.town_K4"
 		tier="2"
 		owner="Hero.lord_6_24"
 		culture="Culture.khuzait"
@@ -326,6 +359,7 @@
 	<Faction
 		id="clan_khuzait_14"
 		name="{=aom_clan_khuzait_14_name}Cilzeron"
+		initial_home_settlement="Settlement.town_K5"
 		tier="2"
 		owner="Hero.lord_6_25"
 		culture="Culture.khuzait"
@@ -335,6 +369,7 @@
 	<Faction
 		id="clan_khuzait_15"
 		name="{=aom_clan_khuzait_15_name}Kalkian"
+		initial_home_settlement="Settlement.town_K1"
 		tier="2"
 		owner="Hero.lord_6_26"
 		culture="Culture.khuzait"
@@ -344,6 +379,7 @@
 	<Faction
 		id="clan_khuzait_16"
 		name="{=aom_clan_khuzait_16_name}Zorian"
+		initial_home_settlement="Settlement.town_K2"
 		tier="3"
 		owner="Hero.lord_6_27"
 		culture="Culture.khuzait"
@@ -353,6 +389,7 @@
 	<Faction
 		id="clan_khuzait_17"
 		name="{=aom_clan_khuzait_17_name}Mithruntai"
+		initial_home_settlement="Settlement.town_K3"
 		tier="3"
 		owner="Hero.lord_6_28"
 		culture="Culture.khuzait"
@@ -362,6 +399,7 @@
 	<Faction
 		id="clan_khuzait_18"
 		name="{=aom_clan_khuzait_18_name}Vazevian"
+		initial_home_settlement="Settlement.town_K4"
 		tier="3"
 		owner="Hero.lord_6_29"
 		culture="Culture.khuzait"
@@ -371,6 +409,7 @@
 	<Faction
 		id="clan_khuzait_19"
 		name="{=aom_clan_khuzait_19_name}Bozorganith"
+		initial_home_settlement="Settlement.town_K4"
 		tier="3"
 		owner="Hero.lord_6_30"
 		culture="Culture.khuzait"

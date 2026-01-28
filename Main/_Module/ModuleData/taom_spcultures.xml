@@ -75,8 +75,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="949.3796"
+    start_point_position_y="1191.117">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -423,8 +423,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Tablut"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="675.238"
+    start_point_position_y="1087.961">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -780,8 +780,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Tablut"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="879.6932"
+    start_point_position_y="1219.841">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -1128,8 +1128,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Tablut"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="724.6088"
+    start_point_position_y="975.238">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -1476,8 +1476,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="633.4053"
+    start_point_position_y="837.9393">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -1824,8 +1824,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="738.8926"
+    start_point_position_y="1248.349">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -2172,8 +2172,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Seega"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="761.6247"
+    start_point_position_y="317.6857">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
@@ -2520,8 +2520,8 @@
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
     default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
-    start_point_position_x="0.0"
-    start_point_position_y="0.0">
+    start_point_position_x="835.0524"
+    start_point_position_y="975.238">
     <caravan_party_templates>
       <caravan_party_template id="PartyTemplate.caravan_template_empire" />
     </caravan_party_templates>
