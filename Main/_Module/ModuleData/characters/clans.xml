@@ -4,268 +4,494 @@
 <Factions>
 
 	<!-- ============================================== -->
-	<!-- DUNLAND CLANS (empire culture)                 -->
-	<!-- Naming style: [Name]-lûth (Clan suffix)        -->
+	<!-- EXTENDED EMPIRE WEST / GONDOR CLANS            -->
+	<!-- Additional Gondor noble houses (10-18)         -->
 	<!-- ============================================== -->
 
-	<!-- Baedd-lûth (Boar Clan) - mountain stronghold holders -->
 	<Faction
-		id="clan_taom_dunland_1"
-		initial_home_settlement="Settlement.town_EN1"
-		name="{=TAOM_clan_d1}Baedd-lûth"
-		tier="5"
-		owner="Hero.lord_taom_dunland_1"
-		culture="Culture.empire"
-		super_faction="Kingdom.empire"
+		id="clan_empire_west_10"
+		name="{=aom_clan_empire_west_10_name}House of Barahirionath"
+		label_color="FF56461A"
+		color="FF685116"
+		color2="FFE4D6B5"
+		alternative_color="FF4B3B0F"
+		alternative_color2="FFCCB98A"
+		tier="3"
+		owner="Hero.lord_1_59"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_generic_gondor_template"
 		is_noble="true"
-		banner_key="11.116.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
-		text="{=TAOM_clan_d1_desc}The Baedd-lûth trace their lineage to the ancient kings of Dunland. Their warriors are known for their ferocity in battle and their hatred of the horse-lords to the south." />
-
-	<!-- Gwrach-lûth (Witch Clan) - mystics and seers -->
+		banner_key="11.92.92.3000.3000.764.764.1.0.0.17352.35.35.700.700.731.755.1.1.0" />
 	<Faction
-		id="clan_taom_dunland_2"
-		initial_home_settlement="Settlement.town_EN2"
-		name="{=TAOM_clan_d2}Gwrach-lûth"
+		id="clan_empire_west_11"
+		name="{=aom_clan_empire_west_11_name}House of Elatanionath"
+		label_color="FF2A2A2A"
+		color="FF1C1C1C"
+		color2="FFD9D6C4"
+		alternative_color="FF101010"
+		alternative_color2="FFBAB6A0"
+		tier="1"
+		owner="Hero.lord_1_60"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_generic_gondor_template"
+		is_noble="true"
+		banner_key="11.149.126.3000.3000.764.764.1.0.0.512.116.116.-32.76.763.487.1.1.0" />
+	<Faction
+		id="clan_empire_west_12"
+		name="{=aom_clan_empire_west_12_name}House of Faramirionath"
+		label_color="FF3A4F3A"
+		color="FF2E4631"
+		color2="FFE0D8BD"
+		alternative_color="FF223624"
+		alternative_color2="FFB9AA79"
+		tier="3"
+		owner="Hero.lord_1_34"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_ithilien_template"
+		is_noble="true"
+		banner_key="11.12.12.3000.3000.764.764.1.0.0.17173.274.116.600.600.762.778.0.0.0" />
+	<Faction
+		id="clan_empire_west_13"
+		name="{=aom_clan_empire_west_13_name}House of Vinginturion"
+		label_color="FF3C5A25"
+		color="FF496F2D"
+		color2="FFE0D4B0"
+		alternative_color="FF2E451A"
+		alternative_color2="FFC8B17D"
+		tier="3"
+		owner="Hero.lord_EW_1"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_pinnath_gelin_template"
+		is_noble="true"
+		banner_key="11.126.126.3000.3000.764.764.1.0.0.17353.35.35.600.600.755.755.0.0.0" />
+	<Faction
+		id="clan_empire_west_14"
+		name="{=aom_clan_empire_west_14_name}House of Telemirionath"
+		label_color="FF7A5321"
+		color="FF9E6222"
+		color2="FFE5D9B8"
+		alternative_color="FF6B4518"
+		alternative_color2="FFCBB78C"
+		tier="3"
+		owner="Hero.lord_EW_6"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_generic_gondor_template"
+		is_noble="true"
+		banner_key="11.2.2.3000.3000.764.764.1.0.0.17348.254.116.800.800.755.755.1.0.0" />
+	<Faction
+		id="clan_empire_west_15"
+		name="{=aom_clan_empire_west_15_name}House of Imlothiath"
+		label_color="FF3A5474"
+		color="FF1E3A69"
+		color2="FFD6D3C4"
+		alternative_color="FF2A4260"
+		alternative_color2="FF89A7BE"
 		tier="4"
-		owner="Hero.lord_taom_dunland_5"
-		culture="Culture.empire"
-		super_faction="Kingdom.empire"
+		owner="Hero.lord_EW_9"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_imrazorionath_template"
 		is_noble="true"
-		banner_key="11.116.116.1536.1536.764.764.1.0.0.433.128.128.350.350.764.764.0.0.0"
-		text="{=TAOM_clan_d2_desc}The Gwrach-lûth are keepers of the old ways. Their chieftains consult with seers and druids before any battle, and their warriors paint themselves with woad." />
-
-	<!-- Eryr-lûth (Eagle Clan) - highland raiders -->
+		banner_key="11.12.12.2059.1496.768.764.1.1.0.17347.304.108.700.700.755.755.1.0.0" />
 	<Faction
-		id="clan_taom_dunland_3"
-		initial_home_settlement="Settlement.castle_EN1"
-		name="{=TAOM_clan_d3}Eryr-lûth"
+		id="clan_empire_west_16"
+		name="{=aom_clan_empire_west_16_name}House of Duneglan"
+		label_color="FF415D4A"
+		color="FF3E5370"
+		color2="FFC8B98A"
+		alternative_color="FF3B5E49"
+		alternative_color2="FFB59F66"
 		tier="4"
-		owner="Hero.lord_taom_dunland_9"
-		culture="Culture.empire"
-		super_faction="Kingdom.empire"
+		owner="Hero.lord_EW_14"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_pelargir_template"
 		is_noble="true"
-		banner_key="11.116.116.1536.1536.764.764.1.0.0.427.128.128.380.380.764.764.0.0.0"
-		text="{=TAOM_clan_d3_desc}The Eryr-lûth hold the mountain passes of Dunland. Their warriors are stubborn defenders who never yield ground once taken." />
-
-	<!-- ============================================== -->
-	<!-- DALE CLANS (sturgia culture)                   -->
-	<!-- Naming style: House of [Name]                  -->
-	<!-- ============================================== -->
-
-	<!-- House of the River - merchants and traders -->
+		banner_key="11.146.12.2059.1496.768.764.1.1.0.17267.296.116.600.600.765.765.1.0.0" />
 	<Faction
-		id="clan_taom_dale_1"
-		initial_home_settlement="Settlement.town_S1"
-		name="{=TAOM_clan_dale1}House of the River"
-		tier="5"
-		owner="Hero.lord_taom_dale_1"
-		culture="Culture.sturgia"
-		super_faction="Kingdom.sturgia"
-		is_noble="true"
-		banner_key="11.8.116.1536.1536.764.764.1.0.0.503.128.128.380.380.764.764.0.0.0"
-		text="{=TAOM_clan_dale1_desc}The House of the River controls the trade routes along the Running River. Their wealth comes from the caravans that pass between Dale, Erebor, and the lands beyond." />
-
-	<!-- House of the Archers - renowned bowmen -->
-	<Faction
-		id="clan_taom_dale_2"
-		initial_home_settlement="Settlement.town_S2"
-		name="{=TAOM_clan_dale2}House of the Archers"
+		id="clan_empire_west_17"
+		name="{=aom_clan_empire_west_17_name}House of Axanturionath"
+		label_color="FF551818"
+		color="FF6B1C1C"
+		color2="FFE3C2A8"
+		alternative_color="FF421111"
+		alternative_color2="FFCBA07E"
 		tier="4"
-		owner="Hero.lord_taom_dale_5"
-		culture="Culture.sturgia"
-		super_faction="Kingdom.sturgia"
+		owner="Hero.lord_EW_23"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_lamedon_template"
 		is_noble="true"
-		banner_key="11.8.116.1536.1536.764.764.1.0.0.516.128.128.350.350.764.764.0.0.0"
-		text="{=TAOM_clan_dale2_desc}The House of the Archers produces the finest bowmen in Dale. Their longbowmen are legendary for the accuracy of their shots and the range of their weapons." />
-
-	<!-- House of Long Lake - defenders of Esgaroth -->
+		banner_key="11.148.2.2059.1496.768.764.1.1.0.17034.31.116.600.600.755.755.1.0.0" />
 	<Faction
-		id="clan_taom_dale_3"
-		initial_home_settlement="Settlement.castle_S1"
-		name="{=TAOM_clan_dale3}House of Long Lake"
+		id="clan_empire_west_18"
+		name="{=aom_clan_empire_west_18_name}House of Celebhatol"
+		label_color="FF415D4A"
+		color="FF3E5370"
+		color2="FFC8B98A"
+		alternative_color="FF3B5E49"
+		alternative_color2="FFB59F66"
 		tier="4"
-		owner="Hero.lord_taom_dale_9"
-		culture="Culture.sturgia"
-		super_faction="Kingdom.sturgia"
+		owner="Hero.lord_EW_20"
+		culture="Culture.gondor"
+		super_faction="Kingdom.empire_w"
+		default_party_template="PartyTemplate.kingdom_hero_party_pelargir_template"
 		is_noble="true"
-		banner_key="11.8.116.1536.1536.764.764.1.0.0.519.128.128.360.360.764.764.0.0.0"
-		text="{=TAOM_clan_dale3_desc}The House of Long Lake guards the approaches to Esgaroth. Their warriors are trained in defensive warfare and have held the gates against many foes." />
+		banner_key="11.141.10.3000.3000.764.764.1.0.0.17344.116.116.760.760.774.755.1.0.0" />
 
 	<!-- ============================================== -->
-	<!-- HARAD CLANS (aserai culture)                   -->
-	<!-- Naming style: Tribe of the [Name]              -->
+	<!-- EXTENDED EMPIRE SOUTH / MORDOR CLANS           -->
+	<!-- Additional Mordor orc clans (10-18)            -->
 	<!-- ============================================== -->
 
-	<!-- Tribe of the Serpent - warriors of the South -->
 	<Faction
-		id="clan_taom_harad_1"
-		initial_home_settlement="Settlement.town_A1"
-		name="{=TAOM_clan_h1}Tribe of the Serpent"
-		tier="5"
-		owner="Hero.lord_taom_harad_1"
-		culture="Culture.aserai"
-		super_faction="Kingdom.aserai"
+		id="clan_empire_south_10"
+		name="{=aom_clan_empire_south_10_name}Urd"
+		tier="1"
+		owner="Hero.lord_M10_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.142.116.1536.1536.764.764.1.0.0.429.128.128.400.400.764.764.0.0.0"
-		text="{=TAOM_clan_h1_desc}The Tribe of the Serpent rules the central deserts of Harad. Their warriors are renowned for their skill with the curved blades of the South and their deadly poison-tipped arrows." />
-
-	<!-- Tribe of the Mumakil - war elephant masters -->
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17128.2002.171.700.700.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_harad_2"
-		initial_home_settlement="Settlement.town_A2"
-		name="{=TAOM_clan_h2}Tribe of the Mumakil"
-		tier="5"
-		owner="Hero.lord_taom_harad_5"
-		culture="Culture.aserai"
-		super_faction="Kingdom.aserai"
+		id="clan_empire_south_11"
+		name="{=aom_clan_empire_south_11_name}Krahjan"
+		tier="1"
+		owner="Hero.lord_M11_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.142.116.1536.1536.764.764.1.0.0.425.128.128.380.380.764.764.0.0.0"
-		text="{=TAOM_clan_h2_desc}The Tribe of the Mumakil breeds and trains the great war elephants of Far Harad. Their Mumakil are feared by all the enemies of the South." />
-
-	<!-- Tribe of the Scarlet - elite guard -->
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17133.2002.171.700.700.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_harad_3"
-		initial_home_settlement="Settlement.castle_A1"
-		name="{=TAOM_clan_h3}Tribe of the Scarlet"
-		tier="4"
-		owner="Hero.lord_taom_harad_9"
-		culture="Culture.aserai"
-		super_faction="Kingdom.aserai"
+		id="clan_empire_south_12"
+		name="{=aom_clan_empire_south_12_name}Rashag-Hai"
+		tier="1"
+		owner="Hero.lord_M12_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.142.116.1536.1536.764.764.1.0.0.430.128.128.360.360.764.764.0.0.0"
-		text="{=TAOM_clan_h3_desc}The Tribe of the Scarlet provides the elite bodyguards of the Haradrim lords. Their warriors wear crimson robes and are fanatically loyal to their masters." />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17141.2002.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_empire_south_13"
+		name="{=aom_clan_empire_south_13_name}Durub-Hai"
+		tier="1"
+		owner="Hero.lord_M13_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17137.2002.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_empire_south_14"
+		name="{=aom_clan_empire_south_14_name}Blogmal-Hai"
+		tier="1"
+		owner="Hero.lord_M14_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17153.2002.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_empire_south_15"
+		name="{=aom_clan_empire_south_15_name}Mor-Hai"
+		tier="1"
+		owner="Hero.lord_M15_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17142.2002.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_empire_south_16"
+		name="{=aom_clan_empire_south_16_name}Ghash-Hai"
+		tier="1"
+		owner="Hero.lord_M16_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17334.2002.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_empire_south_17"
+		name="{=aom_clan_empire_south_17_name}Arki"
+		tier="1"
+		owner="Hero.lord_M17_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17244.2002.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_empire_south_18"
+		name="{=aom_clan_empire_south_18_name}Ovon"
+		tier="1"
+		owner="Hero.lord_M18_1"
+		culture="Culture.mordor"
+		super_faction="Kingdom.empire_s"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17121.2002.171.700.700.764.764.0.0.0" />
 
 	<!-- ============================================== -->
-	<!-- ROHAN CLANS (vlandia culture)                  -->
-	<!-- Naming style: House of [Family]-ing            -->
+	<!-- EXTENDED VLANDIA / ROHAN CLANS                 -->
+	<!-- Additional Rohan noble houses (12-22)          -->
 	<!-- ============================================== -->
 
-	<!-- House of Heoruring - royal house companions -->
 	<Faction
-		id="clan_taom_rohan_1"
-		initial_home_settlement="Settlement.town_V1"
-		name="{=TAOM_clan_r1}House of Heoruring"
-		tier="5"
-		owner="Hero.lord_taom_rohan_1"
+		id="clan_vlandia_12"
+		name="{=aom_clan_vlandia_12_name}House of Aelfwiging"
+		tier="1"
+		owner="Hero.lord_4_29"
+		culture="Culture.vlandia"
+		default_party_template="PartyTemplate.kingdom_hero_party_east_emnet_template"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.293.293.1528.1528.764.764.1.0.0.17286.171.171.635.635.764.764.0.0.0" />
+	<Faction
+		id="clan_vlandia_13"
+		name="{=aom_clan_vlandia_13_name}House of Celmunding"
+		tier="1"
+		owner="Hero.lord_rohan_13_1"
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
-		text="{=TAOM_clan_r1_desc}The House of Heoruring has served the Kings of Rohan since the founding of the Mark. Their riders are the finest in all the Riddermark, and their loyalty to the throne is absolute." />
-
-	<!-- House of Westfolding - defenders of the Gap -->
+		banner_key="11.273.273.1528.1528.764.764.1.0.0.17287.172.171.593.593.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_rohan_2"
-		initial_home_settlement="Settlement.town_V2"
-		name="{=TAOM_clan_r2}House of Westfolding"
-		tier="5"
-		owner="Hero.lord_taom_rohan_5"
+		id="clan_vlandia_14"
+		name="{=aom_clan_vlandia_14_name}House of Widmunding"
+		tier="1"
+		owner="Hero.lord_rohan_14_1"
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.519.128.128.380.380.764.764.0.0.0"
-		text="{=TAOM_clan_r2_desc}The House of Westfolding guards the Gap of Rohan against Dunlending raids. Their warriors are hardened by constant battle with the hill folk." />
-
-	<!-- House of Eastemnetring - horse breeders -->
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.17291.172.171.593.593.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_rohan_3"
-		initial_home_settlement="Settlement.castle_V1"
-		name="{=TAOM_clan_r3}House of Eastemnetring"
-		tier="4"
-		owner="Hero.lord_taom_rohan_9"
+		id="clan_vlandia_15"
+		name="{=aom_clan_vlandia_15_name}House of Ordgaring"
+		tier="1"
+		owner="Hero.lord_rohan_15_1"
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.503.128.128.360.360.764.764.0.0.0"
-		text="{=TAOM_clan_r3_desc}The House of Eastemnetring breeds the finest horses in all of Rohan. Their mearas are descended from the legendary Felarof." />
-
-	<!-- ============================================== -->
-	<!-- KHAND CLANS (battania culture)                 -->
-	<!-- Naming style: [Eastern Name]                   -->
-	<!-- ============================================== -->
-
-	<!-- Zulkârim - assassins and scouts -->
+		banner_key="11.263.263.1528.1528.764.764.1.0.0.17290.172.171.593.593.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_khand_1"
-		initial_home_settlement="Settlement.town_B1"
-		name="{=TAOM_clan_k1}Zulkârim"
-		tier="5"
-		owner="Hero.lord_taom_khand_1"
-		culture="Culture.battania"
-		super_faction="Kingdom.battania"
+		id="clan_vlandia_16"
+		name="{=aom_clan_vlandia_16_name}House of Hunthelming"
+		tier="1"
+		owner="Hero.lord_rohan_16_1"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
-		text="{=TAOM_clan_k1_desc}The Zulkârim serves as the eyes and ears of Khand. Their assassins and scouts move unseen through enemy lands, gathering intelligence and eliminating threats to the realm." />
-
-	<!-- Razûlak - elite warriors -->
+		banner_key="11.261.261.1528.1528.764.764.1.0.0.17288.172.171.593.593.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_khand_2"
-		initial_home_settlement="Settlement.town_B2"
-		name="{=TAOM_clan_k2}Razûlak"
-		tier="5"
-		owner="Hero.lord_taom_khand_5"
-		culture="Culture.battania"
-		super_faction="Kingdom.battania"
+		id="clan_vlandia_17"
+		name="{=aom_clan_vlandia_17_name}House of Bregdaning"
+		tier="1"
+		owner="Hero.lord_rohan_17_1"
+		culture="Culture.vlandia"
+		default_party_template="PartyTemplate.kingdom_hero_party_east_emnet_template"
+		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.519.128.128.380.380.764.764.0.0.0"
-		text="{=TAOM_clan_k2_desc}The Razûlak produces the finest swordsmen in all of Khand. Their curved blades are forged using secret techniques passed down through generations." />
-
-	<!-- Dorûmak - swift raiders -->
+		banner_key="11.293.293.1528.1528.764.764.1.0.0.17286.171.171.635.635.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_khand_3"
-		initial_home_settlement="Settlement.castle_B1"
-		name="{=TAOM_clan_k3}Dorûmak"
+		id="clan_vlandia_18"
+		name="{=aom_clan_vlandia_18_name}House of Deafringas"
 		tier="4"
-		owner="Hero.lord_taom_khand_9"
-		culture="Culture.battania"
-		super_faction="Kingdom.battania"
+		owner="Hero.lord_V11_l"
+		culture="Culture.vlandia"
+		default_party_template="PartyTemplate.kingdom_hero_party_west_emnet_template"
+		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.503.128.128.360.360.764.764.0.0.0"
-		text="{=TAOM_clan_k3_desc}The Dorûmak rides the hot winds of Khand. Their swift raids strike without warning and vanish before any pursuit can be mounted." />
-
-	<!-- ============================================== -->
-	<!-- RHUN CLANS (khuzait culture)                   -->
-	<!-- Naming style: [Eastern Name]-ian               -->
-	<!-- ============================================== -->
-
-	<!-- Balchothian - heavy cavalry -->
+		banner_key="11.2003.2003.1528.1528.764.764.1.0.0.17289.248.171.593.593.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_rhun_1"
-		initial_home_settlement="Settlement.town_K1"
-		name="{=TAOM_clan_rh1}Balchothian"
-		tier="5"
-		owner="Hero.lord_taom_rhun_1"
+		id="clan_vlandia_19"
+		name="{=aom_clan_vlandia_19_name}House of Marhad"
+		tier="1"
+		owner="Hero.lord_4_23"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.263.263.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_vlandia_20"
+		name="{=aom_clan_vlandia_20_name}House of Morcargas"
+		tier="1"
+		owner="Hero.lord_4_28"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.262.262.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_vlandia_21"
+		name="{=aom_clan_vlandia_21_name}House of Halethring"
+		tier="1"
+		owner="Hero.lord_rohan_21_1"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.273.273.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_vlandia_22"
+		name="{=aom_clan_vlandia_22_name}House of Rungaring"
+		tier="1"
+		owner="Hero.lord_rohan_22_1"
+		culture="Culture.vlandia"
+		super_faction="Kingdom.vlandia"
+		is_noble="true"
+		banner_key="11.158.158.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+
+	<!-- ============================================== -->
+	<!-- EXTENDED KHUZAIT / RHUN CLANS                  -->
+	<!-- Additional Rhun clans (10-19)                  -->
+	<!-- ============================================== -->
+
+	<Faction
+		id="clan_khuzait_10"
+		name="{=aom_clan_khuzait_10_name}Illnoria"
+		tier="3"
+		owner="Hero.lord_6_21"
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.424.128.128.400.400.764.764.0.0.0"
-		text="{=TAOM_clan_rh1_desc}The Balchothian fields the heaviest cavalry in all of Rhun. Their armored riders crash through enemy lines like an avalanche of steel, leaving nothing but ruin in their wake." />
-
-	<!-- Wainriderian - elite warriors -->
+		banner_key="11.212.212.1528.1528.764.764.1.0.0.17282.249.171.700.700.764.764.0.0.0" />
 	<Faction
-		id="clan_taom_rhun_2"
-		initial_home_settlement="Settlement.town_K2"
-		name="{=TAOM_clan_rh2}Wainriderian"
-		tier="5"
-		owner="Hero.lord_taom_rhun_5"
+		id="clan_khuzait_11"
+		name="{=aom_clan_khuzait_11_name}Shakhalian"
+		tier="3"
+		owner="Hero.lord_6_22"
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.519.128.128.380.380.764.764.0.0.0"
-		text="{=TAOM_clan_rh2_desc}The Wainriderian claims descent from the great warlords of the First Age. Their banner, a golden serpent on crimson, is feared throughout the West." />
-
-	<!-- Sagarthian - horse archers -->
+		banner_key="11.116.75.4345.4345.764.764.1.0.0.17354.83.116.550.550.750.750.1.0.0" />
 	<Faction
-		id="clan_taom_rhun_3"
-		initial_home_settlement="Settlement.castle_K1"
-		name="{=TAOM_clan_rh3}Sagarthian"
+		id="clan_khuzait_12"
+		name="{=aom_clan_khuzait_12_name}Huz"
+		tier="2"
+		owner="Hero.lord_6_23"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.116.116.2000.2000.764.764.1.0.0.17280.15.116.600.600.755.755.1.0.0" />
+	<Faction
+		id="clan_khuzait_13"
+		name="{=aom_clan_khuzait_13_name}Adekig"
+		tier="2"
+		owner="Hero.lord_6_24"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.212.212.1528.1528.764.764.1.0.0.17284.249.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_khuzait_14"
+		name="{=aom_clan_khuzait_14_name}Cilzeron"
+		tier="2"
+		owner="Hero.lord_6_25"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.18.116.2000.2000.764.764.1.0.0.17354.265.116.600.600.755.755.0.0.0" />
+	<Faction
+		id="clan_khuzait_15"
+		name="{=aom_clan_khuzait_15_name}Kalkian"
+		tier="2"
+		owner="Hero.lord_6_26"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="15.100.116.2000.2000.764.764.1.0.0.510.0.116.20.15000.575.586.1.0.45" />
+	<Faction
+		id="clan_khuzait_16"
+		name="{=aom_clan_khuzait_16_name}Zorian"
+		tier="3"
+		owner="Hero.lord_6_27"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="17.2008.99.2000.2000.764.764.1.0.0.17281.116.116.350.350.750.750.0.0.45" />
+	<Faction
+		id="clan_khuzait_17"
+		name="{=aom_clan_khuzait_17_name}Mithruntai"
+		tier="3"
+		owner="Hero.lord_6_28"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.212.212.1528.1528.764.764.1.0.0.17285.249.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_khuzait_18"
+		name="{=aom_clan_khuzait_18_name}Vazevian"
+		tier="3"
+		owner="Hero.lord_6_29"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.212.212.1528.1528.764.764.1.0.0.17282.2000.171.700.700.764.764.0.0.0" />
+	<Faction
+		id="clan_khuzait_19"
+		name="{=aom_clan_khuzait_19_name}Bozorganith"
+		tier="3"
+		owner="Hero.lord_6_30"
+		culture="Culture.khuzait"
+		super_faction="Kingdom.khuzait"
+		is_noble="true"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17282.249.171.700.700.764.764.0.0.0" />
+
+	<!-- ============================================== -->
+	<!-- ADDITIONAL MINOR FACTIONS                      -->
+	<!-- Missing nomad factions from LOTRAOM            -->
+	<!-- ============================================== -->
+
+	<Faction
+		id="forest_people"
+		initial_posX="1675.441"
+		initial_posY="2312.576"
+		banner_key="11.2.2.1536.1536.764.764.1.0.0.204.153.155.454.454.764.764.0.0.0"
+		label_color="FF61725E"
+		color="FF61725E"
+		color2="FF61725E"
+		alternative_color="FF61725E"
+		alternative_color2="FF61725E"
+		culture="Culture.vakken"
+		default_party_template="PartyTemplate.kingdom_hero_party_shadowkin_template"
+		settlement_banner_mesh="encounter_flag_f"
+		is_minor_faction="true"
+		is_outlaw="true"
+		is_nomad="true"
+		name="{=aom_forest_people_name}Shadowkin"
 		tier="4"
-		owner="Hero.lord_taom_rhun_9"
-		culture="Culture.khuzait"
-		super_faction="Kingdom.khuzait"
-		is_noble="true"
-		banner_key="11.149.116.1536.1536.764.764.1.0.0.503.128.128.360.360.764.764.0.0.0"
-		text="{=TAOM_clan_rh3_desc}The Sagarthian are the finest horse archers in Rhun. Born in the saddle, they can loose arrows with deadly accuracy at full gallop." />
+		text="{=aom_forest_people_desc}The Shadowkin are a reclusive and enigmatic group, dwelling in the deepest forests of Middle-earth. Composed of outcast elves, exiles from Rhovanion, and those who have abandoned civilization, they survive by hunting, raiding, and vanishing like ghosts. While they have no master, they sometimes lend their bows to those who respect the old ways and pay them in kind.">
+		<minor_faction_character_templates>
+			<template id="NPCCharacter.spc_forest_people_leader_0" />
+			<template id="NPCCharacter.spc_forest_people_leader_1" />
+			<template id="NPCCharacter.spc_forest_people_leader_2" />
+			<template id="NPCCharacter.spc_forest_people_leader_3" />
+		</minor_faction_character_templates>
+	</Faction>
+	<Faction
+		id="eleftheroi"
+		initial_posX="1317.46"
+		initial_posY="2144.212"
+		banner_key="11.154.154.1536.1536.764.764.1.0.0.108.150.155.454.454.764.764.0.0.0"
+		label_color="FFA6825C"
+		color="FFA6825C"
+		color2="FFA6825C"
+		alternative_color="FFA6825C"
+		alternative_color2="FFA6825C"
+		culture="Culture.rivendell"
+		default_party_template="PartyTemplate.kingdom_hero_party_tharbad_template"
+		settlement_banner_mesh="encounter_flag_f"
+		is_minor_faction="true"
+		is_outlaw="true"
+		is_nomad="true"
+		name="{=aom_eleftheroi_name}Guardians of Tharbad"
+		tier="3"
+		text="{=aom_eleftheroi_desc}The Guardians of Tharbad are the last protectors of the ancient crossing on the Greyflood. Once men of Arnor, they now keep a lonely watch over the ruins. Though few in number, they remember the old oaths and offer their aid to those who would stand against the Shadow.">
+		<minor_faction_character_templates>
+			<template id="NPCCharacter.spc_eleftheroi_leader_0" />
+			<template id="NPCCharacter.spc_eleftheroi_leader_1" />
+			<template id="NPCCharacter.spc_eleftheroi_leader_2" />
+			<template id="NPCCharacter.spc_eleftheroi_leader_3" />
+		</minor_faction_character_templates>
+	</Faction>
 
 	<!-- ============================================== -->
 	<!-- EREBOR CLANS (erebor culture)                  -->
