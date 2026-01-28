@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
 
@@ -12,7 +12,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -82,7 +82,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -151,7 +151,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -222,7 +222,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -293,7 +293,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -387,7 +387,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -464,7 +464,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -544,7 +544,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -615,7 +615,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -686,7 +686,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -763,7 +763,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -843,7 +843,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -917,7 +917,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -991,7 +991,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1065,7 +1065,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1145,7 +1145,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1216,7 +1216,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1284,7 +1284,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1356,7 +1356,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1436,7 +1436,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1518,7 +1518,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1598,7 +1598,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1681,7 +1681,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1761,7 +1761,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill
@@ -1841,7 +1841,7 @@
         culture="Culture.aserai">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_aserai" />
         </face>
         <skills>
             <skill

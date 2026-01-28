@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
 
@@ -14,7 +14,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -87,7 +87,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -222,7 +222,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -385,7 +385,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -576,7 +576,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -764,7 +764,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -925,7 +925,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1101,7 +1101,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1274,7 +1274,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1341,7 +1341,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1499,7 +1499,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1567,7 +1567,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1758,7 +1758,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1963,7 +1963,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2055,7 +2055,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2148,7 +2148,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2254,7 +2254,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2360,7 +2360,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2462,7 +2462,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2554,7 +2554,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2646,7 +2646,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2734,7 +2734,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2940,7 +2940,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3146,7 +3146,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3350,7 +3350,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3418,7 +3418,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3517,7 +3517,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3627,7 +3627,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3735,7 +3735,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3849,7 +3849,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3956,7 +3956,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4021,7 +4021,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4094,7 +4094,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4162,7 +4162,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4230,7 +4230,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4317,7 +4317,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4382,7 +4382,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4455,7 +4455,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4525,7 +4525,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4596,7 +4596,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4666,7 +4666,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4731,7 +4731,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4804,7 +4804,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4872,7 +4872,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4940,7 +4940,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5007,7 +5007,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5078,7 +5078,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5155,7 +5155,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5232,7 +5232,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5309,7 +5309,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5384,7 +5384,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5456,7 +5456,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5530,7 +5530,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5604,7 +5604,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5678,7 +5678,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5755,7 +5755,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5832,7 +5832,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -5907,7 +5907,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6019,7 +6019,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6129,7 +6129,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6290,7 +6290,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6455,7 +6455,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6526,7 +6526,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6597,7 +6597,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6666,7 +6666,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6766,7 +6766,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -6866,7 +6866,7 @@
         culture="Culture.gondor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_gondor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill

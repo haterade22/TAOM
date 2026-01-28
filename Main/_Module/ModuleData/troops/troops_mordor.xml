@@ -11,7 +11,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -163,7 +163,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -310,7 +310,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -472,7 +472,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -617,7 +617,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -762,7 +762,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -905,7 +905,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1065,7 +1065,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1225,7 +1225,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1383,7 +1383,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1534,7 +1534,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1679,7 +1679,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1834,7 +1834,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1981,7 +1981,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2126,7 +2126,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2357,7 +2357,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2588,7 +2588,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2748,7 +2748,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2905,7 +2905,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3062,7 +3062,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3127,7 +3127,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3194,7 +3194,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3333,7 +3333,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3403,7 +3403,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3473,7 +3473,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3609,7 +3609,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3679,7 +3679,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3749,7 +3749,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3819,7 +3819,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3889,7 +3889,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3956,7 +3956,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_orc_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4023,7 +4023,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_orc_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4090,7 +4090,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_orc_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4155,7 +4155,7 @@
         culture="Culture.mordor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_cave_troll" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
 
@@ -16,7 +16,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -90,7 +90,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -173,7 +173,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -256,7 +256,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -339,7 +339,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -422,7 +422,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -505,7 +505,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -588,7 +588,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -659,7 +659,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -739,7 +739,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -819,7 +819,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -899,7 +899,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -982,7 +982,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1065,7 +1065,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1154,7 +1154,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1225,7 +1225,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1305,7 +1305,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1385,7 +1385,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1465,7 +1465,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1545,7 +1545,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1625,7 +1625,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1705,7 +1705,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1770,7 +1770,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1847,7 +1847,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -1924,7 +1924,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2001,7 +2001,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2063,7 +2063,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2134,7 +2134,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2207,7 +2207,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2278,7 +2278,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2346,7 +2346,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2414,7 +2414,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2482,7 +2482,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2547,7 +2547,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2621,7 +2621,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2695,7 +2695,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2769,7 +2769,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -2843,7 +2843,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -3004,7 +3004,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -3186,7 +3186,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -3392,7 +3392,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -3598,7 +3598,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -3804,7 +3804,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -4025,7 +4025,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -4246,7 +4246,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -4466,7 +4466,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -4627,7 +4627,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -4788,7 +4788,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -4949,7 +4949,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -5109,7 +5109,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -5285,7 +5285,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -5461,7 +5461,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill
@@ -5637,7 +5637,7 @@
         culture="Culture.vlandia">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rohan" />
+                value="BodyProperty.fighter_vlandia" />
         </face>
         <skills>
             <skill

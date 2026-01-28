@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
     <NPCCharacter
         id="easterling_tribesman"
@@ -10,7 +10,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -81,7 +81,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -153,7 +153,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -226,7 +226,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -302,7 +302,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -372,7 +372,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -445,7 +445,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -518,7 +518,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -599,7 +599,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -672,7 +672,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -745,7 +745,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -821,7 +821,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -900,7 +900,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -979,7 +979,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1052,7 +1052,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1125,7 +1125,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1201,7 +1201,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1283,7 +1283,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1353,7 +1353,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1423,7 +1423,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1496,7 +1496,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1577,7 +1577,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1656,7 +1656,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1735,7 +1735,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1814,7 +1814,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1893,7 +1893,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill
@@ -1972,7 +1972,7 @@
         culture="Culture.khuzait">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_rhun" />
+                value="BodyProperty.fighter_khuzait" />
         </face>
         <skills>
             <skill

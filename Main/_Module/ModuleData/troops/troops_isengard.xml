@@ -12,7 +12,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -162,7 +162,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -310,7 +310,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -486,7 +486,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -649,7 +649,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -812,7 +812,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -958,7 +958,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_orc_mordor" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1149,7 +1149,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1325,7 +1325,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1501,7 +1501,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1692,7 +1692,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -1870,7 +1870,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2033,7 +2033,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2179,7 +2179,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2355,7 +2355,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2531,7 +2531,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2734,7 +2734,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -2895,7 +2895,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3071,7 +3071,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3232,7 +3232,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3363,7 +3363,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3428,7 +3428,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3505,7 +3505,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3681,7 +3681,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3827,7 +3827,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -3901,7 +3901,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4089,7 +4089,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4247,7 +4247,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4420,7 +4420,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4578,7 +4578,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4737,7 +4737,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4808,7 +4808,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4879,7 +4879,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
@@ -4950,7 +4950,7 @@
         culture="Culture.isengard">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_uruk_hai" />
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
             <skill
