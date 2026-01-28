@@ -70,7 +70,7 @@
 		banner_key="11.126.126.3000.3000.764.764.1.0.0.17353.35.35.600.600.755.755.0.0.0" />
 	<Faction
 		id="clan_empire_west_14"
-		name="{=aom_clan_empire_west_14_name}House of Telemirionath"
+		name="{=aom_clan_empire_west_14_name}House of Telemírionath"
 		label_color="FF7A5321"
 		color="FF9E6222"
 		color2="FFE5D9B8"
@@ -151,7 +151,7 @@
 
 	<Faction
 		id="clan_empire_south_10"
-		name="{=aom_clan_empire_south_10_name}Urd"
+		name="{=aom_clan_empire_south_10_name}Ûrd"
 		tier="1"
 		owner="Hero.lord_M10_1"
 		culture="Culture.mordor"
@@ -160,7 +160,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17128.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_11"
-		name="{=aom_clan_empire_south_11_name}Krahjan"
+		name="{=aom_clan_empire_south_11_name}Krahjân"
 		tier="1"
 		owner="Hero.lord_M11_1"
 		culture="Culture.mordor"
@@ -169,7 +169,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17133.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_12"
-		name="{=aom_clan_empire_south_12_name}Rashag-Hai"
+		name="{=aom_clan_empire_south_12_name}Rashâg-Hai"
 		tier="1"
 		owner="Hero.lord_M12_1"
 		culture="Culture.mordor"
@@ -178,7 +178,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17141.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_13"
-		name="{=aom_clan_empire_south_13_name}Durub-Hai"
+		name="{=aom_clan_empire_south_13_name}Dûrub-Hai"
 		tier="1"
 		owner="Hero.lord_M13_1"
 		culture="Culture.mordor"
@@ -196,7 +196,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17153.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_15"
-		name="{=aom_clan_empire_south_15_name}Mor-Hai"
+		name="{=aom_clan_empire_south_15_name}Môr-Hai"
 		tier="1"
 		owner="Hero.lord_M15_1"
 		culture="Culture.mordor"
@@ -205,7 +205,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17142.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_16"
-		name="{=aom_clan_empire_south_16_name}Ghash-Hai"
+		name="{=aom_clan_empire_south_16_name}Ghâsh-Hai"
 		tier="1"
 		owner="Hero.lord_M16_1"
 		culture="Culture.mordor"
@@ -214,7 +214,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17334.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_17"
-		name="{=aom_clan_empire_south_17_name}Arki"
+		name="{=aom_clan_empire_south_17_name}Ârki"
 		tier="1"
 		owner="Hero.lord_M17_1"
 		culture="Culture.mordor"
@@ -223,7 +223,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17244.2002.171.700.700.764.764.0.0.0" />
 	<Faction
 		id="clan_empire_south_18"
-		name="{=aom_clan_empire_south_18_name}Ovon"
+		name="{=aom_clan_empire_south_18_name}Ôvon"
 		tier="1"
 		owner="Hero.lord_M18_1"
 		culture="Culture.mordor"
@@ -238,7 +238,7 @@
 
 	<Faction
 		id="clan_vlandia_12"
-		name="{=aom_clan_vlandia_12_name}House of Aelfwiging"
+		name="{=aom_clan_vlandia_12_name}House of Ælfwiging"
 		tier="1"
 		owner="Hero.lord_4_29"
 		culture="Culture.vlandia"
@@ -294,7 +294,7 @@
 		banner_key="11.293.293.1528.1528.764.764.1.0.0.17286.171.171.635.635.764.764.0.0.0" />
 	<Faction
 		id="clan_vlandia_18"
-		name="{=aom_clan_vlandia_18_name}House of Deafringas"
+		name="{=aom_clan_vlandia_18_name}House of Deáfringas"
 		tier="4"
 		owner="Hero.lord_V11_l"
 		culture="Culture.vlandia"
@@ -364,7 +364,7 @@
 		banner_key="11.116.75.4345.4345.764.764.1.0.0.17354.83.116.550.550.750.750.1.0.0" />
 	<Faction
 		id="clan_khuzait_12"
-		name="{=aom_clan_khuzait_12_name}Huz"
+		name="{=aom_clan_khuzait_12_name}Hûz"
 		tier="2"
 		owner="Hero.lord_6_23"
 		culture="Culture.khuzait"
@@ -434,64 +434,6 @@
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17282.249.171.700.700.764.764.0.0.0" />
-
-	<!-- ============================================== -->
-	<!-- ADDITIONAL MINOR FACTIONS                      -->
-	<!-- Missing nomad factions from LOTRAOM            -->
-	<!-- ============================================== -->
-
-	<Faction
-		id="forest_people"
-		initial_posX="1675.441"
-		initial_posY="2312.576"
-		banner_key="11.2.2.1536.1536.764.764.1.0.0.204.153.155.454.454.764.764.0.0.0"
-		label_color="FF61725E"
-		color="FF61725E"
-		color2="FF61725E"
-		alternative_color="FF61725E"
-		alternative_color2="FF61725E"
-		culture="Culture.vakken"
-		default_party_template="PartyTemplate.kingdom_hero_party_shadowkin_template"
-		settlement_banner_mesh="encounter_flag_f"
-		is_minor_faction="true"
-		is_outlaw="true"
-		is_nomad="true"
-		name="{=aom_forest_people_name}Shadowkin"
-		tier="4"
-		text="{=aom_forest_people_desc}The Shadowkin are a reclusive and enigmatic group, dwelling in the deepest forests of Middle-earth. Composed of outcast elves, exiles from Rhovanion, and those who have abandoned civilization, they survive by hunting, raiding, and vanishing like ghosts. While they have no master, they sometimes lend their bows to those who respect the old ways and pay them in kind.">
-		<minor_faction_character_templates>
-			<template id="NPCCharacter.spc_forest_people_leader_0" />
-			<template id="NPCCharacter.spc_forest_people_leader_1" />
-			<template id="NPCCharacter.spc_forest_people_leader_2" />
-			<template id="NPCCharacter.spc_forest_people_leader_3" />
-		</minor_faction_character_templates>
-	</Faction>
-	<Faction
-		id="eleftheroi"
-		initial_posX="1317.46"
-		initial_posY="2144.212"
-		banner_key="11.154.154.1536.1536.764.764.1.0.0.108.150.155.454.454.764.764.0.0.0"
-		label_color="FFA6825C"
-		color="FFA6825C"
-		color2="FFA6825C"
-		alternative_color="FFA6825C"
-		alternative_color2="FFA6825C"
-		culture="Culture.rivendell"
-		default_party_template="PartyTemplate.kingdom_hero_party_tharbad_template"
-		settlement_banner_mesh="encounter_flag_f"
-		is_minor_faction="true"
-		is_outlaw="true"
-		is_nomad="true"
-		name="{=aom_eleftheroi_name}Guardians of Tharbad"
-		tier="3"
-		text="{=aom_eleftheroi_desc}The Guardians of Tharbad are the last protectors of the ancient crossing on the Greyflood. Once men of Arnor, they now keep a lonely watch over the ruins. Though few in number, they remember the old oaths and offer their aid to those who would stand against the Shadow.">
-		<minor_faction_character_templates>
-			<template id="NPCCharacter.spc_eleftheroi_leader_0" />
-			<template id="NPCCharacter.spc_eleftheroi_leader_1" />
-			<template id="NPCCharacter.spc_eleftheroi_leader_2" />
-			<template id="NPCCharacter.spc_eleftheroi_leader_3" />
-		</minor_faction_character_templates>
-	</Faction>
 
 	<!-- ============================================== -->
 	<!-- EREBOR CLANS (erebor culture)                  -->
@@ -1012,250 +954,4 @@
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17335.259.171.700.700.764.764.0.0.0" />
-
-	<!-- ============================================== -->
-	<!-- TAOM HUMAN CULTURE CLANS                      -->
-	<!-- 18 clans for 6 human cultures (3 each)        -->
-	<!-- ============================================== -->
-
-	<!-- ============================================== -->
-	<!-- DUNLAND CLANS (empire culture)       -->
-	<!-- ============================================== -->
-
-	<!-- Baedd-lûth - Boar Clan -->
-	<Faction
-		id="clan_taom_dunland_1"
-		name="{=taom_clan_taom_dunland_1_name}Baedd-lûth"
-		tier="5"
-		owner="Hero.lord_taom_dunland_1"
-		culture="Culture.empire"
-		super_faction="Kingdom.empire_w"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Gwrach-lûth - Witch Clan -->
-	<Faction
-		id="clan_taom_dunland_2"
-		name="{=taom_clan_taom_dunland_2_name}Gwrach-lûth"
-		tier="4"
-		owner="Hero.lord_taom_dunland_5"
-		culture="Culture.empire"
-		super_faction="Kingdom.empire_w"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Eryr-lûth - Eagle Clan -->
-	<Faction
-		id="clan_taom_dunland_3"
-		name="{=taom_clan_taom_dunland_3_name}Eryr-lûth"
-		tier="4"
-		owner="Hero.lord_taom_dunland_9"
-		culture="Culture.empire"
-		super_faction="Kingdom.empire_w"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- ============================================== -->
-	<!-- DALE CLANS (sturgia culture)       -->
-	<!-- ============================================== -->
-
-	<!-- House of the River - River Traders -->
-	<Faction
-		id="clan_taom_dale_1"
-		name="{=taom_clan_taom_dale_1_name}House of the River"
-		tier="5"
-		owner="Hero.lord_taom_dale_1"
-		culture="Culture.sturgia"
-		super_faction="Kingdom.sturgia"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- House of the Archers - Bowmen -->
-	<Faction
-		id="clan_taom_dale_2"
-		name="{=taom_clan_taom_dale_2_name}House of the Archers"
-		tier="4"
-		owner="Hero.lord_taom_dale_5"
-		culture="Culture.sturgia"
-		super_faction="Kingdom.sturgia"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- House of Long Lake - Lake Wardens -->
-	<Faction
-		id="clan_taom_dale_3"
-		name="{=taom_clan_taom_dale_3_name}House of Long Lake"
-		tier="4"
-		owner="Hero.lord_taom_dale_9"
-		culture="Culture.sturgia"
-		super_faction="Kingdom.sturgia"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- ============================================== -->
-	<!-- HARAD CLANS (aserai culture)       -->
-	<!-- ============================================== -->
-
-	<!-- Serpent Lords - Desert Warriors -->
-	<Faction
-		id="clan_taom_harad_1"
-		name="{=taom_clan_taom_harad_1_name}Serpent Lords"
-		tier="5"
-		owner="Hero.lord_taom_harad_1"
-		culture="Culture.aserai"
-		super_faction="Kingdom.aserai"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Mahud Riders - Elephant Masters -->
-	<Faction
-		id="clan_taom_harad_2"
-		name="{=taom_clan_taom_harad_2_name}Mahud Riders"
-		tier="4"
-		owner="Hero.lord_taom_harad_5"
-		culture="Culture.aserai"
-		super_faction="Kingdom.aserai"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Crimson Guard - Elite Warriors -->
-	<Faction
-		id="clan_taom_harad_3"
-		name="{=taom_clan_taom_harad_3_name}Crimson Guard"
-		tier="4"
-		owner="Hero.lord_taom_harad_9"
-		culture="Culture.aserai"
-		super_faction="Kingdom.aserai"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- ============================================== -->
-	<!-- ROHAN CLANS (vlandia culture)       -->
-	<!-- ============================================== -->
-
-	<!-- House of Folcwine - Royal Guard -->
-	<Faction
-		id="clan_taom_rohan_1"
-		name="{=taom_clan_taom_rohan_1_name}House of Folcwine"
-		tier="5"
-		owner="Hero.lord_taom_rohan_1"
-		culture="Culture.vlandia"
-		super_faction="Kingdom.vlandia"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_vlandia_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- House of Deorhelm - Horse Masters -->
-	<Faction
-		id="clan_taom_rohan_2"
-		name="{=taom_clan_taom_rohan_2_name}House of Deorhelm"
-		tier="4"
-		owner="Hero.lord_taom_rohan_5"
-		culture="Culture.vlandia"
-		super_faction="Kingdom.vlandia"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_vlandia_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- House of Merec - Western Riders -->
-	<Faction
-		id="clan_taom_rohan_3"
-		name="{=taom_clan_taom_rohan_3_name}House of Merec"
-		tier="4"
-		owner="Hero.lord_taom_rohan_9"
-		culture="Culture.vlandia"
-		super_faction="Kingdom.vlandia"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_vlandia_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- ============================================== -->
-	<!-- KHAND CLANS (battania culture)       -->
-	<!-- ============================================== -->
-
-	<!-- Shadow Blades - Assassin Clan -->
-	<Faction
-		id="clan_taom_khand_1"
-		name="{=taom_clan_taom_khand_1_name}Shadow Blades"
-		tier="5"
-		owner="Hero.lord_taom_khand_1"
-		culture="Culture.battania"
-		super_faction="Kingdom.battania"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_battania_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Steel Curves - Warrior Clan -->
-	<Faction
-		id="clan_taom_khand_2"
-		name="{=taom_clan_taom_khand_2_name}Steel Curves"
-		tier="4"
-		owner="Hero.lord_taom_khand_5"
-		culture="Culture.battania"
-		super_faction="Kingdom.battania"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_battania_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Wind Racers - Rider Clan -->
-	<Faction
-		id="clan_taom_khand_3"
-		name="{=taom_clan_taom_khand_3_name}Wind Racers"
-		tier="4"
-		owner="Hero.lord_taom_khand_9"
-		culture="Culture.battania"
-		super_faction="Kingdom.battania"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_battania_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- ============================================== -->
-	<!-- RHUN CLANS (khuzait culture)       -->
-	<!-- ============================================== -->
-
-	<!-- Iron Helms - Heavy Warriors -->
-	<Faction
-		id="clan_taom_rhun_1"
-		name="{=taom_clan_taom_rhun_1_name}Iron Helms"
-		tier="5"
-		owner="Hero.lord_taom_rhun_1"
-		culture="Culture.khuzait"
-		super_faction="Kingdom.khuzait"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_khuzait_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Dragon Lords - Elite Cavalry -->
-	<Faction
-		id="clan_taom_rhun_2"
-		name="{=taom_clan_taom_rhun_2_name}Dragon Lords"
-		tier="4"
-		owner="Hero.lord_taom_rhun_5"
-		culture="Culture.khuzait"
-		super_faction="Kingdom.khuzait"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_khuzait_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
-	<!-- Steppe Khans - Nomad Leaders -->
-	<Faction
-		id="clan_taom_rhun_3"
-		name="{=taom_clan_taom_rhun_3_name}Steppe Khans"
-		tier="4"
-		owner="Hero.lord_taom_rhun_9"
-		culture="Culture.khuzait"
-		super_faction="Kingdom.khuzait"
-		is_noble="true"
-		default_party_template="PartyTemplate.kingdom_hero_party_khuzait_template"
-		banner_key="11.142.149.1536.1536.768.768.1.0.0" />
-
 </Factions>
