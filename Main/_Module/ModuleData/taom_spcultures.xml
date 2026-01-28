@@ -9,8 +9,6 @@
     is_main_culture="true"
     color="0xFF23432D"
     color2="0xFFB5913E"
-    cloth_alternative_color1="0xFF0A5730"
-    cloth_alternative_color2="0xFFFFD700"
     elite_basic_troop="NPCCharacter.sturgian_warrior_son"
     basic_troop="NPCCharacter.sturgian_recruit"
     melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
@@ -18,22 +16,20 @@
     melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_sturgia_template"
     default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
-    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
     encounter_background_mesh="encounter_sturgia"
     faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
     text="{=aom_erebor_desc}The Longbeards of Erebor are a proud and industrious race, dwelling in the halls of the Lonely Mountain. Masters of craftsmanship and mining, they are renowned for their skill in forging weapons, armor, and treasures of unrivaled beauty. Led by their King under the Mountain, the dwarves of Erebor are a resilient people, fiercely protective of their homeland and its riches."
     tournament_master="NPCCharacter.tournament_master_sturgia"
     villager="NPCCharacter.villager_sturgia"
     caravan_master="NPCCharacter.caravan_master_sturgia"
-    armed_trader="NPCCharacter.armed_trader_sturgia"
     caravan_guard="NPCCharacter.caravan_guard_sturgia"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
     prison_guard="NPCCharacter.prison_guard_sturgia"
@@ -47,12 +43,12 @@
     townsman="NPCCharacter.townsman_sturgia"
     townsman_infant="NPCCharacter.townsman_infant_sturgia"
     townsman_child="NPCCharacter.townsman_child_sturgia"
-    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     village_woman="NPCCharacter.village_woman_sturgia"
     villager_male_child="NPCCharacter.villager_child_sturgia"
     villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
     villager_female_child="NPCCharacter.village_woman_child_sturgia"
     villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     ransom_broker="NPCCharacter.ransom_broker_sturgia"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
     merchant_notary="NPCCharacter.merchant_notary_sturgia"
@@ -71,15 +67,22 @@
     beggar="NPCCharacter.beggar_sturgia"
     female_beggar="NPCCharacter.female_beggar_sturgia"
     female_dancer="NPCCharacter.female_dancer_sturgia"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
-    gear_dummy="NPCCharacter.gear_dummy_sturgia"
     default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
-    board_game_type="Konane">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -187,10 +190,20 @@
       <name name="{=aom_erebor_female_name_49}Zalwyn" />
       <name name="{=aom_erebor_female_name_50}Frinda" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
-  <!-- RIVENDELL - Ñoldor Elves of Imladris          -->
+  <!-- RIVENDELL - Ñoldor Elves of Imladris            -->
   <!-- ============================================== -->
   <Culture
     id="rivendell"
@@ -198,8 +211,6 @@
     is_main_culture="true"
     color="0xff1A1A1A"
     color2="0xff2000AF"
-    cloth_alternative_color1="0xff1A1A1A"
-    cloth_alternative_color2="0xff223C5E"
     elite_basic_troop="NPCCharacter.imperial_vigla_recruit"
     basic_troop="NPCCharacter.imperial_recruit"
     melee_militia_troop="NPCCharacter.imperial_militia_spearman"
@@ -207,23 +218,21 @@
     melee_elite_militia_troop="NPCCharacter.imperial_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.imperial_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_empire_template"
     default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
-    caravan_party_template="PartyTemplate.caravan_template_empire"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_empire"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_empire_template"
     rebels_party_template="PartyTemplate.rebels_empire_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_empire"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_empire"
     faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
     text="{=aom_rivendell_desc}The Noldor Elves of Rivendell are a wise and ancient people, renowned for their unmatched knowledge, artistry, and valor. Under the guidance of Lord Elrond, they preserve the fading beauty and lore of the Elder Days within the hidden sanctuary of Imladris. Masters of both the sword and the bow, the Noldor combine martial skill with the grace and precision of their kind."
     tournament_master="NPCCharacter.tournament_master_empire"
     villager="NPCCharacter.villager_empire"
     caravan_master="NPCCharacter.caravan_master_empire"
-    armed_trader="NPCCharacter.armed_trader_empire"
     caravan_guard="NPCCharacter.caravan_guard_empire"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_empire"
     prison_guard="NPCCharacter.prison_guard_empire"
@@ -237,12 +246,12 @@
     townsman="NPCCharacter.townsman_empire"
     townsman_infant="NPCCharacter.townsman_infant_empire"
     townsman_child="NPCCharacter.townsman_child_empire"
-    townsman_teenager="NPCCharacter.townsman_teenager_empire"
     village_woman="NPCCharacter.village_woman_empire"
     villager_male_child="NPCCharacter.villager_child_empire"
     villager_male_teenager="NPCCharacter.villager_teenager_empire"
     villager_female_child="NPCCharacter.village_woman_child_empire"
     villager_female_teenager="NPCCharacter.village_woman_teenager_empire"
+    townsman_teenager="NPCCharacter.townsman_teenager_empire"
     ransom_broker="NPCCharacter.ransom_broker_empire"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_empire"
     merchant_notary="NPCCharacter.merchant_notary_empire"
@@ -261,15 +270,22 @@
     beggar="NPCCharacter.beggar_empire"
     female_beggar="NPCCharacter.female_beggar_empire"
     female_dancer="NPCCharacter.female_dancer_empire"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_empire"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_empire"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_empire"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_empire"
-    gear_dummy="NPCCharacter.gear_dummy_empire"
     default_battle_equipment_roster="EquipmentRoster.emp_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
-    board_game_type="Tablut">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Tablut"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -386,10 +402,20 @@
       <name name="{=aom_rivendell_female_name_49}Nimindiel" />
       <name name="{=aom_rivendell_female_name_50}Silvariel" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
-  <!-- MIRKWOOD - Silvan Elves of the Woodland Realm -->
+  <!-- MIRKWOOD - Silvan Elves of the Woodland Realm  -->
   <!-- ============================================== -->
   <Culture
     id="mirkwood"
@@ -397,8 +423,6 @@
     is_main_culture="true"
     color="0xFF234028"
     color2="0xFF8A734C"
-    cloth_alternative_color1="0xFF122814"
-    cloth_alternative_color2="0xffBCCB85"
     elite_basic_troop="NPCCharacter.imperial_vigla_recruit"
     basic_troop="NPCCharacter.imperial_recruit"
     melee_militia_troop="NPCCharacter.imperial_militia_spearman"
@@ -406,23 +430,21 @@
     melee_elite_militia_troop="NPCCharacter.imperial_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.imperial_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_empire_template"
     default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
-    caravan_party_template="PartyTemplate.caravan_template_empire"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_empire"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_empire_template"
     rebels_party_template="PartyTemplate.rebels_empire_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_empire"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_empire"
     faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
     text="{=aom_mirkwood_desc}The Silvan Elves of Mirkwood, also known as the Woodland Realm, are a proud and resilient people who call the vast forest their home. Ruled by King Thranduil, they are skilled hunters and warriors, navigating the shadowed woods with unmatched agility and precision. The Mirkwood Elves are masters of the bow, striking swiftly and silently from the trees."
     tournament_master="NPCCharacter.tournament_master_empire"
     villager="NPCCharacter.villager_empire"
     caravan_master="NPCCharacter.caravan_master_empire"
-    armed_trader="NPCCharacter.armed_trader_empire"
     caravan_guard="NPCCharacter.caravan_guard_empire"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_empire"
     prison_guard="NPCCharacter.prison_guard_empire"
@@ -436,12 +458,12 @@
     townsman="NPCCharacter.townsman_empire"
     townsman_infant="NPCCharacter.townsman_infant_empire"
     townsman_child="NPCCharacter.townsman_child_empire"
-    townsman_teenager="NPCCharacter.townsman_teenager_empire"
     village_woman="NPCCharacter.village_woman_empire"
     villager_male_child="NPCCharacter.villager_child_empire"
     villager_male_teenager="NPCCharacter.villager_teenager_empire"
     villager_female_child="NPCCharacter.village_woman_child_empire"
     villager_female_teenager="NPCCharacter.village_woman_teenager_empire"
+    townsman_teenager="NPCCharacter.townsman_teenager_empire"
     ransom_broker="NPCCharacter.ransom_broker_empire"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_empire"
     merchant_notary="NPCCharacter.merchant_notary_empire"
@@ -460,15 +482,22 @@
     beggar="NPCCharacter.beggar_empire"
     female_beggar="NPCCharacter.female_beggar_empire"
     female_dancer="NPCCharacter.female_dancer_empire"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_empire"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_empire"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_empire"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_empire"
-    gear_dummy="NPCCharacter.gear_dummy_empire"
     default_battle_equipment_roster="EquipmentRoster.emp_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
-    board_game_type="Tablut">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Tablut"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -576,6 +605,16 @@
       <name name="{=aom_mirkwood_female_name_49}Aelinor" />
       <name name="{=aom_mirkwood_female_name_50}Nimindriel" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
@@ -587,8 +626,6 @@
     is_main_culture="true"
     color="0xFF998C5E"
     color2="0xFFE8E6D5"
-    cloth_alternative_color1="0xff14382C"
-    cloth_alternative_color2="0xff99C9A0"
     elite_basic_troop="NPCCharacter.imperial_vigla_recruit"
     basic_troop="NPCCharacter.imperial_recruit"
     melee_militia_troop="NPCCharacter.imperial_militia_spearman"
@@ -596,23 +633,21 @@
     melee_elite_militia_troop="NPCCharacter.imperial_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.imperial_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_empire_template"
     default_party_template="PartyTemplate.kingdom_hero_party_empire_template"
-    caravan_party_template="PartyTemplate.caravan_template_empire"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_empire"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_empire_template"
     rebels_party_template="PartyTemplate.rebels_empire_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_empire"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_empire"
     faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
     text="{=aom_lothlorien_desc}The Elves of Lothlórien, known as the Galadhrim, are a noble and enigmatic people dwelling in the Golden Wood. Guided by the wisdom and power of Lady Galadriel and Lord Celeborn, they are guardians of one of the last bastions of elven beauty and tranquility in Middle-earth. The Galadhrim are unmatched archers, blending seamlessly with the golden Mallorn trees of their homeland."
     tournament_master="NPCCharacter.tournament_master_empire"
     villager="NPCCharacter.villager_empire"
     caravan_master="NPCCharacter.caravan_master_empire"
-    armed_trader="NPCCharacter.armed_trader_empire"
     caravan_guard="NPCCharacter.caravan_guard_empire"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_empire"
     prison_guard="NPCCharacter.prison_guard_empire"
@@ -626,12 +661,12 @@
     townsman="NPCCharacter.townsman_empire"
     townsman_infant="NPCCharacter.townsman_infant_empire"
     townsman_child="NPCCharacter.townsman_child_empire"
-    townsman_teenager="NPCCharacter.townsman_teenager_empire"
     village_woman="NPCCharacter.village_woman_empire"
     villager_male_child="NPCCharacter.villager_child_empire"
     villager_male_teenager="NPCCharacter.villager_teenager_empire"
     villager_female_child="NPCCharacter.village_woman_child_empire"
     villager_female_teenager="NPCCharacter.village_woman_teenager_empire"
+    townsman_teenager="NPCCharacter.townsman_teenager_empire"
     ransom_broker="NPCCharacter.ransom_broker_empire"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_empire"
     merchant_notary="NPCCharacter.merchant_notary_empire"
@@ -650,15 +685,22 @@
     beggar="NPCCharacter.beggar_empire"
     female_beggar="NPCCharacter.female_beggar_empire"
     female_dancer="NPCCharacter.female_dancer_empire"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_empire"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_empire"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_empire"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_empire"
-    gear_dummy="NPCCharacter.gear_dummy_empire"
     default_battle_equipment_roster="EquipmentRoster.emp_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.emp_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
-    board_game_type="Tablut">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Tablut"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -766,10 +808,20 @@
       <name name="{=aom_lothlorien_female_name_49}Aelinor" />
       <name name="{=aom_lothlorien_female_name_50}Nimindriel" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
-  <!-- ISENGARD - Saruman's Uruk-hai                 -->
+  <!-- ISENGARD - Saruman's Uruk-hai                  -->
   <!-- ============================================== -->
   <Culture
     id="isengard"
@@ -777,8 +829,6 @@
     is_main_culture="true"
     color="0xFF2B2B2B"
     color2="0xFF8C8C8C"
-    cloth_alternative_color1="0xff707070"
-    cloth_alternative_color2="0xff3A3A3A"
     elite_basic_troop="NPCCharacter.sturgian_warrior_son"
     basic_troop="NPCCharacter.sturgian_recruit"
     melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
@@ -786,22 +836,20 @@
     melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_sturgia_template"
     default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-    encounter_background_mesh="encounter_sturgia"
-    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
-    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_isengard_desc}The people of Isengard are Saruman's legions, forged through industry and fueled by a dark vision of domination. Centered around the impenetrable tower of Orthanc, Isengard is home to the Uruk-hai, bred for strength, endurance, and obedience. With machines of war and the cunning of their master, they crush all opposition with ruthless precision."
     tournament_master="NPCCharacter.tournament_master_sturgia"
     villager="NPCCharacter.villager_sturgia"
     caravan_master="NPCCharacter.caravan_master_sturgia"
-    armed_trader="NPCCharacter.armed_trader_sturgia"
     caravan_guard="NPCCharacter.caravan_guard_sturgia"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
     prison_guard="NPCCharacter.prison_guard_sturgia"
@@ -815,12 +863,12 @@
     townsman="NPCCharacter.townsman_sturgia"
     townsman_infant="NPCCharacter.townsman_infant_sturgia"
     townsman_child="NPCCharacter.townsman_child_sturgia"
-    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     village_woman="NPCCharacter.village_woman_sturgia"
     villager_male_child="NPCCharacter.villager_child_sturgia"
     villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
     villager_female_child="NPCCharacter.village_woman_child_sturgia"
     villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     ransom_broker="NPCCharacter.ransom_broker_sturgia"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
     merchant_notary="NPCCharacter.merchant_notary_sturgia"
@@ -839,15 +887,22 @@
     beggar="NPCCharacter.beggar_sturgia"
     female_beggar="NPCCharacter.female_beggar_sturgia"
     female_dancer="NPCCharacter.female_dancer_sturgia"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
-    gear_dummy="NPCCharacter.gear_dummy_sturgia"
     default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
-    board_game_type="Konane">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -955,10 +1010,20 @@
       <name name="{=aom_isengard_female_name_49}Lurzia" />
       <name name="{=aom_isengard_female_name_50}Vorlia" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
-  <!-- GUNDABAD - Gundabad Orcs                      -->
+  <!-- GUNDABAD - Gundabad Orcs                       -->
   <!-- ============================================== -->
   <Culture
     id="gundabad"
@@ -966,8 +1031,6 @@
     is_main_culture="true"
     color="0xFF1E1E1E"
     color2="0xFF6A3E1E"
-    cloth_alternative_color1="0xff282828"
-    cloth_alternative_color2="0xff4C4C4C"
     elite_basic_troop="NPCCharacter.sturgian_warrior_son"
     basic_troop="NPCCharacter.sturgian_recruit"
     melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
@@ -975,22 +1038,20 @@
     melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_sturgia_template"
     default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-    encounter_background_mesh="encounter_sturgia"
-    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
-    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_gundabad_desc}The Gundabad Orcs of the Misty Mountains are savage and relentless. From the ancient stronghold of Mount Gundabad, they raid the surrounding lands, driven by a thirst for vengeance and conquest. Under the rule of powerful chieftains, they amass legions of goblins, wargs, and trolls. Gundabad's warriors are brutish and cunning, masters of ambush and overwhelming force."
     tournament_master="NPCCharacter.tournament_master_sturgia"
     villager="NPCCharacter.villager_sturgia"
     caravan_master="NPCCharacter.caravan_master_sturgia"
-    armed_trader="NPCCharacter.armed_trader_sturgia"
     caravan_guard="NPCCharacter.caravan_guard_sturgia"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
     prison_guard="NPCCharacter.prison_guard_sturgia"
@@ -1004,12 +1065,12 @@
     townsman="NPCCharacter.townsman_sturgia"
     townsman_infant="NPCCharacter.townsman_infant_sturgia"
     townsman_child="NPCCharacter.townsman_child_sturgia"
-    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     village_woman="NPCCharacter.village_woman_sturgia"
     villager_male_child="NPCCharacter.villager_child_sturgia"
     villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
     villager_female_child="NPCCharacter.village_woman_child_sturgia"
     villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     ransom_broker="NPCCharacter.ransom_broker_sturgia"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
     merchant_notary="NPCCharacter.merchant_notary_sturgia"
@@ -1028,15 +1089,22 @@
     beggar="NPCCharacter.beggar_sturgia"
     female_beggar="NPCCharacter.female_beggar_sturgia"
     female_dancer="NPCCharacter.female_dancer_sturgia"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
-    gear_dummy="NPCCharacter.gear_dummy_sturgia"
     default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
-    board_game_type="Konane">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -1144,10 +1212,20 @@
       <name name="{=aom_gundabad_female_name_49}Zorga" />
       <name name="{=aom_gundabad_female_name_50}Narlia" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
-  <!-- UMBAR - Corsairs of Umbar                     -->
+  <!-- UMBAR - Corsairs of Umbar                      -->
   <!-- ============================================== -->
   <Culture
     id="umbar"
@@ -1155,8 +1233,6 @@
     is_main_culture="true"
     color="0xFF3A1F1F"
     color2="0xFFB5913E"
-    cloth_alternative_color1="0xff5A2C09"
-    cloth_alternative_color2="0xffC28C61"
     elite_basic_troop="NPCCharacter.aserai_mamluke_soldier"
     basic_troop="NPCCharacter.aserai_recruit"
     melee_militia_troop="NPCCharacter.aserai_militia_spearman"
@@ -1164,22 +1240,20 @@
     melee_elite_militia_troop="NPCCharacter.aserai_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.aserai_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_aserai_template"
     default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"
-    encounter_background_mesh="encounter_aserai"
-    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_aserai"
-    caravan_party_template="PartyTemplate.caravan_template_aserai"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_aserai_template"
     rebels_party_template="PartyTemplate.rebels_aserai_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_aserai"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    encounter_background_mesh="encounter_aserai"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_umbar_desc}The people of Umbar are seafaring warriors and corsairs, masters of the seas south of Gondor. Descended from Númenórean exiles, they are known for their cunning and ferocity in battle. Under black sails, their fleets raid the coasts, striking fear into the hearts of their enemies. While their allegiances lie with Sauron, the Corsairs of Umbar are fiercely independent, valuing strength and cunning above all."
     tournament_master="NPCCharacter.tournament_master_aserai"
     villager="NPCCharacter.villager_aserai"
     caravan_master="NPCCharacter.caravan_master_aserai"
-    armed_trader="NPCCharacter.armed_trader_aserai"
     caravan_guard="NPCCharacter.caravan_guard_aserai"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_aserai"
     prison_guard="NPCCharacter.prison_guard_aserai"
@@ -1193,12 +1267,12 @@
     townsman="NPCCharacter.townsman_aserai"
     townsman_infant="NPCCharacter.townsman_infant_aserai"
     townsman_child="NPCCharacter.townsman_child_aserai"
-    townsman_teenager="NPCCharacter.townsman_teenager_aserai"
     village_woman="NPCCharacter.village_woman_aserai"
     villager_male_child="NPCCharacter.villager_child_aserai"
     villager_male_teenager="NPCCharacter.villager_teenager_aserai"
     villager_female_child="NPCCharacter.village_woman_child_aserai"
     villager_female_teenager="NPCCharacter.village_woman_teenager_aserai"
+    townsman_teenager="NPCCharacter.townsman_teenager_aserai"
     ransom_broker="NPCCharacter.ransom_broker_aserai"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_aserai"
     merchant_notary="NPCCharacter.merchant_notary_aserai"
@@ -1217,15 +1291,22 @@
     beggar="NPCCharacter.beggar_aserai"
     female_beggar="NPCCharacter.female_beggar_aserai"
     female_dancer="NPCCharacter.female_dancer_aserai"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_aserai"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_aserai"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_aserai"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_aserai"
-    gear_dummy="NPCCharacter.gear_dummy_aserai"
     default_battle_equipment_roster="EquipmentRoster.ase_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.ase_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.ase_duel_preset_template"
-    board_game_type="Seega">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Seega"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -1333,10 +1414,20 @@
       <name name="{=aom_umbar_female_name_49}Jorvaya" />
       <name name="{=aom_umbar_female_name_50}Arakara" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
 
   <!-- ============================================== -->
-  <!-- DOLGULDUR - Dol Guldur Orcs                   -->
+  <!-- DOLGULDUR - Dol Guldur Orcs                    -->
   <!-- ============================================== -->
   <Culture
     id="dolguldur"
@@ -1344,8 +1435,6 @@
     is_main_culture="true"
     color="0xFF2F2A2A"
     color2="0xFF5C7352"
-    cloth_alternative_color1="0xff482914"
-    cloth_alternative_color2="0xff866345"
     elite_basic_troop="NPCCharacter.sturgian_warrior_son"
     basic_troop="NPCCharacter.sturgian_recruit"
     melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
@@ -1353,22 +1442,20 @@
     melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
     can_have_settlement="true"
-    town_edge_number="16"
     villager_party_template="PartyTemplate.villager_sturgia_template"
     default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
-    encounter_background_mesh="encounter_sturgia"
-    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
-    elite_caravan_party_template="PartyTemplate.elite_caravan_template_sturgia"
-    caravan_party_template="PartyTemplate.caravan_template_sturgia"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
     militia_party_template="PartyTemplate.militia_sturgia_template"
     rebels_party_template="PartyTemplate.rebels_sturgia_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
-    default_face_key="000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
     text="{=aom_dolguldur_desc}Dol Guldur is a fortress of shadow and malice. Once a stronghold of Sauron in Mirkwood, it is now ruled by the Necromancer's dark lieutenants. The armies of Dol Guldur are a fearsome blend of orcs, wargs, and dark sorcery. This bastion of evil corrupts the forest around it, spreading decay and despair. The warriors of Dol Guldur are relentless, driven by the will of their dark master."
     tournament_master="NPCCharacter.tournament_master_sturgia"
     villager="NPCCharacter.villager_sturgia"
     caravan_master="NPCCharacter.caravan_master_sturgia"
-    armed_trader="NPCCharacter.armed_trader_sturgia"
     caravan_guard="NPCCharacter.caravan_guard_sturgia"
     veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
     prison_guard="NPCCharacter.prison_guard_sturgia"
@@ -1382,12 +1469,12 @@
     townsman="NPCCharacter.townsman_sturgia"
     townsman_infant="NPCCharacter.townsman_infant_sturgia"
     townsman_child="NPCCharacter.townsman_child_sturgia"
-    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     village_woman="NPCCharacter.village_woman_sturgia"
     villager_male_child="NPCCharacter.villager_child_sturgia"
     villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
     villager_female_child="NPCCharacter.village_woman_child_sturgia"
     villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
     ransom_broker="NPCCharacter.ransom_broker_sturgia"
     gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
     merchant_notary="NPCCharacter.merchant_notary_sturgia"
@@ -1406,15 +1493,22 @@
     beggar="NPCCharacter.beggar_sturgia"
     female_beggar="NPCCharacter.female_beggar_sturgia"
     female_dancer="NPCCharacter.female_dancer_sturgia"
-    gear_practice_dummy="NPCCharacter.gear_practice_dummy_sturgia"
-    weapon_practice_stage_1="NPCCharacter.weapon_practice_stage_1_sturgia"
-    weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_sturgia"
-    weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_sturgia"
-    gear_dummy="NPCCharacter.gear_dummy_sturgia"
     default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
     default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
-    board_game_type="Konane">
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="0.0"
+    start_point_position_y="0.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items />
     <banner_bearer_replacement_weapons />
     <default_policies />
@@ -1522,5 +1616,16 @@
       <name name="{=aom_dolguldur_female_name_49}Thalka" />
       <name name="{=aom_dolguldur_female_name_50}Vorla" />
     </female_names>
+    <clan_names />
+    <cultural_feats />
+    <possible_clan_banner_icon_ids />
+    <notable_templates />
+    <lord_templates />
+    <rebellion_hero_templates />
+    <tournament_team_templates_one_participant />
+    <tournament_team_templates_two_participant />
+    <tournament_team_templates_four_participant />
+    <basic_mercenary_troops />
   </Culture>
+
 </SPCultures>
