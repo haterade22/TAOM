@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
 
@@ -8,7 +8,6 @@
         level="6"
         name="{=aom_erebor_recruit_name}[Erebor] Recruit"
         occupation="Soldier"
-        race="dwarf"
         is_basic_troop="true"
         culture="Culture.erebor">
         <face>
@@ -177,7 +176,6 @@
         default_group="Ranged"
         level="11"
         name="{=aom_erebor_scout_name}[Erebor] Scout"
-        race="dwarf"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -356,7 +354,6 @@
         id="erebor_archer"
         default_group="Ranged"
         level="16"
-        race="dwarf"
         name="{=aom_erebor_archer_name}[Erebor] Archer"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -536,7 +533,6 @@
         id="erebor_veteran_archer"
         default_group="Ranged"
         level="21"
-        race="dwarf"
         name="{=aom_erebor_veteran_archer_name}[Erebor] Veteran Archer"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -715,7 +711,6 @@
         id="erebor_warrior"
         default_group="Infantry"
         level="11"
-        race="dwarf"
         name="{=aom_erebor_warrior_name}[Erebor] Warrior"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -882,7 +877,6 @@
         id="erebor_spear_infantry"
         default_group="Infantry"
         level="16"
-        race="dwarf"
         name="{=aom_erebor_spear_infantry_name}[Erebor] Spear Infantry"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -1062,7 +1056,6 @@
         id="erebor_spear_guard"
         default_group="Infantry"
         level="21"
-        race="dwarf"
         name="{=aom_erebor_spear_guard_name}[Erebor] Spear-Guard"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -1242,7 +1235,6 @@
         id="erebor_veteran_spear_guard"
         default_group="Infantry"
         level="26"
-        race="dwarf"
         name="{=aom_erebor_veteran_spear_guard_name}[Erebor] Veteran Spear-Guard"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -1422,7 +1414,6 @@
         id="erebor_legionary"
         default_group="Infantry"
         level="31"
-        race="dwarf"
         name="{=aom_erebor_legionary_name}[Erebor] Legionary"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -1599,7 +1590,6 @@
         id="erebor_axe_infantry"
         default_group="Infantry"
         level="16"
-        race="dwarf"
         name="{=aom_erebor_axe_infantry_name}[Erebor] Axe Infantry"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -1766,7 +1756,6 @@
         id="erebor_axe_guard"
         default_group="Infantry"
         level="21"
-        race="dwarf"
         name="{=aom_erebor_axe_guard_name}[Erebor] Axe-Guard"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -1916,7 +1905,6 @@
         id="erebor_veteran_axe_guard"
         default_group="Infantry"
         level="26"
-        race="dwarf"
         name="{=aom_erebor_veteran_axe_guard_name}[Erebor] Veteran Axe-Guard"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -2005,7 +1993,6 @@
         id="erebor_shield_breaker"
         default_group="Infantry"
         level="31"
-        race="dwarf"
         name="{=aom_erebor_shield_breaker_name}[Erebor] Shield-Breaker"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -2094,8 +2081,7 @@
         id="erebor_wrym_slayers"
         default_group="Infantry"
         level="36"
-        race="dwarf"
-        name="{=aom_erebor_wrym_slayers_name}[Erebor] Adâruf-sulûkh"
+        name="{=aom_erebor_wrym_slayers_name}[Erebor] AdÃ¢ruf-sulÃ»kh"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -2163,8 +2149,7 @@
         id="erebor_khazad_royal_guard"
         default_group="Infantry"
         level="41"
-        race="dwarf"
-        name="{=aom_erebor_khazad_royal_guard_name}[Erebor] Khazâd-uzbadul"
+        name="{=aom_erebor_khazad_royal_guard_name}[Erebor] KhazÃ¢d-uzbadul"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -2229,7 +2214,6 @@
         id="erebor_shield_guard"
         default_group="Infantry"
         level="21"
-        race="dwarf"
         name="{=aom_erebor_shield_guard_name}[Erebor] Shield-Guard"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -2301,7 +2285,6 @@
         id="erebor_veteran_shield_guard"
         default_group="Infantry"
         level="26"
-        race="dwarf"
         name="{=aom_erebor_veteran_shield_guard_name}[Erebor] Veteran Shield-Guard"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -2373,7 +2356,6 @@
         id="erebor_gate_warden"
         default_group="Infantry"
         level="31"
-        race="dwarf"
         name="{=aom_erebor_gate_warden_name}[Erebor] Gate Warden"
         occupation="Soldier"
         culture="Culture.erebor">
@@ -2444,7 +2426,6 @@
     <NPCCharacter
         id="erebor_royal_warden"
         default_group="Infantry"
-        race="dwarf"
         level="36"
         name="{=aom_erebor_royal_warden_name}[Erebor] Royal Vault Warden"
         occupation="Soldier"
@@ -2516,7 +2497,6 @@
     <NPCCharacter
         id="erebor_royal_lord_placeholder"
         default_group="Infantry"
-        race="dwarf"
         level="41"
         name="{=aom_erebor_royal_lord_placeholder_name}[Erebor] Royal Champion"
         occupation="Soldier"
@@ -2595,7 +2575,6 @@
         level="16"
         name="{=aom_iron_hills_recruit_name}[Iron Hills] Recruit"
         occupation="Soldier"
-        race="dwarf"
         is_basic_troop="true"
         culture="Culture.erebor">
         <face>
@@ -2762,7 +2741,6 @@
         level="21"
         name="{=aom_iron_hills_warrior_name}[Iron Hills] Warrior"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -2930,7 +2908,6 @@
         level="26"
         name="{=aom_iron_hills_forge_guard_name}[Iron Hills] Forge-Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -3094,7 +3071,6 @@
         level="31"
         name="{=aom_iron_hills_hammer_guard_name}[Iron Hills] Grim Hammer"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -3275,7 +3251,6 @@
         level="36"
         name="{=aom_iron_hills_veteran_hammer_guard_name}[Iron Hills] Veteran Hammer-Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -3424,7 +3399,6 @@
         level="41"
         name="{=aom_iron_hills_durins_hammers_name}[Iron Hills] Durin's Hammers"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -3570,7 +3544,6 @@
         level="26"
         name="{=aom_iron_hills_axeguard_name}[Iron Hills] Axe-Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -3719,7 +3692,6 @@
         level="31"
         name="{=aom_iron_hills_veteran_axeguard_name}[Iron Hills] Veteran Axe-Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -3868,7 +3840,6 @@
         level="41"
         name="{=aom_iron_hills_dains_reavers_name}[Iron Hills] Dain's Reavers"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4014,7 +3985,6 @@
         level="26"
         name="{=aom_iron_hills_mattock_guard_name}[Iron Hills] Mattock-Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4163,7 +4133,6 @@
         level="31"
         name="{=aom_iron_hills_veteran_mattock_guard_name}[Iron Hills] Veteran Mattock-Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4312,7 +4281,6 @@
         level="41"
         name="{=aom_iron_hills_thorins_mithril_piercers_name}[Iron Hills] Thorin's Mithril Piercers"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4458,7 +4426,6 @@
         level="26"
         name="{=aom_iron_hills_arbalest_name}[Iron Hills] Arbalest"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4561,7 +4528,6 @@
         level="36"
         name="{=aom_iron_hills_iron_phalanx_name}[Iron Hills] Iron Phalanx"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4732,15 +4698,14 @@
         </Equipments>
     </NPCCharacter>
 
-    <!-- Common Line: Thráin’s Ironclads -->
+    <!-- Common Line: ThrÃ¡inâ€™s Ironclads -->
 
     <NPCCharacter
         id="iron_hills_thrain_ironclads"
         default_group="Infantry"
         level="41"
-        name="{=aom_iron_hills_thrain_ironclads_name}[Iron Hills] Thráin’s Ironclads"
+        name="{=aom_iron_hills_thrain_ironclads_name}[Iron Hills] ThrÃ¡inâ€™s Ironclads"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -4916,7 +4881,6 @@
         level="21"
         name="{=aom_iron_hills_scout_name}[Iron Hills] Scout"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5071,7 +5035,6 @@
         level="26"
         name="{=aom_iron_hills_arbalest_name}[Iron Hills] Arbalest"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5226,7 +5189,6 @@
         level="31"
         name="{=aom_iron_hills_veteran_arbalest_name}[Iron Hills] Veteran Arbalest"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5379,9 +5341,8 @@
         id="iron_hills_iron_tusk_sharpshooters"
         default_group="Ranged"
         level="36"
-        name="{=aom_iron_hills_iron_tusk_sharpshooters_name}[Iron Hills] Grór's Sharpshooters"
+        name="{=aom_iron_hills_iron_tusk_sharpshooters_name}[Iron Hills] GrÃ³r's Sharpshooters"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5533,7 +5494,6 @@
         level="26"
         name="{=aom_iron_hills_noble_warrior_name}[Iron Hills] Noble Warrior"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5608,7 +5568,6 @@
         level="31"
         name="{=aom_iron_hills_boar_guard_name}[Iron Hills] Boar Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5785,7 +5744,6 @@
         level="36"
         name="{=aom_iron_hills_boar_champion_name}[Iron Hills] Boar Champion"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -5960,9 +5918,8 @@
         id="iron_hills_royal_guard"
         default_group="Infantry"
         level="41"
-        name="{=aom_iron_hills_royal_guard_name}[Iron Hills] Dáin's Royal Guard"
+        name="{=aom_iron_hills_royal_guard_name}[Iron Hills] DÃ¡in's Royal Guard"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template
@@ -6107,9 +6064,8 @@
         id="iron_hills_kings_chosen"
         default_group="Infantry"
         level="46"
-        name="{=aom_iron_hills_kings_chosen_name}[Iron Hills] Dáin’s Chosen"
+        name="{=aom_iron_hills_kings_chosen_name}[Iron Hills] DÃ¡inâ€™s Chosen"
         occupation="Soldier"
-        race="dwarf"
         culture="Culture.erebor">
         <face>
             <face_key_template

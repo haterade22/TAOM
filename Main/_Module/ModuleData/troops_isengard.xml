@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
 
     <NPCCharacter
         id="urukhai_recruit"
-        race="uruk_hai"
         default_group="Infantry"
         level="6"
         name="{=aom_urukhai_recruit_name}[Isengard] Uruk-Hai Recruit"
@@ -158,7 +157,6 @@
         id="urukhai_fighter"
         default_group="Infantry"
         level="11"
-        race="uruk_hai"
         name="{=aom_urukhai_fighter_name}[Isengard] Uruk-Hai Fighter"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -307,7 +305,6 @@
         id="orc_warg_scout"
         default_group="Cavalry"
         level="11"
-        race="orc"
         name="{=aom_orc_warg_scout_name}[Isengard] Orc Warg-Rider Scout"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -484,7 +481,6 @@
         id="urukhai_scout"
         default_group="Ranged"
         level="11"
-        race="uruk_hai"
         name="{=aom_urukhai_scout_name}[Isengard] Uruk-Hai Scout"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -648,7 +644,6 @@
         id="urukhai_warrior"
         default_group="Infantry"
         level="16"
-        race="uruk_hai"
         name="{=aom_urukhai_warrior_name}[Isengard] Uruk-Hai Warrior"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -812,7 +807,6 @@
         id="urukhai_feller"
         default_group="Infantry"
         level="16"
-        race="uruk_hai"
         name="{=aom_urukhai_feller_name}[Isengard] Uruk-Hai Feller"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -959,7 +953,6 @@
         id="orc_warg_overseer"
         default_group="Cavalry"
         level="16"
-        race="orc"
         name="{=aom_orc_warg_overseer_name}[Isengard] Orc Warg-Rider Overseer"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1151,7 +1144,6 @@
         id="urukhai_skirmisher"
         default_group="Ranged"
         level="16"
-        race="uruk_hai"
         name="{=aom_urukhai_skirmisher_name}[Isengard] Uruk-Hai Skirmisher"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1328,7 +1320,6 @@
         id="urukhai_hunter"
         default_group="Ranged"
         level="16"
-        race="uruk_hai"
         name="{=aom_urukhai_hunter_name}[Isengard] Uruk-Hai Hunter"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1505,7 +1496,6 @@
         id="orc_warg_enforcer"
         default_group="Cavalry"
         level="21"
-        race="orc"
         name="{=aom_orc_warg_enforcer_name}[Isengard] Orc Warg-Rider Enforcer"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1697,7 +1687,6 @@
         id="urukhai_spearman"
         default_group="Infantry"
         level="21"
-        race="uruk_hai"
         name="{=aom_urukhai_spearman_name}[Isengard] Uruk-Hai Spearman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1876,7 +1865,6 @@
         id="urukhai_swordman"
         default_group="Infantry"
         level="21"
-        race="uruk_hai"
         name="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -2040,7 +2028,6 @@
         id="urukhai_slayer"
         default_group="Infantry"
         level="21"
-        race="uruk_hai"
         name="{=aom_urukhai_slayer_name}[Isengard] Uruk-Hai Slayer"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -2187,7 +2174,6 @@
         id="urukhai_tracker"
         default_group="Ranged"
         level="21"
-        race="uruk_hai"
         name="{=aom_urukhai_tracker_name}[Isengard] Uruk-Hai Tracker"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -2364,7 +2350,6 @@
         id="urukhai_arbalest"
         default_group="Ranged"
         level="21"
-        race="uruk_hai"
         name="{=aom_urukhai_arbalest_name}[Isengard] Uruk-Hai Arbalest"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -2541,7 +2526,6 @@
         id="orc_warg_lieutenant"
         default_group="Cavalry"
         level="26"
-        race="orc"
         name="{=aom_orc_warg_lieutenant_name}[Isengard] Orc Warg-Rider Lieutenant"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -2745,7 +2729,6 @@
         id="urukhai_pikeman"
         default_group="Infantry"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_pikeman_name}[Isengard] Uruk-Hai Pikeman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -2907,7 +2890,6 @@
         id="urukhai_veteranspearman"
         default_group="Infantry"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_veteranspearman_name}[Isengard] Uruk-Hai Veteran Spearman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3084,7 +3066,6 @@
         id="urukhai_infantry"
         default_group="Infantry"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_infantry_name}[Isengard] Uruk-Hai Infantry"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3246,7 +3227,6 @@
         id="urukhai_champion"
         default_group="Infantry"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_champion_name}[Isengard] Uruk-Hai Champion"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3378,7 +3358,6 @@
         id="urukhai_reaver"
         default_group="Infantry"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_reaver_name}[Isengard] Uruk-Hai Reaver"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3444,7 +3423,6 @@
         id="urukhai_archer"
         default_group="Ranged"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_archer_name}[Isengard] Uruk-Hai Archer"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3522,7 +3500,6 @@
         id="urukhai_crossbowman"
         default_group="Ranged"
         level="26"
-        race="uruk_hai"
         name="{=aom_urukhai_crossbowman_name}[Isengard] Uruk-Hai Crossbowman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3699,7 +3676,6 @@
         id="urukhai_berserker"
         default_group="Infantry"
         level="31"
-        race="berserker"
         name="{=aom_urukhai_berserker_name}[Isengard] Uruk-Hai Berserker"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3846,7 +3822,6 @@
         id="urukhai_chosenmarksman"
         default_group="Ranged"
         level="31"
-        race="uruk_hai"
         name="{=aom_urukhai_chosenmarksman_name}[Isengard] Uruk-Hai Chosen Marksman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -3921,7 +3896,6 @@
         id="urukhai_veterancrossbowman"
         default_group="Ranged"
         level="31"
-        race="uruk_hai"
         name="{=aom_urukhai_veterancrossbowman_name}[Isengard] Uruk-Hai Veteran Crossbowman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4110,7 +4084,6 @@
         id="urukhai_veteranpikeman"
         default_group="Infantry"
         level="31"
-        race="uruk_hai"
         name="{=aom_urukhai_veteranpikeman_name}[Isengard] Uruk-Hai Veteran Pikeman"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4269,7 +4242,6 @@
         id="urukhai_pavise"
         default_group="Infantry"
         level="31"
-        race="uruk_hai"
         name="{=aom_urukhai_pavise_name}[Isengard] Uruk-Hai Pavise Guard"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4443,7 +4415,6 @@
         id="urukhai_veteraninfantry"
         default_group="Infantry"
         level="31"
-        race="uruk_hai"
         name="{=aom_urukhai_veteraninfantry_name}[Isengard] Champions of the White Hand"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4602,7 +4573,6 @@
         id="urukhai_nazg_hai"
         default_group="Infantry"
         level="36"
-        race="berserker"
         name="{=aom_urukhai_nazg_hai_name}[Isengard] Uruk-Hai Nazg-hai"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4761,7 +4731,6 @@
         id="orthanc_chosen"
         default_group="Infantry"
         level="26"
-        race="uruk_hai"
         name="{=aom_orthanc_chosen_name}[Isengard] Orthanc Chosen"
         occupation="Soldier"
         is_basic_troop="true"
@@ -4834,7 +4803,6 @@
         id="orthanc_guard"
         default_group="Infantry"
         level="31"
-        race="uruk_hai"
         name="{=aom_orthanc_guard_name}[Isengard] Orthanc Guard"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4906,7 +4874,6 @@
         id="orthanc_warden"
         default_group="Infantry"
         level="36"
-        race="uruk_hai"
         name="{=aom_orthanc_warden_name}[Isengard] Orthanc Warden"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -4977,7 +4944,6 @@
     <NPCCharacter
         id="orthanc_bodyguard"
         default_group="Infantry"
-        race="uruk_hai"
         level="41"
         name="{=aom_orthanc_bodyguard_name}[Isengard] Orthanc Bodyguard"
         occupation="Soldier"
