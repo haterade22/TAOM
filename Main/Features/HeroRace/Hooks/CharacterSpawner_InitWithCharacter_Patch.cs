@@ -8,17 +8,23 @@ namespace TAOM.Features.HeroRace.Hooks;
 [HarmonyPatch(typeof(CharacterSpawner), "InitWithCharacter")]
 public class CharacterSpawner_InitWithCharacter_Patch
 {
-    [HarmonyPostfix]
-    public static void Postfix(CharacterSpawner __instance, CharacterCode characterCode, bool useBodyProperties = false)
+    [HarmonyPrefix]
+    public static bool Prefix(CharacterSpawner __instance, CharacterCode characterCode, bool useBodyProperties = false)
     {
         try
         {
+            if (characterCode.Race <= 0)
+            {
+                return true;
+            }
+
             var service = IoC.Resolve<ICharacterSpawnerService>();
             service.InitWithCharacter(__instance, characterCode, useBodyProperties);
+            return false;
         }
         catch (Exception)
         {
-            // Prevent game crash if IoC is not configured or service fails
+            return true;
         }
     }
 }

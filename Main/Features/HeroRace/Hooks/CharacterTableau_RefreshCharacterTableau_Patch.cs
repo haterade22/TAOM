@@ -1,5 +1,6 @@
 using HarmonyLib;
 using System;
+using TAOM.Core.Infrastructure;
 using TAOM.Features.HeroRace.Configuration;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.View.Tableaus;
@@ -28,17 +29,24 @@ public class CharacterTableau_FirstTimeInit_Patch
 [HarmonyPatch(typeof(CharacterTableau), "RefreshCharacterTableau")]
 public class CharacterTableau_RefreshCharacterTableau_Patch
 {
-    [HarmonyPostfix]
-    public static void Postfix(CharacterTableau __instance, Equipment oldEquipment = null)
+    [HarmonyPrefix]
+    public static bool Prefix(CharacterTableau __instance, Equipment oldEquipment = null)
     {
         try
         {
+            int race = ReflectionHelper.GetFieldValue<CharacterTableau, int>(__instance, "_race");
+            if (race <= 0)
+            {
+                return true;
+            }
+
             var service = IoC.Resolve<ICharacterTableauService>();
             service.RefreshCharacterTableau(__instance, oldEquipment);
+            return false;
         }
         catch (Exception)
         {
-            // Prevent game crash if IoC is not configured or service fails
+            return true;
         }
     }
 }
