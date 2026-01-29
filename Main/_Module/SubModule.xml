@@ -12,6 +12,7 @@
 		<DependedModule Id="SandBoxCore" />
 		<DependedModule Id="Sandbox" />
 		<DependedModule Id="CustomBattle" />
+		<DependedModule Id="LOTRLOME_Armory" />
 	</DependedModules>
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
@@ -19,6 +20,7 @@
 		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
 	<SubModules>
 		<SubModule>
@@ -116,6 +118,19 @@
 			<IncludedGameTypes>
 				<GameType value="Campaign"/>
 				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+		<!-- ============================================== -->
+		<!-- TAOM Monster Types                              -->
+		<!-- ============================================== -->
+
+		<XmlNode>
+			<XmlName id="Monsters" path="monsters"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
 			</IncludedGameTypes>
 		</XmlNode>
 
