@@ -126,7 +126,7 @@
 		<!-- ============================================== -->
 
 		<XmlNode>
-			<XmlName id="Monsters" path="monsters"/>
+			<XmlName id="Monsters" path="races/monsters"/>
 			<IncludedGameTypes>
 				<GameType value="Campaign"/>
 				<GameType value="CampaignStoryMode"/>

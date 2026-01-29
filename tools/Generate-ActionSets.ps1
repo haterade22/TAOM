@@ -13,7 +13,7 @@
 param(
     [string]$NativePath = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\Native\ModuleData\action_sets.xml",
     [string]$OldModPath = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory_1_3\ModuleData\action_sets.xml",
-    [string]$OutputPath = (Join-Path $PSScriptRoot "..\Main\_Module\ModuleData\action_sets.xml")
+    [string]$OutputPath = (Join-Path $PSScriptRoot "..\Main\_Module\ModuleData\races\action_sets.xml")
 )
 
 $ErrorActionPreference = 'Stop'
