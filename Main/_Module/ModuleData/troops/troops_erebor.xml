@@ -164,7 +164,7 @@
                     id="Item.sk_dwarf_erebor_boots_light_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -345,7 +345,7 @@
                     id="Item.sk_dwarf_erebor_boots_light_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -524,7 +524,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_f" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -700,7 +700,7 @@
                     id="Item.sk_dwarf_erebor_greaves_heavy_d" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -868,7 +868,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1047,7 +1047,7 @@
                     id="Item.sk_dwarf_erebor_greaves_heavy_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1226,7 +1226,7 @@
                     id="Item.sk_dwarf_erebor_greaves_heavy_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1405,7 +1405,7 @@
                     id="Item.sk_dwarf_erebor_greaves_elite_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1581,7 +1581,7 @@
                     id="Item.sk_dwarf_erebor_greaves_elite_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1747,7 +1747,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_e" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1896,7 +1896,7 @@
                     id="Item.sk_dwarf_erebor_greaves_heavy_d" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -1984,7 +1984,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2072,7 +2072,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2140,7 +2140,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a_green" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2205,7 +2205,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_b_green" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2276,7 +2276,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2347,7 +2347,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_elite_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2418,7 +2418,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_b" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2489,7 +2489,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a_blue" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -2560,7 +2560,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_b_blue" />
             </EquipmentRoster>
             <EquipmentSet
-                id="npc_wanderer_equipment_template_erebor_civilian"
+                id="battania_troop_civilian_template_t1"
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
