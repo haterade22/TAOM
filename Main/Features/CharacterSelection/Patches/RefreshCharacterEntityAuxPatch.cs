@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade.GauntletUI.BodyGenerator;
 namespace TAOM.Features.CharacterSelection.Patches;
 
 [HarmonyPatch(typeof(BodyGeneratorView), "RefreshCharacterEntityAux")]
-[HarmonyPatchCategory("LatePatches")]
+[HarmonyPatchCategory("Late_Transpiler")]
 public class RefreshCharacterEntityAuxPatch
 {
     public static MBActionSet GetActionSet(BodyGeneratorView bodyGeneratorView)

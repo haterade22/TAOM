@@ -6,6 +6,7 @@ using TaleWorlds.MountAndBlade.View.Scripts;
 namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(CharacterSpawner), "InitWithCharacter")]
+[HarmonyPatchCategory("Patch4_CharacterSpawner")]
 public class CharacterSpawner_InitWithCharacter_Patch
 {
     [HarmonyPrefix]

@@ -8,6 +8,7 @@ using TaleWorlds.MountAndBlade.View.Tableaus;
 namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(CharacterTableau), "FirstTimeInit")]
+[HarmonyPatchCategory("Patch1_FirstTimeInit")]
 public class CharacterTableau_FirstTimeInit_Patch
 {
     public static RacePositionConfig Config;
@@ -27,6 +28,7 @@ public class CharacterTableau_FirstTimeInit_Patch
 }
 
 [HarmonyPatch(typeof(CharacterTableau), "RefreshCharacterTableau")]
+[HarmonyPatchCategory("Patch2_RefreshTableau")]
 public class CharacterTableau_RefreshCharacterTableau_Patch
 {
     [HarmonyPrefix]

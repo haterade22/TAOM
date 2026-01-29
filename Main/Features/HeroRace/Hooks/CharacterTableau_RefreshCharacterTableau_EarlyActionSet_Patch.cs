@@ -8,7 +8,7 @@ using TaleWorlds.MountAndBlade.View.Tableaus;
 namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(CharacterTableau), "RefreshCharacterTableau")]
-[HarmonyPatchCategory("LatePatches")]
+[HarmonyPatchCategory("Late_EarlyActionSet")]
 public class CharacterTableau_RefreshCharacterTableau_EarlyActionSet_Patch
 {
     [HarmonyPrefix]

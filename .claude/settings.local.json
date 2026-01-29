@@ -8,7 +8,8 @@
       "WebFetch(domain:moddocs.bannerlord.com)",
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM/**)",
       "Bash(Remove-Item \"c:\\\\Users\\\\mikew\\\\source\\\\repos\\\\TAOM\\\\Main\\\\_Module\\\\ModuleData\\\\splords.xslt\")",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(ilspycmd:*)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",

@@ -7,6 +7,7 @@ using TaleWorlds.MountAndBlade.View.Tableaus;
 namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(CharacterTableau), nameof(CharacterTableau.SetRace))]
+[HarmonyPatchCategory("Patch3_SetRace")]
 public class CharacterTableau_SetRace_Patch
 {
     [HarmonyPostfix]

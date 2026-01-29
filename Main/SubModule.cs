@@ -16,7 +16,17 @@ public class SubModule : MBSubModuleBase
         IoC.Configure();
 
         _harmony = new Harmony("com.taom.mod");
-        _harmony.PatchAll();
+
+        // === BISECT: Uncomment one at a time to find horizontal character root cause ===
+        _harmony.PatchCategory("Patch1_FirstTimeInit");       // Postfix: CharacterTableau.FirstTimeInit — loads config
+        _harmony.PatchCategory("Patch2_RefreshTableau");      // Prefix:  CharacterTableau.RefreshCharacterTableau — race check
+        _harmony.PatchCategory("Patch3_SetRace");             // Postfix: CharacterTableau.SetRace — reset + reinit visuals
+        _harmony.PatchCategory("Patch4_CharacterSpawner");    // Prefix:  CharacterSpawner.InitWithCharacter — race check
+        _harmony.PatchCategory("Patch5_FaceGen");             // Postfix: FaceGen.GetBaseMonsterFromRace — eye height hook
+        // _harmony.PatchCategory("Late_Transpiler");             // Transpiler: BodyGeneratorView.RefreshCharacterEntityAux — ROOT CAUSE of horizontal characters
+        // _harmony.PatchCategory("Late_EarlyActionSet");         // Prefix:  CharacterTableau.RefreshCharacterTableau — pre-load visuals
+        // _harmony.PatchCategory("Late_ActionSetOverride");      // Prefix:  ActionSetCode.GenerateActionSetNameWithSuffix
+        // === END BISECT ===
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }

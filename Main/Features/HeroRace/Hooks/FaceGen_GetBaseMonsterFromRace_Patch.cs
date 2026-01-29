@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(FaceGen), "GetBaseMonsterFromRace")]
+[HarmonyPatchCategory("Patch5_FaceGen")]
 public class FaceGen_GetBaseMonsterFromRace_Patch
 {
     private static IOnFaceGenGetBaseMonsterFromRace _hook;

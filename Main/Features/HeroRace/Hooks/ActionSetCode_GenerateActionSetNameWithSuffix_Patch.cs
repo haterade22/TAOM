@@ -6,7 +6,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(ActionSetCode), "GenerateActionSetNameWithSuffix")]
-[HarmonyPatchCategory("LatePatches")]
+[HarmonyPatchCategory("Late_ActionSetOverride")]
 public class ActionSetCode_GenerateActionSetNameWithSuffix_Patch
 {
     [HarmonyPrefix]
