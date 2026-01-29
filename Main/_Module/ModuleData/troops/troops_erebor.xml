@@ -2591,6 +2591,7 @@
 
     <NPCCharacter
         id="iron_hills_recruit"
+        race="dwarf"
         default_group="Infantry"
         level="16"
         name="{=aom_iron_hills_recruit_name}[Iron Hills] Recruit"
@@ -2757,6 +2758,7 @@
 
     <NPCCharacter
         id="iron_hills_warrior"
+        race="dwarf"
         default_group="Infantry"
         level="21"
         name="{=aom_iron_hills_warrior_name}[Iron Hills] Warrior"
@@ -2924,6 +2926,7 @@
 
     <NPCCharacter
         id="iron_hills_forge_guard"
+        race="dwarf"
         default_group="Infantry"
         level="26"
         name="{=aom_iron_hills_forge_guard_name}[Iron Hills] Forge-Guard"
@@ -3087,6 +3090,7 @@
 
     <NPCCharacter
         id="iron_hills_hammer_guard"
+        race="dwarf"
         default_group="Infantry"
         level="31"
         name="{=aom_iron_hills_hammer_guard_name}[Iron Hills] Grim Hammer"
@@ -3267,6 +3271,7 @@
 
     <NPCCharacter
         id="iron_hills_veteran_hammer_guard"
+        race="dwarf"
         default_group="Infantry"
         level="36"
         name="{=aom_iron_hills_veteran_hammer_guard_name}[Iron Hills] Veteran Hammer-Guard"
@@ -3415,6 +3420,7 @@
 
     <NPCCharacter
         id="iron_hills_durins_hammers"
+        race="dwarf"
         default_group="Infantry"
         level="41"
         name="{=aom_iron_hills_durins_hammers_name}[Iron Hills] Durin's Hammers"
@@ -3560,6 +3566,7 @@
 
     <NPCCharacter
         id="iron_hills_axeguard"
+        race="dwarf"
         default_group="Infantry"
         level="26"
         name="{=aom_iron_hills_axeguard_name}[Iron Hills] Axe-Guard"
@@ -3708,6 +3715,7 @@
 
     <NPCCharacter
         id="iron_hills_veteran_axeguard"
+        race="dwarf"
         default_group="Infantry"
         level="31"
         name="{=aom_iron_hills_veteran_axeguard_name}[Iron Hills] Veteran Axe-Guard"
@@ -3856,6 +3864,7 @@
 
     <NPCCharacter
         id="iron_hills_dains_reavers"
+        race="dwarf"
         default_group="Infantry"
         level="41"
         name="{=aom_iron_hills_dains_reavers_name}[Iron Hills] Dain's Reavers"
@@ -4001,6 +4010,7 @@
 
     <NPCCharacter
         id="iron_hills_mattock_guard"
+        race="dwarf"
         default_group="Infantry"
         level="26"
         name="{=aom_iron_hills_mattock_guard_name}[Iron Hills] Mattock-Guard"
@@ -4149,6 +4159,7 @@
 
     <NPCCharacter
         id="iron_hills_veteran_mattock_guard"
+        race="dwarf"
         default_group="Infantry"
         level="31"
         name="{=aom_iron_hills_veteran_mattock_guard_name}[Iron Hills] Veteran Mattock-Guard"
@@ -4297,6 +4308,7 @@
 
     <NPCCharacter
         id="iron_hills_thorins_mithril_piercers"
+        race="dwarf"
         default_group="Infantry"
         level="41"
         name="{=aom_iron_hills_thorins_mithril_piercers_name}[Iron Hills] Thorin's Mithril Piercers"
@@ -4442,6 +4454,7 @@
 
     <NPCCharacter
         id="iron_hills_arbalest"
+        race="dwarf"
         default_group="Ranged"
         level="26"
         name="{=aom_iron_hills_arbalest_name}[Iron Hills] Arbalest"
@@ -4544,6 +4557,7 @@
 
     <NPCCharacter
         id="iron_hills_iron_phalanx"
+        race="dwarf"
         default_group="Infantry"
         level="36"
         name="{=aom_iron_hills_iron_phalanx_name}[Iron Hills] Iron Phalanx"
@@ -4722,6 +4736,7 @@
 
     <NPCCharacter
         id="iron_hills_thrain_ironclads"
+        race="dwarf"
         default_group="Infantry"
         level="41"
         name="{=aom_iron_hills_thrain_ironclads_name}[Iron Hills] ThrÃƒÂ¡inÃ¢â‚¬â„¢s Ironclads"
@@ -4897,6 +4912,7 @@
 
     <NPCCharacter
         id="iron_hills_scout"
+        race="dwarf"
         default_group="Ranged"
         level="21"
         name="{=aom_iron_hills_scout_name}[Iron Hills] Scout"
@@ -5051,6 +5067,7 @@
 
     <NPCCharacter
         id="iron_hills_arbalest"
+        race="dwarf"
         default_group="Ranged"
         level="26"
         name="{=aom_iron_hills_arbalest_name}[Iron Hills] Arbalest"
@@ -5205,6 +5222,7 @@
 
     <NPCCharacter
         id="iron_hills_veteran_arbalest"
+        race="dwarf"
         default_group="Ranged"
         level="31"
         name="{=aom_iron_hills_veteran_arbalest_name}[Iron Hills] Veteran Arbalest"
@@ -5359,6 +5377,7 @@
 
     <NPCCharacter
         id="iron_hills_iron_tusk_sharpshooters"
+        race="dwarf"
         default_group="Ranged"
         level="36"
         name="{=aom_iron_hills_iron_tusk_sharpshooters_name}[Iron Hills] GrÃƒÂ³r's Sharpshooters"
@@ -5510,6 +5529,7 @@
 
     <NPCCharacter
         id="iron_hills_noble_warrior"
+        race="dwarf"
         default_group="Infantry"
         level="26"
         name="{=aom_iron_hills_noble_warrior_name}[Iron Hills] Noble Warrior"
@@ -5584,6 +5604,7 @@
 
     <NPCCharacter
         id="iron_hills_boar_guard"
+        race="dwarf"
         default_group="Infantry"
         level="31"
         name="{=aom_iron_hills_boar_guard_name}[Iron Hills] Boar Guard"
@@ -5760,6 +5781,7 @@
 
     <NPCCharacter
         id="iron_hills_boar_champion"
+        race="dwarf"
         default_group="Infantry"
         level="36"
         name="{=aom_iron_hills_boar_champion_name}[Iron Hills] Boar Champion"
@@ -5936,6 +5958,7 @@
 
     <NPCCharacter
         id="iron_hills_royal_guard"
+        race="dwarf"
         default_group="Infantry"
         level="41"
         name="{=aom_iron_hills_royal_guard_name}[Iron Hills] DÃƒÂ¡in's Royal Guard"
@@ -6082,6 +6105,7 @@
 
     <NPCCharacter
         id="iron_hills_kings_chosen"
+        race="dwarf"
         default_group="Infantry"
         level="46"
         name="{=aom_iron_hills_kings_chosen_name}[Iron Hills] DÃƒÂ¡inÃ¢â‚¬â„¢s Chosen"
