@@ -2,7 +2,7 @@ using TAOM.Core.Domain;
 using TAOM.Features.HeroRace.Configuration;
 using TAOM.Core.Infrastructure;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection;
 using TaleWorlds.Engine;
@@ -18,11 +18,29 @@ public class CharacterTableauService : ICharacterTableauService
 {
     private readonly IRaceManager _raceManager;
     private readonly RacePositionConfig _config;
+    private readonly Dictionary<string, RacePositionConfigItem> _configLookup;
 
     public CharacterTableauService(IRaceManager raceManager)
     {
         _raceManager = raceManager ?? throw new ArgumentNullException(nameof(raceManager));
         _config = RacePositionConfig.LoadConfig("CharacterAvatarPatch");
+        _configLookup = BuildConfigLookup(_config);
+    }
+
+    private static Dictionary<string, RacePositionConfigItem> BuildConfigLookup(RacePositionConfig config)
+    {
+        var lookup = new Dictionary<string, RacePositionConfigItem>(StringComparer.OrdinalIgnoreCase);
+        if (config?.Items != null)
+        {
+            foreach (var item in config.Items)
+            {
+                if (!string.IsNullOrEmpty(item.Race))
+                {
+                    lookup[item.Race] = item;
+                }
+            }
+        }
+        return lookup;
     }
 
     public void RefreshCharacterTableau(CharacterTableau tableau, Equipment oldEquipment = null)
@@ -63,15 +81,16 @@ public class CharacterTableauService : ICharacterTableauService
 
         if (agentVisuals != null)
         {
-            bool visibilityExcludeParents = oldAgentVisuals.GetEntity().GetVisibilityExcludeParents();
+            bool visibilityExcludeParents = oldAgentVisuals?.GetEntity()?.GetVisibilityExcludeParents() ?? false;
             AgentVisuals tempAgentVisuals = agentVisuals;
             agentVisuals = oldAgentVisuals;
             oldAgentVisuals = tempAgentVisuals;
             agentVisualLoadingCounter = 1;
             AgentVisualsData copyAgentVisualsData = agentVisuals.GetCopyAgentVisualsData();
 
-            RacePositionConfigItem configitem = _config.Items.FirstOrDefault(item => item.Race == _raceManager.GetRaceNameFromId(race).ToLower());
-            RacePositionConfigItem mountconfigitem = _config.Items.FirstOrDefault(item => item.Race == String.Concat("mount_", _raceManager.GetRaceNameFromId(race).ToLower()));
+            var raceName = _raceManager.GetRaceNameFromId(race);
+            _configLookup.TryGetValue(raceName, out var configitem);
+            _configLookup.TryGetValue("mount_" + raceName, out var mountconfigitem);
 
             MatrixFrame charframe = initialSpawnFrame;
             MatrixFrame mountframe = characterMountPositionFrame;
@@ -178,8 +197,9 @@ public class CharacterTableauService : ICharacterTableauService
                 [EquipmentIndex.HorseHarness] = equipment[EquipmentIndex.HorseHarness]
             };
 
-            RacePositionConfigItem configitem = _config.Items.FirstOrDefault(item => item.Race == _raceManager.GetRaceNameFromId(race).ToLower());
-            RacePositionConfigItem mountconfigitem = _config.Items.FirstOrDefault(item => item.Race == String.Concat("mount_", _raceManager.GetRaceNameFromId(race).ToLower()));
+            var raceName = _raceManager.GetRaceNameFromId(race);
+            _configLookup.TryGetValue(raceName, out var configitem);
+            _configLookup.TryGetValue("mount_" + raceName, out var mountconfigitem);
 
             MatrixFrame charframe = mountCharacterPositionFrame;
             MatrixFrame mountframe = mountSpawnPoint;

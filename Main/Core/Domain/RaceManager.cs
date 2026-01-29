@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -14,7 +15,7 @@ public class RaceManager : IRaceManager
     private bool _initialized;
     private readonly object _initLock = new();
 
-    private readonly Dictionary<int, string> _raceNameCache = new();
+    private readonly ConcurrentDictionary<int, string> _raceNameCache = new();
 
     public RaceManager(IModLogger logger, IFaceGenAdapter faceGenAdapter)
     {

@@ -1,5 +1,6 @@
 using TAOM.Core.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -7,7 +8,13 @@ namespace TAOM.Core.Infrastructure;
 
 public class ReflectionService : IReflectionService
 {
+    private const BindingFlags AllInstanceAndStatic =
+        BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+
     private readonly IModLogger _logger;
+    private readonly ConcurrentDictionary<(Type, string), FieldInfo> _fieldCache = new();
+    private readonly ConcurrentDictionary<(Type, string), PropertyInfo> _propertyCache = new();
+    private readonly ConcurrentDictionary<(Type, string), MethodInfo> _methodCache = new();
 
     public ReflectionService(IModLogger logger)
     {
@@ -17,18 +24,32 @@ public class ReflectionService : IReflectionService
     public TReturn GetFieldValue<TOwner, TReturn>(TOwner owner, string name)
         where TOwner : class
     {
-        return (TReturn)typeof(TOwner).GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static).GetValue(owner);
+        var type = typeof(TOwner);
+        var field = _fieldCache.GetOrAdd((type, name), key =>
+            key.Item1.GetField(key.Item2, AllInstanceAndStatic));
+
+        if (field == null)
+        {
+            _logger?.LogError($"ReflectionService: Field '{name}' not found on type '{type.Name}'");
+            throw new InvalidOperationException($"Field '{name}' not found on type '{type.Name}'");
+        }
+
+        return (TReturn)field.GetValue(owner);
     }
 
     public void SetFieldValue<TOwner>(TOwner owner, string name, object value)
         where TOwner : class
     {
-        var field = typeof(TOwner).GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        var type = typeof(TOwner);
+        var field = _fieldCache.GetOrAdd((type, name), key =>
+            key.Item1.GetField(key.Item2, AllInstanceAndStatic));
+
         if (field == null)
         {
-            _logger?.LogError($"ReflectionService: Field '{name}' not found on type '{typeof(TOwner).Name}'");
-            throw new InvalidOperationException($"Field '{name}' not found on type '{typeof(TOwner).Name}'");
+            _logger?.LogError($"ReflectionService: Field '{name}' not found on type '{type.Name}'");
+            throw new InvalidOperationException($"Field '{name}' not found on type '{type.Name}'");
         }
+
         field.SetValue(owner, value);
     }
 
@@ -41,23 +62,38 @@ public class ReflectionService : IReflectionService
     public object GetPropertyValue<TOwner>(TOwner owner, string name)
         where TOwner : class
     {
-        return typeof(TOwner).GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(owner);
+        var type = typeof(TOwner);
+        var property = _propertyCache.GetOrAdd((type, name), key =>
+            key.Item1.GetProperty(key.Item2, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance));
+
+        if (property == null)
+        {
+            _logger?.LogError($"ReflectionService: Property '{name}' not found on type '{type.Name}'");
+            throw new InvalidOperationException($"Property '{name}' not found on type '{type.Name}'");
+        }
+
+        return property.GetValue(owner);
     }
 
     public void SetPropertyValue<TOwner>(TOwner owner, string name, object value)
         where TOwner : class
     {
-        var property = typeof(TOwner).GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        var type = typeof(TOwner);
+        var property = _propertyCache.GetOrAdd((type, name), key =>
+            key.Item1.GetProperty(key.Item2, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance));
+
         if (property == null)
         {
-            _logger?.LogError($"ReflectionService: Property '{name}' not found on type '{typeof(TOwner).Name}'");
-            throw new InvalidOperationException($"Property '{name}' not found on type '{typeof(TOwner).Name}'");
+            _logger?.LogError($"ReflectionService: Property '{name}' not found on type '{type.Name}'");
+            throw new InvalidOperationException($"Property '{name}' not found on type '{type.Name}'");
         }
+
         if (!property.CanWrite)
         {
-            _logger?.LogError($"ReflectionService: Property '{name}' on type '{typeof(TOwner).Name}' is read-only");
-            throw new InvalidOperationException($"Property '{name}' on type '{typeof(TOwner).Name}' is read-only");
+            _logger?.LogError($"ReflectionService: Property '{name}' on type '{type.Name}' is read-only");
+            throw new InvalidOperationException($"Property '{name}' on type '{type.Name}' is read-only");
         }
+
         property.SetValue(owner, value);
     }
 
@@ -66,7 +102,8 @@ public class ReflectionService : IReflectionService
     {
         var typeToSearch = typeof(TType) == typeof(object) ? owner.GetType() : typeof(TType);
 
-        var method = typeToSearch.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        var method = _methodCache.GetOrAdd((typeToSearch, name), key =>
+            key.Item1.GetMethod(key.Item2, AllInstanceAndStatic));
 
         if (method == null)
         {

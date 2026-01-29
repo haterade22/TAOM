@@ -17,6 +17,7 @@ public class RefreshCharacterEntityAuxPatch
         return MBGlobals.GetActionSetWithSuffix(baseMonsterFromRace, bodyGeneratorView.BodyGen.IsFemale, "_facegen");
     }
 
+    [HarmonyTranspiler]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilGen)
     {
         var newInstructions = new List<CodeInstruction>(instructions);

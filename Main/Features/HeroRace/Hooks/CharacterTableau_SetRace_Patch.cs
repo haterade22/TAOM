@@ -1,4 +1,6 @@
 using HarmonyLib;
+using System;
+using TAOM.Core.Infrastructure;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.Tableaus;
 
@@ -10,10 +12,17 @@ public class CharacterTableau_SetRace_Patch
     [HarmonyPostfix]
     static void Postfix(CharacterTableau __instance)
     {
-        var _agentVisuals = AccessTools.Field(typeof(CharacterTableau), "_agentVisuals")?.GetValue(__instance) as AgentVisuals;
-        _agentVisuals?.Reset();
-        var _oldAgentVisuals = AccessTools.Field(typeof(CharacterTableau), "_oldAgentVisuals")?.GetValue(__instance) as AgentVisuals;
-        _oldAgentVisuals?.Reset();
-        AccessTools.Method(typeof(CharacterTableau), "InitializeAgentVisuals").Invoke(__instance, new object[] { });
+        try
+        {
+            var agentVisuals = ReflectionHelper.GetFieldValue<CharacterTableau, AgentVisuals>(__instance, "_agentVisuals");
+            agentVisuals?.Reset();
+            var oldAgentVisuals = ReflectionHelper.GetFieldValue<CharacterTableau, AgentVisuals>(__instance, "_oldAgentVisuals");
+            oldAgentVisuals?.Reset();
+            ReflectionHelper.CallPrivateMethod(__instance, "InitializeAgentVisuals", new object[] { });
+        }
+        catch (Exception)
+        {
+            // Prevent game crash if ReflectionHelper or IoC is not ready
+        }
     }
 }

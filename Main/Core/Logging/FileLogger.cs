@@ -6,6 +6,7 @@ namespace TAOM.Core.Logging;
 public class FileLogger : IModLogger
 {
     private StreamWriter? _logFile;
+    private readonly object _writeLock = new();
     private const string LogDirectory = "Logs";
 
     public FileLogger()
@@ -43,14 +44,20 @@ public class FileLogger : IModLogger
 
     private void WriteLog(string level, string message)
     {
-        var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        var logMessage = $"[{timestamp}] [{level}] {message}";
-        _logFile?.WriteLine(logMessage);
+        lock (_writeLock)
+        {
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var logMessage = $"[{timestamp}] [{level}] {message}";
+            _logFile?.WriteLine(logMessage);
+        }
     }
 
     public void Dispose()
     {
-        _logFile?.Dispose();
-        _logFile = null;
+        lock (_writeLock)
+        {
+            _logFile?.Dispose();
+            _logFile = null;
+        }
     }
 }

@@ -152,6 +152,40 @@ public class ReflectionServiceTests
         Assert.AreEqual(100, result);
     }
 
+    [TestMethod]
+    public void GetFieldValue_NonExistentField_ThrowsAndLogs()
+    {
+        var target = new TestTarget();
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _sut.GetFieldValue<TestTarget, string>(target, "_nonexistent"));
+
+        _logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("_nonexistent")));
+    }
+
+    [TestMethod]
+    public void GetPropertyValue_NonExistentProperty_ThrowsAndLogs()
+    {
+        var target = new TestTarget();
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _sut.GetPropertyValue<TestTarget, string>(target, "NonExistentProp"));
+
+        _logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("NonExistentProp")));
+    }
+
+    [TestMethod]
+    public void GetFieldValue_CachesFieldLookup_SecondCallSameResult()
+    {
+        var target = new TestTarget();
+
+        var result1 = _sut.GetFieldValue<TestTarget, string>(target, "_privateField");
+        var result2 = _sut.GetFieldValue<TestTarget, string>(target, "_privateField");
+
+        Assert.AreEqual("private_value", result1);
+        Assert.AreEqual(result1, result2);
+    }
+
     internal class TestTarget
     {
         private string _privateField = "private_value";

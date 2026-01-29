@@ -1,8 +1,9 @@
+using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Features.HeroRace.Configuration;
 using TAOM.Core.Infrastructure;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -16,12 +17,32 @@ namespace TAOM.Features.HeroRace;
 public class CharacterSpawnerService : ICharacterSpawnerService
 {
     private readonly IRaceManager _raceManager;
+    private readonly IFaceGenAdapter _faceGenAdapter;
     private readonly RacePositionConfig _config;
+    private readonly Dictionary<string, RacePositionConfigItem> _configLookup;
 
-    public CharacterSpawnerService(IRaceManager raceManager)
+    public CharacterSpawnerService(IRaceManager raceManager, IFaceGenAdapter faceGenAdapter)
     {
         _raceManager = raceManager ?? throw new ArgumentNullException(nameof(raceManager));
+        _faceGenAdapter = faceGenAdapter ?? throw new ArgumentNullException(nameof(faceGenAdapter));
         _config = RacePositionConfig.LoadConfig("CharacterImagePatch");
+        _configLookup = BuildConfigLookup(_config);
+    }
+
+    private static Dictionary<string, RacePositionConfigItem> BuildConfigLookup(RacePositionConfig config)
+    {
+        var lookup = new Dictionary<string, RacePositionConfigItem>(StringComparer.OrdinalIgnoreCase);
+        if (config?.Items != null)
+        {
+            foreach (var item in config.Items)
+            {
+                if (!string.IsNullOrEmpty(item.Race))
+                {
+                    lookup[item.Race] = item;
+                }
+            }
+        }
+        return lookup;
     }
 
     public void InitWithCharacter(CharacterSpawner spawner, CharacterCode characterCode, bool useBodyProperties = false)
@@ -71,7 +92,7 @@ public class CharacterSpawnerService : ICharacterSpawnerService
             ReflectionHelper.SetPropertyValue(spawner, "ClothColor2", characterCode.Color2);
         }
 
-        Monster baseMonsterFromRace = TaleWorlds.Core.FaceGen.GetBaseMonsterFromRace(characterCode.Race);
+        Monster baseMonsterFromRace = _faceGenAdapter.GetBaseMonsterFromRace(characterCode.Race);
 
         // 1.3: ActionCode takes in ActionIndexCache
         var idleStart = ActionIndexCache.Create("act_inventory_idle_start");
@@ -99,7 +120,8 @@ public class CharacterSpawnerService : ICharacterSpawnerService
         agentVisuals = ReflectionHelper.GetFieldValue<CharacterSpawner, AgentVisuals>(spawner, "_agentVisuals");
         MatrixFrame frame = MatrixFrame.Identity;
 
-        RacePositionConfigItem configitem = _config.Items.FirstOrDefault(item => item.Race == _raceManager.GetRaceNameFromId(characterCode.Race).ToLower());
+        var raceName = _raceManager.GetRaceNameFromId(characterCode.Race);
+        _configLookup.TryGetValue(raceName, out var configitem);
 
         if (configitem != null)
         {

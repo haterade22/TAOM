@@ -177,4 +177,26 @@ public class RaceManagerTests
         Assert.AreEqual("human", result);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("returned null")));
     }
+
+    [TestMethod]
+    public void InitializeRaceMappings_EmptyArray_InitializesWithNoRaces()
+    {
+        _faceGenAdapter.GetRaceNames().Returns(new string[0]);
+        var sut = new RaceManager(_logger, _faceGenAdapter);
+
+        var result = sut.GetAllRaceIds();
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetRaceNameFromId_EmptyRaces_FallsBackToHardcodedHuman()
+    {
+        _faceGenAdapter.GetRaceNames().Returns(new string[0]);
+        var sut = new RaceManager(_logger, _faceGenAdapter);
+
+        var result = sut.GetRaceNameFromId(999);
+
+        Assert.AreEqual("human", result);
+    }
 }
