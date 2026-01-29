@@ -14,10 +14,6 @@ public class CharacterTableau_SetRace_Patch
     {
         try
         {
-            int race = ReflectionHelper.GetFieldValue<CharacterTableau, int>(__instance, "_race");
-            if (race <= 0)
-                return;
-
             var agentVisuals = ReflectionHelper.GetFieldValue<CharacterTableau, AgentVisuals>(__instance, "_agentVisuals");
             agentVisuals?.Reset();
             var oldAgentVisuals = ReflectionHelper.GetFieldValue<CharacterTableau, AgentVisuals>(__instance, "_oldAgentVisuals");
