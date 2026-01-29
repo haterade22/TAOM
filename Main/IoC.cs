@@ -33,6 +33,7 @@ public static class IoC
         container.Register<IPathService, PathService>(Reuse.Singleton);
         container.Register<IReflectionService, ReflectionService>(Reuse.Singleton);
         container.Register<IRaceManager, RaceManager>(Reuse.Singleton);
+        container.Register<IHeroRosterAdapter, HeroRosterAdapter>(Reuse.Singleton);
     }
 
     private static void RegisterLoggingServices(IContainer container)

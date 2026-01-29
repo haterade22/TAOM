@@ -1,7 +1,9 @@
 using HarmonyLib;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.HeroRace;
 
 namespace TAOM;
 
@@ -24,7 +26,12 @@ public class SubModule : MBSubModuleBase
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
     {
         base.OnGameStart(game, gameStarterObject);
-        // Register campaign behaviors and game models here
+
+        if (gameStarterObject is CampaignGameStarter campaignStarter)
+        {
+            var racePersistenceService = IoC.Resolve<IRacePersistenceService>();
+            campaignStarter.AddBehavior(new RacePersistenceBehavior(racePersistenceService));
+        }
     }
 
     public override void OnGameInitializationFinished(Game game)
@@ -36,6 +43,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch3_SetRace");
         _harmony.PatchCategory("Patch4_CharacterSpawner");
         _harmony.PatchCategory("Patch5_FaceGen");
+        _harmony.PatchCategory("Patch6_FaceGenIcons");
         _harmony.PatchCategory("Late_Transpiler");
         _harmony.PatchCategory("Late_ActionSetOverride");
     }
