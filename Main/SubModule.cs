@@ -17,6 +17,7 @@ public class SubModule : MBSubModuleBase
 
         _harmony = new Harmony("com.taom.mod");
         _harmony.PatchAll();
+        _harmony.PatchCategory("LatePatches");
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
