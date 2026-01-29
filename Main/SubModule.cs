@@ -1,3 +1,4 @@
+using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -6,9 +7,17 @@ namespace TAOM;
 
 public class SubModule : MBSubModuleBase
 {
+    private Harmony _harmony;
+
     protected override void OnSubModuleLoad()
     {
         base.OnSubModuleLoad();
+
+        IoC.Configure();
+
+        _harmony = new Harmony("com.taom.mod");
+        _harmony.PatchAll();
+
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
 
@@ -27,6 +36,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
-        // Cleanup logic here
+        _harmony?.UnpatchAll("com.taom.mod");
+        IoC.Dispose();
     }
 }

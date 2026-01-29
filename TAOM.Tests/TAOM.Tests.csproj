@@ -7,6 +7,9 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
+		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
+		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,6 +25,13 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Main\TAOM.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>True</Private>
+		</Reference>
 	</ItemGroup>
 
 </Project>
