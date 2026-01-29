@@ -16,17 +16,7 @@ public class SubModule : MBSubModuleBase
         IoC.Configure();
 
         _harmony = new Harmony("com.taom.mod");
-
-        // === BISECT: Uncomment one at a time to find horizontal character root cause ===
-        _harmony.PatchCategory("Patch1_FirstTimeInit");       // Postfix: CharacterTableau.FirstTimeInit — loads config
-        _harmony.PatchCategory("Patch2_RefreshTableau");      // Prefix:  CharacterTableau.RefreshCharacterTableau — race check
-        _harmony.PatchCategory("Patch3_SetRace");             // Postfix: CharacterTableau.SetRace — reset + reinit visuals
-        _harmony.PatchCategory("Patch4_CharacterSpawner");    // Prefix:  CharacterSpawner.InitWithCharacter — race check
-        _harmony.PatchCategory("Patch5_FaceGen");             // Postfix: FaceGen.GetBaseMonsterFromRace — eye height hook
-        // _harmony.PatchCategory("Late_Transpiler");             // Transpiler: BodyGeneratorView.RefreshCharacterEntityAux — ROOT CAUSE of horizontal characters
-        // _harmony.PatchCategory("Late_EarlyActionSet");         // Prefix:  CharacterTableau.RefreshCharacterTableau — pre-load visuals
-        // _harmony.PatchCategory("Late_ActionSetOverride");      // Prefix:  ActionSetCode.GenerateActionSetNameWithSuffix
-        // === END BISECT ===
+        // Patches applied in OnGameInitializationFinished — View assembly must be initialized first
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -40,7 +30,14 @@ public class SubModule : MBSubModuleBase
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
-        // Post-initialization logic here
+
+        _harmony.PatchCategory("Patch1_FirstTimeInit");
+        _harmony.PatchCategory("Patch2_RefreshTableau");
+        _harmony.PatchCategory("Patch3_SetRace");
+        _harmony.PatchCategory("Patch4_CharacterSpawner");
+        _harmony.PatchCategory("Patch5_FaceGen");
+        _harmony.PatchCategory("Late_Transpiler");
+        _harmony.PatchCategory("Late_ActionSetOverride");
     }
 
     protected override void OnSubModuleUnloaded()
