@@ -43,7 +43,6 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch3_SetRace");
         _harmony.PatchCategory("Patch4_CharacterSpawner");
         _harmony.PatchCategory("Patch5_FaceGen");
-        _harmony.PatchCategory("Patch6_FaceGenIcons");
         _harmony.PatchCategory("Late_Transpiler");
         _harmony.PatchCategory("Late_ActionSetOverride");
     }

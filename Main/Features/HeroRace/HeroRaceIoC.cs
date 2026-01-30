@@ -18,12 +18,6 @@ public static class HeroRaceIoC
         var eyeHeightHook = container.Resolve<IOnFaceGenGetBaseMonsterFromRace>();
         FaceGen_GetBaseMonsterFromRace_Patch.Initialize(eyeHeightHook);
 
-        container.Register<IFaceGenIconService, FaceGenIconService>(Reuse.Singleton);
-        container.Register<IOnFaceGenUpdateRaceResources, FaceGenIconReplacementHook>(Reuse.Singleton);
-
-        var faceGenIconHook = container.Resolve<IOnFaceGenUpdateRaceResources>();
-        FaceGenVM_UpdateRaceAndGenderBasedResources_Patch.Initialize(faceGenIconHook);
-
         container.Register<IRacePersistenceService, RacePersistenceService>(Reuse.Singleton);
     }
 }
