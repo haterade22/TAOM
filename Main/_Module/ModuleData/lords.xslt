@@ -2196,7 +2196,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_48']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group']"/>
-            <xsl:attribute name="name">{=aom_lord_1_48_name}KhamÃ»l, the Easterling</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_48_name}Khamûl, the Easterling</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>

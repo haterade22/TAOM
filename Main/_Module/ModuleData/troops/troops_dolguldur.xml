@@ -6,7 +6,7 @@
 
     <NPCCharacter
         id="dg_goblin_slave"
-        race="dg_uruk"
+        race="goblin"
         default_group="Infantry"
         level="1"
         name="{=aom_dg_goblin_slave_name}[Dol Guldur] Goblin Slave"
@@ -64,7 +64,7 @@
 
     <NPCCharacter
         id="dg_goblin_crawler"
-        race="dg_uruk"
+        race="goblin"
         default_group="Infantry"
         level="6"
         name="{=aom_dg_goblin_crawler_name}[Dol Guldur] Goblin Crawler"
@@ -157,7 +157,7 @@
 
     <NPCCharacter
         id="dg_goblin_hunter"
-        race="dg_uruk"
+        race="goblin"
         default_group="Ranged"
         level="11"
         name="{=aom_dg_goblin_hunter_name}[Dol Guldur] Goblin Hunter"
@@ -298,7 +298,7 @@
 
     <NPCCharacter
         id="dg_goblin_skirmisher"
-        race="dg_uruk"
+        race="goblin"
         default_group="Ranged"
         level="16"
         name="{=aom_dg_goblin_skirmisher_name}[Dol Guldur] Goblin Skirmisher"
@@ -477,7 +477,7 @@
 
     <NPCCharacter
         id="dg_goblin_archer"
-        race="dg_uruk"
+        race="goblin"
         default_group="Ranged"
         level="21"
         name="{=aom_dg_goblin_archer_name}[Dol Guldur] Goblin Archer"
@@ -670,7 +670,7 @@
 
     <NPCCharacter
         id="dg_orc_recruit"
-        race="dg_uruk"
+        race="orc"
         default_group="Infantry"
         level="6"
         name="{=aom_dg_orc_recruit_name}[Dol Guldur] Orc Recruit"
@@ -764,7 +764,7 @@
 
     <NPCCharacter
         id="dg_orc_gnasher"
-        race="dg_uruk"
+        race="orc"
         default_group="Infantry"
         level="11"
         name="{=aom_dg_orc_gnasher_name}[Dol Guldur] Orc Gnasher"
@@ -869,7 +869,7 @@
 
     <NPCCharacter
         id="dg_orc_warrior"
-        race="dg_uruk"
+        race="orc"
         default_group="Infantry"
         level="16"
         name="{=aom_dg_orc_warrior_name}[Dol Guldur] Orc Warrior"
@@ -1020,7 +1020,7 @@
 
     <NPCCharacter
         id="dg_orc_reaver"
-        race="dg_uruk"
+        race="orc"
         default_group="Infantry"
         level="21"
         name="{=aom_dg_orc_reaver_name}[Dol Guldur] Orc Reaver"
@@ -1181,7 +1181,7 @@
 
     <NPCCharacter
         id="dg_orc_scout"
-        race="dg_uruk"
+        race="orc"
         default_group="Ranged"
         level="21"
         name="{=aom_dg_orc_scout_name}[Dol Guldur] Orc Scout"
@@ -1375,7 +1375,7 @@
 
     <NPCCharacter
         id="dg_orc_archer"
-        race="dg_uruk"
+        race="orc"
         default_group="Ranged"
         level="26"
         name="{=aom_dg_orc_archer_name}[Dol Guldur] Orc Archer"
@@ -5448,7 +5448,6 @@
 
     <NPCCharacter
         id="dg_initiate"
-        race="dg_uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_dg_initiate_name}[Dol Guldur] Initiate"
@@ -5613,7 +5612,6 @@
 
     <NPCCharacter
         id="dg_disciple"
-        race="dg_uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_dg_disciple_name}[Dol Guldur] Disciple"
@@ -5943,7 +5941,6 @@
 
     <NPCCharacter
         id="dg_warden"
-        race="dg_uruk"
         default_group="Infantry"
         level="36"
         name="{=aom_dg_warden_name}[Dol Guldur] Warden"
@@ -6109,10 +6106,9 @@
 
     <NPCCharacter
         id="dg_khamul_veiled_knight"
-        race="dg_uruk"
         default_group="Cavalry"
         level="41"
-        name="{=aom_dg_khamul_veiled_knight_name}[Dol Guldur] KhamÃƒÂ»l's Veiled Knight"
+        name="{=aom_dg_khamul_veiled_knight_name}[Dol Guldur] Khamûl's Veiled Knight"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -6318,10 +6314,9 @@
 
     <NPCCharacter
         id="dg_khamul_shadow_knight"
-        race="dg_uruk"
         default_group="Cavalry"
         level="46"
-        name="{=aom_dg_khamul_shadow_knight_name}[Dol Guldur] KhamÃƒÂ»l's Shadow-Knight"
+        name="{=aom_dg_khamul_shadow_knight_name}[Dol Guldur] Khamûl's Shadow-Knight"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -6524,10 +6519,9 @@
 
     <NPCCharacter
         id="dg_khamul_veiled_guard"
-        race="dg_uruk"
         default_group="Infantry"
         level="41"
-        name="{=aom_dg_khamul_veiled_guard_name}[Dol Guldur] KhamÃƒÂ»l's Veiled Guard"
+        name="{=aom_dg_khamul_veiled_guard_name}[Dol Guldur] Khamûl's Veiled Guard"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -6688,10 +6682,9 @@
 
     <NPCCharacter
         id="dg_khamul_shadow_guard"
-        race="dg_uruk"
         default_group="Infantry"
         level="46"
-        name="{=aom_dg_khamul_shadow_guard_name}[Dol Guldur] KhamÃƒÂ»l's Shadow-Guard"
+        name="{=aom_dg_khamul_shadow_guard_name}[Dol Guldur] Khamûl's Shadow-Guard"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -7236,11 +7229,10 @@
     </NPCCharacter>
 
     <NPCCharacter
-        id="dg_khamul_veiled_marksman"
-        race="dg_uruk"
+        id="dg_khamul_veiled_marksman"  
         default_group="Ranged"
         level="41"
-        name="{=aom_dg_khamul_veiled_marksman_name}[Dol Guldur] KhamÃƒÂ»l's Veiled Marksman"
+        name="{=aom_dg_khamul_veiled_marksman_name}[Dol Guldur] Khamûl's Veiled Marksman"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -7431,10 +7423,9 @@
 
     <NPCCharacter
         id="dg_khamul_shadow_bowman"
-        race="dg_uruk"
         default_group="Ranged"
         level="46"
-        name="{=aom_dg_khamul_shadow_bowman_name}[Dol Guldur] KhamÃƒÂ»l's Shadow-Bowman"
+        name="{=aom_dg_khamul_shadow_bowman_name}[Dol Guldur] Khamûl's Shadow-Bowman"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>

@@ -2095,7 +2095,7 @@
         race="dwarf"
         default_group="Infantry"
         level="36"
-        name="{=aom_erebor_wrym_slayers_name}[Erebor] AdÃƒÂ¢ruf-sulÃƒÂ»kh"
+        name="{=aom_erebor_wrym_slayers_name}[Erebor] Adâruf-sulûkh"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -2164,7 +2164,7 @@
         race="dwarf"
         default_group="Infantry"
         level="41"
-        name="{=aom_erebor_khazad_royal_guard_name}[Erebor] KhazÃƒÂ¢d-uzbadul"
+        name="{=aom_erebor_khazad_royal_guard_name}[Erebor] Khazâd-uzbadul"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -3867,7 +3867,7 @@
         race="dwarf"
         default_group="Infantry"
         level="41"
-        name="{=aom_iron_hills_dains_reavers_name}[Iron Hills] Dain's Reavers"
+        name="{=aom_iron_hills_dains_reavers_name}[Iron Hills] Dáin's Reavers"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -4732,14 +4732,14 @@
         </Equipments>
     </NPCCharacter>
 
-    <!-- Common Line: ThrÃƒÂ¡inÃ¢â‚¬â„¢s Ironclads -->
+    <!-- Common Line: Thráin Ironclads -->
 
     <NPCCharacter
         id="iron_hills_thrain_ironclads"
         race="dwarf"
         default_group="Infantry"
         level="41"
-        name="{=aom_iron_hills_thrain_ironclads_name}[Iron Hills] ThrÃƒÂ¡inÃ¢â‚¬â„¢s Ironclads"
+        name="{=aom_iron_hills_thrain_ironclads_name}[Iron Hills] Thráin's Ironclads"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -5380,7 +5380,7 @@
         race="dwarf"
         default_group="Ranged"
         level="36"
-        name="{=aom_iron_hills_iron_tusk_sharpshooters_name}[Iron Hills] GrÃƒÂ³r's Sharpshooters"
+        name="{=aom_iron_hills_iron_tusk_sharpshooters_name}[Iron Hills] Grór's Sharpshooters"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -5961,7 +5961,7 @@
         race="dwarf"
         default_group="Infantry"
         level="41"
-        name="{=aom_iron_hills_royal_guard_name}[Iron Hills] DÃƒÂ¡in's Royal Guard"
+        name="{=aom_iron_hills_royal_guard_name}[Iron Hills] Dáin's Royal Guard"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>
@@ -6108,7 +6108,7 @@
         race="dwarf"
         default_group="Infantry"
         level="46"
-        name="{=aom_iron_hills_kings_chosen_name}[Iron Hills] DÃƒÂ¡inÃ¢â‚¬â„¢s Chosen"
+        name="{=aom_iron_hills_kings_chosen_name}[Iron Hills] Dáin's Chosen"
         occupation="Soldier"
         culture="Culture.erebor">
         <face>

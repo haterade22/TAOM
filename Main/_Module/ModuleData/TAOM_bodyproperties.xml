@@ -1,0 +1,1134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BodyProperties>
+	<BodyProperty
+		id="fighter_haradrim">
+		<BodyPropertiesMin
+			version="4"
+			age="28.76"
+			weight="0.2701"
+			build="0.3113"
+			key="0029A80AC0CC1842A8600B776A6999B7568A885129BD6595B77794A986746767072650130B9B74665400700001B00000000000000000001B0000000059701040" />
+		<BodyPropertiesMax
+			version="4"
+			age="39.11"
+			weight="0.2701"
+			build="0.36"
+			key="0036E80F00883947C8700C76A97898B65575855248DC13A4C864486976936759063660350C8886775400B00000D00000000000000000003C000000002F888000" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_gundabad">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.2402"
+			build="0.2431"
+			key="00000407800000000F801171141F3011013F777771340088533333327071102A00B446030B3323480000000000000000000000000000000000000000057C00C0" />
+		<BodyPropertiesMax
+			version="4"
+			age="32.01"
+			weight="0.7109"
+			build="0.543"
+			key="000A3C08C0441000EF8819F83BEFEFFFFFFE86877F87EFFFFEFFFEFF7FFFFEFF00F8B6030FFFEFFF00000000000000000000000000000000000000001BFC0000" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_dolguldur">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.3426"
+			build="0.3125"
+			key="0009F00FC00000008777887188868877777788778888888888888888888878880085560308888888000000000000000000000000000000000000000043040140" />
+		<BodyPropertiesMax
+			version="4"
+			age="32.01"
+			weight="0.6296"
+			build="0.9213"
+			key="0009F00FC0000000EEEEFEF1E8FEFEFEEFEE7AFFFEEFFFFEEEEFEFFFFEEEFFEF00AE96030AFEFFFE000000000000000000000000000000000000000043640140" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_goblin">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.4815"
+			build="0.5"
+			key="0009800FC00010008180F7511FEF0F089E8E1F0FF07788960E70F0777731FF8F00477603040EFE9F0000000000000000000000000000000000000000427C0140" />
+		<BodyPropertiesMax
+			version="4"
+			age="22.01"
+			weight="0.4815"
+			build="0.5"
+			key="0009800FC00010008180F7511FEF0F089E8E1F0FF07788960E70F0777731FF8F00477603040EFE9F0000000000000000000000000000000000000000427C0140" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_rhun">
+		<BodyPropertiesMin
+			version="4"
+			age="28.76"
+			weight="0.2701"
+			build="0.3113"
+			key="0029A80AC0CC1842A8600B776A6999B7568A885129BD6595B77794A986746767072650130B9B74665400700001B00000000000000000001B0000000059701040" />
+		<BodyPropertiesMax
+			version="4"
+			age="39.11"
+			weight="0.2701"
+			build="0.36"
+			key="0036E80F00883947C8700C76A97898B65575855248DC13A4C864486976936759063660350C8886775400B00000D00000000000000000003C000000002F888000" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_cave_troll">
+		<BodyPropertiesMin
+			version="4"
+			age="30"
+			weight="0.983"
+			build="1"
+			key="000000054000200079766434475CDCAAC34E866255A096777441DA49838BF6A5FF1F162407A7B7A5FF0FF0001000000F0000000000000027000000003CE40000" />
+		<BodyPropertiesMax
+			version="4"
+			age="40"
+			weight="0.983"
+			build="1"
+			key="000000054000200079766434475CDCAAC34E866255A096777441DA49838BF6A5FF1F16240AA7B7A5FF0FF0001000000F000000000000002A000000003D4C0000" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_uruk_hai">
+		<BodyPropertiesMin
+			version="4"
+			age="29.71"
+			weight="0.0046"
+			build="0.1296"
+			key="0008500AC058300183810444434330348AAAA674B873A14B6543A699BB66A62C493400130DF016752002A00000B00000000000000000001D0000000023A800C0" />
+		<BodyPropertiesMax
+			version="4"
+			age="49.39"
+			weight="0.0046"
+			build="0.1914"
+			key="0008500F00580007CB81077989A7B8A878BCA674B873A4AA889BC5BA76BA49C48D6700460D9BABA93003D00000D00000000000000000004D0000000023B80000" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_uruk_berserker">
+		<BodyPropertiesMin
+			version="4"
+			age="29.29"
+			weight="0"
+			build="0.9728"
+			key="0020F00FC00030008771188F38770F8801F688778888888888888888546A000601AF06130A888888000000000000000000000000000000000000000043640140" />
+		<BodyPropertiesMax
+			version="4"
+			age="29.29"
+			weight="0"
+			build="0.9728"
+			key="001EF00FC00030008771188F38770F8801F688778888888888888888546A000601AF06130A888888000000000000000000000000000000000000000043640140" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_uruk_mordor">
+		<BodyPropertiesMin
+			version="4"
+			age="30.75"
+			weight="0.0648"
+			build="0.1235"
+			key="0023000A402C0001440231371F67094F3325554434403444222271343223334F032400140C44454F2103500000A00000000000000000001C000000004D880000" />
+		<BodyPropertiesMax
+			version="4"
+			age="51.20"
+			weight="0.1265"
+			build="0.1852"
+			key="0034CC0F002C3007AA01288CAFCDE9DFCCCCAABBBBB0BBBB9AA975A9BBAABBBF033400460DBBBBCF3203900000C00000000000000000004D000000004DA000C0" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_orc_mordor">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.3241"
+			build="0.2986"
+			key="00000C0FC0003000077EBEEF0EF6001F011E8178E108F0FF788888887FF1F0100064560306E184EF000000000000000000000000000000000000000042C46002" />
+		<BodyPropertiesMax
+			version="4"
+			age="22.01"
+			weight="0.3843"
+			build="0.4236"
+			key="00140C0FC0003000077EBEEF0EF6001F011E8178E108F0FF788888887FF1F0100076660307E184EF000000000000000000000000000000000000000042DC6002" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="townsman_uruk_mordor">
+		<BodyPropertiesMin
+			version="4"
+			age="20"
+			weight="0.5625"
+			build="0.5324"
+			key="0020080FC000300088700800EEF0011000118878889878888E87777780E880780C8886C2088788FF0000000000000000000000000000000000000000430C9142" />
+		<BodyPropertiesMax
+			version="4"
+			age="29"
+			weight="0.5093"
+			build="0.9467"
+			key="0020080FC000300088700800EEF0011000118878889878888E87777784F1F0FF0C9E86C2098788FF0000000000000000000000000000000000000000432C9142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="villager_uruk_mordor">
+		<BodyPropertiesMin
+			version="4"
+			age="20"
+			weight="0.5625"
+			build="0.5324"
+			key="0020080FC000300088700800EEF0011000118878889878888E87777780E880780C8886C2088788FF0000000000000000000000000000000000000000430C9142" />
+		<BodyPropertiesMax
+			version="4"
+			age="29"
+			weight="0.5093"
+			build="0.9467"
+			key="0020080FC000300088700800EEF0011000118878889878888E87777784F1F0FF0C9E86C2098788FF0000000000000000000000000000000000000000432C9142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="wanderer_uruk_mordor">
+		<BodyPropertiesMin
+			version="4"
+			age="20"
+			weight="0.5625"
+			build="0.5324"
+			key="0020080FC000300088700800EEF0011000118878889878888E87777780E880780C8886C2088788FF0000000000000000000000000000000000000000430C9142" />
+		<BodyPropertiesMax
+			version="4"
+			age="29"
+			weight="0.5093"
+			build="0.9467"
+			key="0020080FC000300088700800EEF0011000118878889878888E87777784F1F0FF0C9E86C2098788FF0000000000000000000000000000000000000000432C9142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_rohan">
+		<BodyPropertiesMin
+			version="4"
+			age="26.49"
+			weight="0.2317"
+			build="0.2165"
+			key="000004000070024297700111255850F159988886C9713F768843694A78736C28152230130BA76B7F3301400000800000000000000000001B0000000019703000" />
+		<BodyPropertiesMax
+			version="4"
+			age="48.09"
+			weight="0.2317"
+			build="0.2165"
+			key="0000AC08C070048A97C1188A94689057B8CC8886C9713F764B47547759A578C6062320460C1CA3463305300000C00000000000000000004C0000000019884000" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_gondor">
+		<BodyPropertiesMin
+			version="4"
+			age="25.99"
+			weight="0.1842"
+			build="0.314"
+			key="00000C08002C3242B95008954867B4CC998897849872B9789786D99B7867A675110540130B5559875300800000E00000000000000000001B0000000059703000" />
+		<BodyPropertiesMax
+			version="4"
+			age="39.5"
+			weight="0.246"
+			build="0.3757"
+			key="0000C808002C3487B95008954867B4CC85A697849872B978948D5ECAAB2D97C7066540350C6219586408B00000E00000000000000000003C00000000218830C0" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_rivendell">
+		<BodyPropertiesMin
+			version="4"
+			age="33.95"
+			weight="0.2104"
+			build="0.2711"
+			key="0000080B802C000204701A108BA18776A7C89BDA86301E7B54977A7A49737757444536240D4C589C4302B10010700103000000000000002D0000000069AC1000" />
+		<BodyPropertiesMax
+			version="4"
+			age="50.26"
+			weight="0.2721"
+			build="0.3946"
+			key="0005AC0F002C0004047018198BA1377397AD9BDA86301E7B9AD79A5B68CAAC63454746460DB79A8A6402B10010800003000000000000004D0000000069BC80C0" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_mirkwood">
+		<BodyPropertiesMin
+			version="4"
+			age="32.13"
+			weight="0.1836"
+			build="0.25"
+			key="0000000000000002578014070530796057AC8835D8701893587B76BB6881A576043446240D8889AA4300900000A00000000000000000002D000000004BAC10C0" />
+		<BodyPropertiesMax
+			version="4"
+			age="45.63"
+			weight="0.1836"
+			build="0.25"
+			key="000584034000000457801407053079608785AA35D8701893587B76BB7A716669043546350D8889AA4300B00000B00000000000000000003D0000000059BC6100" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="villager_rohans">
+		<BodyPropertiesMin
+			version="4"
+			age="20.01"
+			weight="0.0209"
+			build="0.0556"
+			key="00050C00800033410071170011010F88177677687072700188888888761770070061060306888888000000000000000000000000000000000000000042D44002" />
+		<BodyPropertiesMax
+			version="4"
+			age="69.21"
+			weight="0.4606"
+			build="1"
+			key="0005CC03400034840071170E85257F8817767768707270018888888876177007009F760309888888000000000000000000000000000000000000000043344002" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="villager_gondors">
+		<BodyPropertiesMin
+			version="4"
+			age="22.23"
+			weight="0.0486"
+			build="0.2106"
+			key="0000180800003003878110103060000167668877888888888888888886666877009316030988888800000000000000000000000000000000000000003F2C4142" />
+		<BodyPropertiesMax
+			version="4"
+			age="69.23"
+			weight="0.2106"
+			build="0.5324"
+			key="0015F40FC00039038783377F7006137667668877888888888888888886666877009836030988888800000000000000000000000000000000000000003F2C4142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_erebor">
+		<BodyPropertiesMin
+			version="4"
+			age="25.01"
+			weight="0.5116"
+			build="0.5069"
+			key="000004000000304008801FFEFF8F0FF0109588878FF88067888878888D3010F30078860307FFF0AE000000000000000000000000000000000000000042FC0140" />
+		<BodyPropertiesMax
+			version="4"
+			age="40.01"
+			weight="0.6157"
+			build="0.9722"
+			key="0000F00FC00032C5FF9FFFF0F8FE0F0FFFFF8FEFEFFEEFFFFFFFEFFF7EEEFEEE009F960309FFEFFF000000000000000000000000000000000000000043240142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="villager_erebor">
+		<BodyPropertiesMin
+			version="4"
+			age="25.01"
+			weight="0.5301"
+			build="0.5347"
+			key="00000400000030400190001101100010000088878000000000101000800010100088860308000119000000000000000000000000000000000000000043040142" />
+		<BodyPropertiesMax
+			version="4"
+			age="52.01"
+			weight="0.7384"
+			build="0.7454"
+			key="000BFC0FC00032CA08801FFEFF8F0FF0109588878FF88067888878888D3010F3009BB60309FFF0AE000000000000000000000000000000000000000043340140" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="townsman_erebor">
+		<BodyPropertiesMin
+			version="4"
+			age="25.01"
+			weight="0.5301"
+			build="0.5347"
+			key="00000400000030400190001101100010000088878000000000101000800010100088860308000119000000000000000000000000000000000000000043040142" />
+		<BodyPropertiesMax
+			version="4"
+			age="52.01"
+			weight="0.7384"
+			build="0.7454"
+			key="000BFC0FC00032CA08801FFEFF8F0FF0109588878FF88067888878888D3010F3009BB60309FFF0AE000000000000000000000000000000000000000043340140" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_dunland_a">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.2408"
+			build="0.3032"
+			key="0002FC08C1FC0914878F1FFF4F9F1EEE7F018877888888888888888F7718F5F500854603088888880000000000000000000000000000000000000000431C4142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.4907"
+			build="0.838"
+			key="00100008C8FC0A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009D7603098888880000000000000000000000000000000000000000432C4142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="villager_dunland_a">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.2408"
+			build="0.3032"
+			key="0002FC08C1FC0914878F1FFF4F9F1EEE7F018877888888888888888F7718F5F500854603088888880000000000000000000000000000000000000000431C4142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.4907"
+			build="0.838"
+			key="00100008C8FC0A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009D7603098888880000000000000000000000000000000000000000432C4142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="townsman_dunland_a">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.2408"
+			build="0.3032"
+			key="0002FC08C1FC0914878F1FFF4F9F1EEE7F018877888888888888888F7718F5F500854603088888880000000000000000000000000000000000000000431C4142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.4907"
+			build="0.838"
+			key="00100008C8FC0A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009D7603098888880000000000000000000000000000000000000000432C4142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_dunland_b">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.3056"
+			build="0.3056"
+			key="0010000D83000914878F1FFF4F9F1EEE7F018877888888888888888F7718F5F50085560308888888000000000000000000000000000000000000000043144142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.4907"
+			build="0.838"
+			key="0010000FC2000A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009D7603098888880000000000000000000000000000000000000000432C4142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_dunland_c">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.3056"
+			build="0.3056"
+			key="00104C01442C0914878F1FFF4F9F1EEE7F018877888888888888888F7718F5F50085560308888888000000000000000000000000000000000000000043144142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.5532"
+			build="0.6782"
+			key="00104C04C62C0A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009A860309888888000000000000000000000000000000000000000043244142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_dunland_d">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.1042"
+			build="0.2315"
+			key="00107C06C8440914878F1FFF4F9F1EEE7F018877888888888888888F7718F5F500832603088888880000000000000000000000000000000000000000430C4142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.5532"
+			build="0.6782"
+			key="00107C0AC7440A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009A860309888888000000000000000000000000000000000000000043344142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+	<BodyProperty
+		id="fighter_dunland_e">
+		<BodyPropertiesMin
+			version="4"
+			age="22.01"
+			weight="0.5394"
+			build="0.7708"
+			key="001028054C880902878F1FFF4F9F1EEE7F018877888888888888888F7718F5F500AC86030A888888000000000000000000000000000000000000000043444142" />
+		<BodyPropertiesMax
+			version="4"
+			age="42.01"
+			weight="0.5394"
+			build="0.7708"
+			key="0010BC0D0B880A42878F1FFF4F9F1EEE7F018877888888888888888F7718F5F500AC86030A888888000000000000000000000000000000000000000043444142" />
+		<hair_tags>
+			<hair_tag
+				name="empire" />
+			<hair_tag
+				name="sturgia" />
+			<hair_tag
+				name="battania" />
+			<hair_tag
+				name="khuzait" />
+		</hair_tags>
+		<beard_tags>
+			<beard_tag
+				name="empire" />
+			<beard_tag
+				name="sturgia" />
+			<beard_tag
+				name="battania" />
+			<beard_tag
+				name="khuzait" />
+		</beard_tags>
+		<tattoo_tags>
+			<tattoo_tag
+				name="Cleanface" />
+		</tattoo_tags>
+	</BodyProperty>
+</BodyProperties>
