@@ -121,6 +121,16 @@
 			</IncludedGameTypes>
 		</XmlNode>
 
+		<!-- TAOM body properties (character appearance templates) -->
+		<XmlNode>
+			<XmlName id="BodyProperties" path="TAOM_bodyproperties"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
 		<!-- ============================================== -->
 		<!-- TAOM Monster Types                              -->
 		<!-- ============================================== -->

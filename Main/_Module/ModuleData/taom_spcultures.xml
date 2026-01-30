@@ -2793,4 +2793,700 @@
     </basic_mercenary_troops>
   </Culture>
 
+  <!-- ============================================== -->
+  <!-- GONDOR - Kingdom of the Dúnedain              -->
+  <!-- ============================================== -->
+  <Culture
+    id="gondor"
+    name="{=aom_gondor_name}Gondorian"
+    is_main_culture="true"
+    color="0xFF23432D"
+    color2="0xFFB5913E"
+    elite_basic_troop="NPCCharacter.sturgian_warrior_son"
+    basic_troop="NPCCharacter.sturgian_recruit"
+    melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
+    ranged_militia_troop="NPCCharacter.sturgian_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
+    can_have_settlement="true"
+    villager_party_template="PartyTemplate.villager_sturgia_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
+    militia_party_template="PartyTemplate.militia_sturgia_template"
+    rebels_party_template="PartyTemplate.rebels_sturgia_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    text="{=aom_gondor_desc}The people of Gondor are a proud and resilient folk, heirs to the greatest kingdom of Men in Middle-earth. Founded by the Númenórean exiles Isildur and Anárion, Gondor stands as a bastion of strength and hope against the encroaching darkness of Mordor. Its stone cities, crowned by the majestic Minas Tirith, are marvels of engineering and endurance. Guided by noble stewards and valiant captains, they field disciplined armies of steadfast infantry and swift mounted knights, a shining beacon of defiance in the face of despair."
+    tournament_master="NPCCharacter.tournament_master_sturgia"
+    villager="NPCCharacter.villager_sturgia"
+    caravan_master="NPCCharacter.caravan_master_sturgia"
+    caravan_guard="NPCCharacter.caravan_guard_sturgia"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
+    prison_guard="NPCCharacter.prison_guard_sturgia"
+    guard="NPCCharacter.guard_sturgia"
+    blacksmith="NPCCharacter.blacksmith_sturgia"
+    weaponsmith="NPCCharacter.weaponsmith_sturgia"
+    townswoman="NPCCharacter.townswoman_sturgia"
+    townswoman_infant="NPCCharacter.townswoman_infant_sturgia"
+    townswoman_child="NPCCharacter.townswoman_child_sturgia"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_sturgia"
+    townsman="NPCCharacter.townsman_sturgia"
+    townsman_infant="NPCCharacter.townsman_infant_sturgia"
+    townsman_child="NPCCharacter.townsman_child_sturgia"
+    village_woman="NPCCharacter.village_woman_sturgia"
+    villager_male_child="NPCCharacter.villager_child_sturgia"
+    villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
+    villager_female_child="NPCCharacter.village_woman_child_sturgia"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
+    ransom_broker="NPCCharacter.ransom_broker_sturgia"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
+    merchant_notary="NPCCharacter.merchant_notary_sturgia"
+    artisan_notary="NPCCharacter.artisan_notary_sturgia"
+    preacher_notary="NPCCharacter.preacher_notary_sturgia"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_sturgia"
+    shop_worker="NPCCharacter.shop_worker_sturgia"
+    tavernkeeper="NPCCharacter.tavernkeeper_sturgia"
+    taverngamehost="NPCCharacter.taverngamehost_sturgia"
+    musician="NPCCharacter.musician_sturgia"
+    tavern_wench="NPCCharacter.tavern_wench_sturgia"
+    armorer="NPCCharacter.armorer_sturgia"
+    horseMerchant="NPCCharacter.horseMerchant_sturgia"
+    barber="NPCCharacter.barber_sturgia"
+    merchant="NPCCharacter.merchant_sturgia"
+    beggar="NPCCharacter.beggar_sturgia"
+    female_beggar="NPCCharacter.female_beggar_sturgia"
+    female_dancer="NPCCharacter.female_dancer_sturgia"
+    default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="949.3796"
+    start_point_position_y="1191.117">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
+    <male_names>
+      <name name="{=aom_gondor_male_name_1}Boromir" />
+      <name name="{=aom_gondor_male_name_2}Faramir" />
+      <name name="{=aom_gondor_male_name_3}Beregond" />
+      <name name="{=aom_gondor_male_name_4}Imrahil" />
+      <name name="{=aom_gondor_male_name_5}Húrin" />
+      <name name="{=aom_gondor_male_name_6}Denethor" />
+      <name name="{=aom_gondor_male_name_7}Anárion" />
+      <name name="{=aom_gondor_male_name_8}Elendil" />
+      <name name="{=aom_gondor_male_name_9}Thorongil" />
+      <name name="{=aom_gondor_male_name_10}Cirion" />
+      <name name="{=aom_gondor_male_name_11}Ecthelion" />
+      <name name="{=aom_gondor_male_name_12}Turgon" />
+      <name name="{=aom_gondor_male_name_13}Belecthor" />
+      <name name="{=aom_gondor_male_name_14}Eradan" />
+      <name name="{=aom_gondor_male_name_15}Hirgon" />
+      <name name="{=aom_gondor_male_name_16}Dervorin" />
+      <name name="{=aom_gondor_male_name_17}Duinhir" />
+      <name name="{=aom_gondor_male_name_18}Forlong" />
+      <name name="{=aom_gondor_male_name_19}Golasgil" />
+      <name name="{=aom_gondor_male_name_20}Angbor" />
+      <name name="{=aom_gondor_male_name_21}Mardil" />
+      <name name="{=aom_gondor_male_name_22}Vorondil" />
+      <name name="{=aom_gondor_male_name_23}Pelendur" />
+      <name name="{=aom_gondor_male_name_24}Herion" />
+      <name name="{=aom_gondor_male_name_25}Belegorn" />
+      <name name="{=aom_gondor_male_name_26}Baranor" />
+      <name name="{=aom_gondor_male_name_27}Ingold" />
+      <name name="{=aom_gondor_male_name_28}Bergil" />
+      <name name="{=aom_gondor_male_name_29}Hallas" />
+      <name name="{=aom_gondor_male_name_30}Egalmoth" />
+      <name name="{=aom_gondor_male_name_31}Calmacil" />
+      <name name="{=aom_gondor_male_name_32}Telumehtar" />
+      <name name="{=aom_gondor_male_name_33}Aldamir" />
+      <name name="{=aom_gondor_male_name_34}Eldacar" />
+      <name name="{=aom_gondor_male_name_35}Minardil" />
+      <name name="{=aom_gondor_male_name_36}Osgiliath" />
+      <name name="{=aom_gondor_male_name_37}Tarannon" />
+      <name name="{=aom_gondor_male_name_38}Anardil" />
+      <name name="{=aom_gondor_male_name_39}Meneldil" />
+      <name name="{=aom_gondor_male_name_40}Ernil" />
+      <name name="{=aom_gondor_male_name_41}Galador" />
+      <name name="{=aom_gondor_male_name_42}Adrahil" />
+      <name name="{=aom_gondor_male_name_43}Finduilas" />
+      <name name="{=aom_gondor_male_name_44}Duilin" />
+      <name name="{=aom_gondor_male_name_45}Derufin" />
+      <name name="{=aom_gondor_male_name_46}Hirluin" />
+      <name name="{=aom_gondor_male_name_47}Iorlas" />
+      <name name="{=aom_gondor_male_name_48}Targon" />
+      <name name="{=aom_gondor_male_name_49}Mablung" />
+      <name name="{=aom_gondor_male_name_50}Damrod" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_gondor_female_name_1}Lothíriel" />
+      <name name="{=aom_gondor_female_name_2}Ivriniel" />
+      <name name="{=aom_gondor_female_name_3}Finduilas" />
+      <name name="{=aom_gondor_female_name_4}Morwen" />
+      <name name="{=aom_gondor_female_name_5}Gilraen" />
+      <name name="{=aom_gondor_female_name_6}Ioreth" />
+      <name name="{=aom_gondor_female_name_7}Berúthiel" />
+      <name name="{=aom_gondor_female_name_8}Anwen" />
+      <name name="{=aom_gondor_female_name_9}Miriel" />
+      <name name="{=aom_gondor_female_name_10}Silmariën" />
+      <name name="{=aom_gondor_female_name_11}Eärwen" />
+      <name name="{=aom_gondor_female_name_12}Lindórië" />
+      <name name="{=aom_gondor_female_name_13}Almarian" />
+      <name name="{=aom_gondor_female_name_14}Erendis" />
+      <name name="{=aom_gondor_female_name_15}Inzilbêth" />
+      <name name="{=aom_gondor_female_name_16}Telwen" />
+      <name name="{=aom_gondor_female_name_17}Daeriel" />
+      <name name="{=aom_gondor_female_name_18}Niniel" />
+      <name name="{=aom_gondor_female_name_19}Rían" />
+      <name name="{=aom_gondor_female_name_20}Haleth" />
+      <name name="{=aom_gondor_female_name_21}Ancalimë" />
+      <name name="{=aom_gondor_female_name_22}Vardiel" />
+      <name name="{=aom_gondor_female_name_23}Eledhwen" />
+      <name name="{=aom_gondor_female_name_24}Nimrodel" />
+      <name name="{=aom_gondor_female_name_25}Caladwen" />
+      <name name="{=aom_gondor_female_name_26}Mithrellas" />
+      <name name="{=aom_gondor_female_name_27}Eilinel" />
+      <name name="{=aom_gondor_female_name_28}Aerin" />
+      <name name="{=aom_gondor_female_name_29}Andreth" />
+      <name name="{=aom_gondor_female_name_30}Beldis" />
+      <name name="{=aom_gondor_female_name_31}Gilmith" />
+      <name name="{=aom_gondor_female_name_32}Ragnell" />
+      <name name="{=aom_gondor_female_name_33}Anórien" />
+      <name name="{=aom_gondor_female_name_34}Lossiel" />
+      <name name="{=aom_gondor_female_name_35}Idril" />
+      <name name="{=aom_gondor_female_name_36}Oriel" />
+      <name name="{=aom_gondor_female_name_37}Faervel" />
+      <name name="{=aom_gondor_female_name_38}Celwen" />
+      <name name="{=aom_gondor_female_name_39}Braniel" />
+      <name name="{=aom_gondor_female_name_40}Tiriel" />
+      <name name="{=aom_gondor_female_name_41}Varadis" />
+      <name name="{=aom_gondor_female_name_42}Díriel" />
+      <name name="{=aom_gondor_female_name_43}Heledis" />
+      <name name="{=aom_gondor_female_name_44}Menelwen" />
+      <name name="{=aom_gondor_female_name_45}Síriel" />
+      <name name="{=aom_gondor_female_name_46}Elanor" />
+      <name name="{=aom_gondor_female_name_47}Hírwen" />
+      <name name="{=aom_gondor_female_name_48}Malliel" />
+      <name name="{=aom_gondor_female_name_49}Belwen" />
+      <name name="{=aom_gondor_female_name_50}Anariel" />
+    </female_names>
+    <clan_names>
+      <name name="{=aom_gondor_clan_1}House of Húrin" />
+      <name name="{=aom_gondor_clan_2}House of Dol Amroth" />
+      <name name="{=aom_gondor_clan_3}House of Anárion" />
+      <name name="{=aom_gondor_clan_4}House of Lossarnach" />
+      <name name="{=aom_gondor_clan_5}House of Pinnath Gelin" />
+      <name name="{=aom_gondor_clan_6}House of Morthond" />
+      <name name="{=aom_gondor_clan_7}House of Ringló" />
+      <name name="{=aom_gondor_clan_8}House of Lebennin" />
+      <name name="{=aom_gondor_clan_9}House of Pelargir" />
+      <name name="{=aom_gondor_clan_10}House of Ethir" />
+      <name name="{=aom_gondor_clan_11}House of Anfalas" />
+      <name name="{=aom_gondor_clan_12}House of Lamedon" />
+      <name name="{=aom_gondor_clan_13}House of Ithilien" />
+      <name name="{=aom_gondor_clan_14}House of Cair Andros" />
+      <name name="{=aom_gondor_clan_15}House of Tarnost" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- MORDOR - The Dark Land of Sauron              -->
+  <!-- ============================================== -->
+  <Culture
+    id="mordor"
+    name="{=aom_mordor_name}Mordor"
+    is_main_culture="true"
+    color="0xFF23432D"
+    color2="0xFFB5913E"
+    elite_basic_troop="NPCCharacter.sturgian_warrior_son"
+    basic_troop="NPCCharacter.sturgian_recruit"
+    melee_militia_troop="NPCCharacter.sturgian_militia_spearman"
+    ranged_militia_troop="NPCCharacter.sturgian_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.sturgian_militia_veteran_archer"
+    can_have_settlement="true"
+    villager_party_template="PartyTemplate.villager_sturgia_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_sturgia_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
+    militia_party_template="PartyTemplate.militia_sturgia_template"
+    rebels_party_template="PartyTemplate.rebels_sturgia_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_sturgia"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    text="{=aom_mordor_desc}The Orcs of Mordor are a brutal and relentless force, bred in the dark pits of Barad-dûr to serve the will of Sauron. Cruel and savage, they march to war in endless hordes, wielding crude but deadly weapons forged in the fires of Mount Doom. Clad in jagged armor and bearing black banners emblazoned with the Red Eye, they bring fear and destruction wherever they tread. Bound by the iron will of their Dark Lord, the Orcs of Mordor are divided into warbands led by ruthless captains, united only in their desire for conquest."
+    tournament_master="NPCCharacter.tournament_master_sturgia"
+    villager="NPCCharacter.villager_sturgia"
+    caravan_master="NPCCharacter.caravan_master_sturgia"
+    caravan_guard="NPCCharacter.caravan_guard_sturgia"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_sturgia"
+    prison_guard="NPCCharacter.prison_guard_sturgia"
+    guard="NPCCharacter.guard_sturgia"
+    blacksmith="NPCCharacter.blacksmith_sturgia"
+    weaponsmith="NPCCharacter.weaponsmith_sturgia"
+    townswoman="NPCCharacter.townswoman_sturgia"
+    townswoman_infant="NPCCharacter.townswoman_infant_sturgia"
+    townswoman_child="NPCCharacter.townswoman_child_sturgia"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_sturgia"
+    townsman="NPCCharacter.townsman_sturgia"
+    townsman_infant="NPCCharacter.townsman_infant_sturgia"
+    townsman_child="NPCCharacter.townsman_child_sturgia"
+    village_woman="NPCCharacter.village_woman_sturgia"
+    villager_male_child="NPCCharacter.villager_child_sturgia"
+    villager_male_teenager="NPCCharacter.villager_teenager_sturgia"
+    villager_female_child="NPCCharacter.village_woman_child_sturgia"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_sturgia"
+    townsman_teenager="NPCCharacter.townsman_teenager_sturgia"
+    ransom_broker="NPCCharacter.ransom_broker_sturgia"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_sturgia"
+    merchant_notary="NPCCharacter.merchant_notary_sturgia"
+    artisan_notary="NPCCharacter.artisan_notary_sturgia"
+    preacher_notary="NPCCharacter.preacher_notary_sturgia"
+    rural_notable_notary="NPCCharacter.rural_notable_notary_sturgia"
+    shop_worker="NPCCharacter.shop_worker_sturgia"
+    tavernkeeper="NPCCharacter.tavernkeeper_sturgia"
+    taverngamehost="NPCCharacter.taverngamehost_sturgia"
+    musician="NPCCharacter.musician_sturgia"
+    tavern_wench="NPCCharacter.tavern_wench_sturgia"
+    armorer="NPCCharacter.armorer_sturgia"
+    horseMerchant="NPCCharacter.horseMerchant_sturgia"
+    barber="NPCCharacter.barber_sturgia"
+    merchant="NPCCharacter.merchant_sturgia"
+    beggar="NPCCharacter.beggar_sturgia"
+    female_beggar="NPCCharacter.female_beggar_sturgia"
+    female_dancer="NPCCharacter.female_dancer_sturgia"
+    default_battle_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_civilian_equipment_roster="EquipmentRoster.stu_civ_template_default"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="949.3796"
+    start_point_position_y="1191.117">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
+    <vassal_reward_items>
+      <item id="Item.justicier_2hsword" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.iron_spatha_sword_t2" />
+      <item id="Item.empire_sword_1_t2" />
+      <item id="Item.empire_sword_2_t3" />
+      <item id="Item.empire_sword_6_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
+    <male_names>
+      <name name="{=aom_mordor_male_name_1}Gorbag" />
+      <name name="{=aom_mordor_male_name_2}Shagrat" />
+      <name name="{=aom_mordor_male_name_3}Grishnákh" />
+      <name name="{=aom_mordor_male_name_4}Muzgash" />
+      <name name="{=aom_mordor_male_name_5}Lagduf" />
+      <name name="{=aom_mordor_male_name_6}Radbug" />
+      <name name="{=aom_mordor_male_name_7}Ufthak" />
+      <name name="{=aom_mordor_male_name_8}Snaga" />
+      <name name="{=aom_mordor_male_name_9}Gothmog" />
+      <name name="{=aom_mordor_male_name_10}Bolg" />
+      <name name="{=aom_mordor_male_name_11}Mauhúr" />
+      <name name="{=aom_mordor_male_name_12}Uglúk" />
+      <name name="{=aom_mordor_male_name_13}Gashnak" />
+      <name name="{=aom_mordor_male_name_14}Durgash" />
+      <name name="{=aom_mordor_male_name_15}Krimpûl" />
+      <name name="{=aom_mordor_male_name_16}Thrákul" />
+      <name name="{=aom_mordor_male_name_17}Grimbûrz" />
+      <name name="{=aom_mordor_male_name_18}Bûrzash" />
+      <name name="{=aom_mordor_male_name_19}Nazgûl" />
+      <name name="{=aom_mordor_male_name_20}Gûlthrak" />
+      <name name="{=aom_mordor_male_name_21}Skûlgat" />
+      <name name="{=aom_mordor_male_name_22}Orghash" />
+      <name name="{=aom_mordor_male_name_23}Lugdush" />
+      <name name="{=aom_mordor_male_name_24}Krûmgat" />
+      <name name="{=aom_mordor_male_name_25}Tharûk" />
+      <name name="{=aom_mordor_male_name_26}Gorûl" />
+      <name name="{=aom_mordor_male_name_27}Dushgoi" />
+      <name name="{=aom_mordor_male_name_28}Mokûrz" />
+      <name name="{=aom_mordor_male_name_29}Ûrgash" />
+      <name name="{=aom_mordor_male_name_30}Pushnak" />
+      <name name="{=aom_mordor_male_name_31}Globthrák" />
+      <name name="{=aom_mordor_male_name_32}Skûrlag" />
+      <name name="{=aom_mordor_male_name_33}Bûrzgol" />
+      <name name="{=aom_mordor_male_name_34}Ghâshnak" />
+      <name name="{=aom_mordor_male_name_35}Durbûrz" />
+      <name name="{=aom_mordor_male_name_36}Krûmlag" />
+      <name name="{=aom_mordor_male_name_37}Tarkûl" />
+      <name name="{=aom_mordor_male_name_38}Shagrûl" />
+      <name name="{=aom_mordor_male_name_39}Ûfgash" />
+      <name name="{=aom_mordor_male_name_40}Mûgrath" />
+      <name name="{=aom_mordor_male_name_41}Lûgrat" />
+      <name name="{=aom_mordor_male_name_42}Gorlag" />
+      <name name="{=aom_mordor_male_name_43}Nûrzgash" />
+      <name name="{=aom_mordor_male_name_44}Dûshgob" />
+      <name name="{=aom_mordor_male_name_45}Ghûlbag" />
+      <name name="{=aom_mordor_male_name_46}Krimgûl" />
+      <name name="{=aom_mordor_male_name_47}Thraknûl" />
+      <name name="{=aom_mordor_male_name_48}Skarûg" />
+      <name name="{=aom_mordor_male_name_49}Bûrgol" />
+      <name name="{=aom_mordor_male_name_50}Grûbash" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_mordor_female_name_1}Gûlsha" />
+      <name name="{=aom_mordor_female_name_2}Krûmsha" />
+      <name name="{=aom_mordor_female_name_3}Dûrgha" />
+      <name name="{=aom_mordor_female_name_4}Mûrzag" />
+      <name name="{=aom_mordor_female_name_5}Skûlga" />
+      <name name="{=aom_mordor_female_name_6}Bûrzha" />
+      <name name="{=aom_mordor_female_name_7}Ghâsha" />
+      <name name="{=aom_mordor_female_name_8}Thrâkna" />
+      <name name="{=aom_mordor_female_name_9}Grûsha" />
+      <name name="{=aom_mordor_female_name_10}Ûrgha" />
+      <name name="{=aom_mordor_female_name_11}Lûgsha" />
+      <name name="{=aom_mordor_female_name_12}Gorbûl" />
+      <name name="{=aom_mordor_female_name_13}Nûrzha" />
+      <name name="{=aom_mordor_female_name_14}Pushga" />
+      <name name="{=aom_mordor_female_name_15}Shagra" />
+      <name name="{=aom_mordor_female_name_16}Moksha" />
+      <name name="{=aom_mordor_female_name_17}Dûshla" />
+      <name name="{=aom_mordor_female_name_18}Krimlûg" />
+      <name name="{=aom_mordor_female_name_19}Tharûga" />
+      <name name="{=aom_mordor_female_name_20}Gorsha" />
+      <name name="{=aom_mordor_female_name_21}Bûlgha" />
+      <name name="{=aom_mordor_female_name_22}Skûrna" />
+      <name name="{=aom_mordor_female_name_23}Ghûlna" />
+      <name name="{=aom_mordor_female_name_24}Ûfsha" />
+      <name name="{=aom_mordor_female_name_25}Grimbûl" />
+      <name name="{=aom_mordor_female_name_26}Nârgha" />
+      <name name="{=aom_mordor_female_name_27}Kûlsha" />
+      <name name="{=aom_mordor_female_name_28}Dûrbha" />
+      <name name="{=aom_mordor_female_name_29}Glûbna" />
+      <name name="{=aom_mordor_female_name_30}Tharkûl" />
+      <name name="{=aom_mordor_female_name_31}Mûgsha" />
+      <name name="{=aom_mordor_female_name_32}Shrâkla" />
+      <name name="{=aom_mordor_female_name_33}Orghûl" />
+      <name name="{=aom_mordor_female_name_34}Bûrgna" />
+      <name name="{=aom_mordor_female_name_35}Gâshla" />
+      <name name="{=aom_mordor_female_name_36}Krûsha" />
+      <name name="{=aom_mordor_female_name_37}Lûrgha" />
+      <name name="{=aom_mordor_female_name_38}Dûgsha" />
+      <name name="{=aom_mordor_female_name_39}Skûlba" />
+      <name name="{=aom_mordor_female_name_40}Ghârbna" />
+      <name name="{=aom_mordor_female_name_41}Nûrgha" />
+      <name name="{=aom_mordor_female_name_42}Thrûsha" />
+      <name name="{=aom_mordor_female_name_43}Ûlgna" />
+      <name name="{=aom_mordor_female_name_44}Gûrbla" />
+      <name name="{=aom_mordor_female_name_45}Bûshga" />
+      <name name="{=aom_mordor_female_name_46}Krûgha" />
+      <name name="{=aom_mordor_female_name_47}Sharûl" />
+      <name name="{=aom_mordor_female_name_48}Mûrsha" />
+      <name name="{=aom_mordor_female_name_49}Dûrgla" />
+      <name name="{=aom_mordor_female_name_50}Gûlbna" />
+    </female_names>
+    <clan_names>
+      <name name="{=aom_mordor_clan_1}Red Eye Legion" />
+      <name name="{=aom_mordor_clan_2}Morgul Rats" />
+      <name name="{=aom_mordor_clan_3}Black Uruks" />
+      <name name="{=aom_mordor_clan_4}Tower Guard" />
+      <name name="{=aom_mordor_clan_5}Gorgoroth Warband" />
+      <name name="{=aom_mordor_clan_6}Cirith Ungol Pack" />
+      <name name="{=aom_mordor_clan_7}Ash Mountain Tribe" />
+      <name name="{=aom_mordor_clan_8}Nûrn Slaves" />
+      <name name="{=aom_mordor_clan_9}Lithlad Reavers" />
+      <name name="{=aom_mordor_clan_10}Iron Crown" />
+      <name name="{=aom_mordor_clan_11}Udûn Horde" />
+      <name name="{=aom_mordor_clan_12}Shadow Host" />
+      <name name="{=aom_mordor_clan_13}Barad-dûr Guard" />
+      <name name="{=aom_mordor_clan_14}Mount Doom Forge" />
+      <name name="{=aom_mordor_clan_15}Durthang Garrison" />
+    </clan_names>
+    <cultural_feats>
+      <feat id="empire_decreased_garrison_wage" />
+      <feat id="empire_army_influence" />
+      <feat id="empire_slower_hearth_production" />
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_empire_0" />
+      <template name="NPCCharacter.spc_notable_empire_0b" />
+      <template name="NPCCharacter.spc_notable_empire_1" />
+      <template name="NPCCharacter.spc_notable_empire_1b" />
+      <template name="NPCCharacter.spc_notable_empire_2" />
+      <template name="NPCCharacter.spc_notable_empire_2b" />
+      <template name="NPCCharacter.spc_notable_empire_3" />
+      <template name="NPCCharacter.spc_notable_empire_3b" />
+      <template name="NPCCharacter.spc_notable_empire_4" />
+      <template name="NPCCharacter.spc_notable_empire_4b" />
+      <template name="NPCCharacter.spc_notable_empire_5" />
+      <template name="NPCCharacter.spc_notable_empire_6" />
+      <template name="NPCCharacter.spc_notable_empire_7" />
+      <template name="NPCCharacter.spc_notable_empire_8" />
+      <template name="NPCCharacter.spc_notable_empire_9" />
+      <template name="NPCCharacter.spc_notable_empire_10" />
+      <template name="NPCCharacter.spc_notable_empire_11" />
+      <template name="NPCCharacter.spc_notable_empire_12" />
+      <template name="NPCCharacter.spc_notable_empire_13" />
+      <template name="NPCCharacter.spc_notable_empire_21" />
+      <template name="NPCCharacter.spc_notable_empire_22" />
+      <template name="NPCCharacter.spc_notable_empire_gl1" />
+      <template name="NPCCharacter.spc_notable_empire_gl4" />
+      <template name="NPCCharacter.spc_empire_headman_1" />
+      <template name="NPCCharacter.spc_empire_headman_2" />
+      <template name="NPCCharacter.spc_empire_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
+      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.sword_sisters_sister_t3" />
+    </basic_mercenary_troops>
+  </Culture>
+
 </SPCultures>
