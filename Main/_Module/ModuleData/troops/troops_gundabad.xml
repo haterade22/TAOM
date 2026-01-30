@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
-
     <NPCCharacter
         id="gundabad_snaga"
+        race="pale_uruk"
         default_group="Infantry"
         level="6"
         name="{=aom_gundabad_snaga_name}[Gundabad] Snaga"
@@ -69,6 +69,7 @@
 
     <NPCCharacter
         id="gundabad_hunter"
+        race="pale_uruk"
         default_group="Ranged"
         level="11"
         name="{=aom_gundabad_hunter_name}[Gundabad] Hunter"
@@ -142,6 +143,7 @@
 
     <NPCCharacter
         id="gundabad_grunt"
+        race="pale_uruk"
         default_group="Infantry"
         level="11"
         name="{=aom_gundabad_grunt_name}[Gundabad] Grunt"
@@ -209,6 +211,7 @@
 
     <NPCCharacter
         id="gundabad_warg_tamer"
+        race="pale_uruk"
         default_group="Cavalry"
         level="16"
         name="{=aom_gundabad_warg_tamer_name}[Gundabad] Warg-Tamer"
@@ -291,6 +294,7 @@
 
     <NPCCharacter
         id="gundabad_tracker"
+        race="pale_uruk"
         default_group="Cavalry"
         level="21"
         name="{=aom_gundabad_tracker_name}[Gundabad] Tracker"
@@ -371,6 +375,7 @@
 
     <NPCCharacter
         id="gundabad_scout"
+        race="pale_uruk"
         default_group="HorseArcher"
         level="21"
         name="{=aom_gundabad_scout_name}[Gundabad] Scout"
@@ -451,6 +456,7 @@
 
     <NPCCharacter
         id="gundabad_warg_warrior"
+        race="pale_uruk"
         default_group="Cavalry"
         level="26"
         name="{=aom_gundabad_warg_warrior_name}[Gundabad] Warg-Warrior"
@@ -531,6 +537,7 @@
 
     <NPCCharacter
         id="gundabad_dread_rider_of_the_tower"
+        race="pale_uruk"
         default_group="Cavalry"
         level="31"
         name="{=aom_gundabad_dread_rider_of_the_tower_name}[Gundabad] Dread-Rider of the Tower"
@@ -608,6 +615,7 @@
 
     <NPCCharacter
         id="gundabad_despoiler_of_the_vale"
+        race="pale_uruk"
         default_group="HorseArcher"
         level="26"
         name="{=aom_gundabad_despoiler_of_the_vale_name}[Gundabad] Despoiler of the Vale"
@@ -688,6 +696,7 @@
 
     <NPCCharacter
         id="gundabad_lurker"
+        race="pale_uruk"
         default_group="Ranged"
         level="16"
         name="{=aom_gundabad_lurker_name}[Gundabad] Lurker"
@@ -765,6 +774,7 @@
 
     <NPCCharacter
         id="gundabad_sentry"
+        race="pale_uruk"
         default_group="Ranged"
         level="21"
         name="{=aom_gundabad_sentry_name}[Gundabad] Sentry"
@@ -842,6 +852,7 @@
 
     <NPCCharacter
         id="gundabad_archer"
+        race="pale_uruk"
         default_group="Ranged"
         level="26"
         name="{=aom_gundabad_archer_name}[Gundabad] Archer"
@@ -916,6 +927,7 @@
 
     <NPCCharacter
         id="gundabad_fighter"
+        race="pale_uruk"
         default_group="Infantry"
         level="16"
         name="{=aom_gundabad_fighter_name}[Gundabad] Fighter"
@@ -989,6 +1001,7 @@
 
     <NPCCharacter
         id="gundabad_guard"
+        race="pale_uruk"
         default_group="Infantry"
         level="16"
         name="{=aom_gundabad_guard_name}[Gundabad] Guard"
@@ -1062,6 +1075,7 @@
 
     <NPCCharacter
         id="gundabad_brute"
+        race="pale_uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_gundabad_brute_name}[Gundabad] Brute"
@@ -1133,6 +1147,7 @@
 
     <NPCCharacter
         id="gundabad_berserker"
+        race="pale_uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_gundabad_berserker_name}[Gundabad] Berserker"
@@ -1204,6 +1219,7 @@
 
     <NPCCharacter
         id="gundabad_veteran_berserker"
+        race="pale_uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_gundabad_veteran_berserker_name}[Gundabad] Veteran Berserker"
@@ -1275,6 +1291,7 @@
 
     <NPCCharacter
         id="gundabad_champion"
+        race="pale_uruk"
         default_group="Infantry"
         level="36"
         name="{=aom_gundabad_champion_name}[Gundabad] Azog's Champion"
@@ -1343,6 +1360,7 @@
 
     <NPCCharacter
         id="gundabad_sword_warrior"
+        race="pale_uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_gundabad_sword_warrior_name}[Gundabad] Sword-Warrior"
@@ -1414,6 +1432,7 @@
 
     <NPCCharacter
         id="gundabad_veteran_sword_warrior"
+        race="pale_uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_gundabad_veteran_sword_warrior_name}[Gundabad] Veteran Sword-Warrior"
@@ -1485,6 +1504,7 @@
 
     <NPCCharacter
         id="gundabad_chosen_of_tharzog"
+        race="pale_uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Chosen of Tharzog"
@@ -1553,6 +1573,7 @@
 
     <NPCCharacter
         id="gundabad_spear_warrior"
+        race="pale_uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_gundabad_spear_warrior_name}[Gundabad] Spear-Warrior"
@@ -1627,6 +1648,7 @@
 
     <NPCCharacter
         id="gundabad_veteran_spear_warrior"
+        race="pale_uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_gundabad_veteran_spear_warrior_name}[Gundabad] Veteran Spear-Warrior"
@@ -1701,6 +1723,7 @@
 
     <NPCCharacter
         id="gundabad_guardian_of_the_tower"
+        race="pale_uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_gundabad_guardian_of_the_tower_name}[Gundabad] Guardian of the Tower"
@@ -1772,6 +1795,7 @@
 
     <NPCCharacter
         id="gundabad_pike_warrior"
+        race="pale_uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_gundabad_pike_warrior_name}[Gundabad] Pike-Warrior"
@@ -1846,6 +1870,7 @@
 
     <NPCCharacter
         id="gundabad_veteran_pike_warrior"
+        race="pale_uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_gundabad_veteran_pike_warrior_name}[Gundabad] Veteran Pike Warrior"

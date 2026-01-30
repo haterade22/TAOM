@@ -9,7 +9,9 @@
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM/**)",
       "Bash(Remove-Item \"c:\\\\Users\\\\mikew\\\\source\\\\repos\\\\TAOM\\\\Main\\\\_Module\\\\ModuleData\\\\splords.xslt\")",
       "Bash(findstr:*)",
-      "Bash(ilspycmd:*)"
+      "Bash(ilspycmd:*)",
+      "Bash(Select-String -Pattern \"\\(error|warning|Build succeeded|Build FAILED\\)\")",
+      "Bash(ForEach-Object { $_Line })"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",

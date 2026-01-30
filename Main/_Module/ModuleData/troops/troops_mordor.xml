@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
     <!--Mordor Regular Line-->
     <NPCCharacter
         id="mordor_uruk_grunt"
+        race="uruk"
         default_group="Infantry"
         level="6"
         name="{=aom_mordor_uruk_grunt_name}[Mordor] Orc Grunt"
@@ -156,6 +157,7 @@
     <!--Black Uruk Line-->
     <NPCCharacter
         id="mordor_uruk_warrior"
+        race="uruk"
         default_group="Infantry"
         level="11"
         name="{=aom_mordor_uruk_warrior_name}[Mordor] Black Uruk Warrior"
@@ -303,6 +305,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_feller"
+        race="uruk"
         default_group="Infantry"
         level="16"
         name="{=aom_mordor_uruk_feller_name}[Mordor] Black Uruk Feller"
@@ -465,6 +468,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_ravager"
+        race="uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_mordor_uruk_ravager_name}[Mordor] Black Uruk Ravager"
@@ -610,6 +614,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_executioner"
+        race="uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_mordor_uruk_executioner_name}[Mordor] Black Uruk Executioner"
@@ -755,6 +760,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_darkblade"
+        race="uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_mordor_uruk_darkblade_name}[Mordor] Black Uruk Darkblade"
@@ -898,6 +904,7 @@
     <!--Mordor Uruk Halberds-->
     <NPCCharacter
         id="mordor_uruk_halberdier"
+        race="uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_mordor_uruk_halberdier_name}[Mordor] Black Uruk Halberdier"
@@ -1058,6 +1065,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_reaper"
+        race="uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_mordor_uruk_reaper_name}[Mordor] Black Uruk Reaper"
@@ -1218,6 +1226,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_deathwarden"
+        race="uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_mordor_uruk_deathwarden_name}[Mordor] Black Uruk Deathwarden"
@@ -1376,6 +1385,7 @@
     <!--Black Uruk Archer Lines-->
     <NPCCharacter
         id="mordor_uruk_scout"
+        race="uruk"
         default_group="Ranged"
         level="11"
         name="{=aom_mordor_uruk_scout_name}[Mordor] Black Uruk Hunter"
@@ -1527,6 +1537,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_archer"
+        race="uruk"
         default_group="Ranged"
         level="16"
         name="{=aom_mordor_uruk_archer_name}[Mordor] Black Uruk Archer"
@@ -1672,6 +1683,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_marksman"
+        race="uruk"
         default_group="Ranged"
         level="21"
         name="{=aom_mordor_uruk_marksman_name}[Mordor] Black Uruk Marksman"
@@ -1827,6 +1839,7 @@
     <!--Black Uruk Sword & Shield -->
     <NPCCharacter
         id="mordor_uruk_raider"
+        race="uruk"
         default_group="Infantry"
         level="16"
         name="{=aom_mordor_uruk_raider_name}[Mordor] Black Uruk Raider"
@@ -1974,6 +1987,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_shieldbearer"
+        race="uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_mordor_uruk_shieldbearer_name}[Mordor] Black Uruk Shieldbearer"
@@ -2119,6 +2133,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_infantry"
+        race="uruk"
         default_group="Infantry"
         level="21"
         name="{=aom_mordor_uruk_infantry_name}[Mordor] Black Uruk Infantry"
@@ -2350,6 +2365,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_vanguard"
+        race="uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_mordor_uruk_vanguard_name}[Mordor] Black Uruk Vanguard"
@@ -2581,6 +2597,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_shieldguard"
+        race="uruk"
         default_group="Infantry"
         level="26"
         name="{=aom_mordor_uruk_shieldguard_name}[Mordor] Black Uruk Shield Guard"
@@ -2741,6 +2758,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_captain"
+        race="uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_mordor_uruk_captain_name}[Mordor] Black Uruk Captain"
@@ -2898,6 +2916,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_uruk_baraddurguard"
+        race="uruk"
         default_group="Infantry"
         level="31"
         name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-Dur Guard"
@@ -3057,7 +3076,7 @@
         id="mordor_black_numenorean"
         default_group="Infantry"
         level="31"
-        name="{=aom_mordor_black_numenorean_name}[Mordor] Black NÃºmenÃ³rean Marshal"
+        name="{=aom_mordor_black_numenorean_name}[Mordor] Black NÃƒÂºmenÃƒÂ³rean Marshal"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
@@ -3122,6 +3141,7 @@
     <!--Orc-->
     <NPCCharacter
         id="mordor_orc_warrior"
+        race="orc"
         default_group="Infantry"
         level="11"
         name="{=aom_mordor_orc_warrior_name}[Mordor] Orc Warrior"
@@ -3189,6 +3209,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_orc_warbrute"
+        race="orc"
         default_group="Infantry"
         level="16"
         name="{=aom_mordor_orc_warbrute_name}[Mordor] Orc Warbrute"
@@ -3256,6 +3277,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="mordor_orc_blackguard"
+        race="orc"
         default_group="Infantry"
         level="21"
         name="{=aom_mordor_orc_blackguard_name}[Mordor] Orc Black Guard"
@@ -3320,6 +3342,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="cave_troll"
+        race="cave_troll"
         default_group="Infantry"
         level="51"
         is_basic_troop="true"

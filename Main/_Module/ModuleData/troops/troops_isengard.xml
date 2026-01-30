@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <NPCCharacters>
 
     <NPCCharacter
         id="urukhai_recruit"
+        race="uruk_hai"
         default_group="Infantry"
         level="6"
         name="{=aom_urukhai_recruit_name}[Isengard] Uruk-Hai Recruit"
@@ -155,6 +156,7 @@
 
     <NPCCharacter
         id="urukhai_fighter"
+        race="uruk_hai"
         default_group="Infantry"
         level="11"
         name="{=aom_urukhai_fighter_name}[Isengard] Uruk-Hai Fighter"
@@ -303,6 +305,7 @@
 
     <NPCCharacter
         id="orc_warg_scout"
+        race="uruk_hai"
         default_group="Cavalry"
         level="11"
         name="{=aom_orc_warg_scout_name}[Isengard] Orc Warg-Rider Scout"
@@ -479,6 +482,7 @@
 
     <NPCCharacter
         id="urukhai_scout"
+        race="uruk_hai"
         default_group="Ranged"
         level="11"
         name="{=aom_urukhai_scout_name}[Isengard] Uruk-Hai Scout"
@@ -642,6 +646,7 @@
 
     <NPCCharacter
         id="urukhai_warrior"
+        race="uruk_hai"
         default_group="Infantry"
         level="16"
         name="{=aom_urukhai_warrior_name}[Isengard] Uruk-Hai Warrior"
@@ -805,6 +810,7 @@
 
     <NPCCharacter
         id="urukhai_feller"
+        race="uruk_hai"
         default_group="Infantry"
         level="16"
         name="{=aom_urukhai_feller_name}[Isengard] Uruk-Hai Feller"
@@ -951,6 +957,7 @@
 
     <NPCCharacter
         id="orc_warg_overseer"
+        race="uruk_hai"
         default_group="Cavalry"
         level="16"
         name="{=aom_orc_warg_overseer_name}[Isengard] Orc Warg-Rider Overseer"
@@ -1142,6 +1149,7 @@
 
     <NPCCharacter
         id="urukhai_skirmisher"
+        race="uruk_hai"
         default_group="Ranged"
         level="16"
         name="{=aom_urukhai_skirmisher_name}[Isengard] Uruk-Hai Skirmisher"
@@ -1318,6 +1326,7 @@
 
     <NPCCharacter
         id="urukhai_hunter"
+        race="uruk_hai"
         default_group="Ranged"
         level="16"
         name="{=aom_urukhai_hunter_name}[Isengard] Uruk-Hai Hunter"
@@ -1494,6 +1503,7 @@
 
     <NPCCharacter
         id="orc_warg_enforcer"
+        race="uruk_hai"
         default_group="Cavalry"
         level="21"
         name="{=aom_orc_warg_enforcer_name}[Isengard] Orc Warg-Rider Enforcer"
@@ -1685,6 +1695,7 @@
 
     <NPCCharacter
         id="urukhai_spearman"
+        race="uruk_hai"
         default_group="Infantry"
         level="21"
         name="{=aom_urukhai_spearman_name}[Isengard] Uruk-Hai Spearman"
@@ -1863,6 +1874,7 @@
 
     <NPCCharacter
         id="urukhai_swordman"
+        race="uruk_hai"
         default_group="Infantry"
         level="21"
         name="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordman"
@@ -2026,6 +2038,7 @@
 
     <NPCCharacter
         id="urukhai_slayer"
+        race="uruk_hai"
         default_group="Infantry"
         level="21"
         name="{=aom_urukhai_slayer_name}[Isengard] Uruk-Hai Slayer"
@@ -2172,6 +2185,7 @@
 
     <NPCCharacter
         id="urukhai_tracker"
+        race="uruk_hai"
         default_group="Ranged"
         level="21"
         name="{=aom_urukhai_tracker_name}[Isengard] Uruk-Hai Tracker"
@@ -2348,6 +2362,7 @@
 
     <NPCCharacter
         id="urukhai_arbalest"
+        race="uruk_hai"
         default_group="Ranged"
         level="21"
         name="{=aom_urukhai_arbalest_name}[Isengard] Uruk-Hai Arbalest"
@@ -2524,6 +2539,7 @@
 
     <NPCCharacter
         id="orc_warg_lieutenant"
+        race="uruk_hai"
         default_group="Cavalry"
         level="26"
         name="{=aom_orc_warg_lieutenant_name}[Isengard] Orc Warg-Rider Lieutenant"
@@ -2727,6 +2743,7 @@
 
     <NPCCharacter
         id="urukhai_pikeman"
+        race="uruk_hai"
         default_group="Infantry"
         level="26"
         name="{=aom_urukhai_pikeman_name}[Isengard] Uruk-Hai Pikeman"
@@ -2888,6 +2905,7 @@
 
     <NPCCharacter
         id="urukhai_veteranspearman"
+        race="uruk_hai"
         default_group="Infantry"
         level="26"
         name="{=aom_urukhai_veteranspearman_name}[Isengard] Uruk-Hai Veteran Spearman"
@@ -3064,6 +3082,7 @@
 
     <NPCCharacter
         id="urukhai_infantry"
+        race="uruk_hai"
         default_group="Infantry"
         level="26"
         name="{=aom_urukhai_infantry_name}[Isengard] Uruk-Hai Infantry"
@@ -3225,6 +3244,7 @@
 
     <NPCCharacter
         id="urukhai_champion"
+        race="uruk_hai"
         default_group="Infantry"
         level="26"
         name="{=aom_urukhai_champion_name}[Isengard] Uruk-Hai Champion"
@@ -3356,6 +3376,7 @@
 
     <NPCCharacter
         id="urukhai_reaver"
+        race="uruk_hai"
         default_group="Infantry"
         level="26"
         name="{=aom_urukhai_reaver_name}[Isengard] Uruk-Hai Reaver"
@@ -3421,6 +3442,7 @@
 
     <NPCCharacter
         id="urukhai_archer"
+        race="uruk_hai"
         default_group="Ranged"
         level="26"
         name="{=aom_urukhai_archer_name}[Isengard] Uruk-Hai Archer"
@@ -3498,6 +3520,7 @@
 
     <NPCCharacter
         id="urukhai_crossbowman"
+        race="uruk_hai"
         default_group="Ranged"
         level="26"
         name="{=aom_urukhai_crossbowman_name}[Isengard] Uruk-Hai Crossbowman"
@@ -3674,6 +3697,7 @@
 
     <NPCCharacter
         id="urukhai_berserker"
+        race="berserker"
         default_group="Infantry"
         level="31"
         name="{=aom_urukhai_berserker_name}[Isengard] Uruk-Hai Berserker"
@@ -3820,6 +3844,7 @@
 
     <NPCCharacter
         id="urukhai_chosenmarksman"
+        race="uruk_hai"
         default_group="Ranged"
         level="31"
         name="{=aom_urukhai_chosenmarksman_name}[Isengard] Uruk-Hai Chosen Marksman"
@@ -3894,6 +3919,7 @@
 
     <NPCCharacter
         id="urukhai_veterancrossbowman"
+        race="uruk_hai"
         default_group="Ranged"
         level="31"
         name="{=aom_urukhai_veterancrossbowman_name}[Isengard] Uruk-Hai Veteran Crossbowman"
@@ -4082,6 +4108,7 @@
 
     <NPCCharacter
         id="urukhai_veteranpikeman"
+        race="uruk_hai"
         default_group="Infantry"
         level="31"
         name="{=aom_urukhai_veteranpikeman_name}[Isengard] Uruk-Hai Veteran Pikeman"
@@ -4240,6 +4267,7 @@
 
     <NPCCharacter
         id="urukhai_pavise"
+        race="uruk_hai"
         default_group="Infantry"
         level="31"
         name="{=aom_urukhai_pavise_name}[Isengard] Uruk-Hai Pavise Guard"
@@ -4413,6 +4441,7 @@
 
     <NPCCharacter
         id="urukhai_veteraninfantry"
+        race="uruk_hai"
         default_group="Infantry"
         level="31"
         name="{=aom_urukhai_veteraninfantry_name}[Isengard] Champions of the White Hand"
@@ -4571,6 +4600,7 @@
 
     <NPCCharacter
         id="urukhai_nazg_hai"
+        race="berserker"
         default_group="Infantry"
         level="36"
         name="{=aom_urukhai_nazg_hai_name}[Isengard] Uruk-Hai Nazg-hai"
@@ -4729,6 +4759,7 @@
 
     <NPCCharacter
         id="orthanc_chosen"
+        race="uruk_hai"
         default_group="Infantry"
         level="26"
         name="{=aom_orthanc_chosen_name}[Isengard] Orthanc Chosen"
@@ -4801,6 +4832,7 @@
 
     <NPCCharacter
         id="orthanc_guard"
+        race="uruk_hai"
         default_group="Infantry"
         level="31"
         name="{=aom_orthanc_guard_name}[Isengard] Orthanc Guard"
@@ -4872,6 +4904,7 @@
 
     <NPCCharacter
         id="orthanc_warden"
+        race="uruk_hai"
         default_group="Infantry"
         level="36"
         name="{=aom_orthanc_warden_name}[Isengard] Orthanc Warden"
@@ -4943,6 +4976,7 @@
 
     <NPCCharacter
         id="orthanc_bodyguard"
+        race="uruk_hai"
         default_group="Infantry"
         level="41"
         name="{=aom_orthanc_bodyguard_name}[Isengard] Orthanc Bodyguard"
