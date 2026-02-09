@@ -25,6 +25,7 @@ $RegionConfig = @{
     'B'  = @{ Culture = 'Culture.battania';   SceneBase = 'battania'; OwnerPrefix = 'Faction.clan_battania' }
     'DG' = @{ Culture = 'Culture.dolguldur';  SceneBase = 'empire';   OwnerPrefix = 'Faction.clan_dolguldur' }
     'E'  = @{ Culture = 'Culture.erebor';     SceneBase = 'sturgia';  OwnerPrefix = 'Faction.clan_erebor' }
+    'FH' = @{ Culture = 'Culture.aserai';     SceneBase = 'aserai';   OwnerPrefix = 'Faction.clan_aserai' }
     'EN' = @{ Culture = 'Culture.empire';     SceneBase = 'empire';   OwnerPrefix = 'Faction.clan_empire_north' }
     'ES' = @{ Culture = 'Culture.empire';     SceneBase = 'empire';   OwnerPrefix = 'Faction.clan_empire_south' }
     'EW' = @{ Culture = 'Culture.gondor';     SceneBase = 'empire';   OwnerPrefix = 'Faction.clan_empire_west' }
@@ -416,7 +417,7 @@ $entityList = $sceneEntities.GetEnumerator() | ForEach-Object {
 }
 
 # Sort regions
-$regionOrder = @('EN','ES','EW','A','B','V','K','S','DG','E','G','I','L','M','R','RU','U')
+$regionOrder = @('EN','ES','EW','A','FH','B','V','K','S','DG','E','G','I','L','M','R','RU','U')
 $processedRegions = @{}
 
 # Track how many settlements carry over vs new
@@ -451,6 +452,7 @@ foreach ($region in $regionOrder) {
         'S'  { 'STURGIA (Dale/North)' }
         'DG' { 'DOL GULDUR' }
         'E'  { 'EREBOR' }
+        'FH' { 'FAR HARAD' }
         'G'  { 'GUNDABAD' }
         'I'  { 'ISENGARD' }
         'L'  { 'LOTHLORIEN' }

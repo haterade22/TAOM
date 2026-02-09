@@ -38,6 +38,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Secure sensitive data | [security.md](./docs/ai-includes/security.md) |
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 | v1.3 API changes | [migration/](./docs/migration/) |
+| Use agent teams for parallel work | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
 
 ## Key Paths
 
@@ -107,6 +108,20 @@ Before implementing, verify:
 - Event timing (when events fire vs when state changes)
 - Null handling expectations (does TaleWorlds expect `TextObject.Empty` vs `null`?)
 - Collection modification safety (iterate over `.ToList()` copy)
+
+## Agent Teams
+
+Use agent teams when work can be parallelized across independent directories. See [agent-teams.md](./docs/ai-includes/agent-teams.md) for the full guide.
+
+**When to use:** parallel feature work (independent `Features/` dirs), research + implementation, C# + XML/XSLT, multi-aspect code review, large refactors across multiple features.
+
+**When NOT to use:** single-file changes, sequential tasks, multiple agents editing the same file, trivial fixes.
+
+**Rules:**
+- All Critical Rules (TDD, adapters, research-first) apply to **every teammate**
+- `IoC.cs` and `SubModule.cs` are single-owner files — lead integrates last
+- Never run `./build.ps1` from two agents simultaneously
+- Windows uses in-process mode (CLI flag: `--teammate-mode in-process`)
 
 ## Architecture (One-liner)
 
