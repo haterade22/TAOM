@@ -36,7 +36,7 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | ES (8) | castle_ES1, castle_ES2, castle_ES3, castle_ES4, castle_ES5, castle_ES6, castle_ES7, castle_ES8 |
 | EW (16) | castle_EW1, castle_EW2, castle_EW3, castle_EW4, castle_EW5, castle_EW6, castle_EW7, castle_EW8, castle_EW9, castle_EW10, castle_EW11, castle_EW12, castle_EW13, castle_EW14, castle_EW15, castle_EW16 |
 | G (5) | castle_G1, castle_G2, castle_G3, castle_G4, castle_G5 |
-| I (2) | castle_I1, castle_I2 |
+| I (3) | castle_I1, castle_I2, castle_orthanc_gate |
 | K (9) | castle_K1, castle_K2, castle_K3, castle_K4, castle_K5, castle_K6, castle_K7, castle_K8, castle_K9 |
 | L (3) | castle_L1, castle_L2, castle_L3 |
 | M (5) | castle_M1, castle_M2, castle_M3, castle_M4, castle_M5 |
@@ -64,7 +64,7 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | R (4) | village_R1_1, village_R1_2, village_R1_3, village_R1_4 |
 | S (16) | village_S1_1, village_S1_3, village_S2_1, village_S2_2, village_S3_1, village_S3_2, village_S4_1, village_S4_3, village_S4_4, village_S5_1, village_S5_2, village_S6_1, village_S6_2, village_S6_3, village_S7_1, village_S7_2 |
 | U (8) | village_U1_1, village_U1_2, village_U1_3, village_U1_4, village_U2_1, village_U2_2, village_U2_3a, village_U2_4 |
-| V (20) | village_V1_1, village_V1_2, village_V1_3, village_V2_1, village_V2_2, village_V3_1, village_V3_2, village_V3_3, village_V4_1, village_V4_2, village_V4_3, village_V5_1, village_V5_2, village_V6_1, village_V6_2, village_V6_3, village_V7_1, village_V7_2, village_V7_3 |
+| V (19) | village_V1_1, village_V1_2, village_V1_3, village_V2_1, village_V2_2, village_V3_1, village_V3_2, village_V3_3, village_V4_1, village_V4_2, village_V4_3, village_V5_1, village_V5_2, village_V6_1, village_V6_2, village_V6_3, village_V7_1, village_V7_2, village_V7_3 |
 
 ## castle_village_ (264 castle villages)
 
@@ -75,7 +75,7 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | DG (14) | castle_village_DG1_1, castle_village_DG1_2, castle_village_DG1_3, castle_village_DG2_1, castle_village_DG2_2, castle_village_DG2_3, castle_village_DG2_4, castle_village_DG3_1, castle_village_DG3_2, castle_village_DG3_3, castle_village_DG4_1, castle_village_DG4_2, castle_village_DG5_1, castle_village_DG5_2 |
 | E (2) | castle_village_E1_1, castle_village_E1_2 |
 | EN (13) | castle_village_EN3_1, castle_village_EN3_2, castle_village_EN3_3, castle_village_EN4_1, castle_village_EN4_2, castle_village_EN5_1, castle_village_EN5_2, castle_village_EN6_1, castle_village_EN6_2, castle_village_EN7_1, castle_village_EN7_2, castle_village_EN8_1, castle_village_EN8_2 |
-| ES (24) | castle_village_ES1_1, castle_village_ES1_2, castle_village_ES2_1, castle_village_ES2_2, castle_village_ES3_1, castle_village_ES3_2, castle_village_ES3_3, castle_village_ES4_1, castle_village_ES4_2, castle_village_ES4_3, castle_village_ES5_1, castle_village_ES5_2, castle_village_ES5_3, castle_village_ES5_4, castle_village_ES6_1, castle_village_ES6_2, castle_village_ES7_1, castle_village_ES7_2, castle_village_ES7_3, castle_village_ES8_1, castle_village_ES8_2, castle_village_ES8_3, castle_village_ES8_4 |
+| ES (23) | castle_village_ES1_1, castle_village_ES1_2, castle_village_ES2_1, castle_village_ES2_2, castle_village_ES3_1, castle_village_ES3_2, castle_village_ES3_3, castle_village_ES4_1, castle_village_ES4_2, castle_village_ES4_3, castle_village_ES5_1, castle_village_ES5_2, castle_village_ES5_3, castle_village_ES5_4, castle_village_ES6_1, castle_village_ES6_2, castle_village_ES7_1, castle_village_ES7_2, castle_village_ES7_3, castle_village_ES8_1, castle_village_ES8_2, castle_village_ES8_3, castle_village_ES8_4 |
 | EW (39) | castle_village_EW1_1, castle_village_EW1_2, castle_village_EW2_1, castle_village_EW2_2, castle_village_EW3_1, castle_village_EW3_2, castle_village_EW3_3, castle_village_EW4_1, castle_village_EW5_1, castle_village_EW5_2, castle_village_EW6_1, castle_village_EW6_2, castle_village_EW6_3, castle_village_EW6_4, castle_village_EW7_1, castle_village_EW7_2, castle_village_EW7_3, castle_village_EW7_4, castle_village_EW8_1, castle_village_EW8_2, castle_village_EW9_1, castle_village_EW9_2, castle_village_EW9_3, castle_village_EW9_4, castle_village_EW10_1, castle_village_EW10_2, castle_village_EW11_1, castle_village_EW11_2, castle_village_EW12_1, castle_village_EW12_2, castle_village_EW13_1, castle_village_EW13_2, castle_village_EW14_1, castle_village_EW15_1, castle_village_EW15_2, castle_village_EW15_3, castle_village_EW16_1, castle_village_EW16_2, castle_village_EW16_3 |
 | G (12) | castle_village_G1_1, castle_village_G1_2, castle_village_G2_1, castle_village_G2_2, castle_village_G2_3, castle_village_G3_1, castle_village_G3_2, castle_village_G3_4, castle_village_G5_1, castle_village_G5_2, castle_village_G5_3, castle_village_G5_4 |
 | I (7) | castle_village_isengard_a, castle_village_I1_1, castle_village_I1_2, castle_village_I1_3, castle_village_I2_1, castle_village_I2_2, castle_village_I2_3 |
