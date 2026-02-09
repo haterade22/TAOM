@@ -5069,7 +5069,7 @@
   <!-- ============================================== -->
   <!-- FAR HARAD -->
   <!-- ============================================== -->
-  <Settlement id="castle_FH1" name="{=Settlements.Settlement.name.castle_FH1}Castle FH1" owner="Faction.clan_aserai_1" posX="1568.636" posY="360.710" culture="Culture.aserai" gate_posX="1569.636" gate_posY="359.710">
+  <Settlement id="castle_FH1" name="{=Settlements.Settlement.name.castle_FH1}Castle FH1" owner="Faction.clan_aserai_1" posX="1568.636" posY="360.710" culture="Culture.aserai" gate_posX="1569.041" gate_posY="358.8014">
     <Components>
       <Town id="castle_comp_FH1" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5132,7 +5132,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH2" name="{=Settlements.Settlement.name.castle_FH2}Castle FH2" owner="Faction.clan_aserai_1" posX="1513.075" posY="306.474" culture="Culture.aserai" gate_posX="1514.075" gate_posY="305.474">
+  <Settlement id="castle_FH2" name="{=Settlements.Settlement.name.castle_FH2}Castle FH2" owner="Faction.clan_aserai_1" posX="1513.075" posY="306.474" culture="Culture.aserai" gate_posX="1514.139" gate_posY="308.8874">
     <Components>
       <Town id="castle_comp_FH2" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5195,7 +5195,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH3" name="{=Settlements.Settlement.name.castle_FH3}Castle FH3" owner="Faction.clan_aserai_1" posX="1589.284" posY="233.379" culture="Culture.aserai" gate_posX="1590.284" gate_posY="232.379">
+  <Settlement id="castle_FH3" name="{=Settlements.Settlement.name.castle_FH3}Castle FH3" owner="Faction.clan_aserai_1" posX="1589.284" posY="233.379" culture="Culture.aserai" gate_posX="1587.651" gate_posY="232.6865">
     <Components>
       <Town id="castle_comp_FH3" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5245,7 +5245,20 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH4" name="{=Settlements.Settlement.name.castle_FH4}Castle FH4" owner="Faction.clan_aserai_1" posX="1435.876" posY="203.662" culture="Culture.aserai" gate_posX="1436.876" gate_posY="202.662">
+  <Settlement id="castle_village_FH3_3" name="{=Settlements.Settlement.name.castle_village_FH3_3}Castle Village FH3_3" posX="1471.410" posY="252.824" culture="Culture.aserai">
+    <Components>
+      <Village id="castle_village_comp_FH3_3" village_type="VillageType.wheat_farm" hearth="350" bound="Settlement.castle_FH3" background_crop_position="0.0" background_mesh="gui_bg_village_aserai" wait_mesh="wait_aserai_village" castle_background_mesh="gui_bg_castle_aserai" />
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.village_complex">
+      <Location id="village_center" scene_name="aserai_village_b" />
+    </Locations>
+    <CommonAreas>
+      <Area type="Pasture" name="{=fOUsLdZR}Pasture" />
+      <Area type="Thicket" name="{=66Mzk0NZ}Thicket" />
+      <Area type="Bog" name="{=iXA5SttU}Bog" />
+    </CommonAreas>
+  </Settlement>
+  <Settlement id="castle_FH4" name="{=Settlements.Settlement.name.castle_FH4}Castle FH4" owner="Faction.clan_aserai_1" posX="1435.876" posY="203.662" culture="Culture.aserai" gate_posX="1436.982" gate_posY="201.697">
     <Components>
       <Town id="castle_comp_FH4" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5308,7 +5321,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH5" name="{=Settlements.Settlement.name.castle_FH5}Castle FH5" owner="Faction.clan_aserai_1" posX="1313.864" posY="234.519" culture="Culture.aserai" gate_posX="1314.864" gate_posY="233.519">
+  <Settlement id="castle_FH5" name="{=Settlements.Settlement.name.castle_FH5}Castle FH5" owner="Faction.clan_aserai_1" posX="1313.864" posY="234.519" culture="Culture.aserai" gate_posX="1315.519" gate_posY="235.7498">
     <Components>
       <Town id="castle_comp_FH5" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5371,7 +5384,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH6" name="{=Settlements.Settlement.name.castle_FH6}Castle FH6" owner="Faction.clan_aserai_1" posX="1263.601" posY="189.287" culture="Culture.aserai" gate_posX="1264.601" gate_posY="188.287">
+  <Settlement id="castle_FH6" name="{=Settlements.Settlement.name.castle_FH6}Castle FH6" owner="Faction.clan_aserai_1" posX="1263.601" posY="189.287" culture="Culture.aserai" gate_posX="1266.061" gate_posY="188.1382">
     <Components>
       <Town id="castle_comp_FH6" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5434,7 +5447,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH7" name="{=Settlements.Settlement.name.castle_FH7}Castle FH7" owner="Faction.clan_aserai_1" posX="1375.708" posY="98.475" culture="Culture.aserai" gate_posX="1376.708" gate_posY="97.475">
+  <Settlement id="castle_FH7" name="{=Settlements.Settlement.name.castle_FH7}Castle FH7" owner="Faction.clan_aserai_1" posX="1375.708" posY="98.475" culture="Culture.aserai" gate_posX="1377.162" gate_posY="97.04565">
     <Components>
       <Town id="castle_comp_FH7" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5497,7 +5510,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH8" name="{=Settlements.Settlement.name.castle_FH8}Castle FH8" owner="Faction.clan_aserai_1" posX="1299.732" posY="6.747" culture="Culture.aserai" gate_posX="1300.732" gate_posY="5.747">
+  <Settlement id="castle_FH8" name="{=Settlements.Settlement.name.castle_FH8}Castle FH8" owner="Faction.clan_aserai_1" posX="1299.732" posY="6.747" culture="Culture.aserai" gate_posX="1298.065" gate_posY="7.357516">
     <Components>
       <Town id="castle_comp_FH8" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5560,7 +5573,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH9" name="{=Settlements.Settlement.name.castle_FH9}Castle FH9" owner="Faction.clan_aserai_1" posX="1528.656" posY="19.734" culture="Culture.aserai" gate_posX="1529.656" gate_posY="18.734">
+  <Settlement id="castle_FH9" name="{=Settlements.Settlement.name.castle_FH9}Castle FH9" owner="Faction.clan_aserai_1" posX="1528.656" posY="19.734" culture="Culture.aserai" gate_posX="1528.187" gate_posY="22.34826">
     <Components>
       <Town id="castle_comp_FH9" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8406,7 +8419,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E2" name="{=Settlements.Settlement.name.castle_E2}Castle E2" owner="Faction.clan_erebor_1" posX="1047.276" posY="1261.836" culture="Culture.erebor" gate_posX="1048.276" gate_posY="1260.836">
+  <Settlement id="castle_E2" name="{=Settlements.Settlement.name.castle_E2}Castle E2" owner="Faction.clan_erebor_1" posX="1047.276" posY="1261.836" culture="Culture.erebor" gate_posX="1048.071" gate_posY="1260.078">
     <Components>
       <Town id="castle_comp_E2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8456,7 +8469,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E3" name="{=Settlements.Settlement.name.castle_E3}Castle E3" owner="Faction.clan_erebor_1" posX="1155.468" posY="1255.403" culture="Culture.erebor" gate_posX="1156.468" gate_posY="1254.403">
+  <Settlement id="castle_E3" name="{=Settlements.Settlement.name.castle_E3}Castle E3" owner="Faction.clan_erebor_1" posX="1155.468" posY="1255.403" culture="Culture.erebor" gate_posX="1156.262" gate_posY="1253.644">
     <Components>
       <Town id="castle_comp_E3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8506,7 +8519,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E4" name="{=Settlements.Settlement.name.castle_E4}Castle E4" owner="Faction.clan_erebor_1" posX="1135.151" posY="1177.938" culture="Culture.erebor" gate_posX="1136.151" gate_posY="1176.938">
+  <Settlement id="castle_E4" name="{=Settlements.Settlement.name.castle_E4}Castle E4" owner="Faction.clan_erebor_1" posX="1135.151" posY="1177.938" culture="Culture.erebor" gate_posX="1135.946" gate_posY="1176.179">
     <Components>
       <Town id="castle_comp_E4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8569,7 +8582,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E5" name="{=Settlements.Settlement.name.castle_E5}Castle E5" owner="Faction.clan_erebor_1" posX="1078.749" posY="1169.254" culture="Culture.erebor" gate_posX="1079.749" gate_posY="1168.254">
+  <Settlement id="castle_E5" name="{=Settlements.Settlement.name.castle_E5}Castle E5" owner="Faction.clan_erebor_1" posX="1078.749" posY="1169.254" culture="Culture.erebor" gate_posX="1079.544" gate_posY="1167.495">
     <Components>
       <Town id="castle_comp_E5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8632,7 +8645,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E6" name="{=Settlements.Settlement.name.castle_E6}Castle E6" owner="Faction.clan_erebor_1" posX="1242.823" posY="1184.943" culture="Culture.erebor" gate_posX="1243.823" gate_posY="1183.943">
+  <Settlement id="castle_E6" name="{=Settlements.Settlement.name.castle_E6}Castle E6" owner="Faction.clan_erebor_1" posX="1242.823" posY="1184.943" culture="Culture.erebor" gate_posX="1244.63" gate_posY="1183.701">
     <Components>
       <Town id="castle_comp_E6" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8682,7 +8695,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E7" name="{=Settlements.Settlement.name.castle_E7}Castle E7" owner="Faction.clan_erebor_1" posX="1105.004" posY="1116.879" culture="Culture.erebor" gate_posX="1106.004" gate_posY="1115.879">
+  <Settlement id="castle_E7" name="{=Settlements.Settlement.name.castle_E7}Castle E7" owner="Faction.clan_erebor_1" posX="1105.004" posY="1116.879" culture="Culture.erebor" gate_posX="1104.049" gate_posY="1116.874">
     <Components>
       <Town id="castle_comp_E7" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8745,7 +8758,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E8" name="{=Settlements.Settlement.name.castle_E8}Castle E8" owner="Faction.clan_erebor_1" posX="1215.741" posY="1111.895" culture="Culture.erebor" gate_posX="1216.741" gate_posY="1110.895">
+  <Settlement id="castle_E8" name="{=Settlements.Settlement.name.castle_E8}Castle E8" owner="Faction.clan_erebor_1" posX="1062.383" posY="1215.937" culture="Culture.erebor" gate_posX="1063.222" gate_posY="1217.352">
     <Components>
       <Town id="castle_comp_E8" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8769,7 +8782,7 @@
       <Location id="prison" scene_name="sturgia_dungeon_stealth" />
     </Locations>
   </Settlement>
-  <Settlement id="castle_village_E8_1" name="{=Settlements.Settlement.name.castle_village_E8_1}Castle Village E8_1" posX="1258.221" posY="1096.472" culture="Culture.erebor">
+  <Settlement id="castle_village_E8_1" name="{=Settlements.Settlement.name.castle_village_E8_1}Castle Village E8_1" posX="1087.498" posY="1213.014" culture="Culture.erebor">
     <Components>
       <Village id="castle_village_comp_E8_1" village_type="VillageType.wheat_farm" hearth="350" bound="Settlement.castle_E8" background_crop_position="0.0" background_mesh="gui_bg_village_sturgia" wait_mesh="wait_sturgia_village" castle_background_mesh="gui_bg_castle_sturgia" />
     </Components>
@@ -8782,7 +8795,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_village_E8_2" name="{=Settlements.Settlement.name.castle_village_E8_2}Castle Village E8_2" posX="1172.074" posY="1079.490" culture="Culture.erebor">
+  <Settlement id="castle_village_E8_2" name="{=Settlements.Settlement.name.castle_village_E8_2}Castle Village E8_2" posX="1126.389" posY="1225.907" culture="Culture.erebor">
     <Components>
       <Village id="castle_village_comp_E8_2" village_type="VillageType.cattle_farm" hearth="350" bound="Settlement.castle_E8" background_crop_position="0.0" background_mesh="gui_bg_village_sturgia" wait_mesh="wait_sturgia_village" castle_background_mesh="gui_bg_castle_sturgia" />
     </Components>
@@ -8795,12 +8808,62 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_village_E8_3" name="{=Settlements.Settlement.name.castle_village_E8_3}Castle Village E8_3" posX="1229.654" posY="1066.071" culture="Culture.erebor">
+  <Settlement id="castle_E9" name="{=Settlements.Settlement.name.castle_E9}Castle E9" owner="Faction.clan_erebor_1" posX="1215.741" posY="1111.895" culture="Culture.erebor" gate_posX="1216.741" gate_posY="1110.895">
     <Components>
-      <Village id="castle_village_comp_E8_3" village_type="VillageType.iron_mine" hearth="350" bound="Settlement.castle_E8" background_crop_position="0.0" background_mesh="gui_bg_village_sturgia" wait_mesh="wait_sturgia_village" castle_background_mesh="gui_bg_castle_sturgia" />
+      <Town id="castle_comp_E9" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
+          <Buildings>
+            <Building id="building_castle_fortifications" level="1" />
+            <Building id="building_castle_barracks" level="1" />
+            <Building id="building_castle_training_fields" level="1" />
+            <Building id="building_castle_guard_house" level="0" />
+            <Building id="building_castle_siege_workshop" level="0" />
+            <Building id="building_castle_castallans_office" level="1" />
+            <Building id="building_castle_granary" level="1" />
+            <Building id="building_castle_craftmans_quarters" level="0" />
+            <Building id="building_castle_farmlands" level="1" />
+            <Building id="building_castle_mason" level="0" />
+            <Building id="building_castle_roads_and_paths" level="1" />
+          </Buildings>
+      </Town>
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.castle_complex">
+      <Location id="center" scene_name="sturgia_castle_003" scene_name_1="sturgia_castle_003" scene_name_2="sturgia_castle_003" scene_name_3="sturgia_castle_003" />
+      <Location id="lordshall" scene_name_1="sturgia_castle_keep_a_l1_interior" scene_name_2="sturgia_castle_keep_a_l2_interior" scene_name_3="sturgia_castle_keep_a_l3_interior" />
+      <Location id="prison" scene_name="sturgia_dungeon_stealth" />
+    </Locations>
+  </Settlement>
+  <Settlement id="castle_village_E9_1" name="{=Settlements.Settlement.name.castle_village_E9_1}Castle Village E9_1" posX="1258.221" posY="1096.472" culture="Culture.erebor">
+    <Components>
+      <Village id="castle_village_comp_E9_1" village_type="VillageType.cattle_farm" hearth="350" bound="Settlement.castle_E9" background_crop_position="0.0" background_mesh="gui_bg_village_sturgia" wait_mesh="wait_sturgia_village" castle_background_mesh="gui_bg_castle_sturgia" />
     </Components>
     <Locations complex_template="LocationComplexTemplate.village_complex">
-      <Location id="village_center" scene_name="sturgia_village_h" />
+      <Location id="village_center" scene_name="sturgia_village_a" />
+    </Locations>
+    <CommonAreas>
+      <Area type="Pasture" name="{=fOUsLdZR}Pasture" />
+      <Area type="Thicket" name="{=66Mzk0NZ}Thicket" />
+      <Area type="Bog" name="{=iXA5SttU}Bog" />
+    </CommonAreas>
+  </Settlement>
+  <Settlement id="castle_village_E9_2" name="{=Settlements.Settlement.name.castle_village_E9_2}Castle Village E9_2" posX="1172.074" posY="1079.490" culture="Culture.erebor">
+    <Components>
+      <Village id="castle_village_comp_E9_2" village_type="VillageType.iron_mine" hearth="350" bound="Settlement.castle_E9" background_crop_position="0.0" background_mesh="gui_bg_village_sturgia" wait_mesh="wait_sturgia_village" castle_background_mesh="gui_bg_castle_sturgia" />
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.village_complex">
+      <Location id="village_center" scene_name="sturgia_village_b" />
+    </Locations>
+    <CommonAreas>
+      <Area type="Pasture" name="{=fOUsLdZR}Pasture" />
+      <Area type="Thicket" name="{=66Mzk0NZ}Thicket" />
+      <Area type="Bog" name="{=iXA5SttU}Bog" />
+    </CommonAreas>
+  </Settlement>
+  <Settlement id="castle_village_E9_3" name="{=Settlements.Settlement.name.castle_village_E9_3}Castle Village E9_3" posX="1229.654" posY="1066.071" culture="Culture.erebor">
+    <Components>
+      <Village id="castle_village_comp_E9_3" village_type="VillageType.fisherman" hearth="350" bound="Settlement.castle_E9" background_crop_position="0.0" background_mesh="gui_bg_village_sturgia" wait_mesh="wait_sturgia_village" castle_background_mesh="gui_bg_castle_sturgia" />
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.village_complex">
+      <Location id="village_center" scene_name="sturgia_village_c" />
     </Locations>
     <CommonAreas>
       <Area type="Pasture" name="{=fOUsLdZR}Pasture" />
@@ -10898,7 +10961,7 @@
   <!-- ============================================== -->
   <!-- RHUN -->
   <!-- ============================================== -->
-  <Settlement id="castle_RU1" name="{=Settlements.Settlement.name.castle_RU1}Castle RU1" owner="Faction.clan_khuzait_1" posX="965.547" posY="823.241" culture="Culture.khuzait" gate_posX="966.547" gate_posY="822.241">
+  <Settlement id="castle_RU1" name="{=Settlements.Settlement.name.castle_RU1}Castle RU1" owner="Faction.clan_khuzait_1" posX="965.547" posY="823.241" culture="Culture.khuzait" gate_posX="968.2759" gate_posY="823.0829">
     <Components>
       <Town id="castle_comp_RU1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10961,7 +11024,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU10" name="{=Settlements.Settlement.name.castle_RU10}Castle RU10" owner="Faction.clan_khuzait_1" posX="1325.597" posY="1083.378" culture="Culture.khuzait" gate_posX="1326.597" gate_posY="1082.378">
+  <Settlement id="castle_RU10" name="{=Settlements.Settlement.name.castle_RU10}Castle RU10" owner="Faction.clan_khuzait_1" posX="1325.597" posY="1083.378" culture="Culture.khuzait" gate_posX="1324.598" gate_posY="1081.845">
     <Components>
       <Town id="castle_comp_RU10" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11024,7 +11087,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU11" name="{=Settlements.Settlement.name.castle_RU11}Castle RU11" owner="Faction.clan_khuzait_1" posX="1397.017" posY="1002.132" culture="Culture.khuzait" gate_posX="1398.017" gate_posY="1001.132">
+  <Settlement id="castle_RU11" name="{=Settlements.Settlement.name.castle_RU11}Castle RU11" owner="Faction.clan_khuzait_1" posX="1397.017" posY="1002.132" culture="Culture.khuzait" gate_posX="1398.266" gate_posY="1000.541">
     <Components>
       <Town id="castle_comp_RU11" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11087,7 +11150,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU12" name="{=Settlements.Settlement.name.castle_RU12}Castle RU12" owner="Faction.clan_khuzait_1" posX="1506.584" posY="987.869" culture="Culture.khuzait" gate_posX="1507.584" gate_posY="986.869">
+  <Settlement id="castle_RU12" name="{=Settlements.Settlement.name.castle_RU12}Castle RU12" owner="Faction.clan_khuzait_1" posX="1506.584" posY="987.869" culture="Culture.khuzait" gate_posX="1504.452" gate_posY="986.5073">
     <Components>
       <Town id="castle_comp_RU12" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11150,7 +11213,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU2" name="{=Settlements.Settlement.name.castle_RU2}Castle RU2" owner="Faction.clan_khuzait_1" posX="1086.359" posY="791.655" culture="Culture.khuzait" gate_posX="1087.359" gate_posY="790.655">
+  <Settlement id="castle_RU2" name="{=Settlements.Settlement.name.castle_RU2}Castle RU2" owner="Faction.clan_khuzait_1" posX="1086.359" posY="791.655" culture="Culture.khuzait" gate_posX="1088.452" gate_posY="791.6071">
     <Components>
       <Town id="castle_comp_RU2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11213,7 +11276,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU3" name="{=Settlements.Settlement.name.castle_RU3}Castle RU3" owner="Faction.clan_khuzait_1" posX="1145.708" posY="838.490" culture="Culture.khuzait" gate_posX="1146.708" gate_posY="837.490">
+  <Settlement id="castle_RU3" name="{=Settlements.Settlement.name.castle_RU3}Castle RU3" owner="Faction.clan_khuzait_1" posX="1145.708" posY="838.490" culture="Culture.khuzait" gate_posX="1147.598" gate_posY="839.3608">
     <Components>
       <Town id="castle_comp_RU3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11276,7 +11339,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU4" name="{=Settlements.Settlement.name.castle_RU4}Castle RU4" owner="Faction.clan_khuzait_1" posX="1257.057" posY="816.524" culture="Culture.khuzait" gate_posX="1258.057" gate_posY="815.524">
+  <Settlement id="castle_RU4" name="{=Settlements.Settlement.name.castle_RU4}Castle RU4" owner="Faction.clan_khuzait_1" posX="1257.057" posY="816.524" culture="Culture.khuzait" gate_posX="1254.987" gate_posY="816.689">
     <Components>
       <Town id="castle_comp_RU4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11339,7 +11402,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU5" name="{=Settlements.Settlement.name.castle_RU5}Castle RU5" owner="Faction.clan_khuzait_1" posX="1379.628" posY="782.848" culture="Culture.khuzait" gate_posX="1380.628" gate_posY="781.848">
+  <Settlement id="castle_RU5" name="{=Settlements.Settlement.name.castle_RU5}Castle RU5" owner="Faction.clan_khuzait_1" posX="1379.628" posY="782.848" culture="Culture.khuzait" gate_posX="1379.986" gate_posY="785.416">
     <Components>
       <Town id="castle_comp_RU5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11402,7 +11465,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU6" name="{=Settlements.Settlement.name.castle_RU6}Castle RU6" owner="Faction.clan_khuzait_1" posX="1474.926" posY="862.833" culture="Culture.khuzait" gate_posX="1475.926" gate_posY="861.833">
+  <Settlement id="castle_RU6" name="{=Settlements.Settlement.name.castle_RU6}Castle RU6" owner="Faction.clan_khuzait_1" posX="1474.926" posY="862.833" culture="Culture.khuzait" gate_posX="1473.927" gate_posY="861.2996">
     <Components>
       <Town id="castle_comp_RU6" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11465,7 +11528,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU7" name="{=Settlements.Settlement.name.castle_RU7}Castle RU7" owner="Faction.clan_khuzait_1" posX="1303.341" posY="952.591" culture="Culture.khuzait" gate_posX="1304.341" gate_posY="951.591">
+  <Settlement id="castle_RU7" name="{=Settlements.Settlement.name.castle_RU7}Castle RU7" owner="Faction.clan_khuzait_1" posX="1303.341" posY="952.591" culture="Culture.khuzait" gate_posX="1305.425" gate_posY="952.7959">
     <Components>
       <Town id="castle_comp_RU7" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11528,7 +11591,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU8" name="{=Settlements.Settlement.name.castle_RU8}Castle RU8" owner="Faction.clan_khuzait_1" posX="1360.076" posY="929.906" culture="Culture.khuzait" gate_posX="1361.076" gate_posY="928.906">
+  <Settlement id="castle_RU8" name="{=Settlements.Settlement.name.castle_RU8}Castle RU8" owner="Faction.clan_khuzait_1" posX="1360.076" posY="929.906" culture="Culture.khuzait" gate_posX="1358.006" gate_posY="930.0709">
     <Components>
       <Town id="castle_comp_RU8" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11591,7 +11654,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU9" name="{=Settlements.Settlement.name.castle_RU9}Castle RU9" owner="Faction.clan_khuzait_1" posX="1209.028" posY="1012.308" culture="Culture.khuzait" gate_posX="1210.028" gate_posY="1011.308">
+  <Settlement id="castle_RU9" name="{=Settlements.Settlement.name.castle_RU9}Castle RU9" owner="Faction.clan_khuzait_1" posX="1209.028" posY="1012.308" culture="Culture.khuzait" gate_posX="1209.385" gate_posY="1014.876">
     <Components>
       <Town id="castle_comp_RU9" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11918,7 +11981,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU4" name="{=Settlements.Settlement.name.town_RU4}Town RU4" owner="Faction.clan_khuzait_1" posX="1279.545" posY="1079.959" culture="Culture.khuzait" gate_posX="1279.845" gate_posY="1076.959">
+  <Settlement id="town_RU4" name="{=Settlements.Settlement.name.town_RU4}Town RU4" owner="Faction.clan_khuzait_1" posX="1279.545" posY="1079.959" culture="Culture.khuzait" gate_posX="1276.032" gate_posY="1080.755">
     <Components>
       <Town id="town_comp_RU4" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12006,7 +12069,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU5" name="{=Settlements.Settlement.name.town_RU5}Town RU5" owner="Faction.clan_khuzait_1" posX="1434.032" posY="1036.455" culture="Culture.khuzait" gate_posX="1434.332" gate_posY="1033.455">
+  <Settlement id="town_RU5" name="{=Settlements.Settlement.name.town_RU5}Town RU5" owner="Faction.clan_khuzait_1" posX="1434.032" posY="1036.455" culture="Culture.khuzait" gate_posX="1436.045" gate_posY="1034.197">
     <Components>
       <Town id="town_comp_RU5" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12182,7 +12245,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU7" name="{=Settlements.Settlement.name.town_RU7}Town RU7" owner="Faction.clan_khuzait_1" posX="1034.047" posY="831.117" culture="Culture.khuzait" gate_posX="1034.347" gate_posY="828.117">
+  <Settlement id="town_RU7" name="{=Settlements.Settlement.name.town_RU7}Town RU7" owner="Faction.clan_khuzait_1" posX="1034.047" posY="831.117" culture="Culture.khuzait" gate_posX="1032.925" gate_posY="835.3083">
     <Components>
       <Town id="town_comp_RU7" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12270,7 +12333,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU8" name="{=Settlements.Settlement.name.town_RU8}Town RU8" owner="Faction.clan_khuzait_1" posX="1446.006" posY="798.386" culture="Culture.khuzait" gate_posX="1446.306" gate_posY="795.386">
+  <Settlement id="town_RU8" name="{=Settlements.Settlement.name.town_RU8}Town RU8" owner="Faction.clan_khuzait_1" posX="1446.006" posY="798.386" culture="Culture.khuzait" gate_posX="1443.853" gate_posY="794.8655">
     <Components>
       <Town id="town_comp_RU8" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
