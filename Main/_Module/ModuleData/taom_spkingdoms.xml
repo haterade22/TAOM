@@ -4,7 +4,7 @@
     <Kingdom
         id="erebor"
         owner="Hero.lord_E1_1"
-        initial_home_settlement="Settlement.town_erebor"
+        initial_home_settlement="Settlement.town_E1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff0A5730"
         secondary_banner_color="0xffFFD700"
@@ -91,7 +91,7 @@
     <Kingdom
         id="rivendell"
         owner="Hero.lord_R1_1"
-        initial_home_settlement="Settlement.town_rivendell"
+        initial_home_settlement="Settlement.town_R1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
 		primary_banner_color="0xff1A1A1A"
         secondary_banner_color="0xff2000AF"
@@ -178,7 +178,7 @@
     <Kingdom
         id="mirkwood"
         owner="Hero.lord_M1_1"
-        initial_home_settlement="Settlement.town_mirkwood"
+        initial_home_settlement="Settlement.town_M1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff2D5A29"
         secondary_banner_color="0xff9DBF60"
@@ -265,7 +265,7 @@
     <Kingdom
         id="lothlorien"
         owner="Hero.lord_L1_1"
-        initial_home_settlement="Settlement.town_lothlorien"
+        initial_home_settlement="Settlement.town_L1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff315A49"
         secondary_banner_color="0xffA8D1A6"
@@ -443,7 +443,7 @@
     <Kingdom
         id="gundabad"
         owner="Hero.lord_G1_1"
-        initial_home_settlement="Settlement.town_gundabad"
+        initial_home_settlement="Settlement.town_G1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff2D2D2D"
         secondary_banner_color="0xff585858"
@@ -534,7 +534,7 @@
     <Kingdom
         id="umbar"
         owner="Hero.lord_U1_1"
-        initial_home_settlement="Settlement.town_umbar"
+        initial_home_settlement="Settlement.town_U1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff8B4513"
         secondary_banner_color="0xffCD853F"
@@ -625,7 +625,7 @@
     <Kingdom
         id="dolguldur"
         owner="Hero.lord_1_48"
-        initial_home_settlement="Settlement.town_dolguldur"
+        initial_home_settlement="Settlement.town_DG1"
         banner_key="11.4.4.4345.4345.764.764.1.0.0.163.5.5.512.512.764.764.1.0.0"
         primary_banner_color="0xff4F321A"
         secondary_banner_color="0xff7B5234"

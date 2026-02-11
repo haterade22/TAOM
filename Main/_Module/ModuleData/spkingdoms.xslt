@@ -193,7 +193,7 @@
 	<xsl:template match="Kingdom[@id='battania']">
 		<Kingdom
 			id="battania"
-			initial_home_settlement="Settlement.town_B1"
+			initial_home_settlement="Settlement.town_K1"
 			owner="Hero.lord_5_1"
 			banner_key="11.2.2.6296.6296.764.764.1.0.0.460.3.3.457.457.764.764.1.0.0"
 			primary_banner_color="0xff284E19"
@@ -221,7 +221,7 @@
 	<xsl:template match="Kingdom[@id='khuzait']">
 		<Kingdom
 			id="khuzait"
-			initial_home_settlement="Settlement.town_K3"
+			initial_home_settlement="Settlement.town_RU1"
 			owner="Hero.lord_6_1"
 			banner_key="11.10.10.1536.1536.764.764.1.0.0.461.11.11.497.497.764.764.1.0.0"
 			primary_banner_color="0xff429081"

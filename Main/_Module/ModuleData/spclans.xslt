@@ -36,24 +36,27 @@
 
 	<xsl:template match="Faction[@id='clan_empire_north_4']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_empire_north_4}Arth-luth</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_EN6</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_empire_north_5']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_empire_north_5}Cigfran-luth</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_EN5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_empire_north_6']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_empire_north_6}Hebog-luth</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_EN4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -190,8 +193,9 @@
 
 	<xsl:template match="Faction[@id='clan_empire_south_5']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_empire_south_5}Al-Khey-Sârt</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_ES2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -263,16 +267,18 @@
 
 	<xsl:template match="Faction[@id='clan_sturgia_5']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_sturgia_5}House of Esgaroth</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_S7</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_sturgia_6']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_sturgia_6}House of the River</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_S6</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -417,8 +423,9 @@
 
 	<xsl:template match="Faction[@id='clan_vlandia_6']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_vlandia_6}House of Ordlacing</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_V6</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -433,8 +440,9 @@
 
 	<xsl:template match="Faction[@id='clan_vlandia_8']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_vlandia_8}House of Grimmóding</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_V3</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -466,64 +474,114 @@
 	<!-- ==================== KHAND CLANS (Battania) ==================== -->
 	<xsl:template match="Faction[@id='clan_battania_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_1}Vângulis</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.town_K1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_2}Sûrket</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.town_K2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_3']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_3}Orazân</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.town_K3</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_4']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_4}Khârnamud</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.town_K4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_5']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_5}Delmuran</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_6']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_6}Baqtâr</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K3</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_7']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_7}Tûrmak</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_battania_8']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_battania_8}Eshtârul</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K4</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ==================== PLAYER FACTION ==================== -->
+	<xsl:template match="Faction[@id='player_faction']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'initial_home_settlement']"/>
+			<xsl:attribute name="initial_home_settlement">Settlement.town_K1</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ==================== MINOR FACTIONS (settlement remaps) ==================== -->
+	<xsl:template match="Faction[@id='skolderbrotva']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'initial_home_settlement']"/>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_S1</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Faction[@id='company_of_the_boar']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'initial_home_settlement']"/>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_V3</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Faction[@id='wolfskins']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'initial_home_settlement']"/>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K5</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Faction[@id='embers_of_flame']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'initial_home_settlement']"/>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_EN5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -563,8 +621,9 @@
 
 	<xsl:template match="Faction[@id='clan_khuzait_5']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_khuzait_5}Amdûrid</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K6</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -595,8 +654,9 @@
 
 	<xsl:template match="Faction[@id='clan_khuzait_9']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
 			<xsl:attribute name="name">{=TAOM_clan_khuzait_9}Bozorganith</xsl:attribute>
+			<xsl:attribute name="initial_home_settlement">Settlement.castle_K7</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
