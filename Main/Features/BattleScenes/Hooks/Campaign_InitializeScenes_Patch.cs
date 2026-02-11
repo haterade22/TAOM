@@ -16,8 +16,11 @@ public class Campaign_InitializeScenes_Patch
         var taomModulePath = ModuleHelper.GetModuleFullPath("TAOM") + "ModuleData/";
         var sandboxModulePath = ModuleHelper.GetModuleFullPath("Sandbox") + "ModuleData/";
 
-        GameSceneDataManager.Instance.LoadSPBattleScenes(
-            taomModulePath + "sp_battle_scenes.xml");
+        var battleScenesPath = taomModulePath + "sp_battle_scenes.xml";
+        if (File.Exists(battleScenesPath))
+        {
+            GameSceneDataManager.Instance.LoadSPBattleScenes(battleScenesPath);
+        }
 
         var conversationPath = sandboxModulePath + "conversation_scenes.xml";
         if (File.Exists(conversationPath))

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TAOM Battle Scene Grid Configuration
-     Based on vanilla SandBox sp_battle_scenes.xml, extended to cover all indices 0-255.
-     Missing vanilla gaps (0, 52, 54, 64) and extended range (158-255) added to catch-all entries. -->
 <SPBattleScenes>
+	<!-- TAOM Battle Scene Grid Configuration
+	     Based on vanilla SandBox sp_battle_scenes.xml, extended to cover all indices 0-255.
+	     Missing vanilla gaps (0, 52, 54, 64) and extended range (158-255) added to catch-all entries. -->
 	<Scene
 		id="battle_terrain_a"
 		terrain="Plain"
