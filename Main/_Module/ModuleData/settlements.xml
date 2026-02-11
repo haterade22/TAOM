@@ -2216,7 +2216,7 @@
   </Settlement>
   <Settlement id="castle_village_EW7_2" name="{=Settlements.Settlement.name.castle_village_EW7_2}Celgalen Mouth" posX="559.500" posY="624.346" culture="Culture.gondor">
     <Components>
-      <Village id="castle_village_comp_EW7_2" village_type="VillageType.fishermman" hearth="603" bound="Settlement.castle_EW7" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
+      <Village id="castle_village_comp_EW7_2" village_type="VillageType.fisherman" hearth="603" bound="Settlement.castle_EW7" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
     </Components>
     <Locations complex_template="LocationComplexTemplate.village_complex">
       <Location id="village_center" scene_name="empire_village_u" />
