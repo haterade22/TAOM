@@ -18,7 +18,9 @@ public class SubModule : MBSubModuleBase
         IoC.Configure();
 
         _harmony = new Harmony("com.taom.mod");
-        // Patches applied in OnGameInitializationFinished — View assembly must be initialized first
+        // Battle scenes patch must run before Campaign.InitializeScenes (which fires before OnGameStart)
+        _harmony.PatchCategory("Patch0_BattleScenes");
+        // Remaining patches applied in OnGameInitializationFinished — View assembly must be initialized first
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
