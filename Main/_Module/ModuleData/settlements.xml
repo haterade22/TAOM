@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Settlements>
   <!-- ============================================== -->
-  <!-- EMPIRE NORTH (Rohan) -->
+  <!-- EMPIRE NORTH (Dunland) -->
   <!-- ============================================== -->
-  <Settlement id="castle_EN3" name="{=Settlements.Settlement.name.castle_EN3}Rhesos Castle" owner="Faction.clan_empire_north_9" posX="543.070" posY="804.873" culture="Culture.empire" gate_posX="544.1874" gate_posY="806.9181">
+  <Settlement id="castle_EN3" name="{=Settlements.Settlement.name.castle_EN3}Tûr Morva" owner="Faction.clan_empire_north_9" posX="543.070" posY="804.873" culture="Culture.empire" gate_posX="544.1874" gate_posY="806.9181">
     <Components>
       <Town id="castle_comp_EN3" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="720">
           <Buildings>
@@ -66,7 +66,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EN4" name="{=Settlements.Settlement.name.castle_EN4}Gaos Castle" owner="Faction.clan_empire_north_3" posX="567.631" posY="795.600" culture="Culture.empire" gate_posX="569.1432" gate_posY="797.4774">
+  <Settlement id="castle_EN4" name="{=Settlements.Settlement.name.castle_EN4}Lhanuch" owner="Faction.clan_empire_north_3" posX="567.631" posY="795.600" culture="Culture.empire" gate_posX="569.1432" gate_posY="797.4774">
     <Components>
       <Town id="castle_comp_EN4" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="860">
           <Buildings>
@@ -116,7 +116,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EN5" name="{=Settlements.Settlement.name.castle_EN5}Atrion Castle" owner="Faction.clan_empire_north_1" posX="588.301" posY="810.618" culture="Culture.empire" gate_posX="590.0803" gate_posY="811.8146">
+  <Settlement id="castle_EN5" name="{=Settlements.Settlement.name.castle_EN5}Lhan Tarren" owner="Faction.clan_empire_north_1" posX="588.301" posY="810.618" culture="Culture.empire" gate_posX="590.0803" gate_posY="811.8146">
     <Components>
       <Town id="castle_comp_EN5" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="560">
           <Buildings>
@@ -166,7 +166,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EN6" name="{=Settlements.Settlement.name.castle_EN6}Ataconia Castle" owner="Faction.clan_empire_north_2" posX="600.498" posY="865.432" culture="Culture.empire" gate_posX="599.8867" gate_posY="866.2498">
+  <Settlement id="castle_EN6" name="{=Settlements.Settlement.name.castle_EN6}Barnavon" owner="Faction.clan_empire_north_2" posX="600.498" posY="865.432" culture="Culture.empire" gate_posX="599.8867" gate_posY="866.2498">
     <Components>
       <Town id="castle_comp_EN6" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="960">
           <Buildings>
@@ -216,7 +216,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EN7" name="{=Settlements.Settlement.name.castle_EN7}Epinosa Castle" owner="Faction.clan_empire_north_7" posX="619.291" posY="908.359" culture="Culture.empire" gate_posX="618.773" gate_posY="906.8993">
+  <Settlement id="castle_EN7" name="{=Settlements.Settlement.name.castle_EN7}Thror's Coomb" owner="Faction.clan_empire_north_7" posX="619.291" posY="908.359" culture="Culture.empire" gate_posX="618.773" gate_posY="906.8993">
     <Components>
       <Town id="castle_comp_EN7" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="990">
           <Buildings>
@@ -316,7 +316,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EN1" name="{=Settlements.Settlement.name.town_EN1}Epicrotea" owner="Faction.clan_empire_north_2" posX="578.449" posY="889.742" culture="Culture.empire" gate_posX="581.5064" gate_posY="892.0258" text="{=n9WMUuSp}Epicrotea, the 'All-Conquering' was named after the eccentric long-haired military genius Sarapios, who crushed a Battanian host and secured the lands west of Lake Laconis for the Empire. Its towers, overlooking the Miron river, have frequently been a northerner's first glimpse of the awesome and terrible force to their south.">
+  <Settlement id="town_EN1" name="{=Settlements.Settlement.name.town_EN1}Lhan Garan" owner="Faction.clan_empire_north_2" posX="578.449" posY="889.742" culture="Culture.empire" gate_posX="581.5064" gate_posY="892.0258" text="{=n9WMUuSp}Epicrotea, the 'All-Conquering' was named after the eccentric long-haired military genius Sarapios, who crushed a Battanian host and secured the lands west of Lake Laconis for the Empire. Its towers, overlooking the Miron river, have frequently been a northerner's first glimpse of the awesome and terrible force to their south.">
     <Components>
       <Town id="town_comp_EN1" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.208" prosperity="5100">
           <Buildings>
@@ -391,7 +391,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EN2" name="{=Settlements.Settlement.name.town_EN2}Diathma" owner="Faction.clan_empire_north_1" posX="561.191" posY="851.365" culture="Culture.empire" gate_posX="563.875" gate_posY="848.3431" text="{=wKMo2CUP}Diathma, the city of the Divine Decree, was erected by an imperial general on the ruins of a Dryatic shrine overlooking Lake Laconis. It was the last stand of the Dryatics, the northernmost of the Palaic peoples, who rebelled against the Empire and were overcome. According to legend they were pushed back into the shallows of the lake and fought until they were exhausted and the bloody waters engulfed them.">
+  <Settlement id="town_EN2" name="{=Settlements.Settlement.name.town_EN2}Galtrev" owner="Faction.clan_empire_north_1" posX="561.191" posY="851.365" culture="Culture.empire" gate_posX="563.875" gate_posY="848.3431" text="{=wKMo2CUP}Diathma, the city of the Divine Decree, was erected by an imperial general on the ruins of a Dryatic shrine overlooking Lake Laconis. It was the last stand of the Dryatics, the northernmost of the Palaic peoples, who rebelled against the Empire and were overcome. According to legend they were pushed back into the shallows of the lake and fought until they were exhausted and the bloody waters engulfed them.">
     <Components>
       <Town id="town_comp_EN2" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_seaside_1" wait_mesh="wait_empire_town" gate_rotation="0.408" prosperity="4700">
           <Buildings>
@@ -531,7 +531,7 @@
   <!-- ============================================== -->
   <!-- EMPIRE SOUTH (Mordor) -->
   <!-- ============================================== -->
-  <Settlement id="castle_ES1" name="{=Settlements.Settlement.name.castle_ES1}Odrysa Castle" owner="Faction.clan_empire_south_3" posX="948.373" posY="768.892" culture="Culture.empire" gate_posX="947.0259" gate_posY="769.5507">
+  <Settlement id="castle_ES1" name="{=Settlements.Settlement.name.castle_ES1}The Morannon / The Black Gate" owner="Faction.clan_empire_south_3" posX="948.373" posY="768.892" culture="Culture.empire" gate_posX="947.0259" gate_posY="769.5507">
     <Components>
       <Town id="castle_comp_ES1" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="500">
           <Buildings>
@@ -581,7 +581,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES2" name="{=Settlements.Settlement.name.castle_ES2}Corenia Castle" owner="Faction.clan_empire_south_5" posX="962.749" posY="741.314" culture="Culture.empire" gate_posX="961.3373" gate_posY="741.9282">
+  <Settlement id="castle_ES2" name="{=Settlements.Settlement.name.castle_ES2}Cirith Ungol" owner="Faction.clan_empire_south_5" posX="962.749" posY="741.314" culture="Culture.empire" gate_posX="961.3373" gate_posY="741.9282">
     <Components>
       <Town id="castle_comp_ES2" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="770">
           <Buildings>
@@ -631,7 +631,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES3" name="{=Settlements.Settlement.name.castle_ES3}Melion Castle" owner="Faction.clan_empire_south_7" posX="973.499" posY="691.321" culture="Culture.empire" gate_posX="975.8359" gate_posY="692.5034">
+  <Settlement id="castle_ES3" name="{=Settlements.Settlement.name.castle_ES3}Carach Angren" owner="Faction.clan_empire_south_7" posX="973.499" posY="691.321" culture="Culture.empire" gate_posX="975.8359" gate_posY="692.5034">
     <Components>
       <Town id="castle_comp_ES3" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="810">
           <Buildings>
@@ -694,7 +694,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES4" name="{=Settlements.Settlement.name.castle_ES4}Lavenia Castle" owner="Faction.clan_empire_south_3" posX="997.362" posY="667.305" culture="Culture.empire" gate_posX="997.6505" gate_posY="669.8536">
+  <Settlement id="castle_ES4" name="{=Settlements.Settlement.name.castle_ES4}Mornaur" owner="Faction.clan_empire_south_3" posX="997.362" posY="667.305" culture="Culture.empire" gate_posX="997.6505" gate_posY="669.8536">
     <Components>
       <Town id="castle_comp_ES4" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="1100">
           <Buildings>
@@ -757,7 +757,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES5" name="{=Settlements.Settlement.name.castle_ES5}Morenia Castle" owner="Faction.clan_empire_south_8" posX="1018.618" posY="600.171" culture="Culture.empire" gate_posX="1018.579" gate_posY="601.7681">
+  <Settlement id="castle_ES5" name="{=Settlements.Settlement.name.castle_ES5}Nargil" owner="Faction.clan_empire_south_8" posX="1018.618" posY="600.171" culture="Culture.empire" gate_posX="1018.579" gate_posY="601.7681">
     <Components>
       <Town id="castle_comp_ES5" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="850">
           <Buildings>
@@ -833,7 +833,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES6" name="{=Settlements.Settlement.name.castle_ES6}Sestadaim Castle" owner="Faction.clan_empire_south_1" posX="1046.415" posY="523.459" culture="Culture.empire" gate_posX="1045.412" gate_posY="524.7082">
+  <Settlement id="castle_ES6" name="{=Settlements.Settlement.name.castle_ES6}Barad Wath" owner="Faction.clan_empire_south_1" posX="1046.415" posY="523.459" culture="Culture.empire" gate_posX="1045.412" gate_posY="524.7082">
     <Components>
       <Town id="castle_comp_ES6" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="670">
           <Buildings>
@@ -883,7 +883,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES7" name="{=Settlements.Settlement.name.castle_ES7}Jogurys Castle" owner="Faction.clan_empire_south_9" posX="1144.529" posY="632.178" culture="Culture.empire" gate_posX="1143.373" gate_posY="631.4019">
+  <Settlement id="castle_ES7" name="{=Settlements.Settlement.name.castle_ES7}Lûglurag" owner="Faction.clan_empire_south_9" posX="1144.529" posY="632.178" culture="Culture.empire" gate_posX="1143.373" gate_posY="631.4019">
     <Components>
       <Town id="castle_comp_ES7" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="1050">
           <Buildings>
@@ -946,7 +946,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_ES8" name="{=Settlements.Settlement.name.castle_ES8}Chanopsis Castle" owner="Faction.clan_empire_south_1" posX="1242.703" posY="656.781" culture="Culture.empire" gate_posX="1240.885" gate_posY="656.3813">
+  <Settlement id="castle_ES8" name="{=Settlements.Settlement.name.castle_ES8}Barad-Nûrn" owner="Faction.clan_empire_south_1" posX="1242.703" posY="656.781" culture="Culture.empire" gate_posX="1240.885" gate_posY="656.3813">
     <Components>
       <Town id="castle_comp_ES8" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="480">
           <Buildings>
@@ -1022,7 +1022,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_ES1" name="{=Settlements.Settlement.name.town_ES1}Danustica" owner="Faction.clan_empire_south_3" posX="1010.598" posY="722.726" culture="Culture.empire" gate_posX="1009.687" gate_posY="725.5041" text="{=xkkI7ejQ}The frontier city of Danustica dominates the network of lakes and lagoons known as the Calsea. It has long held the line against incursions by the Aserai and various Darshi shahs and padishahs further to the east. Many an imperial legionary stationed here has scribbled graffiti on its walls cursing the city's sweltering summers, brackish water and the mosquitos that rise from the Calsea, but the inhabitants are proud of their role as border defenders and mock the soldiers wilting in the heat around them.">
+  <Settlement id="town_ES1" name="{=Settlements.Settlement.name.town_ES1}Barad Dûr" owner="Faction.clan_empire_south_3" posX="1010.598" posY="722.726" culture="Culture.empire" gate_posX="1009.687" gate_posY="725.5041" text="{=xkkI7ejQ}The frontier city of Danustica dominates the network of lakes and lagoons known as the Calsea. It has long held the line against incursions by the Aserai and various Darshi shahs and padishahs further to the east. Many an imperial legionary stationed here has scribbled graffiti on its walls cursing the city's sweltering summers, brackish water and the mosquitos that rise from the Calsea, but the inhabitants are proud of their role as border defenders and mock the soldiers wilting in the heat around them.">
     <Components>
       <Town id="town_comp_ES1" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_seaside_1" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="4900">
           <Buildings>
@@ -1110,7 +1110,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_ES2" name="{=Settlements.Settlement.name.town_ES2}Vostrum" owner="Faction.clan_empire_south_4" posX="949.306" posY="678.328" culture="Culture.empire" gate_posX="949.2748" gate_posY="681.1851" text="{=ytBRXqt8}Vostrum was founded by the Calradian mercenary Archacos, one of a number of rogue commanders who broke away from the empire during its expansion. Unlike some, who tried to reproduce the empire's republican heritage, he chose to rule as a god-king. His dynasty lasted for generations, until imperial troops overran it and smashed every haloed statue of Archacos and his successors into rubble. Even today, western and northern imperial senators accuse families from this region of being closet monarchists.">
+  <Settlement id="town_ES2" name="{=Settlements.Settlement.name.town_ES2}Minas Morgul" owner="Faction.clan_empire_south_4" posX="949.306" posY="678.328" culture="Culture.empire" gate_posX="949.2748" gate_posY="681.1851" text="{=ytBRXqt8}Vostrum was founded by the Calradian mercenary Archacos, one of a number of rogue commanders who broke away from the empire during its expansion. Unlike some, who tried to reproduce the empire's republican heritage, he chose to rule as a god-king. His dynasty lasted for generations, until imperial troops overran it and smashed every haloed statue of Archacos and his successors into rubble. Even today, western and northern imperial senators accuse families from this region of being closet monarchists.">
     <Components>
       <Town id="town_comp_ES2" is_castle="false" background_crop_position="0.45" background_mesh="menu_empire_seaside_2" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="5100">
           <Buildings>
@@ -1185,7 +1185,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_ES3" name="{=Settlements.Settlement.name.town_ES3}Poros" owner="Faction.clan_empire_south_2" posX="944.526" posY="728.693" culture="Culture.empire" gate_posX="943.4216" gate_posY="726.4753" text="{=rGXdJybe}The town of Poros sits near the northern shores of the Perassic Sea. The warm rolling hills of these parts are well suited to the raising of sheep and horses. The herdsmen have a reputation for being proud and violent, but the nobles of the Leonipardes clan who rule this land are careful to respect their autonomy. Livestock rustling and blood feuds are common here, and it is said that the Leonipardes will never interfere unless invited by both parties, but when they do, their judgments will be obeyed by all.">
+  <Settlement id="town_ES3" name="{=Settlements.Settlement.name.town_ES3}Seregost" owner="Faction.clan_empire_south_2" posX="944.526" posY="728.693" culture="Culture.empire" gate_posX="943.4216" gate_posY="726.4753" text="{=rGXdJybe}The town of Poros sits near the northern shores of the Perassic Sea. The warm rolling hills of these parts are well suited to the raising of sheep and horses. The herdsmen have a reputation for being proud and violent, but the nobles of the Leonipardes clan who rule this land are careful to respect their autonomy. Livestock rustling and blood feuds are common here, and it is said that the Leonipardes will never interfere unless invited by both parties, but when they do, their judgments will be obeyed by all.">
     <Components>
       <Town id="town_comp_ES3" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_2" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="4500">
           <Buildings>
@@ -1247,7 +1247,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_ES4" name="{=Settlements.Settlement.name.town_ES4}Lycaron" owner="Faction.clan_empire_south_1" posX="1059.955" posY="700.289" culture="Culture.empire" gate_posX="1060.832" gate_posY="702.6087" text="{=WGtzBswe}The natural fortress of Lycaron sits on a spur jutting out of the great Ornian rock. In the final years of the imperial conquest, the Palaic tribe here negotiated a peaceful federation with the empire, only to see their home seized by the rebel leader Gethuz. The ensuing siege was only the first of many that Lycaron would undergo in the ensuing centuries, as its nearby silver mines made it a prize for every imperial pretender who ever tried to seize power in a civil war. It is said that the colony of vultures who inhabit the upper reaches of the Rock have dined on the flesh of every people of Calradia.">
+  <Settlement id="town_ES4" name="{=Settlements.Settlement.name.town_ES4}Durthang" owner="Faction.clan_empire_south_1" posX="1059.955" posY="700.289" culture="Culture.empire" gate_posX="1060.832" gate_posY="702.6087" text="{=WGtzBswe}The natural fortress of Lycaron sits on a spur jutting out of the great Ornian rock. In the final years of the imperial conquest, the Palaic tribe here negotiated a peaceful federation with the empire, only to see their home seized by the rebel leader Gethuz. The ensuing siege was only the first of many that Lycaron would undergo in the ensuing centuries, as its nearby silver mines made it a prize for every imperial pretender who ever tried to seize power in a civil war. It is said that the colony of vultures who inhabit the upper reaches of the Rock have dined on the flesh of every people of Calradia.">
     <Components>
       <Town id="town_comp_ES4" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_5" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="3800">
           <Buildings>
@@ -1322,7 +1322,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_ES5" name="{=Settlements.Settlement.name.town_ES5}Onira" owner="Faction.clan_empire_south_1" posX="1073.727" posY="603.098" culture="Culture.empire" gate_posX="1073.696" gate_posY="605.9549" text="{=4ENGzVaC}The tale of Sarpea of Onira is one of the epic poems of the eastern frontier. Like many, it seems written to justify the Empire's conquest. Sarpea, a senator's daughter, was seized by a Palaic chieftain and carried to his citadel here. When the imperial armies appeared before its walls years later to rescue her, she begged them to retreat for the sake of her infant son, whom her fearsome husband had threatened to hurl from the walls instead of allowing him to be captured and raised by his mother's people. The legions withdrew, so the story says, but the boy grew into a warrior who joined the Empire and slew his father. It is now the center of a horse-breeding industry on the eastern plains.">
+  <Settlement id="town_ES5" name="{=Settlements.Settlement.name.town_ES5}Thurband" owner="Faction.clan_empire_south_1" posX="1073.727" posY="603.098" culture="Culture.empire" gate_posX="1073.696" gate_posY="605.9549" text="{=4ENGzVaC}The tale of Sarpea of Onira is one of the epic poems of the eastern frontier. Like many, it seems written to justify the Empire's conquest. Sarpea, a senator's daughter, was seized by a Palaic chieftain and carried to his citadel here. When the imperial armies appeared before its walls years later to rescue her, she begged them to retreat for the sake of her infant son, whom her fearsome husband had threatened to hurl from the walls instead of allowing him to be captured and raised by his mother's people. The legions withdrew, so the story says, but the boy grew into a warrior who joined the Empire and slew his father. It is now the center of a horse-breeding industry on the eastern plains.">
     <Components>
       <Town id="town_comp_ES5" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="3400">
           <Buildings>
@@ -1397,7 +1397,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_ES6" name="{=Settlements.Settlement.name.town_ES6}Phycaon" owner="Faction.clan_empire_south_6" posX="1155.063" posY="683.124" culture="Culture.empire" gate_posX="1153.81" gate_posY="680.9347" text="{=RL2vacqv}Phycaon sits at the head of the Sethys valley, one of the main grain-producing regions of the central Empire. Once the largest of the Palaic cities, its leaders led a league of the tribes against imperial encroachment into the region. But when the empire's victory looked inevitable, they made their peace. The population, now thoroughly Calradicized, have a reputation for being serious, respectable and trade-minded, dependable if a bit humorless.">
+  <Settlement id="town_ES6" name="{=Settlements.Settlement.name.town_ES6}Naerband" owner="Faction.clan_empire_south_6" posX="1155.063" posY="683.124" culture="Culture.empire" gate_posX="1153.81" gate_posY="680.9347" text="{=RL2vacqv}Phycaon sits at the head of the Sethys valley, one of the main grain-producing regions of the central Empire. Once the largest of the Palaic cities, its leaders led a league of the tribes against imperial encroachment into the region. But when the empire's victory looked inevitable, they made their peace. The population, now thoroughly Calradicized, have a reputation for being serious, respectable and trade-minded, dependable if a bit humorless.">
     <Components>
       <Town id="town_comp_ES6" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_2" wait_mesh="wait_empire_town" gate_rotation="0.508" prosperity="2600">
           <Buildings>
@@ -1488,7 +1488,7 @@
   <!-- ============================================== -->
   <!-- GONDOR -->
   <!-- ============================================== -->
-  <Settlement id="castle_EW1" name="{=Settlements.Settlement.name.castle_EW1}Harlond" owner="Faction.clan_empire_west_2" posX="895.679" posY="622.655" culture="Culture.empire" gate_posX="893.7903" gate_posY="620.8859">
+  <Settlement id="castle_EW1" name="{=Settlements.Settlement.name.castle_EW1}Cair Andros" owner="Faction.clan_empire_west_2" posX="895.679" posY="622.655" culture="Culture.empire" gate_posX="893.7903" gate_posY="620.8859">
     <Components>
       <Town id="castle_comp_EW1" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="880">
           <Buildings>
@@ -1538,7 +1538,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW10" name="{=Settlements.Settlement.name.castle_EW10}Castle EW10" owner="Faction.clan_empire_west_1" posX="722.804" posY="549.289" culture="Culture.gondor" gate_posX="723.0187" gate_posY="546.6992">
+  <Settlement id="castle_EW10" name="{=Settlements.Settlement.name.castle_EW10}Caras Tolfalas" owner="Faction.clan_empire_west_1" posX="722.804" posY="549.289" culture="Culture.gondor" gate_posX="723.0187" gate_posY="546.6992">
     <Components>
       <Town id="castle_comp_EW10" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -1588,7 +1588,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW11" name="{=Settlements.Settlement.name.castle_EW11}Castle EW11" owner="Faction.clan_empire_west_1" posX="783.121" posY="513.269" culture="Culture.gondor" gate_posX="780.9033" gate_posY="514.6349">
+  <Settlement id="castle_EW11" name="{=Settlements.Settlement.name.castle_EW11}Methrast" owner="Faction.clan_empire_west_1" posX="783.121" posY="513.269" culture="Culture.gondor" gate_posX="780.9033" gate_posY="514.6349">
     <Components>
       <Town id="castle_comp_EW11" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -1638,7 +1638,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW12" name="{=Settlements.Settlement.name.castle_EW12}Castle EW12" owner="Faction.clan_empire_west_1" posX="788.845" posY="603.233" culture="Culture.gondor" gate_posX="790.5516" gate_posY="605.1923">
+  <Settlement id="castle_EW12" name="{=Settlements.Settlement.name.castle_EW12}Hyarpendë" owner="Faction.clan_empire_west_1" posX="788.845" posY="603.233" culture="Culture.gondor" gate_posX="790.5516" gate_posY="605.1923">
     <Components>
       <Town id="castle_comp_EW12" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -1688,7 +1688,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW13" name="{=Settlements.Settlement.name.castle_EW13}Castle EW13" owner="Faction.clan_empire_west_1" posX="520.174" posY="715.002" culture="Culture.gondor" gate_posX="519.0774" gate_posY="713.2328">
+  <Settlement id="castle_EW13" name="{=Settlements.Settlement.name.castle_EW13}Harlond" owner="Faction.clan_empire_west_1" posX="520.174" posY="715.002" culture="Culture.gondor" gate_posX="519.0774" gate_posY="713.2328">
     <Components>
       <Town id="castle_comp_EW13" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -1738,7 +1738,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW14" name="{=Settlements.Settlement.name.castle_EW14}Castle EW14" owner="Faction.clan_empire_west_1" posX="855.100" posY="658.033" culture="Culture.gondor" gate_posX="854.5496" gate_posY="656.1528">
+  <Settlement id="castle_EW14" name="{=Settlements.Settlement.name.castle_EW14}Erethir" owner="Faction.clan_empire_west_1" posX="855.100" posY="658.033" culture="Culture.gondor" gate_posX="854.5496" gate_posY="656.1528">
     <Components>
       <Town id="castle_comp_EW14" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -1775,7 +1775,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW15" name="{=Settlements.Settlement.name.castle_EW15}Castle EW15" owner="Faction.clan_empire_west_1" posX="880.785" posY="517.289" culture="Culture.gondor" gate_posX="880.2346" gate_posY="515.4088">
+  <Settlement id="castle_EW15" name="{=Settlements.Settlement.name.castle_EW15}Amonost" owner="Faction.clan_empire_west_1" posX="880.785" posY="517.289" culture="Culture.gondor" gate_posX="880.2346" gate_posY="515.4088">
     <Components>
       <Town id="castle_comp_EW15" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -1901,7 +1901,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW2" name="{=Settlements.Settlement.name.castle_EW2}Ethring" owner="Faction.clan_empire_west_4" posX="691.514" posY="677.292" culture="Culture.empire" gate_posX="688.9213" gate_posY="677.1854">
+  <Settlement id="castle_EW2" name="{=Settlements.Settlement.name.castle_EW2}Morlad" owner="Faction.clan_empire_west_4" posX="691.514" posY="677.292" culture="Culture.empire" gate_posX="688.9213" gate_posY="677.1854">
     <Components>
       <Town id="castle_comp_EW2" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="760">
           <Buildings>
@@ -1951,7 +1951,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW3" name="{=Settlements.Settlement.name.castle_EW3}Onica Castle" owner="Faction.clan_empire_west_1" posX="698.762" posY="637.417" culture="Culture.gondor" gate_posX="698.9093" gate_posY="640.0199">
+  <Settlement id="castle_EW3" name="{=Settlements.Settlement.name.castle_EW3}Linhir" owner="Faction.clan_empire_west_1" posX="698.762" posY="637.417" culture="Culture.gondor" gate_posX="698.9093" gate_posY="640.0199">
     <Components>
       <Town id="castle_comp_EW3" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="740">
           <Buildings>
@@ -2014,7 +2014,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW4" name="{=Settlements.Settlement.name.castle_EW4}Cair Andros" owner="Faction.clan_empire_west_3" posX="900.585" posY="714.814" culture="Culture.gondor" gate_posX="902.3427" gate_posY="712.8884">
+  <Settlement id="castle_EW4" name="{=Settlements.Settlement.name.castle_EW4}Rimmon" owner="Faction.clan_empire_west_3" posX="900.585" posY="714.814" culture="Culture.gondor" gate_posX="902.3427" gate_posY="712.8884">
     <Components>
       <Town id="castle_comp_EW4" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="660">
           <Buildings>
@@ -2051,7 +2051,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW5" name="{=Settlements.Settlement.name.castle_EW5}Min-Rimmon" owner="Faction.clan_empire_west_7" posX="821.016" posY="717.509" culture="Culture.empire" gate_posX="821.7594" gate_posY="720.0016">
+  <Settlement id="castle_EW5" name="{=Settlements.Settlement.name.castle_EW5}Edhellond" owner="Faction.clan_empire_west_7" posX="821.016" posY="717.509" culture="Culture.empire" gate_posX="821.7594" gate_posY="720.0016">
     <Components>
       <Town id="castle_comp_EW5" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="610">
           <Buildings>
@@ -2101,7 +2101,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW6" name="{=Settlements.Settlement.name.castle_EW6}Morlad" owner="Faction.clan_empire_west_8" posX="653.601" posY="713.848" culture="Culture.gondor" gate_posX="652.4167" gate_posY="711.5449">
+  <Settlement id="castle_EW6" name="{=Settlements.Settlement.name.castle_EW6}Tumladen" owner="Faction.clan_empire_west_8" posX="653.601" posY="713.848" culture="Culture.gondor" gate_posX="652.4167" gate_posY="711.5449">
     <Components>
       <Town id="castle_comp_EW6" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.408" prosperity="640">
           <Buildings>
@@ -2177,7 +2177,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW7" name="{=Settlements.Settlement.name.castle_EW7}Serelond" owner="Faction.clan_empire_west_9" posX="599.329" posY="673.457" culture="Culture.gondor" gate_posX="601.8207" gate_posY="674.14">
+  <Settlement id="castle_EW7" name="{=Settlements.Settlement.name.castle_EW7}Méreharn" owner="Faction.clan_empire_west_9" posX="599.329" posY="673.457" culture="Culture.gondor" gate_posX="601.8207" gate_posY="674.14">
     <Components>
       <Town id="castle_comp_EW7" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.408" prosperity="820">
           <Buildings>
@@ -2253,7 +2253,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW8" name="{=Settlements.Settlement.name.castle_EW8}Amon Dîn" owner="Faction.clan_empire_west_6" posX="865.865" posY="582.157" culture="Culture.gondor" gate_posX="866.5694" gate_posY="579.9474">
+  <Settlement id="castle_EW8" name="{=Settlements.Settlement.name.castle_EW8}Bar-en-Siril" owner="Faction.clan_empire_west_6" posX="865.865" posY="582.157" culture="Culture.gondor" gate_posX="866.5694" gate_posY="579.9474">
     <Components>
       <Town id="castle_comp_EW8" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.408" prosperity="610">
           <Buildings>
@@ -2303,7 +2303,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW9" name="{=Settlements.Settlement.name.castle_EW9}Tolfalas" owner="Faction.clan_empire_west_2" posX="747.730" posY="527.357" culture="Culture.gondor" gate_posX="745.6835" gate_posY="525.7732">
+  <Settlement id="castle_EW9" name="{=Settlements.Settlement.name.castle_EW9}Glanhir" owner="Faction.clan_empire_west_2" posX="747.730" posY="527.357" culture="Culture.gondor" gate_posX="745.6835" gate_posY="525.7732">
     <Components>
       <Town id="castle_comp_EW9" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.408" prosperity="640">
           <Buildings>
@@ -2454,7 +2454,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW10" name="{=Settlements.Settlement.name.town_EW10}Town EW10" owner="Faction.clan_empire_west_1" posX="606.808" posY="634.825" culture="Culture.gondor" gate_posX="605.4826" gate_posY="635.558">
+  <Settlement id="town_EW10" name="{=Settlements.Settlement.name.town_EW10}Calembel" owner="Faction.clan_empire_west_1" posX="606.808" posY="634.825" culture="Culture.gondor" gate_posX="605.4826" gate_posY="635.558">
     <Components>
       <Town id="town_comp_EW10" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -2490,7 +2490,7 @@
       <Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW11" name="{=Settlements.Settlement.name.town_EW11}Town EW11" owner="Faction.clan_empire_west_1" posX="813.793" posY="548.299" culture="Culture.gondor" gate_posX="814.8808" gate_posY="549.1295">
+  <Settlement id="town_EW11" name="{=Settlements.Settlement.name.town_EW11}Methir" owner="Faction.clan_empire_west_1" posX="813.793" posY="548.299" culture="Culture.gondor" gate_posX="814.8808" gate_posY="549.1295">
     <Components>
       <Town id="town_comp_EW11" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -2601,7 +2601,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW3" name="{=Settlements.Settlement.name.town_EW3}East Osgliath" owner="Faction.clan_empire_west_1" posX="923.816" posY="682.542" culture="Culture.gondor" gate_posX="923.6151" gate_posY="681.5616" text="{==Settlements.Settlement.text.town_EW3}The eastern ruins of Gondor's ancient capital across the Anduin from West Osgiliath, now a haunted battlefield contested between Gondor's Rangers and Mordor's forces. The broken eastern half of the great bridge leads to collapsed buildings and flooded streets where Orcs lurk among fallen towers. Strategic crossing point controlling access to Ithilien and the road to Minas Morgul.">
+  <Settlement id="town_EW3" name="{=Settlements.Settlement.name.town_EW3}East Osgiliath" owner="Faction.clan_empire_west_1" posX="923.816" posY="682.542" culture="Culture.gondor" gate_posX="923.6151" gate_posY="681.5616" text="{==Settlements.Settlement.text.town_EW3}The eastern ruins of Gondor's ancient capital across the Anduin from West Osgiliath, now a haunted battlefield contested between Gondor's Rangers and Mordor's forces. The broken eastern half of the great bridge leads to collapsed buildings and flooded streets where Orcs lurk among fallen towers. Strategic crossing point controlling access to Ithilien and the road to Minas Morgul.">
     <Components>
       <Town id="town_comp_EW3" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -2676,7 +2676,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW4" name="{=Settlements.Settlement.name.town_EW4}Pelargir" owner="Faction.clan_empire_west_3" posX="862.352" posY="589.558" culture="Culture.gondor" gate_posX="861.3731" gate_posY="591.1104" text="{==Settlements.Settlement.text.town_EW4}Pelargir stands at the confluence of the River Sirith and the Great River Anduin in the heart of Lebennin. The city occupies both banks of the Sirith where it joins the Anduin, approximately 100 miles upriver from the Mouths of Anduin (Ethir Anduin) where the Great River empties into the Bay of Belfalas, and roughly 126 miles downriver from the ruins of Osgiliath and the approach to Minas Tirith. This positioning grants Pelargir extraordinary strategic value. The Anduin here flows wide, deep, and calm - ideal for large ships and extensive port facilities. The city serves as the nexus point between Gondor's inland territories and the sea, where goods from Minas Tirith, Lossarnach, and the northern provinces meet cargo from coastal regions and distant ports. More crucially, Pelargir functions as the gateway controlling access to Gondor's heartland via the Great River - any fleet moving up the Anduin to threaten Minas Tirith must pass through or bypass Pelargir's waters.When first founded in the Second Age, Pelargir stood mere miles from the coast of the Bay of Belfalas. However, after the catastrophic Downfall of Númenor reshaped the world's geography, the coastline retreated dramatically westward and southward, leaving Pelargir far inland at the head of what became the Anduin's extensive delta region. This geographical transformation actually enhanced the city's security - Corsair raiders could no longer strike directly from the sea but had to navigate the treacherous channels of the Ethir Anduin or sail far upriver to reach the city, giving defenders time to prepare and respond.">
+  <Settlement id="town_EW4" name="{=Settlements.Settlement.name.town_EW4}Bar Melui" owner="Faction.clan_empire_west_3" posX="862.352" posY="589.558" culture="Culture.gondor" gate_posX="861.3731" gate_posY="591.1104" text="{==Settlements.Settlement.text.town_EW4}Pelargir stands at the confluence of the River Sirith and the Great River Anduin in the heart of Lebennin. The city occupies both banks of the Sirith where it joins the Anduin, approximately 100 miles upriver from the Mouths of Anduin (Ethir Anduin) where the Great River empties into the Bay of Belfalas, and roughly 126 miles downriver from the ruins of Osgiliath and the approach to Minas Tirith. This positioning grants Pelargir extraordinary strategic value. The Anduin here flows wide, deep, and calm - ideal for large ships and extensive port facilities. The city serves as the nexus point between Gondor's inland territories and the sea, where goods from Minas Tirith, Lossarnach, and the northern provinces meet cargo from coastal regions and distant ports. More crucially, Pelargir functions as the gateway controlling access to Gondor's heartland via the Great River - any fleet moving up the Anduin to threaten Minas Tirith must pass through or bypass Pelargir's waters.When first founded in the Second Age, Pelargir stood mere miles from the coast of the Bay of Belfalas. However, after the catastrophic Downfall of Númenor reshaped the world's geography, the coastline retreated dramatically westward and southward, leaving Pelargir far inland at the head of what became the Anduin's extensive delta region. This geographical transformation actually enhanced the city's security - Corsair raiders could no longer strike directly from the sea but had to navigate the treacherous channels of the Ethir Anduin or sail far upriver to reach the city, giving defenders time to prepare and respond.">
     <Components>
       <Town id="town_comp_EW4" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -2751,7 +2751,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW5" name="{=Settlements.Settlement.name.town_EW5}Dol Amroth" owner="Faction.clan_empire_west_2" posX="692.236" posY="612.541" culture="Culture.gondor" gate_posX="692.936" gate_posY="611.8287" text="{==Settlements.Settlement.text.town_EW5}Dol Amroth stands as a fortress-city upon a high promontory jutting westward into the Bay of Belfalas, commanding Gondor's southern coast with majestic authority. The city occupies the southern end of the small bay called Cobas Haven, where the River Ringló flows into the sea. This peninsula position grants Dol Amroth natural defensive advantages - towering cliffs protect seaward approaches, while massive walls guard the landward sides. The city's elevated position allows watchers on the Sea-ward Tower to scan vast stretches of ocean for approaching ships, whether friendly traders or hostile Corsair raiders.The name commemorates a tragic love story from the distant past. In T.A. 1981, Amroth, the last King of Lórien, came to Edhellond (the Elven haven fifty miles north) seeking passage to Aman with his beloved Nimrodel. She had fled Lórien's darkness after the Balrog awakened in Moria, and Amroth had promised to follow her into the West. But Nimrodel became lost in the White Mountains, never reaching the coast. Amroth waited aboard the last ship from Edhellond, but when a great autumn storm drove the vessel out to sea, he leaped overboard in a desperate attempt to swim ashore and search for her. He drowned in the bay's cold waters, and Nimrodel was never found. The hill where the Princes' stronghold stood was thereafter called Dol Amroth in memory of the lost Elf-king's final moments - a poignant reminder that even immortal beings can fall to grief and the sea's merciless power.The principality itself is known by multiple names. Officially, the fief is called Belfalas, or alternatively Dor-en-Ernil, reflecting its unique status as a hereditary princedom within the kingdom of Gondor. In the Common Speech, the region is sometimes called the Langstrand, though this name more properly belongs to Anfalas to the west.">
+  <Settlement id="town_EW5" name="{=Settlements.Settlement.name.town_EW5}Pelargir" owner="Faction.clan_empire_west_2" posX="692.236" posY="612.541" culture="Culture.gondor" gate_posX="692.936" gate_posY="611.8287" text="{==Settlements.Settlement.text.town_EW5}Dol Amroth stands as a fortress-city upon a high promontory jutting westward into the Bay of Belfalas, commanding Gondor's southern coast with majestic authority. The city occupies the southern end of the small bay called Cobas Haven, where the River Ringló flows into the sea. This peninsula position grants Dol Amroth natural defensive advantages - towering cliffs protect seaward approaches, while massive walls guard the landward sides. The city's elevated position allows watchers on the Sea-ward Tower to scan vast stretches of ocean for approaching ships, whether friendly traders or hostile Corsair raiders.The name commemorates a tragic love story from the distant past. In T.A. 1981, Amroth, the last King of Lórien, came to Edhellond (the Elven haven fifty miles north) seeking passage to Aman with his beloved Nimrodel. She had fled Lórien's darkness after the Balrog awakened in Moria, and Amroth had promised to follow her into the West. But Nimrodel became lost in the White Mountains, never reaching the coast. Amroth waited aboard the last ship from Edhellond, but when a great autumn storm drove the vessel out to sea, he leaped overboard in a desperate attempt to swim ashore and search for her. He drowned in the bay's cold waters, and Nimrodel was never found. The hill where the Princes' stronghold stood was thereafter called Dol Amroth in memory of the lost Elf-king's final moments - a poignant reminder that even immortal beings can fall to grief and the sea's merciless power.The principality itself is known by multiple names. Officially, the fief is called Belfalas, or alternatively Dor-en-Ernil, reflecting its unique status as a hereditary princedom within the kingdom of Gondor. In the Common Speech, the region is sometimes called the Langstrand, though this name more properly belongs to Anfalas to the west.">
     <Components>
       <Town id="town_comp_EW5" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -2826,7 +2826,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW6" name="{=Settlements.Settlement.name.town_EW6}Lond Cirion" owner="Faction.clan_empire_west_4" posX="526.139" posY="612.720" culture="Culture.gondor" gate_posX="526.8507" gate_posY="612.0974" text="{==Settlements.Settlement.text.town_EW6}Lond Cirion stands at the mouth of the mighty River Lagorduin where it empties into the Bay of Belfalas, commanding the central coastline of Anfalas - the Long Beach, also known as Langstrand in the Common Speech. The city holds the unique distinction of being the oldest Númenórean settlement in all of Gondor, predating even the great cities of Pelargir and Minas Anor, founded by the first wave of Númenórean seafarers who discovered the Bay of Belfalas during the Second Age.Originally named Ciryalondë by those ancient mariners, the settlement served as the first permanent foothold of Númenor on the mainland of Middle-earth in this region. Over the millennia, as the Quenya tongue faded from common use and Sindarin became the primary Elvish language of Gondor, the old name fell from memory and was replaced by Lond Cirion. The current name honors Cirion, the twelfth Ruling Steward of Gondor (T.A. 2489-2567), who forged the legendary alliance with the Éothéod that led to the founding of Rohan - though whether the city was renamed during his lifetime or posthumously to commemorate his deeds remains uncertain in historical records.The city rises in dramatic terraces up from the harbor, built into the rocky hillsides that characterize this stretch of coastline. Ancient Númenórean engineering is evident in the massive retaining walls and stone foundations that support the upper levels, testament to the skill of builders who worked here over four thousand years ago. The city's multi-level construction allows it to maximize defensibility while maintaining access to the vital harbor below, with ingenious lift systems connecting the upper, middle, and lower districts.">
+  <Settlement id="town_EW6" name="{=Settlements.Settlement.name.town_EW6}Dol Amroth" owner="Faction.clan_empire_west_4" posX="526.139" posY="612.720" culture="Culture.gondor" gate_posX="526.8507" gate_posY="612.0974" text="{==Settlements.Settlement.text.town_EW6}Lond Cirion stands at the mouth of the mighty River Lagorduin where it empties into the Bay of Belfalas, commanding the central coastline of Anfalas - the Long Beach, also known as Langstrand in the Common Speech. The city holds the unique distinction of being the oldest Númenórean settlement in all of Gondor, predating even the great cities of Pelargir and Minas Anor, founded by the first wave of Númenórean seafarers who discovered the Bay of Belfalas during the Second Age.Originally named Ciryalondë by those ancient mariners, the settlement served as the first permanent foothold of Númenor on the mainland of Middle-earth in this region. Over the millennia, as the Quenya tongue faded from common use and Sindarin became the primary Elvish language of Gondor, the old name fell from memory and was replaced by Lond Cirion. The current name honors Cirion, the twelfth Ruling Steward of Gondor (T.A. 2489-2567), who forged the legendary alliance with the Éothéod that led to the founding of Rohan - though whether the city was renamed during his lifetime or posthumously to commemorate his deeds remains uncertain in historical records.The city rises in dramatic terraces up from the harbor, built into the rocky hillsides that characterize this stretch of coastline. Ancient Númenórean engineering is evident in the massive retaining walls and stone foundations that support the upper levels, testament to the skill of builders who worked here over four thousand years ago. The city's multi-level construction allows it to maximize defensibility while maintaining access to the vital harbor below, with ingenious lift systems connecting the upper, middle, and lower districts.">
     <Components>
       <Town id="town_comp_EW6" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -2901,7 +2901,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW7" name="{=Settlements.Settlement.name.town_EW7}Bar Melui" owner="Faction.clan_empire_west_4" posX="883.579" posY="648.949" culture="Culture.gondor" gate_posX="882.8484" gate_posY="648.9463" text="{==Settlements.Settlement.text.town_EW7}Arnach serves as the traditional seat and stronghold of Lord Forlong, though the corpulent lord maintains closer personal ties to Imloth Melui through his marriage to Lady Vanyalos. The town represents the administrative and military center of Lossarnach, where taxes are collected, justice dispensed, and the fiefdom's military forces mustered.The settlement takes its name from the ancient pre-Númenórean kingdom of Arnach that once controlled these valleys, preserving a connection to peoples who lived here millennia before Gondor's founding. This antiquity shows in the town's layout - irregular streets following ancient pathways rather than the ordered planning typical of Númenórean cities, and foundations incorporating stonework whose origins are lost to time.">
+  <Settlement id="town_EW7" name="{=Settlements.Settlement.name.town_EW7}Serelond" owner="Faction.clan_empire_west_4" posX="883.579" posY="648.949" culture="Culture.gondor" gate_posX="882.8484" gate_posY="648.9463" text="{==Settlements.Settlement.text.town_EW7}Arnach serves as the traditional seat and stronghold of Lord Forlong, though the corpulent lord maintains closer personal ties to Imloth Melui through his marriage to Lady Vanyalos. The town represents the administrative and military center of Lossarnach, where taxes are collected, justice dispensed, and the fiefdom's military forces mustered.The settlement takes its name from the ancient pre-Númenórean kingdom of Arnach that once controlled these valleys, preserving a connection to peoples who lived here millennia before Gondor's founding. This antiquity shows in the town's layout - irregular streets following ancient pathways rather than the ordered planning typical of Númenórean cities, and foundations incorporating stonework whose origins are lost to time.">
     <Components>
       <Town id="town_comp_EW7" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -2976,7 +2976,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW8" name="{=Settlements.Settlement.name.town_EW8}Ost Arndir" owner="Faction.clan_empire_west_5" posX="556.390" posY="688.601" culture="Culture.gondor" gate_posX="555.8619" gate_posY="687.9364" text="{==Settlements.Settlement.text.town_EW8}Ost Arndir is the primary stronghold and seat of power in Pinnath Gelin, one of the fertile green hill-lands of southern Gondor. The fortress serves as the capital settlement of this important agricultural region, which functions as a breadbasket for the kingdom.">
+  <Settlement id="town_EW8" name="{=Settlements.Settlement.name.town_EW8}Lond Cirion" owner="Faction.clan_empire_west_5" posX="556.390" posY="688.601" culture="Culture.gondor" gate_posX="555.8619" gate_posY="687.9364" text="{==Settlements.Settlement.text.town_EW8}Ost Arndir is the primary stronghold and seat of power in Pinnath Gelin, one of the fertile green hill-lands of southern Gondor. The fortress serves as the capital settlement of this important agricultural region, which functions as a breadbasket for the kingdom.">
     <Components>
       <Town id="town_comp_EW8" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -3051,7 +3051,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_EW9" name="{=Settlements.Settlement.name.town_EW9}Calembel" owner="Faction.clan_empire_west_9" posX="745.866" posY="660.217" culture="Culture.gondor" gate_posX="745.4271" gate_posY="661.1942" text="{==Settlements.Settlement.text.town_EW9}Calembel stands as the principal town of Lamedon, commanding a small but prominent hill overlooking the fords of the River Ciril in northern Gondor. The town's position makes it a critical waypoint on the ancient road connecting Erech in the Morthond Vale to the great port city of Pelargir, serving as both guardian of the river crossing and gateway between the mountainous interior and the fertile lowlands of southern Gondor. The Ciril's fords below the town represent one of the few reliable crossing points in the region, and control of Calembel has historically meant control of movement through western Lamedon.The town rises in terraced levels up the hillside, with the imposing castle of Angbor - Lord of Lamedon - crowning the summit. From this vantage, watchmen can observe traffic on the road for miles in either direction and monitor the river valleys where tributaries descend from the White Mountains to the north. The elevation also provides natural defensive advantages, though Calembel has long been more administrative center than fortress, its strength lying in the loyalty of Lamedon's people rather than impregnable walls.">
+  <Settlement id="town_EW9" name="{=Settlements.Settlement.name.town_EW9}Ost Arndir" owner="Faction.clan_empire_west_9" posX="745.866" posY="660.217" culture="Culture.gondor" gate_posX="745.4271" gate_posY="661.1942" text="{==Settlements.Settlement.text.town_EW9}Calembel stands as the principal town of Lamedon, commanding a small but prominent hill overlooking the fords of the River Ciril in northern Gondor. The town's position makes it a critical waypoint on the ancient road connecting Erech in the Morthond Vale to the great port city of Pelargir, serving as both guardian of the river crossing and gateway between the mountainous interior and the fertile lowlands of southern Gondor. The Ciril's fords below the town represent one of the few reliable crossing points in the region, and control of Calembel has historically meant control of movement through western Lamedon.The town rises in terraced levels up the hillside, with the imposing castle of Angbor - Lord of Lamedon - crowning the summit. From this vantage, watchmen can observe traffic on the road for miles in either direction and monitor the river valleys where tributaries descend from the White Mountains to the north. The elevation also provides natural defensive advantages, though Calembel has long been more administrative center than fortress, its strength lying in the loyalty of Lamedon's people rather than impregnable walls.">
     <Components>
       <Town id="town_comp_EW9" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="3900">
           <Buildings>
@@ -3129,7 +3129,7 @@
   <!-- ============================================== -->
   <!-- ASERAI (Harad) -->
   <!-- ============================================== -->
-  <Settlement id="castle_A1" name="{=Settlements.Settlement.name.castle_A1}Tubilis Castle" owner="Faction.clan_aserai_1" posX="805.822" posY="343.024" culture="Culture.aserai" gate_posX="806.4882" gate_posY="341.8376">
+  <Settlement id="castle_A1" name="{=Settlements.Settlement.name.castle_A1}Barad Harn" owner="Faction.clan_aserai_1" posX="805.822" posY="343.024" culture="Culture.aserai" gate_posX="806.4882" gate_posY="341.8376">
     <Components>
       <Town id="castle_comp_A1" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="460">
           <Buildings>
@@ -3179,7 +3179,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A11" name="{=Settlements.Settlement.name.castle_A11}Castle A11" owner="Faction.clan_aserai_1" posX="1149.890" posY="441.185" culture="Culture.aserai" gate_posX="1150.556" gate_posY="439.9987">
+  <Settlement id="castle_A11" name="{=Settlements.Settlement.name.castle_A11}Dân Shatagân" owner="Faction.clan_aserai_1" posX="1149.890" posY="441.185" culture="Culture.aserai" gate_posX="1150.556" gate_posY="439.9987">
     <Components>
       <Town id="castle_comp_A11" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3229,7 +3229,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A12" name="{=Settlements.Settlement.name.castle_A12}Castle A12" owner="Faction.clan_aserai_1" posX="1196.176" posY="359.580" culture="Culture.aserai" gate_posX="1197.899" gate_posY="360.3527">
+  <Settlement id="castle_A12" name="{=Settlements.Settlement.name.castle_A12}Pazakhêra" owner="Faction.clan_aserai_1" posX="1196.176" posY="359.580" culture="Culture.aserai" gate_posX="1197.899" gate_posY="360.3527">
     <Components>
       <Town id="castle_comp_A12" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3279,7 +3279,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A13" name="{=Settlements.Settlement.name.castle_A13}Castle A13" owner="Faction.clan_aserai_1" posX="1011.296" posY="279.121" culture="Culture.aserai" gate_posX="1010.02" gate_posY="280.3429">
+  <Settlement id="castle_A13" name="{=Settlements.Settlement.name.castle_A13}Khatzâla" owner="Faction.clan_aserai_1" posX="1011.296" posY="279.121" culture="Culture.aserai" gate_posX="1010.02" gate_posY="280.3429">
     <Components>
       <Town id="castle_comp_A13" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3329,7 +3329,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A14" name="{=Settlements.Settlement.name.castle_A14}Castle A14" owner="Faction.clan_aserai_1" posX="943.651" posY="206.949" culture="Culture.aserai" gate_posX="945.2901" gate_posY="207.6091">
+  <Settlement id="castle_A14" name="{=Settlements.Settlement.name.castle_A14}Bâdrasag" owner="Faction.clan_aserai_1" posX="943.651" posY="206.949" culture="Culture.aserai" gate_posX="945.2901" gate_posY="207.6091">
     <Components>
       <Town id="castle_comp_A14" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3379,7 +3379,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A15" name="{=Settlements.Settlement.name.castle_A15}Castle A15" owner="Faction.clan_aserai_1" posX="683.216" posY="155.438" culture="Culture.aserai" gate_posX="681.4708" gate_posY="154.8572">
+  <Settlement id="castle_A15" name="{=Settlements.Settlement.name.castle_A15}Gatúr" owner="Faction.clan_aserai_1" posX="683.216" posY="155.438" culture="Culture.aserai" gate_posX="681.4708" gate_posY="154.8572">
     <Components>
       <Town id="castle_comp_A15" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3429,7 +3429,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A16" name="{=Settlements.Settlement.name.castle_A16}Castle A16" owner="Faction.clan_aserai_1" posX="1181.627" posY="270.501" culture="Culture.aserai" gate_posX="1182.967" gate_posY="270.2919">
+  <Settlement id="castle_A16" name="{=Settlements.Settlement.name.castle_A16}Lajór" owner="Faction.clan_aserai_1" posX="1181.627" posY="270.501" culture="Culture.aserai" gate_posX="1182.967" gate_posY="270.2919">
     <Components>
       <Town id="castle_comp_A16" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3479,7 +3479,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A17" name="{=Settlements.Settlement.name.castle_A17}Castle A17" owner="Faction.clan_aserai_1" posX="1112.743" posY="100.987" culture="Culture.aserai" gate_posX="1111.426" gate_posY="102.1648">
+  <Settlement id="castle_A17" name="{=Settlements.Settlement.name.castle_A17}Kâna" owner="Faction.clan_aserai_1" posX="1112.743" posY="100.987" culture="Culture.aserai" gate_posX="1111.426" gate_posY="102.1648">
     <Components>
       <Town id="castle_comp_A17" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3529,7 +3529,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A18" name="{=Settlements.Settlement.name.castle_A18}Castle A18" owner="Faction.clan_aserai_1" posX="1002.579" posY="9.902" culture="Culture.aserai" gate_posX="1003.579" gate_posY="8.902">
+  <Settlement id="castle_A18" name="{=Settlements.Settlement.name.castle_A18}Sâkhazai" owner="Faction.clan_aserai_1" posX="1002.579" posY="9.902" culture="Culture.aserai" gate_posX="1003.579" gate_posY="8.902">
     <Components>
       <Town id="castle_comp_A18" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3579,7 +3579,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A19" name="{=Settlements.Settlement.name.castle_A19}Castle A19" owner="Faction.clan_aserai_1" posX="776.832" posY="11.816" culture="Culture.aserai" gate_posX="775.5263" gate_posY="11.33472">
+  <Settlement id="castle_A19" name="{=Settlements.Settlement.name.castle_A19}Khâb Kitâx" owner="Faction.clan_aserai_1" posX="776.832" posY="11.816" culture="Culture.aserai" gate_posX="775.5263" gate_posY="11.33472">
     <Components>
       <Town id="castle_comp_A19" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -3629,7 +3629,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A2" name="{=Settlements.Settlement.name.castle_A2}Sahel Castle" owner="Faction.clan_aserai_3" posX="782.635" posY="418.539" culture="Culture.aserai" gate_posX="780.8428" gate_posY="419.1347">
+  <Settlement id="castle_A2" name="{=Settlements.Settlement.name.castle_A2}Yânu" owner="Faction.clan_aserai_3" posX="782.635" posY="418.539" culture="Culture.aserai" gate_posX="780.8428" gate_posY="419.1347">
     <Components>
       <Town id="castle_comp_A2" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="890">
           <Buildings>
@@ -3679,7 +3679,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A3" name="{=Settlements.Settlement.name.castle_A3}Ain Baliq Castle" owner="Faction.clan_aserai_7" posX="858.564" posY="430.164" culture="Culture.aserai" gate_posX="860.0275" gate_posY="431.1542">
+  <Settlement id="castle_A3" name="{=Settlements.Settlement.name.castle_A3}Kes Shadoul" owner="Faction.clan_aserai_7" posX="858.564" posY="430.164" culture="Culture.aserai" gate_posX="860.0275" gate_posY="431.1542">
     <Components>
       <Town id="castle_comp_A3" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="980">
           <Buildings>
@@ -3729,7 +3729,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A4" name="{=Settlements.Settlement.name.castle_A4}Medeni Castle" owner="Faction.clan_aserai_2" posX="848.109" posY="478.193" culture="Culture.aserai" gate_posX="848.7884" gate_posY="476.5618">
+  <Settlement id="castle_A4" name="{=Settlements.Settlement.name.castle_A4}Kadar Kâraba" owner="Faction.clan_aserai_2" posX="848.109" posY="478.193" culture="Culture.aserai" gate_posX="848.7884" gate_posY="476.5618">
     <Components>
       <Town id="castle_comp_A4" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="750">
           <Buildings>
@@ -3779,7 +3779,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A5" name="{=Settlements.Settlement.name.castle_A5}Jamayeh Castle" owner="Faction.clan_aserai_4" posX="822.091" posY="285.857" culture="Culture.aserai" gate_posX="822.0864" gate_posY="284.0176">
+  <Settlement id="castle_A5" name="{=Settlements.Settlement.name.castle_A5}Hârmaka" owner="Faction.clan_aserai_4" posX="822.091" posY="285.857" culture="Culture.aserai" gate_posX="822.0864" gate_posY="284.0176">
     <Components>
       <Town id="castle_comp_A5" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="610">
           <Buildings>
@@ -3829,7 +3829,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A6" name="{=Settlements.Settlement.name.castle_A6}Shibal Zumr Castle" owner="Faction.clan_aserai_3" posX="917.381" posY="414.464" culture="Culture.aserai" gate_posX="916.372" gate_posY="415.3708">
+  <Settlement id="castle_A6" name="{=Settlements.Settlement.name.castle_A6}Sul Madash" owner="Faction.clan_aserai_3" posX="917.381" posY="414.464" culture="Culture.aserai" gate_posX="916.372" gate_posY="415.3708">
     <Components>
       <Town id="castle_comp_A6" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="570">
           <Buildings>
@@ -3879,7 +3879,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A7" name="{=Settlements.Settlement.name.castle_A7}Uqba Castle" owner="Faction.clan_aserai_7" posX="945.843" posY="454.284" culture="Culture.aserai" gate_posX="946.9343" gate_posY="452.8942">
+  <Settlement id="castle_A7" name="{=Settlements.Settlement.name.castle_A7}Sâr Marsag" owner="Faction.clan_aserai_7" posX="945.843" posY="454.284" culture="Culture.aserai" gate_posX="946.9343" gate_posY="452.8942">
     <Components>
       <Town id="castle_comp_A7" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="550">
           <Buildings>
@@ -3929,7 +3929,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A8" name="{=Settlements.Settlement.name.castle_A8}Tamnuh Castle" owner="Faction.clan_aserai_8" posX="998.291" posY="463.160" culture="Culture.aserai" gate_posX="997.1644" gate_posY="463.9381">
+  <Settlement id="castle_A8" name="{=Settlements.Settlement.name.castle_A8}Nagakhêdi" owner="Faction.clan_aserai_8" posX="998.291" posY="463.160" culture="Culture.aserai" gate_posX="997.1644" gate_posY="463.9381">
     <Components>
       <Town id="castle_comp_A8" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="590">
           <Buildings>
@@ -3979,7 +3979,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A9" name="{=Settlements.Settlement.name.castle_A9}Barihal Castle" owner="Faction.clan_aserai_9" posX="1041.545" posY="413.851" culture="Culture.aserai" gate_posX="1040.452" gate_posY="412.99">
+  <Settlement id="castle_A9" name="{=Settlements.Settlement.name.castle_A9}Khâb Antâx" owner="Faction.clan_aserai_9" posX="1041.545" posY="413.851" culture="Culture.aserai" gate_posX="1040.452" gate_posY="412.99">
     <Components>
       <Town id="castle_comp_A9" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="610">
           <Buildings>
@@ -4029,7 +4029,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A1" name="{=Settlements.Settlement.name.town_A1}Quyaz" owner="Faction.clan_aserai_1" posX="876.924" posY="437.360" culture="Culture.aserai" gate_posX="879.7069" gate_posY="438.7548" text="{=1ImuW3My}Quyaz was once a mercantile republic that dominated the trade between the western ocean and the Perassic Sea, speaking the now all-but-extinct Kannic tongue, a relative of Nahasawi. But imperial hegemony slowly snuffed out its trade, and the rulers was taken over by mercenaries from the Nahasa. It came intermittently under imperial subjugation but today is a prized holding of the Banu Hulyan, a leading clan of the Aserai sultanate.">
+  <Settlement id="town_A1" name="{=Settlements.Settlement.name.town_A1}Kes Marzûk" owner="Faction.clan_aserai_1" posX="876.924" posY="437.360" culture="Culture.aserai" gate_posX="879.7069" gate_posY="438.7548" text="{=1ImuW3My}Quyaz was once a mercantile republic that dominated the trade between the western ocean and the Perassic Sea, speaking the now all-but-extinct Kannic tongue, a relative of Nahasawi. But imperial hegemony slowly snuffed out its trade, and the rulers was taken over by mercenaries from the Nahasa. It came intermittently under imperial subjugation but today is a prized holding of the Banu Hulyan, a leading clan of the Aserai sultanate.">
     <Components>
       <Town id="town_comp_A1" is_castle="false" background_crop_position="0.0" background_mesh="menu_aserai_2" wait_mesh="wait_aserai_town" gate_rotation="0.108" prosperity="4000">
           <Buildings>
@@ -4492,7 +4492,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A2" name="{=Settlements.Settlement.name.town_A2}Husn Fulq" owner="Faction.clan_aserai_2" posX="787.018" posY="440.279" culture="Culture.aserai" gate_posX="787.4059" gate_posY="441.7513" text="{=bnl7Va4c}Husn Fulq sits at the southeastern edge of the Caldea, the network of rivers and brackish lagoons linking the Empire to the Aserai lands. Fulq, also known as Phalcos, was a dark-faced mercenary chieftain who came from lands far to the south. He founded a fortress here and then parlayed its strategic location into a fortune, taking bribes from the Empire and then from the Aserai to switch sides. After 20 years of playing both sides back and forth he sailed home in a ship laden with gold, but many clans of the Aserai proudly claim descent from him, and the 'Tricks of Fulq' are a staple of many a bazaar storyteller's repetoire.">
+  <Settlement id="town_A2" name="{=Settlements.Settlement.name.town_A2}Korb Taskral" owner="Faction.clan_aserai_2" posX="787.018" posY="440.279" culture="Culture.aserai" gate_posX="787.4059" gate_posY="441.7513" text="{=bnl7Va4c}Husn Fulq sits at the southeastern edge of the Caldea, the network of rivers and brackish lagoons linking the Empire to the Aserai lands. Fulq, also known as Phalcos, was a dark-faced mercenary chieftain who came from lands far to the south. He founded a fortress here and then parlayed its strategic location into a fortune, taking bribes from the Empire and then from the Aserai to switch sides. After 20 years of playing both sides back and forth he sailed home in a ship laden with gold, but many clans of the Aserai proudly claim descent from him, and the 'Tricks of Fulq' are a staple of many a bazaar storyteller's repetoire.">
     <Components>
       <Town id="town_comp_A2" is_castle="false" background_crop_position="0.235" background_mesh="menu_aserai_1" wait_mesh="wait_aserai_town" gate_rotation="0.808" prosperity="4200">
           <Buildings>
@@ -4554,7 +4554,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A3" name="{=Settlements.Settlement.name.town_A3}Iyakis" owner="Faction.clan_aserai_4" posX="968.762" posY="361.557" culture="Culture.aserai" gate_posX="967.3528" gate_posY="364.2266" text="{=NFIYqaab}Iyakis sits in a cleft in the Jarjara escarpment, where the waters of the fierce but brief desert rains can be trapped and used for irrigation. For generations ago it was an autonomous outpost of the Empire known as Yachios, dominated by the Carasios clan. Fifty years ago however they saw the writing on the wall for imperial dominion in the southlands, and began intermarrying themselves with the tribes of the Nahasa. Today, known as the Qaraz, they take their places in the councils of the sultanate like any other family of the Aserai.">
+  <Settlement id="town_A3" name="{=Settlements.Settlement.name.town_A3}Chelkarâ" owner="Faction.clan_aserai_4" posX="968.762" posY="361.557" culture="Culture.aserai" gate_posX="967.3528" gate_posY="364.2266" text="{=NFIYqaab}Iyakis sits in a cleft in the Jarjara escarpment, where the waters of the fierce but brief desert rains can be trapped and used for irrigation. For generations ago it was an autonomous outpost of the Empire known as Yachios, dominated by the Carasios clan. Fifty years ago however they saw the writing on the wall for imperial dominion in the southlands, and began intermarrying themselves with the tribes of the Nahasa. Today, known as the Qaraz, they take their places in the councils of the sultanate like any other family of the Aserai.">
     <Components>
       <Town id="town_comp_A3" is_castle="false" background_crop_position="0.0" background_mesh="menu_aserai_4" wait_mesh="wait_aserai_town" gate_rotation="0.508" prosperity="1800">
           <Buildings>
@@ -4616,7 +4616,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A4" name="{=Settlements.Settlement.name.town_A4}Razih" owner="Faction.clan_aserai_2" posX="1062.715" posY="474.254" culture="Culture.aserai" gate_posX="1061.182" gate_posY="471.507" text="{=jXBnf2hQ}Razih is said to be the base from which Kannic explorers set forth to colonize the shores of the Perassic Sea in the centuries before the coming of the empire, the prows of their ships decorated with the intertwined vine leaves of the Kannic goddess of wealth, wine, love and war. Today, the Kannic tongue has been replaced by Nahasawi dialects and their religion is all but forgotten, but the symbol lives on, said to protect those who risk all for the sake of gain or glory.">
+  <Settlement id="town_A4" name="{=Settlements.Settlement.name.town_A4}Hurum Kâna" owner="Faction.clan_aserai_2" posX="1062.715" posY="474.254" culture="Culture.aserai" gate_posX="1061.182" gate_posY="471.507" text="{=jXBnf2hQ}Razih is said to be the base from which Kannic explorers set forth to colonize the shores of the Perassic Sea in the centuries before the coming of the empire, the prows of their ships decorated with the intertwined vine leaves of the Kannic goddess of wealth, wine, love and war. Today, the Kannic tongue has been replaced by Nahasawi dialects and their religion is all but forgotten, but the symbol lives on, said to protect those who risk all for the sake of gain or glory.">
     <Components>
       <Town id="town_comp_A4" is_castle="false" background_crop_position="0.241" background_mesh="menu_aserai_1" wait_mesh="wait_aserai_town" gate_rotation="0.208" prosperity="4500">
           <Buildings>
@@ -4691,7 +4691,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A5" name="{=Settlements.Settlement.name.town_A5}Hubyar" owner="Faction.clan_aserai_3" posX="1113.237" posY="275.350" culture="Culture.aserai" gate_posX="1109.892" gate_posY="276.8802" text="{=IIMWPVhU}The inland city of Hubyar is said to be built on the ruins of a luxurious hunting lodge built by the decadent and cruel king Thuran, whom the patriarch Asera slew in vengeance for the enslavement of his family. This memory may explain the worldview of the fierce and austere Banu Qild, who hold the castle today and who detest all frivolity. But the scent of jasmine that can be detected on the night breezes here carries an undercurrent of temptation. It was here that the hero Nimr came to grief, caught in the chamber of a Banu Qild maiden and left hanging in a cage in the market until he perished.">
+  <Settlement id="town_A5" name="{=Settlements.Settlement.name.town_A5}Parzee" owner="Faction.clan_aserai_3" posX="1113.237" posY="275.350" culture="Culture.aserai" gate_posX="1109.892" gate_posY="276.8802" text="{=IIMWPVhU}The inland city of Hubyar is said to be built on the ruins of a luxurious hunting lodge built by the decadent and cruel king Thuran, whom the patriarch Asera slew in vengeance for the enslavement of his family. This memory may explain the worldview of the fierce and austere Banu Qild, who hold the castle today and who detest all frivolity. But the scent of jasmine that can be detected on the night breezes here carries an undercurrent of temptation. It was here that the hero Nimr came to grief, caught in the chamber of a Banu Qild maiden and left hanging in a cage in the market until he perished.">
     <Components>
       <Town id="town_comp_A5" is_castle="false" background_crop_position="0.179" background_mesh="menu_aserai_2" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="3200">
           <Buildings>
@@ -4753,7 +4753,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A6" name="{=Settlements.Settlement.name.town_A6}Sanala" owner="Faction.clan_aserai_1" posX="861.737" posY="268.348" culture="Culture.aserai" gate_posX="863.1719" gate_posY="270.8366" text="{=uO4dxCl8}The port of Sanala is the gateway through which the grain of the lower Damar has flowed forth to feed a hungry world. The Empire's periodic advances south of the Perassic Sea have usually been aimed at seizing this strategic prize. Although the legions were long ago forced to retreat, Sanala remains among the most cosmopolitan cities in Calradia, filled with merchants from many lands bidding for the lowest bulk prices.">
+  <Settlement id="town_A6" name="{=Settlements.Settlement.name.town_A6}Zajâna" owner="Faction.clan_aserai_1" posX="861.737" posY="268.348" culture="Culture.aserai" gate_posX="863.1719" gate_posY="270.8366" text="{=uO4dxCl8}The port of Sanala is the gateway through which the grain of the lower Damar has flowed forth to feed a hungry world. The Empire's periodic advances south of the Perassic Sea have usually been aimed at seizing this strategic prize. Although the legions were long ago forced to retreat, Sanala remains among the most cosmopolitan cities in Calradia, filled with merchants from many lands bidding for the lowest bulk prices.">
     <Components>
       <Town id="town_comp_A6" is_castle="false" background_crop_position="0.401" background_mesh="menu_aserai_4" wait_mesh="wait_aserai_town" gate_rotation="0.408" prosperity="4300">
           <Buildings>
@@ -4841,7 +4841,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A7" name="{=Settlements.Settlement.name.town_A7}Askar" owner="Faction.clan_aserai_5" posX="856.972" posY="103.592" culture="Culture.aserai" gate_posX="858.2878" gate_posY="105.0528" text="{=GChIoZdd}Askar dominates the middle stretches of the Damar River, as it weaves between the bluffs of the Jarjara Escarpment. This region has been thickly populated for thousands of years, but the river is restless, and every few centuries leaps its banks and erases what comes before. This latest regional capital was an imperial encampment  during their furthest penetration of the Nahasa several centuries ago, taken over by the Aserai tribes after the legions withdrew.">
+  <Settlement id="town_A7" name="{=Settlements.Settlement.name.town_A7}Chatâk" owner="Faction.clan_aserai_5" posX="856.972" posY="103.592" culture="Culture.aserai" gate_posX="858.2878" gate_posY="105.0528" text="{=GChIoZdd}Askar dominates the middle stretches of the Damar River, as it weaves between the bluffs of the Jarjara Escarpment. This region has been thickly populated for thousands of years, but the river is restless, and every few centuries leaps its banks and erases what comes before. This latest regional capital was an imperial encampment  during their furthest penetration of the Nahasa several centuries ago, taken over by the Aserai tribes after the legions withdrew.">
     <Components>
       <Town id="town_comp_A7" is_castle="false" background_crop_position="0.401" background_mesh="menu_aserai_1" wait_mesh="wait_aserai_town" gate_rotation="0.408" prosperity="2100">
           <Buildings>
@@ -4916,7 +4916,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A8" name="{=Settlements.Settlement.name.town_A8}Qasira" owner="Faction.clan_aserai_6" posX="1191.013" posY="158.279" culture="Culture.aserai" gate_posX="1187.607" gate_posY="156.1899" text="{=J4bgNT0r}The legendary Queen Eshora, it is said, punished the jinn who were harassing her people by imprisoning them in one of the caves above Qasira, carving the mystical eight-pointed star into the rock to seal them in. She sentenced them to haul water from the depths of the earth, feeding the springs that gush forth from the rocks and which for centuries have irrigated the date gardens of Qasira and its surrounding villages.">
+  <Settlement id="town_A8" name="{=Settlements.Settlement.name.town_A8}Sormedân" owner="Faction.clan_aserai_6" posX="1191.013" posY="158.279" culture="Culture.aserai" gate_posX="1187.607" gate_posY="156.1899" text="{=J4bgNT0r}The legendary Queen Eshora, it is said, punished the jinn who were harassing her people by imprisoning them in one of the caves above Qasira, carving the mystical eight-pointed star into the rock to seal them in. She sentenced them to haul water from the depths of the earth, feeding the springs that gush forth from the rocks and which for centuries have irrigated the date gardens of Qasira and its surrounding villages.">
     <Components>
       <Town id="town_comp_A8" is_castle="false" background_crop_position="0.0" background_mesh="menu_aserai_2" wait_mesh="wait_aserai_town" gate_rotation="0.508" prosperity="3500">
           <Buildings>
@@ -5069,7 +5069,7 @@
   <!-- ============================================== -->
   <!-- FAR HARAD -->
   <!-- ============================================== -->
-  <Settlement id="castle_FH1" name="{=Settlements.Settlement.name.castle_FH1}Castle FH1" owner="Faction.clan_aserai_1" posX="1568.636" posY="360.710" culture="Culture.aserai" gate_posX="1569.04" gate_posY="358.8029">
+  <Settlement id="castle_FH1" name="{=Settlements.Settlement.name.castle_FH1}Erakúndo" owner="Faction.clan_aserai_1" posX="1568.636" posY="360.710" culture="Culture.aserai" gate_posX="1569.04" gate_posY="358.8029">
     <Components>
       <Town id="castle_comp_FH1" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5132,7 +5132,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH2" name="{=Settlements.Settlement.name.castle_FH2}Castle FH2" owner="Faction.clan_aserai_1" posX="1513.075" posY="306.474" culture="Culture.aserai" gate_posX="1514.138" gate_posY="308.8854">
+  <Settlement id="castle_FH2" name="{=Settlements.Settlement.name.castle_FH2}Gebarakôr" owner="Faction.clan_aserai_1" posX="1513.075" posY="306.474" culture="Culture.aserai" gate_posX="1514.138" gate_posY="308.8854">
     <Components>
       <Town id="castle_comp_FH2" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5195,7 +5195,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH3" name="{=Settlements.Settlement.name.castle_FH3}Castle FH3" owner="Faction.clan_aserai_1" posX="1589.284" posY="233.379" culture="Culture.aserai" gate_posX="1587.651" gate_posY="232.6875">
+  <Settlement id="castle_FH3" name="{=Settlements.Settlement.name.castle_FH3}Kôth Rau" owner="Faction.clan_aserai_1" posX="1589.284" posY="233.379" culture="Culture.aserai" gate_posX="1587.651" gate_posY="232.6875">
     <Components>
       <Town id="castle_comp_FH3" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5258,7 +5258,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH4" name="{=Settlements.Settlement.name.castle_FH4}Castle FH4" owner="Faction.clan_aserai_1" posX="1435.876" posY="203.662" culture="Culture.aserai" gate_posX="1436.981" gate_posY="201.6967">
+  <Settlement id="castle_FH4" name="{=Settlements.Settlement.name.castle_FH4}Onabóha" owner="Faction.clan_aserai_1" posX="1435.876" posY="203.662" culture="Culture.aserai" gate_posX="1436.981" gate_posY="201.6967">
     <Components>
       <Town id="castle_comp_FH4" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5321,7 +5321,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH5" name="{=Settlements.Settlement.name.castle_FH5}Castle FH5" owner="Faction.clan_aserai_1" posX="1313.864" posY="234.519" culture="Culture.aserai" gate_posX="1315.52" gate_posY="235.7509">
+  <Settlement id="castle_FH5" name="{=Settlements.Settlement.name.castle_FH5}Taridím" owner="Faction.clan_aserai_1" posX="1313.864" posY="234.519" culture="Culture.aserai" gate_posX="1315.52" gate_posY="235.7509">
     <Components>
       <Town id="castle_comp_FH5" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5384,7 +5384,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH6" name="{=Settlements.Settlement.name.castle_FH6}Castle FH6" owner="Faction.clan_aserai_1" posX="1263.601" posY="189.287" culture="Culture.aserai" gate_posX="1266.06" gate_posY="188.1362">
+  <Settlement id="castle_FH6" name="{=Settlements.Settlement.name.castle_FH6}Urutúsh" owner="Faction.clan_aserai_1" posX="1263.601" posY="189.287" culture="Culture.aserai" gate_posX="1266.06" gate_posY="188.1362">
     <Components>
       <Town id="castle_comp_FH6" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5447,7 +5447,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH7" name="{=Settlements.Settlement.name.castle_FH7}Castle FH7" owner="Faction.clan_aserai_1" posX="1375.708" posY="98.475" culture="Culture.aserai" gate_posX="1377.162" gate_posY="97.04688">
+  <Settlement id="castle_FH7" name="{=Settlements.Settlement.name.castle_FH7}Zakhûr" owner="Faction.clan_aserai_1" posX="1375.708" posY="98.475" culture="Culture.aserai" gate_posX="1377.162" gate_posY="97.04688">
     <Components>
       <Town id="castle_comp_FH7" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5510,7 +5510,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH8" name="{=Settlements.Settlement.name.castle_FH8}Castle FH8" owner="Faction.clan_aserai_1" posX="1299.732" posY="6.747" culture="Culture.aserai" gate_posX="1298.065" gate_posY="7.356484">
+  <Settlement id="castle_FH8" name="{=Settlements.Settlement.name.castle_FH8}Shâlahin" owner="Faction.clan_aserai_1" posX="1299.732" posY="6.747" culture="Culture.aserai" gate_posX="1298.065" gate_posY="7.356484">
     <Components>
       <Town id="castle_comp_FH8" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5573,7 +5573,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH9" name="{=Settlements.Settlement.name.castle_FH9}Castle FH9" owner="Faction.clan_aserai_1" posX="1528.656" posY="19.734" culture="Culture.aserai" gate_posX="1528.189" gate_posY="22.3488">
+  <Settlement id="castle_FH9" name="{=Settlements.Settlement.name.castle_FH9}Archadâzar" owner="Faction.clan_aserai_1" posX="1528.656" posY="19.734" culture="Culture.aserai" gate_posX="1528.189" gate_posY="22.3488">
     <Components>
       <Town id="castle_comp_FH9" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -5639,7 +5639,7 @@
   <!-- ============================================== -->
   <!-- VLANDIA -->
   <!-- ============================================== -->
-  <Settlement id="castle_V1" name="{=Settlements.Settlement.name.castle_V1}Usanc Castle" owner="Faction.clan_vlandia_11" posX="705.200" posY="789.884" culture="Culture.vlandia" gate_posX="705.2232" gate_posY="791.1683">
+  <Settlement id="castle_V1" name="{=Settlements.Settlement.name.castle_V1}Gramburg" owner="Faction.clan_vlandia_11" posX="705.200" posY="789.884" culture="Culture.vlandia" gate_posX="705.2232" gate_posY="791.1683">
     <Components>
       <Town id="castle_comp_V1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="537">
           <Buildings>
@@ -5689,7 +5689,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_V2" name="{=Settlements.Settlement.name.castle_V2}Hongard Castle" owner="Faction.clan_vlandia_9" posX="793.036" posY="792.709" culture="Culture.vlandia" gate_posX="791.5212" gate_posY="793.4139">
+  <Settlement id="castle_V2" name="{=Settlements.Settlement.name.castle_V2}Fenmarch" owner="Faction.clan_vlandia_9" posX="793.036" posY="792.709" culture="Culture.vlandia" gate_posX="791.5212" gate_posY="793.4139">
     <Components>
       <Town id="castle_comp_V2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="1020">
           <Buildings>
@@ -5739,7 +5739,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_V3" name="{=Settlements.Settlement.name.castle_V3}Drapand Castle" owner="Faction.clan_vlandia_2" posX="809.163" posY="749.091" culture="Culture.vlandia" gate_posX="806.1476" gate_posY="750.1483">
+  <Settlement id="castle_V3" name="{=Settlements.Settlement.name.castle_V3}Cliving" owner="Faction.clan_vlandia_2" posX="809.163" posY="749.091" culture="Culture.vlandia" gate_posX="806.1476" gate_posY="750.1483">
     <Components>
       <Town id="castle_comp_V3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="830">
           <Buildings>
@@ -5789,7 +5789,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_V4" name="{=Settlements.Settlement.name.castle_V4}Ormanfard Castle" owner="Faction.clan_vlandia_10" posX="715.295" posY="827.074" culture="Culture.vlandia" gate_posX="712.2177" gate_posY="827.4104">
+  <Settlement id="castle_V4" name="{=Settlements.Settlement.name.castle_V4}Starkmoore" owner="Faction.clan_vlandia_10" posX="715.295" posY="827.074" culture="Culture.vlandia" gate_posX="712.2177" gate_posY="827.4104">
     <Components>
       <Town id="castle_comp_V4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="650">
           <Buildings>
@@ -5852,7 +5852,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_V5" name="{=Settlements.Settlement.name.castle_V5}Tirby Castle" owner="Faction.clan_vlandia_5" posX="766.025" posY="857.527" culture="Culture.vlandia" gate_posX="767.15" gate_posY="856.4101">
+  <Settlement id="castle_V5" name="{=Settlements.Settlement.name.castle_V5}Hiltbolt" owner="Faction.clan_vlandia_5" posX="766.025" posY="857.527" culture="Culture.vlandia" gate_posX="767.15" gate_posY="856.4101">
     <Components>
       <Town id="castle_comp_V5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="630">
           <Buildings>
@@ -5902,7 +5902,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_V6" name="{=Settlements.Settlement.name.castle_V6}Caleus Castle" owner="Faction.clan_vlandia_6" posX="709.684" posY="739.096" culture="Culture.vlandia" gate_posX="707.087" gate_posY="740.9191">
+  <Settlement id="castle_V6" name="{=Settlements.Settlement.name.castle_V6}Dunharrow" owner="Faction.clan_vlandia_6" posX="709.684" posY="739.096" culture="Culture.vlandia" gate_posX="707.087" gate_posY="740.9191">
     <Components>
       <Town id="castle_comp_V6" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="760">
           <Buildings>
@@ -5952,7 +5952,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_V7" name="{=Settlements.Settlement.name.castle_V7}Talivel Castle" owner="Faction.clan_vlandia_1" posX="651.506" posY="802.472" culture="Culture.vlandia" gate_posX="648.4286" gate_posY="802.8084">
+  <Settlement id="castle_V7" name="{=Settlements.Settlement.name.castle_V7}Marton" owner="Faction.clan_vlandia_1" posX="651.506" posY="802.472" culture="Culture.vlandia" gate_posX="648.4286" gate_posY="802.8084">
     <Components>
       <Town id="castle_comp_V7" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.908" prosperity="770">
           <Buildings>
@@ -6002,7 +6002,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V1" name="{=Settlements.Settlement.name.town_V1}Sargot" owner="Faction.clan_vlandia_1" posX="756.600" posY="751.311" culture="Culture.vlandia" gate_posX="756.6202" gate_posY="750.481" text="{=aOn6pa0D}Sargot is a common name for hills, promontories, islands and other defensible positions in western Calradia. It refers to a fortified encampment of the Massa, a tribe allied to the the Vlandians who joined their invasion.  Though the Massa moved on, their stay was often so traumatic for a district that the name remained long after their departure. This Sargot was actually founded on the ruins of an imperial town, resettled by Vlandians, and which has supplanted the memory of the community that came before it.">
+  <Settlement id="town_V1" name="{=Settlements.Settlement.name.town_V1}Edoras" owner="Faction.clan_vlandia_1" posX="756.600" posY="751.311" culture="Culture.vlandia" gate_posX="756.6202" gate_posY="750.481" text="{=aOn6pa0D}Sargot is a common name for hills, promontories, islands and other defensible positions in western Calradia. It refers to a fortified encampment of the Massa, a tribe allied to the the Vlandians who joined their invasion.  Though the Massa moved on, their stay was often so traumatic for a district that the name remained long after their departure. This Sargot was actually founded on the ruins of an imperial town, resettled by Vlandians, and which has supplanted the memory of the community that came before it.">
     <Components>
       <Town id="town_comp_V1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.378" prosperity="4500">
           <Buildings>
@@ -6077,7 +6077,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V2" name="{=Settlements.Settlement.name.town_V2}Ocs Hall" owner="Faction.clan_vlandia_7" posX="673.759" posY="773.895" culture="Culture.vlandia" gate_posX="672.3344" gate_posY="774.0141" text="{=nhmBQIC4}Ocs Hall is one of the few towns in the Vlandian kingdom that was founded after the seizure of the land from the Empire. This valley was once an isolated holdout of Battanians, centered on the Llyn Modris, a lake in a volcanic caldera that was said to be the  seat of a giant. This land was conquered by the Vlandian warlord Oca, who also gave his name to the nearby Ocspool lake. The Battanian tribes were driven inland, and took their legends with them.">
+  <Settlement id="town_V2" name="{=Settlements.Settlement.name.town_V2}Aldburg" owner="Faction.clan_vlandia_7" posX="673.759" posY="773.895" culture="Culture.vlandia" gate_posX="672.3344" gate_posY="774.0141" text="{=nhmBQIC4}Ocs Hall is one of the few towns in the Vlandian kingdom that was founded after the seizure of the land from the Empire. This valley was once an isolated holdout of Battanians, centered on the Llyn Modris, a lake in a volcanic caldera that was said to be the  seat of a giant. This land was conquered by the Vlandian warlord Oca, who also gave his name to the nearby Ocspool lake. The Battanian tribes were driven inland, and took their legends with them.">
     <Components>
       <Town id="town_comp_V2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.308" prosperity="4200">
           <Buildings>
@@ -6139,7 +6139,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V3" name="{=Settlements.Settlement.name.town_V3}Pravend" owner="Faction.clan_vlandia_2" posX="784.808" posY="735.909" culture="Culture.vlandia" gate_posX="783.1453" gate_posY="734.1207" text="{=Nx0qK2g6}Paravenos was the second major colony founded by Calradios the Great, and it soon succeeded Charasea as the capital of the Calradians. Eventually, the empire's center of gravity moved east, but Paravenos retained its primacy as the economic center of the West. When Osric Iron-Arm the Vlandian invaded, he recognized Paravenos would be far more valuable as a seat of power than as simply as a source of loot,  and negotiated its surrender with local senators. It passed to a cadet branch of Osric's line, the dey Tihr clan, and is today known as Pravend.">
+  <Settlement id="town_V3" name="{=Settlements.Settlement.name.town_V3}Helm's Deep" owner="Faction.clan_vlandia_2" posX="784.808" posY="735.909" culture="Culture.vlandia" gate_posX="783.1453" gate_posY="734.1207" text="{=Nx0qK2g6}Paravenos was the second major colony founded by Calradios the Great, and it soon succeeded Charasea as the capital of the Calradians. Eventually, the empire's center of gravity moved east, but Paravenos retained its primacy as the economic center of the West. When Osric Iron-Arm the Vlandian invaded, he recognized Paravenos would be far more valuable as a seat of power than as simply as a source of loot,  and negotiated its surrender with local senators. It passed to a cadet branch of Osric's line, the dey Tihr clan, and is today known as Pravend.">
     <Components>
       <Town id="town_comp_V3" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.008" prosperity="3200">
           <Buildings>
@@ -6214,7 +6214,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V4" name="{=Settlements.Settlement.name.town_V4}Town V4" owner="Faction.clan_vlandia_1" posX="747.326" posY="893.849" culture="Culture.vlandia" gate_posX="750.0458" gate_posY="889.9022">
+  <Settlement id="town_V4" name="{=Settlements.Settlement.name.town_V4}Grimslade" owner="Faction.clan_vlandia_1" posX="747.326" posY="893.849" culture="Culture.vlandia" gate_posX="750.0458" gate_posY="889.9022">
     <Components>
       <Town id="town_comp_V4" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlandia" wait_mesh="wait_vlandia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -6289,7 +6289,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V5" name="{=Settlements.Settlement.name.town_V5}Galend" owner="Faction.clan_vlandia_1" posX="746.239" posY="799.386" culture="Culture.vlandia" gate_posX="746.2808" gate_posY="800.3168" text="{=79R6gi4l}Galend overlooks the wave-beaten Biscan coast. It takes in the catch from the Biscan's intrepid fishermen who venture out far into the western ocean, as well as the wool of sheep from the green fog-covered hills. The current line of Vlandian kings comes from the clans who settled in this region during Osric Iron-Arm's invasion.">
+  <Settlement id="town_V5" name="{=Settlements.Settlement.name.town_V5}Eaworth" owner="Faction.clan_vlandia_1" posX="746.239" posY="799.386" culture="Culture.vlandia" gate_posX="746.2808" gate_posY="800.3168" text="{=79R6gi4l}Galend overlooks the wave-beaten Biscan coast. It takes in the catch from the Biscan's intrepid fishermen who venture out far into the western ocean, as well as the wool of sheep from the green fog-covered hills. The current line of Vlandian kings comes from the clans who settled in this region during Osric Iron-Arm's invasion.">
     <Components>
       <Town id="town_comp_V5" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.408" prosperity="1900">
           <Buildings>
@@ -6351,7 +6351,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V6" name="{=Settlements.Settlement.name.town_V6}Jaculan" owner="Faction.clan_vlandia_3" posX="795.297" posY="826.972" culture="Culture.vlandia" gate_posX="795.1072" gate_posY="827.8442" text="{=R6YJsK89}Jaculan sits in the warmer southern reaches of the Biscan coast, in rolling hills known for their olive trees. It was once a favored resort of the imperial aristocracy, who hunted wild boars amid the oak forests. The independent peasantry of this region are known for their heterodox ideas. The Brotherhood of the Woods is but the latest of a series of rebellions to have broken out here, sometimes aided by an aristocracy that considers them a tool to use against rival Vlandian houses.">
+  <Settlement id="town_V6" name="{=Settlements.Settlement.name.town_V6}Aldenburg" owner="Faction.clan_vlandia_3" posX="795.297" posY="826.972" culture="Culture.vlandia" gate_posX="795.1072" gate_posY="827.8442" text="{=R6YJsK89}Jaculan sits in the warmer southern reaches of the Biscan coast, in rolling hills known for their olive trees. It was once a favored resort of the imperial aristocracy, who hunted wild boars amid the oak forests. The independent peasantry of this region are known for their heterodox ideas. The Brotherhood of the Woods is but the latest of a series of rebellions to have broken out here, sometimes aided by an aristocracy that considers them a tool to use against rival Vlandian houses.">
     <Components>
       <Town id="town_comp_V6" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.408" prosperity="4000">
           <Buildings>
@@ -6426,7 +6426,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_V7" name="{=Settlements.Settlement.name.town_V7}Charas" owner="Faction.clan_vlandia_4" posX="627.497" posY="767.215" culture="Culture.vlandia" gate_posX="623.4596" gate_posY="765.9907" text="{=0cZmKO76}The city known today as Charas is traditionally reckoned to be the first Calradian colony on the shores of their new continent. At the Empire's height, when the capital moved north to Paravenos,  Charasea remained a key hub of sea-faring and trade, while imperial aristocrats built their summer homes on the warm shores of the nearby gulf and cruised their pleasure-boats around its islands. When the Vlandians came, Charas fell into the hands of the ruthless House of dey Cortain, and its wealth funds their ambitions.">
+  <Settlement id="town_V7" name="{=Settlements.Settlement.name.town_V7}Langhold" owner="Faction.clan_vlandia_4" posX="627.497" posY="767.215" culture="Culture.vlandia" gate_posX="623.4596" gate_posY="765.9907" text="{=0cZmKO76}The city known today as Charas is traditionally reckoned to be the first Calradian colony on the shores of their new continent. At the Empire's height, when the capital moved north to Paravenos,  Charasea remained a key hub of sea-faring and trade, while imperial aristocrats built their summer homes on the warm shores of the nearby gulf and cruised their pleasure-boats around its islands. When the Vlandians came, Charas fell into the hands of the ruthless House of dey Cortain, and its wealth funds their ambitions.">
     <Components>
       <Town id="town_comp_V7" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_vlanda" wait_mesh="wait_vlandia_town" gate_rotation="0.408" prosperity="3000">
           <Buildings>
@@ -7300,7 +7300,7 @@
   <!-- ============================================== -->
   <!-- STURGIA (Dale/North) -->
   <!-- ============================================== -->
-  <Settlement id="castle_S1" name="{=Settlements.Settlement.name.castle_S1}Ustokol Castle" owner="Faction.clan_sturgia_5" posX="947.159" posY="1151.279" culture="Culture.sturgia" gate_posX="949.0474" gate_posY="1151.052">
+  <Settlement id="castle_S1" name="{=Settlements.Settlement.name.castle_S1}Garthness" owner="Faction.clan_sturgia_5" posX="947.159" posY="1151.279" culture="Culture.sturgia" gate_posX="949.0474" gate_posY="1151.052">
     <Components>
       <Town id="castle_comp_S1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_battania_town" gate_rotation="0.408" prosperity="890">
           <Buildings>
@@ -7350,7 +7350,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_S2" name="{=Settlements.Settlement.name.castle_S2}Mazhadan Castle" owner="Faction.clan_sturgia_1" posX="981.855" posY="1191.768" culture="Culture.sturgia" gate_posX="981.9008" gate_posY="1189.891">
+  <Settlement id="castle_S2" name="{=Settlements.Settlement.name.castle_S2}Westoft" owner="Faction.clan_sturgia_1" posX="981.855" posY="1191.768" culture="Culture.sturgia" gate_posX="981.9008" gate_posY="1189.891">
     <Components>
       <Town id="castle_comp_S2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="830">
           <Buildings>
@@ -7400,7 +7400,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_S3" name="{=Settlements.Settlement.name.castle_S3}Nevyansk Castle" owner="Faction.clan_sturgia_1" posX="1086.689" posY="1145.347" culture="Culture.sturgia" gate_posX="1085.05" gate_posY="1144.409">
+  <Settlement id="castle_S3" name="{=Settlements.Settlement.name.castle_S3}Yoldbryn" owner="Faction.clan_sturgia_1" posX="1086.689" posY="1145.347" culture="Culture.sturgia" gate_posX="1085.05" gate_posY="1144.409">
     <Components>
       <Town id="castle_comp_S3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="470">
           <Buildings>
@@ -7450,7 +7450,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_S4" name="{=Settlements.Settlement.name.castle_S4}Kranirog Castle" owner="Faction.clan_sturgia_9" posX="1076.613" posY="1052.837" culture="Culture.sturgia" gate_posX="1075.948" gate_posY="1054.454">
+  <Settlement id="castle_S4" name="{=Settlements.Settlement.name.castle_S4}Taigbarn" owner="Faction.clan_sturgia_9" posX="1076.613" posY="1052.837" culture="Culture.sturgia" gate_posX="1075.948" gate_posY="1054.454">
     <Components>
       <Town id="castle_comp_S4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="1000">
           <Buildings>
@@ -7500,7 +7500,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_S5" name="{=Settlements.Settlement.name.castle_S5}Ov Castle" owner="Faction.clan_sturgia_7" posX="1008.223" posY="1050.417" culture="Culture.sturgia" gate_posX="1007.504" gate_posY="1048.808">
+  <Settlement id="castle_S5" name="{=Settlements.Settlement.name.castle_S5}Torndal" owner="Faction.clan_sturgia_7" posX="1008.223" posY="1050.417" culture="Culture.sturgia" gate_posX="1007.504" gate_posY="1048.808">
     <Components>
       <Town id="castle_comp_S5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="800">
           <Buildings>
@@ -7550,7 +7550,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_S6" name="{=Settlements.Settlement.name.castle_S6}Takor Castle" owner="Faction.clan_sturgia_8" posX="1039.234" posY="1087.700" culture="Culture.sturgia" gate_posX="1039.273" gate_posY="1085.81">
+  <Settlement id="castle_S6" name="{=Settlements.Settlement.name.castle_S6}Tham Aeldir" owner="Faction.clan_sturgia_8" posX="1039.234" posY="1087.700" culture="Culture.sturgia" gate_posX="1039.273" gate_posY="1085.81">
     <Components>
       <Town id="castle_comp_S6" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="680">
           <Buildings>
@@ -7600,7 +7600,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_S7" name="{=Settlements.Settlement.name.castle_S7}Urikskala Castle" owner="Faction.clan_sturgia_3" posX="986.253" posY="1106.715" culture="Culture.sturgia" gate_posX="987.5879" gate_posY="1105.565">
+  <Settlement id="castle_S7" name="{=Settlements.Settlement.name.castle_S7}Bridgethorp" owner="Faction.clan_sturgia_3" posX="986.253" posY="1106.715" culture="Culture.sturgia" gate_posX="987.5879" gate_posY="1105.565">
     <Components>
       <Town id="castle_comp_S7" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="660">
           <Buildings>
@@ -7650,7 +7650,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_S1" name="{=Settlements.Settlement.name.town_S1}Varcheg" owner="Faction.clan_sturgia_1" posX="936.583" posY="1191.310" culture="Culture.sturgia" gate_posX="932.1995" gate_posY="1193.089" text="{=i2VkRLBg}The former Nord colony of Varcheg sits on a windswept sea-bluff at the base of the Kachyar peninsula in what was once Battanian land. The jarl who founded this coastal outpost, hoping to trade with the interior, pledged himself in fealty to the Battanian High King Dernmachad, but then proceeded to dabble in Battanian politics. Annoyed, Dernmachad hired a Sturgian army to crush his unreliable new vassal. The Sturgians complied and routed the Nords, but then demanded the newly captured town as their payment. They called the town 'Varcheg,' a corruption of the Nordic term for 'oathsworn companion,' to mock both rivals whose quarreling had handed them their prize.">
+  <Settlement id="town_S1" name="{=Settlements.Settlement.name.town_S1}Dale" owner="Faction.clan_sturgia_1" posX="936.583" posY="1191.310" culture="Culture.sturgia" gate_posX="932.1995" gate_posY="1193.089" text="{=i2VkRLBg}The former Nord colony of Varcheg sits on a windswept sea-bluff at the base of the Kachyar peninsula in what was once Battanian land. The jarl who founded this coastal outpost, hoping to trade with the interior, pledged himself in fealty to the Battanian High King Dernmachad, but then proceeded to dabble in Battanian politics. Annoyed, Dernmachad hired a Sturgian army to crush his unreliable new vassal. The Sturgians complied and routed the Nords, but then demanded the newly captured town as their payment. They called the town 'Varcheg,' a corruption of the Nordic term for 'oathsworn companion,' to mock both rivals whose quarreling had handed them their prize.">
     <Components>
       <Town id="town_comp_S1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.608" prosperity="3100">
           <Buildings>
@@ -7712,7 +7712,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_S2" name="{=Settlements.Settlement.name.town_S2}Balgard" owner="Faction.clan_sturgia_1" posX="947.012" posY="1072.045" culture="Culture.sturgia" gate_posX="950.527" gate_posY="1074.763" text="{=Xom9DeXZ}Balgard, which sits on the icy waters of Mazopor bay, was founded by migrants from the Nordlands. Legend holds that the initial wave of Nords arrogantly demanded tribute from the nearby Vakken and Sturgian tribes, who formed an alliance and drove the newcomers back to their ships. But the victors fell out over the spoils, until a canny Nord, Gundar, landed and volunteered to help them fairly divvy up the weapons and armor of his dead kinsmen. The residents recognized Gundar's lordship over the region and his descendants, intermarried with the Sturgians, are today the grand princes of Sturgia.">
+  <Settlement id="town_S2" name="{=Settlements.Settlement.name.town_S2}Vargfell" owner="Faction.clan_sturgia_1" posX="947.012" posY="1072.045" culture="Culture.sturgia" gate_posX="950.527" gate_posY="1074.763" text="{=Xom9DeXZ}Balgard, which sits on the icy waters of Mazopor bay, was founded by migrants from the Nordlands. Legend holds that the initial wave of Nords arrogantly demanded tribute from the nearby Vakken and Sturgian tribes, who formed an alliance and drove the newcomers back to their ships. But the victors fell out over the spoils, until a canny Nord, Gundar, landed and volunteered to help them fairly divvy up the weapons and armor of his dead kinsmen. The residents recognized Gundar's lordship over the region and his descendants, intermarried with the Sturgians, are today the grand princes of Sturgia.">
     <Components>
       <Town id="town_comp_S2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.308" prosperity="2300">
           <Buildings>
@@ -7774,7 +7774,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_S3" name="{=Settlements.Settlement.name.town_S3}Omor" owner="Faction.clan_sturgia_2" posX="1075.747" posY="1080.197" culture="Culture.sturgia" gate_posX="1080.467" gate_posY="1079.875" text="{=pbHXtJ82}Omor sits on the eastern shores of Lake Laconis. Long before the Sturgians formed themselves into a principality it was a holy site for the forest tribes, who worshipped their gods and ancestors in the sacred oak trees of the nearby woods. Today, it is an emporium for fur trappers and woodsmen who prowl the Ircara wildlands to the east, and the primeval peace of the forests is drowned out by the sounds of bartering, saws, and the unloading of ships at the lake.">
+  <Settlement id="town_S3" name="{=Settlements.Settlement.name.town_S3}Liutburg" owner="Faction.clan_sturgia_2" posX="1075.747" posY="1080.197" culture="Culture.sturgia" gate_posX="1080.467" gate_posY="1079.875" text="{=pbHXtJ82}Omor sits on the eastern shores of Lake Laconis. Long before the Sturgians formed themselves into a principality it was a holy site for the forest tribes, who worshipped their gods and ancestors in the sacred oak trees of the nearby woods. Today, it is an emporium for fur trappers and woodsmen who prowl the Ircara wildlands to the east, and the primeval peace of the forests is drowned out by the sounds of bartering, saws, and the unloading of ships at the lake.">
     <Components>
       <Town id="town_comp_S3" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.008" prosperity="3200">
           <Buildings>
@@ -7836,7 +7836,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_S4" name="{=Settlements.Settlement.name.town_S4}Varnovapol" owner="Faction.clan_sturgia_4" posX="1038.099" posY="1142.827" culture="Culture.sturgia" gate_posX="1035.567" gate_posY="1144.27" text="{=aTMypBiY}Varnovapol, which sits beneath the Chertyg mountains on the crystal waters of Lake Laconis, has the dubious honor of being perhaps the most-often conquered city in Calradia. Originally it was a colony of the Empire, infamous as a place of exile for dissident senators, before it was seized by Nords as a base to expand their influence into the Sturgian fur trade. It was taken by the Alkit tribe from the eastern steppe and briefly served as the capital of a small khanate, before finally falling to the fierce Ormidoving clan.">
+  <Settlement id="town_S4" name="{=Settlements.Settlement.name.town_S4}Stranding" owner="Faction.clan_sturgia_4" posX="1038.099" posY="1142.827" culture="Culture.sturgia" gate_posX="1035.567" gate_posY="1144.27" text="{=aTMypBiY}Varnovapol, which sits beneath the Chertyg mountains on the crystal waters of Lake Laconis, has the dubious honor of being perhaps the most-often conquered city in Calradia. Originally it was a colony of the Empire, infamous as a place of exile for dissident senators, before it was seized by Nords as a base to expand their influence into the Sturgian fur trade. It was taken by the Alkit tribe from the eastern steppe and briefly served as the capital of a small khanate, before finally falling to the fierce Ormidoving clan.">
     <Components>
       <Town id="town_comp_S4" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.808" prosperity="3300">
           <Buildings>
@@ -7911,7 +7911,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_S5" name="{=Settlements.Settlement.name.town_S5}Tyal" owner="Faction.clan_sturgia_3" posX="1055.902" posY="1187.797" culture="Culture.sturgia" gate_posX="1055.616" gate_posY="1183.783" text="{=F5HlQdgf}Tyal sits in the western foothills of Mount Iltan, on the eastern borders of the Sturgian lands. This region has long stood aloof from the power struggles of the other Sturgian principalities. Its people are known as wanderers, traders, horse breeders and fur-trappers. The local aristocracy has occasionally exchanged princesses with the steppe tribes to the east to firm up a truce or a trade pact, and proudly includes the names of several great khans on their list of ancestors.">
+  <Settlement id="town_S5" name="{=Settlements.Settlement.name.town_S5}Eldby" owner="Faction.clan_sturgia_3" posX="1055.902" posY="1187.797" culture="Culture.sturgia" gate_posX="1055.616" gate_posY="1183.783" text="{=F5HlQdgf}Tyal sits in the western foothills of Mount Iltan, on the eastern borders of the Sturgian lands. This region has long stood aloof from the power struggles of the other Sturgian principalities. Its people are known as wanderers, traders, horse breeders and fur-trappers. The local aristocracy has occasionally exchanged princesses with the steppe tribes to the east to firm up a truce or a trade pact, and proudly includes the names of several great khans on their list of ancestors.">
     <Components>
       <Town id="town_comp_S5" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.308" prosperity="1700">
           <Buildings>
@@ -7976,7 +7976,7 @@
   <!-- ============================================== -->
   <!-- DOL GULDUR -->
   <!-- ============================================== -->
-  <Settlement id="castle_DG1" name="{=Settlements.Settlement.name.castle_DG1}Castle DG1" owner="Faction.clan_dolguldur_1" posX="854.548" posY="938.741" culture="Culture.dolguldur" gate_posX="854.9359" gate_posY="942.8782">
+  <Settlement id="castle_DG1" name="{=Settlements.Settlement.name.castle_DG1}Ashúrz" owner="Faction.clan_dolguldur_1" posX="854.548" posY="938.741" culture="Culture.dolguldur" gate_posX="854.9359" gate_posY="942.8782">
     <Components>
       <Town id="castle_comp_DG1" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8039,7 +8039,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_DG2" name="{=Settlements.Settlement.name.castle_DG2}Castle DG2" owner="Faction.clan_dolguldur_1" posX="890.190" posY="967.445" culture="Culture.dolguldur" gate_posX="890.5779" gate_posY="971.5822">
+  <Settlement id="castle_DG2" name="{=Settlements.Settlement.name.castle_DG2}Dannenglor" owner="Faction.clan_dolguldur_1" posX="890.190" posY="967.445" culture="Culture.dolguldur" gate_posX="890.5779" gate_posY="971.5822">
     <Components>
       <Town id="castle_comp_DG2" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8115,7 +8115,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_DG3" name="{=Settlements.Settlement.name.castle_DG3}Castle DG3" owner="Faction.clan_dolguldur_1" posX="933.930" posY="989.314" culture="Culture.dolguldur" gate_posX="934.0223" gate_posY="992.9965">
+  <Settlement id="castle_DG3" name="{=Settlements.Settlement.name.castle_DG3}Bûrzkala" owner="Faction.clan_dolguldur_1" posX="933.930" posY="989.314" culture="Culture.dolguldur" gate_posX="934.0223" gate_posY="992.9965">
     <Components>
       <Town id="castle_comp_DG3" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8178,7 +8178,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_DG4" name="{=Settlements.Settlement.name.castle_DG4}Castle DG4" owner="Faction.clan_dolguldur_1" posX="901.379" posY="1014.968" culture="Culture.dolguldur" gate_posX="901.6169" gate_posY="1013.053">
+  <Settlement id="castle_DG4" name="{=Settlements.Settlement.name.castle_DG4}Maufulug" owner="Faction.clan_dolguldur_1" posX="901.379" posY="1014.968" culture="Culture.dolguldur" gate_posX="901.6169" gate_posY="1013.053">
     <Components>
       <Town id="castle_comp_DG4" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8228,7 +8228,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_DG5" name="{=Settlements.Settlement.name.castle_DG5}Castle DG5" owner="Faction.clan_dolguldur_1" posX="855.512" posY="1007.116" culture="Culture.dolguldur" gate_posX="855.7499" gate_posY="1005.201">
+  <Settlement id="castle_DG5" name="{=Settlements.Settlement.name.castle_DG5}Amon Angened" owner="Faction.clan_dolguldur_1" posX="855.512" posY="1007.116" culture="Culture.dolguldur" gate_posX="855.7499" gate_posY="1005.201">
     <Components>
       <Town id="castle_comp_DG5" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8278,7 +8278,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_DG1" name="{=Settlements.Settlement.name.town_DG1}Town DG1" owner="Faction.clan_dolguldur_1" posX="832.324" posY="973.792" culture="Culture.dolguldur" gate_posX="832.135" gate_posY="972.7124">
+  <Settlement id="town_DG1" name="{=Settlements.Settlement.name.town_DG1}Dol Guldur" owner="Faction.clan_dolguldur_1" posX="832.324" posY="973.792" culture="Culture.dolguldur" gate_posX="832.135" gate_posY="972.7124">
     <Components>
       <Town id="town_comp_DG1" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -8356,7 +8356,7 @@
   <!-- ============================================== -->
   <!-- EREBOR -->
   <!-- ============================================== -->
-  <Settlement id="castle_E1" name="{=Settlements.Settlement.name.castle_E1}Castle E1" owner="Faction.clan_erebor_1" posX="968.851" posY="1233.200" culture="Culture.erebor" gate_posX="969.5411" gate_posY="1232.969">
+  <Settlement id="castle_E1" name="{=Settlements.Settlement.name.castle_E1}Irongap" owner="Faction.clan_erebor_1" posX="968.851" posY="1233.200" culture="Culture.erebor" gate_posX="969.5411" gate_posY="1232.969">
     <Components>
       <Town id="castle_comp_E1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8419,7 +8419,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E2" name="{=Settlements.Settlement.name.castle_E2}Castle E2" owner="Faction.clan_erebor_1" posX="1047.276" posY="1261.836" culture="Culture.erebor" gate_posX="1048.071" gate_posY="1260.077">
+  <Settlement id="castle_E2" name="{=Settlements.Settlement.name.castle_E2}Flogalith" owner="Faction.clan_erebor_1" posX="1047.276" posY="1261.836" culture="Culture.erebor" gate_posX="1048.071" gate_posY="1260.077">
     <Components>
       <Town id="castle_comp_E2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8469,7 +8469,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E3" name="{=Settlements.Settlement.name.castle_E3}Castle E3" owner="Faction.clan_erebor_1" posX="1155.468" posY="1255.403" culture="Culture.erebor" gate_posX="1156.263" gate_posY="1253.644">
+  <Settlement id="castle_E3" name="{=Settlements.Settlement.name.castle_E3}Anatrâd" owner="Faction.clan_erebor_1" posX="1155.468" posY="1255.403" culture="Culture.erebor" gate_posX="1156.263" gate_posY="1253.644">
     <Components>
       <Town id="castle_comp_E3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8519,7 +8519,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E4" name="{=Settlements.Settlement.name.castle_E4}Castle E4" owner="Faction.clan_erebor_1" posX="1135.151" posY="1177.938" culture="Culture.erebor" gate_posX="1135.946" gate_posY="1176.179">
+  <Settlement id="castle_E4" name="{=Settlements.Settlement.name.castle_E4}Frósthel" owner="Faction.clan_erebor_1" posX="1135.151" posY="1177.938" culture="Culture.erebor" gate_posX="1135.946" gate_posY="1176.179">
     <Components>
       <Town id="castle_comp_E4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8582,7 +8582,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E5" name="{=Settlements.Settlement.name.castle_E5}Castle E5" owner="Faction.clan_erebor_1" posX="1078.749" posY="1169.254" culture="Culture.erebor" gate_posX="1079.544" gate_posY="1167.495">
+  <Settlement id="castle_E5" name="{=Settlements.Settlement.name.castle_E5}Buzra-sâlan" owner="Faction.clan_erebor_1" posX="1078.749" posY="1169.254" culture="Culture.erebor" gate_posX="1079.544" gate_posY="1167.495">
     <Components>
       <Town id="castle_comp_E5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8645,7 +8645,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E6" name="{=Settlements.Settlement.name.castle_E6}Castle E6" owner="Faction.clan_erebor_1" posX="1242.823" posY="1184.943" culture="Culture.erebor" gate_posX="1244.63" gate_posY="1183.704">
+  <Settlement id="castle_E6" name="{=Settlements.Settlement.name.castle_E6}Mesem-garak" owner="Faction.clan_erebor_1" posX="1242.823" posY="1184.943" culture="Culture.erebor" gate_posX="1244.63" gate_posY="1183.704">
     <Components>
       <Town id="castle_comp_E6" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8695,7 +8695,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E7" name="{=Settlements.Settlement.name.castle_E7}Castle E7" owner="Faction.clan_erebor_1" posX="1105.004" posY="1116.879" culture="Culture.erebor" gate_posX="1104.046" gate_posY="1116.873">
+  <Settlement id="castle_E7" name="{=Settlements.Settlement.name.castle_E7}Zul-mazal" owner="Faction.clan_erebor_1" posX="1105.004" posY="1116.879" culture="Culture.erebor" gate_posX="1104.046" gate_posY="1116.873">
     <Components>
       <Town id="castle_comp_E7" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8758,7 +8758,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_E8" name="{=Settlements.Settlement.name.castle_E8}Castle E8" owner="Faction.clan_erebor_1" posX="1062.383" posY="1215.937" culture="Culture.erebor" gate_posX="1063.225" gate_posY="1217.355">
+  <Settlement id="castle_E8" name="{=Settlements.Settlement.name.castle_E8}Grymmclúd" owner="Faction.clan_erebor_1" posX="1062.383" posY="1215.937" culture="Culture.erebor" gate_posX="1063.225" gate_posY="1217.355">
     <Components>
       <Town id="castle_comp_E8" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -8871,7 +8871,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_E1" name="{=Settlements.Settlement.name.town_E1}Town E1" owner="Faction.clan_erebor_1" posX="944.177" posY="1200.578" culture="Culture.erebor" gate_posX="944.3746" gate_posY="1201.178">
+  <Settlement id="town_E1" name="{=Settlements.Settlement.name.town_E1}Erebor" owner="Faction.clan_erebor_1" posX="944.177" posY="1200.578" culture="Culture.erebor" gate_posX="944.3746" gate_posY="1201.178">
     <Components>
       <Town id="town_comp_E1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -8959,7 +8959,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_E2" name="{=Settlements.Settlement.name.town_E2}Town E2" owner="Faction.clan_erebor_1" posX="1106.174" posY="1225.492" culture="Culture.erebor" gate_posX="1105.76" gate_posY="1225.292">
+  <Settlement id="town_E2" name="{=Settlements.Settlement.name.town_E2}Járnfast" owner="Faction.clan_erebor_1" posX="1106.174" posY="1225.492" culture="Culture.erebor" gate_posX="1105.76" gate_posY="1225.292">
     <Components>
       <Town id="town_comp_E2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -9047,7 +9047,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_E3" name="{=Settlements.Settlement.name.town_E3}Town E3" owner="Faction.clan_erebor_1" posX="1193.212" posY="1179.045" culture="Culture.erebor" gate_posX="1192.781" gate_posY="1180.425">
+  <Settlement id="town_E3" name="{=Settlements.Settlement.name.town_E3}Azanûlibar-dûm" owner="Faction.clan_erebor_1" posX="1193.212" posY="1179.045" culture="Culture.erebor" gate_posX="1192.781" gate_posY="1180.425">
     <Components>
       <Town id="town_comp_E3" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -9135,7 +9135,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_E4" name="{=Settlements.Settlement.name.town_E4}Town E4" owner="Faction.clan_erebor_1" posX="1245.388" posY="1226.820" culture="Culture.erebor" gate_posX="1245.392" gate_posY="1227.307">
+  <Settlement id="town_E4" name="{=Settlements.Settlement.name.town_E4}Skárhald" owner="Faction.clan_erebor_1" posX="1245.388" posY="1226.820" culture="Culture.erebor" gate_posX="1245.392" gate_posY="1227.307">
     <Components>
       <Town id="town_comp_E4" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -9226,7 +9226,7 @@
   <!-- ============================================== -->
   <!-- GUNDABAD -->
   <!-- ============================================== -->
-  <Settlement id="castle_G1" name="{=Settlements.Settlement.name.castle_G1}Castle G1" owner="Faction.clan_gundabad_1" posX="741.301" posY="1234.157" culture="Culture.gundabad" gate_posX="739.3734" gate_posY="1236.519">
+  <Settlement id="castle_G1" name="{=Settlements.Settlement.name.castle_G1}Dûglarshun" owner="Faction.clan_gundabad_1" posX="741.301" posY="1234.157" culture="Culture.gundabad" gate_posX="739.3734" gate_posY="1236.519">
     <Components>
       <Town id="castle_comp_G1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9276,7 +9276,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_G2" name="{=Settlements.Settlement.name.castle_G2}Castle G2" owner="Faction.clan_gundabad_1" posX="749.864" posY="1190.211" culture="Culture.gundabad" gate_posX="748.0036" gate_posY="1192.386">
+  <Settlement id="castle_G2" name="{=Settlements.Settlement.name.castle_G2}Framsburg" owner="Faction.clan_gundabad_1" posX="749.864" posY="1190.211" culture="Culture.gundabad" gate_posX="748.0036" gate_posY="1192.386">
     <Components>
       <Town id="castle_comp_G2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9339,7 +9339,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_G3" name="{=Settlements.Settlement.name.castle_G3}Castle G3" owner="Faction.clan_gundabad_1" posX="709.234" posY="1216.440" culture="Culture.gundabad" gate_posX="708.0161" gate_posY="1217.174">
+  <Settlement id="castle_G3" name="{=Settlements.Settlement.name.castle_G3}Mazôglod" owner="Faction.clan_gundabad_1" posX="709.234" posY="1216.440" culture="Culture.gundabad" gate_posX="708.0161" gate_posY="1217.174">
     <Components>
       <Town id="castle_comp_G3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9402,7 +9402,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_G4" name="{=Settlements.Settlement.name.castle_G4}Castle G4" owner="Faction.clan_gundabad_1" posX="773.799" posY="1217.919" culture="Culture.gundabad" gate_posX="774.6099" gate_posY="1217.685">
+  <Settlement id="castle_G4" name="{=Settlements.Settlement.name.castle_G4}Shúrdmúl" owner="Faction.clan_gundabad_1" posX="773.799" posY="1217.919" culture="Culture.gundabad" gate_posX="774.6099" gate_posY="1217.685">
     <Components>
       <Town id="castle_comp_G4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9502,7 +9502,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_G1" name="{=Settlements.Settlement.name.town_G1}Town G1" owner="Faction.clan_gundabad_1" posX="724.313" posY="1241.825" culture="Culture.gundabad" gate_posX="729.3417" gate_posY="1242.955">
+  <Settlement id="town_G1" name="{=Settlements.Settlement.name.town_G1}Mount Gundabad" owner="Faction.clan_gundabad_1" posX="724.313" posY="1241.825" culture="Culture.gundabad" gate_posX="729.3417" gate_posY="1242.955">
     <Components>
       <Town id="town_comp_G1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -9590,7 +9590,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_G2" name="{=Settlements.Settlement.name.town_G2}Town G2" owner="Faction.clan_gundabad_1" posX="641.993" posY="1204.034" culture="Culture.gundabad" gate_posX="641.5018" gate_posY="1198.715">
+  <Settlement id="town_G2" name="{=Settlements.Settlement.name.town_G2}Mount Gram" owner="Faction.clan_gundabad_1" posX="641.993" posY="1204.034" culture="Culture.gundabad" gate_posX="641.5018" gate_posY="1198.715">
     <Components>
       <Town id="town_comp_G2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_sturgia" wait_mesh="wait_sturgia_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -9681,7 +9681,7 @@
   <!-- ============================================== -->
   <!-- ISENGARD -->
   <!-- ============================================== -->
-  <Settlement id="castle_I1" name="{=Settlements.Settlement.name.castle_I1}Castle I1" owner="Faction.clan_isengard_1" posX="633.057" posY="807.088" culture="Culture.isengard" gate_posX="631.2559" gate_posY="806.6998">
+  <Settlement id="castle_I1" name="{=Settlements.Settlement.name.castle_I1}Forthbrond" owner="Faction.clan_isengard_1" posX="633.057" posY="807.088" culture="Culture.isengard" gate_posX="631.2559" gate_posY="806.6998">
     <Components>
       <Town id="castle_comp_I1" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9744,7 +9744,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_I2" name="{=Settlements.Settlement.name.castle_I2}Castle I2" owner="Faction.clan_isengard_1" posX="648.953" posY="820.819" culture="Culture.isengard" gate_posX="649.9105" gate_posY="819.2219">
+  <Settlement id="castle_I2" name="{=Settlements.Settlement.name.castle_I2}Nan Angranost" owner="Faction.clan_isengard_1" posX="648.953" posY="820.819" culture="Culture.isengard" gate_posX="649.9105" gate_posY="819.2219">
     <Components>
       <Town id="castle_comp_I2" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9844,7 +9844,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_isengard" name="{=Settlements.Settlement.name.town_isengard}Isengard" owner="Faction.clan_isengard_1" posX="633.000" posY="831.733" culture="Culture.isengard" gate_posX="633.2222" gate_posY="832.9877" text="{=Settlements.Settlement.text.town_isengard}The fortress of Isengard, domain of Saruman the White.">
+  <Settlement id="town_isengard" name="{=Settlements.Settlement.name.town_isengard}Orthanc" owner="Faction.clan_isengard_1" posX="633.000" posY="831.733" culture="Culture.isengard" gate_posX="633.2222" gate_posY="832.9877" text="{=Settlements.Settlement.text.town_isengard}The fortress of Isengard, domain of Saruman the White.">
     <Components>
       <Town id="town_comp_isengard" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_empire" wait_mesh="wait_empire_town" gate_rotation="0.378" prosperity="4000">
           <Buildings>
@@ -9896,7 +9896,7 @@
   <!-- ============================================== -->
   <!-- LOTHLORIEN -->
   <!-- ============================================== -->
-  <Settlement id="castle_L1" name="{=Settlements.Settlement.name.castle_L1}Castle L1" owner="Faction.clan_lothlorien_1" posX="754.816" posY="954.599" culture="Culture.lothlorien" gate_posX="755.6037" gate_posY="958.6252">
+  <Settlement id="castle_L1" name="{=Settlements.Settlement.name.castle_L1}Tol Calan" owner="Faction.clan_lothlorien_1" posX="754.816" posY="954.599" culture="Culture.lothlorien" gate_posX="755.6037" gate_posY="958.6252">
     <Components>
       <Town id="castle_comp_L1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -9959,7 +9959,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_L2" name="{=Settlements.Settlement.name.castle_L2}Castle L2" owner="Faction.clan_lothlorien_1" posX="716.323" posY="910.595" culture="Culture.lothlorien" gate_posX="717.5854" gate_posY="914.5252">
+  <Settlement id="castle_L2" name="{=Settlements.Settlement.name.castle_L2}Cerin Amroth" owner="Faction.clan_lothlorien_1" posX="716.323" posY="910.595" culture="Culture.lothlorien" gate_posX="717.5854" gate_posY="914.5252">
     <Components>
       <Town id="castle_comp_L2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10022,7 +10022,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_L3" name="{=Settlements.Settlement.name.castle_L3}Castle L3" owner="Faction.clan_lothlorien_1" posX="788.521" posY="904.333" culture="Culture.lothlorien" gate_posX="786.4081" gate_posY="905.5641">
+  <Settlement id="castle_L3" name="{=Settlements.Settlement.name.castle_L3}Talas Duiren" owner="Faction.clan_lothlorien_1" posX="788.521" posY="904.333" culture="Culture.lothlorien" gate_posX="786.4081" gate_posY="905.5641">
     <Components>
       <Town id="castle_comp_L3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10085,7 +10085,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_L1" name="{=Settlements.Settlement.name.town_L1}Town L1" owner="Faction.clan_lothlorien_1" posX="740.286" posY="943.435" culture="Culture.lothlorien" gate_posX="741.0166" gate_posY="942.5574">
+  <Settlement id="town_L1" name="{=Settlements.Settlement.name.town_L1}Caras Galadhon" owner="Faction.clan_lothlorien_1" posX="740.286" posY="943.435" culture="Culture.lothlorien" gate_posX="741.0166" gate_posY="942.5574">
     <Components>
       <Town id="town_comp_L1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_battania" wait_mesh="wait_battania_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -10202,7 +10202,7 @@
   <!-- ============================================== -->
   <!-- MIRKWOOD -->
   <!-- ============================================== -->
-  <Settlement id="castle_M1" name="{=Settlements.Settlement.name.castle_M1}Castle M1" owner="Faction.clan_mirkwood_1" posX="872.109" posY="1128.128" culture="Culture.mirkwood" gate_posX="873.253" gate_posY="1128.615">
+  <Settlement id="castle_M1" name="{=Settlements.Settlement.name.castle_M1}Glad Thaw" owner="Faction.clan_mirkwood_1" posX="872.109" posY="1128.128" culture="Culture.mirkwood" gate_posX="873.253" gate_posY="1128.615">
     <Components>
       <Town id="castle_comp_M1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10252,7 +10252,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_M2" name="{=Settlements.Settlement.name.castle_M2}Castle M2" owner="Faction.clan_mirkwood_1" posX="926.548" posY="1128.589" culture="Culture.mirkwood" gate_posX="927.4987" gate_posY="1129.747">
+  <Settlement id="castle_M2" name="{=Settlements.Settlement.name.castle_M2}Gwígar" owner="Faction.clan_mirkwood_1" posX="926.548" posY="1128.589" culture="Culture.mirkwood" gate_posX="927.4987" gate_posY="1129.747">
     <Components>
       <Town id="castle_comp_M2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10302,7 +10302,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_M3" name="{=Settlements.Settlement.name.castle_M3}Castle M3" owner="Faction.clan_mirkwood_1" posX="817.029" posY="1114.970" culture="Culture.mirkwood" gate_posX="818.1104" gate_posY="1115.903">
+  <Settlement id="castle_M3" name="{=Settlements.Settlement.name.castle_M3}Torech Emel" owner="Faction.clan_mirkwood_1" posX="817.029" posY="1114.970" culture="Culture.mirkwood" gate_posX="818.1104" gate_posY="1115.903">
     <Components>
       <Town id="castle_comp_M3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10352,7 +10352,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_M4" name="{=Settlements.Settlement.name.castle_M4}Castle M4" owner="Faction.clan_mirkwood_1" posX="797.403" posY="1168.401" culture="Culture.mirkwood" gate_posX="798.0267" gate_posY="1168.172">
+  <Settlement id="castle_M4" name="{=Settlements.Settlement.name.castle_M4}Lasgalor" owner="Faction.clan_mirkwood_1" posX="797.403" posY="1168.401" culture="Culture.mirkwood" gate_posX="798.0267" gate_posY="1168.172">
     <Components>
       <Town id="castle_comp_M4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10402,7 +10402,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_M5" name="{=Settlements.Settlement.name.castle_M5}Castle M5" owner="Faction.clan_mirkwood_1" posX="811.904" posY="1217.426" culture="Culture.mirkwood" gate_posX="812.7474" gate_posY="1217.339">
+  <Settlement id="castle_M5" name="{=Settlements.Settlement.name.castle_M5}Imnagath" owner="Faction.clan_mirkwood_1" posX="811.904" posY="1217.426" culture="Culture.mirkwood" gate_posX="812.7474" gate_posY="1217.339">
     <Components>
       <Town id="castle_comp_M5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10452,7 +10452,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_M1" name="{=Settlements.Settlement.name.town_M1}Town M1" owner="Faction.clan_mirkwood_1" posX="894.663" posY="1190.000" culture="Culture.mirkwood" gate_posX="895.301" gate_posY="1188.339">
+  <Settlement id="town_M1" name="{=Settlements.Settlement.name.town_M1}Felegoth" owner="Faction.clan_mirkwood_1" posX="894.663" posY="1190.000" culture="Culture.mirkwood" gate_posX="895.301" gate_posY="1188.339">
     <Components>
       <Town id="town_comp_M1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_battania" wait_mesh="wait_battania_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -10540,7 +10540,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_M2" name="{=Settlements.Settlement.name.town_M2}Town M2" owner="Faction.clan_mirkwood_1" posX="859.992" posY="1158.657" culture="Culture.mirkwood" gate_posX="860.0559" gate_posY="1157.274">
+  <Settlement id="town_M2" name="{=Settlements.Settlement.name.town_M2}Caras Laerolin" owner="Faction.clan_mirkwood_1" posX="859.992" posY="1158.657" culture="Culture.mirkwood" gate_posX="860.0559" gate_posY="1157.274">
     <Components>
       <Town id="town_comp_M2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_battania" wait_mesh="wait_battania_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -10618,7 +10618,7 @@
   <!-- ============================================== -->
   <!-- RIVENDELL -->
   <!-- ============================================== -->
-  <Settlement id="castle_R2" name="{=Settlements.Settlement.name.castle_R2}Castle R2" owner="Faction.clan_rivendell_1" posX="677.706" posY="1175.774" culture="Culture.rivendell" gate_posX="676.5914" gate_posY="1174.907">
+  <Settlement id="castle_R2" name="{=Settlements.Settlement.name.castle_R2}Hithaegrist" owner="Faction.clan_rivendell_1" posX="677.706" posY="1175.774" culture="Culture.rivendell" gate_posX="676.5914" gate_posY="1174.907">
     <Components>
       <Town id="castle_comp_R2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10681,7 +10681,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_R3" name="{=Settlements.Settlement.name.castle_R3}Castle R3" owner="Faction.clan_rivendell_1" posX="646.866" posY="1145.456" culture="Culture.rivendell" gate_posX="645.7514" gate_posY="1144.589">
+  <Settlement id="castle_R3" name="{=Settlements.Settlement.name.castle_R3}Nan Tornaeth" owner="Faction.clan_rivendell_1" posX="646.866" posY="1145.456" culture="Culture.rivendell" gate_posX="645.7514" gate_posY="1144.589">
     <Components>
       <Town id="castle_comp_R3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10744,7 +10744,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_R4" name="{=Settlements.Settlement.name.castle_R4}Castle R4" owner="Faction.clan_rivendell_1" posX="677.540" posY="1101.818" culture="Culture.rivendell" gate_posX="679.6315" gate_posY="1105.036">
+  <Settlement id="castle_R4" name="{=Settlements.Settlement.name.castle_R4}Baracharn" owner="Faction.clan_rivendell_1" posX="677.540" posY="1101.818" culture="Culture.rivendell" gate_posX="679.6315" gate_posY="1105.036">
     <Components>
       <Town id="castle_comp_R4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10807,7 +10807,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_R5" name="{=Settlements.Settlement.name.castle_R5}Castle R5" owner="Faction.clan_rivendell_1" posX="629.682" posY="1060.865" culture="Culture.rivendell" gate_posX="631.7735" gate_posY="1064.083">
+  <Settlement id="castle_R5" name="{=Settlements.Settlement.name.castle_R5}Fennas Drúnin" owner="Faction.clan_rivendell_1" posX="629.682" posY="1060.865" culture="Culture.rivendell" gate_posX="631.7735" gate_posY="1064.083">
     <Components>
       <Town id="castle_comp_R5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_battania" wait_mesh="wait_battania_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -10870,7 +10870,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_R1" name="{=Settlements.Settlement.name.town_R1}Town R1" owner="Faction.clan_rivendell_1" posX="698.541" posY="1117.604" culture="Culture.rivendell" gate_posX="697.4142" gate_posY="1118.251">
+  <Settlement id="town_R1" name="{=Settlements.Settlement.name.town_R1}Rivendell" owner="Faction.clan_rivendell_1" posX="698.541" posY="1117.604" culture="Culture.rivendell" gate_posX="697.4142" gate_posY="1118.251">
     <Components>
       <Town id="town_comp_R1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_battania" wait_mesh="wait_battania_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -10961,7 +10961,7 @@
   <!-- ============================================== -->
   <!-- RHUN -->
   <!-- ============================================== -->
-  <Settlement id="castle_RU1" name="{=Settlements.Settlement.name.castle_RU1}Castle RU1" owner="Faction.clan_khuzait_1" posX="965.547" posY="823.241" culture="Culture.khuzait" gate_posX="968.2741" gate_posY="823.0869">
+  <Settlement id="castle_RU1" name="{=Settlements.Settlement.name.castle_RU1}Tôrcâin" owner="Faction.clan_khuzait_1" posX="965.547" posY="823.241" culture="Culture.khuzait" gate_posX="968.2741" gate_posY="823.0869">
     <Components>
       <Town id="castle_comp_RU1" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11024,7 +11024,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU10" name="{=Settlements.Settlement.name.castle_RU10}Castle RU10" owner="Faction.clan_khuzait_1" posX="1325.597" posY="1083.378" culture="Culture.khuzait" gate_posX="1324.597" gate_posY="1081.844">
+  <Settlement id="castle_RU10" name="{=Settlements.Settlement.name.castle_RU10}Khûsar" owner="Faction.clan_khuzait_1" posX="1325.597" posY="1083.378" culture="Culture.khuzait" gate_posX="1324.597" gate_posY="1081.844">
     <Components>
       <Town id="castle_comp_RU10" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11087,7 +11087,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU11" name="{=Settlements.Settlement.name.castle_RU11}Castle RU11" owner="Faction.clan_khuzait_1" posX="1397.017" posY="1002.132" culture="Culture.khuzait" gate_posX="1398.265" gate_posY="1000.543">
+  <Settlement id="castle_RU11" name="{=Settlements.Settlement.name.castle_RU11}Tarlat Arlan" owner="Faction.clan_khuzait_1" posX="1397.017" posY="1002.132" culture="Culture.khuzait" gate_posX="1398.265" gate_posY="1000.543">
     <Components>
       <Town id="castle_comp_RU11" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11150,7 +11150,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU12" name="{=Settlements.Settlement.name.castle_RU12}Castle RU12" owner="Faction.clan_khuzait_1" posX="1506.584" posY="987.869" culture="Culture.khuzait" gate_posX="1504.449" gate_posY="986.5092">
+  <Settlement id="castle_RU12" name="{=Settlements.Settlement.name.castle_RU12}Mârdûn" owner="Faction.clan_khuzait_1" posX="1506.584" posY="987.869" culture="Culture.khuzait" gate_posX="1504.449" gate_posY="986.5092">
     <Components>
       <Town id="castle_comp_RU12" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11213,7 +11213,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU2" name="{=Settlements.Settlement.name.castle_RU2}Castle RU2" owner="Faction.clan_khuzait_1" posX="1086.359" posY="791.655" culture="Culture.khuzait" gate_posX="1088.45" gate_posY="791.6109">
+  <Settlement id="castle_RU2" name="{=Settlements.Settlement.name.castle_RU2}Nîrakh" owner="Faction.clan_khuzait_1" posX="1086.359" posY="791.655" culture="Culture.khuzait" gate_posX="1088.45" gate_posY="791.6109">
     <Components>
       <Town id="castle_comp_RU2" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11276,7 +11276,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU3" name="{=Settlements.Settlement.name.castle_RU3}Castle RU3" owner="Faction.clan_khuzait_1" posX="1145.708" posY="838.490" culture="Culture.khuzait" gate_posX="1147.596" gate_posY="839.3601">
+  <Settlement id="castle_RU3" name="{=Settlements.Settlement.name.castle_RU3}Ulbarath" owner="Faction.clan_khuzait_1" posX="1145.708" posY="838.490" culture="Culture.khuzait" gate_posX="1147.596" gate_posY="839.3601">
     <Components>
       <Town id="castle_comp_RU3" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11339,7 +11339,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU4" name="{=Settlements.Settlement.name.castle_RU4}Castle RU4" owner="Faction.clan_khuzait_1" posX="1257.057" posY="816.524" culture="Culture.khuzait" gate_posX="1254.988" gate_posY="816.6874">
+  <Settlement id="castle_RU4" name="{=Settlements.Settlement.name.castle_RU4}Chêya" owner="Faction.clan_khuzait_1" posX="1257.057" posY="816.524" culture="Culture.khuzait" gate_posX="1254.988" gate_posY="816.6874">
     <Components>
       <Town id="castle_comp_RU4" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11402,7 +11402,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU5" name="{=Settlements.Settlement.name.castle_RU5}Castle RU5" owner="Faction.clan_khuzait_1" posX="1379.628" posY="782.848" culture="Culture.khuzait" gate_posX="1379.985" gate_posY="785.4165">
+  <Settlement id="castle_RU5" name="{=Settlements.Settlement.name.castle_RU5}Morath" owner="Faction.clan_khuzait_1" posX="1379.628" posY="782.848" culture="Culture.khuzait" gate_posX="1379.985" gate_posY="785.4165">
     <Components>
       <Town id="castle_comp_RU5" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11465,7 +11465,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU6" name="{=Settlements.Settlement.name.castle_RU6}Castle RU6" owner="Faction.clan_khuzait_1" posX="1474.926" posY="862.833" culture="Culture.khuzait" gate_posX="1473.926" gate_posY="861.2988">
+  <Settlement id="castle_RU6" name="{=Settlements.Settlement.name.castle_RU6}Kârashûn" owner="Faction.clan_khuzait_1" posX="1474.926" posY="862.833" culture="Culture.khuzait" gate_posX="1473.926" gate_posY="861.2988">
     <Components>
       <Town id="castle_comp_RU6" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11528,7 +11528,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU7" name="{=Settlements.Settlement.name.castle_RU7}Castle RU7" owner="Faction.clan_khuzait_1" posX="1303.341" posY="952.591" culture="Culture.khuzait" gate_posX="1305.423" gate_posY="952.7949">
+  <Settlement id="castle_RU7" name="{=Settlements.Settlement.name.castle_RU7}Rûartar" owner="Faction.clan_khuzait_1" posX="1303.341" posY="952.591" culture="Culture.khuzait" gate_posX="1305.423" gate_posY="952.7949">
     <Components>
       <Town id="castle_comp_RU7" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11591,7 +11591,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU8" name="{=Settlements.Settlement.name.castle_RU8}Castle RU8" owner="Faction.clan_khuzait_1" posX="1360.076" posY="929.906" culture="Culture.khuzait" gate_posX="1358.007" gate_posY="930.0695">
+  <Settlement id="castle_RU8" name="{=Settlements.Settlement.name.castle_RU8}Ulathar" owner="Faction.clan_khuzait_1" posX="1360.076" posY="929.906" culture="Culture.khuzait" gate_posX="1358.007" gate_posY="930.0695">
     <Components>
       <Town id="castle_comp_RU8" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11654,7 +11654,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_RU9" name="{=Settlements.Settlement.name.castle_RU9}Castle RU9" owner="Faction.clan_khuzait_1" posX="1209.028" posY="1012.308" culture="Culture.khuzait" gate_posX="1209.385" gate_posY="1014.876">
+  <Settlement id="castle_RU9" name="{=Settlements.Settlement.name.castle_RU9}Samârnûl" owner="Faction.clan_khuzait_1" posX="1209.028" posY="1012.308" culture="Culture.khuzait" gate_posX="1209.385" gate_posY="1014.876">
     <Components>
       <Town id="castle_comp_RU9" is_castle="true" background_crop_position="0.0" background_mesh="gui_bg_castle_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -11717,7 +11717,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU1" name="{=Settlements.Settlement.name.town_RU1}Town RU1" owner="Faction.clan_khuzait_1" posX="1270.979" posY="884.709" culture="Culture.khuzait" gate_posX="1274.44" gate_posY="881.5842">
+  <Settlement id="town_RU1" name="{=Settlements.Settlement.name.town_RU1}Mistrand" owner="Faction.clan_khuzait_1" posX="1270.979" posY="884.709" culture="Culture.khuzait" gate_posX="1274.44" gate_posY="881.5842">
     <Components>
       <Town id="town_comp_RU1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -11805,7 +11805,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU2" name="{=Settlements.Settlement.name.town_RU2}Town RU2" owner="Faction.clan_khuzait_1" posX="1199.379" posY="863.681" culture="Culture.khuzait" gate_posX="1200.855" gate_posY="860.6939">
+  <Settlement id="town_RU2" name="{=Settlements.Settlement.name.town_RU2}Lest" owner="Faction.clan_khuzait_1" posX="1199.379" posY="863.681" culture="Culture.khuzait" gate_posX="1200.855" gate_posY="860.6939">
     <Components>
       <Town id="town_comp_RU2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -11893,7 +11893,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU3" name="{=Settlements.Settlement.name.town_RU3}Town RU3" owner="Faction.clan_khuzait_1" posX="1299.115" posY="1016.276" culture="Culture.khuzait" gate_posX="1295.436" gate_posY="1013.186">
+  <Settlement id="town_RU3" name="{=Settlements.Settlement.name.town_RU3}Vorgavuld" owner="Faction.clan_khuzait_1" posX="1299.115" posY="1016.276" culture="Culture.khuzait" gate_posX="1295.436" gate_posY="1013.186">
     <Components>
       <Town id="town_comp_RU3" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -11981,7 +11981,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU4" name="{=Settlements.Settlement.name.town_RU4}Town RU4" owner="Faction.clan_khuzait_1" posX="1279.545" posY="1079.959" culture="Culture.khuzait" gate_posX="1276.032" gate_posY="1080.754">
+  <Settlement id="town_RU4" name="{=Settlements.Settlement.name.town_RU4}Ûrushban" owner="Faction.clan_khuzait_1" posX="1279.545" posY="1079.959" culture="Culture.khuzait" gate_posX="1276.032" gate_posY="1080.754">
     <Components>
       <Town id="town_comp_RU4" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12069,7 +12069,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU5" name="{=Settlements.Settlement.name.town_RU5}Town RU5" owner="Faction.clan_khuzait_1" posX="1434.032" posY="1036.455" culture="Culture.khuzait" gate_posX="1436.045" gate_posY="1034.197">
+  <Settlement id="town_RU5" name="{=Settlements.Settlement.name.town_RU5}Sârt" owner="Faction.clan_khuzait_1" posX="1434.032" posY="1036.455" culture="Culture.khuzait" gate_posX="1436.045" gate_posY="1034.197">
     <Components>
       <Town id="town_comp_RU5" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12157,7 +12157,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU6" name="{=Settlements.Settlement.name.town_RU6}Town RU6" owner="Faction.clan_khuzait_1" posX="1477.965" posY="942.210" culture="Culture.khuzait" gate_posX="1481.426" gate_posY="939.0858">
+  <Settlement id="town_RU6" name="{=Settlements.Settlement.name.town_RU6}Kelepar" owner="Faction.clan_khuzait_1" posX="1477.965" posY="942.210" culture="Culture.khuzait" gate_posX="1481.426" gate_posY="939.0858">
     <Components>
       <Town id="town_comp_RU6" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12245,7 +12245,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU7" name="{=Settlements.Settlement.name.town_RU7}Town RU7" owner="Faction.clan_khuzait_1" posX="1034.047" posY="831.117" culture="Culture.khuzait" gate_posX="1032.924" gate_posY="835.3094">
+  <Settlement id="town_RU7" name="{=Settlements.Settlement.name.town_RU7}Khûndol" owner="Faction.clan_khuzait_1" posX="1034.047" posY="831.117" culture="Culture.khuzait" gate_posX="1032.924" gate_posY="835.3094">
     <Components>
       <Town id="town_comp_RU7" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12333,7 +12333,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_RU8" name="{=Settlements.Settlement.name.town_RU8}Town RU8" owner="Faction.clan_khuzait_1" posX="1446.006" posY="798.386" culture="Culture.khuzait" gate_posX="1443.853" gate_posY="794.8651">
+  <Settlement id="town_RU8" name="{=Settlements.Settlement.name.town_RU8}Iôrig" owner="Faction.clan_khuzait_1" posX="1446.006" posY="798.386" culture="Culture.khuzait" gate_posX="1443.853" gate_posY="794.8651">
     <Components>
       <Town id="town_comp_RU8" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_khuzait" wait_mesh="wait_khuzait_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12424,7 +12424,7 @@
   <!-- ============================================== -->
   <!-- UMBAR -->
   <!-- ============================================== -->
-  <Settlement id="castle_U1" name="{=Settlements.Settlement.name.castle_U1}Castle U1" owner="Faction.clan_umbar_1" posX="693.088" posY="299.363" culture="Culture.umbar" gate_posX="695.5717" gate_posY="296.9008">
+  <Settlement id="castle_U1" name="{=Settlements.Settlement.name.castle_U1}Zimrathôr" owner="Faction.clan_umbar_1" posX="693.088" posY="299.363" culture="Culture.umbar" gate_posX="695.5717" gate_posY="296.9008">
     <Components>
       <Town id="castle_comp_U1" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12487,7 +12487,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U2" name="{=Settlements.Settlement.name.castle_U2}Castle U2" owner="Faction.clan_umbar_1" posX="649.710" posY="315.628" culture="Culture.umbar" gate_posX="652.1937" gate_posY="313.1657">
+  <Settlement id="castle_U2" name="{=Settlements.Settlement.name.castle_U2}Bêluzir" owner="Faction.clan_umbar_1" posX="649.710" posY="315.628" culture="Culture.umbar" gate_posX="652.1937" gate_posY="313.1657">
     <Components>
       <Town id="castle_comp_U2" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12537,7 +12537,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U3" name="{=Settlements.Settlement.name.castle_U3}Castle U3" owner="Faction.clan_umbar_1" posX="656.082" posY="353.801" culture="Culture.umbar" gate_posX="659.655" gate_posY="354.2018">
+  <Settlement id="castle_U3" name="{=Settlements.Settlement.name.castle_U3}Azruphâr" owner="Faction.clan_umbar_1" posX="656.082" posY="353.801" culture="Culture.umbar" gate_posX="659.655" gate_posY="354.2018">
     <Components>
       <Town id="castle_comp_U3" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12587,7 +12587,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U4" name="{=Settlements.Settlement.name.castle_U4}Castle U4" owner="Faction.clan_umbar_1" posX="727.665" posY="359.279" culture="Culture.umbar" gate_posX="724.0605" gate_posY="359.0836">
+  <Settlement id="castle_U4" name="{=Settlements.Settlement.name.castle_U4}Bej Magha" owner="Faction.clan_umbar_1" posX="727.665" posY="359.279" culture="Culture.umbar" gate_posX="724.0605" gate_posY="359.0836">
     <Components>
       <Town id="castle_comp_U4" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12650,7 +12650,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U5" name="{=Settlements.Settlement.name.castle_U5}Castle U5" owner="Faction.clan_umbar_1" posX="779.963" posY="232.296" culture="Culture.umbar" gate_posX="783.0332" gate_posY="234.242">
+  <Settlement id="castle_U5" name="{=Settlements.Settlement.name.castle_U5}Rakhâx" owner="Faction.clan_umbar_1" posX="779.963" posY="232.296" culture="Culture.umbar" gate_posX="783.0332" gate_posY="234.242">
     <Components>
       <Town id="castle_comp_U5" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12713,7 +12713,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U6" name="{=Settlements.Settlement.name.castle_U6}Castle U6" owner="Faction.clan_umbar_1" posX="703.917" posY="241.202" culture="Culture.umbar" gate_posX="700.8859" gate_posY="239.3799">
+  <Settlement id="castle_U6" name="{=Settlements.Settlement.name.castle_U6}Hâtab" owner="Faction.clan_umbar_1" posX="703.917" posY="241.202" culture="Culture.umbar" gate_posX="700.8859" gate_posY="239.3799">
     <Components>
       <Town id="castle_comp_U6" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12776,7 +12776,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U7" name="{=Settlements.Settlement.name.castle_U7}Castle U7" owner="Faction.clan_umbar_1" posX="648.220" posY="165.215" culture="Culture.umbar" gate_posX="651.7223" gate_posY="164.4252">
+  <Settlement id="castle_U7" name="{=Settlements.Settlement.name.castle_U7}Khûthra" owner="Faction.clan_umbar_1" posX="648.220" posY="165.215" culture="Culture.umbar" gate_posX="651.7223" gate_posY="164.4252">
     <Components>
       <Town id="castle_comp_U7" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12839,7 +12839,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U8" name="{=Settlements.Settlement.name.castle_U8}Castle U8" owner="Faction.clan_umbar_1" posX="575.068" posY="217.793" culture="Culture.umbar" gate_posX="578.5703" gate_posY="217.0032">
+  <Settlement id="castle_U8" name="{=Settlements.Settlement.name.castle_U8}Zamarzîr" owner="Faction.clan_umbar_1" posX="575.068" posY="217.793" culture="Culture.umbar" gate_posX="578.5703" gate_posY="217.0032">
     <Components>
       <Town id="castle_comp_U8" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
           <Buildings>
@@ -12902,7 +12902,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_U1" name="{=Settlements.Settlement.name.town_U1}Town U1" owner="Faction.clan_umbar_1" posX="742.595" posY="322.241" culture="Culture.umbar" gate_posX="748.8865" gate_posY="323.1985">
+  <Settlement id="town_U1" name="{=Settlements.Settlement.name.town_U1}Umbar" owner="Faction.clan_umbar_1" posX="742.595" posY="322.241" culture="Culture.umbar" gate_posX="748.8865" gate_posY="323.1985">
     <Components>
       <Town id="town_comp_U1" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
@@ -12990,7 +12990,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_U2" name="{=Settlements.Settlement.name.town_U2}Town U2" owner="Faction.clan_umbar_1" posX="534.583" posY="163.165" culture="Culture.umbar" gate_posX="534.626" gate_posY="157.5253">
+  <Settlement id="town_U2" name="{=Settlements.Settlement.name.town_U2}Jax Phanal" owner="Faction.clan_umbar_1" posX="534.583" posY="163.165" culture="Culture.umbar" gate_posX="534.626" gate_posY="157.5253">
     <Components>
       <Town id="town_comp_U2" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
           <Buildings>
