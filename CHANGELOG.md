@@ -2,6 +2,25 @@
 
 ## 2026-03-06
 
+### Banner Injection Feature
+
+Ported LOTRAOM's Banner Injection system to TAOM for Bannerlord 1.3. Re-applies custom `banner_key` values to Kingdom and Clan objects on every session launch, preventing banner reversion on save/load cycles. Leverages 1.3 public setters (no reflection needed).
+
+**C# Implementation (18 files):**
+- `BannerInjectionService` — core injection logic: loads config, compares runtime banners to XML, sets + invalidates visuals for mismatches
+- `BannerExclusionService` — tracks player-modified banners via `IDataStore` persistence to avoid overwriting player edits
+- `BannerConfigProvider` — parses `banner_key` from 4 sources: `taom_spkingdoms.xml`, `spkingdoms.xslt`, `characters/clans.xml`, `spclans.xslt`. Handles both inline XML attributes and `xsl:attribute` XSLT patterns
+- `BannerInjectionBehavior` — thin `CampaignBehaviorBase`, fires injection on `OnSessionLaunchedEvent`
+- `IKingdomBannerAdapter` / `KingdomBannerAdapter` — wraps `Kingdom.All`, `Kingdom.Banner` setter, visual invalidation
+- `IClanBannerAdapter` / `ClanBannerAdapter` — wraps `Clan.All`, `Clan.Banner` setter, ruling clan detection
+- `GauntletBannerEditorScreen_OnDone_Patch` — Harmony postfix detects player banner edits, marks clan as player-modified
+- `BannerInjectionIoC` — DryIoc registration for all banner services
+- 8 `BannerConfigProviderTests` + 5 `BannerExclusionServiceTests` + 13 `BannerInjectionServiceTests` = 26 new tests
+
+**XSLT Changes:**
+- Added vanilla `banner_key` attributes to all 73 clan templates in `spclans.xslt` (across 8 culture groups) in anticipation of future clan rework
+- Each template excludes `banner_key` from pass-through to prevent duplication
+
 ### Notable NPCs — Culture-Specific Notables
 
 Replaced vanilla Empire notable NPCs with culture-specific notables for all 10 custom cultures. Previously all settlements (including orc/elf/dwarf) spawned human Empire notables as merchants, artisans, preachers, etc.
