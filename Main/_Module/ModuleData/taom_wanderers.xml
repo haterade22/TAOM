@@ -315,7 +315,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_0"
 		race="uruk"
-		name="{=aom_spc_wanderer_mordor_0_name}{FIRSTNAME} DÃ»rzakh"
+		name="{=aom_spc_wanderer_mordor_0_name}{FIRSTNAME} Dûrzakh"
 		voice="softspoken"
 		age="28"
 		is_template="true"
@@ -339,7 +339,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_1"
 		race="orc"
-		name="{=aom_spc_wanderer_mordor_1_name}{FIRSTNAME} MorgÃ»lkin"
+		name="{=aom_spc_wanderer_mordor_1_name}{FIRSTNAME} Morgûlkin"
 		voice="earnest"
 		age="27"
 		is_template="true"
@@ -388,7 +388,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_3"
 		race="orc"
-		name="{=aom_spc_wanderer_mordor_3_name}{FIRSTNAME} KrÃ»lmar"
+		name="{=aom_spc_wanderer_mordor_3_name}{FIRSTNAME} Krûlmar"
 		voice="curt"
 		age="35"
 		is_template="true"
@@ -436,7 +436,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_5"
 		race="orc"
-		name="{=aom_spc_wanderer_mordor_5_name}{FIRSTNAME} ShagrÃ»k"
+		name="{=aom_spc_wanderer_mordor_5_name}{FIRSTNAME} Shagrûk"
 		voice="curt"
 		age="30"
 		is_template="true"
@@ -488,7 +488,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_7"
 		race="human"
-		name="{=aom_spc_wanderer_mordor_7_name}{FIRSTNAME} DÃ»mphÃªl"
+		name="{=aom_spc_wanderer_mordor_7_name}{FIRSTNAME} Dûmphêl"
 		voice="ironic"
 		age="24"
 		is_template="true"
@@ -514,7 +514,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_8"
 		race="human"
-		name="{=aom_spc_wanderer_mordor_8_name}{FIRSTNAME} AzaridÃªth"
+		name="{=aom_spc_wanderer_mordor_8_name}{FIRSTNAME} Azaridêth"
 		voice="curt"
 		age="29"
 		is_template="true"
@@ -564,7 +564,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_10"
 		race="uruk"
-		name="{=aom_spc_wanderer_mordor_10_name}{FIRSTNAME} RÃ»kdar"
+		name="{=aom_spc_wanderer_mordor_10_name}{FIRSTNAME} Rûkdar"
 		voice="earnest"
 		age="32"
 		is_template="true"
@@ -588,7 +588,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_11"
 		race="orc"
-		name="{=aom_spc_wanderer_mordor_11_name}{FIRSTNAME} MornÃ»k"
+		name="{=aom_spc_wanderer_mordor_11_name}{FIRSTNAME} Mornûk"
 		voice="softspoken"
 		age="28"
 		is_template="true"
@@ -612,7 +612,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_12"
 		race="uruk"
-		name="{=aom_spc_wanderer_mordor_12_name}{FIRSTNAME} SkarnÃ»l"
+		name="{=aom_spc_wanderer_mordor_12_name}{FIRSTNAME} Skarnûl"
 		voice="curt"
 		age="31"
 		is_template="true"
@@ -636,7 +636,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_13"
 		race="orc"
-		name="{=aom_spc_wanderer_mordor_13_name}{FIRSTNAME} ZaghÃ»l"
+		name="{=aom_spc_wanderer_mordor_13_name}{FIRSTNAME} Zaghûl"
 		voice="ironic"
 		age="25"
 		is_template="true"
@@ -660,7 +660,7 @@
 	<NPCCharacter
 		id="spc_wanderer_mordor_14"
 		race="human"
-		name="{=aom_spc_wanderer_mordor_14_name}{FIRSTNAME} DÃ»mrad"
+		name="{=aom_spc_wanderer_mordor_14_name}{FIRSTNAME} Dûmrad"
 		voice="earnest"
 		age="33"
 		is_template="true"
@@ -1010,7 +1010,7 @@
 	<NPCCharacter
 		id="spc_wanderer_isengard_3"
 		race="uruk_hai"
-		name="{=aom_spc_wanderer_isengard_3_name}{FIRSTNAME} GrakhÃ»rz"
+		name="{=aom_spc_wanderer_isengard_3_name}{FIRSTNAME} Grakhûrz"
 		voice="curt"
 		age="35"
 		is_template="true"
@@ -1034,7 +1034,7 @@
 	<NPCCharacter
 		id="spc_wanderer_isengard_4"
 		race="berserker"
-		name="{=aom_spc_wanderer_isengard_4_name}{FIRSTNAME} ThrÃ»mag"
+		name="{=aom_spc_wanderer_isengard_4_name}{FIRSTNAME} Thrûmag"
 		voice="softspoken"
 		age="23"
 		is_template="true"
@@ -1058,7 +1058,7 @@
 	<NPCCharacter
 		id="spc_wanderer_isengard_5"
 		race="uruk_hai"
-		name="{=aom_spc_wanderer_isengard_5_name}{FIRSTNAME} SkarnÃ»k"
+		name="{=aom_spc_wanderer_isengard_5_name}{FIRSTNAME} Skarnûk"
 		voice="curt"
 		age="30"
 		is_template="true"
@@ -1084,7 +1084,7 @@
 	<NPCCharacter
 		id="spc_wanderer_isengard_6"
 		race="uruk_hai"
-		name="{=aom_spc_wanderer_isengard_6_name}{FIRSTNAME} BrÃ»zhak"
+		name="{=aom_spc_wanderer_isengard_6_name}{FIRSTNAME} Brûzhak"
 		voice="curt"
 		age="24"
 		is_template="true"
@@ -1110,7 +1110,7 @@
 	<NPCCharacter
 		id="spc_wanderer_isengard_7"
 		race="uruk_hai"
-		name="{=aom_spc_wanderer_isengard_7_name}{FIRSTNAME} KrÃ»ldash"
+		name="{=aom_spc_wanderer_isengard_7_name}{FIRSTNAME} Krûldash"
 		voice="ironic"
 		age="24"
 		is_template="true"
@@ -1161,7 +1161,7 @@
 	<NPCCharacter
 		id="spc_wanderer_isengard_9"
 		race="uruk_hai"
-		name="{=aom_spc_wanderer_isengard_9_name}{FIRSTNAME} GorhÃ»l"
+		name="{=aom_spc_wanderer_isengard_9_name}{FIRSTNAME} Gorhûl"
 		voice="ironic"
 		age="26"
 		is_template="true"
@@ -1212,7 +1212,7 @@
 	<NPCCharacter
 		id="spc_wanderer_erebor_1"
 		race="dwarf"
-		name="{=aom_spc_wanderer_erebor_1_name}{FIRSTNAME} Bit DurakÃ»n"
+		name="{=aom_spc_wanderer_erebor_1_name}{FIRSTNAME} Bit Durakûn"
 		voice="earnest"
 		age="27"
 		is_template="true"
@@ -1261,7 +1261,7 @@
 	<NPCCharacter
 		id="spc_wanderer_erebor_3"
 		race="dwarf"
-		name="{=aom_spc_wanderer_erebor_3_name}{FIRSTNAME} Bit BuzrÃ»n"
+		name="{=aom_spc_wanderer_erebor_3_name}{FIRSTNAME} Bit Buzrûn"
 		voice="curt"
 		age="35"
 		is_template="true"
@@ -1361,7 +1361,7 @@
 	<NPCCharacter
 		id="spc_wanderer_erebor_7"
 		race="dwarf"
-		name="{=aom_spc_wanderer_erebor_7_name}{FIRSTNAME} Bit GÃ³r"
+		name="{=aom_spc_wanderer_erebor_7_name}{FIRSTNAME} Bit Gór"
 		voice="ironic"
 		age="24"
 		is_template="true"
@@ -1387,7 +1387,7 @@
 	<NPCCharacter
 		id="spc_wanderer_erebor_8"
 		race="dwarf"
-		name="{=aom_spc_wanderer_erebor_8_name}{FIRSTNAME} Bit LÃ³in"
+		name="{=aom_spc_wanderer_erebor_8_name}{FIRSTNAME} Bit Lóin"
 		voice="curt"
 		age="29"
 		is_template="true"
@@ -1461,7 +1461,7 @@
 	<NPCCharacter
 		id="spc_wanderer_erebor_11"
 		race="dwarf"
-		name="{=aom_spc_wanderer_erebor_11_name}{FIRSTNAME} Bit KÃ¡r"
+		name="{=aom_spc_wanderer_erebor_11_name}{FIRSTNAME} Bit Kár"
 		voice="softspoken"
 		age="28"
 		is_template="true"
@@ -1533,7 +1533,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="spc_wanderer_rohan_2"
-		name="{=aom_spc_wanderer_rohan_2_name}{FIRSTNAME} ThanegrÃ­m"
+		name="{=aom_spc_wanderer_rohan_2_name}{FIRSTNAME} Thanegrím"
 		voice="earnest"
 		age="21"
 		is_template="true"
