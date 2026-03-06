@@ -55,7 +55,7 @@ public class BannerConfigProviderTests
     }
 
     [TestMethod]
-    public void GetKingdomBannerKeys_ParsesXsltTemplates()
+    public void GetKingdomBannerKeys_ParsesXsltWithXslAttribute()
     {
         File.WriteAllText(Path.Combine(_tempDir, "spkingdoms.xslt"), @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">
@@ -73,6 +73,25 @@ public class BannerConfigProviderTests
 
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("11.184.14.4922", result["kingdom_rohan"]);
+    }
+
+    [TestMethod]
+    public void GetKingdomBannerKeys_ParsesXsltWithInlineAttributes()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "spkingdoms.xslt"), @"<?xml version=""1.0"" encoding=""utf-8""?>
+<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">
+    <xsl:template match=""Kingdom[@id='kingdom_gondor']"">
+        <Kingdom id=""kingdom_gondor""
+            name=""Gondor""
+            banner_key=""11.8.8.4345""
+            primary_banner_color=""0xff591645"" />
+    </xsl:template>
+</xsl:stylesheet>");
+
+        var result = _sut.GetKingdomBannerKeys();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("11.8.8.4345", result["kingdom_gondor"]);
     }
 
     [TestMethod]

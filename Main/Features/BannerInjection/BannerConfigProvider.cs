@@ -26,8 +26,9 @@ public class BannerConfigProvider : IBannerConfigProvider
         var result = new Dictionary<string, string>();
         ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "taom_spkingdoms.xml"),
             "Kingdom", result);
-        ParseXsltBannerKeys(Path.Combine(_pathService.ModuleDataPath, "spkingdoms.xslt"),
-            "Kingdom", result);
+        var xsltPath = Path.Combine(_pathService.ModuleDataPath, "spkingdoms.xslt");
+        ParseBannerKeys(xsltPath, "Kingdom", result);
+        ParseXsltBannerKeys(xsltPath, "Kingdom", result);
         return result;
     }
 
@@ -36,8 +37,9 @@ public class BannerConfigProvider : IBannerConfigProvider
         var result = new Dictionary<string, string>();
         ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "characters", "clans.xml"),
             "Faction", result);
-        ParseXsltBannerKeys(Path.Combine(_pathService.ModuleDataPath, "spclans.xslt"),
-            "Faction", result);
+        var xsltPath = Path.Combine(_pathService.ModuleDataPath, "spclans.xslt");
+        ParseBannerKeys(xsltPath, "Faction", result);
+        ParseXsltBannerKeys(xsltPath, "Faction", result);
         return result;
     }
 
