@@ -127,6 +127,23 @@ Use agent teams when work can be parallelized across independent directories. Se
 
 **Mod**: `[HarmonyPatch/GameModel/CampaignBehavior]` → `IHookInterface` → `Service` → `IAdapter` (sealed types)
 
+## Documentation Requirements (MANDATORY)
+
+After every change session, update ALL relevant documentation before finishing:
+
+| Doc | When to update | Path |
+|-----|---------------|------|
+| **CHANGELOG.md** | Every session — summarize all changes made | `CHANGELOG.md` |
+| **CLAUDE.md** | When adding new files, paths, patterns, or rules | `CLAUDE.md` |
+| **ADRs** | When making architectural decisions | `docs/adrs/` |
+| **Migration tracking** | When completing migration tasks | `docs/migration/TRACKING.md` |
+
+**CHANGELOG rules:**
+- Group by date, then by category (features, bug fixes, tooling, etc.)
+- Include file names and counts where relevant
+- Keep entries concise but specific enough to understand the change
+- Most recent date at top
+
 ## Commits
 
 50/72 rule. No AI attribution. Example: `feat: add garrison patrol calculation`

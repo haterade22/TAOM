@@ -264,7 +264,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_erebor_0" />
       <template name="NPCCharacter.spc_wanderer_erebor_1" />
       <template name="NPCCharacter.spc_wanderer_erebor_2" />
@@ -303,7 +303,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -633,7 +633,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_rivendell_0" />
       <template name="NPCCharacter.spc_wanderer_rivendell_1" />
       <template name="NPCCharacter.spc_wanderer_rivendell_2" />
@@ -670,7 +670,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -991,7 +991,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_mirkwood_0" />
       <template name="NPCCharacter.spc_wanderer_mirkwood_1" />
       <template name="NPCCharacter.spc_wanderer_mirkwood_2" />
@@ -1028,7 +1028,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -1349,7 +1349,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_lothlorien_0" />
       <template name="NPCCharacter.spc_wanderer_lothlorien_1" />
       <template name="NPCCharacter.spc_wanderer_lothlorien_2" />
@@ -1386,7 +1386,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -1706,7 +1706,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_isengard_0" />
       <template name="NPCCharacter.spc_wanderer_isengard_1" />
       <template name="NPCCharacter.spc_wanderer_isengard_2" />
@@ -1743,7 +1743,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -2064,7 +2064,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_gundabad_0" />
       <template name="NPCCharacter.spc_wanderer_gundabad_1" />
       <template name="NPCCharacter.spc_wanderer_gundabad_2" />
@@ -2101,7 +2101,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -2422,7 +2422,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_umbar_0" />
       <template name="NPCCharacter.spc_wanderer_umbar_1" />
       <template name="NPCCharacter.spc_wanderer_umbar_2" />
@@ -2459,7 +2459,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -2780,7 +2780,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_dolguldur_0" />
       <template name="NPCCharacter.spc_wanderer_dolguldur_1" />
       <template name="NPCCharacter.spc_wanderer_dolguldur_2" />
@@ -2817,7 +2817,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -3143,7 +3143,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_gondor_0" />
       <template name="NPCCharacter.spc_wanderer_gondor_1" />
       <template name="NPCCharacter.spc_wanderer_gondor_2" />
@@ -3183,7 +3183,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
@@ -3509,7 +3509,7 @@
       <icon id="223" />
       <icon id="400" />
     </possible_clan_banner_icon_ids>
-    <notable_and_wanderer_templates>
+    <notable_templates>
       <template name="NPCCharacter.spc_wanderer_mordor_0" />
       <template name="NPCCharacter.spc_wanderer_mordor_1" />
       <template name="NPCCharacter.spc_wanderer_mordor_2" />
@@ -3551,7 +3551,7 @@
       <template name="NPCCharacter.spc_empire_headman_1" />
       <template name="NPCCharacter.spc_empire_headman_2" />
       <template name="NPCCharacter.spc_empire_headman_3" />
-    </notable_and_wanderer_templates>
+    </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
       <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
