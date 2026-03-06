@@ -23,6 +23,8 @@ public class BannerConfigProvider : IBannerConfigProvider
         var result = new Dictionary<string, string>();
         ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "taom_spkingdoms.xml"),
             "Kingdom", result);
+        ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "spkingdoms.xslt"),
+            "Kingdom", result);
         return result;
     }
 
