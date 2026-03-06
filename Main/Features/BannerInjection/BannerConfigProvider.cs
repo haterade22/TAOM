@@ -33,6 +33,8 @@ public class BannerConfigProvider : IBannerConfigProvider
         var result = new Dictionary<string, string>();
         ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "characters", "clans.xml"),
             "Faction", result);
+        ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "spclans.xslt"),
+            "Faction", result);
         return result;
     }
 
