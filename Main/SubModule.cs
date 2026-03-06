@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 
 namespace TAOM;
@@ -33,6 +34,9 @@ public class SubModule : MBSubModuleBase
         {
             var racePersistenceService = IoC.Resolve<IRacePersistenceService>();
             campaignStarter.AddBehavior(new RacePersistenceBehavior(racePersistenceService));
+
+            var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
+            campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService));
         }
     }
 

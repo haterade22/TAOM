@@ -4,6 +4,7 @@ using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 
 namespace TAOM;
@@ -22,6 +23,7 @@ public static class IoC
         RegisterLoggingServices(container);
 
         HeroRaceIoC.RegisterHeroRaceFeature(container);
+        BannerInjectionIoC.RegisterBannerInjectionFeature(container);
 
         _container = container;
     }
