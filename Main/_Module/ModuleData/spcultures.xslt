@@ -246,7 +246,7 @@
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
 			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
 			<!-- Replace vanilla empire wanderers with Dunland wanderers, keep vanilla notables -->
-			<notable_and_wanderer_templates>
+			<notable_templates>
 				<template name="NPCCharacter.spc_wanderer_dunland_0" />
 				<template name="NPCCharacter.spc_wanderer_dunland_1" />
 				<template name="NPCCharacter.spc_wanderer_dunland_2" />
@@ -283,7 +283,7 @@
 				<template name="NPCCharacter.spc_empire_headman_1" />
 				<template name="NPCCharacter.spc_empire_headman_2" />
 				<template name="NPCCharacter.spc_empire_headman_3" />
-			</notable_and_wanderer_templates>
+			</notable_templates>
 		</xsl:copy>
 	</xsl:template>
 
@@ -523,7 +523,7 @@
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
 			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
 			<!-- Replace vanilla aserai wanderers with Harad wanderers, keep vanilla notables -->
-			<notable_and_wanderer_templates>
+			<notable_templates>
 				<template name="NPCCharacter.spc_wanderer_harad_0" />
 				<template name="NPCCharacter.spc_wanderer_harad_1" />
 				<template name="NPCCharacter.spc_wanderer_harad_2" />
@@ -554,7 +554,7 @@
 				<template name="NPCCharacter.spc_aserai_headman_1" />
 				<template name="NPCCharacter.spc_aserai_headman_2" />
 				<template name="NPCCharacter.spc_aserai_headman_3" />
-			</notable_and_wanderer_templates>
+			</notable_templates>
 		</xsl:copy>
 	</xsl:template>
 
@@ -794,7 +794,7 @@
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
 			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
 			<!-- Replace vanilla vlandia wanderers with Rohan wanderers, keep vanilla notables -->
-			<notable_and_wanderer_templates>
+			<notable_templates>
 				<template name="NPCCharacter.spc_wanderer_rohan_0" />
 				<template name="NPCCharacter.spc_wanderer_rohan_1" />
 				<template name="NPCCharacter.spc_wanderer_rohan_2" />
@@ -823,7 +823,7 @@
 				<template name="NPCCharacter.spc_vlandia_headman_1" />
 				<template name="NPCCharacter.spc_vlandia_headman_2" />
 				<template name="NPCCharacter.spc_vlandia_headman_3" />
-			</notable_and_wanderer_templates>
+			</notable_templates>
 		</xsl:copy>
 	</xsl:template>
 
@@ -1053,7 +1053,7 @@
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
 			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
 			<!-- Replace vanilla khuzait wanderers with Rhun wanderers, keep vanilla notables -->
-			<notable_and_wanderer_templates>
+			<notable_templates>
 				<template name="NPCCharacter.spc_wanderer_rhun_0" />
 				<template name="NPCCharacter.spc_wanderer_rhun_1" />
 				<template name="NPCCharacter.spc_wanderer_rhun_2" />
@@ -1084,7 +1084,7 @@
 				<template name="NPCCharacter.spc_khuzait_headman_1" />
 				<template name="NPCCharacter.spc_khuzait_headman_2" />
 				<template name="NPCCharacter.spc_khuzait_headman_3" />
-			</notable_and_wanderer_templates>
+			</notable_templates>
 		</xsl:copy>
 	</xsl:template>
 

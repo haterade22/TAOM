@@ -183,10 +183,13 @@
         occupation="Villager"
         culture="Culture.vlandia"
         default_group="Infantry"
-        upgrade_target="NPCCharacter.rohan_edoras_recruit">
+        >
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.rohan_edoras_recruit" />
+        </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
