@@ -6535,4 +6535,1210 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+
+	<!-- GONDOR - education equipment templates (from vanilla empire) -->
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_default_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.hemp_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.footmans_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_0_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_1_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_1_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.footmans_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_1_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_1_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_1_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_1_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.hemp_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_2_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_2_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_2_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_2_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.footmans_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_2_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.hemp_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_1_page_2_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_default_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_child_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.ironlame_feathered_spangenhelm" />
+			<Equipment
+				slot="Cape"
+				id="Item.imperial_studded_strip_shoulders" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.decorated_imperial_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.leather_cap" />
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Gloves"
+				id="Item.padded_mitten" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_0_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_child_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.ironlame_feathered_spangenhelm" />
+			<Equipment
+				slot="Cape"
+				id="Item.imperial_studded_strip_shoulders" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.decorated_imperial_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.leather_cap" />
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Gloves"
+				id="Item.padded_mitten" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_1_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_child_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.ironlame_feathered_spangenhelm" />
+			<Equipment
+				slot="Cape"
+				id="Item.imperial_studded_strip_shoulders" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.decorated_imperial_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.leather_cap" />
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Gloves"
+				id="Item.padded_mitten" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_2_page_2_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_default_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.bandit_fur_a" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.empire_horseman_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.hemp_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.footmans_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_0_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_1_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Cape"
+				id="Item.imperial_studded_strip_shoulders" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.empire_horseman_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_1_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_1_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_1_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.thick_sleeved_robe" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_1_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_1_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_2_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.empire_horseman_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_2_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_2_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_2_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_2_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_3_page_2_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_default_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Cape"
+				id="Item.pauldron_cape_a" />
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_0_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_1_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Cape"
+				id="Item.pauldron_cape_a" />
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_1_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_rolled_cloth" />
+			<Equipment
+				slot="Leg"
+				id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_1_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_1_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_1_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_1_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_2_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.empire_horseman_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_2_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_2_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.hemp_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_2_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_2_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.footmans_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_4_page_2_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tied_cloth_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_default_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.fine_town_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.ladys_shoe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.ironlame_feathered_spangenhelm" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.decorated_imperial_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Gloves"
+				id="Item.padded_mitten" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Cape"
+				id="Item.pauldron_cape_a" />
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_0_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_1_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.ironlame_feathered_spangenhelm" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.decorated_imperial_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_1_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_1_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_1_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Gloves"
+				id="Item.padded_mitten" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_1_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Cape"
+				id="Item.pauldron_cape_a" />
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_1_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_2_branch_0_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Head"
+				id="Item.ironlame_feathered_spangenhelm" />
+			<Equipment
+				slot="Body"
+				id="Item.legionary_mail" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.decorated_imperial_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_2_branch_1_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_2_branch_2_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.tunic_with_shoulder_pads" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_2_branch_3_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.basic_imperial_leather_armor" />
+			<Equipment
+				slot="Gloves"
+				id="Item.padded_mitten" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_2_branch_4_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Cape"
+				id="Item.pauldron_cape_a" />
+			<Equipment
+				slot="Body"
+				id="Item.leather_tunic" />
+			<Equipment
+				slot="Leg"
+				id="Item.leather_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="child_education_equipments_stage_5_page_2_branch_5_gondor">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.imperial_robes" />
+			<Equipment
+				slot="Gloves"
+				id="Item.woven_leather_bracers" />
+			<Equipment
+				slot="Leg"
+				id="Item.fine_town_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>
