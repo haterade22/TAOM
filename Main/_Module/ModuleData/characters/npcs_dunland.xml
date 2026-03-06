@@ -512,33 +512,232 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_dunland" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_dunland_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_0}Shrewd hillman trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.battania_civil_a" />
-				<equipment slot="Cape" id="Item.empire_cape_a" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_0b}Wily dunlending peddler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
-				<equipment slot="Cape" id="Item.battania_civil_cape" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_1}Fierce clan merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_1b}Cold-eyed hill trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_woodland_outfit" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_2}Quiet dunlending dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.leather_scale_armor" />
+				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_2b}Cautious hillman provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_civil_a" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_3}Self-made dunlending merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.highland_gloves" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_3b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_3b}Jovial hillman merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
+				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_4" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_4}Sharp-tongued clan trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_woodland_outfit" />
+				<equipment slot="Gloves" id="Item.highland_gloves" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_4b}Devious dunlending merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.leather_scale_armor" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="artisan_notary_dunland" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_dunland_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_5}Wild hill preacher" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
-		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_6}Stern dunlending elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_civil_a" />
+				<equipment slot="Cape" id="Item.battania_civil_cape" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_7}Keeper of dunlending ways" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
+				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_dunland_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_8}Gruff dunlending smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.leather_scale_armor" />
+				<equipment slot="Gloves" id="Item.highland_gloves" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_9" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_9}Skilled hillman craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_woodland_outfit" />
+				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_dunland_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_gl1}Cunning clan ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.leather_scale_armor" />
+				<equipment slot="Gloves" id="Item.highland_gloves" />
+				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_10}Mocking hillman gang boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_woodland_outfit" />
+				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_11}Brutal dunlending enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_gl4}Savage hill thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
+				<equipment slot="Cape" id="Item.battania_civil_cape" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dunland_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_12}Sly dunlending smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.battania_civil_a" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
@@ -546,16 +745,24 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="preacher_notary_dunland" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_dunland_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_13}Menacing clan gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
-		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.nordic_sloven_leather" />
-				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Body" id="Item.leather_scale_armor" />
+				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
+				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_dunland_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_21}Weathered hillman landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.battania_civil_a" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
@@ -563,18 +770,49 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="rural_notable_notary_dunland" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_dunland_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_22}Respected dunlending elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
-		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_dunland_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_headman_1}Proud dunlending headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_woodland_outfit" />
+				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_dunland_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_headman_2}Cautious clan headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.leather_scale_armor" />
+				<equipment slot="Cape" id="Item.battania_civil_cape" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_dunland_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_headman_3}Cunning hillman headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
-				<equipment slot="Leg" id="Item.battania_leather_boots" />
-			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.battania_civil_a" />
+				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>

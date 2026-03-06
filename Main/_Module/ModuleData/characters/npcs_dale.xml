@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== DALE CIVILIAN NPCs ==================== -->
+	<!-- Bardings/Dale are humans - no race attribute -->
+	<!-- Dale is vanilla sturgia remapped: Culture.sturgia -->
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_dale" default_group="Infantry" name="{=aom_dl_townsman}Townsman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_dale" default_group="Infantry" name="{=aom_dl_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_dale" default_group="Infantry" name="{=aom_dl_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_dale" default_group="Infantry" name="{=aom_dl_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_dale" default_group="Infantry" name="{=aom_dl_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_dale" default_group="Infantry" name="{=aom_dl_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_dale" default_group="Infantry" name="{=aom_dl_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_dale" default_group="Infantry" name="{=aom_dl_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager -->
+	<NPCCharacter id="villager_dale" default_group="Infantry" level="1" name="{=aom_dl_villager}Villager" occupation="Villager" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Woman -->
+	<NPCCharacter id="village_woman_dale" default_group="Infantry" name="{=aom_dl_village_woman}Village Woman" occupation="Villager" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Children/Teenagers -->
+	<NPCCharacter id="villager_child_dale" default_group="Infantry" name="{=aom_dl_villager_child}Village Child" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_child_dale" default_group="Infantry" name="{=aom_dl_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_dale" default_group="Infantry" name="{=aom_dl_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_dale" default_group="Infantry" name="{=aom_dl_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_dale" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.sturgia" name="{=aom_dl_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_dale" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.sturgia" name="{=aom_dl_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_dale" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.sturgia" name="{=aom_dl_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_dale" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.sturgia" name="{=aom_dl_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_dale" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.sturgia" name="{=aom_dl_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_dale" default_group="Infantry" is_hero="false" name="{=aom_dl_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_dale" default_group="Infantry" is_hero="false" name="{=aom_dl_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_dale" default_group="Infantry" is_hero="false" name="{=aom_dl_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_dale" default_group="Infantry" is_hero="false" name="{=aom_dl_musician}Musician" occupation="Musician" culture="Culture.sturgia" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_dale" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.sturgia" name="{=aom_dl_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="shop_worker_dale" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.sturgia" name="{=aom_dl_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_dale" default_group="Infantry" level="4" culture="Culture.sturgia" occupation="PrisonGuard" name="{=aom_dl_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_dale" default_group="Infantry" level="16" name="{=aom_dl_guard}Guard" occupation="Soldier" culture="Culture.sturgia">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Head" id="Item.imperial_open_mail_coif" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="armed_trader_dale" default_group="Infantry" level="16" name="{=aom_dl_armed_trader}Dale Armed Trader" occupation="CaravanGuard" culture="Culture.sturgia">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_master_dale" default_group="Infantry" level="26" name="{=aom_dl_caravan_master}Dale Caravan Master" occupation="CaravanGuard" culture="Culture.sturgia">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Head" id="Item.imperial_open_mail_coif" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_dale" default_group="Infantry" level="21" name="{=aom_dl_caravan_guard}Dale Caravan Guard" occupation="CaravanGuard" culture="Culture.sturgia">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Head" id="Item.imperial_open_mail_coif" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_dale" default_group="Infantry" level="26" name="{=aom_dl_vet_caravan_guard}Dale Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.sturgia">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Item2" id="Item.western_spear_3_t3" />
+				<equipment slot="Head" id="Item.imperial_open_mail_coif" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Ransom Broker -->
+	<NPCCharacter id="ransom_broker_dale" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.sturgia" name="{=aom_dl_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_dale" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.sturgia" name="{=aom_dl_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Barber -->
+	<NPCCharacter id="barber_dale" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.sturgia" name="{=aom_dl_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_dale" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.sturgia" name="{=aom_dl_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_dale" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.sturgia" name="{=aom_dl_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_dale" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.sturgia" name="{=aom_dl_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_dale" default_group="Infantry" level="15" is_hero="false" name="{=aom_dl_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.sturgia">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_dale" default_group="Infantry" level="15" is_hero="false" name="{=aom_dl_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.sturgia">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_dale" default_group="Infantry" level="25" is_hero="false" name="{=aom_dl_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.sturgia">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_dale" default_group="Infantry" level="35" is_hero="false" name="{=aom_dl_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.sturgia">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_dale" default_group="Infantry" level="15" is_hero="false" name="{=aom_dl_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.sturgia">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Education Templates -->
+	<NPCCharacter id="education_character_template_1_dale" default_group="Infantry" is_hero="false" culture="Culture.sturgia" name="{=aom_dl_edu_1}Dale Youth">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="education_character_template_2_dale" default_group="Infantry" is_hero="false" culture="Culture.sturgia" name="{=aom_dl_edu_2}Dale Youth">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="education_character_template_3_dale" default_group="Infantry" is_hero="false" culture="Culture.sturgia" name="{=aom_dl_edu_3}Dale Youth">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_dress" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="education_character_template_4_dale" default_group="Infantry" is_hero="false" culture="Culture.sturgia" name="{=aom_dl_edu_4}Dale Youth">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="education_character_template_5_dale" default_group="Infantry" is_hero="false" culture="Culture.sturgia" name="{=aom_dl_edu_5}Dale Youth">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="education_character_template_6_dale" default_group="Infantry" is_hero="false" culture="Culture.sturgia" name="{=aom_dl_edu_6}Dale Youth">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== DALE NOTABLES ==================== -->
+
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_dale_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_0}Cautious Barding trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_0b}Shrewd laketown merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_1}Ruthless Dale fur trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_1b}Cold Barding merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_2}Dale gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_2b}Wise Barding merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_3}Self-made Dale merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_3b}Jovial laketown merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_4}Shrewd Barding merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_4b}Devious Dale merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_dale_5" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.sturgia" name="{=aom_dl_notable_5}Devout Dale elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_6}Stern Barding lorekeeper" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.sturgia" name="{=aom_dl_notable_7}Dale keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_dale_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_8}Skilled Barding smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.sturgia" name="{=aom_dl_notable_9}Gifted Dale craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_dale_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_gl1}Bold laketown ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_10}Sardonic Barding outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_11}Intimidating Dale enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_gl4}Ruthless Barding thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_12" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_12}Cunning Dale smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_13}Menacing laketown schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_dale_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_21}Weathered Barding landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_dale_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_22}Agreeable Dale elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_dale_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.sturgia" name="{=aom_dl_headman_1}Steadfast Dale headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_dale_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_headman_2}Conservative Barding headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sturgia_civil_a" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_dale_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_headman_3}Shrewd Dale headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

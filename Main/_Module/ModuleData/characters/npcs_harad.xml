@@ -546,31 +546,68 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_harad_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_notable_0}Shrewd desert trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_notable_0b}Haradrim spice dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_notable_1}Cunning Haradrim merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="artisan_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_harad_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_notable_1b}Cold-eyed Haradrim trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.aserai" name="{=aom_hd_notable_2}Haradrim silk merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
 				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.aserai" name="{=aom_hd_notable_2b}Cautious Haradrim gem trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
 				<equipment slot="Gloves" id="Item.haradrim_gloves" />
@@ -578,32 +615,226 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="preacher_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_harad_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.aserai" name="{=aom_hd_notable_3}Self-made Haradrim merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_3b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.aserai" name="{=aom_hd_notable_3b}Jovial desert merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_4" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_notable_4}Shrewd Haradrim caravan master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="rural_notable_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_harad_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_notable_4b}Devious Haradrim merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_harad_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.aserai" name="{=aom_hd_notable_5}Fierce sun priest" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.aserai" name="{=aom_hd_notable_6}Stern Haradrim elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_notable_7}Keeper of desert traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_harad_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_notable_8}Skilled Haradrim metalworker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_9" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.aserai" name="{=aom_hd_notable_9}Inventive Haradrim craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_harad_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.aserai" name="{=aom_hd_notable_gl1}Protective Haradrim ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_notable_10}Ruthless Haradrim smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_notable_11}Intimidating desert enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.aserai" name="{=aom_hd_notable_gl4}Bestial Haradrim thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.aserai" name="{=aom_hd_notable_12}Cunning Haradrim fence" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_notable_13}Menacing Haradrim gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_harad_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_notable_21}Weathered oasis landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_harad_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.aserai" name="{=aom_hd_notable_22}Agreeable Haradrim elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_harad_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.aserai" name="{=aom_hd_headman_1}Proud Haradrim headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_harad_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.aserai" name="{=aom_hd_headman_2}Conservative desert headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_harad_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.aserai" name="{=aom_hd_headman_3}Devious Haradrim headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
 		</Equipments>

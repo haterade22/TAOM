@@ -826,93 +826,308 @@
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter
-        id="merchant_notary_rohan"
-        name="{=aom_roh_merchant_notary}Merchant Notary"
-        occupation="Townsfolk"
-        culture="Culture.vlandia"
-        default_group="Infantry">
-        <face>
-            <face_key_template value="BodyProperty.fighter_rohan" />
-        </face>
+    <!-- Notables: Merchants (10) -->
+    <NPCCharacter id="spc_notable_rohan_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_0}Cautious Riddermark trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
-                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
-                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
-
-    <NPCCharacter
-        id="artisan_notary_rohan"
-        name="{=aom_roh_artisan_notary}Artisan Notary"
-        occupation="Townsfolk"
-        culture="Culture.vlandia"
-        default_group="Infantry">
-        <face>
-            <face_key_template value="BodyProperty.fighter_rohan" />
-        </face>
+    <NPCCharacter id="spc_notable_rohan_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_0b}Rohirric vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_1}Proud horse-lord merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_1b}Cold Rohirric dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_2}Quiet Riddermark provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
-            </EquipmentRoster>
-        </Equipments>
-    </NPCCharacter>
-
-    <NPCCharacter
-        id="preacher_notary_rohan"
-        name="{=aom_roh_preacher_notary}Preacher"
-        occupation="Townsfolk"
-        culture="Culture.vlandia"
-        default_group="Infantry">
-        <face>
-            <face_key_template value="BodyProperty.fighter_rohan" />
-        </face>
-        <Equipments>
-            <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
-                <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_2b}Cautious Rohirric grain trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_3}Self-made Rohirric merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
-                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_3b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_3b}Jovial Riddermark merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_4" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_4}Shrewd Rohirric trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_4b}Devious horse-lord merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter
-        id="rural_notable_notary_rohan"
-        name="{=aom_roh_rural_notary}Rural Notable"
-        occupation="Townsfolk"
-        culture="Culture.vlandia"
-        default_group="Infantry">
-        <face>
-            <face_key_template value="BodyProperty.fighter_rohan" />
-        </face>
+    <!-- Notables: Preachers (3) -->
+    <NPCCharacter id="spc_notable_rohan_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_5}Devout Rohirric elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
         <Equipments>
-            <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
-                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
-            </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_6}Stern Riddermark wise-man" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_7}Keeper of Rohirric traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Artisans (2) -->
+    <NPCCharacter id="spc_notable_rohan_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_8}Skilled Rohirric smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_9" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_9}Gifted Riddermark craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Gang Leaders (6) -->
+    <NPCCharacter id="spc_notable_rohan_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_gl1}Bold Riddermark ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_10}Mocking Rohirric gang boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_11}Brutal Riddermark enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_gl4}Savage horse-lord thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_12}Sly Rohirric smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_13}Menacing Riddermark gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Rural Notables (2) -->
+    <NPCCharacter id="spc_notable_rohan_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_21}Weathered Rohirric landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_rohan_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_22}Respected Riddermark elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Headmen (3) -->
+    <NPCCharacter id="spc_rohan_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_headman_1}Steadfast Rohirric headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_rohan_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_headman_2}Cautious Riddermark headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_rohan_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_headman_3}Cunning horse-lord headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

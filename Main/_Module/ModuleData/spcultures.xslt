@@ -73,10 +73,10 @@
 			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_dunland</xsl:attribute>
 			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_dunland</xsl:attribute>
 			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_dunland</xsl:attribute>
-			<xsl:attribute name="merchant_notary">NPCCharacter.merchant_notary_dunland</xsl:attribute>
-			<xsl:attribute name="artisan_notary">NPCCharacter.artisan_notary_dunland</xsl:attribute>
-			<xsl:attribute name="preacher_notary">NPCCharacter.preacher_notary_dunland</xsl:attribute>
-			<xsl:attribute name="rural_notable_notary">NPCCharacter.rural_notable_notary_dunland</xsl:attribute>
+			<xsl:attribute name="merchant_notary">NPCCharacter.spc_notable_dunland_0</xsl:attribute>
+			<xsl:attribute name="artisan_notary">NPCCharacter.spc_notable_dunland_8</xsl:attribute>
+			<xsl:attribute name="preacher_notary">NPCCharacter.spc_notable_dunland_5</xsl:attribute>
+			<xsl:attribute name="rural_notable_notary">NPCCharacter.spc_notable_dunland_21</xsl:attribute>
 			<xsl:attribute name="shop_worker">NPCCharacter.shop_worker_dunland</xsl:attribute>
 			<xsl:attribute name="tavernkeeper">NPCCharacter.tavernkeeper_dunland</xsl:attribute>
 			<xsl:attribute name="taverngamehost">NPCCharacter.taverngamehost_dunland</xsl:attribute>
@@ -244,8 +244,48 @@
 				<name name="{{=aom_dunland_clan_name_19}}The Mountain Shadows" />
 			</clan_names>
 
-			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
+			<!-- Notable templates (replaces vanilla empire notables with Dunland-specific) -->
+			<notable_templates>
+				<template name="NPCCharacter.spc_wanderer_dunland_0" />
+				<template name="NPCCharacter.spc_wanderer_dunland_1" />
+				<template name="NPCCharacter.spc_wanderer_dunland_2" />
+				<template name="NPCCharacter.spc_wanderer_dunland_3" />
+				<template name="NPCCharacter.spc_wanderer_dunland_4" />
+				<template name="NPCCharacter.spc_wanderer_dunland_5" />
+				<template name="NPCCharacter.spc_wanderer_dunland_6" />
+				<template name="NPCCharacter.spc_wanderer_dunland_7" />
+				<template name="NPCCharacter.spc_wanderer_dunland_8" />
+				<template name="NPCCharacter.spc_wanderer_dunland_9" />
+				<template name="NPCCharacter.spc_notable_dunland_0" />
+				<template name="NPCCharacter.spc_notable_dunland_0b" />
+				<template name="NPCCharacter.spc_notable_dunland_1" />
+				<template name="NPCCharacter.spc_notable_dunland_1b" />
+				<template name="NPCCharacter.spc_notable_dunland_2" />
+				<template name="NPCCharacter.spc_notable_dunland_2b" />
+				<template name="NPCCharacter.spc_notable_dunland_3" />
+				<template name="NPCCharacter.spc_notable_dunland_3b" />
+				<template name="NPCCharacter.spc_notable_dunland_4" />
+				<template name="NPCCharacter.spc_notable_dunland_4b" />
+				<template name="NPCCharacter.spc_notable_dunland_5" />
+				<template name="NPCCharacter.spc_notable_dunland_6" />
+				<template name="NPCCharacter.spc_notable_dunland_7" />
+				<template name="NPCCharacter.spc_notable_dunland_8" />
+				<template name="NPCCharacter.spc_notable_dunland_9" />
+				<template name="NPCCharacter.spc_notable_dunland_gl1" />
+				<template name="NPCCharacter.spc_notable_dunland_10" />
+				<template name="NPCCharacter.spc_notable_dunland_11" />
+				<template name="NPCCharacter.spc_notable_dunland_gl4" />
+				<template name="NPCCharacter.spc_notable_dunland_12" />
+				<template name="NPCCharacter.spc_notable_dunland_13" />
+				<template name="NPCCharacter.spc_notable_dunland_21" />
+				<template name="NPCCharacter.spc_notable_dunland_22" />
+				<template name="NPCCharacter.spc_dunland_headman_1" />
+				<template name="NPCCharacter.spc_dunland_headman_2" />
+				<template name="NPCCharacter.spc_dunland_headman_3" />
+			</notable_templates>
+
+			<!-- Pass through vanilla child elements we don't override -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -312,10 +352,10 @@
 			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_aserai</xsl:attribute>
 			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_harad</xsl:attribute>
 			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_harad</xsl:attribute>
-			<xsl:attribute name="merchant_notary">NPCCharacter.merchant_notary_harad</xsl:attribute>
-			<xsl:attribute name="artisan_notary">NPCCharacter.artisan_notary_harad</xsl:attribute>
-			<xsl:attribute name="preacher_notary">NPCCharacter.preacher_notary_harad</xsl:attribute>
-			<xsl:attribute name="rural_notable_notary">NPCCharacter.rural_notable_notary_harad</xsl:attribute>
+			<xsl:attribute name="merchant_notary">NPCCharacter.spc_notable_harad_0</xsl:attribute>
+			<xsl:attribute name="artisan_notary">NPCCharacter.spc_notable_harad_8</xsl:attribute>
+			<xsl:attribute name="preacher_notary">NPCCharacter.spc_notable_harad_5</xsl:attribute>
+			<xsl:attribute name="rural_notable_notary">NPCCharacter.spc_notable_harad_21</xsl:attribute>
 			<xsl:attribute name="shop_worker">NPCCharacter.shop_worker_harad</xsl:attribute>
 			<xsl:attribute name="tavernkeeper">NPCCharacter.tavernkeeper_harad</xsl:attribute>
 			<xsl:attribute name="taverngamehost">NPCCharacter.taverngamehost_harad</xsl:attribute>
@@ -483,8 +523,48 @@
 				<name name="{{=aom_harad_clan_name_20}}The Twilight Sand" />
 			</clan_names>
 
-			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
+			<!-- Notable templates (replaces vanilla aserai notables with Harad-specific) -->
+			<notable_templates>
+				<template name="NPCCharacter.spc_wanderer_harad_0" />
+				<template name="NPCCharacter.spc_wanderer_harad_1" />
+				<template name="NPCCharacter.spc_wanderer_harad_2" />
+				<template name="NPCCharacter.spc_wanderer_harad_3" />
+				<template name="NPCCharacter.spc_wanderer_harad_4" />
+				<template name="NPCCharacter.spc_wanderer_harad_5" />
+				<template name="NPCCharacter.spc_wanderer_harad_6" />
+				<template name="NPCCharacter.spc_wanderer_harad_7" />
+				<template name="NPCCharacter.spc_wanderer_harad_8" />
+				<template name="NPCCharacter.spc_wanderer_harad_9" />
+				<template name="NPCCharacter.spc_notable_harad_0" />
+				<template name="NPCCharacter.spc_notable_harad_0b" />
+				<template name="NPCCharacter.spc_notable_harad_1" />
+				<template name="NPCCharacter.spc_notable_harad_1b" />
+				<template name="NPCCharacter.spc_notable_harad_2" />
+				<template name="NPCCharacter.spc_notable_harad_2b" />
+				<template name="NPCCharacter.spc_notable_harad_3" />
+				<template name="NPCCharacter.spc_notable_harad_3b" />
+				<template name="NPCCharacter.spc_notable_harad_4" />
+				<template name="NPCCharacter.spc_notable_harad_4b" />
+				<template name="NPCCharacter.spc_notable_harad_5" />
+				<template name="NPCCharacter.spc_notable_harad_6" />
+				<template name="NPCCharacter.spc_notable_harad_7" />
+				<template name="NPCCharacter.spc_notable_harad_8" />
+				<template name="NPCCharacter.spc_notable_harad_9" />
+				<template name="NPCCharacter.spc_notable_harad_gl1" />
+				<template name="NPCCharacter.spc_notable_harad_10" />
+				<template name="NPCCharacter.spc_notable_harad_11" />
+				<template name="NPCCharacter.spc_notable_harad_gl4" />
+				<template name="NPCCharacter.spc_notable_harad_12" />
+				<template name="NPCCharacter.spc_notable_harad_13" />
+				<template name="NPCCharacter.spc_notable_harad_21" />
+				<template name="NPCCharacter.spc_notable_harad_22" />
+				<template name="NPCCharacter.spc_harad_headman_1" />
+				<template name="NPCCharacter.spc_harad_headman_2" />
+				<template name="NPCCharacter.spc_harad_headman_3" />
+			</notable_templates>
+
+			<!-- Pass through vanilla child elements we don't override -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -551,10 +631,10 @@
 			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_rohan</xsl:attribute>
 			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_rohan</xsl:attribute>
 			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_rohan</xsl:attribute>
-			<xsl:attribute name="merchant_notary">NPCCharacter.merchant_notary_rohan</xsl:attribute>
-			<xsl:attribute name="artisan_notary">NPCCharacter.artisan_notary_rohan</xsl:attribute>
-			<xsl:attribute name="preacher_notary">NPCCharacter.preacher_notary_rohan</xsl:attribute>
-			<xsl:attribute name="rural_notable_notary">NPCCharacter.rural_notable_notary_rohan</xsl:attribute>
+			<xsl:attribute name="merchant_notary">NPCCharacter.spc_notable_rohan_0</xsl:attribute>
+			<xsl:attribute name="artisan_notary">NPCCharacter.spc_notable_rohan_8</xsl:attribute>
+			<xsl:attribute name="preacher_notary">NPCCharacter.spc_notable_rohan_5</xsl:attribute>
+			<xsl:attribute name="rural_notable_notary">NPCCharacter.spc_notable_rohan_21</xsl:attribute>
 			<xsl:attribute name="shop_worker">NPCCharacter.shop_worker_rohan</xsl:attribute>
 			<xsl:attribute name="tavernkeeper">NPCCharacter.tavernkeeper_rohan</xsl:attribute>
 			<xsl:attribute name="taverngamehost">NPCCharacter.taverngamehost_rohan</xsl:attribute>
@@ -722,8 +802,48 @@
 				<name name="{{=aom_rohan_clan_name_10}}Earmynding" />
 			</clan_names>
 
-			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
+			<!-- Notable templates (replaces vanilla vlandia notables with Rohan-specific) -->
+			<notable_templates>
+				<template name="NPCCharacter.spc_wanderer_rohan_0" />
+				<template name="NPCCharacter.spc_wanderer_rohan_1" />
+				<template name="NPCCharacter.spc_wanderer_rohan_2" />
+				<template name="NPCCharacter.spc_wanderer_rohan_3" />
+				<template name="NPCCharacter.spc_wanderer_rohan_4" />
+				<template name="NPCCharacter.spc_wanderer_rohan_5" />
+				<template name="NPCCharacter.spc_wanderer_rohan_6" />
+				<template name="NPCCharacter.spc_wanderer_rohan_7" />
+				<template name="NPCCharacter.spc_wanderer_rohan_8" />
+				<template name="NPCCharacter.spc_wanderer_rohan_9" />
+				<template name="NPCCharacter.spc_notable_rohan_0" />
+				<template name="NPCCharacter.spc_notable_rohan_0b" />
+				<template name="NPCCharacter.spc_notable_rohan_1" />
+				<template name="NPCCharacter.spc_notable_rohan_1b" />
+				<template name="NPCCharacter.spc_notable_rohan_2" />
+				<template name="NPCCharacter.spc_notable_rohan_2b" />
+				<template name="NPCCharacter.spc_notable_rohan_3" />
+				<template name="NPCCharacter.spc_notable_rohan_3b" />
+				<template name="NPCCharacter.spc_notable_rohan_4" />
+				<template name="NPCCharacter.spc_notable_rohan_4b" />
+				<template name="NPCCharacter.spc_notable_rohan_5" />
+				<template name="NPCCharacter.spc_notable_rohan_6" />
+				<template name="NPCCharacter.spc_notable_rohan_7" />
+				<template name="NPCCharacter.spc_notable_rohan_8" />
+				<template name="NPCCharacter.spc_notable_rohan_9" />
+				<template name="NPCCharacter.spc_notable_rohan_gl1" />
+				<template name="NPCCharacter.spc_notable_rohan_10" />
+				<template name="NPCCharacter.spc_notable_rohan_11" />
+				<template name="NPCCharacter.spc_notable_rohan_gl4" />
+				<template name="NPCCharacter.spc_notable_rohan_12" />
+				<template name="NPCCharacter.spc_notable_rohan_13" />
+				<template name="NPCCharacter.spc_notable_rohan_21" />
+				<template name="NPCCharacter.spc_notable_rohan_22" />
+				<template name="NPCCharacter.spc_rohan_headman_1" />
+				<template name="NPCCharacter.spc_rohan_headman_2" />
+				<template name="NPCCharacter.spc_rohan_headman_3" />
+			</notable_templates>
+
+			<!-- Pass through vanilla child elements we don't override -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -790,10 +910,10 @@
 			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_khuzait</xsl:attribute>
 			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_rhun</xsl:attribute>
 			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_rhun</xsl:attribute>
-			<xsl:attribute name="merchant_notary">NPCCharacter.merchant_notary_rhun</xsl:attribute>
-			<xsl:attribute name="artisan_notary">NPCCharacter.artisan_notary_rhun</xsl:attribute>
-			<xsl:attribute name="preacher_notary">NPCCharacter.preacher_notary_rhun</xsl:attribute>
-			<xsl:attribute name="rural_notable_notary">NPCCharacter.rural_notable_notary_rhun</xsl:attribute>
+			<xsl:attribute name="merchant_notary">NPCCharacter.spc_notable_rhun_0</xsl:attribute>
+			<xsl:attribute name="artisan_notary">NPCCharacter.spc_notable_rhun_8</xsl:attribute>
+			<xsl:attribute name="preacher_notary">NPCCharacter.spc_notable_rhun_5</xsl:attribute>
+			<xsl:attribute name="rural_notable_notary">NPCCharacter.spc_notable_rhun_21</xsl:attribute>
 			<xsl:attribute name="shop_worker">NPCCharacter.shop_worker_rhun</xsl:attribute>
 			<xsl:attribute name="tavernkeeper">NPCCharacter.tavernkeeper_rhun</xsl:attribute>
 			<xsl:attribute name="taverngamehost">NPCCharacter.taverngamehost_rhun</xsl:attribute>
@@ -951,28 +1071,234 @@
 				<name name="{{=aom_rhun_clan_name_10}}Golden Horde" />
 			</clan_names>
 
-			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
+			<!-- Notable templates (replaces vanilla khuzait notables with Rhun-specific) -->
+			<notable_templates>
+				<template name="NPCCharacter.spc_wanderer_rhun_0" />
+				<template name="NPCCharacter.spc_wanderer_rhun_1" />
+				<template name="NPCCharacter.spc_wanderer_rhun_2" />
+				<template name="NPCCharacter.spc_wanderer_rhun_3" />
+				<template name="NPCCharacter.spc_wanderer_rhun_4" />
+				<template name="NPCCharacter.spc_wanderer_rhun_5" />
+				<template name="NPCCharacter.spc_wanderer_rhun_6" />
+				<template name="NPCCharacter.spc_wanderer_rhun_7" />
+				<template name="NPCCharacter.spc_wanderer_rhun_8" />
+				<template name="NPCCharacter.spc_wanderer_rhun_9" />
+				<template name="NPCCharacter.spc_notable_rhun_0" />
+				<template name="NPCCharacter.spc_notable_rhun_0b" />
+				<template name="NPCCharacter.spc_notable_rhun_1" />
+				<template name="NPCCharacter.spc_notable_rhun_1b" />
+				<template name="NPCCharacter.spc_notable_rhun_2" />
+				<template name="NPCCharacter.spc_notable_rhun_2b" />
+				<template name="NPCCharacter.spc_notable_rhun_3" />
+				<template name="NPCCharacter.spc_notable_rhun_3b" />
+				<template name="NPCCharacter.spc_notable_rhun_4" />
+				<template name="NPCCharacter.spc_notable_rhun_4b" />
+				<template name="NPCCharacter.spc_notable_rhun_5" />
+				<template name="NPCCharacter.spc_notable_rhun_6" />
+				<template name="NPCCharacter.spc_notable_rhun_7" />
+				<template name="NPCCharacter.spc_notable_rhun_8" />
+				<template name="NPCCharacter.spc_notable_rhun_9" />
+				<template name="NPCCharacter.spc_notable_rhun_gl1" />
+				<template name="NPCCharacter.spc_notable_rhun_10" />
+				<template name="NPCCharacter.spc_notable_rhun_11" />
+				<template name="NPCCharacter.spc_notable_rhun_gl4" />
+				<template name="NPCCharacter.spc_notable_rhun_12" />
+				<template name="NPCCharacter.spc_notable_rhun_13" />
+				<template name="NPCCharacter.spc_notable_rhun_21" />
+				<template name="NPCCharacter.spc_notable_rhun_22" />
+				<template name="NPCCharacter.spc_rhun_headman_1" />
+				<template name="NPCCharacter.spc_rhun_headman_2" />
+				<template name="NPCCharacter.spc_rhun_headman_3" />
+			</notable_templates>
+
+			<!-- Pass through vanilla child elements we don't override -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates)]"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Rename sturgia to Barding -->
 	<xsl:template match="Culture[@id='sturgia']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'text']"/>
+			<!-- Copy all vanilla attributes first, then override the ones we change -->
+			<xsl:apply-templates select="@*"/>
+
+			<!-- Name and description -->
 			<xsl:attribute name="name">{=TAOM_sturgia_culture}Barding</xsl:attribute>
 			<xsl:attribute name="text">{=TAOM_sturgia_desc}The Bardings of Dale, named for Bard the Bowman, are a proud and industrious people who rose to prominence after reclaiming their homeland from the shadow of Smaug. Nestled between the Lonely Mountain and the Long Lake, Dale thrives as a hub of trade and culture. Known for their resilience and craftsmanship, the Bardings excel in forging weapons and armor, rivaling even the Dwarves of Erebor. Their armies, composed of disciplined archers, stalwart swordsmen, and agile skirmishers, defend their lands with fierce determination. United under noble leaders, the Bardings are ever watchful, guarding against the encroaching darkness and preserving their rich heritage.</xsl:attribute>
-			<xsl:apply-templates select="node()"/>
+
+			<!-- NPC references -->
+			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_dale</xsl:attribute>
+			<xsl:attribute name="villager">NPCCharacter.villager_dale</xsl:attribute>
+			<xsl:attribute name="caravan_master">NPCCharacter.caravan_master_dale</xsl:attribute>
+			<xsl:attribute name="armed_trader">NPCCharacter.armed_trader_dale</xsl:attribute>
+			<xsl:attribute name="caravan_guard">NPCCharacter.caravan_guard_dale</xsl:attribute>
+			<xsl:attribute name="veteran_caravan_guard">NPCCharacter.veteran_caravan_guard_dale</xsl:attribute>
+			<xsl:attribute name="prison_guard">NPCCharacter.prison_guard_dale</xsl:attribute>
+			<xsl:attribute name="guard">NPCCharacter.guard_dale</xsl:attribute>
+			<xsl:attribute name="blacksmith">NPCCharacter.blacksmith_dale</xsl:attribute>
+			<xsl:attribute name="weaponsmith">NPCCharacter.weaponsmith_dale</xsl:attribute>
+			<xsl:attribute name="townswoman">NPCCharacter.townswoman_dale</xsl:attribute>
+			<xsl:attribute name="townswoman_infant">NPCCharacter.townswoman_infant_dale</xsl:attribute>
+			<xsl:attribute name="townswoman_child">NPCCharacter.townswoman_child_dale</xsl:attribute>
+			<xsl:attribute name="townswoman_teenager">NPCCharacter.townswoman_teenager_dale</xsl:attribute>
+			<xsl:attribute name="townsman">NPCCharacter.townsman_dale</xsl:attribute>
+			<xsl:attribute name="townsman_infant">NPCCharacter.townsman_infant_dale</xsl:attribute>
+			<xsl:attribute name="townsman_child">NPCCharacter.townsman_child_dale</xsl:attribute>
+			<xsl:attribute name="townsman_teenager">NPCCharacter.townsman_teenager_dale</xsl:attribute>
+			<xsl:attribute name="village_woman">NPCCharacter.village_woman_dale</xsl:attribute>
+			<xsl:attribute name="villager_male_child">NPCCharacter.villager_child_dale</xsl:attribute>
+			<xsl:attribute name="villager_male_teenager">NPCCharacter.villager_teenager_dale</xsl:attribute>
+			<xsl:attribute name="villager_female_child">NPCCharacter.village_woman_child_dale</xsl:attribute>
+			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_dale</xsl:attribute>
+			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_dale</xsl:attribute>
+			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_dale</xsl:attribute>
+			<xsl:attribute name="merchant_notary">NPCCharacter.spc_notable_dale_0</xsl:attribute>
+			<xsl:attribute name="artisan_notary">NPCCharacter.spc_notable_dale_8</xsl:attribute>
+			<xsl:attribute name="preacher_notary">NPCCharacter.spc_notable_dale_5</xsl:attribute>
+			<xsl:attribute name="rural_notable_notary">NPCCharacter.spc_notable_dale_21</xsl:attribute>
+			<xsl:attribute name="shop_worker">NPCCharacter.shop_worker_dale</xsl:attribute>
+			<xsl:attribute name="tavernkeeper">NPCCharacter.tavernkeeper_dale</xsl:attribute>
+			<xsl:attribute name="taverngamehost">NPCCharacter.taverngamehost_dale</xsl:attribute>
+			<xsl:attribute name="musician">NPCCharacter.musician_dale</xsl:attribute>
+			<xsl:attribute name="tavern_wench">NPCCharacter.tavern_wench_dale</xsl:attribute>
+			<xsl:attribute name="armorer">NPCCharacter.armorer_dale</xsl:attribute>
+			<xsl:attribute name="horseMerchant">NPCCharacter.horseMerchant_dale</xsl:attribute>
+			<xsl:attribute name="barber">NPCCharacter.barber_dale</xsl:attribute>
+			<xsl:attribute name="merchant">NPCCharacter.merchant_dale</xsl:attribute>
+			<xsl:attribute name="beggar">NPCCharacter.beggar_dale</xsl:attribute>
+			<xsl:attribute name="female_beggar">NPCCharacter.female_beggar_dale</xsl:attribute>
+			<xsl:attribute name="female_dancer">NPCCharacter.female_dancer_dale</xsl:attribute>
+			<xsl:attribute name="gear_practice_dummy">NPCCharacter.gear_practice_dummy_dale</xsl:attribute>
+			<xsl:attribute name="weapon_practice_stage_1">NPCCharacter.weapon_practice_stage_1_dale</xsl:attribute>
+			<xsl:attribute name="weapon_practice_stage_2">NPCCharacter.weapon_practice_stage_2_dale</xsl:attribute>
+			<xsl:attribute name="weapon_practice_stage_3">NPCCharacter.weapon_practice_stage_3_dale</xsl:attribute>
+			<xsl:attribute name="gear_dummy">NPCCharacter.gear_dummy_dale</xsl:attribute>
+
+			<!-- Notable templates (replaces vanilla sturgia notables with Dale-specific) -->
+			<notable_templates>
+				<template name="NPCCharacter.spc_notable_dale_0" />
+				<template name="NPCCharacter.spc_notable_dale_0b" />
+				<template name="NPCCharacter.spc_notable_dale_1" />
+				<template name="NPCCharacter.spc_notable_dale_1b" />
+				<template name="NPCCharacter.spc_notable_dale_2" />
+				<template name="NPCCharacter.spc_notable_dale_2b" />
+				<template name="NPCCharacter.spc_notable_dale_3" />
+				<template name="NPCCharacter.spc_notable_dale_3b" />
+				<template name="NPCCharacter.spc_notable_dale_4" />
+				<template name="NPCCharacter.spc_notable_dale_4b" />
+				<template name="NPCCharacter.spc_notable_dale_5" />
+				<template name="NPCCharacter.spc_notable_dale_6" />
+				<template name="NPCCharacter.spc_notable_dale_7" />
+				<template name="NPCCharacter.spc_notable_dale_8" />
+				<template name="NPCCharacter.spc_notable_dale_9" />
+				<template name="NPCCharacter.spc_notable_dale_gl1" />
+				<template name="NPCCharacter.spc_notable_dale_10" />
+				<template name="NPCCharacter.spc_notable_dale_11" />
+				<template name="NPCCharacter.spc_notable_dale_gl4" />
+				<template name="NPCCharacter.spc_notable_dale_12" />
+				<template name="NPCCharacter.spc_notable_dale_13" />
+				<template name="NPCCharacter.spc_notable_dale_21" />
+				<template name="NPCCharacter.spc_notable_dale_22" />
+				<template name="NPCCharacter.spc_dale_headman_1" />
+				<template name="NPCCharacter.spc_dale_headman_2" />
+				<template name="NPCCharacter.spc_dale_headman_3" />
+			</notable_templates>
+
+			<!-- Pass through vanilla child elements we don't override -->
+			<xsl:apply-templates select="*[not(self::notable_templates)]"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Rename battania to Variag -->
 	<xsl:template match="Culture[@id='battania']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'text']"/>
+			<!-- Copy all vanilla attributes first, then override the ones we change -->
+			<xsl:apply-templates select="@*"/>
+
+			<!-- Name and description -->
 			<xsl:attribute name="name">{=TAOM_battania_culture}Variag</xsl:attribute>
 			<xsl:attribute name="text">{=TAOM_battania_desc}The Variags of Khand are a fierce and warlike people, hailing from the dry and rugged lands east of Mordor. Known for their mercenary prowess and loyalty to Sauron, the Variags fight with unmatched ferocity. They ride swift warhorses into battle, wielding curved blades and long spears with deadly precision. Their bronze and crimson armor, adorned with intricate designs, reflects their proud and martial heritage. Divided into tribes and clans, the Variags unite under powerful warlords, bringing fear and chaos to the enemies of the Dark Lord.</xsl:attribute>
-			<xsl:apply-templates select="node()"/>
+
+			<!-- NPC references -->
+			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_khand</xsl:attribute>
+			<xsl:attribute name="villager">NPCCharacter.villager_khand</xsl:attribute>
+			<xsl:attribute name="caravan_master">NPCCharacter.caravan_master_khand</xsl:attribute>
+			<xsl:attribute name="armed_trader">NPCCharacter.armed_trader_khand</xsl:attribute>
+			<xsl:attribute name="caravan_guard">NPCCharacter.caravan_guard_khand</xsl:attribute>
+			<xsl:attribute name="veteran_caravan_guard">NPCCharacter.veteran_caravan_guard_khand</xsl:attribute>
+			<xsl:attribute name="prison_guard">NPCCharacter.prison_guard_khand</xsl:attribute>
+			<xsl:attribute name="guard">NPCCharacter.guard_khand</xsl:attribute>
+			<xsl:attribute name="blacksmith">NPCCharacter.blacksmith_khand</xsl:attribute>
+			<xsl:attribute name="weaponsmith">NPCCharacter.weaponsmith_khand</xsl:attribute>
+			<xsl:attribute name="townswoman">NPCCharacter.townswoman_khand</xsl:attribute>
+			<xsl:attribute name="townswoman_infant">NPCCharacter.townswoman_infant_khand</xsl:attribute>
+			<xsl:attribute name="townswoman_child">NPCCharacter.townswoman_child_khand</xsl:attribute>
+			<xsl:attribute name="townswoman_teenager">NPCCharacter.townswoman_teenager_khand</xsl:attribute>
+			<xsl:attribute name="townsman">NPCCharacter.townsman_khand</xsl:attribute>
+			<xsl:attribute name="townsman_infant">NPCCharacter.townsman_infant_khand</xsl:attribute>
+			<xsl:attribute name="townsman_child">NPCCharacter.townsman_child_khand</xsl:attribute>
+			<xsl:attribute name="townsman_teenager">NPCCharacter.townsman_teenager_khand</xsl:attribute>
+			<xsl:attribute name="village_woman">NPCCharacter.village_woman_khand</xsl:attribute>
+			<xsl:attribute name="villager_male_child">NPCCharacter.villager_child_khand</xsl:attribute>
+			<xsl:attribute name="villager_male_teenager">NPCCharacter.villager_teenager_khand</xsl:attribute>
+			<xsl:attribute name="villager_female_child">NPCCharacter.village_woman_child_khand</xsl:attribute>
+			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_khand</xsl:attribute>
+			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_khand</xsl:attribute>
+			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_khand</xsl:attribute>
+			<xsl:attribute name="merchant_notary">NPCCharacter.spc_notable_khand_0</xsl:attribute>
+			<xsl:attribute name="artisan_notary">NPCCharacter.spc_notable_khand_8</xsl:attribute>
+			<xsl:attribute name="preacher_notary">NPCCharacter.spc_notable_khand_5</xsl:attribute>
+			<xsl:attribute name="rural_notable_notary">NPCCharacter.spc_notable_khand_21</xsl:attribute>
+			<xsl:attribute name="shop_worker">NPCCharacter.shop_worker_khand</xsl:attribute>
+			<xsl:attribute name="tavernkeeper">NPCCharacter.tavernkeeper_khand</xsl:attribute>
+			<xsl:attribute name="taverngamehost">NPCCharacter.taverngamehost_khand</xsl:attribute>
+			<xsl:attribute name="musician">NPCCharacter.musician_khand</xsl:attribute>
+			<xsl:attribute name="tavern_wench">NPCCharacter.tavern_wench_khand</xsl:attribute>
+			<xsl:attribute name="armorer">NPCCharacter.armorer_khand</xsl:attribute>
+			<xsl:attribute name="horseMerchant">NPCCharacter.horseMerchant_khand</xsl:attribute>
+			<xsl:attribute name="barber">NPCCharacter.barber_khand</xsl:attribute>
+			<xsl:attribute name="merchant">NPCCharacter.merchant_khand</xsl:attribute>
+			<xsl:attribute name="beggar">NPCCharacter.beggar_khand</xsl:attribute>
+			<xsl:attribute name="female_beggar">NPCCharacter.female_beggar_khand</xsl:attribute>
+			<xsl:attribute name="female_dancer">NPCCharacter.female_dancer_khand</xsl:attribute>
+			<xsl:attribute name="gear_practice_dummy">NPCCharacter.gear_practice_dummy_khand</xsl:attribute>
+			<xsl:attribute name="weapon_practice_stage_1">NPCCharacter.weapon_practice_stage_1_khand</xsl:attribute>
+			<xsl:attribute name="weapon_practice_stage_2">NPCCharacter.weapon_practice_stage_2_khand</xsl:attribute>
+			<xsl:attribute name="weapon_practice_stage_3">NPCCharacter.weapon_practice_stage_3_khand</xsl:attribute>
+			<xsl:attribute name="gear_dummy">NPCCharacter.gear_dummy_khand</xsl:attribute>
+
+			<!-- Notable templates (replaces vanilla battania notables with Khand-specific) -->
+			<notable_templates>
+				<template name="NPCCharacter.spc_notable_khand_0" />
+				<template name="NPCCharacter.spc_notable_khand_0b" />
+				<template name="NPCCharacter.spc_notable_khand_1" />
+				<template name="NPCCharacter.spc_notable_khand_1b" />
+				<template name="NPCCharacter.spc_notable_khand_2" />
+				<template name="NPCCharacter.spc_notable_khand_2b" />
+				<template name="NPCCharacter.spc_notable_khand_3" />
+				<template name="NPCCharacter.spc_notable_khand_3b" />
+				<template name="NPCCharacter.spc_notable_khand_4" />
+				<template name="NPCCharacter.spc_notable_khand_4b" />
+				<template name="NPCCharacter.spc_notable_khand_5" />
+				<template name="NPCCharacter.spc_notable_khand_6" />
+				<template name="NPCCharacter.spc_notable_khand_7" />
+				<template name="NPCCharacter.spc_notable_khand_8" />
+				<template name="NPCCharacter.spc_notable_khand_9" />
+				<template name="NPCCharacter.spc_notable_khand_gl1" />
+				<template name="NPCCharacter.spc_notable_khand_10" />
+				<template name="NPCCharacter.spc_notable_khand_11" />
+				<template name="NPCCharacter.spc_notable_khand_gl4" />
+				<template name="NPCCharacter.spc_notable_khand_12" />
+				<template name="NPCCharacter.spc_notable_khand_13" />
+				<template name="NPCCharacter.spc_notable_khand_21" />
+				<template name="NPCCharacter.spc_notable_khand_22" />
+				<template name="NPCCharacter.spc_khand_headman_1" />
+				<template name="NPCCharacter.spc_khand_headman_2" />
+				<template name="NPCCharacter.spc_khand_headman_3" />
+			</notable_templates>
+
+			<!-- Pass through vanilla child elements we don't override -->
+			<xsl:apply-templates select="*[not(self::notable_templates)]"/>
 		</xsl:copy>
 	</xsl:template>
 

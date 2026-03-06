@@ -548,31 +548,68 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_rhun" default_group="Infantry" is_hero="false" occupation="GangLeader" culture="Culture.khuzait" name="{=aom_rh_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_rhun_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0}Crafty eastern trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.easterling_torso" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0b}Easterling wine merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="artisan_notary_rhun" default_group="Infantry" is_hero="false" occupation="Artisan" culture="Culture.khuzait" name="{=aom_rh_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_rhun_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_1}Proud Easterling merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_1b}Cold Easterling trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.khuzait" name="{=aom_rh_notable_2}Easterling fur dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
 				<equipment slot="Gloves" id="Item.easterling_glove" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.khuzait" name="{=aom_rh_notable_2b}Cautious Easterling ore trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_b" />
 				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
@@ -580,32 +617,229 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="preacher_notary_rhun" default_group="Infantry" is_hero="false" occupation="Preacher" culture="Culture.khuzait" name="{=aom_rh_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_rhun_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_3}Self-made Easterling merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Gloves" id="Item.easterling_glove" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_3b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_3b}Jovial steppe merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_4" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_4}Shrewd Easterling caravan master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_4b}Devious Easterling merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_rhun_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.khuzait" name="{=aom_rh_notable_5}Mystic steppe shaman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_6}Stern Easterling elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_7}Keeper of eastern traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Gloves" id="Item.easterling_glove" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_rhun_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_8}Skilled Easterling smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_9" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.khuzait" name="{=aom_rh_notable_9}Inventive Easterling craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Gloves" id="Item.easterling_glove" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_rhun_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_gl1}Fierce Easterling ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Gloves" id="Item.easterling_glove" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_10}Ruthless Easterling smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_11}Intimidating steppe enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.khuzait" name="{=aom_rh_notable_gl4}Bestial Easterling thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Gloves" id="Item.easterling_glove" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_12}Cunning Easterling fence" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_13}Menacing Easterling gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="rural_notable_notary_rhun" default_group="Infantry" is_hero="false" occupation="RuralNotable" culture="Culture.khuzait" name="{=aom_rh_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_rhun_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_21}Weathered steppe landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
-		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_rhun_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.khuzait" name="{=aom_rh_notable_22}Agreeable Easterling elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_rhun_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_headman_1}Bold Easterling headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_rhun_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_headman_2}Conservative steppe headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_rhun_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_headman_3}Devious Easterling headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
