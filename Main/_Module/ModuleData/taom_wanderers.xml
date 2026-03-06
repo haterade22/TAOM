@@ -1,0 +1,3570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== GONDOR WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_gondor_0"
+		name="{=aom_spc_wanderer_gondor_0_name}{FIRSTNAME} Calendorionath"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_1"
+		name="{=aom_spc_wanderer_gondor_1_name}{FIRSTNAME} Minastirionath"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_2"
+		name="{=aom_spc_wanderer_gondor_2_name}{FIRSTNAME} Erelionath"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_3"
+		name="{=aom_spc_wanderer_gondor_3_name}{FIRSTNAME} Morthalionath"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_4"
+		name="{=aom_spc_wanderer_gondor_4_name}{FIRSTNAME} Dolmarionath"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_5"
+		name="{=aom_spc_wanderer_gondor_5_name}{FIRSTNAME} Tarcilionath"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_6"
+		name="{=aom_spc_wanderer_gondor_6_name}{FIRSTNAME} Laurethionath"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_7"
+		name="{=aom_spc_wanderer_gondor_7_name}{FIRSTNAME} Pelargirionath"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_8"
+		name="{=aom_spc_wanderer_gondor_8_name}{FIRSTNAME} Forostirionath"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_9"
+		name="{=aom_spc_wanderer_gondor_9_name}{FIRSTNAME} Valandilionath"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_10"
+		name="{=aom_spc_wanderer_gondor_10_name}{FIRSTNAME} Morvegilionath"
+		voice="earnest"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_10_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_11"
+		name="{=aom_spc_wanderer_gondor_11_name}{FIRSTNAME} Arandurionath"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_11_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gondor_12"
+		name="{=aom_spc_wanderer_gondor_12_name}{FIRSTNAME} Telemarionath"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gondor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_12_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== MORDOR WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_mordor_0"
+		race="uruk"
+		name="{=aom_spc_wanderer_mordor_0_name}{FIRSTNAME} DÃ»rzakh"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_1"
+		race="orc"
+		name="{=aom_spc_wanderer_mordor_1_name}{FIRSTNAME} MorgÃ»lkin"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_orc_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_2"
+		race="uruk"
+		name="{=aom_spc_wanderer_mordor_2_name}{FIRSTNAME} Ashrakul"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_3"
+		race="orc"
+		name="{=aom_spc_wanderer_mordor_3_name}{FIRSTNAME} KrÃ»lmar"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_orc_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_4"
+		race="uruk"
+		name="{=aom_spc_wanderer_mordor_4_name}{FIRSTNAME} Gorthak"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_5"
+		race="orc"
+		name="{=aom_spc_wanderer_mordor_5_name}{FIRSTNAME} ShagrÃ»k"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_orc_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_6"
+		race="uruk"
+		name="{=aom_spc_wanderer_mordor_6_name}{FIRSTNAME} Uzgoth"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_7"
+		race="human"
+		name="{=aom_spc_wanderer_mordor_7_name}{FIRSTNAME} DÃ»mphÃªl"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_8"
+		race="human"
+		name="{=aom_spc_wanderer_mordor_8_name}{FIRSTNAME} AzaridÃªth"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_9"
+		race="orc"
+		name="{=aom_spc_wanderer_mordor_9_name}{FIRSTNAME} Nazgarth"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_orc_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_10"
+		race="uruk"
+		name="{=aom_spc_wanderer_mordor_10_name}{FIRSTNAME} RÃ»kdar"
+		voice="earnest"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_10_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_11"
+		race="orc"
+		name="{=aom_spc_wanderer_mordor_11_name}{FIRSTNAME} MornÃ»k"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_11_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_orc_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_12"
+		race="uruk"
+		name="{=aom_spc_wanderer_mordor_12_name}{FIRSTNAME} SkarnÃ»l"
+		voice="curt"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_12_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_13"
+		race="orc"
+		name="{=aom_spc_wanderer_mordor_13_name}{FIRSTNAME} ZaghÃ»l"
+		voice="ironic"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_13_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_orc_mordor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mordor_14"
+		race="human"
+		name="{=aom_spc_wanderer_mordor_14_name}{FIRSTNAME} DÃ»mrad"
+		voice="earnest"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mordor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mordor_14_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== GUNDABAD WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_gundabad_0"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_0_name}{FIRSTNAME} Bonechewer"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_1"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_1_name}{FIRSTNAME} Skullsplitter"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_2"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_2_name}{FIRSTNAME} Bloodfang"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_3"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_3_name}{FIRSTNAME} Ironscar"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_4"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_4_name}{FIRSTNAME} Rageclaw"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_5"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_5_name}{FIRSTNAME} Fleshripper"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_6"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_6_name}{FIRSTNAME} Shadowlurker"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_7"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_7_name}{FIRSTNAME} Doommarked"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_8"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_8_name}{FIRSTNAME} Goremaiden"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_gundabad_9"
+		race="pale_uruk"
+		name="{=aom_spc_wanderer_gundabad_9_name}{FIRSTNAME} Cruelblade"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.gundabad"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== ISENGARD WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_isengard_0"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_0_name}{FIRSTNAME} Vrakhul"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_1"
+		race="berserker"
+		name="{=aom_spc_wanderer_isengard_1_name}{FIRSTNAME} Argash"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_berserker" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_2"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_2_name}{FIRSTNAME} Druzgak"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_3"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_3_name}{FIRSTNAME} GrakhÃ»rz"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_4"
+		race="berserker"
+		name="{=aom_spc_wanderer_isengard_4_name}{FIRSTNAME} ThrÃ»mag"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_berserker" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_5"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_5_name}{FIRSTNAME} SkarnÃ»k"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_6"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_6_name}{FIRSTNAME} BrÃ»zhak"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_7"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_7_name}{FIRSTNAME} KrÃ»ldash"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_8"
+		race="berserker"
+		name="{=aom_spc_wanderer_isengard_8_name}{FIRSTNAME} Urzmak"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_berserker" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_isengard_9"
+		race="uruk_hai"
+		name="{=aom_spc_wanderer_isengard_9_name}{FIRSTNAME} GorhÃ»l"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.isengard"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_isengard_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_uruk_hai" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== EREBOR WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_erebor_0"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_0_name}{FIRSTNAME} Bit Barukkhaz"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_1"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_1_name}{FIRSTNAME} Bit DurakÃ»n"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_2"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_2_name}{FIRSTNAME} Bit Gamilzar"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_3"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_3_name}{FIRSTNAME} Bit BuzrÃ»n"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_4"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_4_name}{FIRSTNAME} Bit Tharin"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_5"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_5_name}{FIRSTNAME} Bit Barin"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_6"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_6_name}{FIRSTNAME} Bit Argan"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_7"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_7_name}{FIRSTNAME} Bit GÃ³r"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_8"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_8_name}{FIRSTNAME} Bit LÃ³in"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_9"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_9_name}{FIRSTNAME} Bit Garin"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_10"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_10_name}{FIRSTNAME} Bit Norin"
+		voice="earnest"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_10_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_erebor_11"
+		race="dwarf"
+		name="{=aom_spc_wanderer_erebor_11_name}{FIRSTNAME} Bit KÃ¡r"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.erebor"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_erebor_11_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_erebor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== ROHAN WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_rohan_0"
+		name="{=aom_spc_wanderer_rohan_0_name}{FIRSTNAME} Wulfgarig"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_1"
+		name="{=aom_spc_wanderer_rohan_1_name}{FIRSTNAME} Osricdarn"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_2"
+		name="{=aom_spc_wanderer_rohan_2_name}{FIRSTNAME} ThanegrÃ­m"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_3"
+		name="{=aom_spc_wanderer_rohan_3_name}{FIRSTNAME} Frithwineson"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_4"
+		name="{=aom_spc_wanderer_rohan_4_name}{FIRSTNAME} Leofstaning"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_5"
+		name="{=aom_spc_wanderer_rohan_5_name}{FIRSTNAME} Herebranding"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_6"
+		name="{=aom_spc_wanderer_rohan_6_name}{FIRSTNAME} Godricsson"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_7"
+		name="{=aom_spc_wanderer_rohan_7_name}{FIRSTNAME} Thelredwain"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rohan_8"
+		name="{=aom_spc_wanderer_rohan_8_name}{FIRSTNAME} Hardingar"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+
+
+	<!-- ==================== RIVENDELL WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_rivendell_0"
+		name="{=aom_spc_wanderer_rivendell_0_name}{FIRSTNAME} Erestelionath"
+		voice="softspoken"
+		age="45"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_1"
+		name="{=aom_spc_wanderer_rivendell_1_name}{FIRSTNAME} Calenglorionath"
+		voice="earnest"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_2"
+		name="{=aom_spc_wanderer_rivendell_2_name}{FIRSTNAME} Noldorionath"
+		voice="ironic"
+		age="52"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_3"
+		name="{=aom_spc_wanderer_rivendell_3_name}{FIRSTNAME} Lindonionath"
+		voice="softspoken"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_4"
+		name="{=aom_spc_wanderer_rivendell_4_name}{FIRSTNAME} Aranwionath"
+		voice="earnest"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_5"
+		name="{=aom_spc_wanderer_rivendell_5_name}{FIRSTNAME} Celebrindionath"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_6"
+		name="{=aom_spc_wanderer_rivendell_6_name}{FIRSTNAME} Ithilionath"
+		voice="softspoken"
+		age="48"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_7"
+		name="{=aom_spc_wanderer_rivendell_7_name}{FIRSTNAME} Gildorionath"
+		voice="ironic"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_8"
+		name="{=aom_spc_wanderer_rivendell_8_name}{FIRSTNAME} Peredhilionath"
+		voice="earnest"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rivendell_9"
+		name="{=aom_spc_wanderer_rivendell_9_name}{FIRSTNAME} Earendilionath"
+		voice="softspoken"
+		age="37"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.rivendell"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== MIRKWOOD WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_0"
+		name="{=aom_spc_wanderer_mirkwood_0_name}{FIRSTNAME} Tawarionath"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_1"
+		name="{=aom_spc_wanderer_mirkwood_1_name}{FIRSTNAME} Galadhelionath"
+		voice="earnest"
+		age="42"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_2"
+		name="{=aom_spc_wanderer_mirkwood_2_name}{FIRSTNAME} Lasgalionath"
+		voice="ironic"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_3"
+		name="{=aom_spc_wanderer_mirkwood_3_name}{FIRSTNAME} Thranduilionath"
+		voice="softspoken"
+		age="50"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_4"
+		name="{=aom_spc_wanderer_mirkwood_4_name}{FIRSTNAME} Legolionath"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_5"
+		name="{=aom_spc_wanderer_mirkwood_5_name}{FIRSTNAME} Mornelionath"
+		voice="earnest"
+		age="45"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_6"
+		name="{=aom_spc_wanderer_mirkwood_6_name}{FIRSTNAME} Falasgalionath"
+		voice="softspoken"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_7"
+		name="{=aom_spc_wanderer_mirkwood_7_name}{FIRSTNAME} Celebionath"
+		voice="ironic"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_8"
+		name="{=aom_spc_wanderer_mirkwood_8_name}{FIRSTNAME} Aranionath"
+		voice="curt"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mirkwood_9"
+		name="{=aom_spc_wanderer_mirkwood_9_name}{FIRSTNAME} Brethilionath"
+		voice="earnest"
+		age="36"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mirkwood"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_mirkwood_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_mirkwood" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== LOTHLORIEN WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_0"
+		name="{=aom_spc_wanderer_lothlorien_0_name}{FIRSTNAME} Carasionath"
+		voice="softspoken"
+		age="50"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_1"
+		name="{=aom_spc_wanderer_lothlorien_1_name}{FIRSTNAME} Nimrothionath"
+		voice="softspoken"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_2"
+		name="{=aom_spc_wanderer_lothlorien_2_name}{FIRSTNAME} Mallorionath"
+		voice="earnest"
+		age="55"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_3"
+		name="{=aom_spc_wanderer_lothlorien_3_name}{FIRSTNAME} Amrothionath"
+		voice="ironic"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_4"
+		name="{=aom_spc_wanderer_lothlorien_4_name}{FIRSTNAME} Celebornionath"
+		voice="softspoken"
+		age="48"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_5"
+		name="{=aom_spc_wanderer_lothlorien_5_name}{FIRSTNAME} Galadhrionath"
+		voice="earnest"
+		age="42"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_6"
+		name="{=aom_spc_wanderer_lothlorien_6_name}{FIRSTNAME} Nimlodelionath"
+		voice="softspoken"
+		age="53"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_7"
+		name="{=aom_spc_wanderer_lothlorien_7_name}{FIRSTNAME} Cerinionath"
+		voice="ironic"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_8"
+		name="{=aom_spc_wanderer_lothlorien_8_name}{FIRSTNAME} Haldhirionath"
+		voice="earnest"
+		age="44"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lothlorien_9"
+		name="{=aom_spc_wanderer_lothlorien_9_name}{FIRSTNAME} Oropherionath"
+		voice="softspoken"
+		age="47"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lothlorien"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_lothlorien_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== DOLGULDUR WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_0"
+		name="{=aom_spc_wanderer_dolguldur_0_name}{FIRSTNAME} Ghashnak"
+		voice="curt"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_1"
+		name="{=aom_spc_wanderer_dolguldur_1_name}{FIRSTNAME} Krimgul"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_2"
+		name="{=aom_spc_wanderer_dolguldur_2_name}{FIRSTNAME} Durbatuk"
+		voice="ironic"
+		age="22"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_3"
+		name="{=aom_spc_wanderer_dolguldur_3_name}{FIRSTNAME} Nazgash"
+		voice="curt"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_4"
+		name="{=aom_spc_wanderer_dolguldur_4_name}{FIRSTNAME} Grimbarg"
+		voice="earnest"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_5"
+		name="{=aom_spc_wanderer_dolguldur_5_name}{FIRSTNAME} Sharkul"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_6"
+		name="{=aom_spc_wanderer_dolguldur_6_name}{FIRSTNAME} Azgoth"
+		voice="ironic"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_7"
+		name="{=aom_spc_wanderer_dolguldur_7_name}{FIRSTNAME} Lugdush"
+		voice="curt"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_8"
+		name="{=aom_spc_wanderer_dolguldur_8_name}{FIRSTNAME} Krimpash"
+		voice="earnest"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dolguldur_9"
+		name="{=aom_spc_wanderer_dolguldur_9_name}{FIRSTNAME} Gorbag"
+		voice="curt"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dolguldur"
+		occupation="Wanderer"
+		race="orc"
+		skill_template="SkillSet.spc_wanderer_dolguldur_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_empire" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== DUNLAND WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_dunland_0"
+		name="{=aom_spc_wanderer_dunland_0_name}{FIRSTNAME} Breghorn"
+		voice="curt"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_1"
+		name="{=aom_spc_wanderer_dunland_1_name}{FIRSTNAME} Cerdic"
+		voice="earnest"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_2"
+		name="{=aom_spc_wanderer_dunland_2_name}{FIRSTNAME} Dunhere"
+		voice="ironic"
+		age="22"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_3"
+		name="{=aom_spc_wanderer_dunland_3_name}{FIRSTNAME} Wulfgar"
+		voice="curt"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_4"
+		name="{=aom_spc_wanderer_dunland_4_name}{FIRSTNAME} Eorlund"
+		voice="earnest"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_5"
+		name="{=aom_spc_wanderer_dunland_5_name}{FIRSTNAME} Grimbold"
+		voice="softspoken"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_6"
+		name="{=aom_spc_wanderer_dunland_6_name}{FIRSTNAME} Haldred"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_7"
+		name="{=aom_spc_wanderer_dunland_7_name}{FIRSTNAME} Brychan"
+		voice="ironic"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_8"
+		name="{=aom_spc_wanderer_dunland_8_name}{FIRSTNAME} Morcar"
+		voice="earnest"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dunland_9"
+		name="{=aom_spc_wanderer_dunland_9_name}{FIRSTNAME} Thuringwethil"
+		voice="curt"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.empire"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_dunland_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_battania" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== HARAD WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_harad_0"
+		name="{=aom_spc_wanderer_harad_0_name}{FIRSTNAME} al-Harushan"
+		voice="earnest"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_1"
+		name="{=aom_spc_wanderer_harad_1_name}{FIRSTNAME} ibn Khamul"
+		voice="curt"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_2"
+		name="{=aom_spc_wanderer_harad_2_name}{FIRSTNAME} al-Suthek"
+		voice="ironic"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_3"
+		name="{=aom_spc_wanderer_harad_3_name}{FIRSTNAME} ibn Marushan"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_4"
+		name="{=aom_spc_wanderer_harad_4_name}{FIRSTNAME} al-Fahran"
+		voice="earnest"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_5"
+		name="{=aom_spc_wanderer_harad_5_name}{FIRSTNAME} ibn Zarkesh"
+		voice="curt"
+		age="22"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_6"
+		name="{=aom_spc_wanderer_harad_6_name}{FIRSTNAME} al-Rashadin"
+		voice="ironic"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_7"
+		name="{=aom_spc_wanderer_harad_7_name}{FIRSTNAME} ibn Suladan"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_8"
+		name="{=aom_spc_wanderer_harad_8_name}{FIRSTNAME} al-Makhtar"
+		voice="softspoken"
+		age="45"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_harad_9"
+		name="{=aom_spc_wanderer_harad_9_name}{FIRSTNAME} ibn Tarakan"
+		voice="curt"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.aserai"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_harad_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== RHUN WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_rhun_0"
+		name="{=aom_spc_wanderer_rhun_0_name}{FIRSTNAME} Khamakul"
+		voice="curt"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_1"
+		name="{=aom_spc_wanderer_rhun_1_name}{FIRSTNAME} Dordagan"
+		voice="earnest"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_2"
+		name="{=aom_spc_wanderer_rhun_2_name}{FIRSTNAME} Balchoth"
+		voice="softspoken"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_3"
+		name="{=aom_spc_wanderer_rhun_3_name}{FIRSTNAME} Wainagar"
+		voice="ironic"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_4"
+		name="{=aom_spc_wanderer_rhun_4_name}{FIRSTNAME} Khuldan"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_5"
+		name="{=aom_spc_wanderer_rhun_5_name}{FIRSTNAME} Bortagan"
+		voice="earnest"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_6"
+		name="{=aom_spc_wanderer_rhun_6_name}{FIRSTNAME} Vardamir"
+		voice="curt"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_7"
+		name="{=aom_spc_wanderer_rhun_7_name}{FIRSTNAME} Ulgarion"
+		voice="ironic"
+		age="42"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_8"
+		name="{=aom_spc_wanderer_rhun_8_name}{FIRSTNAME} Khandagar"
+		voice="softspoken"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_rhun_9"
+		name="{=aom_spc_wanderer_rhun_9_name}{FIRSTNAME} Rhunagar"
+		voice="earnest"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.khuzait"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== UMBAR WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_umbar_0"
+		name="{=aom_spc_wanderer_umbar_0_name}{FIRSTNAME} Castamir"
+		voice="ironic"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_1"
+		name="{=aom_spc_wanderer_umbar_1_name}{FIRSTNAME} Sangahyando"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_2"
+		name="{=aom_spc_wanderer_umbar_2_name}{FIRSTNAME} Angamaitë"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_3"
+		name="{=aom_spc_wanderer_umbar_3_name}{FIRSTNAME} Fuinur"
+		voice="ironic"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_4"
+		name="{=aom_spc_wanderer_umbar_4_name}{FIRSTNAME} Herumor"
+		voice="curt"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_5"
+		name="{=aom_spc_wanderer_umbar_5_name}{FIRSTNAME} Earnil"
+		voice="softspoken"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_6"
+		name="{=aom_spc_wanderer_umbar_6_name}{FIRSTNAME} Pelendur"
+		voice="ironic"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_7"
+		name="{=aom_spc_wanderer_umbar_7_name}{FIRSTNAME} Falastur"
+		voice="earnest"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_8"
+		name="{=aom_spc_wanderer_umbar_8_name}{FIRSTNAME} Hyarmendacil"
+		voice="curt"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_umbar_9"
+		name="{=aom_spc_wanderer_umbar_9_name}{FIRSTNAME} Ciryandil"
+		voice="ironic"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.umbar"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_umbar_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" />
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

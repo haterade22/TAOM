@@ -1,0 +1,1373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- GONDOR companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_gondor" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.gondor_helmet" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Leg" id="Item.gondor_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.gondor_helmet" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Leg" id="Item.gondor_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Head" id="Item.citidel_guard_helmet1" />
+			<Equipment slot="Body" id="Item.citidel_guard_armor1" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+			<Equipment slot="Head" id="Item.citidel_guard_helmet1" />
+			<Equipment slot="Body" id="Item.citidel_guard_armor1" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.citidel_guard_helmet3" />
+			<Equipment slot="Body" id="Item.citidel_guard_armor2" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Leg" id="Item.gondor_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.citidel_guard_helmet3" />
+			<Equipment slot="Body" id="Item.citidel_guard_armor2" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Leg" id="Item.gondor_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Head" id="Item.gondor_helmet" />
+			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Cape" id="Item.gondor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+			<Equipment slot="Head" id="Item.gondor_helmet" />
+			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Cape" id="Item.gondor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Leg" id="Item.gondor_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.gondor_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- MORDOR companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_mordor" culture="Culture.mordor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_a1" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_a1" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_a1" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_a1" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_a2" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_a1" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_a2" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_a1" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_a1" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_a1" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_a1" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_a1" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- GUNDABAD companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_gundabad" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_hauberk" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_hauberk" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.long_woolen_tunic" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ISENGARD companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_isengard" culture="Culture.isengard">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_pike_a" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_pike_a" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_pike_a" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- EREBOR companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_erebor" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
+			<Equipment slot="Head" id="Item.leather_cap" />
+			<Equipment slot="Body" id="Item.padded_leather_shirt" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
+			<Equipment slot="Head" id="Item.leather_cap" />
+			<Equipment slot="Body" id="Item.padded_leather_shirt" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.footmans_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.footmans_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
+			<Equipment slot="Head" id="Item.leather_cap" />
+			<Equipment slot="Body" id="Item.tunic_with_shoulder_pads" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
+			<Equipment slot="Head" id="Item.leather_cap" />
+			<Equipment slot="Body" id="Item.tunic_with_shoulder_pads" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Body" id="Item.tunic_with_shoulder_pads" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Body" id="Item.padded_leather_shirt" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Body" id="Item.footmans_tunic" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ROHAN companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_rohan" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet1" />
+			<Equipment slot="Body" id="Item.rohan_militia_armour_a" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet1" />
+			<Equipment slot="Body" id="Item.rohan_militia_armour_a" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
+			<Equipment slot="Body" id="Item.rohan_militia_armour_b" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
+			<Equipment slot="Body" id="Item.rohan_militia_armour_b" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet1" />
+			<Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet1" />
+			<Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
+			<Equipment slot="Body" id="Item.cts_rohan_armor3" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
+			<Equipment slot="Body" id="Item.cts_rohan_armor3" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Body" id="Item.padded_leather_shirt" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Body" id="Item.gambeson_b" />
+			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Body" id="Item.footmans_tunic" />
+			<Equipment slot="Leg" id="Item.strapped_shoes" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+
+	<!-- RIVENDELL companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_rivendell" culture="Culture.rivendell">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- MIRKWOOD companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_mirkwood" culture="Culture.mirkwood">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
+			<Equipment slot="Head" id="Item.mkwd_inf1_t4_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_spear_a02" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_spear_a02" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_spear_a02" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
+			<Equipment slot="Head" id="Item.mkwd_inf1_t4_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_glaive_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowa" />
+			<Equipment slot="Head" id="Item.mkwd_inf1_t4_helmet_gold_hc" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
+			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
+			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.mirkwood_glaive_a01" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.mirkwood_glaive_a01" />
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- LOTHLORIEN companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_lothlorien" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowc" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowc" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowc" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item2" id="Item.highelf_longbowb" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
+			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- DOLGULDUR companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_dolguldur" culture="Culture.dolguldur">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_polearm_a" />
+			<Equipment slot="Item1" id="Item.sk_dg_uruk_shield_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_polearm_a" />
+			<Equipment slot="Item1" id="Item.sk_dg_uruk_shield_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_2h_sword_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_polearm_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_2h_sword_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_sword_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sk_dg_uruk_shield_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_axe_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sk_dg_uruk_shield_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_polearm_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_sword_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_polearm_a" />
+			<Equipment slot="Item1" id="Item.sk_dg_uruk_shield_a" />
+			<Equipment slot="Head" id="Item.sk_dg_uruk_head_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_sword_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_1h_sword_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.sk_dg_uruk_2h_sword_a" />
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- DUNLAND companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_dunland" culture="Culture.empire">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
+			<Equipment slot="Item2" id="Item.hunting_bow" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+			<Equipment slot="Item1" id="Item.dunland_caerdh_shield_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
+			<Equipment slot="Item1" id="Item.dunland_caerdh_shield_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Item1" id="Item.dunland_caerdh_shield_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_medium_a" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+			<Equipment slot="Item1" id="Item.dunland_caerdh_shield_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Item1" id="Item.dunland_caerdh_shield_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+			<Equipment slot="Item2" id="Item.hunting_bow" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_elite_a" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
+			<Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Body" id="Item.battania_woodland_outfit" />
+			<Equipment slot="Leg" id="Item.battania_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+			<Equipment slot="Body" id="Item.battania_civil_a" />
+			<Equipment slot="Leg" id="Item.battania_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+			<Equipment slot="Body" id="Item.battania_civil_a" />
+			<Equipment slot="Leg" id="Item.battania_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- HARAD companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_harad" culture="Culture.aserai">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Body" id="Item.aserai_civil_c" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Body" id="Item.aserai_civil_c" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+			<Equipment slot="Body" id="Item.aserai_civil_e" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- RHUN companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_rhun" culture="Culture.khuzait">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
+			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.easterling_head" />
+			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
+			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterling_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.easterling_head" />
+			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.easterling_head" />
+			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterling_glove" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.easterling_head" />
+			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterling_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
+			<Equipment slot="Body" id="Item.easterling_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterling_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.easterling_head" />
+			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
+			<Equipment slot="Body" id="Item.easterling_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterling_glove" />
+			<Equipment slot="Leg" id="Item.easterling_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
+			<Equipment slot="Body" id="Item.easterling_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterling_glove" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
+			<Equipment slot="Body" id="Item.easterling_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterling_glove" />
+			<Equipment slot="Leg" id="Item.easterling_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.easterling_head" />
+			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
+			<Equipment slot="Gloves" id="Item.easterling_glove" />
+			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat_b" />
+			<Equipment slot="Leg" id="Item.khuzait_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+			<Equipment slot="Leg" id="Item.khuzait_civil_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat_b" />
+			<Equipment slot="Leg" id="Item.khuzait_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- UMBAR companion equipment -->
+	<EquipmentRoster id="npc_companion_equipment_template_umbar" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_e" />
+			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Head" id="Item.gondor_nobke_helmet1" />
+			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.gond_spear2" />
+			<Equipment slot="Item2" id="Item.lowland_longbow" />
+			<Equipment slot="Head" id="Item.gondor_nobke_helmet1" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_pike_a" />
+			<Equipment slot="Item2" id="Item.lowland_longbow" />
+			<Equipment slot="Head" id="Item.gondor_nobke_helmet1" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.gond_spear2" />
+			<Equipment slot="Item2" id="Item.lowland_longbow" />
+			<Equipment slot="Head" id="Item.gondor_nobke_helmet1" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_pike_a" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_e" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_e" />
+			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
+			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item2" id="Item.lowland_longbow" />
+			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
+			<Equipment slot="Body" id="Item.gondor_chainmaila" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item2" id="Item.lowland_longbow" />
+			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
+			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
+			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item2" id="Item.lowland_longbow" />
+			<Equipment slot="Head" id="Item.gondor_nobke_helmet1" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
+			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Body" id="Item.bandit_envelope_dress_v1" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.gond_spear2" />
+			<Equipment slot="Body" id="Item.bandit_envelope_dress_v1" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Body" id="Item.layered_leather_tunic" />
+			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+</EquipmentRosters>

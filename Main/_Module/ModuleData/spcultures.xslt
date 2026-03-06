@@ -243,8 +243,47 @@
 				<name name="{=aom_dunland_clan_name_19}The Mountain Shadows" />
 			</clan_names>
 
-			<!-- Copy cultural_feats, possible_clan_banner_icon_ids, notable_and_wanderer_templates -->
-			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids|notable_and_wanderer_templates"/>
+			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
+			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
+			<!-- Replace vanilla empire wanderers with Dunland wanderers, keep vanilla notables -->
+			<notable_and_wanderer_templates>
+				<template name="NPCCharacter.spc_wanderer_dunland_0" />
+				<template name="NPCCharacter.spc_wanderer_dunland_1" />
+				<template name="NPCCharacter.spc_wanderer_dunland_2" />
+				<template name="NPCCharacter.spc_wanderer_dunland_3" />
+				<template name="NPCCharacter.spc_wanderer_dunland_4" />
+				<template name="NPCCharacter.spc_wanderer_dunland_5" />
+				<template name="NPCCharacter.spc_wanderer_dunland_6" />
+				<template name="NPCCharacter.spc_wanderer_dunland_7" />
+				<template name="NPCCharacter.spc_wanderer_dunland_8" />
+				<template name="NPCCharacter.spc_wanderer_dunland_9" />
+				<template name="NPCCharacter.spc_notable_empire_0" />
+				<template name="NPCCharacter.spc_notable_empire_0b" />
+				<template name="NPCCharacter.spc_notable_empire_1" />
+				<template name="NPCCharacter.spc_notable_empire_1b" />
+				<template name="NPCCharacter.spc_notable_empire_2" />
+				<template name="NPCCharacter.spc_notable_empire_2b" />
+				<template name="NPCCharacter.spc_notable_empire_3" />
+				<template name="NPCCharacter.spc_notable_empire_3b" />
+				<template name="NPCCharacter.spc_notable_empire_4" />
+				<template name="NPCCharacter.spc_notable_empire_4b" />
+				<template name="NPCCharacter.spc_notable_empire_5" />
+				<template name="NPCCharacter.spc_notable_empire_6" />
+				<template name="NPCCharacter.spc_notable_empire_7" />
+				<template name="NPCCharacter.spc_notable_empire_8" />
+				<template name="NPCCharacter.spc_notable_empire_9" />
+				<template name="NPCCharacter.spc_notable_empire_10" />
+				<template name="NPCCharacter.spc_notable_empire_11" />
+				<template name="NPCCharacter.spc_notable_empire_12" />
+				<template name="NPCCharacter.spc_notable_empire_13" />
+				<template name="NPCCharacter.spc_notable_empire_21" />
+				<template name="NPCCharacter.spc_notable_empire_22" />
+				<template name="NPCCharacter.spc_notable_empire_gl1" />
+				<template name="NPCCharacter.spc_notable_empire_gl4" />
+				<template name="NPCCharacter.spc_empire_headman_1" />
+				<template name="NPCCharacter.spc_empire_headman_2" />
+				<template name="NPCCharacter.spc_empire_headman_3" />
+			</notable_and_wanderer_templates>
 		</xsl:copy>
 	</xsl:template>
 
@@ -481,8 +520,41 @@
 				<name name="{=aom_harad_clan_name_20}The Twilight Sand" />
 			</clan_names>
 
-			<!-- Copy cultural_feats, possible_clan_banner_icon_ids, notable_and_wanderer_templates -->
-			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids|notable_and_wanderer_templates"/>
+			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
+			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
+			<!-- Replace vanilla aserai wanderers with Harad wanderers, keep vanilla notables -->
+			<notable_and_wanderer_templates>
+				<template name="NPCCharacter.spc_wanderer_harad_0" />
+				<template name="NPCCharacter.spc_wanderer_harad_1" />
+				<template name="NPCCharacter.spc_wanderer_harad_2" />
+				<template name="NPCCharacter.spc_wanderer_harad_3" />
+				<template name="NPCCharacter.spc_wanderer_harad_4" />
+				<template name="NPCCharacter.spc_wanderer_harad_5" />
+				<template name="NPCCharacter.spc_wanderer_harad_6" />
+				<template name="NPCCharacter.spc_wanderer_harad_7" />
+				<template name="NPCCharacter.spc_wanderer_harad_8" />
+				<template name="NPCCharacter.spc_wanderer_harad_9" />
+				<template name="NPCCharacter.spc_notable_aserai_0" />
+				<template name="NPCCharacter.spc_notable_aserai_0b" />
+				<template name="NPCCharacter.spc_notable_aserai_1" />
+				<template name="NPCCharacter.spc_notable_aserai_1b" />
+				<template name="NPCCharacter.spc_notable_aserai_2" />
+				<template name="NPCCharacter.spc_notable_aserai_2b" />
+				<template name="NPCCharacter.spc_notable_aserai_3" />
+				<template name="NPCCharacter.spc_notable_aserai_3b" />
+				<template name="NPCCharacter.spc_notable_aserai_4" />
+				<template name="NPCCharacter.spc_notable_aserai_5" />
+				<template name="NPCCharacter.spc_notable_aserai_6" />
+				<template name="NPCCharacter.spc_notable_aserai_7" />
+				<template name="NPCCharacter.spc_notable_aserai_8" />
+				<template name="NPCCharacter.spc_notable_aserai_9" />
+				<template name="NPCCharacter.spc_notable_aserai_10" />
+				<template name="NPCCharacter.spc_notable_aserai_11" />
+				<template name="NPCCharacter.spc_notable_aserai_12" />
+				<template name="NPCCharacter.spc_aserai_headman_1" />
+				<template name="NPCCharacter.spc_aserai_headman_2" />
+				<template name="NPCCharacter.spc_aserai_headman_3" />
+			</notable_and_wanderer_templates>
 		</xsl:copy>
 	</xsl:template>
 
@@ -719,8 +791,39 @@
 				<name name="{=aom_rohan_clan_name_10}Earmynding" />
 			</clan_names>
 
-			<!-- Copy cultural_feats, possible_clan_banner_icon_ids, notable_and_wanderer_templates -->
-			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids|notable_and_wanderer_templates"/>
+			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
+			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
+			<!-- Replace vanilla vlandia wanderers with Rohan wanderers, keep vanilla notables -->
+			<notable_and_wanderer_templates>
+				<template name="NPCCharacter.spc_wanderer_rohan_0" />
+				<template name="NPCCharacter.spc_wanderer_rohan_1" />
+				<template name="NPCCharacter.spc_wanderer_rohan_2" />
+				<template name="NPCCharacter.spc_wanderer_rohan_3" />
+				<template name="NPCCharacter.spc_wanderer_rohan_4" />
+				<template name="NPCCharacter.spc_wanderer_rohan_5" />
+				<template name="NPCCharacter.spc_wanderer_rohan_6" />
+				<template name="NPCCharacter.spc_wanderer_rohan_7" />
+				<template name="NPCCharacter.spc_wanderer_rohan_8" />
+				<template name="NPCCharacter.spc_notable_vlandia_merch1" />
+				<template name="NPCCharacter.spc_notable_vlandia_merch2" />
+				<template name="NPCCharacter.spc_notable_vlandia_merch3" />
+				<template name="NPCCharacter.spc_notable_vlandia_merch4" />
+				<template name="NPCCharacter.spc_notable_vlandia_merch5" />
+				<template name="NPCCharacter.spc_notable_vlandia_1" />
+				<template name="NPCCharacter.spc_notable_vlandia_1b" />
+				<template name="NPCCharacter.spc_notable_vlandia_2" />
+				<template name="NPCCharacter.spc_notable_vlandia_3" />
+				<template name="NPCCharacter.spc_vlandia_gangleader_1" />
+				<template name="NPCCharacter.spc_vlandia_gangleader_2" />
+				<template name="NPCCharacter.spc_vlandia_gangleader_3" />
+				<template name="NPCCharacter.spc_notable_vlandia_artisan_1" />
+				<template name="NPCCharacter.spc_notable_vlandia_artisan_2" />
+				<template name="NPCCharacter.spc_notable_vlandia_rural_1" />
+				<template name="NPCCharacter.spc_notable_vlandia_rural_2" />
+				<template name="NPCCharacter.spc_vlandia_headman_1" />
+				<template name="NPCCharacter.spc_vlandia_headman_2" />
+				<template name="NPCCharacter.spc_vlandia_headman_3" />
+			</notable_and_wanderer_templates>
 		</xsl:copy>
 	</xsl:template>
 
@@ -947,8 +1050,41 @@
 				<name name="{=aom_rhun_clan_name_10}Golden Horde" />
 			</clan_names>
 
-			<!-- Copy cultural_feats, possible_clan_banner_icon_ids, notable_and_wanderer_templates -->
-			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids|notable_and_wanderer_templates"/>
+			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
+			<xsl:apply-templates select="cultural_feats|possible_clan_banner_icon_ids"/>
+			<!-- Replace vanilla khuzait wanderers with Rhun wanderers, keep vanilla notables -->
+			<notable_and_wanderer_templates>
+				<template name="NPCCharacter.spc_wanderer_rhun_0" />
+				<template name="NPCCharacter.spc_wanderer_rhun_1" />
+				<template name="NPCCharacter.spc_wanderer_rhun_2" />
+				<template name="NPCCharacter.spc_wanderer_rhun_3" />
+				<template name="NPCCharacter.spc_wanderer_rhun_4" />
+				<template name="NPCCharacter.spc_wanderer_rhun_5" />
+				<template name="NPCCharacter.spc_wanderer_rhun_6" />
+				<template name="NPCCharacter.spc_wanderer_rhun_7" />
+				<template name="NPCCharacter.spc_wanderer_rhun_8" />
+				<template name="NPCCharacter.spc_wanderer_rhun_9" />
+				<template name="NPCCharacter.spc_notable_khuzait_merchant_1" />
+				<template name="NPCCharacter.spc_notable_khuzait_0b" />
+				<template name="NPCCharacter.spc_notable_khuzait_1" />
+				<template name="NPCCharacter.spc_notable_khuzait_1b" />
+				<template name="NPCCharacter.spc_notable_khuzait_1c" />
+				<template name="NPCCharacter.spc_notable_khuzait_2" />
+				<template name="NPCCharacter.spc_notable_khuzait_2b" />
+				<template name="NPCCharacter.spc_notable_khuzait_3" />
+				<template name="NPCCharacter.spc_notable_khuzait_4" />
+				<template name="NPCCharacter.spc_khuzait_gangleader_1" />
+				<template name="NPCCharacter.spc_khuzait_gangleader_2" />
+				<template name="NPCCharacter.spc_khuzait_gangleader_3" />
+				<template name="NPCCharacter.spc_khuzait_artisan_1" />
+				<template name="NPCCharacter.spc_khuzait_artisan_2" />
+				<template name="NPCCharacter.spc_khuzait_artisan_3" />
+				<template name="NPCCharacter.spc_khuzait_rural_notable_1" />
+				<template name="NPCCharacter.spc_khuzait_rural_notable_2" />
+				<template name="NPCCharacter.spc_khuzait_headman_1" />
+				<template name="NPCCharacter.spc_khuzait_headman_2" />
+				<template name="NPCCharacter.spc_khuzait_headman_3" />
+			</notable_and_wanderer_templates>
 		</xsl:copy>
 	</xsl:template>
 
