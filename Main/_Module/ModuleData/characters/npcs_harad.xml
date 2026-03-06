@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== HARAD CIVILIAN NPCs ==================== -->
+	<!-- Haradrim are humans - no race attribute -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_harad" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.aserai" name="{=aom_hd_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to harad_levy) -->
+	<NPCCharacter id="villager_harad" default_group="Infantry" level="1" name="{=aom_hd_villager}Villager" occupation="Villager" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.harad_levy" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Woman -->
+	<NPCCharacter id="village_woman_harad" default_group="Infantry" name="{=aom_hd_village_woman}Village Woman" occupation="Villager" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_harad" default_group="Infantry" level="26" name="{=aom_hd_caravan_master}Harad Caravan Master" occupation="CaravanGuard" culture="Culture.aserai">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_harad" default_group="Infantry" level="16" name="{=aom_hd_armed_trader}Harad Armed Trader" occupation="CaravanGuard" culture="Culture.aserai">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_harad" default_group="Infantry" level="16" name="{=aom_hd_caravan_guard}Harad Caravan Guard" occupation="Soldier" culture="Culture.aserai">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_harad" default_group="Infantry" level="21" name="{=aom_hd_vet_caravan_guard}Harad Veteran Caravan Guard" occupation="Soldier" culture="Culture.aserai">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_harad" default_group="Infantry" level="4" culture="Culture.aserai" occupation="PrisonGuard" name="{=aom_hd_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_harad" default_group="Infantry" level="16" name="{=aom_hd_guard}Guard" occupation="Soldier" culture="Culture.aserai">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_harad" default_group="Infantry" name="{=aom_hd_townsman}Townsman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_harad" default_group="Infantry" name="{=aom_hd_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_harad" default_group="Infantry" name="{=aom_hd_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_harad" default_group="Infantry" name="{=aom_hd_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_harad" default_group="Infantry" name="{=aom_hd_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_harad" default_group="Infantry" name="{=aom_hd_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_harad" default_group="Infantry" name="{=aom_hd_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_harad" default_group="Infantry" name="{=aom_hd_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Children/Teenagers -->
+	<NPCCharacter id="villager_male_child_harad" default_group="Infantry" name="{=aom_hd_villager_m_child}Village Child" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_male_teenager_harad" default_group="Infantry" name="{=aom_hd_villager_m_teen}Village Teenager" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_female_child_harad" default_group="Infantry" name="{=aom_hd_villager_f_child}Village Child" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_female_teenager_harad" default_group="Infantry" name="{=aom_hd_villager_f_teen}Village Teenager" occupation="Townsfolk" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_harad" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.aserai" name="{=aom_hd_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_harad" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.aserai" name="{=aom_hd_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_harad" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.aserai" name="{=aom_hd_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_harad" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.aserai" name="{=aom_hd_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_harad" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.aserai" name="{=aom_hd_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_harad" default_group="Infantry" is_hero="false" name="{=aom_hd_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_harad" default_group="Infantry" is_hero="false" name="{=aom_hd_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_harad" default_group="Infantry" is_hero="false" name="{=aom_hd_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_harad" default_group="Infantry" is_hero="false" name="{=aom_hd_musician}Musician" occupation="Musician" culture="Culture.aserai" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="shop_worker_harad" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.aserai" name="{=aom_hd_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="barber_harad" default_group="Infantry" is_hero="false" is_female="true" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_harad" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_harad" default_group="Infantry" is_hero="false" is_female="true" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_harad" default_group="Infantry" is_hero="false" is_female="true" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables -->
+	<NPCCharacter id="merchant_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="artisan_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="preacher_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="rural_notable_notary_harad" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.aserai" name="{=aom_hd_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_harad" default_group="Infantry" level="15" is_hero="false" name="{=aom_hd_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.aserai">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_harad" default_group="Infantry" level="15" is_hero="false" name="{=aom_hd_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.aserai">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_c" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_harad" default_group="Infantry" level="25" is_hero="false" name="{=aom_hd_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.aserai">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_harad" default_group="Infantry" level="35" is_hero="false" name="{=aom_hd_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.aserai">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_harad" default_group="Infantry" level="15" is_hero="false" name="{=aom_hd_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.aserai">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.aserai_civil_a" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

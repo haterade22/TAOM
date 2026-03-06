@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+    <!-- ==================== TOWNSFOLK ==================== -->
+
+    <NPCCharacter
+        id="townsman_rohan"
+        name="{=aom_roh_townsman}Townsman"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_rohan"
+        name="{=aom_roh_townswoman}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townsman_infant_rohan"
+        name="{=aom_roh_townsman_infant}Townsman"
+        occupation="Townsfolk"
+        is_child_template="true"
+        child_monster="child_male_child"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_infant_rohan"
+        name="{=aom_roh_townswoman_infant}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        is_child_template="true"
+        child_monster="child_female_child"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townsman_child_rohan"
+        name="{=aom_roh_townsman_child}Townsman"
+        occupation="Townsfolk"
+        is_child_template="true"
+        child_monster="child_male_child"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_child_rohan"
+        name="{=aom_roh_townswoman_child}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        is_child_template="true"
+        child_monster="child_female_child"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townsman_teenager_rohan"
+        name="{=aom_roh_townsman_teen}Townsman"
+        occupation="Townsfolk"
+        is_child_template="true"
+        child_monster="child_male_teenager"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_teenager_rohan"
+        name="{=aom_roh_townswoman_teen}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        is_child_template="true"
+        child_monster="child_female_teenager"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== VILLAGERS ==================== -->
+
+    <NPCCharacter
+        id="villager_rohan"
+        name="{=aom_roh_villager}Villager"
+        occupation="Villager"
+        culture="Culture.vlandia"
+        default_group="Infantry"
+        upgrade_target="NPCCharacter.rohan_edoras_recruit">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="village_woman_rohan"
+        name="{=aom_roh_village_woman}Village Woman"
+        occupation="Villager"
+        is_female="true"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="villager_child_rohan"
+        name="{=aom_roh_villager_child}Villager"
+        occupation="Villager"
+        is_child_template="true"
+        child_monster="child_male_child"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="village_woman_child_rohan"
+        name="{=aom_roh_village_woman_child}Village Girl"
+        occupation="Villager"
+        is_female="true"
+        is_child_template="true"
+        child_monster="child_female_child"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="villager_teenager_rohan"
+        name="{=aom_roh_villager_teen}Villager"
+        occupation="Villager"
+        is_child_template="true"
+        child_monster="child_male_teenager"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="village_woman_teenager_rohan"
+        name="{=aom_roh_village_woman_teen}Village Girl"
+        occupation="Villager"
+        is_female="true"
+        is_child_template="true"
+        child_monster="child_female_teenager"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== MERCHANTS & TRADERS ==================== -->
+
+    <NPCCharacter
+        id="merchant_rohan"
+        name="{=aom_roh_merchant}Merchant"
+        occupation="GoodsTrader"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== CRAFTERS ==================== -->
+
+    <NPCCharacter
+        id="blacksmith_rohan"
+        name="{=aom_roh_blacksmith}Blacksmith"
+        occupation="Blacksmith"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weaponsmith_rohan"
+        name="{=aom_roh_weaponsmith}Weaponsmith"
+        occupation="Weaponsmith"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="armorer_rohan"
+        name="{=aom_roh_armorer}Armorer"
+        occupation="Armorer"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="horseMerchant_rohan"
+        name="{=aom_roh_horse_merchant}Horse Trader"
+        occupation="HorseTrader"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== TAVERN ==================== -->
+
+    <NPCCharacter
+        id="tavernkeeper_rohan"
+        name="{=aom_roh_tavernkeeper}Tavernkeeper"
+        occupation="Tavernkeeper"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="taverngamehost_rohan"
+        name="{=aom_roh_taverngamehost}Tavern Game Host"
+        occupation="TavernGameHost"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="tavern_wench_rohan"
+        name="{=aom_roh_tavern_wench}Tavern Maid"
+        occupation="TavernWench"
+        is_female="true"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="musician_rohan"
+        name="{=aom_roh_musician}Musician"
+        occupation="Musician"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== ARENA & SHOPS ==================== -->
+
+    <NPCCharacter
+        id="tournament_master_rohan"
+        name="{=aom_roh_tournament_master}Tournament Master"
+        occupation="ArenaMaster"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="shop_worker_rohan"
+        name="{=aom_roh_shop_worker}Shop Worker"
+        occupation="ShopWorker"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== GUARDS ==================== -->
+
+    <NPCCharacter
+        id="prison_guard_rohan"
+        name="{=aom_roh_prison_guard}Prison Guard"
+        occupation="PrisonGuard"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_d" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="guard_rohan"
+        name="{=aom_roh_guard}Guard"
+        occupation="Soldier"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== CARAVAN ==================== -->
+
+    <NPCCharacter
+        id="armed_trader_rohan"
+        name="{=aom_roh_armed_trader}Armed Trader"
+        occupation="CaravanGuard"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="caravan_master_rohan"
+        name="{=aom_roh_caravan_master}Caravan Master"
+        occupation="CaravanGuard"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="caravan_guard_rohan"
+        name="{=aom_roh_caravan_guard}Caravan Guard"
+        occupation="CaravanGuard"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+                <equipment slot="Item2" id="Item.hunting_bow" />
+                <equipment slot="Item3" id="Item.default_arrows" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="veteran_caravan_guard_rohan"
+        name="{=aom_roh_vet_caravan_guard}Veteran Caravan Guard"
+        occupation="CaravanGuard"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+                <equipment slot="Item2" id="Item.hunting_bow" />
+                <equipment slot="Item3" id="Item.default_arrows" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor4" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== NOTABLES & SPECIAL TOWNSFOLK ==================== -->
+
+    <NPCCharacter
+        id="ransom_broker_rohan"
+        name="{=aom_roh_ransom_broker}Ransom Broker"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gangleader_bodyguard_rohan"
+        name="{=aom_roh_gangleader_bg}Bodyguard"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_d" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="merchant_notary_rohan"
+        name="{=aom_roh_merchant_notary}Merchant Notary"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="artisan_notary_rohan"
+        name="{=aom_roh_artisan_notary}Artisan Notary"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="preacher_notary_rohan"
+        name="{=aom_roh_preacher_notary}Preacher"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="rural_notable_notary_rohan"
+        name="{=aom_roh_rural_notary}Rural Notable"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="barber_rohan"
+        name="{=aom_roh_barber}Barber"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="beggar_rohan"
+        name="{=aom_roh_beggar}Beggar"
+        occupation="Townsfolk"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="female_beggar_rohan"
+        name="{=aom_roh_female_beggar}Beggar"
+        occupation="Townsfolk"
+        is_female="true"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="female_dancer_rohan"
+        name="{=aom_roh_female_dancer}Dancer"
+        occupation="Townsfolk"
+        is_female="true"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== PRACTICE DUMMIES (no face) ==================== -->
+
+    <NPCCharacter
+        id="gear_practice_dummy_rohan"
+        name="{=aom_roh_gear_practice_dummy}Gear Practice Dummy"
+        occupation="Soldier"
+        level="15"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weapon_practice_stage_1_rohan"
+        name="{=aom_roh_wpractice_1}Weapon Practice Dummy Stage 1"
+        occupation="Soldier"
+        level="15"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weapon_practice_stage_2_rohan"
+        name="{=aom_roh_wpractice_2}Weapon Practice Dummy Stage 2"
+        occupation="Soldier"
+        level="25"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weapon_practice_stage_3_rohan"
+        name="{=aom_roh_wpractice_3}Weapon Practice Dummy Stage 3"
+        occupation="Soldier"
+        level="35"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gear_dummy_rohan"
+        name="{=aom_roh_gear_dummy}Gear Dummy"
+        occupation="Soldier"
+        level="15"
+        culture="Culture.vlandia"
+        default_group="Infantry">
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+</NPCCharacters>

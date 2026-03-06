@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- ==================== ROHAN LORD BATTLE EQUIPMENT ==================== -->
+
+	<EquipmentRoster id="rohan_bat_template_medium_a" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_bat_template_medium_b" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a02_gsw" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet3" />
+			<Equipment slot="Body" id="Item.cts_rohan_armor1" />
+			<Equipment slot="Cape" id="Item.cts_rohan_cape3" />
+			<Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_bat_template_medium_c" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a03_gsw" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
+			<Equipment slot="Body" id="Item.cts_rohan_armor2" />
+			<Equipment slot="Cape" id="Item.cts_rohan_cape2" />
+			<Equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_bat_template_medium_d" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_5_t5" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet3a" />
+			<Equipment slot="Body" id="Item.cts_rohan_armor3" />
+			<Equipment slot="Cape" id="Item.roh_nbl_shldr_c" />
+			<Equipment slot="Gloves" id="Item.cts_rohan_armguard3" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_bat_template_medium_e" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== ROHAN LORD CIVILIAN EQUIPMENT ==================== -->
+
+	<EquipmentRoster id="rohan_civ_template_default_a" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_civ_template_default_b" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_civ_template_default_c" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rohan_militia_armour_a" />
+			<Equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_civ_template_default_d" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rohan_civ_template_default_e" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rohan_militia_armour_b" />
+			<Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+</EquipmentRosters>

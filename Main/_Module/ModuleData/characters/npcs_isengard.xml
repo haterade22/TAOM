@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== ISENGARD CIVILIAN NPCs ==================== -->
+	<!-- All use race="uruk_hai" for correct uruk-hai rendering -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.isengard" name="{=aom_ig_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to urukhai_recruit) -->
+	<NPCCharacter id="villager_isengard" race="uruk_hai" default_group="Infantry" level="1" name="{=aom_ig_villager}Villager" occupation="Villager" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.urukhai_recruit" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Woman -->
+	<NPCCharacter id="village_woman_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_village_woman}Village Woman" occupation="Villager" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_isengard" race="uruk_hai" default_group="Infantry" level="26" name="{=aom_ig_caravan_master}Isengard Caravan Master" occupation="CaravanGuard" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_armed_trader}Isengard Armed Trader" occupation="CaravanGuard" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_caravan_guard}Isengard Caravan Guard" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_isengard" race="uruk_hai" default_group="Infantry" level="21" name="{=aom_ig_vet_caravan_guard}Isengard Veteran Caravan Guard" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_isengard" race="uruk_hai" default_group="Infantry" level="4" culture="Culture.isengard" occupation="PrisonGuard" name="{=aom_ig_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item1" id="Item.isengard_1h_sword_b" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item1" id="Item.isengard_1h_sword_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_guard}Guard" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.isengard" name="{=aom_ig_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.isengard" name="{=aom_ig_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.isengard" name="{=aom_ig_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townswoman_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townsman}Townsman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Population -->
+	<NPCCharacter id="villager_male_child_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_m_child}Village Child" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_male_teenager_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_m_teen}Village Teenager" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_female_child_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_f_child}Village Child" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_female_teenager_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_f_teen}Village Teenager" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables -->
+	<NPCCharacter id="ransom_broker_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gangleader_bodyguard_isengard" race="uruk_hai" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="merchant_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="artisan_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="preacher_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="rural_notable_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="shop_worker_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.isengard" name="{=aom_ig_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" name="{=aom_ig_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" name="{=aom_ig_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" name="{=aom_ig_musician}Musician" occupation="Musician" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" name="{=aom_ig_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.isengard" name="{=aom_ig_warg_merchant}Warg Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="barber_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.isengard" name="{=aom_ig_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies (no face, Soldier occupation) -->
+	<NPCCharacter id="gear_practice_dummy_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.isengard">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_isengard" race="uruk_hai" default_group="Infantry" level="25" name="{=aom_ig_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_isengard" race="uruk_hai" default_group="Infantry" level="35" name="{=aom_ig_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.isengard">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>
