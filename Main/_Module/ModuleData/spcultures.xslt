@@ -13,7 +13,8 @@
 	<!-- Rename empire to Dunlending -->
 	<xsl:template match="Culture[@id='empire']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'armed_trader' and local-name() != 'armorer' and local-name() != 'artisan_notary' and local-name() != 'barber' and local-name() != 'basic_troop' and local-name() != 'beggar' and local-name() != 'blacksmith' and local-name() != 'board_game_type' and local-name() != 'caravan_guard' and local-name() != 'caravan_master' and local-name() != 'caravan_party_template' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_battle_equipment_roster' and local-name() != 'default_civilian_equipment_roster' and local-name() != 'default_party_template' and local-name() != 'elite_basic_troop' and local-name() != 'elite_caravan_party_template' and local-name() != 'encounter_background_mesh' and local-name() != 'female_beggar' and local-name() != 'female_dancer' and local-name() != 'gangleader_bodyguard' and local-name() != 'gear_dummy' and local-name() != 'gear_practice_dummy' and local-name() != 'guard' and local-name() != 'horseMerchant' and local-name() != 'melee_elite_militia_troop' and local-name() != 'melee_militia_troop' and local-name() != 'merchant' and local-name() != 'merchant_notary' and local-name() != 'militia_party_template' and local-name() != 'musician' and local-name() != 'name' and local-name() != 'preacher_notary' and local-name() != 'prison_guard' and local-name() != 'ranged_elite_militia_troop' and local-name() != 'ranged_militia_troop' and local-name() != 'ransom_broker' and local-name() != 'rebels_party_template' and local-name() != 'rural_notable_notary' and local-name() != 'shop_worker' and local-name() != 'tavern_wench' and local-name() != 'taverngamehost' and local-name() != 'tavernkeeper' and local-name() != 'text' and local-name() != 'tournament_master' and local-name() != 'townsman' and local-name() != 'townsman_child' and local-name() != 'townsman_infant' and local-name() != 'townsman_teenager' and local-name() != 'townswoman' and local-name() != 'townswoman_child' and local-name() != 'townswoman_infant' and local-name() != 'townswoman_teenager' and local-name() != 'vassal_reward_party_template' and local-name() != 'veteran_caravan_guard' and local-name() != 'village_woman' and local-name() != 'villager' and local-name() != 'villager_female_child' and local-name() != 'villager_female_teenager' and local-name() != 'villager_male_child' and local-name() != 'villager_male_teenager' and local-name() != 'villager_party_template' and local-name() != 'weapon_practice_stage_1' and local-name() != 'weapon_practice_stage_2' and local-name() != 'weapon_practice_stage_3' and local-name() != 'weaponsmith']"/>
+			<!-- Copy all vanilla attributes first, then override the ones we change -->
+			<xsl:apply-templates select="@*"/>
 
 			<!-- Name and description -->
 			<xsl:attribute name="name">{=aom_empire_name}Dunlendings</xsl:attribute>
@@ -243,15 +244,16 @@
 				<name name="{{=aom_dunland_clan_name_19}}The Mountain Shadows" />
 			</clan_names>
 
-			<!-- Pass through all vanilla child elements (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*"/>
+			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Rename aserai to Haradrim -->
 	<xsl:template match="Culture[@id='aserai']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'armed_trader' and local-name() != 'armorer' and local-name() != 'artisan_notary' and local-name() != 'barber' and local-name() != 'basic_troop' and local-name() != 'beggar' and local-name() != 'blacksmith' and local-name() != 'board_game_type' and local-name() != 'caravan_guard' and local-name() != 'caravan_master' and local-name() != 'caravan_party_template' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_battle_equipment_roster' and local-name() != 'default_civilian_equipment_roster' and local-name() != 'default_party_template' and local-name() != 'elite_basic_troop' and local-name() != 'elite_caravan_party_template' and local-name() != 'encounter_background_mesh' and local-name() != 'female_beggar' and local-name() != 'female_dancer' and local-name() != 'gangleader_bodyguard' and local-name() != 'gear_dummy' and local-name() != 'gear_practice_dummy' and local-name() != 'guard' and local-name() != 'horseMerchant' and local-name() != 'melee_elite_militia_troop' and local-name() != 'melee_militia_troop' and local-name() != 'merchant' and local-name() != 'merchant_notary' and local-name() != 'militia_party_template' and local-name() != 'musician' and local-name() != 'name' and local-name() != 'preacher_notary' and local-name() != 'prison_guard' and local-name() != 'ranged_elite_militia_troop' and local-name() != 'ranged_militia_troop' and local-name() != 'ransom_broker' and local-name() != 'rebels_party_template' and local-name() != 'rural_notable_notary' and local-name() != 'shop_worker' and local-name() != 'tavern_wench' and local-name() != 'taverngamehost' and local-name() != 'tavernkeeper' and local-name() != 'text' and local-name() != 'tournament_master' and local-name() != 'townsman' and local-name() != 'townsman_child' and local-name() != 'townsman_infant' and local-name() != 'townsman_teenager' and local-name() != 'townswoman' and local-name() != 'townswoman_child' and local-name() != 'townswoman_infant' and local-name() != 'townswoman_teenager' and local-name() != 'vassal_reward_party_template' and local-name() != 'veteran_caravan_guard' and local-name() != 'village_woman' and local-name() != 'villager' and local-name() != 'villager_female_child' and local-name() != 'villager_female_teenager' and local-name() != 'villager_male_child' and local-name() != 'villager_male_teenager' and local-name() != 'villager_party_template' and local-name() != 'weapon_practice_stage_1' and local-name() != 'weapon_practice_stage_2' and local-name() != 'weapon_practice_stage_3' and local-name() != 'weaponsmith']"/>
+			<!-- Copy all vanilla attributes first, then override the ones we change -->
+			<xsl:apply-templates select="@*"/>
 
 			<!-- Name and description -->
 			<xsl:attribute name="name">{=aom_aserai_name}Haradrim</xsl:attribute>
@@ -481,15 +483,16 @@
 				<name name="{{=aom_harad_clan_name_20}}The Twilight Sand" />
 			</clan_names>
 
-			<!-- Pass through all vanilla child elements (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*"/>
+			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Rename vlandia to Rohirrim -->
 	<xsl:template match="Culture[@id='vlandia']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'armed_trader' and local-name() != 'armorer' and local-name() != 'artisan_notary' and local-name() != 'barber' and local-name() != 'basic_troop' and local-name() != 'beggar' and local-name() != 'blacksmith' and local-name() != 'board_game_type' and local-name() != 'caravan_guard' and local-name() != 'caravan_master' and local-name() != 'caravan_party_template' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_battle_equipment_roster' and local-name() != 'default_civilian_equipment_roster' and local-name() != 'default_party_template' and local-name() != 'elite_basic_troop' and local-name() != 'elite_caravan_party_template' and local-name() != 'encounter_background_mesh' and local-name() != 'female_beggar' and local-name() != 'female_dancer' and local-name() != 'gangleader_bodyguard' and local-name() != 'gear_dummy' and local-name() != 'gear_practice_dummy' and local-name() != 'guard' and local-name() != 'horseMerchant' and local-name() != 'melee_elite_militia_troop' and local-name() != 'melee_militia_troop' and local-name() != 'merchant' and local-name() != 'merchant_notary' and local-name() != 'militia_party_template' and local-name() != 'musician' and local-name() != 'name' and local-name() != 'preacher_notary' and local-name() != 'prison_guard' and local-name() != 'ranged_elite_militia_troop' and local-name() != 'ranged_militia_troop' and local-name() != 'ransom_broker' and local-name() != 'rebels_party_template' and local-name() != 'rural_notable_notary' and local-name() != 'shop_worker' and local-name() != 'tavern_wench' and local-name() != 'taverngamehost' and local-name() != 'tavernkeeper' and local-name() != 'text' and local-name() != 'tournament_master' and local-name() != 'townsman' and local-name() != 'townsman_child' and local-name() != 'townsman_infant' and local-name() != 'townsman_teenager' and local-name() != 'townswoman' and local-name() != 'townswoman_child' and local-name() != 'townswoman_infant' and local-name() != 'townswoman_teenager' and local-name() != 'vassal_reward_party_template' and local-name() != 'veteran_caravan_guard' and local-name() != 'village_woman' and local-name() != 'villager' and local-name() != 'villager_female_child' and local-name() != 'villager_female_teenager' and local-name() != 'villager_male_child' and local-name() != 'villager_male_teenager' and local-name() != 'villager_party_template' and local-name() != 'weapon_practice_stage_1' and local-name() != 'weapon_practice_stage_2' and local-name() != 'weapon_practice_stage_3' and local-name() != 'weaponsmith']"/>
+			<!-- Copy all vanilla attributes first, then override the ones we change -->
+			<xsl:apply-templates select="@*"/>
 
 			<!-- Name and description -->
 			<xsl:attribute name="name">{=aom_vlandia_name}Rohirrim</xsl:attribute>
@@ -719,15 +722,16 @@
 				<name name="{{=aom_rohan_clan_name_10}}Earmynding" />
 			</clan_names>
 
-			<!-- Pass through all vanilla child elements (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*"/>
+			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Rename khuzait to Easterling -->
 	<xsl:template match="Culture[@id='khuzait']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'armed_trader' and local-name() != 'armorer' and local-name() != 'artisan_notary' and local-name() != 'barber' and local-name() != 'basic_troop' and local-name() != 'beggar' and local-name() != 'blacksmith' and local-name() != 'board_game_type' and local-name() != 'caravan_guard' and local-name() != 'caravan_master' and local-name() != 'caravan_party_template' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_battle_equipment_roster' and local-name() != 'default_civilian_equipment_roster' and local-name() != 'default_party_template' and local-name() != 'elite_basic_troop' and local-name() != 'elite_caravan_party_template' and local-name() != 'encounter_background_mesh' and local-name() != 'female_beggar' and local-name() != 'female_dancer' and local-name() != 'gangleader_bodyguard' and local-name() != 'gear_dummy' and local-name() != 'gear_practice_dummy' and local-name() != 'guard' and local-name() != 'horseMerchant' and local-name() != 'melee_elite_militia_troop' and local-name() != 'melee_militia_troop' and local-name() != 'merchant' and local-name() != 'merchant_notary' and local-name() != 'militia_party_template' and local-name() != 'musician' and local-name() != 'name' and local-name() != 'preacher_notary' and local-name() != 'prison_guard' and local-name() != 'ranged_elite_militia_troop' and local-name() != 'ranged_militia_troop' and local-name() != 'ransom_broker' and local-name() != 'rebels_party_template' and local-name() != 'rural_notable_notary' and local-name() != 'shop_worker' and local-name() != 'tavern_wench' and local-name() != 'taverngamehost' and local-name() != 'tavernkeeper' and local-name() != 'text' and local-name() != 'tournament_master' and local-name() != 'townsman' and local-name() != 'townsman_child' and local-name() != 'townsman_infant' and local-name() != 'townsman_teenager' and local-name() != 'townswoman' and local-name() != 'townswoman_child' and local-name() != 'townswoman_infant' and local-name() != 'townswoman_teenager' and local-name() != 'vassal_reward_party_template' and local-name() != 'veteran_caravan_guard' and local-name() != 'village_woman' and local-name() != 'villager' and local-name() != 'villager_female_child' and local-name() != 'villager_female_teenager' and local-name() != 'villager_male_child' and local-name() != 'villager_male_teenager' and local-name() != 'villager_party_template' and local-name() != 'weapon_practice_stage_1' and local-name() != 'weapon_practice_stage_2' and local-name() != 'weapon_practice_stage_3' and local-name() != 'weaponsmith']"/>
+			<!-- Copy all vanilla attributes first, then override the ones we change -->
+			<xsl:apply-templates select="@*"/>
 
 			<!-- Name and description -->
 			<xsl:attribute name="name">{=aom_khuzait_name}Easterlings</xsl:attribute>
@@ -947,8 +951,8 @@
 				<name name="{{=aom_rhun_clan_name_10}}Golden Horde" />
 			</clan_names>
 
-			<!-- Pass through all vanilla child elements (notable_templates, lord_templates, cultural_feats, etc.) -->
-			<xsl:apply-templates select="*"/>
+			<!-- Pass through vanilla child elements we don't override (notable_templates, lord_templates, cultural_feats, etc.) -->
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names)]"/>
 		</xsl:copy>
 	</xsl:template>
 

@@ -55,12 +55,14 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 
 ## XSLT Transformations
 
-TAOM uses XSLT to transform vanilla Bannerlord XML at load time:
+TAOM uses XSLT to transform vanilla Bannerlord XML at load time. **Reference format: `SandBoxCore/ModuleData/` is the authoritative source** for vanilla XML structure (NOT `SandBox/ModuleData/`). For example, `SandBoxCore` uses `<notable_templates>` (which the engine reads), while `SandBox` uses `<notable_and_wanderer_templates>` (ignored by engine).
+
+XSLT pattern: copy all vanilla attributes/elements with `<xsl:apply-templates select="@*"/>` and `<xsl:apply-templates select="*[not(...)]"/>`, then override only what we change. Never filter out vanilla attributes — critical ones like `is_main_culture`, `can_have_settlement`, `faction_banner_key` will be silently dropped.
 
 | File | Purpose |
 |------|---------|
 | `spkingdoms.xslt` | Kingdom names (8) |
-| `spcultures.xslt` | Culture names (6) |
+| `spcultures.xslt` | Culture overrides — names, troops, NPCs, policies, names (6) |
 | `spclans.xslt` | Clan names (73) |
 | `lords.xslt` | Lords - name, default_group, is_female, BodyProperties, skills, traits (380) |
 | `heroes.xslt` | Hero biographies (415) |
