@@ -374,7 +374,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="horseMerchant_rhun" default_group="Infantry" is_hero="false" occupation="HorseMerchant" culture="Culture.khuzait" name="{=aom_rh_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="horseMerchant_rhun" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.khuzait" name="{=aom_rh_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -466,7 +466,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="barber_rhun" default_group="Infantry" is_hero="false" is_female="true" occupation="Barber" culture="Culture.khuzait" name="{=aom_rh_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="barber_rhun" default_group="Infantry" is_hero="false" is_female="true" occupation="Townsfolk" culture="Culture.khuzait" name="{=aom_rh_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -511,7 +511,7 @@
 	</NPCCharacter>
 
 	<!-- Beggars / Dancers -->
-	<NPCCharacter id="beggar_rhun" default_group="Infantry" is_hero="false" occupation="Beggar" culture="Culture.khuzait" name="{=aom_rh_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="beggar_rhun" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.khuzait" name="{=aom_rh_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -522,7 +522,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_rhun" default_group="Infantry" is_hero="false" is_female="true" occupation="Beggar" culture="Culture.khuzait" name="{=aom_rh_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_rhun" default_group="Infantry" is_hero="false" is_female="true" occupation="Townsfolk" culture="Culture.khuzait" name="{=aom_rh_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
