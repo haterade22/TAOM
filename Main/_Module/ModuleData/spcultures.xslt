@@ -118,129 +118,129 @@
 
 			<!-- LOTR names -->
 			<male_names>
-				<name name="{=aom_dunland_male_name_1}Brodar" />
-				<name name="{=aom_dunland_male_name_2}Dunric" />
-				<name name="{=aom_dunland_male_name_3}Eogan" />
-				<name name="{=aom_dunland_male_name_4}Grimdal" />
-				<name name="{=aom_dunland_male_name_5}Tharn" />
-				<name name="{=aom_dunland_male_name_6}Caddoc" />
-				<name name="{=aom_dunland_male_name_7}Mordran" />
-				<name name="{=aom_dunland_male_name_8}Fynric" />
-				<name name="{=aom_dunland_male_name_9}Caedoc" />
-				<name name="{=aom_dunland_male_name_10}Torlan" />
-				<name name="{=aom_dunland_male_name_11}Ragnor" />
-				<name name="{=aom_dunland_male_name_12}Eldric" />
-				<name name="{=aom_dunland_male_name_13}Halric" />
-				<name name="{=aom_dunland_male_name_14}Wulric" />
-				<name name="{=aom_dunland_male_name_15}Cernoc" />
-				<name name="{=aom_dunland_male_name_16}Brynor" />
-				<name name="{=aom_dunland_male_name_17}Gorran" />
-				<name name="{=aom_dunland_male_name_18}Tordoc" />
-				<name name="{=aom_dunland_male_name_19}Fynric" />
-				<name name="{=aom_dunland_male_name_20}Harroc" />
-				<name name="{=aom_dunland_male_name_21}Caelan" />
-				<name name="{=aom_dunland_male_name_22}Wuldar" />
-				<name name="{=aom_dunland_male_name_23}Thorran" />
-				<name name="{=aom_dunland_male_name_24}Grelric" />
-				<name name="{=aom_dunland_male_name_25}Brador" />
-				<name name="{=aom_dunland_male_name_26}Morlan" />
-				<name name="{=aom_dunland_male_name_27}Ardric" />
-				<name name="{=aom_dunland_male_name_28}Cadroc" />
-				<name name="{=aom_dunland_male_name_29}Graldor" />
-				<name name="{=aom_dunland_male_name_30}Farnoc" />
-				<name name="{=aom_dunland_male_name_31}Ulric" />
-				<name name="{=aom_dunland_male_name_32}Brendoc" />
-				<name name="{=aom_dunland_male_name_33}Eadric" />
-				<name name="{=aom_dunland_male_name_34}Thraldor" />
-				<name name="{=aom_dunland_male_name_35}Wulgan" />
-				<name name="{=aom_dunland_male_name_36}Gorran" />
-				<name name="{=aom_dunland_male_name_37}Ragnald" />
-				<name name="{=aom_dunland_male_name_38}Dunmor" />
-				<name name="{=aom_dunland_male_name_39}Thorlic" />
-				<name name="{=aom_dunland_male_name_40}Fynwald" />
-				<name name="{=aom_dunland_male_name_41}Bryldan" />
-				<name name="{=aom_dunland_male_name_42}Granthar" />
-				<name name="{=aom_dunland_male_name_43}Halmod" />
-				<name name="{=aom_dunland_male_name_44}Thrydan" />
-				<name name="{=aom_dunland_male_name_45}Eorlund" />
-				<name name="{=aom_dunland_male_name_46}Gareth" />
-				<name name="{=aom_dunland_male_name_47}Harwic" />
-				<name name="{=aom_dunland_male_name_48}Gildan" />
-				<name name="{=aom_dunland_male_name_49}Wulfram" />
-				<name name="{=aom_dunland_male_name_50}Thorag" />
+				<name name="{{=aom_dunland_male_name_1}}Brodar" />
+				<name name="{{=aom_dunland_male_name_2}}Dunric" />
+				<name name="{{=aom_dunland_male_name_3}}Eogan" />
+				<name name="{{=aom_dunland_male_name_4}}Grimdal" />
+				<name name="{{=aom_dunland_male_name_5}}Tharn" />
+				<name name="{{=aom_dunland_male_name_6}}Caddoc" />
+				<name name="{{=aom_dunland_male_name_7}}Mordran" />
+				<name name="{{=aom_dunland_male_name_8}}Fynric" />
+				<name name="{{=aom_dunland_male_name_9}}Caedoc" />
+				<name name="{{=aom_dunland_male_name_10}}Torlan" />
+				<name name="{{=aom_dunland_male_name_11}}Ragnor" />
+				<name name="{{=aom_dunland_male_name_12}}Eldric" />
+				<name name="{{=aom_dunland_male_name_13}}Halric" />
+				<name name="{{=aom_dunland_male_name_14}}Wulric" />
+				<name name="{{=aom_dunland_male_name_15}}Cernoc" />
+				<name name="{{=aom_dunland_male_name_16}}Brynor" />
+				<name name="{{=aom_dunland_male_name_17}}Gorran" />
+				<name name="{{=aom_dunland_male_name_18}}Tordoc" />
+				<name name="{{=aom_dunland_male_name_19}}Fynric" />
+				<name name="{{=aom_dunland_male_name_20}}Harroc" />
+				<name name="{{=aom_dunland_male_name_21}}Caelan" />
+				<name name="{{=aom_dunland_male_name_22}}Wuldar" />
+				<name name="{{=aom_dunland_male_name_23}}Thorran" />
+				<name name="{{=aom_dunland_male_name_24}}Grelric" />
+				<name name="{{=aom_dunland_male_name_25}}Brador" />
+				<name name="{{=aom_dunland_male_name_26}}Morlan" />
+				<name name="{{=aom_dunland_male_name_27}}Ardric" />
+				<name name="{{=aom_dunland_male_name_28}}Cadroc" />
+				<name name="{{=aom_dunland_male_name_29}}Graldor" />
+				<name name="{{=aom_dunland_male_name_30}}Farnoc" />
+				<name name="{{=aom_dunland_male_name_31}}Ulric" />
+				<name name="{{=aom_dunland_male_name_32}}Brendoc" />
+				<name name="{{=aom_dunland_male_name_33}}Eadric" />
+				<name name="{{=aom_dunland_male_name_34}}Thraldor" />
+				<name name="{{=aom_dunland_male_name_35}}Wulgan" />
+				<name name="{{=aom_dunland_male_name_36}}Gorran" />
+				<name name="{{=aom_dunland_male_name_37}}Ragnald" />
+				<name name="{{=aom_dunland_male_name_38}}Dunmor" />
+				<name name="{{=aom_dunland_male_name_39}}Thorlic" />
+				<name name="{{=aom_dunland_male_name_40}}Fynwald" />
+				<name name="{{=aom_dunland_male_name_41}}Bryldan" />
+				<name name="{{=aom_dunland_male_name_42}}Granthar" />
+				<name name="{{=aom_dunland_male_name_43}}Halmod" />
+				<name name="{{=aom_dunland_male_name_44}}Thrydan" />
+				<name name="{{=aom_dunland_male_name_45}}Eorlund" />
+				<name name="{{=aom_dunland_male_name_46}}Gareth" />
+				<name name="{{=aom_dunland_male_name_47}}Harwic" />
+				<name name="{{=aom_dunland_male_name_48}}Gildan" />
+				<name name="{{=aom_dunland_male_name_49}}Wulfram" />
+				<name name="{{=aom_dunland_male_name_50}}Thorag" />
 			</male_names>
 			<female_names>
-				<name name="{=aom_dunland_female_name_1}Bryndis" />
-				<name name="{=aom_dunland_female_name_2}Eydis" />
-				<name name="{=aom_dunland_female_name_3}Morwyn" />
-				<name name="{=aom_dunland_female_name_4}Grisla" />
-				<name name="{=aom_dunland_female_name_5}Halda" />
-				<name name="{=aom_dunland_female_name_6}Thyra" />
-				<name name="{=aom_dunland_female_name_7}Caedwyn" />
-				<name name="{=aom_dunland_female_name_8}Elrin" />
-				<name name="{=aom_dunland_female_name_9}Fynwyn" />
-				<name name="{=aom_dunland_female_name_10}Thalda" />
-				<name name="{=aom_dunland_female_name_11}Grelwyn" />
-				<name name="{=aom_dunland_female_name_12}Harwyn" />
-				<name name="{=aom_dunland_female_name_13}Aldis" />
-				<name name="{=aom_dunland_female_name_14}Wynla" />
-				<name name="{=aom_dunland_female_name_15}Brythea" />
-				<name name="{=aom_dunland_female_name_16}Eorra" />
-				<name name="{=aom_dunland_female_name_17}Thylda" />
-				<name name="{=aom_dunland_female_name_18}Granna" />
-				<name name="{=aom_dunland_female_name_19}Elwyn" />
-				<name name="{=aom_dunland_female_name_20}Morla" />
-				<name name="{=aom_dunland_female_name_21}Harla" />
-				<name name="{=aom_dunland_female_name_22}Fynla" />
-				<name name="{=aom_dunland_female_name_23}Gryssa" />
-				<name name="{=aom_dunland_female_name_24}Thryssa" />
-				<name name="{=aom_dunland_female_name_25}Halwyn" />
-				<name name="{=aom_dunland_female_name_26}Caelin" />
-				<name name="{=aom_dunland_female_name_27}Grelwyn" />
-				<name name="{=aom_dunland_female_name_28}Thara" />
-				<name name="{=aom_dunland_female_name_29}Morra" />
-				<name name="{=aom_dunland_female_name_30}Bryna" />
-				<name name="{=aom_dunland_female_name_31}Thilda" />
-				<name name="{=aom_dunland_female_name_32}Elis" />
-				<name name="{=aom_dunland_female_name_33}Caelwyn" />
-				<name name="{=aom_dunland_female_name_34}Aldra" />
-				<name name="{=aom_dunland_female_name_35}Harra" />
-				<name name="{=aom_dunland_female_name_36}Wynla" />
-				<name name="{=aom_dunland_female_name_37}Thylda" />
-				<name name="{=aom_dunland_female_name_38}Gresla" />
-				<name name="{=aom_dunland_female_name_39}Fynwyn" />
-				<name name="{=aom_dunland_female_name_40}Elra" />
-				<name name="{=aom_dunland_female_name_41}Morwyn" />
-				<name name="{=aom_dunland_female_name_42}Halda" />
-				<name name="{=aom_dunland_female_name_43}Caedla" />
-				<name name="{=aom_dunland_female_name_44}Thanna" />
-				<name name="{=aom_dunland_female_name_45}Bryndel" />
-				<name name="{=aom_dunland_female_name_46}Griswyn" />
-				<name name="{=aom_dunland_female_name_47}Eydis" />
-				<name name="{=aom_dunland_female_name_48}Fynla" />
-				<name name="{=aom_dunland_female_name_49}Harwyn" />
-				<name name="{=aom_dunland_female_name_50}Wynna" />
+				<name name="{{=aom_dunland_female_name_1}}Bryndis" />
+				<name name="{{=aom_dunland_female_name_2}}Eydis" />
+				<name name="{{=aom_dunland_female_name_3}}Morwyn" />
+				<name name="{{=aom_dunland_female_name_4}}Grisla" />
+				<name name="{{=aom_dunland_female_name_5}}Halda" />
+				<name name="{{=aom_dunland_female_name_6}}Thyra" />
+				<name name="{{=aom_dunland_female_name_7}}Caedwyn" />
+				<name name="{{=aom_dunland_female_name_8}}Elrin" />
+				<name name="{{=aom_dunland_female_name_9}}Fynwyn" />
+				<name name="{{=aom_dunland_female_name_10}}Thalda" />
+				<name name="{{=aom_dunland_female_name_11}}Grelwyn" />
+				<name name="{{=aom_dunland_female_name_12}}Harwyn" />
+				<name name="{{=aom_dunland_female_name_13}}Aldis" />
+				<name name="{{=aom_dunland_female_name_14}}Wynla" />
+				<name name="{{=aom_dunland_female_name_15}}Brythea" />
+				<name name="{{=aom_dunland_female_name_16}}Eorra" />
+				<name name="{{=aom_dunland_female_name_17}}Thylda" />
+				<name name="{{=aom_dunland_female_name_18}}Granna" />
+				<name name="{{=aom_dunland_female_name_19}}Elwyn" />
+				<name name="{{=aom_dunland_female_name_20}}Morla" />
+				<name name="{{=aom_dunland_female_name_21}}Harla" />
+				<name name="{{=aom_dunland_female_name_22}}Fynla" />
+				<name name="{{=aom_dunland_female_name_23}}Gryssa" />
+				<name name="{{=aom_dunland_female_name_24}}Thryssa" />
+				<name name="{{=aom_dunland_female_name_25}}Halwyn" />
+				<name name="{{=aom_dunland_female_name_26}}Caelin" />
+				<name name="{{=aom_dunland_female_name_27}}Grelwyn" />
+				<name name="{{=aom_dunland_female_name_28}}Thara" />
+				<name name="{{=aom_dunland_female_name_29}}Morra" />
+				<name name="{{=aom_dunland_female_name_30}}Bryna" />
+				<name name="{{=aom_dunland_female_name_31}}Thilda" />
+				<name name="{{=aom_dunland_female_name_32}}Elis" />
+				<name name="{{=aom_dunland_female_name_33}}Caelwyn" />
+				<name name="{{=aom_dunland_female_name_34}}Aldra" />
+				<name name="{{=aom_dunland_female_name_35}}Harra" />
+				<name name="{{=aom_dunland_female_name_36}}Wynla" />
+				<name name="{{=aom_dunland_female_name_37}}Thylda" />
+				<name name="{{=aom_dunland_female_name_38}}Gresla" />
+				<name name="{{=aom_dunland_female_name_39}}Fynwyn" />
+				<name name="{{=aom_dunland_female_name_40}}Elra" />
+				<name name="{{=aom_dunland_female_name_41}}Morwyn" />
+				<name name="{{=aom_dunland_female_name_42}}Halda" />
+				<name name="{{=aom_dunland_female_name_43}}Caedla" />
+				<name name="{{=aom_dunland_female_name_44}}Thanna" />
+				<name name="{{=aom_dunland_female_name_45}}Bryndel" />
+				<name name="{{=aom_dunland_female_name_46}}Griswyn" />
+				<name name="{{=aom_dunland_female_name_47}}Eydis" />
+				<name name="{{=aom_dunland_female_name_48}}Fynla" />
+				<name name="{{=aom_dunland_female_name_49}}Harwyn" />
+				<name name="{{=aom_dunland_female_name_50}}Wynna" />
 			</female_names>
 			<clan_names>
-				<name name="{=aom_dunland_clan_name_01}The Red Wolves" />
-				<name name="{=aom_dunland_clan_name_02}The Iron Fangs" />
-				<name name="{=aom_dunland_clan_name_03}The Stonebreakers" />
-				<name name="{=aom_dunland_clan_name_04}The Shadow Hunters" />
-				<name name="{=aom_dunland_clan_name_05}The Hill Ravagers" />
-				<name name="{=aom_dunland_clan_name_06}The Wild Blades" />
-				<name name="{=aom_dunland_clan_name_07}The Stormcallers" />
-				<name name="{=aom_dunland_clan_name_08}The Blood Ravens" />
-				<name name="{=aom_dunland_clan_name_09}The Bone Spears" />
-				<name name="{=aom_dunland_clan_name_10}The Earthshakers" />
-				<name name="{=aom_dunland_clan_name_11}The Thorned Shields" />
-				<name name="{=aom_dunland_clan_name_12}The Shadowed Wolves" />
-				<name name="{=aom_dunland_clan_name_13}The Broken Axes" />
-				<name name="{=aom_dunland_clan_name_14}The Raven Eyes" />
-				<name name="{=aom_dunland_clan_name_15}The Frosthowl Clan" />
-				<name name="{=aom_dunland_clan_name_16}The Ironbound" />
-				<name name="{=aom_dunland_clan_name_17}The Stone Fists" />
-				<name name="{=aom_dunland_clan_name_18}The Howling Gale" />
-				<name name="{=aom_dunland_clan_name_19}The Mountain Shadows" />
+				<name name="{{=aom_dunland_clan_name_01}}The Red Wolves" />
+				<name name="{{=aom_dunland_clan_name_02}}The Iron Fangs" />
+				<name name="{{=aom_dunland_clan_name_03}}The Stonebreakers" />
+				<name name="{{=aom_dunland_clan_name_04}}The Shadow Hunters" />
+				<name name="{{=aom_dunland_clan_name_05}}The Hill Ravagers" />
+				<name name="{{=aom_dunland_clan_name_06}}The Wild Blades" />
+				<name name="{{=aom_dunland_clan_name_07}}The Stormcallers" />
+				<name name="{{=aom_dunland_clan_name_08}}The Blood Ravens" />
+				<name name="{{=aom_dunland_clan_name_09}}The Bone Spears" />
+				<name name="{{=aom_dunland_clan_name_10}}The Earthshakers" />
+				<name name="{{=aom_dunland_clan_name_11}}The Thorned Shields" />
+				<name name="{{=aom_dunland_clan_name_12}}The Shadowed Wolves" />
+				<name name="{{=aom_dunland_clan_name_13}}The Broken Axes" />
+				<name name="{{=aom_dunland_clan_name_14}}The Raven Eyes" />
+				<name name="{{=aom_dunland_clan_name_15}}The Frosthowl Clan" />
+				<name name="{{=aom_dunland_clan_name_16}}The Ironbound" />
+				<name name="{{=aom_dunland_clan_name_17}}The Stone Fists" />
+				<name name="{{=aom_dunland_clan_name_18}}The Howling Gale" />
+				<name name="{{=aom_dunland_clan_name_19}}The Mountain Shadows" />
 			</clan_names>
 
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
@@ -394,130 +394,130 @@
 
 			<!-- LOTR names -->
 			<male_names>
-				<name name="{=aom_harad_male_name_1}Azaran" />
-				<name name="{=aom_harad_male_name_2}Zamir" />
-				<name name="{=aom_harad_male_name_3}Khalid" />
-				<name name="{=aom_harad_male_name_4}Rashid" />
-				<name name="{=aom_harad_male_name_5}Nazir" />
-				<name name="{=aom_harad_male_name_6}Jameel" />
-				<name name="{=aom_harad_male_name_7}Hasim" />
-				<name name="{=aom_harad_male_name_8}Faraj" />
-				<name name="{=aom_harad_male_name_9}Sahim" />
-				<name name="{=aom_harad_male_name_10}Tariq" />
-				<name name="{=aom_harad_male_name_11}Basim" />
-				<name name="{=aom_harad_male_name_12}Karim" />
-				<name name="{=aom_harad_male_name_13}Salim" />
-				<name name="{=aom_harad_male_name_14}Rayan" />
-				<name name="{=aom_harad_male_name_15}Zafar" />
-				<name name="{=aom_harad_male_name_16}Yasir" />
-				<name name="{=aom_harad_male_name_17}Hakeem" />
-				<name name="{=aom_harad_male_name_18}Ibrahim" />
-				<name name="{=aom_harad_male_name_19}Faisal" />
-				<name name="{=aom_harad_male_name_20}Najeeb" />
-				<name name="{=aom_harad_male_name_21}Munir" />
-				<name name="{=aom_harad_male_name_22}Ashraf" />
-				<name name="{=aom_harad_male_name_23}Zakwan" />
-				<name name="{=aom_harad_male_name_24}Azeem" />
-				<name name="{=aom_harad_male_name_25}Suleiman" />
-				<name name="{=aom_harad_male_name_26}Hakim" />
-				<name name="{=aom_harad_male_name_27}Jibril" />
-				<name name="{=aom_harad_male_name_28}Tahir" />
-				<name name="{=aom_harad_male_name_29}Rafiq" />
-				<name name="{=aom_harad_male_name_30}Malik" />
-				<name name="{=aom_harad_male_name_31}Zahir" />
-				<name name="{=aom_harad_male_name_32}Asim" />
-				<name name="{=aom_harad_male_name_33}Nabil" />
-				<name name="{=aom_harad_male_name_34}Omar" />
-				<name name="{=aom_harad_male_name_35}Qasim" />
-				<name name="{=aom_harad_male_name_36}Halim" />
-				<name name="{=aom_harad_male_name_37}Mansoor" />
-				<name name="{=aom_harad_male_name_38}Yahya" />
-				<name name="{=aom_harad_male_name_39}Shakir" />
-				<name name="{=aom_harad_male_name_40}Adil" />
-				<name name="{=aom_harad_male_name_41}Mahdi" />
-				<name name="{=aom_harad_male_name_42}Fahim" />
-				<name name="{=aom_harad_male_name_43}Latif" />
-				<name name="{=aom_harad_male_name_44}Rameez" />
-				<name name="{=aom_harad_male_name_45}Tameem" />
-				<name name="{=aom_harad_male_name_46}Yazid" />
-				<name name="{=aom_harad_male_name_47}Kamar" />
-				<name name="{=aom_harad_male_name_48}Hassan" />
-				<name name="{=aom_harad_male_name_49}Azim" />
-				<name name="{=aom_harad_male_name_50}Zubaid" />
+				<name name="{{=aom_harad_male_name_1}}Azaran" />
+				<name name="{{=aom_harad_male_name_2}}Zamir" />
+				<name name="{{=aom_harad_male_name_3}}Khalid" />
+				<name name="{{=aom_harad_male_name_4}}Rashid" />
+				<name name="{{=aom_harad_male_name_5}}Nazir" />
+				<name name="{{=aom_harad_male_name_6}}Jameel" />
+				<name name="{{=aom_harad_male_name_7}}Hasim" />
+				<name name="{{=aom_harad_male_name_8}}Faraj" />
+				<name name="{{=aom_harad_male_name_9}}Sahim" />
+				<name name="{{=aom_harad_male_name_10}}Tariq" />
+				<name name="{{=aom_harad_male_name_11}}Basim" />
+				<name name="{{=aom_harad_male_name_12}}Karim" />
+				<name name="{{=aom_harad_male_name_13}}Salim" />
+				<name name="{{=aom_harad_male_name_14}}Rayan" />
+				<name name="{{=aom_harad_male_name_15}}Zafar" />
+				<name name="{{=aom_harad_male_name_16}}Yasir" />
+				<name name="{{=aom_harad_male_name_17}}Hakeem" />
+				<name name="{{=aom_harad_male_name_18}}Ibrahim" />
+				<name name="{{=aom_harad_male_name_19}}Faisal" />
+				<name name="{{=aom_harad_male_name_20}}Najeeb" />
+				<name name="{{=aom_harad_male_name_21}}Munir" />
+				<name name="{{=aom_harad_male_name_22}}Ashraf" />
+				<name name="{{=aom_harad_male_name_23}}Zakwan" />
+				<name name="{{=aom_harad_male_name_24}}Azeem" />
+				<name name="{{=aom_harad_male_name_25}}Suleiman" />
+				<name name="{{=aom_harad_male_name_26}}Hakim" />
+				<name name="{{=aom_harad_male_name_27}}Jibril" />
+				<name name="{{=aom_harad_male_name_28}}Tahir" />
+				<name name="{{=aom_harad_male_name_29}}Rafiq" />
+				<name name="{{=aom_harad_male_name_30}}Malik" />
+				<name name="{{=aom_harad_male_name_31}}Zahir" />
+				<name name="{{=aom_harad_male_name_32}}Asim" />
+				<name name="{{=aom_harad_male_name_33}}Nabil" />
+				<name name="{{=aom_harad_male_name_34}}Omar" />
+				<name name="{{=aom_harad_male_name_35}}Qasim" />
+				<name name="{{=aom_harad_male_name_36}}Halim" />
+				<name name="{{=aom_harad_male_name_37}}Mansoor" />
+				<name name="{{=aom_harad_male_name_38}}Yahya" />
+				<name name="{{=aom_harad_male_name_39}}Shakir" />
+				<name name="{{=aom_harad_male_name_40}}Adil" />
+				<name name="{{=aom_harad_male_name_41}}Mahdi" />
+				<name name="{{=aom_harad_male_name_42}}Fahim" />
+				<name name="{{=aom_harad_male_name_43}}Latif" />
+				<name name="{{=aom_harad_male_name_44}}Rameez" />
+				<name name="{{=aom_harad_male_name_45}}Tameem" />
+				<name name="{{=aom_harad_male_name_46}}Yazid" />
+				<name name="{{=aom_harad_male_name_47}}Kamar" />
+				<name name="{{=aom_harad_male_name_48}}Hassan" />
+				<name name="{{=aom_harad_male_name_49}}Azim" />
+				<name name="{{=aom_harad_male_name_50}}Zubaid" />
 			</male_names>
 			<female_names>
-				<name name="{=aom_harad_female_name_1}Zahira" />
-				<name name="{=aom_harad_female_name_2}Nadia" />
-				<name name="{=aom_harad_female_name_3}Yasmin" />
-				<name name="{=aom_harad_female_name_4}Amira" />
-				<name name="{=aom_harad_female_name_5}Layla" />
-				<name name="{=aom_harad_female_name_6}Rania" />
-				<name name="{=aom_harad_female_name_7}Jamila" />
-				<name name="{=aom_harad_female_name_8}Hafsa" />
-				<name name="{=aom_harad_female_name_9}Zuleika" />
-				<name name="{=aom_harad_female_name_10}Amina" />
-				<name name="{=aom_harad_female_name_11}Salima" />
-				<name name="{=aom_harad_female_name_12}Lamia" />
-				<name name="{=aom_harad_female_name_13}Samira" />
-				<name name="{=aom_harad_female_name_14}Nazeera" />
-				<name name="{=aom_harad_female_name_15}Ruqaya" />
-				<name name="{=aom_harad_female_name_16}Halima" />
-				<name name="{=aom_harad_female_name_17}Aziza" />
-				<name name="{=aom_harad_female_name_18}Khadija" />
-				<name name="{=aom_harad_female_name_19}Fadwa" />
-				<name name="{=aom_harad_female_name_20}Safiya" />
-				<name name="{=aom_harad_female_name_21}Aalia" />
-				<name name="{=aom_harad_female_name_22}Nawal" />
-				<name name="{=aom_harad_female_name_23}Bushra" />
-				<name name="{=aom_harad_female_name_24}Zahra" />
-				<name name="{=aom_harad_female_name_25}Rihana" />
-				<name name="{=aom_harad_female_name_26}Sumaya" />
-				<name name="{=aom_harad_female_name_27}Naima" />
-				<name name="{=aom_harad_female_name_28}Rashida" />
-				<name name="{=aom_harad_female_name_29}Zainab" />
-				<name name="{=aom_harad_female_name_30}Shaima" />
-				<name name="{=aom_harad_female_name_31}Munira" />
-				<name name="{=aom_harad_female_name_32}Fatima" />
-				<name name="{=aom_harad_female_name_33}Shirin" />
-				<name name="{=aom_harad_female_name_34}Saniya" />
-				<name name="{=aom_harad_female_name_35}Malika" />
-				<name name="{=aom_harad_female_name_36}Afiya" />
-				<name name="{=aom_harad_female_name_37}Zain" />
-				<name name="{=aom_harad_female_name_38}Farida" />
-				<name name="{=aom_harad_female_name_39}Amani" />
-				<name name="{=aom_harad_female_name_40}Nazira" />
-				<name name="{=aom_harad_female_name_41}Huda" />
-				<name name="{=aom_harad_female_name_42}Rahma" />
-				<name name="{=aom_harad_female_name_43}Yamila" />
-				<name name="{=aom_harad_female_name_44}Shama" />
-				<name name="{=aom_harad_female_name_45}Tamina" />
-				<name name="{=aom_harad_female_name_46}Zubaida" />
-				<name name="{=aom_harad_female_name_47}Rabiya" />
-				<name name="{=aom_harad_female_name_48}Asma" />
-				<name name="{=aom_harad_female_name_49}Latifa" />
-				<name name="{=aom_harad_female_name_50}Saida" />
+				<name name="{{=aom_harad_female_name_1}}Zahira" />
+				<name name="{{=aom_harad_female_name_2}}Nadia" />
+				<name name="{{=aom_harad_female_name_3}}Yasmin" />
+				<name name="{{=aom_harad_female_name_4}}Amira" />
+				<name name="{{=aom_harad_female_name_5}}Layla" />
+				<name name="{{=aom_harad_female_name_6}}Rania" />
+				<name name="{{=aom_harad_female_name_7}}Jamila" />
+				<name name="{{=aom_harad_female_name_8}}Hafsa" />
+				<name name="{{=aom_harad_female_name_9}}Zuleika" />
+				<name name="{{=aom_harad_female_name_10}}Amina" />
+				<name name="{{=aom_harad_female_name_11}}Salima" />
+				<name name="{{=aom_harad_female_name_12}}Lamia" />
+				<name name="{{=aom_harad_female_name_13}}Samira" />
+				<name name="{{=aom_harad_female_name_14}}Nazeera" />
+				<name name="{{=aom_harad_female_name_15}}Ruqaya" />
+				<name name="{{=aom_harad_female_name_16}}Halima" />
+				<name name="{{=aom_harad_female_name_17}}Aziza" />
+				<name name="{{=aom_harad_female_name_18}}Khadija" />
+				<name name="{{=aom_harad_female_name_19}}Fadwa" />
+				<name name="{{=aom_harad_female_name_20}}Safiya" />
+				<name name="{{=aom_harad_female_name_21}}Aalia" />
+				<name name="{{=aom_harad_female_name_22}}Nawal" />
+				<name name="{{=aom_harad_female_name_23}}Bushra" />
+				<name name="{{=aom_harad_female_name_24}}Zahra" />
+				<name name="{{=aom_harad_female_name_25}}Rihana" />
+				<name name="{{=aom_harad_female_name_26}}Sumaya" />
+				<name name="{{=aom_harad_female_name_27}}Naima" />
+				<name name="{{=aom_harad_female_name_28}}Rashida" />
+				<name name="{{=aom_harad_female_name_29}}Zainab" />
+				<name name="{{=aom_harad_female_name_30}}Shaima" />
+				<name name="{{=aom_harad_female_name_31}}Munira" />
+				<name name="{{=aom_harad_female_name_32}}Fatima" />
+				<name name="{{=aom_harad_female_name_33}}Shirin" />
+				<name name="{{=aom_harad_female_name_34}}Saniya" />
+				<name name="{{=aom_harad_female_name_35}}Malika" />
+				<name name="{{=aom_harad_female_name_36}}Afiya" />
+				<name name="{{=aom_harad_female_name_37}}Zain" />
+				<name name="{{=aom_harad_female_name_38}}Farida" />
+				<name name="{{=aom_harad_female_name_39}}Amani" />
+				<name name="{{=aom_harad_female_name_40}}Nazira" />
+				<name name="{{=aom_harad_female_name_41}}Huda" />
+				<name name="{{=aom_harad_female_name_42}}Rahma" />
+				<name name="{{=aom_harad_female_name_43}}Yamila" />
+				<name name="{{=aom_harad_female_name_44}}Shama" />
+				<name name="{{=aom_harad_female_name_45}}Tamina" />
+				<name name="{{=aom_harad_female_name_46}}Zubaida" />
+				<name name="{{=aom_harad_female_name_47}}Rabiya" />
+				<name name="{{=aom_harad_female_name_48}}Asma" />
+				<name name="{{=aom_harad_female_name_49}}Latifa" />
+				<name name="{{=aom_harad_female_name_50}}Saida" />
 			</female_names>
 			<clan_names>
-				<name name="{=aom_harad_clan_name_01}The Burning Sands" />
-				<name name="{=aom_harad_clan_name_02}The Golden Blades" />
-				<name name="{=aom_harad_clan_name_03}The Desert Suns" />
-				<name name="{=aom_harad_clan_name_04}The Red Spears" />
-				<name name="{=aom_harad_clan_name_05}The Dune Riders" />
-				<name name="{=aom_harad_clan_name_06}The Scorching Wind" />
-				<name name="{=aom_harad_clan_name_07}The Sandstorm Warriors" />
-				<name name="{=aom_harad_clan_name_08}The Serpent Fangs" />
-				<name name="{=aom_harad_clan_name_09}The Black Scorpions" />
-				<name name="{=aom_harad_clan_name_10}The Mûmakil Keepers" />
-				<name name="{=aom_harad_clan_name_11}The Oasis Guardians" />
-				<name name="{=aom_harad_clan_name_12}The Firebrands" />
-				<name name="{=aom_harad_clan_name_13}The Crimson Shields" />
-				<name name="{=aom_harad_clan_name_14}The Golden Crescent" />
-				<name name="{=aom_harad_clan_name_15}The Silent Shadows" />
-				<name name="{=aom_harad_clan_name_16}The Sunstrikers" />
-				<name name="{=aom_harad_clan_name_17}The Dune Wardens" />
-				<name name="{=aom_harad_clan_name_18}The Serpent Riders" />
-				<name name="{=aom_harad_clan_name_19}The Blazing Hooves" />
-				<name name="{=aom_harad_clan_name_20}The Twilight Sand" />
+				<name name="{{=aom_harad_clan_name_01}}The Burning Sands" />
+				<name name="{{=aom_harad_clan_name_02}}The Golden Blades" />
+				<name name="{{=aom_harad_clan_name_03}}The Desert Suns" />
+				<name name="{{=aom_harad_clan_name_04}}The Red Spears" />
+				<name name="{{=aom_harad_clan_name_05}}The Dune Riders" />
+				<name name="{{=aom_harad_clan_name_06}}The Scorching Wind" />
+				<name name="{{=aom_harad_clan_name_07}}The Sandstorm Warriors" />
+				<name name="{{=aom_harad_clan_name_08}}The Serpent Fangs" />
+				<name name="{{=aom_harad_clan_name_09}}The Black Scorpions" />
+				<name name="{{=aom_harad_clan_name_10}}The Mûmakil Keepers" />
+				<name name="{{=aom_harad_clan_name_11}}The Oasis Guardians" />
+				<name name="{{=aom_harad_clan_name_12}}The Firebrands" />
+				<name name="{{=aom_harad_clan_name_13}}The Crimson Shields" />
+				<name name="{{=aom_harad_clan_name_14}}The Golden Crescent" />
+				<name name="{{=aom_harad_clan_name_15}}The Silent Shadows" />
+				<name name="{{=aom_harad_clan_name_16}}The Sunstrikers" />
+				<name name="{{=aom_harad_clan_name_17}}The Dune Wardens" />
+				<name name="{{=aom_harad_clan_name_18}}The Serpent Riders" />
+				<name name="{{=aom_harad_clan_name_19}}The Blazing Hooves" />
+				<name name="{{=aom_harad_clan_name_20}}The Twilight Sand" />
 			</clan_names>
 
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
@@ -665,130 +665,130 @@
 
 			<!-- LOTR names -->
 			<male_names>
-				<name name="{=aom_rohan_male_name_1}Eadred" />
-				<name name="{=aom_rohan_male_name_2}Eomund" />
-				<name name="{=aom_rohan_male_name_3}Ceorl" />
-				<name name="{=aom_rohan_male_name_4}Aethelric" />
-				<name name="{=aom_rohan_male_name_5}Beorhthelm" />
-				<name name="{=aom_rohan_male_name_6}Ealdwulf" />
-				<name name="{=aom_rohan_male_name_7}Wulfgar" />
-				<name name="{=aom_rohan_male_name_8}Theodric" />
-				<name name="{=aom_rohan_male_name_9}Ealric" />
-				<name name="{=aom_rohan_male_name_10}Bryhtwulf" />
-				<name name="{=aom_rohan_male_name_11}Theodwine" />
-				<name name="{=aom_rohan_male_name_12}Cynric" />
-				<name name="{=aom_rohan_male_name_13}Eormenric" />
-				<name name="{=aom_rohan_male_name_14}Eadhelm" />
-				<name name="{=aom_rohan_male_name_15}Aldwulf" />
-				<name name="{=aom_rohan_male_name_16}Frithgar" />
-				<name name="{=aom_rohan_male_name_17}Oswine" />
-				<name name="{=aom_rohan_male_name_18}Leofwine" />
-				<name name="{=aom_rohan_male_name_19}Theobald" />
-				<name name="{=aom_rohan_male_name_20}Wynfrith" />
-				<name name="{=aom_rohan_male_name_21}Hereward" />
-				<name name="{=aom_rohan_male_name_22}Eothain" />
-				<name name="{=aom_rohan_male_name_23}Guthric" />
-				<name name="{=aom_rohan_male_name_24}Theowulf" />
-				<name name="{=aom_rohan_male_name_25}Framric" />
-				<name name="{=aom_rohan_male_name_26}Eadgar" />
-				<name name="{=aom_rohan_male_name_27}Heremod" />
-				<name name="{=aom_rohan_male_name_28}Beornhelm" />
-				<name name="{=aom_rohan_male_name_29}Sigefred" />
-				<name name="{=aom_rohan_male_name_30}Theodenric" />
-				<name name="{=aom_rohan_male_name_31}Ealwulf" />
-				<name name="{=aom_rohan_male_name_32}Garmund" />
-				<name name="{=aom_rohan_male_name_33}Hrothgar" />
-				<name name="{=aom_rohan_male_name_34}Eowald" />
-				<name name="{=aom_rohan_male_name_35}Ceowulf" />
-				<name name="{=aom_rohan_male_name_36}Faramund" />
-				<name name="{=aom_rohan_male_name_37}Aethelhelm" />
-				<name name="{=aom_rohan_male_name_38}Eofor" />
-				<name name="{=aom_rohan_male_name_39}Wynstan" />
-				<name name="{=aom_rohan_male_name_40}Herewine" />
-				<name name="{=aom_rohan_male_name_41}Guthwine" />
-				<name name="{=aom_rohan_male_name_42}Cynwine" />
-				<name name="{=aom_rohan_male_name_43}Aelfric" />
-				<name name="{=aom_rohan_male_name_44}Wulfstan" />
-				<name name="{=aom_rohan_male_name_45}Beorhtwine" />
-				<name name="{=aom_rohan_male_name_46}Theomund" />
-				<name name="{=aom_rohan_male_name_47}Ceowine" />
-				<name name="{=aom_rohan_male_name_48}Theodhelm" />
-				<name name="{=aom_rohan_male_name_49}Leofhelm" />
-				<name name="{=aom_rohan_male_name_50}Aelfwine" />
-				<name name="{=aom_rohan_male_name_51}Wulfnoth" />
-				<name name="{=aom_rohan_male_name_52}Thelward" />
-				<name name="{=aom_rohan_male_name_53}Thelme" />
-				<name name="{=aom_rohan_male_name_54}Eormred" />
-				<name name="{=aom_rohan_male_name_55}Aelwyne" />
-				<name name="{=aom_rohan_male_name_56}Ilfgar" />
-				<name name="{=aom_rohan_male_name_57}Alfgar" />
-				<name name="{=aom_rohan_male_name_58}Ulfar" />
-				<name name="{=aom_rohan_male_name_59}Leofar" />
-				<name name="{=aom_rohan_male_name_60}Leofric" />
+				<name name="{{=aom_rohan_male_name_1}}Eadred" />
+				<name name="{{=aom_rohan_male_name_2}}Eomund" />
+				<name name="{{=aom_rohan_male_name_3}}Ceorl" />
+				<name name="{{=aom_rohan_male_name_4}}Aethelric" />
+				<name name="{{=aom_rohan_male_name_5}}Beorhthelm" />
+				<name name="{{=aom_rohan_male_name_6}}Ealdwulf" />
+				<name name="{{=aom_rohan_male_name_7}}Wulfgar" />
+				<name name="{{=aom_rohan_male_name_8}}Theodric" />
+				<name name="{{=aom_rohan_male_name_9}}Ealric" />
+				<name name="{{=aom_rohan_male_name_10}}Bryhtwulf" />
+				<name name="{{=aom_rohan_male_name_11}}Theodwine" />
+				<name name="{{=aom_rohan_male_name_12}}Cynric" />
+				<name name="{{=aom_rohan_male_name_13}}Eormenric" />
+				<name name="{{=aom_rohan_male_name_14}}Eadhelm" />
+				<name name="{{=aom_rohan_male_name_15}}Aldwulf" />
+				<name name="{{=aom_rohan_male_name_16}}Frithgar" />
+				<name name="{{=aom_rohan_male_name_17}}Oswine" />
+				<name name="{{=aom_rohan_male_name_18}}Leofwine" />
+				<name name="{{=aom_rohan_male_name_19}}Theobald" />
+				<name name="{{=aom_rohan_male_name_20}}Wynfrith" />
+				<name name="{{=aom_rohan_male_name_21}}Hereward" />
+				<name name="{{=aom_rohan_male_name_22}}Eothain" />
+				<name name="{{=aom_rohan_male_name_23}}Guthric" />
+				<name name="{{=aom_rohan_male_name_24}}Theowulf" />
+				<name name="{{=aom_rohan_male_name_25}}Framric" />
+				<name name="{{=aom_rohan_male_name_26}}Eadgar" />
+				<name name="{{=aom_rohan_male_name_27}}Heremod" />
+				<name name="{{=aom_rohan_male_name_28}}Beornhelm" />
+				<name name="{{=aom_rohan_male_name_29}}Sigefred" />
+				<name name="{{=aom_rohan_male_name_30}}Theodenric" />
+				<name name="{{=aom_rohan_male_name_31}}Ealwulf" />
+				<name name="{{=aom_rohan_male_name_32}}Garmund" />
+				<name name="{{=aom_rohan_male_name_33}}Hrothgar" />
+				<name name="{{=aom_rohan_male_name_34}}Eowald" />
+				<name name="{{=aom_rohan_male_name_35}}Ceowulf" />
+				<name name="{{=aom_rohan_male_name_36}}Faramund" />
+				<name name="{{=aom_rohan_male_name_37}}Aethelhelm" />
+				<name name="{{=aom_rohan_male_name_38}}Eofor" />
+				<name name="{{=aom_rohan_male_name_39}}Wynstan" />
+				<name name="{{=aom_rohan_male_name_40}}Herewine" />
+				<name name="{{=aom_rohan_male_name_41}}Guthwine" />
+				<name name="{{=aom_rohan_male_name_42}}Cynwine" />
+				<name name="{{=aom_rohan_male_name_43}}Aelfric" />
+				<name name="{{=aom_rohan_male_name_44}}Wulfstan" />
+				<name name="{{=aom_rohan_male_name_45}}Beorhtwine" />
+				<name name="{{=aom_rohan_male_name_46}}Theomund" />
+				<name name="{{=aom_rohan_male_name_47}}Ceowine" />
+				<name name="{{=aom_rohan_male_name_48}}Theodhelm" />
+				<name name="{{=aom_rohan_male_name_49}}Leofhelm" />
+				<name name="{{=aom_rohan_male_name_50}}Aelfwine" />
+				<name name="{{=aom_rohan_male_name_51}}Wulfnoth" />
+				<name name="{{=aom_rohan_male_name_52}}Thelward" />
+				<name name="{{=aom_rohan_male_name_53}}Thelme" />
+				<name name="{{=aom_rohan_male_name_54}}Eormred" />
+				<name name="{{=aom_rohan_male_name_55}}Aelwyne" />
+				<name name="{{=aom_rohan_male_name_56}}Ilfgar" />
+				<name name="{{=aom_rohan_male_name_57}}Alfgar" />
+				<name name="{{=aom_rohan_male_name_58}}Ulfar" />
+				<name name="{{=aom_rohan_male_name_59}}Leofar" />
+				<name name="{{=aom_rohan_male_name_60}}Leofric" />
 			</male_names>
 			<female_names>
-				<name name="{=aom_rohan_female_name_1}Eadgifu" />
-				<name name="{=aom_rohan_female_name_2}Theodwyn" />
-				<name name="{=aom_rohan_female_name_3}Aethelhild" />
-				<name name="{=aom_rohan_female_name_4}Cynethryth" />
-				<name name="{=aom_rohan_female_name_5}Beorthild" />
-				<name name="{=aom_rohan_female_name_6}Frithwyn" />
-				<name name="{=aom_rohan_female_name_7}Wynfrith" />
-				<name name="{=aom_rohan_female_name_8}Eormenhild" />
-				<name name="{=aom_rohan_female_name_9}Hildith" />
-				<name name="{=aom_rohan_female_name_10}Eowynne" />
-				<name name="{=aom_rohan_female_name_11}Leofwyn" />
-				<name name="{=aom_rohan_female_name_12}Ealhild" />
-				<name name="{=aom_rohan_female_name_13}Theowyn" />
-				<name name="{=aom_rohan_female_name_14}Wynfrida" />
-				<name name="{=aom_rohan_female_name_15}Aldgifu" />
-				<name name="{=aom_rohan_female_name_16}Herelind" />
-				<name name="{=aom_rohan_female_name_17}Brynhild" />
-				<name name="{=aom_rohan_female_name_18}Sigewyn" />
-				<name name="{=aom_rohan_female_name_19}Eadwyn" />
-				<name name="{=aom_rohan_female_name_20}Cynwyn" />
-				<name name="{=aom_rohan_female_name_21}Hildred" />
-				<name name="{=aom_rohan_female_name_22}Ethelwyn" />
-				<name name="{=aom_rohan_female_name_23}Ceolwyn" />
-				<name name="{=aom_rohan_female_name_24}Frithlind" />
-				<name name="{=aom_rohan_female_name_25}Theodith" />
-				<name name="{=aom_rohan_female_name_26}Ethelfrida" />
-				<name name="{=aom_rohan_female_name_27}Beorhild" />
-				<name name="{=aom_rohan_female_name_28}Eormhild" />
-				<name name="{=aom_rohan_female_name_29}Leofhild" />
-				<name name="{=aom_rohan_female_name_30}Aldwyn" />
-				<name name="{=aom_rohan_female_name_31}Wynhild" />
-				<name name="{=aom_rohan_female_name_32}Hildwyn" />
-				<name name="{=aom_rohan_female_name_33}Eadfrida" />
-				<name name="{=aom_rohan_female_name_34}Theodlin" />
-				<name name="{=aom_rohan_female_name_35}Cynfrith" />
-				<name name="{=aom_rohan_female_name_36}Guthwyn" />
-				<name name="{=aom_rohan_female_name_37}Hildwynne" />
-				<name name="{=aom_rohan_female_name_38}Ealhfrida" />
-				<name name="{=aom_rohan_female_name_39}Sigith" />
-				<name name="{=aom_rohan_female_name_40}Wynfrithia" />
-				<name name="{=aom_rohan_female_name_41}Eadgitha" />
-				<name name="{=aom_rohan_female_name_42}Aethelreda" />
-				<name name="{=aom_rohan_female_name_43}Beorthwyn" />
-				<name name="{=aom_rohan_female_name_44}Frithgifu" />
-				<name name="{=aom_rohan_female_name_45}Theodfrith" />
-				<name name="{=aom_rohan_female_name_46}Wynhilda" />
-				<name name="{=aom_rohan_female_name_47}Ealhfrith" />
-				<name name="{=aom_rohan_female_name_48}Cynethild" />
-				<name name="{=aom_rohan_female_name_49}Ealhwyn" />
-				<name name="{=aom_rohan_female_name_50}Eadwynne" />
+				<name name="{{=aom_rohan_female_name_1}}Eadgifu" />
+				<name name="{{=aom_rohan_female_name_2}}Theodwyn" />
+				<name name="{{=aom_rohan_female_name_3}}Aethelhild" />
+				<name name="{{=aom_rohan_female_name_4}}Cynethryth" />
+				<name name="{{=aom_rohan_female_name_5}}Beorthild" />
+				<name name="{{=aom_rohan_female_name_6}}Frithwyn" />
+				<name name="{{=aom_rohan_female_name_7}}Wynfrith" />
+				<name name="{{=aom_rohan_female_name_8}}Eormenhild" />
+				<name name="{{=aom_rohan_female_name_9}}Hildith" />
+				<name name="{{=aom_rohan_female_name_10}}Eowynne" />
+				<name name="{{=aom_rohan_female_name_11}}Leofwyn" />
+				<name name="{{=aom_rohan_female_name_12}}Ealhild" />
+				<name name="{{=aom_rohan_female_name_13}}Theowyn" />
+				<name name="{{=aom_rohan_female_name_14}}Wynfrida" />
+				<name name="{{=aom_rohan_female_name_15}}Aldgifu" />
+				<name name="{{=aom_rohan_female_name_16}}Herelind" />
+				<name name="{{=aom_rohan_female_name_17}}Brynhild" />
+				<name name="{{=aom_rohan_female_name_18}}Sigewyn" />
+				<name name="{{=aom_rohan_female_name_19}}Eadwyn" />
+				<name name="{{=aom_rohan_female_name_20}}Cynwyn" />
+				<name name="{{=aom_rohan_female_name_21}}Hildred" />
+				<name name="{{=aom_rohan_female_name_22}}Ethelwyn" />
+				<name name="{{=aom_rohan_female_name_23}}Ceolwyn" />
+				<name name="{{=aom_rohan_female_name_24}}Frithlind" />
+				<name name="{{=aom_rohan_female_name_25}}Theodith" />
+				<name name="{{=aom_rohan_female_name_26}}Ethelfrida" />
+				<name name="{{=aom_rohan_female_name_27}}Beorhild" />
+				<name name="{{=aom_rohan_female_name_28}}Eormhild" />
+				<name name="{{=aom_rohan_female_name_29}}Leofhild" />
+				<name name="{{=aom_rohan_female_name_30}}Aldwyn" />
+				<name name="{{=aom_rohan_female_name_31}}Wynhild" />
+				<name name="{{=aom_rohan_female_name_32}}Hildwyn" />
+				<name name="{{=aom_rohan_female_name_33}}Eadfrida" />
+				<name name="{{=aom_rohan_female_name_34}}Theodlin" />
+				<name name="{{=aom_rohan_female_name_35}}Cynfrith" />
+				<name name="{{=aom_rohan_female_name_36}}Guthwyn" />
+				<name name="{{=aom_rohan_female_name_37}}Hildwynne" />
+				<name name="{{=aom_rohan_female_name_38}}Ealhfrida" />
+				<name name="{{=aom_rohan_female_name_39}}Sigith" />
+				<name name="{{=aom_rohan_female_name_40}}Wynfrithia" />
+				<name name="{{=aom_rohan_female_name_41}}Eadgitha" />
+				<name name="{{=aom_rohan_female_name_42}}Aethelreda" />
+				<name name="{{=aom_rohan_female_name_43}}Beorthwyn" />
+				<name name="{{=aom_rohan_female_name_44}}Frithgifu" />
+				<name name="{{=aom_rohan_female_name_45}}Theodfrith" />
+				<name name="{{=aom_rohan_female_name_46}}Wynhilda" />
+				<name name="{{=aom_rohan_female_name_47}}Ealhfrith" />
+				<name name="{{=aom_rohan_female_name_48}}Cynethild" />
+				<name name="{{=aom_rohan_female_name_49}}Ealhwyn" />
+				<name name="{{=aom_rohan_female_name_50}}Eadwynne" />
 			</female_names>
 			<clan_names>
-				<name name="{=aom_rohan_clan_name_01}Harolding" />
-				<name name="{=aom_rohan_clan_name_02}Earfening" />
-				<name name="{=aom_rohan_clan_name_03}Aldoringas" />
-				<name name="{=aom_rohan_clan_name_04}Hamaingas" />
-				<name name="{=aom_rohan_clan_name_05}Arngriming" />
-				<name name="{=aom_rohan_clan_name_06}Sweordbora" />
-				<name name="{=aom_rohan_clan_name_07}Wundeming" />
-				<name name="{=aom_rohan_clan_name_08}Marovanding" />
-				<name name="{=aom_rohan_clan_name_09}Kalmundas" />
-				<name name="{=aom_rohan_clan_name_10}Earmynding" />
+				<name name="{{=aom_rohan_clan_name_01}}Harolding" />
+				<name name="{{=aom_rohan_clan_name_02}}Earfening" />
+				<name name="{{=aom_rohan_clan_name_03}}Aldoringas" />
+				<name name="{{=aom_rohan_clan_name_04}}Hamaingas" />
+				<name name="{{=aom_rohan_clan_name_05}}Arngriming" />
+				<name name="{{=aom_rohan_clan_name_06}}Sweordbora" />
+				<name name="{{=aom_rohan_clan_name_07}}Wundeming" />
+				<name name="{{=aom_rohan_clan_name_08}}Marovanding" />
+				<name name="{{=aom_rohan_clan_name_09}}Kalmundas" />
+				<name name="{{=aom_rohan_clan_name_10}}Earmynding" />
 			</clan_names>
 
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
@@ -934,120 +934,120 @@
 
 			<!-- LOTR names -->
 			<male_names>
-				<name name="{=aom_rhun_male_name_1}Khalrud" />
-				<name name="{=aom_rhun_male_name_2}Torgash" />
-				<name name="{=aom_rhun_male_name_3}Vaskir" />
-				<name name="{=aom_rhun_male_name_4}Rhazir" />
-				<name name="{=aom_rhun_male_name_5}Nazruk" />
-				<name name="{=aom_rhun_male_name_6}Tharun" />
-				<name name="{=aom_rhun_male_name_7}Dagrim" />
-				<name name="{=aom_rhun_male_name_8}Zarnash" />
-				<name name="{=aom_rhun_male_name_9}Varlek" />
-				<name name="{=aom_rhun_male_name_10}Fazrik" />
-				<name name="{=aom_rhun_male_name_11}Orzun" />
-				<name name="{=aom_rhun_male_name_12}Khulgar" />
-				<name name="{=aom_rhun_male_name_13}Durzag" />
-				<name name="{=aom_rhun_male_name_14}Marok" />
-				<name name="{=aom_rhun_male_name_15}Zahgrim" />
-				<name name="{=aom_rhun_male_name_16}Narash" />
-				<name name="{=aom_rhun_male_name_17}Tahrik" />
-				<name name="{=aom_rhun_male_name_18}Vazrik" />
-				<name name="{=aom_rhun_male_name_19}Uzrad" />
-				<name name="{=aom_rhun_male_name_20}Zhoram" />
-				<name name="{=aom_rhun_male_name_21}Rhashad" />
-				<name name="{=aom_rhun_male_name_22}Barkhan" />
-				<name name="{=aom_rhun_male_name_23}Sargul" />
-				<name name="{=aom_rhun_male_name_24}Thurgan" />
-				<name name="{=aom_rhun_male_name_25}Varim" />
-				<name name="{=aom_rhun_male_name_26}Mazrik" />
-				<name name="{=aom_rhun_male_name_27}Khalzar" />
-				<name name="{=aom_rhun_male_name_28}Nashor" />
-				<name name="{=aom_rhun_male_name_29}Gurash" />
-				<name name="{=aom_rhun_male_name_30}Durzag" />
-				<name name="{=aom_rhun_male_name_31}Zharkal" />
-				<name name="{=aom_rhun_male_name_32}Torakh" />
-				<name name="{=aom_rhun_male_name_33}Farnul" />
-				<name name="{=aom_rhun_male_name_34}Marzuk" />
-				<name name="{=aom_rhun_male_name_35}Zharun" />
-				<name name="{=aom_rhun_male_name_36}Naruk" />
-				<name name="{=aom_rhun_male_name_37}Sargan" />
-				<name name="{=aom_rhun_male_name_38}Thurmik" />
-				<name name="{=aom_rhun_male_name_39}Dazrik" />
-				<name name="{=aom_rhun_male_name_40}Kharnul" />
-				<name name="{=aom_rhun_male_name_41}Vashkir" />
-				<name name="{=aom_rhun_male_name_42}Rhodan" />
-				<name name="{=aom_rhun_male_name_43}Tazruk" />
-				<name name="{=aom_rhun_male_name_44}Gorash" />
-				<name name="{=aom_rhun_male_name_45}Nazrin" />
-				<name name="{=aom_rhun_male_name_46}Tharkal" />
-				<name name="{=aom_rhun_male_name_47}Mazhad" />
-				<name name="{=aom_rhun_male_name_48}Orzrik" />
-				<name name="{=aom_rhun_male_name_49}Zharnak" />
-				<name name="{=aom_rhun_male_name_50}Farzuk" />
+				<name name="{{=aom_rhun_male_name_1}}Khalrud" />
+				<name name="{{=aom_rhun_male_name_2}}Torgash" />
+				<name name="{{=aom_rhun_male_name_3}}Vaskir" />
+				<name name="{{=aom_rhun_male_name_4}}Rhazir" />
+				<name name="{{=aom_rhun_male_name_5}}Nazruk" />
+				<name name="{{=aom_rhun_male_name_6}}Tharun" />
+				<name name="{{=aom_rhun_male_name_7}}Dagrim" />
+				<name name="{{=aom_rhun_male_name_8}}Zarnash" />
+				<name name="{{=aom_rhun_male_name_9}}Varlek" />
+				<name name="{{=aom_rhun_male_name_10}}Fazrik" />
+				<name name="{{=aom_rhun_male_name_11}}Orzun" />
+				<name name="{{=aom_rhun_male_name_12}}Khulgar" />
+				<name name="{{=aom_rhun_male_name_13}}Durzag" />
+				<name name="{{=aom_rhun_male_name_14}}Marok" />
+				<name name="{{=aom_rhun_male_name_15}}Zahgrim" />
+				<name name="{{=aom_rhun_male_name_16}}Narash" />
+				<name name="{{=aom_rhun_male_name_17}}Tahrik" />
+				<name name="{{=aom_rhun_male_name_18}}Vazrik" />
+				<name name="{{=aom_rhun_male_name_19}}Uzrad" />
+				<name name="{{=aom_rhun_male_name_20}}Zhoram" />
+				<name name="{{=aom_rhun_male_name_21}}Rhashad" />
+				<name name="{{=aom_rhun_male_name_22}}Barkhan" />
+				<name name="{{=aom_rhun_male_name_23}}Sargul" />
+				<name name="{{=aom_rhun_male_name_24}}Thurgan" />
+				<name name="{{=aom_rhun_male_name_25}}Varim" />
+				<name name="{{=aom_rhun_male_name_26}}Mazrik" />
+				<name name="{{=aom_rhun_male_name_27}}Khalzar" />
+				<name name="{{=aom_rhun_male_name_28}}Nashor" />
+				<name name="{{=aom_rhun_male_name_29}}Gurash" />
+				<name name="{{=aom_rhun_male_name_30}}Durzag" />
+				<name name="{{=aom_rhun_male_name_31}}Zharkal" />
+				<name name="{{=aom_rhun_male_name_32}}Torakh" />
+				<name name="{{=aom_rhun_male_name_33}}Farnul" />
+				<name name="{{=aom_rhun_male_name_34}}Marzuk" />
+				<name name="{{=aom_rhun_male_name_35}}Zharun" />
+				<name name="{{=aom_rhun_male_name_36}}Naruk" />
+				<name name="{{=aom_rhun_male_name_37}}Sargan" />
+				<name name="{{=aom_rhun_male_name_38}}Thurmik" />
+				<name name="{{=aom_rhun_male_name_39}}Dazrik" />
+				<name name="{{=aom_rhun_male_name_40}}Kharnul" />
+				<name name="{{=aom_rhun_male_name_41}}Vashkir" />
+				<name name="{{=aom_rhun_male_name_42}}Rhodan" />
+				<name name="{{=aom_rhun_male_name_43}}Tazruk" />
+				<name name="{{=aom_rhun_male_name_44}}Gorash" />
+				<name name="{{=aom_rhun_male_name_45}}Nazrin" />
+				<name name="{{=aom_rhun_male_name_46}}Tharkal" />
+				<name name="{{=aom_rhun_male_name_47}}Mazhad" />
+				<name name="{{=aom_rhun_male_name_48}}Orzrik" />
+				<name name="{{=aom_rhun_male_name_49}}Zharnak" />
+				<name name="{{=aom_rhun_male_name_50}}Farzuk" />
 			</male_names>
 			<female_names>
-				<name name="{=aom_rhun_female_name_1}Rhazira" />
-				<name name="{=aom_rhun_female_name_2}Tazmina" />
-				<name name="{=aom_rhun_female_name_3}Vazira" />
-				<name name="{=aom_rhun_female_name_4}Mazrika" />
-				<name name="{=aom_rhun_female_name_5}Zahrina" />
-				<name name="{=aom_rhun_female_name_6}Khalira" />
-				<name name="{=aom_rhun_female_name_7}Orzila" />
-				<name name="{=aom_rhun_female_name_8}Durzanna" />
-				<name name="{=aom_rhun_female_name_9}Narima" />
-				<name name="{=aom_rhun_female_name_10}Tharila" />
-				<name name="{=aom_rhun_female_name_11}Varila" />
-				<name name="{=aom_rhun_female_name_12}Dazira" />
-				<name name="{=aom_rhun_female_name_13}Rhamira" />
-				<name name="{=aom_rhun_female_name_14}Fazira" />
-				<name name="{=aom_rhun_female_name_15}Uzrila" />
-				<name name="{=aom_rhun_female_name_16}Zhalina" />
-				<name name="{=aom_rhun_female_name_17}Khulisa" />
-				<name name="{=aom_rhun_female_name_18}Barkhira" />
-				<name name="{=aom_rhun_female_name_19}Nariza" />
-				<name name="{=aom_rhun_female_name_20}Tharnila" />
-				<name name="{=aom_rhun_female_name_21}Rhashira" />
-				<name name="{=aom_rhun_female_name_22}Mazhara" />
-				<name name="{=aom_rhun_female_name_23}Varshira" />
-				<name name="{=aom_rhun_female_name_24}Zharnira" />
-				<name name="{=aom_rhun_female_name_25}Sarkira" />
-				<name name="{=aom_rhun_female_name_26}Farniza" />
-				<name name="{=aom_rhun_female_name_27}Goriza" />
-				<name name="{=aom_rhun_female_name_28}Nazira" />
-				<name name="{=aom_rhun_female_name_29}Kharnila" />
-				<name name="{=aom_rhun_female_name_30}Torila" />
-				<name name="{=aom_rhun_female_name_31}Dhurina" />
-				<name name="{=aom_rhun_female_name_32}Vashila" />
-				<name name="{=aom_rhun_female_name_33}Nariza" />
-				<name name="{=aom_rhun_female_name_34}Fazrim" />
-				<name name="{=aom_rhun_female_name_35}Mazhira" />
-				<name name="{=aom_rhun_female_name_36}Khalia" />
-				<name name="{=aom_rhun_female_name_37}Sarniza" />
-				<name name="{=aom_rhun_female_name_38}Orlina" />
-				<name name="{=aom_rhun_female_name_39}Ruhana" />
-				<name name="{=aom_rhun_female_name_40}Tharniza" />
-				<name name="{=aom_rhun_female_name_41}Zhalira" />
-				<name name="{=aom_rhun_female_name_42}Rhazina" />
-				<name name="{=aom_rhun_female_name_43}Durshira" />
-				<name name="{=aom_rhun_female_name_44}Barkhira" />
-				<name name="{=aom_rhun_female_name_45}Thariza" />
-				<name name="{=aom_rhun_female_name_46}Mazina" />
-				<name name="{=aom_rhun_female_name_47}Narilia" />
-				<name name="{=aom_rhun_female_name_48}Farnina" />
-				<name name="{=aom_rhun_female_name_49}Zhalima" />
-				<name name="{=aom_rhun_female_name_50}Orzina" />
+				<name name="{{=aom_rhun_female_name_1}}Rhazira" />
+				<name name="{{=aom_rhun_female_name_2}}Tazmina" />
+				<name name="{{=aom_rhun_female_name_3}}Vazira" />
+				<name name="{{=aom_rhun_female_name_4}}Mazrika" />
+				<name name="{{=aom_rhun_female_name_5}}Zahrina" />
+				<name name="{{=aom_rhun_female_name_6}}Khalira" />
+				<name name="{{=aom_rhun_female_name_7}}Orzila" />
+				<name name="{{=aom_rhun_female_name_8}}Durzanna" />
+				<name name="{{=aom_rhun_female_name_9}}Narima" />
+				<name name="{{=aom_rhun_female_name_10}}Tharila" />
+				<name name="{{=aom_rhun_female_name_11}}Varila" />
+				<name name="{{=aom_rhun_female_name_12}}Dazira" />
+				<name name="{{=aom_rhun_female_name_13}}Rhamira" />
+				<name name="{{=aom_rhun_female_name_14}}Fazira" />
+				<name name="{{=aom_rhun_female_name_15}}Uzrila" />
+				<name name="{{=aom_rhun_female_name_16}}Zhalina" />
+				<name name="{{=aom_rhun_female_name_17}}Khulisa" />
+				<name name="{{=aom_rhun_female_name_18}}Barkhira" />
+				<name name="{{=aom_rhun_female_name_19}}Nariza" />
+				<name name="{{=aom_rhun_female_name_20}}Tharnila" />
+				<name name="{{=aom_rhun_female_name_21}}Rhashira" />
+				<name name="{{=aom_rhun_female_name_22}}Mazhara" />
+				<name name="{{=aom_rhun_female_name_23}}Varshira" />
+				<name name="{{=aom_rhun_female_name_24}}Zharnira" />
+				<name name="{{=aom_rhun_female_name_25}}Sarkira" />
+				<name name="{{=aom_rhun_female_name_26}}Farniza" />
+				<name name="{{=aom_rhun_female_name_27}}Goriza" />
+				<name name="{{=aom_rhun_female_name_28}}Nazira" />
+				<name name="{{=aom_rhun_female_name_29}}Kharnila" />
+				<name name="{{=aom_rhun_female_name_30}}Torila" />
+				<name name="{{=aom_rhun_female_name_31}}Dhurina" />
+				<name name="{{=aom_rhun_female_name_32}}Vashila" />
+				<name name="{{=aom_rhun_female_name_33}}Nariza" />
+				<name name="{{=aom_rhun_female_name_34}}Fazrim" />
+				<name name="{{=aom_rhun_female_name_35}}Mazhira" />
+				<name name="{{=aom_rhun_female_name_36}}Khalia" />
+				<name name="{{=aom_rhun_female_name_37}}Sarniza" />
+				<name name="{{=aom_rhun_female_name_38}}Orlina" />
+				<name name="{{=aom_rhun_female_name_39}}Ruhana" />
+				<name name="{{=aom_rhun_female_name_40}}Tharniza" />
+				<name name="{{=aom_rhun_female_name_41}}Zhalira" />
+				<name name="{{=aom_rhun_female_name_42}}Rhazina" />
+				<name name="{{=aom_rhun_female_name_43}}Durshira" />
+				<name name="{{=aom_rhun_female_name_44}}Barkhira" />
+				<name name="{{=aom_rhun_female_name_45}}Thariza" />
+				<name name="{{=aom_rhun_female_name_46}}Mazina" />
+				<name name="{{=aom_rhun_female_name_47}}Narilia" />
+				<name name="{{=aom_rhun_female_name_48}}Farnina" />
+				<name name="{{=aom_rhun_female_name_49}}Zhalima" />
+				<name name="{{=aom_rhun_female_name_50}}Orzina" />
 			</female_names>
 			<clan_names>
-				<name name="{=aom_rhun_clan_name_01}Iron Spears" />
-				<name name="{=aom_rhun_clan_name_02}Golden Scimitars" />
-				<name name="{=aom_rhun_clan_name_03}Red Banners" />
-				<name name="{=aom_rhun_clan_name_04}Burning Blades" />
-				<name name="{=aom_rhun_clan_name_05}Blood of Rhûn" />
-				<name name="{=aom_rhun_clan_name_06}Crimson Warriors" />
-				<name name="{=aom_rhun_clan_name_07}Black Shields" />
-				<name name="{=aom_rhun_clan_name_08}Stormcallers" />
-				<name name="{=aom_rhun_clan_name_09}Scarlet Guardians" />
-				<name name="{=aom_rhun_clan_name_10}Golden Horde" />
+				<name name="{{=aom_rhun_clan_name_01}}Iron Spears" />
+				<name name="{{=aom_rhun_clan_name_02}}Golden Scimitars" />
+				<name name="{{=aom_rhun_clan_name_03}}Red Banners" />
+				<name name="{{=aom_rhun_clan_name_04}}Burning Blades" />
+				<name name="{{=aom_rhun_clan_name_05}}Blood of Rhûn" />
+				<name name="{{=aom_rhun_clan_name_06}}Crimson Warriors" />
+				<name name="{{=aom_rhun_clan_name_07}}Black Shields" />
+				<name name="{{=aom_rhun_clan_name_08}}Stormcallers" />
+				<name name="{{=aom_rhun_clan_name_09}}Scarlet Guardians" />
+				<name name="{{=aom_rhun_clan_name_10}}Golden Horde" />
 			</clan_names>
 
 			<!-- Copy cultural_feats, possible_clan_banner_icon_ids -->
