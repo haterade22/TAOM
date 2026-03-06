@@ -478,15 +478,32 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="merchant_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Merchant 1: Cautious Uruk trader -->
+	<NPCCharacter id="spc_notable_isengard_0" name="{=aom_ig_notable_0}Cautious Uruk trader" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 2: Cunning Uruk overseer -->
+	<NPCCharacter id="spc_notable_isengard_0b" name="{=aom_ig_notable_0b}Cunning Uruk overseer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
@@ -495,15 +512,178 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="artisan_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Merchant 3: Ruthless Uruk provisioner -->
+	<NPCCharacter id="spc_notable_isengard_1" name="{=aom_ig_notable_1}Ruthless Uruk provisioner" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 4: Cold Uruk quartermaster -->
+	<NPCCharacter id="spc_notable_isengard_1b" name="{=aom_ig_notable_1b}Cold Uruk quartermaster" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 5: Shrewd Uruk supply master -->
+	<NPCCharacter id="spc_notable_isengard_2" name="{=aom_ig_notable_2}Shrewd Uruk supply master" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 6: Wary Isengard stockpiler -->
+	<NPCCharacter id="spc_notable_isengard_2b" name="{=aom_ig_notable_2b}Wary Isengard stockpiler" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 7: Self-made Uruk dealer -->
+	<NPCCharacter id="spc_notable_isengard_3" name="{=aom_ig_notable_3}Self-made Uruk dealer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 8: Jovial Uruk peddler -->
+	<NPCCharacter id="spc_notable_isengard_3b" name="{=aom_ig_notable_3b}Jovial Uruk peddler" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 9: Scheming Uruk hoarder -->
+	<NPCCharacter id="spc_notable_isengard_4" name="{=aom_ig_notable_4}Scheming Uruk hoarder" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 10: Devious Uruk profiteer -->
+	<NPCCharacter id="spc_notable_isengard_4b" name="{=aom_ig_notable_4b}Devious Uruk profiteer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 1: Fanatical Uruk war-chanter -->
+	<NPCCharacter id="spc_notable_isengard_5" name="{=aom_ig_notable_5}Fanatical Uruk war-chanter" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 2: Stern Uruk taskmaster -->
+	<NPCCharacter id="spc_notable_isengard_6" name="{=aom_ig_notable_6}Stern Uruk taskmaster" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 3: Brooding Uruk mystic -->
+	<NPCCharacter id="spc_notable_isengard_7" name="{=aom_ig_notable_7}Brooding Uruk mystic" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
@@ -512,14 +692,153 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="preacher_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Artisan 1: Gruff Uruk smith -->
+	<NPCCharacter id="spc_notable_isengard_8" name="{=aom_ig_notable_8}Gruff Uruk smith" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Artisan">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 2: Outgoing Uruk forgemaster -->
+	<NPCCharacter id="spc_notable_isengard_9" name="{=aom_ig_notable_9}Outgoing Uruk forgemaster" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 1: Protective Uruk pit boss -->
+	<NPCCharacter id="spc_notable_isengard_gl1" name="{=aom_ig_notable_gl1}Protective Uruk pit boss" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 2: Ironic Uruk racketeer -->
+	<NPCCharacter id="spc_notable_isengard_10" name="{=aom_ig_notable_10}Ironic Uruk racketeer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 3: Intimidating Uruk enforcer -->
+	<NPCCharacter id="spc_notable_isengard_11" name="{=aom_ig_notable_11}Intimidating Uruk enforcer" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 4: Bestial Uruk brute -->
+	<NPCCharacter id="spc_notable_isengard_gl4" name="{=aom_ig_notable_gl4}Bestial Uruk brute" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 5: Scheming Isengard thug -->
+	<NPCCharacter id="spc_notable_isengard_12" name="{=aom_ig_notable_12}Scheming Isengard thug" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 6: Menacing Uruk cutthroat -->
+	<NPCCharacter id="spc_notable_isengard_13" name="{=aom_ig_notable_13}Menacing Uruk cutthroat" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 1: Gruff Uruk overseer -->
+	<NPCCharacter id="spc_notable_isengard_21" name="{=aom_ig_notable_21}Gruff Uruk overseer" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
@@ -527,16 +846,66 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="rural_notable_notary_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- RuralNotable 2: Agreeable Uruk field captain -->
+	<NPCCharacter id="spc_notable_isengard_22" name="{=aom_ig_notable_22}Agreeable Uruk field captain" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 1: Rebellious Uruk pit captain -->
+	<NPCCharacter id="spc_isengard_headman_1" name="{=aom_ig_headman_1}Rebellious Uruk pit captain" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 2: Conservative Uruk elder -->
+	<NPCCharacter id="spc_isengard_headman_2" name="{=aom_ig_headman_2}Conservative Uruk elder" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 3: Devious Uruk headman -->
+	<NPCCharacter id="spc_isengard_headman_3" name="{=aom_ig_headman_3}Devious Uruk headman" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
 		</Equipments>

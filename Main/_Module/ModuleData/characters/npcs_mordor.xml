@@ -490,66 +490,310 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="merchant_notary_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_mordor_0" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_0}Cunning Mordor slave trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_0b" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_0b}Mordor pit provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_1" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_1}Ruthless Mordor arms dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="artisan_notary_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_mordor_1b" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_1b}Cold-eyed Mordor merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_2" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_2}Mordor ore dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_2b" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_2b}Cautious Mordor supply runner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_3" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_3}Self-made Mordor trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_3b" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_3b}Scheming Mordor merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_4" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_4}Shrewd Mordor provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_4b" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_4b}Devious Mordor black marketeer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="preacher_notary_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_mordor_5" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_5}Dark Lord's herald" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
-		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
-			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
-				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
-			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="rural_notable_notary_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_mordor_6" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_6}Stern Mordor war-priest" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
-		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_7" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_7}Keeper of the dark rites" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_mordor_8" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_8}Gruff Mordor pit overseer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_9" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_9}Mordor forge-master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_mordor_gl1" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_gl1}Dark Lord's enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_10" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_10}Mordor pit boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_11" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_11}Intimidating Mordor taskmaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_gl4" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_gl4}Bestial Mordor thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_12" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_12}Cunning Mordor smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_13" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_13}Menacing Mordor warlord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_mordor_21" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_21}Gruff Mordor camp leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_22" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_22}Watchful Mordor elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_mordor_headman_1" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_headman_1}Rebellious Mordor headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_mordor_headman_2" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_headman_2}Conservative Mordor headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_mordor_headman_3" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_headman_3}Devious Mordor headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

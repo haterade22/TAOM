@@ -505,6 +505,24 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
+			<XmlName id="NPCCharacters" path="characters/npcs_lothlorien"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="characters/npcs_umbar"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
 			<XmlName id="EquipmentRosters" path="taom_equipment_sets_isengard"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
@@ -538,6 +556,22 @@
 				<GameType value ="CampaignStoryMode"/>
 				<GameType value = "CustomGame"/>
 				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<!-- XSLT to remove vanilla faction strings and replace with LOTR-themed -->
+		<XmlNode>
+			<XmlName id="GameText" path="module_strings"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<!-- TAOM faction/culture strings for all cultures -->
+		<XmlNode>
+			<XmlName id="GameText" path="taom_module_strings"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>

@@ -547,64 +547,292 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_gondor" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_gondor_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0}Prudent Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.gondor_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0b}Gondorian vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="artisan_notary_gondor" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_gondor_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_1}Ruthless Gondorian trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.gondor_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_1b}Cold Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="preacher_notary_gondor" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_gondor_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_2}Minas Tirith gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_2b}Wise Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="rural_notable_notary_gondor" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_gondor_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_3}Self-made Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_3b}Jovial Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_4}Shrewd Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.gondor_boots" />
 			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_4b}Devious Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_gondor_5" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.gondor" name="{=aom_gd_notable_5}Zealous Gondorian loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_6}Stern lord of Gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.gondor" name="{=aom_gd_notable_7}Gondorian keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_gondor_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_8}Gruff Minas Tirith artisan" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.gondor" name="{=aom_gd_notable_9}Gifted Gondorian craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_gondor_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_gl1}Protective Gondorian ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_10}Sardonic Gondorian outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_11}Intimidating Gondorian enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_gl4}Ruthless Gondorian thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_12" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_12}Cunning Gondorian smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_13}Menacing Gondorian schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_gondor_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_21}Stern Gondorian landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_gondor_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_22}Agreeable Gondorian elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.gondor_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_gondor_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.gondor" name="{=aom_gd_headman_1}Rebellious Gondorian headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_gondor_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_headman_2}Conservative Gondorian headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_gondor_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_headman_3}Devious Gondorian headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>

@@ -66,6 +66,7 @@ XSLT pattern: copy all vanilla attributes/elements with `<xsl:apply-templates se
 | `spclans.xslt` | Clan names (73) |
 | `lords.xslt` | Lords - name, default_group, is_female, BodyProperties, skills, traits (380) |
 | `heroes.xslt` | Hero biographies (415) |
+| `module_strings.xslt` | Remove vanilla faction strings for 6 remapped cultures |
 
 ## Additional XML Files
 
@@ -76,6 +77,7 @@ New entities not in vanilla Bannerlord are added via direct XML (not XSLT):
 | `characters/lords.xml` | New LOTRAOM lords not in vanilla (504) - staged |
 | `characters/heroes.xml` | New LOTRAOM heroes not in vanilla - staged |
 | `characters/clans.xml` | New LOTRAOM clans not in vanilla (~101) - staged |
+| `taom_module_strings.xml` | Faction/culture strings for all 16 cultures (192 strings) |
 
 ## TaleWorlds Research Protocol (CRITICAL)
 

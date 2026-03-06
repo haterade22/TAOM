@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_lothlorien_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0}Cautious Golden Wood merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0b}Galadhrim vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_1}Shrewd Lorien silk trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_1b}Cold elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_2}Galadhrim gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_2b}Cautious Lorien herb trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_3}Self-made Lorien trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_3b}Jocular Galadhrim merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_4}Shrewd Golden Wood provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_4b}Devious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_lothlorien_5" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lothlorien" name="{=aom_lt_notable_5}Wise elf of Caras Galadhon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_6}Stern Lorien lore-keeper" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lothlorien" name="{=aom_lt_notable_7}Keeper of the mallorn groves" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_lothlorien_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_8}Gruff Galadhrim bowyer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lothlorien" name="{=aom_lt_notable_9}Mallorn craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_lothlorien_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_gl1}Protective Galadhrim warden" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_10}Ironic Lorien border guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_11}Intimidating Galadhrim enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_gl4}Ruthless Lorien sentinel" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_12" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_12}Cunning Lorien shadow scout" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_13}Menacing Galadhrim enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_lothlorien_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_21}Gruff Lorien landwarden" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lothlorien_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_22}Agreeable Lorien elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_lothlorien_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lothlorien" name="{=aom_lt_headman_1}Rebellious Lorien headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_lothlorien_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_headman_2}Conservative Lorien headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_lothlorien_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_headman_3}Devious Lorien headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

@@ -309,10 +309,11 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.mirkwood" name="{=aom_mk_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_mirkwood_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_0}Wary woodland merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
@@ -321,10 +322,232 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="artisan_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_mirkwood_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_0b}Silvan vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_1}Stern woodland trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_1b}Aloof silvan merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_2}Woodland herb dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_2b}Wise silvan merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_3}Self-made woodland merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_3b}Jovial forest trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_4}Shrewd woodland merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_4b}Devious silvan merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_mirkwood_5" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mirkwood" name="{=aom_mk_notable_5}Zealous woodland loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_6}Stern silvan elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mirkwood" name="{=aom_mk_notable_7}Woodland keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_mirkwood_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_8}Gruff forest artisan" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mirkwood" name="{=aom_mk_notable_9}Gifted woodland craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_mirkwood_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_gl1}Protective woodland ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_10}Sardonic forest outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_11}Intimidating woodland enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_gl4}Ruthless silvan exile" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_12" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_12}Cunning woodland smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_13}Menacing forest schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
@@ -334,9 +557,44 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="preacher_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_mirkwood_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_21}Stern woodland landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
-		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mirkwood_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_22}Agreeable silvan elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_mirkwood_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mirkwood" name="{=aom_mk_headman_1}Rebellious woodland headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_mirkwood_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_headman_2}Conservative silvan headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.mirkwood_body" />
@@ -344,14 +602,14 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="rural_notable_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_mirkwood_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_headman_3}Devious woodland headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
-		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mirkwood_body" />
-				<equipment slot="Leg" id="Item.mirkwood_boots" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

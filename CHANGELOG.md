@@ -2,6 +2,14 @@
 
 ## 2026-03-06
 
+### Faction & Culture Strings
+
+Added missing faction/culture strings for all 16 cultures, fixing "ERROR: Text with id str_faction_ruler doesn't exist!" for custom cultures like Erebor.
+
+- Created `taom_module_strings.xml` — 192 faction strings (12 types × 16 cultures) covering ruler titles, noble titles, faction adjectives, formal/informal names
+- Created `module_strings.xslt` — removes vanilla faction strings for 6 remapped cultures (empire→Dunland, vlandia→Rohan, battania→Khand, khuzait→Rhûn, aserai→Harad, sturgia→Dale)
+- Updated `SubModule.xml` — registered both new GameText files
+
 ### Wanderer/Companion System — Complete Implementation
 
 Implemented a full companion/wanderer system for all 14 kingdoms. Wanderers spawn in taverns, can be recruited, and have unique backstories, skills, and equipment.

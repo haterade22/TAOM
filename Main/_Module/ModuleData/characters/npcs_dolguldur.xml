@@ -311,21 +311,33 @@
 	</NPCCharacter>
 
 	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.dolguldur" name="{=aom_dg_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+
+	<!-- Merchant 1: Cautious Dol Guldur merchant -->
+	<NPCCharacter id="spc_notable_dolguldur_0" name="{=aom_dg_notable_0}Cautious Dol Guldur merchant" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
 				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
 				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="artisan_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Merchant 2: Shadowy Dol Guldur haggler -->
+	<NPCCharacter id="spc_notable_dolguldur_0b" name="{=aom_dg_notable_0b}Shadowy Dol Guldur haggler" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
@@ -335,9 +347,30 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="preacher_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Merchant 3: Ruthless dark orc provisioner -->
+	<NPCCharacter id="spc_notable_dolguldur_1" name="{=aom_dg_notable_1}Ruthless dark orc provisioner" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 4: Cold Dol Guldur quartermaster -->
+	<NPCCharacter id="spc_notable_dolguldur_1b" name="{=aom_dg_notable_1b}Cold Dol Guldur quartermaster" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
@@ -346,9 +379,359 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="rural_notable_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Merchant 5: Shrewd dark orc supply master -->
+	<NPCCharacter id="spc_notable_dolguldur_2" name="{=aom_dg_notable_2}Shrewd dark orc supply master" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 6: Wary Dol Guldur hoarder -->
+	<NPCCharacter id="spc_notable_dolguldur_2b" name="{=aom_dg_notable_2b}Wary Dol Guldur hoarder" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 7: Self-made dark orc dealer -->
+	<NPCCharacter id="spc_notable_dolguldur_3" name="{=aom_dg_notable_3}Self-made dark orc dealer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 8: Jovial Dol Guldur peddler -->
+	<NPCCharacter id="spc_notable_dolguldur_3b" name="{=aom_dg_notable_3b}Jovial Dol Guldur peddler" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 9: Scheming dark orc profiteer -->
+	<NPCCharacter id="spc_notable_dolguldur_4" name="{=aom_dg_notable_4}Scheming dark orc profiteer" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 10: Devious Dol Guldur trader -->
+	<NPCCharacter id="spc_notable_dolguldur_4b" name="{=aom_dg_notable_4b}Devious Dol Guldur trader" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 1: Fanatical Dol Guldur war-chanter -->
+	<NPCCharacter id="spc_notable_dolguldur_5" name="{=aom_dg_notable_5}Fanatical Dol Guldur war-chanter" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 2: Stern dark orc taskmaster -->
+	<NPCCharacter id="spc_notable_dolguldur_6" name="{=aom_dg_notable_6}Stern dark orc taskmaster" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 3: Brooding dark orc mystic -->
+	<NPCCharacter id="spc_notable_dolguldur_7" name="{=aom_dg_notable_7}Brooding dark orc mystic" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 1: Gruff dark orc artisan -->
+	<NPCCharacter id="spc_notable_dolguldur_8" name="{=aom_dg_notable_8}Gruff dark orc artisan" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 2: Outgoing Dol Guldur forgemaster -->
+	<NPCCharacter id="spc_notable_dolguldur_9" name="{=aom_dg_notable_9}Outgoing Dol Guldur forgemaster" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 1: Protective Dol Guldur enforcer -->
+	<NPCCharacter id="spc_notable_dolguldur_gl1" name="{=aom_dg_notable_gl1}Protective Dol Guldur enforcer" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 2: Grim orc enforcer -->
+	<NPCCharacter id="spc_notable_dolguldur_10" name="{=aom_dg_notable_10}Grim orc enforcer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 3: Intimidating dark orc brute -->
+	<NPCCharacter id="spc_notable_dolguldur_11" name="{=aom_dg_notable_11}Intimidating dark orc brute" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 4: Bestial Dol Guldur thug -->
+	<NPCCharacter id="spc_notable_dolguldur_gl4" name="{=aom_dg_notable_gl4}Bestial Dol Guldur thug" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 5: Scheming dark orc racketeer -->
+	<NPCCharacter id="spc_notable_dolguldur_12" name="{=aom_dg_notable_12}Scheming dark orc racketeer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 6: Menacing Dol Guldur cutthroat -->
+	<NPCCharacter id="spc_notable_dolguldur_13" name="{=aom_dg_notable_13}Menacing Dol Guldur cutthroat" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 1: Gruff dark orc overseer -->
+	<NPCCharacter id="spc_notable_dolguldur_21" name="{=aom_dg_notable_21}Gruff dark orc overseer" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 2: Agreeable Dol Guldur field boss -->
+	<NPCCharacter id="spc_notable_dolguldur_22" name="{=aom_dg_notable_22}Agreeable Dol Guldur field boss" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 1: Rebellious Dol Guldur captain -->
+	<NPCCharacter id="spc_dolguldur_headman_1" name="{=aom_dg_headman_1}Rebellious Dol Guldur captain" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 2: Conservative dark orc elder -->
+	<NPCCharacter id="spc_dolguldur_headman_2" name="{=aom_dg_headman_2}Conservative dark orc elder" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 3: Devious Dol Guldur headman -->
+	<NPCCharacter id="spc_dolguldur_headman_3" name="{=aom_dg_headman_3}Devious Dol Guldur headman" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
