@@ -1534,7 +1534,6 @@
       <item id="Item.isengard_1h_sword_b" />
       <item id="Item.isengard_pike_a" />
       <item id="Item.isengard_pike_b" />
-      <item id="Item.isengard_pike_c" />
     </banner_bearer_replacement_weapons>
     <default_policies>
       <policy id="policy_senate" />
@@ -2168,7 +2167,7 @@
     is_main_culture="true"
     color="0xFF3A1F1F"
     color2="0xFFB5913E"
-    elite_basic_troop="NPCCharacter.aserai_mamluke_soldier"
+    elite_basic_troop="NPCCharacter.umbar_elite"
     basic_troop="NPCCharacter.aserai_recruit"
     melee_militia_troop="NPCCharacter.aserai_militia_spearman"
     ranged_militia_troop="NPCCharacter.aserai_militia_archer"

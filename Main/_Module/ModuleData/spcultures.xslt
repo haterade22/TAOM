@@ -321,7 +321,7 @@
 
 			<!-- Equipment rosters -->
 			<xsl:attribute name="default_battle_equipment_roster">EquipmentRoster.harad_bat_template_medium_a</xsl:attribute>
-			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.harad_civ_template_default_a</xsl:attribute>
+			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.harad_civ_template_a</xsl:attribute>
 
 			<!-- NPC references -->
 			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_harad</xsl:attribute>
@@ -343,10 +343,10 @@
 			<xsl:attribute name="townsman_child">NPCCharacter.townsman_child_harad</xsl:attribute>
 			<xsl:attribute name="townsman_teenager">NPCCharacter.townsman_teenager_harad</xsl:attribute>
 			<xsl:attribute name="village_woman">NPCCharacter.village_woman_harad</xsl:attribute>
-			<xsl:attribute name="villager_male_child">NPCCharacter.villager_child_harad</xsl:attribute>
-			<xsl:attribute name="villager_male_teenager">NPCCharacter.villager_teenager_harad</xsl:attribute>
-			<xsl:attribute name="villager_female_child">NPCCharacter.village_woman_child_harad</xsl:attribute>
-			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_harad</xsl:attribute>
+			<xsl:attribute name="villager_male_child">NPCCharacter.villager_child_aserai</xsl:attribute>
+			<xsl:attribute name="villager_male_teenager">NPCCharacter.villager_teenager_aserai</xsl:attribute>
+			<xsl:attribute name="villager_female_child">NPCCharacter.village_woman_child_aserai</xsl:attribute>
+			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_aserai</xsl:attribute>
 			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_harad</xsl:attribute>
 			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_harad</xsl:attribute>
 			<xsl:attribute name="merchant_notary">NPCCharacter.merchant_notary_harad</xsl:attribute>
@@ -861,7 +861,7 @@
 
 			<!-- Equipment rosters -->
 			<xsl:attribute name="default_battle_equipment_roster">EquipmentRoster.rhun_bat_template_medium_a</xsl:attribute>
-			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.rhun_civ_template_default_a</xsl:attribute>
+			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.rhun_civ_template_a</xsl:attribute>
 
 			<!-- NPC references -->
 			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_rhun</xsl:attribute>
@@ -883,10 +883,10 @@
 			<xsl:attribute name="townsman_child">NPCCharacter.townsman_child_rhun</xsl:attribute>
 			<xsl:attribute name="townsman_teenager">NPCCharacter.townsman_teenager_rhun</xsl:attribute>
 			<xsl:attribute name="village_woman">NPCCharacter.village_woman_rhun</xsl:attribute>
-			<xsl:attribute name="villager_male_child">NPCCharacter.villager_child_rhun</xsl:attribute>
-			<xsl:attribute name="villager_male_teenager">NPCCharacter.villager_teenager_rhun</xsl:attribute>
-			<xsl:attribute name="villager_female_child">NPCCharacter.village_woman_child_rhun</xsl:attribute>
-			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_rhun</xsl:attribute>
+			<xsl:attribute name="villager_male_child">NPCCharacter.villager_child_khuzait</xsl:attribute>
+			<xsl:attribute name="villager_male_teenager">NPCCharacter.villager_teenager_khuzait</xsl:attribute>
+			<xsl:attribute name="villager_female_child">NPCCharacter.village_woman_child_khuzait</xsl:attribute>
+			<xsl:attribute name="villager_female_teenager">NPCCharacter.village_woman_teenager_khuzait</xsl:attribute>
 			<xsl:attribute name="ransom_broker">NPCCharacter.ransom_broker_rhun</xsl:attribute>
 			<xsl:attribute name="gangleader_bodyguard">NPCCharacter.gangleader_bodyguard_rhun</xsl:attribute>
 			<xsl:attribute name="merchant_notary">NPCCharacter.merchant_notary_rhun</xsl:attribute>

@@ -47,7 +47,7 @@
 
 	<EquipmentRoster id="isengard_bat_template_medium_e" culture="Culture.isengard">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.isengard_pike_c" />
+			<Equipment slot="Item0" id="Item.isengard_pike_b" />
 			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
 			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
 			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />

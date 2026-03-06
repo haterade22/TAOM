@@ -5157,7 +5157,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.isengard_pike_c" />
+                <equipment slot="Item0" id="Item.isengard_pike_b" />
                 <equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
