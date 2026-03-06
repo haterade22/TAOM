@@ -6,6 +6,30 @@
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- Remove vanilla culture descriptions (replaced with LOTR lore) -->
+	<xsl:template match="string[@id='str_culture_description.empire']"/>
+	<xsl:template match="string[@id='str_culture_description.vlandia']"/>
+	<xsl:template match="string[@id='str_culture_description.battania']"/>
+	<xsl:template match="string[@id='str_culture_description.khuzait']"/>
+	<xsl:template match="string[@id='str_culture_description.aserai']"/>
+	<xsl:template match="string[@id='str_culture_description.sturgia']"/>
+
+	<!-- Remove vanilla culture rich names -->
+	<xsl:template match="string[@id='str_culture_rich_name.empire']"/>
+	<xsl:template match="string[@id='str_culture_rich_name.vlandia']"/>
+	<xsl:template match="string[@id='str_culture_rich_name.battania']"/>
+	<xsl:template match="string[@id='str_culture_rich_name.khuzait']"/>
+	<xsl:template match="string[@id='str_culture_rich_name.aserai']"/>
+	<xsl:template match="string[@id='str_culture_rich_name.sturgia']"/>
+
+	<!-- Remove vanilla culture adjectives -->
+	<xsl:template match="string[@id='str_adjective_for_culture.empire']"/>
+	<xsl:template match="string[@id='str_adjective_for_culture.vlandia']"/>
+	<xsl:template match="string[@id='str_adjective_for_culture.battania']"/>
+	<xsl:template match="string[@id='str_adjective_for_culture.khuzait']"/>
+	<xsl:template match="string[@id='str_adjective_for_culture.aserai']"/>
+	<xsl:template match="string[@id='str_adjective_for_culture.sturgia']"/>
+
 	<!-- Remove vanilla faction strings for empire (remapped to Dunland) -->
 	<xsl:template match="string[@id='str_faction_official.empire']"/>
 	<xsl:template match="string[@id='str_faction_official.empire_f']"/>

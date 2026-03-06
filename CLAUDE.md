@@ -62,7 +62,7 @@ XSLT pattern: copy all vanilla attributes/elements with `<xsl:apply-templates se
 | File | Purpose |
 |------|---------|
 | `spkingdoms.xslt` | Kingdom names (8) |
-| `spcultures.xslt` | Culture overrides — names, troops, NPCs, policies, names (6) |
+| `spcultures.xslt` | Culture overrides for 6 XSLT cultures — names, troops, policies, names lists |
 | `spclans.xslt` | Clan names (73) |
 | `lords.xslt` | Lords - name, default_group, is_female, BodyProperties, skills, traits (380) |
 | `heroes.xslt` | Hero biographies (415) |
@@ -77,6 +77,8 @@ New entities not in vanilla Bannerlord are added via direct XML (not XSLT):
 | `characters/lords.xml` | New LOTRAOM lords not in vanilla (504) - staged |
 | `characters/heroes.xml` | New LOTRAOM heroes not in vanilla - staged |
 | `characters/clans.xml` | New LOTRAOM clans not in vanilla (~101) - staged |
+| `characters/npcs_{culture}.xml` | Culture-specific NPCs: notables (26 per culture), wanderers, troops, etc. |
+| `taom_spcultures.xml` | 10 custom cultures (Erebor, Rivendell, Mirkwood, Lothlorien, Isengard, Gundabad, Umbar, Dol Guldur, Gondor, Mordor) |
 | `taom_module_strings.xml` | Faction/culture strings for all 16 cultures (192 strings) |
 
 ## TaleWorlds Research Protocol (CRITICAL)

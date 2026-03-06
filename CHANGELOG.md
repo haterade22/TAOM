@@ -2,12 +2,33 @@
 
 ## 2026-03-06
 
+### Notable NPCs — Culture-Specific Notables
+
+Replaced vanilla Empire notable NPCs with culture-specific notables for all 10 custom cultures. Previously all settlements (including orc/elf/dwarf) spawned human Empire notables as merchants, artisans, preachers, etc.
+
+- Created 26 notary NPCs per culture matching vanilla occupation distribution: 10 Merchant, 3 Preacher, 2 Artisan, 6 GangLeader, 2 RuralNotable, 3 Headman
+- Each NPC has correct race, `is_template="true"`, varied voices, traits, and culture-appropriate equipment
+- Updated `taom_spcultures.xml` — replaced `spc_notable_empire_*` references with culture-specific `spc_notable_{culture}_*` in all 10 `notable_templates` blocks + culture-level `merchant_notary`/`artisan_notary`/`preacher_notary`/`rural_notable_notary` attributes
+- Created `characters/npcs_lothlorien.xml` and `characters/npcs_umbar.xml` (new files — these cultures had no NPC file)
+- Registered new files in `SubModule.xml`
+
+### XSLT Fixes
+
+- Fixed XSLT attribute filters for aserai→Harad, vlandia→Rohan, khuzait→Rhun — replaced 60+ attribute exclusion filters with `<xsl:apply-templates select="@*"/>` passthrough pattern
+- Fixed child element duplication across all 4 XSLT cultures — `vassal_reward_items`, `banner_bearer_replacement_weapons`, `default_policies`, `male_names`, `female_names`, `clan_names` now excluded from passthrough
+- Fixed 23 corrupted accent characters in `taom_wanderers.xml` (double-encoded UTF-8: `Ã»`→`û`, `Ãª`→`ê`, `Ã³`→`ó`, `Ã¡`→`á`, `Ã­`→`í`)
+
 ### Faction & Culture Strings
 
-Added missing faction/culture strings for all 16 cultures, fixing "ERROR: Text with id str_faction_ruler doesn't exist!" for custom cultures like Erebor.
+Added comprehensive faction/culture strings for all 16 cultures, fixing "ERROR: Text with id str_faction_ruler doesn't exist!" and replacing vanilla culture names/descriptions with LOTR-themed content.
 
-- Created `taom_module_strings.xml` — 192 faction strings (12 types × 16 cultures) covering ruler titles, noble titles, faction adjectives, formal/informal names
-- Created `module_strings.xslt` — removes vanilla faction strings for 6 remapped cultures (empire→Dunland, vlandia→Rohan, battania→Khand, khuzait→Rhûn, aserai→Harad, sturgia→Dale)
+- Created `taom_module_strings.xml` — 272 strings across 17 types for 16 cultures:
+  - Faction strings (12 types): ruler titles, noble titles, faction adjectives, formal/informal names
+  - Culture descriptions (16): LOTR lore text for character creation
+  - Culture rich names (16): e.g. "Rohirrim", "Dwarves", "Galadhrim"
+  - Culture adjectives (16): e.g. "Dunlending", "Rohirric", "Dwarven"
+  - Player parent names (32): LOTR-themed father/mother names for character creation
+- Created `module_strings.xslt` — removes vanilla strings for 6 remapped cultures (empire→Dunland, vlandia→Rohan, battania→Khand, khuzait→Rhûn, aserai→Harad, sturgia→Dale)
 - Updated `SubModule.xml` — registered both new GameText files
 
 ### Wanderer/Companion System — Complete Implementation

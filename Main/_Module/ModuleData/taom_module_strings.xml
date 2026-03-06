@@ -219,6 +219,112 @@
 	<string id="str_faction_informal_name_for_culture.rivendell" text="{=taom_str_faction_informal_name_for_culture.rivendell}Rivendell" />
 	<string id="str_neutral_term_for_culture.rivendell" text="{=taom_str_neutral_term_for_culture.rivendell}Elves of Rivendell" />
 
+	<!-- ============================================== -->
+	<!-- Culture Descriptions                           -->
+	<!-- ============================================== -->
+
+	<!-- Vanilla culture descriptions (LOTR-themed replacements) -->
+	<string id="str_culture_description.empire" text="{=taom_str_culture_description.empire}The Dunlendings, fierce hillmen of the western highlands, are a proud and ancient people. Resentful of the Rohirrim, they are known for their guerilla tactics and tenacity in battle. United under strong leaders, they fight for their survival and to reclaim the lands they believe are rightfully theirs." />
+	<string id="str_culture_description.vlandia" text="{=taom_str_culture_description.vlandia}The Rohirrim, known as the Horse-lords, are the proud and noble people of Rohan, a realm of wide open plains and rolling hills. They are renowned for their skill as riders and their unmatched cavalry, which forms the backbone of their military strength. Living in a tightly-knit feudal society, the Rohirrim are led by a king and a loyal nobility who are bound by honor and tradition to protect their land and people. They are fiercely independent, valuing freedom above all, and their warriors are trained to fight with spears, swords, and bows, all while astride their powerful steeds." />
+	<string id="str_culture_description.battania" text="{=taom_str_culture_description.battania}The Variags of Khand are a ruthless and warlike people from the eastern steppes. Known for their mastery of horses and deadly chariots, they bring a unique and brutal style of warfare. Aligned with Sauron, the Variags fight for power and plunder, spreading fear across Middle-earth." />
+	<string id="str_culture_description.khuzait" text="{=taom_str_culture_description.khuzait}The Easterlings are a proud and disciplined people, hailing from the vast eastern lands beyond Mordor. Renowned for their resilience and mastery of warfare, they are both farmers and warriors, blending agrarian traditions with a fierce martial culture. Their armies are known for their fearsome cavalry, adorned in ornate armor and carrying deadly spears and bows. With a rich heritage of craftsmanship and loyalty to their kin, the Easterlings march to war under vibrant banners of gold and crimson, striking fear into the hearts of their enemies. Their allegiance to Sauron has made them a formidable force, uniting under his shadow to expand their dominion across Middle-earth." />
+	<string id="str_culture_description.aserai" text="{=taom_str_culture_description.aserai}The Haradrim, warriors of the southern deserts, are a fierce and resilient people allied with Sauron. Known for their exotic war beasts and skilled cavalry, they march to war under crimson banners. Proud and deeply rooted in their traditions, they bring the savagery of the desert to the battlefields of Middle-earth." />
+	<string id="str_culture_description.sturgia" text="{=taom_str_culture_description.sturgia}The Bardings of Dale, descendants of Bard the Bowman, are a proud and industrious people living in the shadow of Erebor. Renowned for their skilled archers and disciplined warriors, they safeguard their thriving city and the trade routes of the north. United by a strong sense of community and honor, the Bardings stand firm against the darkness threatening their lands." />
+
+	<!-- Custom culture descriptions -->
+	<string id="str_culture_description.erebor" text="{=taom_str_culture_description.erebor}The noble Dwarves of Erebor, are renowned for their craftsmanship, resilience, and pride. From their halls in the Lonely Mountain, they forge mighty weapons and treasures of unmatched beauty. Clad in mail and armed with axes, they defend their kin with steadfast courage, seeking to reclaim their legacy and preserve their heritage against all who threaten it." />
+	<string id="str_culture_description.rivendell" text="{=taom_str_culture_description.rivendell}Rivendell, the Last Homely House, is a refuge of wisdom and beauty led by Lord Elrond. Nestled in the Misty Mountains, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Rivendell offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+	<string id="str_culture_description.mirkwood" text="{=taom_str_culture_description.mirkwood}The Wood-Elves of Mirkwood, led by King Thranduil, are guardians of the vast and mysterious forest. Known for their agility and mastery of the bow, they blend into the shadows, striking with precision and grace. Their realm is one of beauty and peril, protected by the resolve of its warriors and the timeless wisdom of their king. Fiercely independent, the Elves of Mirkwood fight to preserve their forest against encroaching darkness." />
+	<string id="str_culture_description.lothlorien" text="{=taom_str_culture_description.lothlorien}The Galadhrim of Lothlórien, dwellers of the Golden Wood, are an ethereal and noble people led by Lady Galadriel and Lord Celeborn. Masters of archery and woodland warfare, they guard their enchanted realm with unmatched skill. Their loyalty to their kin and homeland is unwavering, and their subtle magic preserves Lothlórien as a sanctuary of hope and light amidst the growing shadow." />
+	<string id="str_culture_description.isengard" text="{=taom_str_culture_description.isengard}The armies of Isengard, led by Saruman the White, are a formidable force of Uruk-hai and mercenaries. Forged in the fires of industry, their weapons and armor are crafted for destruction. The forces of Isengard march to war with ruthless efficiency, bent on conquest and domination." />
+	<string id="str_culture_description.gundabad" text="{=taom_str_culture_description.gundabad}The Orcs of Gundabad, residing in the mist-shrouded mountains, are a brutal and savage force. Led by their warlords, they wage endless raids on neighboring lands. Driven by hatred and cruelty, they are relentless in their quest to dominate the north." />
+	<string id="str_culture_description.umbar" text="{=taom_str_culture_description.umbar}The Corsairs of Umbar, seafaring raiders and master sailors, are a ruthless and cunning people allied with Sauron. Known for their swift ships and relentless naval warfare, they strike fear into the coastlines of Middle-earth. Proud of their maritime heritage, they bring the chaos of the seas to the land, raiding and pillaging in the name of their dark alliances." />
+	<string id="str_culture_description.dolguldur" text="{=taom_str_culture_description.dolguldur}The minions of Dol Guldur, under the command of the Necromancer, are a dark and sinister force. Hidden within the corrupted forest of Mirkwood, they employ treachery and shadow to weaken their enemies. Orcs, wargs, and other foul creatures march forth to spread fear and decay across Middle-earth." />
+	<string id="str_culture_description.gondor" text="{=taom_str_culture_description.gondor}The Gondorians, descendants of the Númenórean exiles, are the proud stewards of the greatest kingdom of Men in Middle-earth. Known for their towering stone fortresses and unwavering courage, Gondor is a bastion of hope against the looming shadow of Mordor. Its disciplined armies, comprised of valiant infantry, skilled archers, and mounted knights, stand as a shield for all free peoples. Guided by noble stewards and captains, the Gondorians hold fast to their traditions, unyielding in their duty to protect the realm and its legacy." />
+	<string id="str_culture_description.mordor" text="{=taom_str_culture_description.mordor}The armies of Mordor, forged in the shadow of Mount Doom, are a relentless force of darkness commanded by Sauron, the Dark Lord. Comprised of orcs, trolls, and wicked men, they march to war under the burning Eye, sowing fear and destruction. These legions are driven by cruelty and servitude, wielding jagged blades and crude armor. Bound by Sauron's iron will, the forces of Mordor are a deadly tide seeking to engulf all of Middle-earth in shadow." />
+
+	<!-- ============================================== -->
+	<!-- Culture Rich Names                             -->
+	<!-- ============================================== -->
+
+	<string id="str_culture_rich_name.empire" text="{=taom_str_culture_rich_name.empire}Dunlending" />
+	<string id="str_culture_rich_name.vlandia" text="{=taom_str_culture_rich_name.vlandia}Rohirrim" />
+	<string id="str_culture_rich_name.battania" text="{=taom_str_culture_rich_name.battania}Variags" />
+	<string id="str_culture_rich_name.khuzait" text="{=taom_str_culture_rich_name.khuzait}Easterling" />
+	<string id="str_culture_rich_name.aserai" text="{=taom_str_culture_rich_name.aserai}Haradrim" />
+	<string id="str_culture_rich_name.sturgia" text="{=taom_str_culture_rich_name.sturgia}Bardings" />
+	<string id="str_culture_rich_name.erebor" text="{=taom_str_culture_rich_name.erebor}Dwarves" />
+	<string id="str_culture_rich_name.rivendell" text="{=taom_str_culture_rich_name.rivendell}Ñoldor" />
+	<string id="str_culture_rich_name.mirkwood" text="{=taom_str_culture_rich_name.mirkwood}Silvan" />
+	<string id="str_culture_rich_name.lothlorien" text="{=taom_str_culture_rich_name.lothlorien}Galadhrim" />
+	<string id="str_culture_rich_name.isengard" text="{=taom_str_culture_rich_name.isengard}Uruk-hai" />
+	<string id="str_culture_rich_name.gundabad" text="{=taom_str_culture_rich_name.gundabad}Gundabad Orcs" />
+	<string id="str_culture_rich_name.umbar" text="{=taom_str_culture_rich_name.umbar}Umbar" />
+	<string id="str_culture_rich_name.dolguldur" text="{=taom_str_culture_rich_name.dolguldur}Dol Guldur" />
+	<string id="str_culture_rich_name.gondor" text="{=taom_str_culture_rich_name.gondor}Gondorians" />
+	<string id="str_culture_rich_name.mordor" text="{=taom_str_culture_rich_name.mordor}Mordor" />
+
+	<!-- ============================================== -->
+	<!-- Culture Adjectives                             -->
+	<!-- ============================================== -->
+
+	<string id="str_adjective_for_culture.empire" text="{=taom_str_adjective_for_culture.empire}Dunlending" />
+	<string id="str_adjective_for_culture.vlandia" text="{=taom_str_adjective_for_culture.vlandia}Rohirric" />
+	<string id="str_adjective_for_culture.battania" text="{=taom_str_adjective_for_culture.battania}Variag" />
+	<string id="str_adjective_for_culture.khuzait" text="{=taom_str_adjective_for_culture.khuzait}Easterling" />
+	<string id="str_adjective_for_culture.aserai" text="{=taom_str_adjective_for_culture.aserai}Haradrim" />
+	<string id="str_adjective_for_culture.sturgia" text="{=taom_str_adjective_for_culture.sturgia}Barding" />
+	<string id="str_adjective_for_culture.erebor" text="{=taom_str_adjective_for_culture.erebor}Dwarven" />
+	<string id="str_adjective_for_culture.rivendell" text="{=taom_str_adjective_for_culture.rivendell}Rivendellian" />
+	<string id="str_adjective_for_culture.mirkwood" text="{=taom_str_adjective_for_culture.mirkwood}Mirkwood" />
+	<string id="str_adjective_for_culture.lothlorien" text="{=taom_str_adjective_for_culture.lothlorien}Lothlorien" />
+	<string id="str_adjective_for_culture.isengard" text="{=taom_str_adjective_for_culture.isengard}Isengarder" />
+	<string id="str_adjective_for_culture.gundabad" text="{=taom_str_adjective_for_culture.gundabad}Gundabad" />
+	<string id="str_adjective_for_culture.umbar" text="{=taom_str_adjective_for_culture.umbar}Umbarian" />
+	<string id="str_adjective_for_culture.dolguldur" text="{=taom_str_adjective_for_culture.dolguldur}Dol Guldur" />
+	<string id="str_adjective_for_culture.gondor" text="{=taom_str_adjective_for_culture.gondor}Gondorian" />
+	<string id="str_adjective_for_culture.mordor" text="{=taom_str_adjective_for_culture.mordor}Mordorian" />
+
+	<!-- ============================================== -->
+	<!-- Player Parent Names (Character Creation)       -->
+	<!-- ============================================== -->
+
+	<!-- Vanilla cultures (LOTR-themed replacements) -->
+	<string id="str_player_father_name.empire" text="{=taom_str_player_father_name.empire}Wulfgar" />
+	<string id="str_player_mother_name.empire" text="{=taom_str_player_mother_name.empire}Freca" />
+	<string id="str_player_father_name.vlandia" text="{=taom_str_player_father_name.vlandia}Baldred" />
+	<string id="str_player_mother_name.vlandia" text="{=taom_str_player_mother_name.vlandia}Morwen" />
+	<string id="str_player_father_name.battania" text="{=taom_str_player_father_name.battania}Variag" />
+	<string id="str_player_mother_name.battania" text="{=taom_str_player_mother_name.battania}Khara" />
+	<string id="str_player_father_name.khuzait" text="{=taom_str_player_father_name.khuzait}Khamûl" />
+	<string id="str_player_mother_name.khuzait" text="{=taom_str_player_mother_name.khuzait}Adûnaphel" />
+	<string id="str_player_father_name.aserai" text="{=taom_str_player_father_name.aserai}Suladan" />
+	<string id="str_player_mother_name.aserai" text="{=taom_str_player_mother_name.aserai}Haleth" />
+	<string id="str_player_father_name.sturgia" text="{=taom_str_player_father_name.sturgia}Bard" />
+	<string id="str_player_mother_name.sturgia" text="{=taom_str_player_mother_name.sturgia}Sigrid" />
+
+	<!-- Custom cultures -->
+	<string id="str_player_father_name.erebor" text="{=taom_str_player_father_name.erebor}Drúlin" />
+	<string id="str_player_mother_name.erebor" text="{=taom_str_player_mother_name.erebor}Orrina" />
+	<string id="str_player_father_name.rivendell" text="{=taom_str_player_father_name.rivendell}Celeforn" />
+	<string id="str_player_mother_name.rivendell" text="{=taom_str_player_mother_name.rivendell}Gilrien" />
+	<string id="str_player_father_name.mirkwood" text="{=taom_str_player_father_name.mirkwood}Galion" />
+	<string id="str_player_mother_name.mirkwood" text="{=taom_str_player_mother_name.mirkwood}Lúthien" />
+	<string id="str_player_father_name.lothlorien" text="{=taom_str_player_father_name.lothlorien}Irophin" />
+	<string id="str_player_mother_name.lothlorien" text="{=taom_str_player_mother_name.lothlorien}Oimrodel" />
+	<string id="str_player_father_name.isengard" text="{=taom_str_player_father_name.isengard}Grima" />
+	<string id="str_player_mother_name.isengard" text="{=taom_str_player_mother_name.isengard}Lurka" />
+	<string id="str_player_father_name.gundabad" text="{=taom_str_player_father_name.gundabad}Narzuk" />
+	<string id="str_player_mother_name.gundabad" text="{=taom_str_player_mother_name.gundabad}Borlia" />
+	<string id="str_player_father_name.umbar" text="{=taom_str_player_father_name.umbar}Castamir" />
+	<string id="str_player_mother_name.umbar" text="{=taom_str_player_mother_name.umbar}Berúthiel" />
+	<string id="str_player_father_name.dolguldur" text="{=taom_str_player_father_name.dolguldur}Grishmak" />
+	<string id="str_player_mother_name.dolguldur" text="{=taom_str_player_mother_name.dolguldur}Durgash" />
+	<string id="str_player_father_name.gondor" text="{=taom_str_player_father_name.gondor}Coromir" />
+	<string id="str_player_mother_name.gondor" text="{=taom_str_player_mother_name.gondor}Finduilas" />
+	<string id="str_player_father_name.mordor" text="{=taom_str_player_father_name.mordor}Gorbag" />
+	<string id="str_player_mother_name.mordor" text="{=taom_str_player_mother_name.mordor}Zhelob" />
+
 	<!-- Erebor -->
 	<string id="str_faction_official.erebor" text="{=taom_str_faction_official.erebor}a noble dwarf" />
 	<string id="str_faction_official.erebor_f" text="{=taom_str_faction_official.erebor_f}a lady dwarf" />
