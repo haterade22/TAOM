@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== MIRKWOOD CIVILIAN NPCs ==================== -->
+	<!-- Elves use default human race (no race attribute) -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_mirkwood" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mirkwood" name="{=aom_mk_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to mirkwood_recruit) -->
+	<NPCCharacter id="villager_mirkwood" default_group="Infantry" level="1" name="{=aom_mk_villager}Villager" occupation="Villager" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.mirkwood_recruit" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_mirkwood" default_group="Infantry" level="26" name="{=aom_mk_caravan_master}Mirkwood Caravan Master" occupation="CaravanGuard" culture="Culture.mirkwood">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
+				<equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_mirkwood" default_group="Infantry" level="21" name="{=aom_mk_caravan_guard}Mirkwood Caravan Guard" occupation="CaravanGuard" culture="Culture.mirkwood">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
+				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
+				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_mirkwood" default_group="Infantry" level="26" name="{=aom_mk_vet_caravan_guard}Mirkwood Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mirkwood">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
+				<equipment slot="Head" id="Item.mkwd_inf3_t4_helmet_gold_hc" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_mirkwood" default_group="Infantry" level="16" name="{=aom_mk_armed_trader}Mirkwood Armed Trader" occupation="CaravanGuard" culture="Culture.mirkwood">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_mirkwood" default_group="Infantry" level="4" culture="Culture.mirkwood" occupation="PrisonGuard" name="{=aom_mk_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item1" id="Item.mirkwood_spear_a01" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_mirkwood" default_group="Infantry" level="16" name="{=aom_mk_guard}Guard" occupation="Soldier" culture="Culture.mirkwood">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
+				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
+				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_mirkwood" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.mirkwood" name="{=aom_mk_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_mirkwood" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.mirkwood" name="{=aom_mk_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_mirkwood" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.mirkwood" name="{=aom_mk_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_mirkwood" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.mirkwood" name="{=aom_mk_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_mirkwood" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.mirkwood" name="{=aom_mk_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_mirkwood" default_group="Infantry" is_hero="false" name="{=aom_mk_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_mirkwood" default_group="Infantry" is_hero="false" name="{=aom_mk_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_mirkwood" default_group="Infantry" is_hero="false" name="{=aom_mk_musician}Musician" occupation="Musician" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_mirkwood" default_group="Infantry" is_hero="false" name="{=aom_mk_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="barber_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="shop_worker_mirkwood" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.mirkwood" name="{=aom_mk_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_mirkwood" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.mirkwood" name="{=aom_mk_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_mirkwood" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables -->
+	<NPCCharacter id="merchant_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.mirkwood" name="{=aom_mk_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="artisan_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="preacher_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="rural_notable_notary_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_mirkwood" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_mirkwood" default_group="Infantry" name="{=aom_mk_townsman}Townsman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_mirkwood" default_group="Infantry" name="{=aom_mk_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_mirkwood" default_group="Infantry" name="{=aom_mk_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_mirkwood" default_group="Infantry" name="{=aom_mk_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_mirkwood" default_group="Infantry" name="{=aom_mk_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_mirkwood" default_group="Infantry" name="{=aom_mk_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_mirkwood" default_group="Infantry" name="{=aom_mk_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_mirkwood" default_group="Infantry" name="{=aom_mk_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Population -->
+	<NPCCharacter id="village_woman_mirkwood" default_group="Infantry" name="{=aom_mk_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_child_mirkwood" default_group="Infantry" name="{=aom_mk_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_mirkwood" default_group="Infantry" name="{=aom_mk_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_child_mirkwood" default_group="Infantry" name="{=aom_mk_villager_child}Village Child" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_mirkwood" default_group="Infantry" name="{=aom_mk_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_mirkwood" default_group="Infantry" name="{=aom_mk_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_mirkwood" default_group="Infantry" name="{=aom_mk_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_mirkwood" default_group="Infantry" name="{=aom_mk_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_mirkwood" default_group="Infantry" name="{=aom_mk_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_mirkwood" default_group="Infantry" name="{=aom_mk_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

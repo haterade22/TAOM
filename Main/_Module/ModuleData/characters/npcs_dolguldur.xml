@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== DOL GULDUR CIVILIAN NPCs ==================== -->
+	<!-- All use race="dg_uruk" for correct orc rendering -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.dolguldur" name="{=aom_dg_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_d" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_d" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to goblin slave) -->
+	<NPCCharacter id="villager_dolguldur" race="dg_uruk" default_group="Infantry" level="1" name="{=aom_dg_villager}Slave" occupation="Villager" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.dg_goblin_slave" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_dolguldur" race="dg_uruk" default_group="Infantry" level="26" name="{=aom_dg_caravan_master}Dol Guldur Caravan Master" occupation="CaravanGuard" culture="Culture.dolguldur">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a03" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="21" name="{=aom_dg_caravan_guard}Dol Guldur Caravan Guard" occupation="CaravanGuard" culture="Culture.dolguldur">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="26" name="{=aom_dg_vet_caravan_guard}Dol Guldur Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.dolguldur">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a03" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+				<equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_b" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_b" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_dolguldur" race="dg_uruk" default_group="Infantry" level="16" name="{=aom_dg_armed_trader}Dol Guldur Armed Trader" occupation="CaravanGuard" culture="Culture.dolguldur">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+				<equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="4" culture="Culture.dolguldur" occupation="PrisonGuard" name="{=aom_dg_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item1" id="Item.wm_dol_goldur_halberd_a01" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_dolguldur" race="dg_uruk" default_group="Infantry" level="16" name="{=aom_dg_guard}Guard" occupation="Soldier" culture="Culture.dolguldur">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.dolguldur" name="{=aom_dg_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a01" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.dolguldur" name="{=aom_dg_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.dolguldur" name="{=aom_dg_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.dolguldur" name="{=aom_dg_warg_merchant}Warg Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.dolguldur" name="{=aom_dg_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" name="{=aom_dg_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" name="{=aom_dg_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" name="{=aom_dg_musician}Musician" occupation="Musician" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" name="{=aom_dg_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="barber_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="shop_worker_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.dolguldur" name="{=aom_dg_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.dolguldur" name="{=aom_dg_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_dolguldur" race="dg_uruk" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_axe_a03" />
+				<equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables -->
+	<NPCCharacter id="merchant_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.dolguldur" name="{=aom_dg_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="artisan_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="preacher_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="rural_notable_notary_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townsman}Townsman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Population -->
+	<NPCCharacter id="village_woman_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_child_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_child_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_villager_child}Village Child" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>
