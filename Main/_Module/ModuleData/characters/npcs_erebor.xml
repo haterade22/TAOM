@@ -415,10 +415,11 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Notables -->
-	<NPCCharacter id="merchant_notary_erebor" race="dwarf" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.erebor" name="{=aom_er_merchant_notary}Merchant Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_erebor_0" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0}Cautious dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
@@ -426,22 +427,32 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="artisan_notary_erebor" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_artisan_notary}Artisan Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_erebor_0b" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0b}Dwarven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
-				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_1" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_1}Ruthless dwarven trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="preacher_notary_erebor" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_preacher_notary}Preacher Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_erebor_1b" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_1b}Cold dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
@@ -449,14 +460,253 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-
-	<NPCCharacter id="rural_notable_notary_erebor" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_rural_notary}Rural Notary" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="spc_notable_erebor_2" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_2}Dwarven gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_2b" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_2b}Cautious dwarven ore trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_3" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_3}Self-made dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_3b" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_3b}Jocular dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_4" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_4}Shrewd dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_d" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_4b" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_4b}Devious dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_erebor_5" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_er_notable_5}Zealous dwarven loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_6" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_6}Stern dwarven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_7" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_er_notable_7}Dwarven keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_erebor_8" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_8}Gruff dwarven smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_9" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_er_notable_9}Outgoing dwarven craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_erebor_gl1" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_gl1}Protective dwarven ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_10" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_10}Ironic dwarven gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_11" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_11}Intimidating dwarven enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_d" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_gl4" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_gl4}Bestial dwarven thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_12" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_12}Cunning dwarven smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_13" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_13}Menacing dwarven gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_erebor_21" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_21}Gruff dwarven landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_erebor_22" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_22}Agreeable dwarven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_erebor_headman_1" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_er_headman_1}Rebellious dwarven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_erebor_headman_2" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_headman_2}Conservative dwarven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_erebor_headman_3" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_headman_3}Devious dwarven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
