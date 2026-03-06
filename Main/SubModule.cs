@@ -51,6 +51,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch5_FaceGen");
         _harmony.PatchCategory("Late_Transpiler");
         _harmony.PatchCategory("Late_ActionSetOverride");
+        _harmony.PatchCategory("Patch6_BannerEditor");
     }
 
     protected override void OnSubModuleUnloaded()
