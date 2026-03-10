@@ -23,13 +23,13 @@
                 value="0" />
             <skill
                 id="OneHanded"
-                value="33" />
+                value="28" />
             <skill
                 id="TwoHanded"
-                value="18" />
+                value="23" />
             <skill
                 id="Polearm"
-                value="28" />
+                value="23" />
             <skill
                 id="Bow"
                 value="0" />
@@ -38,7 +38,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="20" />
+                value="15" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -176,22 +176,22 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="65" />
+                value="60" />
             <skill
                 id="TwoHanded"
-                value="55" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="5" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="0" />
             <skill
                 id="Throwing"
-                value="30" />
+                value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -324,22 +324,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="95" />
+                value="90" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="90" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="40" />
+                value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -487,22 +487,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="130" />
+                value="125" />
             <skill
                 id="TwoHanded"
-                value="110" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="130" />
+                value="125" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -633,22 +633,22 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="180" />
+                value="175" />
             <skill
                 id="TwoHanded"
-                value="155" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="165" />
             <skill
                 id="Bow"
                 value="15" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="80" />
+                value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -779,22 +779,22 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="250" />
+                value="245" />
             <skill
                 id="TwoHanded"
-                value="210" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="220" />
+                value="215" />
             <skill
                 id="Bow"
                 value="20" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -923,22 +923,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="115" />
-            <skill
-                id="TwoHanded"
                 value="110" />
             <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
                 id="Polearm"
-                value="145" />
+                value="140" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -1084,22 +1084,22 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="180" />
+                value="175" />
             <skill
                 id="TwoHanded"
-                value="155" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="165" />
             <skill
                 id="Bow"
                 value="15" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="80" />
+                value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -1245,22 +1245,22 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="235" />
+                value="230" />
             <skill
                 id="TwoHanded"
-                value="210" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="235" />
+                value="230" />
             <skill
                 id="Bow"
                 value="20" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1404,22 +1404,22 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="35" />
+                value="30" />
             <skill
                 id="TwoHanded"
-                value="25" />
+                value="30" />
             <skill
                 id="Polearm"
-                value="30" />
+                value="25" />
             <skill
                 id="Bow"
                 value="50" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="30" />
+                value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -1556,22 +1556,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="75" />
+                value="70" />
             <skill
                 id="TwoHanded"
-                value="45" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="45" />
+                value="40" />
             <skill
                 id="Bow"
                 value="80" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="20" />
             <skill
                 id="Throwing"
-                value="40" />
+                value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -1702,22 +1702,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="105" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="125" />
             <skill
                 id="Crossbow"
-                value="30" />
+                value="25" />
             <skill
                 id="Throwing"
-                value="50" />
+                value="45" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1858,22 +1858,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="95" />
+                value="90" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="90" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="40" />
+                value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2006,22 +2006,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="145" />
+                value="140" />
             <skill
                 id="TwoHanded"
-                value="110" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="115" />
+                value="110" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2152,22 +2152,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="130" />
+                value="125" />
             <skill
                 id="TwoHanded"
-                value="110" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="130" />
+                value="125" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2384,22 +2384,22 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="180" />
+                value="175" />
             <skill
                 id="TwoHanded"
-                value="155" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="165" />
             <skill
                 id="Bow"
                 value="15" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="80" />
+                value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2616,22 +2616,22 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="195" />
+                value="190" />
             <skill
                 id="TwoHanded"
-                value="155" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="155" />
+                value="150" />
             <skill
                 id="Bow"
                 value="15" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="80" />
+                value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2777,22 +2777,22 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="235" />
+                value="230" />
             <skill
                 id="TwoHanded"
-                value="210" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="235" />
+                value="230" />
             <skill
                 id="Bow"
                 value="20" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2935,22 +2935,22 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="235" />
+                value="230" />
             <skill
                 id="TwoHanded"
-                value="210" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="235" />
+                value="230" />
             <skill
                 id="Bow"
                 value="20" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3092,22 +3092,22 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="235" />
+                value="230" />
             <skill
                 id="TwoHanded"
-                value="210" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="235" />
+                value="230" />
             <skill
                 id="Bow"
                 value="20" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3160,22 +3160,22 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="65" />
+                value="60" />
             <skill
                 id="TwoHanded"
-                value="55" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="5" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="0" />
             <skill
                 id="Throwing"
-                value="30" />
+                value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -3228,22 +3228,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="95" />
+                value="90" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="90" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="40" />
+                value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -3296,22 +3296,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="130" />
+                value="125" />
             <skill
                 id="TwoHanded"
-                value="110" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="130" />
+                value="125" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3362,22 +3362,22 @@
                 value="35" />
             <skill
                 id="OneHanded"
-                value="355" />
+                value="350" />
             <skill
                 id="TwoHanded"
-                value="330" />
+                value="335" />
             <skill
                 id="Polearm"
-                value="350" />
+                value="345" />
             <skill
                 id="Bow"
                 value="35" />
             <skill
                 id="Crossbow"
-                value="30" />
+                value="25" />
             <skill
                 id="Throwing"
-                value="110" />
+                value="105" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3494,22 +3494,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="115" />
-            <skill
-                id="TwoHanded"
                 value="110" />
             <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
                 id="Polearm"
-                value="145" />
+                value="140" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3562,22 +3562,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="105" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="125" />
             <skill
                 id="Crossbow"
-                value="30" />
+                value="25" />
             <skill
                 id="Throwing"
-                value="50" />
+                value="45" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3632,22 +3632,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="115" />
-            <skill
-                id="TwoHanded"
                 value="110" />
             <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
                 id="Polearm"
-                value="145" />
+                value="140" />
             <skill
                 id="Bow"
                 value="10" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="55" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3703,22 +3703,22 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="105" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="125" />
             <skill
                 id="Crossbow"
-                value="30" />
+                value="25" />
             <skill
                 id="Throwing"
-                value="50" />
+                value="45" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>

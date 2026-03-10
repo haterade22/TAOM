@@ -93,64 +93,64 @@ GROUP_BASELINES = {
 # =============================================================================
 
 CULTURAL_MODS = {
-    'erebor': {
-        'OneHanded': 10, 'TwoHanded': 10, 'Throwing': 10,
-        'Riding': -5, 'Bow': -5,
-    },
-    'iron_hills': {
-        'OneHanded': 10, 'Polearm': 10, 'Crossbow': 10,
-        'Riding': -5, 'Bow': -5,
-    },
     'gondor': {
-        'Polearm': 5, 'OneHanded': 5,
-        'Throwing': -5,
+        'Athletics': 5, 'Riding': 5, 'OneHanded': 10, 'TwoHanded': 5,
+        'Polearm': 5, 'Throwing': -10,
     },
     'rohan': {
-        'Riding': 10, 'Polearm': 10,
-        'Crossbow': -5,
+        'Riding': 20, 'Polearm': 10, 'Throwing': 2,
+        'Athletics': -5, 'Bow': -5, 'Crossbow': -10,
     },
-    'isengard': {
-        'Athletics': 5, 'OneHanded': 10, 'TwoHanded': 10,
-        'Bow': -5, 'Riding': -5,
+    'erebor': {
+        'Athletics': 10, 'OneHanded': 10, 'TwoHanded': 20, 'Polearm': 10, 'Throwing': 10,
+        'Riding': -20,
     },
-    'mordor': {
-        'OneHanded': 5, 'Throwing': 10,
-        'Athletics': -5, 'Riding': -5, 'Bow': -5,
-    },
-    'harad': {
-        'Riding': 10, 'Bow': 10,
-        'Athletics': -5,
-    },
-    'rhun_new': {
-        'Polearm': 10, 'TwoHanded': 5, 'Riding': 8,
-        'Bow': -5, 'Throwing': -5,
-    },
-    'dunland': {
-        'Throwing': 10, 'TwoHanded': 5,
+    'iron_hills': {
+        'Athletics': 10, 'OneHanded': 15, 'TwoHanded': 20, 'Polearm': 20, 'Crossbow': 5, 'Throwing': 10,
         'Riding': -5,
     },
-    'dolguldur': {
-        'Riding': 5,
-        'Athletics': -5, 'Polearm': -5,
-    },
-    'gundabad': {
-        'Athletics': 10, 'TwoHanded': 10,
-        'Riding': -5, 'Bow': -5,
-    },
     'rivendell': {
-        'Athletics': 45, 'Riding': 45, 'OneHanded': 50, 'TwoHanded': 50,
-        'Polearm': 50, 'Bow': 50, 'Crossbow': 0, 'Throwing': 45,
+        'Athletics': 35, 'Riding': 30, 'OneHanded': 35, 'TwoHanded': 40,
+        'Polearm': 40, 'Bow': 40, 'Crossbow': 40, 'Throwing': 40,
     },
     'mirkwood': {
-        'Bow': 40, 'Athletics': 30, 'OneHanded': 25, 'TwoHanded': 25,
-        'Polearm': 25, 'Riding': 20, 'Throwing': 20,
+        'Athletics': 45, 'Riding': 5, 'OneHanded': 40, 'TwoHanded': 30,
+        'Polearm': 30, 'Bow': 50, 'Crossbow': 50, 'Throwing': 50,
     },
     'lothlorien': {
-        'Bow': 35, 'OneHanded': 35, 'TwoHanded': 35, 'Polearm': 35,
-        'Athletics': 30, 'Riding': 25, 'Throwing': 25,
+        'Athletics': 35, 'Riding': 25, 'OneHanded': 30, 'TwoHanded': 25,
+        'Polearm': 30, 'Bow': 35, 'Crossbow': 35, 'Throwing': 35,
+    },
+    'isengard': {
+        'Athletics': 10, 'Riding': 5, 'OneHanded': 10, 'TwoHanded': 15,
+        'Polearm': 15, 'Crossbow': 10, 'Throwing': 10,
+    },
+    'mordor': {
+        'TwoHanded': 5, 'Throwing': 5,
+        'Athletics': -5, 'Riding': -5, 'Polearm': -5, 'Bow': -5, 'Crossbow': -5,
+    },
+    'gundabad': {
+        'Athletics': 5, 'TwoHanded': 10, 'Polearm': 5, 'Throwing': 5,
+        'Riding': -5, 'Bow': -10, 'Crossbow': -10,
+    },
+    'dolguldur': {
+        'OneHanded': 5, 'TwoHanded': 5,
+        'Riding': -10, 'Polearm': 0, 'Bow': -5, 'Crossbow': -5,
+    },
+    'harad': {
+        'Riding': 15, 'OneHanded': 5, 'Bow': 10,
+        'TwoHanded': -10, 'Polearm': -5,
+    },
+    'rhun_new': {
+        'Athletics': 5, 'Riding': 18, 'Polearm': 15,
+        'Bow': -10, 'Crossbow': -10, 'Throwing': -5,
+    },
+    'dunland': {
+        'Athletics': 20, 'OneHanded': 5, 'TwoHanded': 5, 'Throwing': 15,
+        'Riding': -5,
     },
     'umbar': {
-        'OneHanded': 5, 'Polearm': 5,
+        'Athletics': 5, 'OneHanded': 5, 'Polearm': 5,
         'Riding': -5, 'Bow': -5,
     },
 }
