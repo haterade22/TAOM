@@ -49,6 +49,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Features | `Main/Features/` | Feature modules |
 | Adapters | `Main/Adapters/` | Wraps sealed types |
 | Core | `Main/Core/` | Core infrastructure |
+| GameModels | `Main/Features/TroopProgression/Models/` | Troop tier, wage, volunteer overrides |
 | XML config | `Main/_Module/ModuleData/` | Game configuration |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` | Vanilla XML transformations |
 | **TaleWorlds DLLs** | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` | Decompile on demand |
@@ -128,6 +129,16 @@ Use agent teams when work can be parallelized across independent directories. Se
 - `IoC.cs` and `SubModule.cs` are single-owner files — lead integrates last
 - Never run `./build.ps1` from two agents simultaneously
 - Windows uses in-process mode (CLI flag: `--teammate-mode in-process`)
+
+## GameModel Overrides
+
+TAOM overrides vanilla GameModels via `CampaignGameStarter.AddModel()` in `SubModule.OnGameStart`. Last registered model wins. Models are thin entry points that delegate to IoC-resolved services.
+
+| GameModel | Overrides | Purpose |
+|-----------|-----------|---------|
+| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) |
+| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10), level-bracket recruitment costs, `MaxWagePaymentLimit => 20000` |
+| `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) |
 
 ## Architecture (One-liner)
 

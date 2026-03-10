@@ -2,6 +2,41 @@
 
 ## 2026-03-10
 
+### Troop Progression — Level 51 Support (TroopProgression Feature)
+
+Ported LOTRAOM's extended troop tier system to TAOM for Bannerlord 1.3. Raises the troop tier cap from vanilla's 6 (level 31+) to 10 (level 51+), enabling meaningful differentiation across all troop levels produced by the rebalance script.
+
+**C# Implementation (10 files):**
+- `TaomCharacterStatsModel` — GameModel override: `MaxCharacterTier => 10` (vanilla 6). Vanilla `GetTier()` formula `Ceiling((level-5)/5)` clamped to `[0, MaxCharacterTier]` naturally produces tiers 7-10 for levels 36-55
+- `TaomPartyWageModel` — GameModel override: extended tier-based wages (T0=1 through T10=30) and level-bracket recruitment costs (L1=10 through L51=3600, L52+=4000). `MaxWagePaymentLimit` raised to 20,000 (vanilla 10,000). Includes mounted surcharge (1.3x) and mercenary/gangster/caravan guard multipliers
+- `TaomVolunteerModel` — GameModel override: `MaxVolunteerTier => 6` (vanilla 4), allowing higher-tier volunteers
+- `TroopCostService` / `ITroopCostService` — wage and recruitment cost calculations using primitives only (no sealed types)
+- `VolunteerTierService` / `IVolunteerTierService` — volunteer tier configuration
+- `TroopProgressionIoC` — DryIoc feature registration
+- 37 `TroopCostServiceTests` + 2 `VolunteerTierServiceTests` = 39 new tests
+
+**Tier-to-level mapping (with MaxCharacterTier=10):**
+
+| Tier | Levels | Wage | Recruitment Cost |
+|------|--------|------|-----------------|
+| 0 | 1-5 | 1 | 10-20 |
+| 1 | 6-10 | 2 | 20-50 |
+| 2 | 11-15 | 3 | 50-200 |
+| 3 | 16-20 | 5 | 200-400 |
+| 4 | 21-25 | 8 | 400-600 |
+| 5 | 26-30 | 12 | 600-1000 |
+| 6 | 31-35 | 15 | 1000-1500 |
+| 7 | 36-40 | 18 | 1500-2100 |
+| 8 | 41-45 | 20 | 2100-2800 |
+| 9 | 46-50 | 25 | 2800-3600 |
+| 10 | 51-55 | 30 | 3600-4000 |
+
+**Integration:** GameModels registered via `CampaignGameStarter.AddModel()` in `SubModule.OnGameStart` — "last model wins" semantics ensure TAOM overrides vanilla defaults.
+
+**Not yet ported from LOTRAOM (future work):** culture feat wage modifiers (6 factions), `GetTotalWage` faction modifiers, race bonus wage hooks, settlement-specific volunteer pools.
+
+---
+
 ### Troop Skill Rebalancing — All 13 Culture Files (545 troops)
 
 Comprehensive skill rebalancing across all troop trees using a uniform baseline + cultural modifier formula. Previously, skills were wildly inconsistent: Rhun had placeholder 150 values, Rivendell had 300+ at level 21 (3x peers), Umbar/Dunland cavalry were 0.5x average, and 40 militia entries had zero skills.

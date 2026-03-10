@@ -5,6 +5,8 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
+using TAOM.Features.TroopProgression;
+using TAOM.Features.TroopProgression.Models;
 
 namespace TAOM;
 
@@ -37,6 +39,12 @@ public class SubModule : MBSubModuleBase
 
             var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
             campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService));
+
+            var costService = IoC.Resolve<ITroopCostService>();
+            var volunteerService = IoC.Resolve<IVolunteerTierService>();
+            campaignStarter.AddModel(new TaomCharacterStatsModel());
+            campaignStarter.AddModel(new TaomPartyWageModel(costService));
+            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService));
         }
     }
 

@@ -6,6 +6,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
+using TAOM.Features.TroopProgression;
 
 namespace TAOM;
 
@@ -24,6 +25,7 @@ public static class IoC
 
         HeroRaceIoC.RegisterHeroRaceFeature(container);
         BannerInjectionIoC.RegisterBannerInjectionFeature(container);
+        TroopProgressionIoC.RegisterTroopProgressionFeature(container);
 
         _container = container;
     }
