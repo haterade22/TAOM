@@ -30,7 +30,7 @@ Every troop now follows a consistent formula: **baseline skills per level + cult
 | **Isengard** | Brute force — athletics, melee | Archery, mounted |
 | **Mordor** | Throwing weapons, swords | Athletics, riding, bows |
 | **Harad** | Cavalry, archery | Athletics |
-| **Rhun** | Polearms, two-handed | Archery, throwing |
+| **Rhun** | Polearms, riding, two-handed | Archery, throwing |
 | **Dunland** | Throwing weapons, two-handed | Riding |
 | **Dol Guldur** | Warg riders | Athletics, polearms |
 | **Gundabad** | Heavy brutes — athletics, two-handed | Riding, bows |
@@ -71,7 +71,7 @@ Final Skill = Baseline[level][group][skill] + Cultural Modifier[culture][skill]
 - **Uruk-hai (Isengard):** Bred for war. +10 OneHanded and TwoHanded plus +5 Athletics makes them fearsome foot soldiers. Poor archers and riders.
 - **Orcs (Mordor):** Strength in numbers, not skill. +5 OneHanded and +10 Throwing, but penalties to Athletics, Riding, and Bow. Slightly below average overall — they win through volume.
 - **Haradrim (Harad):** Desert cavalry and archers. +10 Riding and +10 Bow makes their Mumakil riders and archers dangerous. Slightly less athletic on foot.
-- **Easterlings (Rhun):** Disciplined polearm formations. +10 Polearm and +5 TwoHanded but weaker ranged capability.
+- **Easterlings (Rhun):** Disciplined polearm formations with strong cavalry. +10 Polearm, +8 Riding, and +5 TwoHanded but weaker ranged capability.
 - **Dunlendings (Dunland):** Wild raiders. +10 Throwing and +5 TwoHanded — they hurl javelins and charge in with axes. Can't ride well.
 - **Orcs of Dol Guldur:** Warg-riding specialists (+5 Riding for mounted units), but less athletic and weaker with polearms than other orc factions.
 - **Gundabad Orcs:** The biggest, meanest orcs. +10 Athletics and +10 TwoHanded — these are the bruisers. Terrible archers and riders.

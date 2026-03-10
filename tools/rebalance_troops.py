@@ -122,7 +122,7 @@ CULTURAL_MODS = {
         'Athletics': -5,
     },
     'rhun_new': {
-        'Polearm': 10, 'TwoHanded': 5,
+        'Polearm': 10, 'TwoHanded': 5, 'Riding': 8,
         'Bow': -5, 'Throwing': -5,
     },
     'dunland': {

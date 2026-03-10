@@ -60,7 +60,7 @@ Comprehensive skill rebalancing across all troop trees using a uniform baseline 
 | Isengard | Athletics +5, OneHanded +10, TwoHanded +10 | Bow -5, Riding -5 |
 | Mordor | OneHanded +5, Throwing +10 | Athletics -5, Riding -5, Bow -5 |
 | Harad | Riding +10, Bow +10 | Athletics -5 |
-| Rhun | Polearm +10, TwoHanded +5 | Bow -5, Throwing -5 |
+| Rhun | Polearm +10, Riding +8, TwoHanded +5 | Bow -5, Throwing -5 |
 | Dunland | Throwing +10, TwoHanded +5 | Riding -5 |
 | Dol Guldur | Riding +5 | Athletics -5, Polearm -5 |
 | Gundabad | Athletics +10, TwoHanded +10 | Riding -5, Bow -5 |
