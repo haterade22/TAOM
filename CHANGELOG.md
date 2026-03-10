@@ -2,6 +2,40 @@
 
 ## 2026-03-10
 
+### Armor Rebalancing — 2,368 Items Across 17 Cultures
+
+Comprehensive armor stat rebalancing using a uniform baseline + cultural modifier formula, mirroring the troop skill rebalancing system.
+
+**Approach:**
+- Created `tools/rebalance_armor.py` — Python script with baseline armor values per tier (civilian/light/medium/heavy/elite/lord) and per-slot (head/body/arm/leg/shoulder), plus cultural modifiers
+- Tier detection via keyword matching on item names/IDs with value-based fallback
+- Numbered variants (I, II, III...) get +1 armor progression within each tier
+- Material type corrected: light=Leather, medium=Chainmail, heavy+=Plate
+
+**Baseline body armor values:** civilian=5, light=20, medium=32, heavy=42, elite=50, lord=60
+
+**Cultural Identities:**
+
+| Culture | Protection Mod | Weight Mult | Identity |
+|---------|---------------|-------------|----------|
+| Erebor | +4 | 1.05x | Master dwarven smiths |
+| Iron Hills | +5 | 1.10x | Heaviest dwarven armor |
+| Rivendell | +6 | 0.70x | Finest elven masterwork |
+| Mirkwood | +5 | 0.65x | Lightest elven craft |
+| Lothlorien | +5 | 0.70x | Golden wood craft |
+| Gondor | +0 | 1.00x | Reference culture |
+| Rohan | -2 | 0.90x | Lighter for mounted |
+| Isengard | +2 | 1.15x | Industrial heavy |
+| Mordor | -1 | 1.10x | Crude mass-produced |
+| Gundabad | -2 | 1.15x | Crude but heavy |
+| Harad | -3 | 0.85x | Desert light armor |
+| Dunland | -2 | 0.95x | Hill-folk |
+
+**Files modified:** 83 armor XMLs in `taommod/src/data/armory/` + `tools/rebalance_armor.py`
+**Item count:** 2,368 armor items across 17 cultures, 5 armor slots
+
+---
+
 ### Troop Progression — Level 51 Support (TroopProgression Feature)
 
 Ported LOTRAOM's extended troop tier system to TAOM for Bannerlord 1.3. Raises the troop tier cap from vanilla's 6 (level 31+) to 10 (level 51+), enabling meaningful differentiation across all troop levels produced by the rebalance script.
