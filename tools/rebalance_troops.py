@@ -275,6 +275,100 @@ def get_display_name(name_attr):
     return name_attr
 
 
+def apply_skills_via_regex(filepath, troop_skill_map):
+    """
+    Apply skill changes to XML file using regex, preserving all formatting.
+    troop_skill_map: dict of troop_id -> {skill_id: value, ...}
+    """
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    for troop_id, new_skills in troop_skill_map.items():
+        # Find the NPCCharacter block for this troop
+        # Try <skills>...</skills> first, then self-closing <skills />
+        pattern = re.compile(
+            r'(id="' + re.escape(troop_id) + r'".*?<skills>)(.*?)(</skills>)',
+            re.DOTALL
+        )
+        match = pattern.search(content)
+
+        # Handle self-closing <skills /> (used in some militia entries)
+        if not match:
+            self_close_pattern = re.compile(
+                r'(id="' + re.escape(troop_id) + r'".*?)(<skills\s*/>)',
+                re.DOTALL
+            )
+            self_close_match = self_close_pattern.search(content)
+            if self_close_match:
+                # Replace <skills /> with <skills>..skills..</skills>
+                skills_line_match = re.search(r'\n(\s*)<skills', content[max(0, self_close_match.start(2) - 200):self_close_match.start(2) + 20])
+                indent = '        '
+                if skills_line_match:
+                    indent = skills_line_match.group(1)
+                skill_indent = indent + '    '
+                skill_lines = []
+                for skill_id in SKILL_NAMES:
+                    value = new_skills.get(skill_id, 0)
+                    skill_lines.append(
+                        f'{skill_indent}<skill\n'
+                        f'{skill_indent}    id="{skill_id}"\n'
+                        f'{skill_indent}    value="{value}" />'
+                    )
+                replacement = '<skills>\n' + '\n'.join(skill_lines) + '\n' + indent + '</skills>'
+                content = content[:self_close_match.start(2)] + replacement + content[self_close_match.end(2):]
+            continue
+
+        skills_block = match.group(2)
+
+        # Check if skills block is empty (militia entries with <skills></skills>)
+        if not skills_block.strip():
+            # Detect indentation from the <skills> tag
+            skills_tag_pos = match.start(1)
+            line_start = content.rfind('\n', 0, match.start(0)) + 1
+            # Find indentation of <skills> line
+            skills_line_match = re.search(r'\n(\s*)<skills>', content[match.start(1) - 200:match.end(1)])
+            indent = '            '  # Default 12 spaces
+            if skills_line_match:
+                indent = skills_line_match.group(1)
+
+            skill_indent = indent + '    '
+            skill_lines = []
+            for skill_id in SKILL_NAMES:
+                value = new_skills.get(skill_id, 0)
+                skill_lines.append(
+                    f'{skill_indent}<skill\n'
+                    f'{skill_indent}    id="{skill_id}"\n'
+                    f'{skill_indent}    value="{value}" />'
+                )
+            new_skills_block = '\n' + '\n'.join(skill_lines) + '\n' + indent
+
+            content = content[:match.start(2)] + new_skills_block + content[match.end(2):]
+        else:
+            # Replace each skill value within the existing skills block
+            new_skills_block = skills_block
+            for skill_id, value in new_skills.items():
+                skill_pattern = re.compile(
+                    r'(id="' + re.escape(skill_id) + r'"\s+value=")(\d+)(")'
+                )
+                new_skills_block = skill_pattern.sub(
+                    lambda m: m.group(1) + str(value) + m.group(3),
+                    new_skills_block
+                )
+                # Also handle value before id: value="X" id="SkillName"
+                skill_pattern_alt = re.compile(
+                    r'(value=")(\d+)("\s+id="' + re.escape(skill_id) + r'")'
+                )
+                new_skills_block = skill_pattern_alt.sub(
+                    lambda m, v=value: m.group(1) + str(v) + m.group(3),
+                    new_skills_block
+                )
+
+            content = content[:match.start(2)] + new_skills_block + content[match.end(2):]
+
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+
 def process_file(filepath, dry_run=True):
     """Process a single troop XML file. Returns list of change records."""
     filename = os.path.basename(filepath)
@@ -283,11 +377,12 @@ def process_file(filepath, dry_run=True):
 
     filename_culture = filename.replace('troops_', '').replace('.xml', '')
 
-    # Parse preserving formatting
+    # Parse with ElementTree for reading only (never write with ET)
     tree = ET.parse(filepath)
     root = tree.getroot()
 
     changes = []
+    troop_skill_map = {}  # For regex-based writing
 
     for npc in root.findall('.//NPCCharacter'):
         troop_id = npc.get('id', '')
@@ -340,16 +435,12 @@ def process_file(filepath, dry_run=True):
             'delta': total_new - total_old,
         })
 
-        # Apply changes to XML if not dry run
-        if not dry_run and has_change and skills_elem is not None:
-            for s in skills_elem.findall('skill'):
-                skill_id = s.get('id')
-                if skill_id in new_skills:
-                    s.set('value', str(new_skills[skill_id]))
+        if has_change:
+            troop_skill_map[troop_id] = new_skills
 
-    # Write back if not dry run
-    if not dry_run:
-        tree.write(filepath, encoding='utf-8', xml_declaration=True)
+    # Apply via regex (preserves all formatting, comments, whitespace)
+    if not dry_run and troop_skill_map:
+        apply_skills_via_regex(filepath, troop_skill_map)
 
     return changes
 

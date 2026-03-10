@@ -1,7 +1,14 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
-    
-    <NPCCharacter id="balcoth_volunteer" default_group="Infantry" level="11" name="{=aom_balcoth_volunteer_name}[Rhûn] Balcoth Volunteer" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== BALCOTH TROOP TREE ========== -->
+    <NPCCharacter
+        id="balcoth_volunteer"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_balcoth_volunteer_name}[Rhûn] Balcoth Volunteer"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -31,7 +38,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="balcoth_footman" default_group="Infantry" level="16" name="{=aom_balcoth_footman_name}[Rhûn] Balcoth Footman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="balcoth_footman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_balcoth_footman_name}[Rhûn] Balcoth Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -62,7 +75,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="balcoth_axeman" default_group="Infantry" level="21" name="{=aom_balcoth_axeman_name}[Rhûn] Balcoth Axeman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="balcoth_axeman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_balcoth_axeman_name}[Rhûn] Balcoth Axeman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -92,7 +111,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="balcoth_archer" default_group="Ranged" level="21" name="{=aom_balcoth_archer_name}[Rhûn] Balcoth Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="balcoth_archer"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_balcoth_archer_name}[Rhûn] Balcoth Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -124,7 +149,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="balcoth_veteran_axeman" default_group="Infantry" level="26" name="{=aom_balcoth_veteran_axeman_name}[Rhûn] Balcoth Veteran Axeman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="balcoth_veteran_axeman"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_balcoth_veteran_axeman_name}[Rhûn] Balcoth Veteran Axeman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -153,7 +184,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_veteran_archer" default_group="Ranged" level="26" name="{=aom_wainrider_veteran_archer_name}[Rhûn] Wainrider Veteran Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_veteran_archer"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_wainrider_veteran_archer_name}[Rhûn] Wainrider Veteran Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -185,7 +222,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_wind_arrow_sharpshooter" default_group="Ranged" level="31" name="{=aom_wainrider_wind_arrow_sharpshooter_name}[Rhûn] Wainrider Wind-Arrow Sharpshooter" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_wind_arrow_sharpshooter"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_wainrider_wind_arrow_sharpshooter_name}[Rhûn] Wainrider Wind-Arrow Sharpshooter"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -215,8 +258,15 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="far_rhun_levy" default_group="Infantry" level="11" name="{=aom_far_rhun_levy_name}[Rhûn] Far-Rhun Levy" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== FAR-RHUN TROOP TREE ========== -->
+    <NPCCharacter
+        id="far_rhun_levy"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_far_rhun_levy_name}[Rhûn] Far-Rhun Levy"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -247,7 +297,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_footman" default_group="Infantry" level="16" name="{=aom_far_rhun_footman_name}[Rhûn] Far-Rhun Footman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_footman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_far_rhun_footman_name}[Rhûn] Far-Rhun Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -277,7 +333,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_horseman" default_group="Cavalry" level="16" name="{=aom_far_rhun_horseman_name}[Rhûn] Far-Rhun Horseman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_horseman"
+        default_group="Cavalry"
+        level="16"
+        name="{=aom_far_rhun_horseman_name}[Rhûn] Far-Rhun Horseman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -311,7 +373,13 @@
             <equipment slot="HorseHarness" id="Item.steppe_harness" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_infantry" default_group="Infantry" level="21" name="{=aom_far_rhun_infantry_name}[Rhûn] Far-Rhun Infantry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_infantry"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_far_rhun_infantry_name}[Rhûn] Far-Rhun Infantry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -341,7 +409,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_cavalry" default_group="Cavalry" level="21" name="{=aom_far_rhun_cavalry_name}[Rhûn] Far-Rhun Cavalry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_cavalry"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_far_rhun_cavalry_name}[Rhûn] Far-Rhun Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -375,7 +449,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_horse_master" default_group="Cavalry" level="21" name="{=aom_far_rhun_horse_master_name}[Rhûn] Far-Rhun Horse Master" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_horse_master"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_far_rhun_horse_master_name}[Rhûn] Far-Rhun Horse Master"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -407,7 +487,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_gate_guard" default_group="Infantry" level="26" name="{=aom_far_rhun_gate_guard_name}[Rhûn] Far-Rhun Gate Guard" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_gate_guard"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_far_rhun_gate_guard_name}[Rhûn] Far-Rhun Gate Guard"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -438,7 +524,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_cataphract" default_group="Cavalry" level="26" name="{=aom_far_rhun_cataphract_name}[Rhûn] Far-Rhun Cataphract" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_cataphract"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_far_rhun_cataphract_name}[Rhûn] Far-Rhun Cataphract"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -471,7 +563,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_iron_legionary" default_group="Infantry" level="31" name="{=aom_far_rhun_iron_legionary_name}[Rhûn] Far-Rhun Iron Legionary" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_iron_legionary"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_far_rhun_iron_legionary_name}[Rhûn] Far-Rhun Iron Legionary"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -500,7 +598,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="far_rhun_iron_cataphract" default_group="Cavalry" level="31" name="{=aom_far_rhun_iron_cataphract_name}[Rhûn] Far-Rhun Iron Cataphract" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="far_rhun_iron_cataphract"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_far_rhun_iron_cataphract_name}[Rhûn] Far-Rhun Iron Cataphract"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -531,8 +635,15 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="kharaghul_youth" default_group="Cavalry" level="11" name="{=aom_kharaghul_youth_name}[Rhûn] Kharaghûl Youth" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== KHARAGHÛL TROOP TREE ========== -->
+    <NPCCharacter
+        id="kharaghul_youth"
+        default_group="Cavalry"
+        level="11"
+        name="{=aom_kharaghul_youth_name}[Rhûn] Kharaghûl Youth"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -564,7 +675,13 @@
             <equipment slot="HorseHarness" id="Item.steppe_harness" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_rider" default_group="Cavalry" level="16" name="{=aom_kharaghul_rider_name}[Rhûn] Kharaghûl Rider" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_rider"
+        default_group="Cavalry"
+        level="16"
+        name="{=aom_kharaghul_rider_name}[Rhûn] Kharaghûl Rider"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -598,7 +715,13 @@
             <equipment slot="HorseHarness" id="Item.steppe_harness" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_raider" default_group="Cavalry" level="21" name="{=aom_kharaghul_raider_name}[Rhûn] Kharaghûl Raider" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_raider"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_kharaghul_raider_name}[Rhûn] Kharaghûl Raider"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -632,7 +755,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_horse_scout" default_group="HorseArcher" level="21" name="{=aom_kharaghul_horse_scout_name}[Rhûn] Kharaghûl Horse Scout" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_horse_scout"
+        default_group="HorseArcher"
+        level="21"
+        name="{=aom_kharaghul_horse_scout_name}[Rhûn] Kharaghûl Horse Scout"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -665,7 +794,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_horse_archer" default_group="HorseArcher" level="26" name="{=aom_kharaghul_horse_archer_name}[Rhûn] Kharaghûl Horse Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_horse_archer"
+        default_group="HorseArcher"
+        level="26"
+        name="{=aom_kharaghul_horse_archer_name}[Rhûn] Kharaghûl Horse Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -699,7 +834,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_nokor" default_group="Cavalry" level="31" name="{=aom_kharaghul_nokor_name}[Rhûn] Kharaghûl Nokor" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_nokor"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_kharaghul_nokor_name}[Rhûn] Kharaghûl Nokor"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -732,7 +873,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_keshig" default_group="HorseArcher" level="31" name="{=aom_kharaghul_keshig_name}[Rhûn] Kharaghûl Keshig" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_keshig"
+        default_group="HorseArcher"
+        level="31"
+        name="{=aom_kharaghul_keshig_name}[Rhûn] Kharaghûl Keshig"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -766,7 +913,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_ashkur_nokor" default_group="Cavalry" level="36" name="{=aom_kharaghul_ashkur_nokor_name}[Rhûn] Kharaghûl Ashkur Nokor" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_ashkur_nokor"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_kharaghul_ashkur_nokor_name}[Rhûn] Kharaghûl Ashkur Nokor"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -797,7 +950,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="kharaghul_karash_keshig" default_group="HorseArcher" level="36" name="{=aom_kharaghul_karash_keshig_name}[Rhûn] Kharaghûl Karash Keshig" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="kharaghul_karash_keshig"
+        default_group="HorseArcher"
+        level="36"
+        name="{=aom_kharaghul_karash_keshig_name}[Rhûn] Kharaghûl Karash Keshig"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -829,8 +988,15 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="sagarun_deckhand" default_group="Infantry" level="11" name="{=aom_sagarun_deckhand_name}[Rhûn] Sagarûn Deckhand" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== SAGARÛN TROOP TREE ========== -->
+    <NPCCharacter
+        id="sagarun_deckhand"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_sagarun_deckhand_name}[Rhûn] Sagarûn Deckhand"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -860,7 +1026,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_watchman" default_group="Infantry" level="16" name="{=aom_sagarun_watchman_name}[Rhûn] Sagarûn Watchman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_watchman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_sagarun_watchman_name}[Rhûn] Sagarûn Watchman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -891,7 +1063,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_skirmisher" default_group="Ranged" level="26" name="{=aom_sagarun_skirmisher_name}[Rhûn] Sagarûn Skirmisher" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_skirmisher"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_sagarun_skirmisher_name}[Rhûn] Sagarûn Skirmisher"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -923,7 +1101,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_crossbowman" default_group="Ranged" level="26" name="{=aom_sagarun_crossbowman_name}[Rhûn] Sagarûn Crossbowman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_crossbowman"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_sagarun_crossbowman_name}[Rhûn] Sagarûn Crossbowman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -956,7 +1140,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_marine" default_group="Infantry" level="31" name="{=aom_sagarun_marine_name}[Rhûn] Sagarûn Marine" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_marine"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_sagarun_marine_name}[Rhûn] Sagarûn Marine"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -987,7 +1177,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_naffatun" default_group="Ranged" level="31" name="{=aom_sagarun_naffatun_name}[Rhûn] Sagarûn Naffatun" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_naffatun"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_sagarun_naffatun_name}[Rhûn] Sagarûn Naffatun"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1018,7 +1214,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_arbalest" default_group="Ranged" level="31" name="{=aom_sagarun_arbalest_name}[Rhûn] Sagarûn Arbalest" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_arbalest"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_sagarun_arbalest_name}[Rhûn] Sagarûn Arbalest"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1050,7 +1252,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_storm_forged_marine" default_group="Infantry" level="36" name="{=aom_sagarun_storm_forged_marine_name}[Rhûn] Sagarûn Storm Forged Marine" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_storm_forged_marine"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_sagarun_storm_forged_marine_name}[Rhûn] Sagarûn Storm Forged Marine"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1079,7 +1287,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_storm_helmed_naffatun" default_group="Ranged" level="36" name="{=aom_sagarun_storm_helmed_naffatun_name}[Rhûn] Sagarûn Storm Helmed Naffatun" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_storm_helmed_naffatun"
+        default_group="Ranged"
+        level="36"
+        name="{=aom_sagarun_storm_helmed_naffatun_name}[Rhûn] Sagarûn Storm Helmed Naffatun"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1108,7 +1322,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="sagarun_storm_marked_arbalest" default_group="Ranged" level="36" name="{=aom_sagarun_storm_marked_arbalest_name}[Rhûn] Sagarûn Storm Marked Arbalest" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="sagarun_storm_marked_arbalest"
+        default_group="Ranged"
+        level="36"
+        name="{=aom_sagarun_storm_marked_arbalest_name}[Rhûn] Sagarûn Storm Marked Arbalest"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1138,8 +1358,15 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="easterling_recruit" default_group="Infantry" level="6" name="{=aom_easterling_recruit_name}[Rhûn] Easterling Recruit" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== EASTERLING TROOP TREE ========== -->
+    <NPCCharacter
+        id="easterling_recruit"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_easterling_recruit_name}[Rhûn] Easterling Recruit"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1169,7 +1396,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_militia" default_group="Infantry" level="11" name="{=aom_easterling_militia_name}[Rhûn] Easterling Militia" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_militia"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_easterling_militia_name}[Rhûn] Easterling Militia"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1199,7 +1432,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_bowman" default_group="Ranged" level="11" name="{=aom_easterling_bowman_name}[Rhûn] Easterling Bowman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_bowman"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_easterling_bowman_name}[Rhûn] Easterling Bowman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1230,7 +1469,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_footman_new" default_group="Infantry" level="16" name="{=aom_easterling_footman_new_name}[Rhûn] Easterling Footman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_footman_new"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_easterling_footman_new_name}[Rhûn] Easterling Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1262,7 +1507,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_skirmisher_new" default_group="Ranged" level="16" name="{=aom_easterling_skirmisher_new_name}[Rhûn] Easterling Skirmisher" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_skirmisher_new"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_easterling_skirmisher_new_name}[Rhûn] Easterling Skirmisher"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1293,7 +1544,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_swordsman_new" default_group="Infantry" level="21" name="{=aom_easterling_swordsman_new_name}[Rhûn] Easterling Swordsman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_swordsman_new"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_easterling_swordsman_new_name}[Rhûn] Easterling Swordsman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1323,7 +1580,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_halberdier_new" default_group="Infantry" level="21" name="{=aom_easterling_halberdier_new_name}[Rhûn] Easterling Halberdier" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_halberdier_new"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_easterling_halberdier_new_name}[Rhûn] Easterling Halberdier"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1354,7 +1617,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_cavalry_new" default_group="Cavalry" level="21" name="{=aom_easterling_cavalry_new_name}[Rhûn] Easterling Cavalry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_cavalry_new"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_easterling_cavalry_new_name}[Rhûn] Easterling Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1388,7 +1657,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_archer_new" default_group="Ranged" level="21" name="{=aom_easterling_archer_new_name}[Rhûn] Easterling Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_archer_new"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_easterling_archer_new_name}[Rhûn] Easterling Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1420,7 +1695,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_veteran_swordsman_new" default_group="Infantry" level="26" name="{=aom_easterling_veteran_swordsman_new_name}[Rhûn] Easterling Veteran Swordsman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_veteran_swordsman_new"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_easterling_veteran_swordsman_new_name}[Rhûn] Easterling Veteran Swordsman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1449,7 +1730,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_veteran_halberdier_new" default_group="Infantry" level="26" name="{=aom_easterling_veteran_halberdier_new_name}[Rhûn] Easterling Veteran Halberdier" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_veteran_halberdier_new"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_easterling_veteran_halberdier_new_name}[Rhûn] Easterling Veteran Halberdier"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1478,7 +1765,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_veteran_cavalry" default_group="Cavalry" level="26" name="{=aom_easterling_veteran_cavalry_name}[Rhûn] Easterling Veteran Cavalry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_veteran_cavalry"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_easterling_veteran_cavalry_name}[Rhûn] Easterling Veteran Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1509,7 +1802,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="easterling_veteran_archer_new" default_group="Ranged" level="26" name="{=aom_easterling_veteran_archer_new_name}[Rhûn] Easterling Veteran Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="easterling_veteran_archer_new"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_easterling_veteran_archer_new_name}[Rhûn] Easterling Veteran Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1539,8 +1838,15 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="loke_rim_initiate" default_group="Infantry" level="16" name="{=aom_loke_rim_initiate_name}[Rhûn] Loke-Rim Initiate" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== LOKE-RIM TROOP TREE ========== -->
+    <NPCCharacter
+        id="loke_rim_initiate"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_loke_rim_initiate_name}[Rhûn] Loke-Rim Initiate"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1571,7 +1877,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_footman" default_group="Infantry" level="21" name="{=aom_loke_rim_footman_name}[Rhûn] Loke-Rim Footman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_footman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_loke_rim_footman_name}[Rhûn] Loke-Rim Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1602,7 +1914,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_bowman" default_group="Ranged" level="21" name="{=aom_loke_rim_bowman_name}[Rhûn] Loke-Rim Bowman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_bowman"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_loke_rim_bowman_name}[Rhûn] Loke-Rim Bowman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1634,7 +1952,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_cavalry" default_group="Cavalry" level="26" name="{=aom_loke_rim_cavalry_name}[Rhûn] Loke-Rim Cavalry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_cavalry"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_loke_rim_cavalry_name}[Rhûn] Loke-Rim Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1667,7 +1991,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_infantry" default_group="Infantry" level="26" name="{=aom_loke_rim_infantry_name}[Rhûn] Loke-Rim Infantry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_infantry"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_loke_rim_infantry_name}[Rhûn] Loke-Rim Infantry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1699,7 +2029,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_archer" default_group="Ranged" level="26" name="{=aom_loke_rim_archer_name}[Rhûn] Loke-Rim Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_archer"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_loke_rim_archer_name}[Rhûn] Loke-Rim Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1731,7 +2067,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_cataphract" default_group="Cavalry" level="31" name="{=aom_loke_rim_cataphract_name}[Rhûn] Loke-Rim Cataphract" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_cataphract"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_loke_rim_cataphract_name}[Rhûn] Loke-Rim Cataphract"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1764,7 +2106,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_shieldguard" default_group="Infantry" level="31" name="{=aom_loke_rim_shieldguard_name}[Rhûn] Loke-Rim Shieldguard" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_shieldguard"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_loke_rim_shieldguard_name}[Rhûn] Loke-Rim Shieldguard"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1795,7 +2143,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_maceman" default_group="Infantry" level="31" name="{=aom_loke_rim_maceman_name}[Rhûn] Loke-Rim Maceman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_maceman"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_loke_rim_maceman_name}[Rhûn] Loke-Rim Maceman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1826,7 +2180,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_marksman" default_group="Ranged" level="31" name="{=aom_loke_rim_marksman_name}[Rhûn] Loke-Rim Marksman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_marksman"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_loke_rim_marksman_name}[Rhûn] Loke-Rim Marksman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1858,7 +2218,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_gilded_cataphract" default_group="Cavalry" level="36" name="{=aom_loke_rim_gilded_cataphract_name}[Rhûn] Loke-Rim Gilded Cataphract" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_gilded_cataphract"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_loke_rim_gilded_cataphract_name}[Rhûn] Loke-Rim Gilded Cataphract"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1889,7 +2255,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_gilded_shieldguard" default_group="Infantry" level="36" name="{=aom_loke_rim_gilded_shieldguard_name}[Rhûn] Loke-Rim Gilded Shieldguard" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_gilded_shieldguard"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_loke_rim_gilded_shieldguard_name}[Rhûn] Loke-Rim Gilded Shieldguard"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1918,7 +2290,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_gilded_champion" default_group="Infantry" level="36" name="{=aom_loke_rim_gilded_champion_name}[Rhûn] Loke-Rim Gilded Champion" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_gilded_champion"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_loke_rim_gilded_champion_name}[Rhûn] Loke-Rim Gilded Champion"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1947,7 +2325,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="loke_rim_gilded_marksman" default_group="Ranged" level="36" name="{=aom_loke_rim_gilded_marksman_name}[Rhûn] Loke-Rim Gilded Marksman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="loke_rim_gilded_marksman"
+        default_group="Ranged"
+        level="36"
+        name="{=aom_loke_rim_gilded_marksman_name}[Rhûn] Loke-Rim Gilded Marksman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -1977,8 +2361,15 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="dragon_wrath_acolyte" default_group="Infantry" level="21" name="{=aom_dragon_wrath_acolyte_name}[Rhûn] Dragon-Wrath Acolyte" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <!-- ========== DRAGON-WRATH TROOP TREE ========== -->
+    <NPCCharacter
+        id="dragon_wrath_acolyte"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dragon_wrath_acolyte_name}[Rhûn] Dragon-Wrath Acolyte"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2009,7 +2400,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_disciple" default_group="Infantry" level="31" name="{=aom_dragon_wrath_disciple_name}[Rhûn] Dragon-Wrath Disciple" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_disciple"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dragon_wrath_disciple_name}[Rhûn] Dragon-Wrath Disciple"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2041,7 +2438,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_archer" default_group="Ranged" level="31" name="{=aom_dragon_wrath_archer_name}[Rhûn] Dragon-Wrath Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_archer"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_dragon_wrath_archer_name}[Rhûn] Dragon-Wrath Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2073,7 +2476,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_lancer" default_group="Cavalry" level="36" name="{=aom_dragon_wrath_lancer_name}[Rhûn] Dragon-Wrath Lancer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_lancer"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_dragon_wrath_lancer_name}[Rhûn] Dragon-Wrath Lancer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2106,7 +2515,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_infantry" default_group="Infantry" level="36" name="{=aom_dragon_wrath_infantry_name}[Rhûn] Dragon-Wrath Infantry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_infantry"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_dragon_wrath_infantry_name}[Rhûn] Dragon-Wrath Infantry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2138,7 +2553,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_longbowman" default_group="Ranged" level="36" name="{=aom_dragon_wrath_longbowman_name}[Rhûn] Dragon-Wrath Longbowman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_longbowman"
+        default_group="Ranged"
+        level="36"
+        name="{=aom_dragon_wrath_longbowman_name}[Rhûn] Dragon-Wrath Longbowman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2170,7 +2591,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_ash_knight" default_group="Cavalry" level="41" name="{=aom_dragon_wrath_ash_knight_name}[Rhûn] Dragon-Wrath Ash Knight" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_ash_knight"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_dragon_wrath_ash_knight_name}[Rhûn] Dragon-Wrath Ash Knight"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2203,7 +2630,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_ash_shieldguard" default_group="Infantry" level="41" name="{=aom_dragon_wrath_ash_shieldguard_name}[Rhûn] Dragon-Wrath Ash Shieldguard" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_ash_shieldguard"
+        default_group="Infantry"
+        level="41"
+        name="{=aom_dragon_wrath_ash_shieldguard_name}[Rhûn] Dragon-Wrath Ash Shieldguard"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2234,7 +2667,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_ash_executioner" default_group="Infantry" level="41" name="{=aom_dragon_wrath_ash_executioner_name}[Rhûn] Dragon-Wrath Ash Executioner" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_ash_executioner"
+        default_group="Infantry"
+        level="41"
+        name="{=aom_dragon_wrath_ash_executioner_name}[Rhûn] Dragon-Wrath Ash Executioner"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2265,7 +2704,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_ash_marksman" default_group="Ranged" level="41" name="{=aom_dragon_wrath_ash_marksman_name}[Rhûn] Dragon-Wrath Ash Marksman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_ash_marksman"
+        default_group="Ranged"
+        level="41"
+        name="{=aom_dragon_wrath_ash_marksman_name}[Rhûn] Dragon-Wrath Ash Marksman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2297,7 +2742,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_obsidian_knight" default_group="Cavalry" level="46" name="{=aom_dragon_wrath_obsidian_knight_name}[Rhûn] Dragon-Wrath Obsidian Knight" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_obsidian_knight"
+        default_group="Cavalry"
+        level="46"
+        name="{=aom_dragon_wrath_obsidian_knight_name}[Rhûn] Dragon-Wrath Obsidian Knight"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2328,7 +2779,13 @@
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_obsidian_shieldmaster" default_group="Infantry" level="46" name="{=aom_dragon_wrath_obsidian_shieldmaster_name}[Rhûn] Dragon-Wrath Obsidian Shieldmaster" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_obsidian_shieldmaster"
+        default_group="Infantry"
+        level="46"
+        name="{=aom_dragon_wrath_obsidian_shieldmaster_name}[Rhûn] Dragon-Wrath Obsidian Shieldmaster"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2357,7 +2814,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_obsidian_war_reaver" default_group="Infantry" level="46" name="{=aom_dragon_wrath_obsidian_war_reaver_name}[Rhûn] Dragon-Wrath Obsidian War-Reaver" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_obsidian_war_reaver"
+        default_group="Infantry"
+        level="46"
+        name="{=aom_dragon_wrath_obsidian_war_reaver_name}[Rhûn] Dragon-Wrath Obsidian War-Reaver"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2386,7 +2849,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="dragon_wrath_obsidian_warbow" default_group="Ranged" level="46" name="{=aom_dragon_wrath_obsidian_warbow_name}[Rhûn] Dragon-Wrath Obsidian Warbow" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="dragon_wrath_obsidian_warbow"
+        default_group="Ranged"
+        level="46"
+        name="{=aom_dragon_wrath_obsidian_warbow_name}[Rhûn] Dragon-Wrath Obsidian Warbow"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2417,14 +2886,21 @@
         </Equipments>
     </NPCCharacter>
 
-    
-    
-    
-    
-    
-    
+    <!-- ==================== WAIN/WAINRIDER TROOP TREE ==================== -->
+    <!-- Wain Youngblood (T3) -> Wain Footman -->
+    <!-- Wain Footman (T4) -> Wain Glaiveman / Wainrider Horseman -->
+    <!-- Wain Glaiveman (T5) -> Wain Iron-Glaive (T6) -> Wain Darkhan (T7) -->
+    <!-- Wainrider Horseman (T5) -> Wainrider Cavalry (T6) -> Wainrider Khan's Chosen (T8) / Wainrider Swift-Chariot (T8) -->
+    <!-- Wainrider Swift-Chariot (T8) -> Wainrider Warlord Chariot (T9) -->
 
-    <NPCCharacter id="wain_youngblood" default_group="Infantry" level="16" name="{=aom_wain_youngblood_name}[Rhûn] Wain Youngblood" occupation="Soldier" is_basic_troop="true" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wain_youngblood"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_wain_youngblood_name}[Rhûn] Wain Youngblood"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2454,7 +2930,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t2" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wain_footman" default_group="Infantry" level="21" name="{=aom_wain_footman_name}[Rhûn] Wain Footman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wain_footman"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_wain_footman_name}[Rhûn] Wain Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2485,7 +2967,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t2" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wain_glaiveman" default_group="Infantry" level="26" name="{=aom_wain_glaiveman_name}[Rhûn] Wain Glaiveman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wain_glaiveman"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_wain_glaiveman_name}[Rhûn] Wain Glaiveman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2516,7 +3004,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_horseman" default_group="Cavalry" level="26" name="{=aom_wainrider_horseman_name}[Rhûn] Wainrider Horseman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_horseman"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_wainrider_horseman_name}[Rhûn] Wainrider Horseman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2548,7 +3042,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wain_iron_glaive" default_group="Infantry" level="31" name="{=aom_wain_iron_glaive_name}[Rhûn] Wain Iron-Glaive" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wain_iron_glaive"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_wain_iron_glaive_name}[Rhûn] Wain Iron-Glaive"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2579,7 +3079,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_cavalry" default_group="Cavalry" level="31" name="{=aom_wainrider_cavalry_name}[Rhûn] Wainrider Cavalry" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_cavalry"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_wainrider_cavalry_name}[Rhûn] Wainrider Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2613,7 +3119,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wain_darkhan" default_group="Infantry" level="36" name="{=aom_wain_darkhan_name}[Rhûn] Wain Darkhan" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wain_darkhan"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_wain_darkhan_name}[Rhûn] Wain Darkhan"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2642,7 +3154,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_khans_chosen" default_group="Cavalry" level="41" name="{=aom_wainrider_khans_chosen_name}[Rhûn] Wainrider Khan's Chosen" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_khans_chosen"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_wainrider_khans_chosen_name}[Rhûn] Wainrider Khan's Chosen"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2673,7 +3191,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_swift_chariot" default_group="Cavalry" level="41" name="{=aom_wainrider_swift_chariot_name}[Rhûn] Wainrider Swift-Chariot" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_swift_chariot"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_wainrider_swift_chariot_name}[Rhûn] Wainrider Swift-Chariot"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2707,7 +3231,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="wainrider_warlord_chariot" default_group="Cavalry" level="46" name="{=aom_wainrider_warlord_chariot_name}[Rhûn] Wainrider Warlord Chariot" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="wainrider_warlord_chariot"
+        default_group="Cavalry"
+        level="46"
+        name="{=aom_wainrider_warlord_chariot_name}[Rhûn] Wainrider Warlord Chariot"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
         </face>
@@ -2739,8 +3269,14 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    
-    <NPCCharacter id="rhun_militia_spearman" default_group="Infantry" level="11" name="{=aom_rhun_mil_spear_name}[Rhûn] Militia Spearman" occupation="Soldier" culture="Culture.khuzait">
+    <!-- ========== RHUN MILITIA TROOPS (for settlements) ========== -->
+    <NPCCharacter
+        id="rhun_militia_spearman"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_rhun_mil_spear_name}[Rhûn] Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
@@ -2779,7 +3315,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="rhun_militia_archer" default_group="Ranged" level="11" name="{=aom_rhun_mil_arch_name}[Rhûn] Militia Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="rhun_militia_archer"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_rhun_mil_arch_name}[Rhûn] Militia Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
@@ -2820,7 +3362,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="rhun_militia_veteran_spearman" default_group="Infantry" level="16" name="{=aom_rhun_mil_vspear_name}[Rhûn] Militia Veteran Spearman" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="rhun_militia_veteran_spearman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_rhun_mil_vspear_name}[Rhûn] Militia Veteran Spearman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
@@ -2848,7 +3396,13 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="rhun_militia_veteran_archer" default_group="Ranged" level="16" name="{=aom_rhun_mil_varch_name}[Rhûn] Militia Veteran Archer" occupation="Soldier" culture="Culture.khuzait">
+    <NPCCharacter
+        id="rhun_militia_veteran_archer"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_rhun_mil_varch_name}[Rhûn] Militia Veteran Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>

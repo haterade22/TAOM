@@ -1,984 +1,2412 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
-    <NPCCharacter id="gundabad_snaga" race="pale_uruk" default_group="Infantry" level="6" name="{=aom_gundabad_snaga_name}[Gundabad] Snaga" occupation="Soldier" is_basic_troop="true" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_snaga"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_gundabad_snaga_name}[Gundabad] Snaga"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="43" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="28" />
-            <skill id="TwoHanded" value="28" />
-            <skill id="Polearm" value="28" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="10" />
+            <skill
+                id="Athletics"
+                value="43" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="28" />
+            <skill
+                id="TwoHanded"
+                value="28" />
+            <skill
+                id="Polearm"
+                value="28" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="10" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_hunter" />
-            <upgrade_target id="NPCCharacter.gundabad_grunt" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_hunter" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_grunt" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_hunter" race="pale_uruk" default_group="Ranged" level="11" name="{=aom_gundabad_hunter_name}[Gundabad] Hunter" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_hunter"
+        race="pale_uruk"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_gundabad_hunter_name}[Gundabad] Hunter"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="60" />
-            <skill id="Riding" value="5" />
-            <skill id="OneHanded" value="30" />
-            <skill id="TwoHanded" value="35" />
-            <skill id="Polearm" value="30" />
-            <skill id="Bow" value="50" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="20" />
+            <skill
+                id="Athletics"
+                value="60" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="30" />
+            <skill
+                id="TwoHanded"
+                value="35" />
+            <skill
+                id="Polearm"
+                value="30" />
+            <skill
+                id="Bow"
+                value="50" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="20" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_warg_tamer" />
-            <upgrade_target id="NPCCharacter.gundabad_lurker" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_warg_tamer" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_lurker" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_uruk_bow_a" />
-                <equipment slot="Item1" id="Item.steppe_arrows" />
-                <equipment slot="Item2" id="Item.steppe_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_axe_a03" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_grunt" race="pale_uruk" default_group="Infantry" level="11" name="{=aom_gundabad_grunt_name}[Gundabad] Grunt" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_grunt"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_gundabad_grunt_name}[Gundabad] Grunt"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="58" />
-            <skill id="Riding" value="5" />
-            <skill id="OneHanded" value="60" />
-            <skill id="TwoHanded" value="65" />
-            <skill id="Polearm" value="70" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="20" />
+            <skill
+                id="Athletics"
+                value="58" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="60" />
+            <skill
+                id="TwoHanded"
+                value="65" />
+            <skill
+                id="Polearm"
+                value="70" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="20" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_fighter" />
-            <upgrade_target id="NPCCharacter.gundabad_guard" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_fighter" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_guard" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_d" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_warg_tamer" race="pale_uruk" default_group="Cavalry" level="16" name="{=aom_gundabad_warg_tamer_name}[Gundabad] Warg-Tamer" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_warg_tamer"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="16"
+        name="{=aom_gundabad_warg_tamer_name}[Gundabad] Warg-Tamer"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="90" />
-            <skill id="OneHanded" value="80" />
-            <skill id="TwoHanded" value="60" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="25" />
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="90" />
+            <skill
+                id="OneHanded"
+                value="80" />
+            <skill
+                id="TwoHanded"
+                value="60" />
+            <skill
+                id="Polearm"
+                value="100" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="25" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_tracker" />
-            <upgrade_target id="NPCCharacter.gundabad_scout" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_tracker" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_scout" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-                <equipment slot="Item2" id="Item.wm_gundabad_axe_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_c" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
-                <equipment slot="Horse" id="Item.warg_brown" />
-                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_g" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_b" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_tracker" race="pale_uruk" default_group="Cavalry" level="21" name="{=aom_gundabad_tracker_name}[Gundabad] Tracker" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_tracker"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_gundabad_tracker_name}[Gundabad] Tracker"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="115" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="70" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="30" />
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="115" />
+            <skill
+                id="OneHanded"
+                value="115" />
+            <skill
+                id="TwoHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="30" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_warg_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_warg_warrior" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.wm_gundabad_sword_a03" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_d" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
-                <equipment slot="Horse" id="Item.warg_dark" />
-                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_scout" race="pale_uruk" default_group="HorseArcher" level="21" name="{=aom_gundabad_scout_name}[Gundabad] Scout" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_scout"
+        race="pale_uruk"
+        default_group="HorseArcher"
+        level="21"
+        name="{=aom_gundabad_scout_name}[Gundabad] Scout"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="145" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="65" />
-            <skill id="Polearm" value="80" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="45" />
+            <skill
+                id="Athletics"
+                value="120" />
+            <skill
+                id="Riding"
+                value="145" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="65" />
+            <skill
+                id="Polearm"
+                value="80" />
+            <skill
+                id="Bow"
+                value="140" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="45" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_despoiler_of_the_vale" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_despoiler_of_the_vale" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
-                <equipment slot="Item1" id="Item.steppe_arrows" />
-                <equipment slot="Item2" id="Item.wm_gundabad_spear_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_d" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
-                <equipment slot="Horse" id="Item.warg_brown" />
-                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+                <equipment
+                    slot="Item0"
+                    id="Item.composite_steppe_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_warg_warrior" race="pale_uruk" default_group="Cavalry" level="26" name="{=aom_gundabad_warg_warrior_name}[Gundabad] Warg-Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_warg_warrior"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_gundabad_warg_warrior_name}[Gundabad] Warg-Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="155" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="90" />
-            <skill id="Polearm" value="195" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="40" />
+            <skill
+                id="Athletics"
+                value="125" />
+            <skill
+                id="Riding"
+                value="155" />
+            <skill
+                id="OneHanded"
+                value="170" />
+            <skill
+                id="TwoHanded"
+                value="90" />
+            <skill
+                id="Polearm"
+                value="195" />
+            <skill
+                id="Bow"
+                value="25" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="40" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_dread_rider_of_the_tower" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_dread_rider_of_the_tower" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_gundabad_mace_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_c" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_d" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
-                <equipment slot="Horse" id="Item.warg_albino" />
-                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_heavy_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_albino" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_dread_rider_of_the_tower" race="pale_uruk" default_group="Cavalry" level="31" name="{=aom_gundabad_dread_rider_of_the_tower_name}[Gundabad] Dread-Rider of the Tower" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_dread_rider_of_the_tower"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_gundabad_dread_rider_of_the_tower_name}[Gundabad] Dread-Rider of the Tower"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="140" />
-            <skill id="Riding" value="205" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="250" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="50" />
+            <skill
+                id="Athletics"
+                value="140" />
+            <skill
+                id="Riding"
+                value="205" />
+            <skill
+                id="OneHanded"
+                value="220" />
+            <skill
+                id="TwoHanded"
+                value="110" />
+            <skill
+                id="Polearm"
+                value="250" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_gundabad_mace_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_d" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
-                <equipment slot="Horse" id="Item.warg_albino" />
-                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_elite_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_elite_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_elite_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_elite_b" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_albino" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_despoiler_of_the_vale" race="pale_uruk" default_group="HorseArcher" level="26" name="{=aom_gundabad_despoiler_of_the_vale_name}[Gundabad] Despoiler of the Vale" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_despoiler_of_the_vale"
+        race="pale_uruk"
+        default_group="HorseArcher"
+        level="26"
+        name="{=aom_gundabad_despoiler_of_the_vale_name}[Gundabad] Despoiler of the Vale"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="195" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="190" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="55" />
+            <skill
+                id="Athletics"
+                value="135" />
+            <skill
+                id="Riding"
+                value="195" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="85" />
+            <skill
+                id="Polearm"
+                value="110" />
+            <skill
+                id="Bow"
+                value="190" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="55" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
-                <equipment slot="Item1" id="Item.steppe_arrows" />
-                <equipment slot="Item2" id="Item.steppe_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_mace_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
-                <equipment slot="Horse" id="Item.warg_dark" />
-                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+                <equipment
+                    slot="Item0"
+                    id="Item.composite_steppe_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_heavy_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_lurker" race="pale_uruk" default_group="Ranged" level="16" name="{=aom_gundabad_lurker_name}[Gundabad] Lurker" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_lurker"
+        race="pale_uruk"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_gundabad_lurker_name}[Gundabad] Lurker"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="45" />
-            <skill id="Bow" value="80" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="30" />
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="55" />
+            <skill
+                id="Polearm"
+                value="45" />
+            <skill
+                id="Bow"
+                value="80" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="30" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_sentry" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_sentry" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_uruk_bow_a" />
-                <equipment slot="Item1" id="Item.bodkin_arrows_c" />
-                <equipment slot="Item2" id="Item.bodkin_arrows_c" />
-                <equipment slot="Item3" id="Item.wm_gundabad_axe_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_d" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_sentry" race="pale_uruk" default_group="Ranged" level="21" name="{=aom_gundabad_sentry_name}[Gundabad] Sentry" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_sentry"
+        race="pale_uruk"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_gundabad_sentry_name}[Gundabad] Sentry"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="75" />
-            <skill id="Polearm" value="70" />
-            <skill id="Bow" value="125" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="40" />
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="70" />
+            <skill
+                id="Bow"
+                value="125" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="40" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_archer" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_archer" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_isengard_bow_a01" />
-                <equipment slot="Item1" id="Item.bodkin_arrows_c" />
-                <equipment slot="Item2" id="Item.bodkin_arrows_c" />
-                <equipment slot="Item3" id="Item.wm_gundabad_sword_a04" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_c" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_f" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_sword_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_g" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_f" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_archer" race="pale_uruk" default_group="Ranged" level="26" name="{=aom_gundabad_archer_name}[Gundabad] Archer" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_archer"
+        race="pale_uruk"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_gundabad_archer_name}[Gundabad] Archer"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="115" />
-            <skill id="Riding" value="15" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="95" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="165" />
-            <skill id="Crossbow" value="35" />
-            <skill id="Throwing" value="50" />
+            <skill
+                id="Athletics"
+                value="115" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="165" />
+            <skill
+                id="Crossbow"
+                value="35" />
+            <skill
+                id="Throwing"
+                value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_isengard_bow_a02" />
-                <equipment slot="Item1" id="Item.piercing_arrows" />
-                <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_sword_a03" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_heavy_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_c" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_fighter" race="pale_uruk" default_group="Infantry" level="16" name="{=aom_gundabad_fighter_name}[Gundabad] Fighter" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_fighter"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_gundabad_fighter_name}[Gundabad] Fighter"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="90" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="90" />
-            <skill id="TwoHanded" value="95" />
-            <skill id="Polearm" value="95" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="30" />
+            <skill
+                id="Athletics"
+                value="90" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="90" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="95" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="30" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_brute" />
-            <upgrade_target id="NPCCharacter.gundabad_sword_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_brute" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_sword_warrior" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_e" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_c" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_c" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_guard" race="pale_uruk" default_group="Infantry" level="16" name="{=aom_gundabad_guard_name}[Gundabad] Guard" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_guard"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_gundabad_guard_name}[Gundabad] Guard"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="90" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="90" />
-            <skill id="TwoHanded" value="95" />
-            <skill id="Polearm" value="95" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="30" />
+            <skill
+                id="Athletics"
+                value="90" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="90" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="95" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="30" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_spear_warrior" />
-            <upgrade_target id="NPCCharacter.gundabad_pike_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_spear_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_pike_warrior" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_d" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_c" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_c" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_brute" race="pale_uruk" default_group="Infantry" level="21" name="{=aom_gundabad_brute_name}[Gundabad] Brute" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_brute"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_gundabad_brute_name}[Gundabad] Brute"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="125" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="130" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="50" />
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="125" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="130" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_berserker" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_berserker" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_e" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_e" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_berserker" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gundabad_berserker_name}[Gundabad] Berserker" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_berserker"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_gundabad_berserker_name}[Gundabad] Berserker"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="15" />
-            <skill id="OneHanded" value="175" />
-            <skill id="TwoHanded" value="165" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="70" />
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="175" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="170" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="70" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_veteran_berserker" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_veteran_berserker" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_javelin_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_f" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_d" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_d" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_b01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_d" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_veteran_berserker" race="pale_uruk" default_group="Infantry" level="31" name="{=aom_gundabad_veteran_berserker_name}[Gundabad] Veteran Berserker" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_veteran_berserker"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_gundabad_veteran_berserker_name}[Gundabad] Veteran Berserker"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="20" />
-            <skill id="OneHanded" value="230" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="80" />
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="235" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="80" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_champion" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_champion" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_c" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_a" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_b01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_elite_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_elite_c" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_champion" race="pale_uruk" default_group="Infantry" level="36" name="{=aom_gundabad_champion_name}[Gundabad] Azog's Champion" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_champion"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_gundabad_champion_name}[Gundabad] Azog's Champion"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="150" />
-            <skill id="Riding" value="25" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="260" />
-            <skill id="Polearm" value="275" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="90" />
+            <skill
+                id="Athletics"
+                value="150" />
+            <skill
+                id="Riding"
+                value="25" />
+            <skill
+                id="OneHanded"
+                value="270" />
+            <skill
+                id="TwoHanded"
+                value="260" />
+            <skill
+                id="Polearm"
+                value="275" />
+            <skill
+                id="Bow"
+                value="25" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="90" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_b01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_elite_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_elite_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_elite_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_sword_warrior" race="pale_uruk" default_group="Infantry" level="21" name="{=aom_gundabad_sword_warrior_name}[Gundabad] Sword-Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_sword_warrior"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_gundabad_sword_warrior_name}[Gundabad] Sword-Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="50" />
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="115" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_veteran_sword_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_veteran_sword_warrior" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_d" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_d" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_sword_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_d" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_veteran_sword_warrior" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gundabad_veteran_sword_warrior_name}[Gundabad] Veteran Sword-Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_veteran_sword_warrior"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_gundabad_veteran_sword_warrior_name}[Gundabad] Veteran Sword-Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="15" />
-            <skill id="OneHanded" value="190" />
-            <skill id="TwoHanded" value="165" />
-            <skill id="Polearm" value="155" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="70" />
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="190" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="155" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="70" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_chosen_of_tharzog" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_chosen_of_tharzog" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_g" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_e" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_e" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_g" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_e" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_chosen_of_tharzog" race="pale_uruk" default_group="Infantry" level="31" name="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Chosen of Tharzog" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_chosen_of_tharzog"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Chosen of Tharzog"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="20" />
-            <skill id="OneHanded" value="230" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="80" />
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="235" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="80" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_mace_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_f" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_d" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_elite_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_elite_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_elite_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_spear_warrior" race="pale_uruk" default_group="Infantry" level="21" name="{=aom_gundabad_spear_warrior_name}[Gundabad] Spear-Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_spear_warrior"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_gundabad_spear_warrior_name}[Gundabad] Spear-Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="50" />
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_veteran_spear_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_veteran_spear_warrior" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.wm_gundabad_sword_a04" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_c" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_sword_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_c" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_veteran_spear_warrior" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gundabad_veteran_spear_warrior_name}[Gundabad] Veteran Spear-Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_veteran_spear_warrior"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_gundabad_veteran_spear_warrior_name}[Gundabad] Veteran Spear-Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="15" />
-            <skill id="OneHanded" value="160" />
-            <skill id="TwoHanded" value="165" />
-            <skill id="Polearm" value="185" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="70" />
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="160" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="185" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="70" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_guardian_of_the_tower" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_guardian_of_the_tower" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_j" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_f" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_j" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_elite_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_f" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_guardian_of_the_tower" race="pale_uruk" default_group="Infantry" level="31" name="{=aom_gundabad_guardian_of_the_tower_name}[Gundabad] Guardian of the Tower" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_guardian_of_the_tower"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_gundabad_guardian_of_the_tower_name}[Gundabad] Guardian of the Tower"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="20" />
-            <skill id="OneHanded" value="230" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="80" />
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="235" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="80" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_gundabad_sword_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_c" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_elite_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_elite_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_elite_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_elite_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_pike_warrior" race="pale_uruk" default_group="Infantry" level="21" name="{=aom_gundabad_pike_warrior_name}[Gundabad] Pike-Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_pike_warrior"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_gundabad_pike_warrior_name}[Gundabad] Pike-Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="10" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="50" />
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.gundabad_veteran_pike_warrior" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_veteran_pike_warrior" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.isengard_pike_a" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.wm_gundabad_sword_a04" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_e" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_sword_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_veteran_pike_warrior" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gundabad_veteran_pike_warrior_name}[Gundabad] Veteran Pike Warrior" occupation="Soldier" culture="Culture.gundabad">
+    <NPCCharacter
+        id="gundabad_veteran_pike_warrior"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_gundabad_veteran_pike_warrior_name}[Gundabad] Veteran Pike Warrior"
+        occupation="Soldier"
+        culture="Culture.gundabad">
         <face>
-            <face_key_template value="BodyProperty.fighter_empire" />
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="15" />
-            <skill id="OneHanded" value="160" />
-            <skill id="TwoHanded" value="165" />
-            <skill id="Polearm" value="185" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="70" />
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="160" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="185" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="70" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.isengard_pike_b" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_gundabad_mace_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_j" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_e" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_f" />
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_heavy_j" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_heavy_f" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                civilian="true" />
         </Equipments>
     </NPCCharacter>
 
-    
+    <!-- ==================== MILITIA TROOPS ==================== -->
 
-    <NPCCharacter id="gundabad_militia_spearman" race="pale_uruk" default_group="Infantry" level="11" name="{=aom_gb_militia_spear}[Gundabad] Militia Spearman" occupation="Soldier" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+    <NPCCharacter
+        id="gundabad_militia_spearman"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_gb_militia_spear}[Gundabad] Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.gundabad"
+        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
         <face>
-            <face_key_template value="BodyProperty.fighter_gundabad" />
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
         </face>
-        <skills />
-        <upgrade_targets />
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_militia_archer" race="pale_uruk" default_group="Ranged" level="11" name="{=aom_gb_militia_archer}[Gundabad] Militia Archer" occupation="Soldier" culture="Culture.gundabad" skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+    <NPCCharacter
+        id="gundabad_militia_archer"
+        race="pale_uruk"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_gb_militia_archer}[Gundabad] Militia Archer"
+        occupation="Soldier"
+        culture="Culture.gundabad"
+        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
         <face>
-            <face_key_template value="BodyProperty.fighter_gundabad" />
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
         </face>
-        <skills />
-        <upgrade_targets />
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="70" />
+            <skill
+                id="Bow"
+                value="125" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_axe_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_axe_a02" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_mace_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_militia_veteran_spearman" race="pale_uruk" default_group="Infantry" level="16" name="{=aom_gb_militia_vet_spear}[Gundabad] Militia Veteran Spearman" occupation="Soldier" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+    <NPCCharacter
+        id="gundabad_militia_veteran_spearman"
+        race="pale_uruk"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_gb_militia_vet_spear}[Gundabad] Militia Veteran Spearman"
+        occupation="Soldier"
+        culture="Culture.gundabad"
+        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
         <face>
-            <face_key_template value="BodyProperty.fighter_gundabad" />
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
         </face>
-        <skills />
-        <upgrade_targets />
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.wm_gundabad_axe_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_gundabad_mace_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-                <equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_c" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_c" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="gundabad_militia_veteran_archer" race="pale_uruk" default_group="Ranged" level="16" name="{=aom_gb_militia_vet_archer}[Gundabad] Militia Veteran Archer" occupation="Soldier" culture="Culture.gundabad" skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+    <NPCCharacter
+        id="gundabad_militia_veteran_archer"
+        race="pale_uruk"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_gb_militia_vet_archer}[Gundabad] Militia Veteran Archer"
+        occupation="Soldier"
+        culture="Culture.gundabad"
+        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
         <face>
-            <face_key_template value="BodyProperty.fighter_gundabad" />
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
         </face>
-        <skills />
-        <upgrade_targets />
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="70" />
+            <skill
+                id="Bow"
+                value="125" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_sword_a01" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_axe_a02" />
-                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_b" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_b" />
-                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gb_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item3" id="Item.wm_gundabad_mace_a02" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_c" />
-                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_b" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gb_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Item0" id="Item.hunting_bow" />
-                <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
-                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_gb_uruk_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
