@@ -23,21 +23,21 @@ Every troop now follows a consistent formula: **baseline skills per level + cult
 
 | | Best At | Worst At |
 |--|---------|----------|
-| **Erebor** | Axes, throwing axes, melee | Mounted combat, archery |
-| **Iron Hills** | Melee, polearms, crossbows | Mounted combat, archery |
-| **Gondor** | Balanced — slight edge in polearms & swords | Throwing weapons |
-| **Rohan** | Riding, lance/spear combat | Crossbows |
-| **Isengard** | Brute force — athletics, melee | Archery, mounted |
-| **Mordor** | Throwing weapons, swords | Athletics, riding, bows |
-| **Harad** | Cavalry, archery | Athletics |
-| **Rhun** | Polearms, riding, two-handed | Archery, throwing |
-| **Dunland** | Throwing weapons, two-handed | Riding |
-| **Dol Guldur** | Warg riders | Athletics, polearms |
-| **Gundabad** | Heavy brutes — athletics, two-handed | Riding, bows |
-| **Umbar** | Swords, polearms | Riding, bows |
-| **Rivendell** | Everything (+45-50 all combat) | Elite High Elves |
-| **Mirkwood** | Archery (+40), agility (+30) | Elite Wood Elves |
-| **Lothlorien** | Balanced elite — bow & melee (+35) | Elite Golden Wood |
+| **Erebor** | Two-handed (+20), axes, throwing (+10) | Mounted combat (-20) |
+| **Iron Hills** | Two-handed (+20), polearms (+20), melee (+15) | Riding (-5) |
+| **Gondor** | Swords (+10), balanced combat | Throwing weapons (-10) |
+| **Rohan** | Riding (+20), lance combat (+10) | Crossbows (-10), athletics (-5) |
+| **Isengard** | Two-handed (+15), polearms (+15), crossbows (+10) | Slightly below on riding |
+| **Mordor** | Two-handed (+5), throwing (+5) | Athletics, riding, polearms, bows (-5) |
+| **Harad** | Cavalry (+15), archery (+10) | Two-handed (-10), polearms (-5) |
+| **Rhun** | Riding (+18), polearms (+15) | Bows (-10), crossbows (-10) |
+| **Dunland** | Athletics (+20), throwing (+15) | Riding (-5) |
+| **Dol Guldur** | Swords & two-handed (+5) | Riding (-10), bows (-5) |
+| **Gundabad** | Two-handed (+10), athletics (+5) | Bows (-10), crossbows (-10) |
+| **Umbar** | Athletics (+10), swords (+10), two-handed (+5) | Riding (-15) |
+| **Rivendell** | Everything (+30-40 all combat) | Elite High Elves |
+| **Mirkwood** | Archery (+50), athletics (+45), melee (+40) | Elite Wood Elves |
+| **Lothlorien** | Balanced elite — bow (+35), melee & athletics (+30-35) | Elite Golden Wood |
 
 **Scale:** 545 troops rebalanced across 13 XML files. Skills scale from level 1 through level 51 across 4 troop groups (Infantry, Ranged, Cavalry, Horse Archer).
 
@@ -65,22 +65,22 @@ Final Skill = Baseline[level][group][skill] + Cultural Modifier[culture][skill]
 
 **Cultural Modifiers** are ±5-10 per skill for standard factions, and +25-50 for elven factions. These give each culture its identity:
 
-- **Dwarves (Erebor, Iron Hills):** Strong melee fighters. Erebor favors axes and throwing axes; Iron Hills favors polearms and crossbows. Both suffer on horseback.
-- **Men of the West (Gondor):** Disciplined and balanced. Slight edge in swords and polearms, but no dramatic strengths or weaknesses.
-- **Rohirrim (Rohan):** Masters of cavalry. +10 Riding and Polearm reflects their lance-charging horse culture. Weakest with crossbows.
-- **Uruk-hai (Isengard):** Bred for war. +10 OneHanded and TwoHanded plus +5 Athletics makes them fearsome foot soldiers. Poor archers and riders.
-- **Orcs (Mordor):** Strength in numbers, not skill. +5 OneHanded and +10 Throwing, but penalties to Athletics, Riding, and Bow. Slightly below average overall — they win through volume.
-- **Haradrim (Harad):** Desert cavalry and archers. +10 Riding and +10 Bow makes their Mumakil riders and archers dangerous. Slightly less athletic on foot.
-- **Easterlings (Rhun):** Disciplined polearm formations with strong cavalry. +10 Polearm, +8 Riding, and +5 TwoHanded but weaker ranged capability.
-- **Dunlendings (Dunland):** Wild raiders. +10 Throwing and +5 TwoHanded — they hurl javelins and charge in with axes. Can't ride well.
-- **Orcs of Dol Guldur:** Warg-riding specialists (+5 Riding for mounted units), but less athletic and weaker with polearms than other orc factions.
-- **Gundabad Orcs:** The biggest, meanest orcs. +10 Athletics and +10 TwoHanded — these are the bruisers. Terrible archers and riders.
-- **Corsairs (Umbar):** Pirate infantry. +5 OneHanded and Polearm for boarding combat. Poor cavalry and archers.
+- **Dwarves (Erebor, Iron Hills):** Strong melee fighters. Erebor favors two-handed weapons (+20) and throwing axes (+10); Iron Hills favors polearms (+20) and crossbows (+5). Both have excellent athletics (+10) but Erebor especially suffers on horseback (-20).
+- **Men of the West (Gondor):** Disciplined and balanced. +10 OneHanded with +5 across Athletics, Riding, TwoHanded, and Polearm. Only weakness is throwing weapons (-10).
+- **Rohirrim (Rohan):** Masters of cavalry. +20 Riding and +10 Polearm reflects their lance-charging horse culture. Weakest with crossbows (-10) and slightly less athletic on foot (-5).
+- **Uruk-hai (Isengard):** Bred for war. +15 TwoHanded and Polearm, +10 Athletics and OneHanded, plus +10 Crossbow makes them fearsome foot soldiers. Decent at everything.
+- **Orcs (Mordor):** Strength in numbers, not skill. +5 TwoHanded and Throwing, but penalties to Athletics, Riding, Polearm, Bow, and Crossbow (-5 each). Below average overall — they win through volume.
+- **Haradrim (Harad):** Desert cavalry and archers. +15 Riding and +10 Bow makes their Mumakil riders and archers dangerous. Weaker with two-handed weapons (-10) and polearms (-5).
+- **Easterlings (Rhun):** Disciplined polearm formations with strong cavalry. +18 Riding, +15 Polearm, +5 Athletics but weaker ranged capability (Bow -10, Crossbow -10, Throwing -5).
+- **Dunlendings (Dunland):** Wild raiders. +20 Athletics and +15 Throwing — they hurl javelins and charge in with axes (+5 TwoHanded). Can't ride well (-5).
+- **Orcs of Dol Guldur:** Sword-and-shield fighters (+5 OneHanded, +5 TwoHanded), but poor riders (-10) and weaker archers (-5 Bow, -5 Crossbow).
+- **Gundabad Orcs:** The biggest, meanest orcs. +10 TwoHanded and +5 Athletics — these are the bruisers. Terrible archers (Bow -10, Crossbow -10).
+- **Corsairs (Umbar):** Pirate infantry. +10 Athletics and OneHanded, +5 TwoHanded for boarding combat. Terrible horsemen (-15 Riding) — sailors through and through.
 
 **Elven Elite Factions:**
-- **Rivendell (High Elves):** The best warriors in Middle-earth. +45-50 across all combat skills. A level 21 Rivendell swordsman has ~175 OneHanded vs ~125 for Gondor.
-- **Mirkwood (Wood Elves):** Supreme archers. +40 Bow, +30 Athletics, +25 melee. Deadliest ranged troops in the game.
-- **Lothlorien (Golden Wood):** Balanced elite. +35 Bow and melee, +30 Athletics. Jack-of-all-trades superiority.
+- **Rivendell (High Elves):** The best warriors in Middle-earth. +30-40 across all combat skills (+40 TwoHanded/Polearm/Bow/Crossbow/Throwing, +35 Athletics/OneHanded, +30 Riding). A level 21 Rivendell swordsman has ~160 OneHanded vs ~135 for Gondor.
+- **Mirkwood (Wood Elves):** Supreme archers. +50 Bow/Crossbow/Throwing, +45 Athletics, +40 OneHanded, +30 TwoHanded/Polearm. Deadliest ranged troops in the game.
+- **Lothlorien (Golden Wood):** Balanced elite. +35 Bow/Crossbow/Throwing/Athletics, +30 OneHanded/Polearm, +25 Riding/TwoHanded. Jack-of-all-trades superiority.
 
 **Weapon Specialization:**
 Troops with specific weapon types in their names get skill swaps. A "Crossbowman" swaps Bow↔Crossbow values. A "Pikeman" gets Polearm as primary. A "Swordsman" gets OneHanded boosted. This is detected automatically from troop names.

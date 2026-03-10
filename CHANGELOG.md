@@ -53,21 +53,21 @@ Comprehensive skill rebalancing across all troop trees using a uniform baseline 
 
 | Culture | Strengths | Weaknesses |
 |---------|-----------|------------|
-| Erebor | OneHanded +10, TwoHanded +10, Throwing +10 | Riding -5, Bow -5 |
-| Iron Hills | OneHanded +10, Polearm +10, Crossbow +10 | Riding -5, Bow -5 |
-| Gondor | Polearm +5, OneHanded +5 | Throwing -5 |
-| Rohan | Riding +10, Polearm +10 | Crossbow -5 |
-| Isengard | Athletics +5, OneHanded +10, TwoHanded +10 | Bow -5, Riding -5 |
-| Mordor | OneHanded +5, Throwing +10 | Athletics -5, Riding -5, Bow -5 |
-| Harad | Riding +10, Bow +10 | Athletics -5 |
-| Rhun | Polearm +10, Riding +8, TwoHanded +5 | Bow -5, Throwing -5 |
-| Dunland | Throwing +10, TwoHanded +5 | Riding -5 |
-| Dol Guldur | Riding +5 | Athletics -5, Polearm -5 |
-| Gundabad | Athletics +10, TwoHanded +10 | Riding -5, Bow -5 |
-| Rivendell | All combat +45-50 (elite High Elves) | — |
-| Mirkwood | Bow +40, Athletics +30, Melee +25 (elite) | — |
-| Lothlorien | Bow +35, Melee +35, Athletics +30 (elite) | — |
-| Umbar | OneHanded +5, Polearm +5 | Riding -5, Bow -5 |
+| Erebor | TwoHanded +20, Athletics +10, OneHanded +10, Polearm +10, Throwing +10 | Riding -20 |
+| Iron Hills | TwoHanded +20, Polearm +20, OneHanded +15, Athletics +10, Throwing +10 | Riding -5 |
+| Gondor | OneHanded +10, Athletics +5, Riding +5, TwoHanded +5, Polearm +5 | Throwing -10 |
+| Rohan | Riding +20, Polearm +10, Throwing +2 | Crossbow -10, Athletics -5, Bow -5 |
+| Isengard | TwoHanded +15, Polearm +15, Athletics +10, OneHanded +10, Crossbow +10, Throwing +10 | Riding +5 |
+| Mordor | TwoHanded +5, Throwing +5 | Athletics -5, Riding -5, Polearm -5, Bow -5, Crossbow -5 |
+| Harad | Riding +15, Bow +10, OneHanded +5 | TwoHanded -10, Polearm -5 |
+| Rhun | Riding +18, Polearm +15, Athletics +5 | Bow -10, Crossbow -10, Throwing -5 |
+| Dunland | Athletics +20, Throwing +15, OneHanded +5, TwoHanded +5 | Riding -5 |
+| Dol Guldur | OneHanded +5, TwoHanded +5 | Riding -10, Bow -5, Crossbow -5 |
+| Gundabad | TwoHanded +10, Athletics +5, Polearm +5, Throwing +5 | Bow -10, Crossbow -10, Riding -5 |
+| Rivendell | All combat +30-40 (elite High Elves) | — |
+| Mirkwood | Bow/Crossbow/Throwing +50, Athletics +45, OneHanded +40 (elite) | — |
+| Lothlorien | Bow/Crossbow/Throwing +35, Athletics +35, Polearm +30, OneHanded +30 (elite) | — |
+| Umbar | Athletics +10, OneHanded +10, TwoHanded +5 | Riding -15 |
 
 **Files modified:** 13 troop XMLs + `tools/rebalance_troops.py`
 **Troop count:** 545 troops across Dol Guldur (50), Dunland (45), Erebor (47), Gondor (71), Gundabad (30), Harad (29), Isengard (38), Mirkwood (17), Mordor (28), Rhun (91), Rivendell (28), Rohan (57), Umbar (14)

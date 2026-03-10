@@ -150,8 +150,8 @@ CULTURAL_MODS = {
         'Riding': -5,
     },
     'umbar': {
-        'Athletics': 5, 'OneHanded': 5, 'Polearm': 5,
-        'Riding': -5, 'Bow': -5,
+        'Athletics': 10, 'OneHanded': 10, 'TwoHanded': 5,
+        'Riding': -15,
     },
 }
 
