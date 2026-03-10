@@ -74,6 +74,28 @@ Comprehensive skill rebalancing across all troop trees using a uniform baseline 
 
 ---
 
+### Website — Culture Theming & Troop Balancing Page
+
+Updated the taommod website with culture-specific color theming across all data tables and the troop balancing page.
+
+**Troop Balancing Page (`troop-balancing.astro`):**
+- Renamed all 15 cultures to lore-accurate names (Gondorians, Rohirrim, Longbeards, Ironfists, Noldorin, Silvan, Sindar, Uruk-Hai, Mordor Orcs, Gundabad Orcs, Goblins, Haruze, Easterlings, Dunlending, Umbarean)
+- Added culture-colored backgrounds to comparison table cells and culture detail cards
+- Updated identity descriptions with lore text (Gondor regional specializations, Erebor/Iron Hills weapon preferences, Rohan cavalry focus, evil faction creature notes)
+- Culture badges styled with per-culture colors
+
+**Culture Color Scheme (across all pages):**
+- Erebor: blue-gold `#6a9fd4` / `rgba(106, 159, 212)`
+- Iron Hills: dark red/clay `#a04030` / `rgba(160, 64, 48)`
+- Gundabad: cool gray `#7a8a9a` / `rgba(122, 138, 154)`
+- Harad: red `#c43c3c` / `rgba(220, 20, 60)`
+- Easterlings/Rhun: golden `#d4a24c` / `rgba(212, 162, 76)`
+- Other cultures retain established colors
+
+**Files modified:** `src/styles/global.css` (data-table culture row colors), `src/pages/mod-info/troop-balancing.astro` (full page overhaul)
+
+---
+
 ## 2026-03-06
 
 ### Banner Injection Feature
