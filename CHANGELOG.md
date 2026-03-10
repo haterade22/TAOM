@@ -1,5 +1,44 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-10
+
+### Troop Skill Rebalancing — All 13 Culture Files (545 troops)
+
+Comprehensive skill rebalancing across all troop trees using a uniform baseline + cultural modifier formula. Previously, skills were wildly inconsistent: Rhun had placeholder 150 values, Rivendell had 300+ at level 21 (3x peers), Umbar/Dunland cavalry were 0.5x average, and 40 militia entries had zero skills.
+
+**Approach:**
+- Created `tools/rebalance_troops.py` — Python script with baseline skill tables per level/group (Infantry, Ranged, Cavalry, HorseArcher) and per-culture modifiers
+- Baseline tables define center values for 11 level tiers (1-51) across 8 combat skills
+- Cultural modifiers (±5-10 for standard factions, +25-50 for elven factions) give each culture distinct identity
+- Weapon specialization detection swaps primary/secondary weapon skills based on troop names (crossbow, pike, sword, axe)
+- Militia entries now use level 21 baselines of their culture instead of all-zero skills
+- Regex-based XML replacement preserves all formatting, comments, and non-skill attributes
+
+**Cultural Identities:**
+
+| Culture | Strengths | Weaknesses |
+|---------|-----------|------------|
+| Erebor | OneHanded +10, TwoHanded +10, Throwing +10 | Riding -5, Bow -5 |
+| Iron Hills | OneHanded +10, Polearm +10, Crossbow +10 | Riding -5, Bow -5 |
+| Gondor | Polearm +5, OneHanded +5 | Throwing -5 |
+| Rohan | Riding +10, Polearm +10 | Crossbow -5 |
+| Isengard | Athletics +5, OneHanded +10, TwoHanded +10 | Bow -5, Riding -5 |
+| Mordor | OneHanded +5, Throwing +10 | Athletics -5, Riding -5, Bow -5 |
+| Harad | Riding +10, Bow +10 | Athletics -5 |
+| Rhun | Polearm +10, TwoHanded +5 | Bow -5, Throwing -5 |
+| Dunland | Throwing +10, TwoHanded +5 | Riding -5 |
+| Dol Guldur | Riding +5 | Athletics -5, Polearm -5 |
+| Gundabad | Athletics +10, TwoHanded +10 | Riding -5, Bow -5 |
+| Rivendell | All combat +45-50 (elite High Elves) | — |
+| Mirkwood | Bow +40, Athletics +30, Melee +25 (elite) | — |
+| Lothlorien | Bow +35, Melee +35, Athletics +30 (elite) | — |
+| Umbar | OneHanded +5, Polearm +5 | Riding -5, Bow -5 |
+
+**Files modified:** 13 troop XMLs + `tools/rebalance_troops.py`
+**Troop count:** 545 troops across Dol Guldur (50), Dunland (45), Erebor (47), Gondor (71), Gundabad (30), Harad (29), Isengard (38), Mirkwood (17), Mordor (28), Rhun (91), Rivendell (28), Rohan (57), Umbar (14)
+
+---
+
 ## 2026-03-06
 
 ### Banner Injection Feature
