@@ -189,7 +189,7 @@
 		</Kingdom>
 	</xsl:template>
 
-	<!-- Replace battania with Khand -->
+	<!-- Replace battania with Khand (Neutral Kingdom - fights everyone) -->
 	<xsl:template match="Kingdom[@id='battania']">
 		<Kingdom
 			id="battania"
@@ -213,6 +213,62 @@
 					kingdom="Kingdom.empire_w"
 					value="-1"
 					isAtWar="true" />
+				<relationship
+					kingdom="Kingdom.empire_s"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.aserai"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.vlandia"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.sturgia"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.khuzait"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.empire"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.isengard"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.gundabad"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.dolguldur"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.umbar"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.erebor"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.rivendell"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.mirkwood"
+					value="-1"
+					isAtWar="false" />
+				<relationship
+					kingdom="Kingdom.lothlorien"
+					value="-1"
+					isAtWar="false" />
 			</relationships>
 		</Kingdom>
 	</xsl:template>

@@ -393,7 +393,7 @@
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.umbar"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.vlandia"
@@ -484,7 +484,7 @@
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.umbar"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.vlandia"
@@ -530,7 +530,7 @@
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
-    <!--Umbar - Corsairs-->
+    <!--Umbar - Corsairs (Neutral Kingdom - primarily hostile to Gondor, also attacks Harad)-->
     <Kingdom
         id="umbar"
         owner="Hero.lord_U1_1"
@@ -550,32 +550,32 @@
         text="{=taom_umbar_desc}Umbar, the dark haven of the Corsairs, is a realm steeped in maritime power and treacherous ambition. The Corsairs raid the coasts of Middle-earth, spreading fear with their swift ships.">
         <relationships>
             <relationship
-                kingdom="Kingdom.khuzait"
-                value="1"
+                kingdom="Kingdom.empire_w"
+                value="-1"
+                isAtWar="true" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="-1"
                 isAtWar="false" />
             <relationship
-                kingdom="Kingdom.empire_w"
+                kingdom="Kingdom.khuzait"
                 value="0"
                 isAtWar="false" />
             <relationship
-                kingdom="Kingdom.aserai"
-                value="1"
-                isAtWar="false" />
-            <relationship
                 kingdom="Kingdom.isengard"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.empire_s"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.gundabad"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.dolguldur"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.vlandia"
@@ -666,7 +666,7 @@
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.umbar"
-                value="1"
+                value="0"
                 isAtWar="false" />
             <relationship
                 kingdom="Kingdom.vlandia"
