@@ -2,6 +2,15 @@
 
 ## 2026-03-11
 
+### Website — Weapon Balance Data Corrections
+
+- Fixed Rhun avgMelee from 66 to 69 (was using simple average instead of weighted average across rhun+khuzait cultures)
+- Fixed Rhun meleePercent from 97% to 101% to match corrected average
+- Demoted Dol Guldur from A-tier to B-tier for Shock Troops (no longer justified with -3 pts weapons)
+- Demoted Dol Guldur from A-tier to B-tier for Line Breakers (same reason)
+- Removed 22 stale percentage-based weapon references from balance-overview.astro (140%, 120%, 118%, etc.)
+- Updated Overview section in weapon-balancing.astro from old percentage system to points-based narrative
+
 ### Website — Balance Overview Page
 
 - Added `/mod-info/balance-overview` page with faction power rankings across all three balance axes (troop skills, armor, weapons)
