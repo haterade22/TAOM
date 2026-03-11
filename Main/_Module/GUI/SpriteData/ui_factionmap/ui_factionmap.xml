@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SpriteData registration for the faction map textures.
+  
+  Place PNG files in:
+    GUI/SpriteData/FactionMap/
+  
+  Then run the TaleWorlds Sprite Compiler (or use the mod toolkit)
+  to generate the sprite sheets.
+  
+  For initial testing WITHOUT the sprite compiler, you can:
+    1. Use Bannerlord's runtime texture loading
+    2. Or borrow an existing sprite as placeholder (see FactionMapLayer.cs)
+-->
+<SpriteData>
+  <SpriteCategories>
+    <SpriteCategory>
+      <Name>ui_factionmap</Name>
+      <AlwaysLoad/>
+      <SpriteSheetCount>1</SpriteSheetCount>
+      <SpriteSheetSize ID="1" Width="2048" Height="2048"/>
+    </SpriteCategory>
+  </SpriteCategories>
+
+  <SpriteParts>
+    <SpritePart Name="FactionMap_Base">
+      <SheetID>1</SheetID>
+      <SheetX>0</SheetX>
+      <SheetY>0</SheetY>
+      <Width>2048</Width>
+      <Height>1423</Height>
+    </SpritePart>
+  </SpriteParts>
+
+  <Sprites>
+    <GenericSprite Name="FactionMap_Base">
+      <SpritePart Name="FactionMap_Base"/>
+    </GenericSprite>
+  </Sprites>
+</SpriteData>

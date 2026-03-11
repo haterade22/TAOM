@@ -2,6 +2,45 @@
 
 ## 2026-03-11
 
+### Feature — Interactive Faction Selection Map
+
+Ported external LOTRAOM_FactionMap feature into TAOM as `Main/Features/FactionMap/`. Replaces vanilla character creation culture selection with a clickable Middle-earth map (36 regions, 18 factions, 6-pass rendering with animations).
+
+**Architecture (46 new C# files):**
+- Models: FactionData, RegionData, LandmarkDef, FactionSelectionResult, HoverStateChange (5 POCOs/DTOs)
+- Services: FactionConfigProvider, FactionRegistryService, LandmarkService, CultureResolverService, FactionSelectionService, FactionHoverService (6 TDD services + interfaces)
+- Adapter: ICultureObjectAdapter/CultureObjectAdapter wrapping MBObjectManager
+- ViewModels: FactionSelectionVM (thin, <200 lines) + 4 sub-VMs (TraitItem, BonusItem, PerkItem, LandmarkItem)
+- Widgets: PolygonWidget (6-pass renderer), BannerWidget, FactionImageWidget, MapContainerWidget, RuntimeSprite
+- Hooks: 3 Harmony patch pairs (Constructor/Tick/Finalize) on CharacterCreationCultureStageView using hook interface pattern
+- Infrastructure: FactionMapIoC, FactionMapPaths, FactionMapStaticBridge
+
+**Data & Assets:**
+- `factions.json` — 29 factions with culture IDs mapped to TAOM's 16 cultures (10 custom + 6 remapped vanilla)
+- `regions.json` — 36 clickable map regions with bounding boxes and polygon vertices
+- 111 PNG sprite assets (banners, faction images, highlights)
+- FactionMap.xml brushes, CharacterCreationCultureStage.xml prefab, sprite registration XML
+
+**Tests (45 new tests):**
+- FactionConfigProviderTests (6), FactionRegistryServiceTests (9), FactionSelectionServiceTests (12), FactionHoverServiceTests (7), CultureResolverServiceTests (6), LandmarkServiceTests (5)
+
+**Review fixes (9 issues resolved):**
+- Added explicit `[HarmonyPostfix]`/`[HarmonyPrefix]` attributes to all 3 Harmony patches (were relying on method name convention only)
+- Added comments explaining dynamic `TargetMethod()` pattern for View assembly types
+- Extracted FactionDisplayHelper from FactionSelectionVM (263→150 lines)
+- Extracted ICultureSettingService/CultureSettingService from CultureStageViewCreatedHook (205→146 lines)
+- Extracted FactionDataParser from FactionConfigProvider (161→119 lines)
+- Fixed LandmarkService thread safety (lazy init → constructor initialization)
+- Added IModLogger to CultureObjectAdapter for exception logging
+- Converted PolygonWidget to file-scoped namespace
+- Updated all `game_faction` values in factions.json to TAOM culture IDs (gondor, erebor, mordor, rivendell, etc.)
+- Added 7 edge-case tests (malformed JSON, color fallbacks, difficulty bounds, logging verification)
+
+**Modified existing files:**
+- IoC.cs — Added FactionMapIoC registration
+- SubModule.cs — Added FactionMapPaths initialization + Patch7_FactionMap category
+- TAOM.csproj — Added AllowUnsafeBlocks, System.Numerics.Vectors package
+
 ### Website — Weapon Balance Data Corrections
 
 - Fixed Rhun avgMelee from 66 to 69 (was using simple average instead of weighted average across rhun+khuzait cultures)

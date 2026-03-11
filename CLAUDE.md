@@ -50,6 +50,9 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Adapters | `Main/Adapters/` | Wraps sealed types |
 | Core | `Main/Core/` | Core infrastructure |
 | GameModels | `Main/Features/TroopProgression/Models/` | Troop tier, wage, volunteer overrides |
+| FactionMap | `Main/Features/FactionMap/` | Interactive faction selection map |
+| FactionMap data | `Main/_Module/ModuleData/factionmap/` | regions.json + factions.json |
+| FactionMap sprites | `Main/_Module/GUI/SpriteData/FactionMap/` | Map PNG assets (111 files) |
 | XML config | `Main/_Module/ModuleData/` | Game configuration |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` | Vanilla XML transformations |
 | **TaleWorlds DLLs** | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` | Decompile on demand |

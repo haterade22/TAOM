@@ -5,6 +5,9 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
+using TAOM.Core.Infrastructure;
+using TAOM.Core.Logging;
+using TAOM.Features.FactionMap;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
 
@@ -24,6 +27,10 @@ public class SubModule : MBSubModuleBase
         // Battle scenes patch must run before Campaign.InitializeScenes (which fires before OnGameStart)
         _harmony.PatchCategory("Patch0_BattleScenes");
         // Remaining patches applied in OnGameInitializationFinished — View assembly must be initialized first
+
+        var pathService = IoC.Resolve<IPathService>();
+        var logger = IoC.Resolve<IModLogger>();
+        FactionMapPaths.Initialize(pathService.ModuleRootPath, logger);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -60,6 +67,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Late_Transpiler");
         _harmony.PatchCategory("Late_ActionSetOverride");
         _harmony.PatchCategory("Patch6_BannerEditor");
+        _harmony.PatchCategory("Patch7_FactionMap");
     }
 
     protected override void OnSubModuleUnloaded()

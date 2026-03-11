@@ -1,0 +1,394 @@
+<Prefab>
+  <Constants>
+    <Constant Name="Panel.Width" Value="420"/>
+  </Constants>
+  <Window>
+    <!-- Root: transparent so the game scene shows through -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- Map area — map first, then frame ON TOP -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                MarginRight="!Panel.Width">
+          <Children>
+            <!-- Map content — blue ocean bg, full size. Frame overlays the edges. -->
+            <MapContainerWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                Sprite="BlankWhiteSquare_9" Color="#0E2A42FF">
+              <Children>
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="easterlings_of_rhun" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="tribes_of_harad" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="variags_of_khand" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_gondor" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="iron_hills" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="orcs_of_narager" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="dark_lands_of_mordor" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="dwarves_of_orocarni" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="realm_of_dorwinion" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="clans_of_enedwaith" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="dwarves_of_erebor" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_dale" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="havens_of_umbar" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="realm_of_cardolan" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="elves_of_lindon" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="orcs_of_gwaer" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="hill_men_of_dunland" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_rohan" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="faithful_of_bellakar" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="dwarves_of_ered_luin" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="orcs_of_the_misty_mountains" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="forodwaith" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_arthedain" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="hill_men_of_rhudaur" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="vale_of_anduin" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="shadow_of_dol_guldur" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="orcs_of_ered_luin" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="elves_of_neldoreth" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="deco_1" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="orcs_of_forochel" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="orcs_of_gundabad" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="realm_of_angmar" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="elves_of_mirkwood" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="fangorn_forest" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="dominion_of_isengard" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="elves_of_rivendell" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="elves_of_lothlorien" Command.Click="ExecuteSelectRegion" />
+                <BannerWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="64" SuggestedHeight="97"
+                              BannerPosX="@BannerPosX" BannerPosY="@BannerPosY"
+                              BannerColorHex="@BannerColorHex" BannerSide="@BannerSide"
+                              BannerImage="@BannerImage" />
+                <!-- Frame overlay ON TOP of map (last child = rendered in front) -->
+                <!-- Negative margins push the frame outward so the 27px border sits mostly outside the map -->
+                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                             MarginTop="-14" MarginBottom="-14" MarginLeft="-14" MarginRight="-14"
+                             Brush="FactionMap.MapFrame" IsEnabled="false" />
+              </Children>
+            </MapContainerWidget>
+          </Children>
+        </Widget>
+
+        <!-- Drop shadow strips left of panel -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="6" HorizontalAlignment="Right"
+                MarginRight="420" MarginTop="4" MarginBottom="4"
+                Sprite="BlankWhiteSquare_9" Color="#000000B0"
+                DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="6" HorizontalAlignment="Right"
+                MarginRight="426" MarginTop="6" MarginBottom="6"
+                Sprite="BlankWhiteSquare_9" Color="#00000060"
+                DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="8" HorizontalAlignment="Right"
+                MarginRight="432" MarginTop="8" MarginBottom="8"
+                Sprite="BlankWhiteSquare_9" Color="#00000025"
+                DoNotAcceptEvents="true" />
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- RIGHT PANEL                                             -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="!Panel.Width" HorizontalAlignment="Right"
+                DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <!-- Panel background — inset to stay inside the 27px frame border -->
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                    MarginTop="27" MarginBottom="27" MarginLeft="27" MarginRight="27"
+                    Sprite="BlankWhiteSquare_9" Color="@FactionColorHex" />
+
+            <!-- Ornamental frame overlay ON TOP of background -->
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                         Brush="FactionMap.PanelFrame" IsEnabled="false" />
+
+            <!-- Scroll area — inside the 27px frame border -->
+            <Widget Id="InnerPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                    MarginTop="27" MarginBottom="72" MarginLeft="27" MarginRight="27">
+              <Children>
+
+                <ScrollablePanel Id="ScrollablePanel"
+                                 WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                 AutoHideScrollBars="true"
+                                 ClipRect="ClipRect"
+                                 InnerPanel="ClipRect\ContentList"
+                                 VerticalScrollbar="..\VerticalScrollbar">
+                  <Children>
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                            ClipContents="true">
+                      <Children>
+
+                        <ListPanel Id="ContentList"
+                                   WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                   VerticalAlignment="Top"
+                                   MarginTop="2" MarginBottom="2"
+                                   StackLayout.LayoutMethod="VerticalBottomToTop">
+                          <Children>
+
+                            <!-- ═══════ FACTION TITLE with faction-colored background ═══════ -->
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                    SuggestedHeight="36" MarginBottom="2"
+                                    IsVisible="@HasSelection">
+                              <Children>
+                                <!-- Faction-colored background -->
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="@FactionAccentColorHex" />
+                                <!-- Gold border top/bottom -->
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        SuggestedHeight="1" VerticalAlignment="Top"
+                                        Sprite="BlankWhiteSquare_9" Color="#C6AC8D90" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        SuggestedHeight="1" VerticalAlignment="Bottom"
+                                        Sprite="BlankWhiteSquare_9" Color="#C6AC8D90" />
+                                <!-- Title text -->
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="@SelectedFactionName"
+                                            Brush="FactionMap.Title" />
+                              </Children>
+                            </Widget>
+
+                            <!-- Side label -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Center" MarginTop="1" MarginBottom="1"
+                                        Text="@SideDisplayText"
+                                        Brush="FactionMap.SideFree"
+                                        IsVisible="@IsFreePeoples" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Center" MarginTop="1" MarginBottom="1"
+                                        Text="@SideDisplayText"
+                                        Brush="FactionMap.SideEvil"
+                                        IsVisible="@IsEvil" />
+
+                            <!-- ═══════ FACTION IMAGE ═══════ -->
+                            <FactionImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                SuggestedHeight="200"
+                                                HorizontalAlignment="Center"
+                                                ImageId="@FactionImageId"
+                                                MarginTop="4" MarginBottom="4"
+                                                IsVisible="@HasSelection" />
+
+                            <!-- ═══════ SECTION: Lore ═══════ -->
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                         SuggestedHeight="26" MarginTop="4"
+                                         Brush="FactionMap.SectionBar"
+                                         IsVisible="@HasSelection">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="Lore" Brush="FactionMap.SectionTitle" />
+                              </Children>
+                            </BrushWidget>
+
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Center" MarginTop="4" MarginBottom="6"
+                                        Text="@SelectedFactionDesc"
+                                        Brush="FactionMap.Body"
+                                        IsVisible="@HasSelection" />
+
+                            <!-- ═══════ SECTION: Perks ═══════ -->
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                         SuggestedHeight="26" MarginTop="2"
+                                         Brush="FactionMap.SectionBar"
+                                         IsVisible="@HasSelection">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="Perks" Brush="FactionMap.SectionTitle" />
+                              </Children>
+                            </BrushWidget>
+
+                            <ListPanel DataSource="{FactionPerks}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4">
+                              <ItemTemplate>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                           MarginTop="2" MarginBottom="2"
+                                           StackLayout.LayoutMethod="VerticalBottomToTop">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Text="@PerkName" Brush="FactionMap.PerkName" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Text="@PerkDescription" Brush="FactionMap.PerkDesc" MarginTop="1" />
+                                  </Children>
+                                </ListPanel>
+                              </ItemTemplate>
+                            </ListPanel>
+
+                            <!-- ═══════ SECTION: Special Unit ═══════ -->
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                         SuggestedHeight="26" MarginTop="2"
+                                         Brush="FactionMap.SectionBar"
+                                         IsVisible="@HasSpecialUnit">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="Special Unit" Brush="FactionMap.SectionTitle" />
+                              </Children>
+                            </BrushWidget>
+
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        Text="@SpecialUnitName" Brush="FactionMap.UnitName"
+                                        MarginTop="4"
+                                        IsVisible="@HasSpecialUnit" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        Text="@SpecialUnitDesc" Brush="FactionMap.UnitDesc"
+                                        MarginTop="1" MarginBottom="4"
+                                        IsVisible="@HasSpecialUnit" />
+
+                            <!-- ═══════ SECTION: Bonuses ═══════ -->
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                         SuggestedHeight="26" MarginTop="2"
+                                         Brush="FactionMap.SectionBar"
+                                         IsVisible="@HasSelection">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="Bonuses" Brush="FactionMap.SectionTitle" />
+                              </Children>
+                            </BrushWidget>
+
+                            <ListPanel DataSource="{FactionBonuses}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4">
+                              <ItemTemplate>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        MarginTop="1" MarginBottom="1">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Text="@Text" Brush="FactionMap.Positive"
+                                                IsVisible="@IsPositive" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Text="@Text" Brush="FactionMap.Negative"
+                                                IsVisible="@IsNegative" />
+                                  </Children>
+                                </Widget>
+                              </ItemTemplate>
+                            </ListPanel>
+
+                            <!-- ═══════ SECTION: Strengths ═══════ -->
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                         SuggestedHeight="26" MarginTop="2"
+                                         Brush="FactionMap.SectionBar"
+                                         IsVisible="@HasStrengths">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="Strengths" Brush="FactionMap.SectionTitle" />
+                              </Children>
+                            </BrushWidget>
+
+                            <ListPanel DataSource="{FactionStrengths}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4"
+                                       IsVisible="@HasStrengths">
+                              <ItemTemplate>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Text="@Text" Brush="FactionMap.Positive" MarginTop="1" />
+                              </ItemTemplate>
+                            </ListPanel>
+
+                            <!-- ═══════ SECTION: Weaknesses ═══════ -->
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                         SuggestedHeight="26" MarginTop="2"
+                                         Brush="FactionMap.SectionBar"
+                                         IsVisible="@HasWeaknesses">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Text="Weaknesses" Brush="FactionMap.SectionTitle" />
+                              </Children>
+                            </BrushWidget>
+
+                            <ListPanel DataSource="{FactionWeaknesses}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4"
+                                       IsVisible="@HasWeaknesses">
+                              <ItemTemplate>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Text="@Text" Brush="FactionMap.Negative" MarginTop="1" />
+                              </ItemTemplate>
+                            </ListPanel>
+
+                            <!-- ═══════ DIFFICULTY ═══════ -->
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                    SuggestedHeight="1" MarginTop="8" MarginLeft="30" MarginRight="30"
+                                    Sprite="BlankWhiteSquare_9" Color="#C6AC8D40"
+                                    IsVisible="@HasDifficulty" />
+
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Center" MarginTop="4" MarginBottom="4"
+                                        Text="@DifficultyText"
+                                        Brush="FactionMap.Difficulty"
+                                        IsVisible="@HasDifficulty" />
+
+                            <!-- Non-playable warning -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Center" MarginTop="6"
+                                        Text="This realm is not playable"
+                                        Brush="FactionMap.Warning"
+                                        IsVisible="@SelectedFactionNotPlayable" />
+
+                            <!-- "Choose your Realm" when nothing selected -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Center" MarginTop="80"
+                                        Text="@Title"
+                                        Brush="FactionMap.Title"
+                                        IsVisible="@HasNoSelection" />
+
+                          </Children>
+                        </ListPanel>
+
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ScrollablePanel>
+
+                <!-- Vertical Scrollbar -->
+                <ScrollbarWidget Id="VerticalScrollbar"
+                                 WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                 SuggestedWidth="6" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                 MarginTop="6" MarginBottom="15"
+                                 AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle"
+                                 MaxValue="100" MinValue="0">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                            SuggestedWidth="4" HorizontalAlignment="Center"
+                            Sprite="BlankWhiteSquare_9" Color="#5A403380" AlphaFactor="0.2" />
+                    <ImageWidget Id="VerticalScrollbarHandle"
+                                 WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                 SuggestedWidth="8" SuggestedHeight="10"
+                                 HorizontalAlignment="Center"
+                                 Brush="FaceGen.Scrollbar.Handle" />
+                  </Children>
+                </ScrollbarWidget>
+
+              </Children>
+            </Widget>
+
+            <!-- Navigation Buttons -->
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                       MarginBottom="16">
+              <Children>
+                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="90" SuggestedHeight="45"
+                              MarginRight="15"
+                              Brush="Standard.BackButton"
+                              Command.Click="OnPreviousStage" UpdateChildrenStates="true" />
+                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="180" SuggestedHeight="45"
+                              Brush="Popup.Done.Button.NineGrid"
+                              Command.Click="ExecuteConfirm"
+                              IsEnabled="@CanConfirm" UpdateChildrenStates="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Text="Start" Brush="Popup.Button.Text" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

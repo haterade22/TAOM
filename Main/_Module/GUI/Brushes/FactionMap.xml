@@ -1,0 +1,164 @@
+<Brushes>
+
+  <!-- Region puzzle piece brush: ColorFactor-based hover/press feedback -->
+  <Brush Name="FactionMap.RegionPiece" TransitionDuration="0.15">
+    <Layers>
+      <BrushLayer Name="Default" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" ColorFactor="1.0" AlphaFactor="1.0" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.3" AlphaFactor="1.0" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.8" AlphaFactor="1.0" />
+      </Style>
+      <Style Name="Selected">
+        <BrushLayer Name="Default" Color="#ffc349FF" ColorFactor="1.4" AlphaFactor="1.0" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" ColorFactor="0.5" AlphaFactor="0.6" />
+      </Style>
+    </Styles>
+  </Brush>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- Info panel text brushes (420px dark panel)         -->
+  <!-- Styled to match vanilla CharacterCreation brushes  -->
+  <!-- ═══════════════════════════════════════════════════ -->
+
+  <!-- Faction name title: Galahad 30, warm gold with glow (like Stage.Title.Text) -->
+  <Brush Name="FactionMap.Title" Font="Galahad" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C6AC8DFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.1" TextGlowRadius="0" TextBlur="0.6" FontSize="30" />
+    </Styles>
+  </Brush>
+
+  <!-- Section heading: Galahad 19, warm gold (like Stage.Title.Text but smaller) -->
+  <Brush Name="FactionMap.SectionTitle" Font="Galahad" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C6AC8DFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.1" TextGlowRadius="0" TextBlur="0.4" FontSize="19" />
+    </Styles>
+  </Brush>
+
+  <!-- Description / body text: FiraSans 18, parchment cream (like Stage.Selection.Description.Text) -->
+  <Brush Name="FactionMap.Body" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#FDF3DEFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" TextGlowRadius="0" TextBlur="0" FontSize="18" />
+    </Styles>
+  </Brush>
+
+  <!-- Small body text: FiraSans 15 -->
+  <Brush Name="FactionMap.BodySmall" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#F4E1C4FF" FontSize="15" />
+    </Styles>
+  </Brush>
+
+  <!-- Positive bonus (green): FiraSans 18 (like Stage.Selection.Feat.Positive) -->
+  <Brush Name="FactionMap.Positive" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#33BA32FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" TextGlowRadius="0" TextBlur="0" FontSize="18" />
+    </Styles>
+  </Brush>
+
+  <!-- Negative bonus (red): FiraSans 18 (like Stage.Selection.Feat.Negative) -->
+  <Brush Name="FactionMap.Negative" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#AE1512FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" TextGlowRadius="0" TextBlur="0" FontSize="18" />
+    </Styles>
+  </Brush>
+
+  <!-- Side label "Free Peoples": FiraSans 16, gold-green -->
+  <Brush Name="FactionMap.SideFree" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#99DC30FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" FontSize="16" />
+    </Styles>
+  </Brush>
+
+  <!-- Side label "Forces of Evil": FiraSans 16, dark red -->
+  <Brush Name="FactionMap.SideEvil" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#E56B4FFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" FontSize="16" />
+    </Styles>
+  </Brush>
+
+  <!-- Difficulty text: FiraSans 15 muted gold -->
+  <Brush Name="FactionMap.Difficulty" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C5B498FF" FontSize="15" />
+    </Styles>
+  </Brush>
+
+  <!-- Perk name: FiraSans 17, warm gold (like Review.Title.Text) -->
+  <Brush Name="FactionMap.PerkName" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#EDBD71FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" FontSize="17" />
+    </Styles>
+  </Brush>
+
+  <!-- Perk description: FiraSans 15 muted parchment -->
+  <Brush Name="FactionMap.PerkDesc" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C5B498FF" FontSize="15" />
+    </Styles>
+  </Brush>
+
+  <!-- Special unit name: Galahad 18, warm cream -->
+  <Brush Name="FactionMap.UnitName" Font="Galahad" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#F4E1C4FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.06" TextBlur="0.2" FontSize="18" />
+    </Styles>
+  </Brush>
+
+  <!-- Special unit description: FiraSans 15 -->
+  <Brush Name="FactionMap.UnitDesc" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C5B498FF" FontSize="15" />
+    </Styles>
+  </Brush>
+
+  <!-- Non-playable warning: FiraSans 17 red (like ClanNaming.DisabledReason.Text) -->
+  <Brush Name="FactionMap.Warning" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C42E14FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" FontSize="17" />
+    </Styles>
+  </Brush>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- Frame / border brushes using nine-region sprites    -->
+  <!-- ═══════════════════════════════════════════════════ -->
+
+  <!-- Panel outer frame: bright gold ornamental border, drawn INSIDE widget bounds -->
+  <Brush Name="FactionMap.PanelFrame">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="frame_9" Color="#C8A870FF" />
+    </Layers>
+  </Brush>
+
+  <!-- Map outer frame: matching ornamental border, drawn INSIDE widget bounds -->
+  <Brush Name="FactionMap.MapFrame">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="frame_9" Color="#C8A870FF" />
+    </Layers>
+  </Brush>
+
+  <!-- Title bar background: dark canvas + bright gold frame border -->
+  <Brush Name="FactionMap.TitleBar">
+    <Layers>
+      <BrushLayer Name="Canvas" Sprite="rounded_canvas_9" Color="#2A1E10FF" />
+      <BrushLayer Name="Frame" Sprite="tooltip_frame_white_9" Color="#C8A870FF" />
+    </Layers>
+  </Brush>
+
+  <!-- Section header bar: subtle dark bg + gold frame accent -->
+  <Brush Name="FactionMap.SectionBar">
+    <Layers>
+      <BrushLayer Name="Canvas" Sprite="rounded_canvas_9" Color="#1A1510D0" />
+      <BrushLayer Name="Frame" Sprite="tooltip_frame_white_9" Color="#A08050E0" />
+    </Layers>
+  </Brush>
+
+</Brushes>
