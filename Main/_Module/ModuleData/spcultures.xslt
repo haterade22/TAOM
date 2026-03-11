@@ -25,10 +25,10 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.dunland_peasant</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.dunland_noble_son</xsl:attribute>
-			<xsl:attribute name="melee_militia_troop">NPCCharacter.dunland_militia_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_militia_troop">NPCCharacter.dunland_militia_archer</xsl:attribute>
-			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.dunland_militia_veteran_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.dunland_militia_veteran_archer</xsl:attribute>
+			<xsl:attribute name="melee_militia_troop">NPCCharacter.dunland_peasant</xsl:attribute>
+			<xsl:attribute name="ranged_militia_troop">NPCCharacter.dunland_peasant</xsl:attribute>
+			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.dunland_noble_son</xsl:attribute>
+			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.dunland_noble_son</xsl:attribute>
 
 			<!-- Party templates -->
 			<xsl:attribute name="villager_party_template">PartyTemplate.villager_empire_template</xsl:attribute>
@@ -304,10 +304,10 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.harad_levy</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.harad_noble</xsl:attribute>
-			<xsl:attribute name="melee_militia_troop">NPCCharacter.harad_militia_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_militia_troop">NPCCharacter.harad_militia_archer</xsl:attribute>
-			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.harad_militia_veteran_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.harad_militia_veteran_archer</xsl:attribute>
+			<xsl:attribute name="melee_militia_troop">NPCCharacter.harad_levy</xsl:attribute>
+			<xsl:attribute name="ranged_militia_troop">NPCCharacter.harad_levy</xsl:attribute>
+			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.harad_noble</xsl:attribute>
+			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.harad_noble</xsl:attribute>
 
 			<!-- Party templates -->
 			<xsl:attribute name="villager_party_template">PartyTemplate.villager_aserai_template</xsl:attribute>
@@ -583,10 +583,10 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.rohan_edoras_recruit</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
-			<xsl:attribute name="melee_militia_troop">NPCCharacter.rohan_militia_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rohan_militia_archer</xsl:attribute>
-			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rohan_militia_veteran_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.rohan_militia_veteran_archer</xsl:attribute>
+			<xsl:attribute name="melee_militia_troop">NPCCharacter.rohan_edoras_recruit</xsl:attribute>
+			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rohan_edoras_recruit</xsl:attribute>
+			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
+			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
 
 			<!-- Party templates -->
 			<xsl:attribute name="villager_party_template">PartyTemplate.villager_vlandia_template</xsl:attribute>
@@ -862,10 +862,10 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.easterling_recruit</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.easterling_cavalry_new</xsl:attribute>
-			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
-			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>
-			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.rhun_militia_veteran_archer</xsl:attribute>
+			<xsl:attribute name="melee_militia_troop">NPCCharacter.easterling_recruit</xsl:attribute>
+			<xsl:attribute name="ranged_militia_troop">NPCCharacter.easterling_recruit</xsl:attribute>
+			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.easterling_cavalry_new</xsl:attribute>
+			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.easterling_cavalry_new</xsl:attribute>
 
 			<!-- Party templates -->
 			<xsl:attribute name="villager_party_template">PartyTemplate.villager_khuzait_template</xsl:attribute>
