@@ -2,6 +2,14 @@
 
 ## 2026-03-10
 
+### Website — Database Landing Page & Lord Database Fixes
+
+- Added `/database` landing page with overview cards matching mod-info style (Troops, Lords, Armoury, Weaponry)
+- Added "Overview" link to Database dropdown nav
+- Fixed lord database: culture group headers now start collapsed by default
+- Fixed bug where collapsed culture headers disappeared — `filterRows()` was checking display state instead of filter match
+- Removed 48 generic militia troops (militia archer/spearman/veteran variants) from website troop data across 12 cultures; keeps named militia troops (gondor_militiaman, rohan_westfold_militiaman, harad_militia, easterling_militia)
+
 ### Armor Rebalancing — 2,368 Items Across 17 Cultures
 
 Comprehensive armor stat rebalancing using a uniform baseline + cultural modifier formula, mirroring the troop skill rebalancing system.
