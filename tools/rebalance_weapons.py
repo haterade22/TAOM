@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Weapon Damage Rebalancing Script for TAOM
+Weapon Damage Rebalancing Script for TAOM (Points-Based System)
 
-Applies cultural damage_factor modifiers to blade crafting pieces.
-Part of the balance triangle: Troop Skills + Armor + Weapons.
+Each culture gets a point value above/below the global average melee damage.
+The script computes a multiplier per culture to achieve the target average,
+then applies it to damage_factor values on blade crafting pieces.
 
-Modifies damage_factor values on <Thrust> and <Swing> elements within
-<BladeData> for each culture's blade pieces. Hero/legendary weapons
-are exempt from modifiers.
+Bows are excluded. Hero/legendary weapons are exempt.
 
 Usage:
     python rebalance_weapons.py --dry-run       # Preview changes
@@ -36,7 +35,7 @@ STEAM_CRAFTING_PIECES = os.path.join(
 )
 
 # =============================================================================
-# Culture Mapping (vanilla Bannerlord culture IDs → TAOM faction names)
+# Culture Mapping (vanilla Bannerlord culture IDs -> TAOM faction names)
 # =============================================================================
 
 CULTURE_MAP = {
@@ -51,6 +50,7 @@ CULTURE_MAP = {
     'gundabad':   'gundabad',
     'dolguldur':  'dolguldur',
     'rhun':       'rhun',
+    'arnor':      'arnor',
     # Remapped vanilla cultures
     'vlandia':    'rohan',
     'empire':     'dunland',
@@ -63,46 +63,81 @@ CULTURE_MAP = {
 }
 
 # =============================================================================
-# Cultural Weapon Damage Modifiers
+# Points-Based Weapon Balance System
 # =============================================================================
+# Each culture gets points above/below global average melee damage.
+# Positive = better craftsmanship/quality, Negative = cruder weapons.
 
-WEAPON_MODS = {
-    # Good Peoples
-    'gondor':     1.00,   # +0%  — baseline reference
-    'rohan':      1.05,   # +5%  — light armor needs slight weapon compensation
-    'erebor':     0.80,   # -20% — best melee skills + best dwarf armor
-    'rivendell':  0.80,   # -20% — elite skills (+40) + best armor (+6)
-    'mirkwood':   0.80,   # -20% — elite skills (+50) + light armor (+5)
-    'lothlorien': 0.80,   # -20% — elite skills + good armor
-
-    # Evil Factions
-    'isengard':   1.05,   # +5%  — solid troops deserve solid weapons
-    'mordor':     1.05,   # +5%  — weak troops/armor need weapon compensation
-    'gundabad':   1.05,   # +5%  — worst armor in game needs compensation
-    'dolguldur':  1.10,   # +10% — weakest troops need biggest weapon boost
-    'harad':      1.10,   # +10% — worst armor needs weapon compensation
-    'rhun':       1.05,   # +5%  — small buff for cavalry culture
-    'dunland':    1.15,   # +15% — poor armor + skills needs significant boost
-
-    # Unaffected
-    'neutral':    1.00,
-    'sturgia':    1.00,
+CULTURAL_POINTS = {
+    'rivendell':  10,   # Noldorin master-smiths — finest blades in Middle-earth
+    'lothlorien':  9,   # Sindar craftsmanship — second only to Noldor
+    'erebor':      5,   # Dwarven forges — exceptional metalwork
+    'mirkwood':    4,   # Woodland elf craft — fine but less refined than Noldor
+    'gondor':      3,   # Numenorean heritage — well-forged steel
+    'rhun':        2,   # Eastern smithcraft — decent quality
+    'arnor':       2,   # Northern Dunedain — Numenorean tradition
+    'isengard':    0,   # Uruk-hai baseline — functional industrial weapons
+    'rohan':       0,   # Rohirric smiths — solid but unexceptional
+    'harad':       0,   # Haradrim craft — competent baseline
+    'gundabad':   -1,   # Goblin-made — slightly crude
+    'mordor':     -2,   # Orc-forged — crude but mass-produced
+    'dunland':    -2,   # Dunlending craft — rough tribal weapons
+    'dolguldur':  -3,   # Worst quality — crude Dol Guldur orc-work
 }
 
-# =============================================================================
-# Dunland Spear Pre-Fix (applied BEFORE cultural modifier)
-# =============================================================================
-# These 5 spear heads are structurally underpowered at 1.9.
-# Raise to 2.8 before applying the +15% cultural modifier.
-# Final result: 2.8 * 1.15 = 3.22, competitive with other polearms.
+# Rohan polearm exception: +3 points for polearms (cavalry lances/spears)
+ROHAN_POLEARM_POINTS = 3
 
-DUNLAND_SPEAR_FIX = {
-    'dunland_caerdh_spear_head_a': 2.8,
-    'dunland_caerdh_spear_head_b': 2.8,
-    'dunland_caerdh_spear_head_c': 2.8,
-    'dunland_caerdh_spear_head_d': 2.8,
-    'dunland_caerdh_spear_head_e': 2.8,
+# Current measured per-culture average melee damage (from aggregate-weapon-data.mjs)
+# These represent the ORIGINAL unmodified weapon averages in the XML.
+CURRENT_AVG_MELEE = {
+    'gondor':     65,
+    'rohan':      60,
+    'erebor':     77,
+    'rivendell':  51,
+    'mirkwood':   66,
+    'lothlorien': 70,
+    'isengard':   61,
+    'mordor':     78,
+    'gundabad':   67,
+    'dolguldur':  91,
+    'harad':      62,
+    'rhun':       67,   # Merged khuzait (33 weapons, avg 76) + rhun (20, avg 52)
+    'dunland':    70,
 }
+
+# Compute global average and per-culture multipliers
+GLOBAL_AVG = sum(CURRENT_AVG_MELEE.values()) / len(CURRENT_AVG_MELEE)  # ~68.08
+
+def _compute_multiplier(culture, is_polearm=False):
+    """Compute damage_factor multiplier for a culture."""
+    points = CULTURAL_POINTS.get(culture)
+    if points is None:
+        return 1.0
+
+    # Rohan polearm exception
+    if culture == 'rohan' and is_polearm:
+        points = ROHAN_POLEARM_POINTS
+
+    target = GLOBAL_AVG + points
+    current = CURRENT_AVG_MELEE.get(culture)
+    if not current:
+        # Culture has no measured weapons yet (e.g., arnor) — use global avg
+        return round(target / GLOBAL_AVG, 3)
+    return round(target / current, 3)
+
+
+# Pre-compute multipliers for display
+WEAPON_MODS = {}
+for culture in CULTURAL_POINTS:
+    WEAPON_MODS[culture] = _compute_multiplier(culture)
+WEAPON_MODS['neutral'] = 1.0
+WEAPON_MODS['sturgia'] = 1.0
+
+ROHAN_POLEARM_MOD = _compute_multiplier('rohan', is_polearm=True)
+
+# Polearm weapon templates (for Rohan polearm detection)
+POLEARM_TEMPLATES = {'TwoHandedPolearm', 'Pike', 'OneHandedPolearm', 'Javelin'}
 
 # =============================================================================
 # Hero Weapon Exemptions (blade piece IDs that skip cultural modifiers)
@@ -137,23 +172,26 @@ HERO_BLADE_IDS = {
 
 
 # =============================================================================
-# Step 1: Build blade piece → culture mapping from weapons XML
+# Step 1: Build blade piece -> culture + template mapping from weapons XML
 # =============================================================================
 
 def build_piece_culture_map(weapons_xml_path):
     """
-    Parse LOTRAOM_weapons.xml to map each blade piece ID to its culture.
-    Returns: dict of blade_piece_id -> taom_culture_name
+    Parse LOTRAOM_weapons.xml to map each blade piece ID to its culture
+    and weapon template.
+    Returns: (piece_culture, piece_weapon, piece_template) dicts
     """
     tree = ET.parse(weapons_xml_path)
     root = tree.getroot()
 
     piece_culture = {}
-    piece_weapon = {}  # blade_piece_id -> weapon_id (for reporting)
+    piece_weapon = {}      # blade_piece_id -> weapon_id (for reporting)
+    piece_template = {}    # blade_piece_id -> crafting_template (for polearm detection)
 
     for item in root.findall('.//CraftedItem'):
         item_id = item.get('id', '')
         raw_culture = item.get('culture', '').replace('Culture.', '')
+        template = item.get('crafting_template', '')
 
         # Fallback: detect culture from weapon ID prefix if no culture attribute
         if not raw_culture:
@@ -169,8 +207,9 @@ def build_piece_culture_map(weapons_xml_path):
                 if piece_id not in piece_culture:
                     piece_culture[piece_id] = taom_culture
                     piece_weapon[piece_id] = item_id
+                    piece_template[piece_id] = template
 
-    return piece_culture, piece_weapon
+    return piece_culture, piece_weapon, piece_template
 
 
 # Prefix-based fallback culture detection for weapons without culture attribute
@@ -236,10 +275,10 @@ def _detect_culture_from_piece_id(piece_id):
 # Step 2: Parse crafting pieces and compute changes
 # =============================================================================
 
-def compute_changes(crafting_xml_path, piece_culture, piece_weapon):
+def compute_changes(crafting_xml_path, piece_culture, piece_weapon, piece_template):
     """
     Parse LOTRLOME_crafting_pieces.xml, find all Blade pieces,
-    and compute new damage_factor values.
+    and compute new damage_factor values using the points-based system.
 
     Returns list of change records.
     """
@@ -271,29 +310,26 @@ def compute_changes(crafting_xml_path, piece_culture, piece_weapon):
         if not culture:
             culture = CULTURE_MAP.get(_detect_culture_from_piece_id(piece_id), 'unknown')
         weapon_id = piece_weapon.get(piece_id, '(unused piece)')
+        template = piece_template.get(piece_id, '')
 
         # Check hero exemption
         is_hero = piece_id in HERO_BLADE_IDS
 
-        # Get modifier
-        modifier = WEAPON_MODS.get(culture, 1.0)
-
-        # Apply Dunland spear pre-fix
-        pre_fix_thrust = DUNLAND_SPEAR_FIX.get(piece_id)
-        pre_fix_applied = False
-        effective_old_thrust = old_thrust
-        if pre_fix_thrust is not None and old_thrust is not None:
-            effective_old_thrust = pre_fix_thrust
-            pre_fix_applied = True
+        # Get modifier — check Rohan polearm special case
+        is_polearm = template in POLEARM_TEMPLATES
+        if culture == 'rohan' and is_polearm:
+            modifier = ROHAN_POLEARM_MOD
+        else:
+            modifier = WEAPON_MODS.get(culture, 1.0)
 
         # Compute new values
         if is_hero:
-            new_thrust = effective_old_thrust if pre_fix_applied else old_thrust
+            new_thrust = old_thrust
             new_swing = old_swing
             modifier_applied = 1.0
         else:
             modifier_applied = modifier
-            new_thrust = round(effective_old_thrust * modifier, 2) if effective_old_thrust is not None else None
+            new_thrust = round(old_thrust * modifier, 2) if old_thrust is not None else None
             new_swing = round(old_swing * modifier, 2) if old_swing is not None else None
 
         # Only record if something changed
@@ -303,10 +339,11 @@ def compute_changes(crafting_xml_path, piece_culture, piece_weapon):
         changes.append({
             'piece_id': piece_id,
             'weapon_id': weapon_id,
+            'template': template,
             'culture': culture,
             'is_hero': is_hero,
+            'is_polearm': is_polearm,
             'modifier': modifier_applied,
-            'pre_fix': pre_fix_applied,
             'old_swing': old_swing,
             'new_swing': new_swing,
             'old_thrust': old_thrust,
@@ -353,7 +390,6 @@ def apply_changes_via_regex(filepath, changes):
 
         # Replace thrust damage_factor
         if change['thrust_changed'] and change['new_thrust'] is not None:
-            # Match damage_factor within a <Thrust> context
             thrust_pattern = re.compile(
                 r'(<Thrust\s[^>]*?damage_factor=")([^"]*?)(")'
             )
@@ -405,9 +441,10 @@ def print_summary(changes):
     for c in changes:
         by_culture[c['culture']].append(c)
 
-    print('\n=== Weapon Damage Rebalance Summary ===\n')
-    print(f"{'Culture':<14} {'Mod':>5} {'Pieces':>6} {'Changed':>8} {'Hero':>5}  Notes")
-    print('-' * 70)
+    print(f'\n=== Points-Based Weapon Rebalance Summary ===')
+    print(f'Global avg melee damage: {GLOBAL_AVG:.1f}\n')
+    print(f"{'Culture':<14} {'Pts':>4} {'Mod':>6} {'Pieces':>6} {'Changed':>8} {'Hero':>5}  Notes")
+    print('-' * 80)
 
     total_pieces = 0
     total_changed = 0
@@ -415,27 +452,32 @@ def print_summary(changes):
 
     for culture in sorted(by_culture.keys()):
         items = by_culture[culture]
+        pts = CULTURAL_POINTS.get(culture, '?')
         mod = WEAPON_MODS.get(culture, 1.0)
         n_pieces = len(items)
         n_changed = sum(1 for c in items if c['changed'])
         n_hero = sum(1 for c in items if c['is_hero'])
-        n_prefix = sum(1 for c in items if c['pre_fix'])
+        n_polearm = sum(1 for c in items if c['is_polearm'] and not c['is_hero'])
 
         notes = []
         if n_hero > 0:
             notes.append(f'{n_hero} hero exempt')
-        if n_prefix > 0:
-            notes.append(f'{n_prefix} spear pre-fix')
+        if culture == 'rohan' and n_polearm > 0:
+            notes.append(f'{n_polearm} polearms at {ROHAN_POLEARM_MOD:.3f}x (+{ROHAN_POLEARM_POINTS}pts)')
 
-        mod_str = f"{mod:.2f}x"
-        print(f"{culture:<14} {mod_str:>5} {n_pieces:>6} {n_changed:>8} {n_hero:>5}  {', '.join(notes)}")
+        current = CURRENT_AVG_MELEE.get(culture, '?')
+        target = f'{GLOBAL_AVG + pts:.0f}' if isinstance(pts, (int, float)) else '?'
+
+        mod_str = f"{mod:.3f}x"
+        pts_str = f"{pts:+d}" if isinstance(pts, int) else str(pts)
+        print(f"{culture:<14} {pts_str:>4} {mod_str:>6} {n_pieces:>6} {n_changed:>8} {n_hero:>5}  {current}->{target} avg  {', '.join(notes)}")
 
         total_pieces += n_pieces
         total_changed += n_changed
         total_hero += n_hero
 
-    print('-' * 70)
-    print(f"{'TOTAL':<14} {'':>5} {total_pieces:>6} {total_changed:>8} {total_hero:>5}")
+    print('-' * 80)
+    print(f"{'TOTAL':<14} {'':>4} {'':>6} {total_pieces:>6} {total_changed:>8} {total_hero:>5}")
 
     # Detail view of changes
     print('\n=== Detailed Changes ===\n')
@@ -450,8 +492,8 @@ def print_summary(changes):
         old_th = f"{c['old_thrust']:.1f}" if c['old_thrust'] is not None else '—'
         new_th = f"{c['new_thrust']:.1f}" if c['new_thrust'] is not None else '—'
         hero = 'HERO' if c['is_hero'] else ''
-        prefix = ' [FIX]' if c['pre_fix'] else ''
-        print(f"{c['piece_id']:<45} {c['culture']:<12} {old_sw:>6} {new_sw:>6} {old_th:>6} {new_th:>6} {hero:>5}{prefix}")
+        polearm = ' [POLE]' if c['is_polearm'] and c['culture'] == 'rohan' else ''
+        print(f"{c['piece_id']:<45} {c['culture']:<12} {old_sw:>6} {new_sw:>6} {old_th:>6} {new_th:>6} {hero:>5}{polearm}")
 
 
 def export_csv(changes, filepath):
@@ -459,15 +501,17 @@ def export_csv(changes, filepath):
     with open(filepath, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow([
-            'piece_id', 'weapon_id', 'culture', 'modifier', 'is_hero', 'pre_fix',
+            'piece_id', 'weapon_id', 'culture', 'template', 'points',
+            'modifier', 'is_hero', 'is_polearm',
             'old_swing_factor', 'new_swing_factor',
             'old_thrust_factor', 'new_thrust_factor',
             'changed'
         ])
         for c in sorted(changes, key=lambda x: (x['culture'], x['piece_id'])):
             writer.writerow([
-                c['piece_id'], c['weapon_id'], c['culture'],
-                c['modifier'], c['is_hero'], c['pre_fix'],
+                c['piece_id'], c['weapon_id'], c['culture'], c['template'],
+                CULTURAL_POINTS.get(c['culture'], ''),
+                c['modifier'], c['is_hero'], c['is_polearm'],
                 c['old_swing'] if c['old_swing'] is not None else '',
                 c['new_swing'] if c['new_swing'] is not None else '',
                 c['old_thrust'] if c['old_thrust'] is not None else '',
@@ -496,12 +540,25 @@ def main():
         print(f"ERROR: Crafting pieces XML not found: {CRAFTING_PIECES_XML}")
         sys.exit(1)
 
-    print("Building blade piece -> culture mapping from weapons XML...")
-    piece_culture, piece_weapon = build_piece_culture_map(WEAPONS_XML)
+    # Print multiplier table
+    print('\n=== Cultural Weapon Multipliers ===')
+    print(f"{'Culture':<14} {'Points':>6} {'Current':>8} {'Target':>8} {'Multiplier':>10}")
+    print('-' * 50)
+    for culture in sorted(CULTURAL_POINTS.keys()):
+        pts = CULTURAL_POINTS[culture]
+        current = CURRENT_AVG_MELEE.get(culture, GLOBAL_AVG)
+        target = GLOBAL_AVG + pts
+        mult = WEAPON_MODS[culture]
+        print(f"{culture:<14} {pts:>+6} {current:>8.1f} {target:>8.1f} {mult:>10.3f}x")
+    if ROHAN_POLEARM_MOD != WEAPON_MODS.get('rohan', 1.0):
+        print(f"{'rohan (pole)':<14} {ROHAN_POLEARM_POINTS:>+6} {CURRENT_AVG_MELEE.get('rohan', 0):>8.1f} {GLOBAL_AVG + ROHAN_POLEARM_POINTS:>8.1f} {ROHAN_POLEARM_MOD:>10.3f}x")
+
+    print("\nBuilding blade piece -> culture mapping from weapons XML...")
+    piece_culture, piece_weapon, piece_template = build_piece_culture_map(WEAPONS_XML)
     print(f"  Mapped {len(piece_culture)} blade pieces to cultures")
 
     print("Computing damage factor changes...")
-    changes = compute_changes(CRAFTING_PIECES_XML, piece_culture, piece_weapon)
+    changes = compute_changes(CRAFTING_PIECES_XML, piece_culture, piece_weapon, piece_template)
     print(f"  Analyzed {len(changes)} blade pieces")
 
     print_summary(changes)
@@ -535,7 +592,7 @@ def main():
         csv_path = os.path.join(SCRIPT_DIR, 'weapon_rebalance.csv')
         export_csv(changes, csv_path)
 
-        print("\nDone! Run tw-damage-calc.mjs to verify new damage values.")
+        print("\nDone! Run aggregate-weapon-data.mjs to verify new damage values.")
 
     else:
         print("\n[DRY RUN] No files were modified.")

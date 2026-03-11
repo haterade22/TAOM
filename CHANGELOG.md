@@ -22,11 +22,26 @@
   - Erebor/Iron Hills: zero throwing troops, zero cavalry — pure heavy infantry
   - Rohan: 18 infantry shield troops (Westfold, Westmarches, Edoras) — B-tier frontline, not D
 
-### Website — Weapon Balancing Updates
+### Weapon Rebalancing — Points-Based System
 
-- Updated remaining 5 culture cards on weapon-balancing page with post-rebalance data
-- Updated balance concerns section to reflect post-modifier state
-- Updated overview section describing cultural weapon modifier system
+- Replaced percentage-based weapon modifiers with points-based craftsmanship system
+- Each culture gets points above/below global average melee damage (68):
+  - Noldor (Rivendell): +10, Sindar (Lothlorien): +9, Erebor/Iron Hills: +5
+  - Mirkwood: +4, Gondor: +3, Rhun: +2, Arnor: +2
+  - Isengard: 0 (baseline), Rohan: 0 (polearms +3), Harad: 0
+  - Gundabad: -1, Mordor: -2, Dunland: -2, Dol Guldur: -3
+- Applied 217 blade piece modifications via `rebalance_weapons.py --apply`
+- Rohan polearms get separate +3 point bonus for cavalry lance superiority
+- Hero/legendary weapons exempt from modifiers (18 pieces)
+- Bows excluded — to be handled separately later
+- Updated `weapon-balancing.astro` with new per-culture data and craftsmanship narrative
+- Updated `balance-overview.astro` weapon grades to reflect new system
+- New philosophy: weapon quality reflects craftsmanship (elves = best, dwarves = great, evil = crude)
+
+### Website — Rename Goblins to Dol Guldur Orcs
+
+- Renamed 'Goblins' to 'Dol Guldur Orcs' across weapon-balancing, troop-balancing, armour-balancing, and balance-overview pages
+- Preserved 'Goblin' in troop names (Goblin Hunter, Goblin Slave) and race descriptions
 
 ### Armor Modifier Revisions
 
