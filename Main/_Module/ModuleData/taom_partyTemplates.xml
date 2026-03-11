@@ -64,8 +64,8 @@
 
 	<MBPartyTemplate id="militia_gundabad_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_snaga" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_snaga" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -176,8 +176,8 @@
 
 	<MBPartyTemplate id="militia_erebor_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_recruit" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_recruit" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -289,8 +289,8 @@
 
 	<MBPartyTemplate id="militia_dolguldur_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_goblin_slave" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_goblin_slave" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dolguldur_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dolguldur_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -398,8 +398,8 @@
 
 	<MBPartyTemplate id="militia_mirkwood_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_recruit" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_recruit" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -510,8 +510,8 @@
 
 	<MBPartyTemplate id="militia_rivendell_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.imladris_recruit" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.imladris_recruit" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rivendell_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rivendell_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -618,8 +618,8 @@
 
 	<MBPartyTemplate id="militia_gondor_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_levyman" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_levyman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -725,8 +725,8 @@
 
 	<MBPartyTemplate id="militia_mordor_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -831,8 +831,8 @@
 
 	<MBPartyTemplate id="militia_rohan_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rohan_edoras_recruit" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rohan_edoras_recruit" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rohan_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rohan_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -935,8 +935,8 @@
 
 	<MBPartyTemplate id="militia_dunland_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_peasant" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_peasant" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1035,8 +1035,8 @@
 
 	<MBPartyTemplate id="militia_harad_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_levy" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_levy" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1135,8 +1135,8 @@
 
 	<MBPartyTemplate id="militia_rhun_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.easterling_recruit" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.easterling_recruit" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rhun_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rhun_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1235,8 +1235,8 @@
 
 	<MBPartyTemplate id="militia_isengard_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.urukhai_recruit" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.urukhai_recruit" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.isengard_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.isengard_militia_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
