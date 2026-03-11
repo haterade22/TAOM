@@ -1,5 +1,45 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-11
+
+### Website — Balance Overview Page
+
+- Added `/mod-info/balance-overview` page with faction power rankings across all three balance axes (troop skills, armor, weapons)
+- Added Balance Overview card to mod-info index page
+- Faction Power Comparison table with S-D grading for 12 non-elven cultures + 3 elven cultures (separate section)
+- Iron Hills and Erebor graded individually (not combined)
+- Balance Triangle visual explaining the three-axis system
+
+### Website — Infantry Subcategories & Tier Lists
+
+- Added 7 tier lists: Overall Infantry, Front Line, Shock Troops, Line Breakers, Skirmishers, Cavalry, Ranged
+- Gaming-style S-D tier format with per-culture reasons
+- Updated all tier list descriptions to reference actual troop equipment loadouts (Item0-Item4 from NPC XML)
+- Troop role classification based on actual equipment: sword+shield = frontline, 2H weapon = shock/linebreaker, throwing weapon = skirmisher, bow/crossbow = ranged
+- Key findings from equipment analysis:
+  - Dunland: 28 of 30 infantry carry throwing weapons (S-tier skirmisher, D-tier frontline)
+  - Dol Guldur: 17 ranged troops (S-tier ranged), 22 shield troops, 5 linebreakers
+  - Erebor/Iron Hills: zero throwing troops, zero cavalry — pure heavy infantry
+  - Rohan: 18 infantry shield troops (Westfold, Westmarches, Edoras) — B-tier frontline, not D
+
+### Website — Weapon Balancing Updates
+
+- Updated remaining 5 culture cards on weapon-balancing page with post-rebalance data
+- Updated balance concerns section to reflect post-modifier state
+- Updated overview section describing cultural weapon modifier system
+
+### Armor Modifier Revisions
+
+- Gundabad protection: -2 → 0 (holds dwarven cities, access to dwarven forges)
+- Dol Guldur protection: -1 → 0 (fortress-forged plate from Sauron's armories)
+- Rivendell protection: +6 → +5 (on par with dwarves, not above)
+- Gondor protection: 0 → +1 (Numenorean smithing tradition)
+- Re-ran `rebalance_armor.py --apply` on 83 armor files (2,368 items)
+- Updated `balance-overview.astro` armor grades: Gundabad D→B, Dol Guldur C→B
+- Updated `armour-balancing.astro` culture detail cards with new values and lore
+
+---
+
 ## 2026-03-10
 
 ### Website — Database Landing Page & Lord Database Fixes

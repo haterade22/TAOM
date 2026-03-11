@@ -99,12 +99,12 @@ CULTURAL_MODS = {
     'iron_hills':  {'protection': 5,  'weight_mult': 1.10},
 
     # Elves: high protection, light weight (masterwork)
-    'rivendell':   {'protection': 6,  'weight_mult': 0.70},
+    'rivendell':   {'protection': 5,  'weight_mult': 0.70},
     'mirkwood':    {'protection': 5,  'weight_mult': 0.65},
     'lothlorien':  {'protection': 5,  'weight_mult': 0.70},
 
     # Men of the West: balanced
-    'gondor':      {'protection': 0,  'weight_mult': 1.00},
+    'gondor':      {'protection': 1,  'weight_mult': 1.00},
     'rohan':       {'protection': -2, 'weight_mult': 0.90},
     'arnor':       {'protection': 2,  'weight_mult': 1.00},
 
@@ -117,8 +117,8 @@ CULTURAL_MODS = {
     # Orcs & Uruk-hai
     'isengard':    {'protection': 2,  'weight_mult': 1.15},
     'mordor':      {'protection': -1, 'weight_mult': 1.10},
-    'gundabad':    {'protection': -2, 'weight_mult': 1.15},
-    'dol_guldur':  {'protection': -1, 'weight_mult': 1.10},
+    'gundabad':    {'protection': 0,  'weight_mult': 1.15},
+    'dol_guldur':  {'protection': 0,  'weight_mult': 1.10},
 
     # Special
     'thenn':       {'protection': -3, 'weight_mult': 1.05},
