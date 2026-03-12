@@ -56,6 +56,9 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | XML config | `Main/_Module/ModuleData/` | Game configuration |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` | Vanilla XML transformations |
 | **TaleWorlds DLLs** | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` | Decompile on demand |
+| VS Code config | `.vscode/` | tasks.json, extensions.json, settings.json |
+| Editor config | `.editorconfig` | Formatting rules (4-space C#, 2-space XML, CRLF) |
+| MCP config | `.mcp.json` | Project-scoped MCP servers (Serena) |
 
 ## XSLT Transformations
 
@@ -167,6 +170,25 @@ After every change session, update ALL relevant documentation before finishing:
 ## Commits
 
 50/72 rule. No AI attribution. Example: `feat: add garrison patrol calculation`
+
+## MCP Servers
+
+| Server | Scope | Purpose |
+|--------|-------|---------|
+| **Serena** | Project (`.mcp.json`) | Symbolic code navigation — find/replace symbols, overview, references |
+| **sequential-thinking** | Global | Extended reasoning for complex decisions |
+| **context7** | Global | Library documentation lookup |
+
+Serena is configured per-project via `.mcp.json` (not globally). Each project gets its own Serena instance pointing at the correct codebase. Requires onboarding on first use (`check_onboarding_performed` → `onboarding`).
+
+## Hooks
+
+Configured in `.claude/settings.json`, scripts in `.claude/hooks/`.
+
+| Hook | Event | Matcher | Purpose |
+|------|-------|---------|---------|
+| `check-build-before-commit.sh` | PreToolUse | Bash | Blocks `git commit` if `dotnet build` fails |
+| `notify-csharp-edit.sh` | PostToolUse | Edit\|Write | Logs C# file modifications to session |
 
 ## Notes
 

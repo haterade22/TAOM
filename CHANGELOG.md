@@ -1,6 +1,40 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-12
+
+### Tooling — Claude Code Hooks
+
+- Added pre-commit build check hook (`.claude/hooks/check-build-before-commit.sh`) — blocks `git commit` if `dotnet build` fails
+- Added C# edit notification hook (`.claude/hooks/notify-csharp-edit.sh`) — logs modified C# file paths to session
+- Created `.claude/settings.json` with hook configuration
+- Enabled hooks globally (removed `disableAllHooks: true` from global settings)
+
 ## 2026-03-11
+
+### Tooling — Developer Environment & AI Workflow Improvements
+
+**VS Code project config (3 new files):**
+- `.vscode/tasks.json` — Build (Ctrl+Shift+B), Build+Test, Run Tests tasks with `$msCompile` problem matcher
+- `.vscode/extensions.json` — Recommends Claude Code, C# DevKit, XML, PowerShell extensions
+- `.vscode/settings.json` — Hides bin/obj/.vs from explorer, enables format-on-save
+
+**Editor formatting (1 new file):**
+- `.editorconfig` — Enforces 4-space C# indent, 2-space XML/JSON indent, CRLF line endings, trim trailing whitespace
+
+**Serena MCP per-project configuration:**
+- Created `.mcp.json` for TAOM — Serena symbolic code navigation now targets TAOM's C# codebase
+- Created `.mcp.json` for Achaea — Serena continues targeting LEVI-Achaea
+- Removed Serena from global MCP config (was always pointing at Achaea regardless of project)
+
+**Claude Code configuration cleanup:**
+- Removed 5 stale one-off permission entries from global `settings.json`
+- Removed 3 stale permission entries from project `.claude/settings.local.json`
+- Added 4 new memory files: user profile, feedback (SandBoxCore reference, XSLT passthrough), external references
+- Updated MEMORY.md index with new memory file links
+
+**CLAUDE.md updates:**
+- Added VS Code config, .editorconfig, and .mcp.json to Key Paths table
+- Added MCP Servers section documenting Serena, sequential-thinking, and context7
 
 ### Feature — Interactive Faction Selection Map
 
