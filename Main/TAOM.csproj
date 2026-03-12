@@ -19,6 +19,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\System.Numerics.Vectors.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+			<Aliases>SNV</Aliases>
+		</Reference>
 		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
@@ -58,7 +63,6 @@
 		</PackageReference>
 		<PackageReference Include="DryIoc.dll" Version="4.8.8" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" IncludeAssets="compile" />
 		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
 		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />

@@ -1,17 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir /s \"c:\\\\Users\\\\mikew\\\\source\\\\repos\\\\TAOM\")",
       "Bash(tree:*)",
       "Bash(dir:*)",
-      "Bash(xargs:*)",
       "WebFetch(domain:moddocs.bannerlord.com)",
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM/**)",
-      "Bash(Remove-Item \"c:\\\\Users\\\\mikew\\\\source\\\\repos\\\\TAOM\\\\Main\\\\_Module\\\\ModuleData\\\\splords.xslt\")",
       "Bash(findstr:*)",
       "Bash(ilspycmd:*)",
-      "Bash(Select-String -Pattern \"\\(error|warning|Build succeeded|Build FAILED\\)\")",
-      "Bash(ForEach-Object { $_Line })",
+      "Bash(Select-String:*)",
       "Bash(powershell.exe -ExecutionPolicy Bypass -File ./build.ps1)"
     ],
     "additionalDirectories": [

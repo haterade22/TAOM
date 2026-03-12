@@ -1,6 +1,7 @@
 using System;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.GauntletUI.Data;
 using TaleWorlds.TwoDimension;
@@ -87,8 +88,37 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
                     return;
                 }
                 _cultureSettingService.SetCultureOnCharacterCreation(culture, viewInstance, _originalDataSource);
-                var nextStageMethod = AccessTools.Method(viewInstance.GetType(), "NextStage");
-                nextStageMethod?.Invoke(viewInstance, null);
+
+                // Replicate vanilla NextStage() logic directly because the vanilla method
+                // accesses _dataSource.CurrentSelectedCulture.Culture which is null since
+                // we replaced the vanilla VM with FactionSelectionVM.
+                try
+                {
+                    var charCreationMgrField = AccessTools.Field(viewInstance.GetType(), "_characterCreationManager");
+                    var charCreationMgr = charCreationMgrField?.GetValue(viewInstance);
+                    if (charCreationMgr != null)
+                    {
+                        var contentProp = AccessTools.Property(charCreationMgr.GetType(), "CharacterCreationContent");
+                        var content = contentProp?.GetValue(charCreationMgr);
+                        if (content != null)
+                        {
+                            var setNameMethod = AccessTools.Method(content.GetType(), "SetMainCharacterName",
+                                new[] { typeof(string) });
+                            var generatedName = NameGenerator.Current
+                                .GenerateFirstNameForPlayer(culture, Hero.MainHero.IsFemale)
+                                .ToString();
+                            setNameMethod?.Invoke(content, new object[] { generatedName });
+                        }
+                    }
+
+                    var affirmativeField = AccessTools.Field(viewInstance.GetType(), "_affirmativeAction");
+                    var affirmativeAction = affirmativeField?.GetValue(viewInstance) as Delegate;
+                    affirmativeAction?.DynamicInvoke();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"NextStage error: {ex.Message}\n{ex.StackTrace}");
+                }
             };
 
             Action onPreviousStage = () =>

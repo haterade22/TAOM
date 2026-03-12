@@ -1,3 +1,4 @@
+extern alias SNV;
 using System;
 using TAOM.Features.FactionMap;
 using TaleWorlds.Engine;
@@ -6,7 +7,7 @@ using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.Library;
 using TaleWorlds.TwoDimension;
-using Vector2 = System.Numerics.Vector2;
+using Vector2 = SNV::System.Numerics.Vector2;
 
 using EngineTexture = TaleWorlds.Engine.Texture;
 using TwoDimTexture = TaleWorlds.TwoDimension.Texture;
