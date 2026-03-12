@@ -24,6 +24,7 @@ from collections import defaultdict
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.join(SCRIPT_DIR, '..')
 XSLT_PATH = os.path.join(REPO_ROOT, 'Main', '_Module', 'ModuleData', 'lords.xslt')
+XML_PATH = os.path.join(REPO_ROOT, 'Main', '_Module', 'ModuleData', 'characters', 'lords.xml')
 CSV_PATH = os.path.join(SCRIPT_DIR, 'lords_balance.csv')
 
 ALL_SKILLS = [
@@ -202,12 +203,21 @@ JUNIOR_MULTIPLIER = 0.60
 # =============================================================================
 # Vanilla culture -> TAOM culture mapping
 CULTURE_MAP = {
+    # Vanilla cultures -> TAOM
     'Culture.empire': 'dunland',
     'Culture.sturgia': 'dale',
     'Culture.aserai': 'harad',
     'Culture.vlandia': 'rohan',
     'Culture.battania': 'mirkwood',
     'Culture.khuzait': 'rhun',
+    # TAOM custom cultures
+    'Culture.dolguldur': 'dolguldur',
+    'Culture.erebor': 'erebor',
+    'Culture.gundabad': 'gundabad',
+    'Culture.isengard': 'isengard',
+    'Culture.lothlorien': 'lothlorien',
+    'Culture.rivendell': 'rivendell',
+    'Culture.umbar': 'umbar',
 }
 
 CULTURAL_MODS = {
@@ -239,6 +249,42 @@ CULTURAL_MODS = {
         'Riding': 20, 'Polearm': 15, 'Bow': 10,
         'Athletics': -5,
         'Trade': 10, 'Steward': 5,
+    },
+    # TAOM custom cultures
+    'dolguldur': {  # Dol Guldur - dark sorcery, stealth, fear
+        'Athletics': 10, 'TwoHanded': 10, 'Throwing': 10,
+        'Riding': -10, 'Bow': -5,
+        'Roguery': 20, 'Scouting': 15, 'Tactics': 10,
+    },
+    'erebor': {  # Dwarves - heavy infantry, crafting, engineering
+        'TwoHanded': 15, 'OneHanded': 10, 'Athletics': 10, 'Throwing': 10,
+        'Riding': -20, 'Bow': -10,
+        'Crafting': 25, 'Engineering': 20, 'Trade': 15, 'Steward': 10,
+    },
+    'gundabad': {  # Goblins/Orcs - brutal infantry, roguery
+        'TwoHanded': 15, 'Throwing': 15, 'Athletics': 10,
+        'Riding': -15, 'Bow': -5,
+        'Roguery': 15, 'Scouting': 10,
+    },
+    'isengard': {  # Uruk-hai - disciplined heavy infantry, engineering
+        'TwoHanded': 15, 'Polearm': 10, 'Athletics': 15, 'Crossbow': 10,
+        'Riding': -15, 'Bow': -10,
+        'Engineering': 20, 'Tactics': 10,
+    },
+    'lothlorien': {  # High Elves - archery, magic/medicine, crafting
+        'Bow': 30, 'OneHanded': 15, 'Athletics': 20,
+        'Riding': -5, 'Crossbow': -10,
+        'Medicine': 25, 'Crafting': 20, 'Scouting': 20, 'Charm': 10,
+    },
+    'rivendell': {  # Noldor Elves - wise warriors, scholars, leaders
+        'OneHanded': 20, 'Bow': 20, 'Athletics': 15,
+        'Riding': -5, 'Crossbow': -10,
+        'Medicine': 20, 'Leadership': 15, 'Charm': 15, 'Scouting': 15, 'Crafting': 10,
+    },
+    'umbar': {  # Corsairs - naval raiders, roguery, trade
+        'OneHanded': 10, 'Throwing': 10, 'Crossbow': 10,
+        'Riding': -10, 'Polearm': -5,
+        'Roguery': 20, 'Trade': 20, 'Scouting': 15,
     },
 }
 
@@ -376,6 +422,114 @@ def apply_to_xslt(content, lord_skill_map):
 
 
 # =============================================================================
+# XML Parsing and Writing (for characters/lords.xml)
+# =============================================================================
+
+def parse_xml_lords(filepath):
+    """Parse characters/lords.xml to extract all lord data."""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    npc_pattern = re.compile(
+        r'<NPCCharacter\s+id="([^"]+)"([^>]*)>(.*?)</NPCCharacter>',
+        re.DOTALL
+    )
+
+    lords = {}
+    for match in npc_pattern.finditer(content):
+        lord_id = match.group(1)
+        attr_str = match.group(2)
+        block = match.group(3)
+
+        # Parse attributes from the tag itself
+        attrs = {'id': lord_id}
+        for attr_match in re.finditer(r'(\w+)="([^"]*)"', attr_str):
+            attrs[attr_match.group(1)] = attr_match.group(2)
+
+        # Extract current skills
+        skills = {}
+        for skill_match in re.finditer(r'<skill id="(\w+)" value="(\d+)"', block):
+            skills[skill_match.group(1)] = int(skill_match.group(2))
+
+        name = attrs.get('name', lord_id)
+        if '}' in name:
+            name = name.split('}', 1)[1]
+
+        lords[lord_id] = {
+            'attrs': attrs,
+            'name': name,
+            'current_skills': skills,
+            'has_skills': bool(skills),
+        }
+
+    return lords, content
+
+
+def build_xml_skills_block(skills):
+    """Build the <skills> XML block for direct XML format (8-space indent)."""
+    lines = ['        <skills>']
+    for skill_id in ALL_SKILLS:
+        val = skills.get(skill_id, 0)
+        lines.append(f'            <skill id="{skill_id}" value="{val}" />')
+    lines.append('        </skills>')
+    return '\n'.join(lines)
+
+
+def apply_to_xml(content, lord_skill_map):
+    """Apply skill changes to XML content by replacing within each NPCCharacter block."""
+    # Single-pass: find each NPCCharacter block, replace skills if lord is in our map
+    npc_pattern = re.compile(
+        r'(<NPCCharacter\s+id="([^"]+)"[^>]*>)(.*?)(</NPCCharacter>)',
+        re.DOTALL
+    )
+
+    replaced = set()
+
+    def replace_block(match):
+        tag_open = match.group(1)
+        lord_id = match.group(2)
+        body = match.group(3)
+        tag_close = match.group(4)
+
+        if lord_id not in lord_skill_map:
+            return match.group(0)
+
+        new_skills = lord_skill_map[lord_id]
+        new_block = build_xml_skills_block(new_skills)
+
+        # Replace populated <skills>...</skills>
+        new_body, n = re.subn(r'\s*<skills>.*?</skills>', '\n' + new_block, body, count=1, flags=re.DOTALL)
+        if n > 0:
+            replaced.add(lord_id)
+            return tag_open + new_body + tag_close
+
+        # Replace empty <skills /> or <skills/>
+        new_body, n = re.subn(r'\s*<skills\s*/>', '\n' + new_block, body, count=1)
+        if n > 0:
+            replaced.add(lord_id)
+            return tag_open + new_body + tag_close
+
+        # No skills element at all — insert before <Traits> or before <Equipments>
+        for anchor in [r'(\s*<Traits)', r'(\s*<Equipments)']:
+            new_body, n = re.subn(anchor, '\n' + new_block + r'\1', body, count=1)
+            if n > 0:
+                replaced.add(lord_id)
+                return tag_open + new_body + tag_close
+
+        # Last resort: insert before closing tag
+        replaced.add(lord_id)
+        return tag_open + body + '\n' + new_block + '\n    ' + tag_close
+
+    content = npc_pattern.sub(replace_block, content)
+
+    missing = set(lord_skill_map.keys()) - replaced
+    for lord_id in sorted(missing):
+        print(f"  WARNING: Could not find skills block for {lord_id} in XML")
+
+    return content
+
+
+# =============================================================================
 # Reporting
 # =============================================================================
 
@@ -462,18 +616,8 @@ def export_csv(changes, csv_path):
 # Main
 # =============================================================================
 
-def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in ('--dry-run', '--apply', '--export-csv'):
-        print(__doc__)
-        sys.exit(1)
-
-    mode = sys.argv[1]
-
-    print(f'Parsing lords from {XSLT_PATH}...')
-    lords, xslt_content = parse_xslt(XSLT_PATH)
-    print(f'  Found {len(lords)} lord templates')
-
-    # Calculate new skills for each lord
+def process_lords(lords, source_label):
+    """Calculate new skills for a set of parsed lords. Returns (changes, skill_map)."""
     changes = {}
     lord_skill_map = {}
 
@@ -503,24 +647,62 @@ def main():
             'default_group': default_group,
             'skills': new_skills,
             'had_skills': data['has_skills'],
+            'source': source_label,
         }
         lord_skill_map[lord_id] = new_skills
 
-    print(f'  Calculated skills for {len(lord_skill_map)} lords')
+    return changes, lord_skill_map
+
+
+def main():
+    if len(sys.argv) < 2 or sys.argv[1] not in ('--dry-run', '--apply', '--export-csv'):
+        print(__doc__)
+        sys.exit(1)
+
+    mode = sys.argv[1]
+
+    # Parse XSLT lords
+    print(f'Parsing XSLT lords from {XSLT_PATH}...')
+    xslt_lords, xslt_content = parse_xslt(XSLT_PATH)
+    print(f'  Found {len(xslt_lords)} lord templates')
+
+    xslt_changes, xslt_skill_map = process_lords(xslt_lords, 'xslt')
+    print(f'  Calculated skills for {len(xslt_skill_map)} lords')
+
+    # Parse XML lords
+    print(f'Parsing XML lords from {XML_PATH}...')
+    xml_lords, xml_content = parse_xml_lords(XML_PATH)
+    print(f'  Found {len(xml_lords)} lords')
+
+    xml_changes, xml_skill_map = process_lords(xml_lords, 'xml')
+    print(f'  Calculated skills for {len(xml_skill_map)} lords')
     print()
 
+    # Merge for reporting/CSV
+    all_changes = {**xslt_changes, **xml_changes}
+    all_skill_map = {**xslt_skill_map, **xml_skill_map}
+    all_lords = {**xslt_lords, **xml_lords}
+
     if mode == '--dry-run':
-        print_report(lords, changes, lord_skill_map)
+        print_report(all_lords, all_changes, all_skill_map)
 
     elif mode == '--apply':
-        new_content = apply_to_xslt(xslt_content, lord_skill_map)
+        # Apply to XSLT
+        new_xslt = apply_to_xslt(xslt_content, xslt_skill_map)
         with open(XSLT_PATH, 'w', encoding='utf-8') as f:
-            f.write(new_content)
+            f.write(new_xslt)
         print(f'Written to {XSLT_PATH}')
-        print(f'  Lords rebalanced: {len(lord_skill_map)}')
+        print(f'  XSLT lords rebalanced: {len(xslt_skill_map)}')
+
+        # Apply to XML
+        new_xml = apply_to_xml(xml_content, xml_skill_map)
+        with open(XML_PATH, 'w', encoding='utf-8') as f:
+            f.write(new_xml)
+        print(f'Written to {XML_PATH}')
+        print(f'  XML lords rebalanced: {len(xml_skill_map)}')
 
     elif mode == '--export-csv':
-        export_csv(changes, CSV_PATH)
+        export_csv(all_changes, CSV_PATH)
 
 
 if __name__ == '__main__':

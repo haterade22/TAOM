@@ -30,7 +30,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3009" build="0.9977" key="00180800811414C2878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5009F560309888888000000000000000000000000000000000000000043244142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="196"/>
                 <skill id="TwoHanded" value="186"/>
                 <skill id="Polearm" value="186"/>
@@ -81,7 +81,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6213" build="0.5278" key="000D74060814100168588D58B57BB7342987B6DA87388A678888888F8588656A0068960306888888000000000000000000000000000000000000000042CC1103"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="109"/>
                 <skill id="TwoHanded" value="59"/>
                 <skill id="Polearm" value="69"/>
@@ -131,7 +131,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2051" build="0.2259" key="0018900FC22C29029E693487686495249959879685AD41D37B7BC6A72C72B2C5007336030746B8C400000000000000000000000000000000000000002EF41102"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="204"/>
                 <skill id="TwoHanded" value="165"/>
                 <skill id="Polearm" value="203"/>
@@ -182,7 +182,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018900FC32C0004277D1767865C6D65C99ABB9D9A854973C599D87C96798E5B00785603076C374A00000000000000000000000000000000000000002EDC4083"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="128"/>
                 <skill id="TwoHanded" value="69"/>
                 <skill id="Polearm" value="59"/>
@@ -232,7 +232,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4676" build="0.8519" key="000A7C0E434413144D3B8B8895B7BAA1B892A95A7777C459352A36B6B836977600AD76030A78257900000000000000000000000000000000000000002F543002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="139"/>
                 <skill id="TwoHanded" value="79"/>
                 <skill id="Polearm" value="79"/>
@@ -282,7 +282,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4676" build="0.4745" key="000A5006C644045997988BCD74A733AD17786B9C6A5788AD62AA34835485628A0087760308A5527600000000000000000000000000000000000000002EFC10C2"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="99"/>
                 <skill id="TwoHanded" value="81"/>
                 <skill id="Polearm" value="93"/>
@@ -332,7 +332,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4583" build="0.1343" key="0002540F007010024A6A02B8F08300011060730012EEF7017B0B010E7E918F4500927603091485F7000000000000000000000000000000000000000021342142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="210"/>
                 <skill id="TwoHanded" value="200"/>
                 <skill id="Polearm" value="200"/>
@@ -410,7 +410,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0185" build="0.7199" key="000A480FC00000022F70080860528544369289B2BF8A7E05776961088DB01839009B06030966530400000000000000000000000000000000000000003D3C1002"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="125"/>
                 <skill id="TwoHanded" value="67"/>
                 <skill id="Polearm" value="57"/>
@@ -677,7 +677,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                                                                                                            <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="474"/>
                 <skill id="TwoHanded" value="451"/>
                 <skill id="Polearm" value="464"/>
@@ -727,7 +727,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="360"/>
                 <skill id="TwoHanded" value="342"/>
                 <skill id="Polearm" value="350"/>
@@ -778,7 +778,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="510"/>
                 <skill id="TwoHanded" value="485"/>
                 <skill id="Polearm" value="500"/>
@@ -828,7 +828,7 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.0162" key="00000C0FC000300010000011110000000000000010010001011001101010000000F006030F001101000000000000000000000000000000000000000005F40142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="510"/>
                 <skill id="TwoHanded" value="485"/>
                 <skill id="Polearm" value="500"/>
@@ -935,7 +935,7 @@
             <face>
                 <BodyProperties version="4" weight="0.7019" build="0.3678" key="00026C09851423C2DE888372433B967E7F01649228AD4DB58888888F7718F5F500C6B6030C888888000000000000000000000000000000000000000043840142"/>
             </face>
-                                                <skills>
+                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="110"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="70"/>
@@ -985,7 +985,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.9412" key="0018540FC32C1A546669AC7C84CA7269A89E996472AB6A254BC5AC69693A675500BE56030BB8DD4800000000000000000000000000000000000000002F7C4042"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="119"/>
                 <skill id="TwoHanded" value="55"/>
                 <skill id="Polearm" value="45"/>
@@ -1158,7 +1158,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6" build="0.3" key="000B6C02C0BC100679D8455AA9684859888735557C6493786867627857B2895800058893058735D900001105000030A30000001F000000000000000001686000"/>
             </face>
-                                                                        <skills>
+                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -1208,7 +1208,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="510"/>
                 <skill id="TwoHanded" value="485"/>
                 <skill id="Polearm" value="500"/>
@@ -1289,7 +1289,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6213" build="0.5278" key="000DB80D0C141012B89AB3B6BA36B78C5289399A7B938997C8CDA86AA3BD1A270068960306C18788000000000000000000000000000000000000000042CC0083"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="66"/>
                 <skill id="TwoHanded" value="38"/>
                 <skill id="Polearm" value="28"/>
@@ -1340,7 +1340,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018700FC52C300A287C737B6258466A7B9869A85BB485996716C57DCCA973BB0078560307993A5700000000000000000000000000000000000000002EDC20C3"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="59"/>
                 <skill id="TwoHanded" value="34"/>
                 <skill id="Polearm" value="34"/>
@@ -1420,7 +1420,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018900FC42C0A00277D1767865C6D65C99ABB9D9A854973C599D87C96798E5B00785603076C374A00000000000000000000000000000000000000002EDC7102"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="69"/>
                 <skill id="TwoHanded" value="57"/>
                 <skill id="Polearm" value="39"/>
@@ -1567,7 +1567,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                                                            <skills>
+                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="338"/>
                 <skill id="TwoHanded" value="322"/>
                 <skill id="Polearm" value="328"/>
@@ -1647,7 +1647,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3009" build="0.9977" key="0018440543141382878F1FFF461C01FF7F018877888888888888888F7718F5F5009F560309888888000000000000000000000000000000000000000043244142"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="220"/>
                 <skill id="TwoHanded" value="150"/>
                 <skill id="Polearm" value="160"/>
@@ -1697,7 +1697,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3009" build="0.6157" key="000D6C0E47142902DEB8BE1AB5C571CD7F01649228AD4DB58888888F7718F5F50079560307888888000000000000000000000000000000000000000042FC0142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="81"/>
                 <skill id="TwoHanded" value="45"/>
                 <skill id="Polearm" value="31"/>
@@ -1747,7 +1747,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.6875" key="0018540FC42C345347C7A946DB43476574B24E5B263494B3C1A8D7A142978A98008A5603088816A600000000000000000000000000000000000000002F0C7002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="160"/>
                 <skill id="TwoHanded" value="130"/>
                 <skill id="Polearm" value="100"/>
@@ -1797,7 +1797,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4676" build="0.4745" key="000A9006C744199A9A99991D9C769875AD89C74564583655C8A8A9DD949AB9CA0087760308C46DA800000000000000000000000000000000000000002EFC5002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="220"/>
                 <skill id="Polearm" value="170"/>
@@ -1936,7 +1936,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3171" build="0.331" key="0008600D81FC3001AB6396829678635A9E988688E7437D4C394454A8DC55696B00B556030B73DC76000000000000000000000000000000000000000043742083"/>
             </face>
-                                                            <skills>
+                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="160"/>
                 <skill id="TwoHanded" value="130"/>
                 <skill id="Polearm" value="100"/>
@@ -1986,7 +1986,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3171" build="0.2245" key="0008E00FCDFC1A547589847271756C397A5E664B96794B555718B95CE9C357830083560308938B28000000000000000000000000000000000000000043044142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="124"/>
                 <skill id="TwoHanded" value="136"/>
                 <skill id="Polearm" value="102"/>
@@ -2036,7 +2036,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00087C078158090285773B6C97789A495A4598548A747A346A86816BA837976B0074460307586266000000000000000000000000000000000000000042E41082"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="130"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="50"/>
@@ -2086,7 +2086,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001007835813922BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41082"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="220"/>
                 <skill id="Polearm" value="170"/>
@@ -2136,7 +2136,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004C3A013922B4A77BC993C89497B2786D689785734DA946A6D4229EA9300544603057983BB000000000000000000000000000000000000000042AC1082"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="220"/>
                 <skill id="Polearm" value="170"/>
@@ -2249,7 +2249,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00004C04C7A03782CB4C93C3247A752599557696691778A256BA99AB862778B9005446030566758B000000000000000000000000000000000000000042AC2102"/>
             </face>
-                                                <skills>
+                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="110"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="70"/>
@@ -2364,7 +2364,7 @@
             <face>
                 <BodyProperties version="4" weight="0.9769" build="0.9861" key="0005D40D80001A4304700800605DF10950388DB2BFEA1D017917FB0F8B00683B007FF60307911FFF00000000000000000000000000000000000000003CFC9002"/>
             </face>
-                                                <skills>
+                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -2444,7 +2444,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2176" build="0.4699" key="000594041214000E318040336E417501E7F0868F09990035BB7979087CF51E0A00873603080BB69F1F6410605020004000000000000017670000000043144003"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="130"/>
                 <skill id="TwoHanded" value="90"/>
                 <skill id="Polearm" value="170"/>
@@ -2491,7 +2491,7 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.7037" key="000A140D801439C2A880010FB2807808943182694044AB107776900C8D96EA0900AB06030A9D9F080000000000000000000000000000000000000000194C9002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="210"/>
                 <skill id="TwoHanded" value="170"/>
                 <skill id="Polearm" value="210"/>
@@ -2541,7 +2541,7 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.7037" key="000DD00C4014168270800108B005450CDBA588004F440B0579A6906C8DE11697008B06030894B4050000000000000000000000000000000000000000190C4002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -2652,7 +2652,7 @@
             <face>
                 <BodyProperties version="4" weight="0.1" build="0.95" key="0016C80E0000200DBC4597A5256457A995879939BBECA7A766C7893AA68945570005435309B1876400001105000030A30000001F000000000000000000A02000"/>
             </face>
-                                                <skills>
+                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="119"/>
                 <skill id="TwoHanded" value="130"/>
                 <skill id="Polearm" value="97"/>
@@ -2702,7 +2702,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="210"/>
                 <skill id="TwoHanded" value="170"/>
                 <skill id="Polearm" value="210"/>
@@ -2752,7 +2752,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2" build="0.95" key="0005A00140BC100DA85B899C8A71E497A32461B62479196C55058E7245674416000506530C356542000000000000000000000000000000000000000000004180"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="170"/>
                 <skill id="TwoHanded" value="90"/>
                 <skill id="Polearm" value="70"/>
@@ -2837,7 +2837,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2" build="0.9" key="00065C08807C000D88566B74DA8577A325C64A9B6AA35AD26A5B2DB39752565500065BA20657885E00001105000030A30000001F000000000000000000F03000"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="110"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="70"/>
@@ -2887,7 +2887,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.8" key="0005C8058000100E63727AC8926A687A1A85878578987C9B437E6347545ABCB7000C0892057768C900001105000030A30000001F000000000000000000004000"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="220"/>
                 <skill id="TwoHanded" value="150"/>
                 <skill id="Polearm" value="160"/>
@@ -2937,7 +2937,7 @@
             <face>
                 <BodyProperties version="4" weight="0.7" build="0.9" key="000BB00598FC00059A75657577A39A87B3D89A8E9774BD7677A867A97D3A634D00060C520767C68700001105000030A30000001F000000000000000000287000"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -2987,7 +2987,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3" build="0.4" key="0016C40E403C1408E436C9A4849415C6909E955997C1BD57CB837C9596548C15000E4B820E71DA76000000000000000000000000000000000000000000003141"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="210"/>
                 <skill id="TwoHanded" value="170"/>
                 <skill id="Polearm" value="210"/>
@@ -3037,7 +3037,7 @@
             <face>
                 <BodyProperties version="4" weight="0.1" build="0.99" key="0011B40B402410088733440E80468F1FFF4F9274C862B448941B5637963E5D3E000E08830B7247A6000000000000000000000000000000000000000000003101"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="220"/>
                 <skill id="Polearm" value="170"/>
@@ -3118,7 +3118,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6213" build="0.5278" key="000DB0054F14200F777D66238AC2D652B789B895A5C5A788785C677564695D840068960306654796000000000000000000000000000000000000000042CC30C3"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="110"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="70"/>
@@ -3169,7 +3169,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2051" build="0.2259" key="0018400781140004A7B67379AA5D43AB9A8574A83CB8794A545964E544A185CC0073360307A6835A00000000000000000000000000000000000000002EF44083"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="81"/>
                 <skill id="TwoHanded" value="45"/>
                 <skill id="Polearm" value="31"/>
@@ -3220,7 +3220,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018400FCE2C300153BC5AEB293A86574795A8AAA94684B62987569589672E26007856030767353900000000000000000000000000000000000000002EDC20C3"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="52"/>
                 <skill id="TwoHanded" value="31"/>
                 <skill id="Polearm" value="29"/>
@@ -3271,7 +3271,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018A40FCE2C000551C968762E626B3BBA56396A8CCE86366B478689697773B900785603072B7F7800000000000000000000000000000000000000002EDC1083"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -3322,7 +3322,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6389" build="0.9861" key="00155C0FCA2C300D3C6B797D7726C92756836865445B388DC6588889AB94CCC500BFA6030B29C34A00000000000000000000000000000000000000002F7C4103"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="149"/>
                 <skill id="TwoHanded" value="88"/>
                 <skill id="Polearm" value="113"/>
@@ -3373,7 +3373,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4676" build="0.5023" key="0015840E4C2C300C48E753769785B8663E48599D438E731B1D578153584559560068760306B6967600000000000000000000000000000000000000002EBC00C3"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="63"/>
                 <skill id="TwoHanded" value="45"/>
                 <skill id="Polearm" value="75"/>
@@ -3424,7 +3424,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4676" build="0.4745" key="000A9006CA44300A9A99991D9C769875AD89C74564583655C8A8A9DD949AB9CA0067760306C46DA800000000000000000000000000000000000000002ED400C3"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="110"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="70"/>
@@ -3584,7 +3584,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004C9A0100D2BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41083"/>
             </face>
-                                                                        <skills>
+                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="130"/>
                 <skill id="TwoHanded" value="70"/>
                 <skill id="Polearm" value="60"/>
@@ -3635,7 +3635,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004CAA000032B4A77BC993C89497B2786D689785734DA946A6D4229EA9300544603057983BB000000000000000000000000000000000000000042AC1103"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="81"/>
                 <skill id="TwoHanded" value="45"/>
                 <skill id="Polearm" value="31"/>
@@ -3713,7 +3713,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.4" key="000B8802C0BC1005B9D8455AA96848594597AD77996A54B899D967BA74979778010008930FBA9A7900001105000030A30000001F000000000000000001683100"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="77"/>
                 <skill id="TwoHanded" value="43"/>
                 <skill id="Polearm" value="29"/>
@@ -3923,7 +3923,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3171" build="0.331" key="0008780E42FC30076B9BCC4B879C2322B95787ECA9B959838E7C94A8754CD83800955603096BB79F000000000000000000000000000000000000000043340083"/>
             </face>
-                                                                                                <skills>
+                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="175"/>
                 <skill id="TwoHanded" value="193"/>
                 <skill id="Polearm" value="148"/>
@@ -4001,7 +4001,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001007835810122BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41083"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="170"/>
                 <skill id="TwoHanded" value="90"/>
                 <skill id="Polearm" value="70"/>
@@ -4052,7 +4052,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2685" build="0.2662" key="00087C07835809538579765AA95984A5844298548A747A34548663635992CD7B0074460307A8E449000000000000000000000000000000000000000042E41102"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="110"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="70"/>
@@ -4504,7 +4504,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                                                                                                                                                                                                <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="510"/>
                 <skill id="TwoHanded" value="485"/>
                 <skill id="Polearm" value="500"/>
@@ -4555,7 +4555,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="166"/>
                 <skill id="TwoHanded" value="158"/>
                 <skill id="Polearm" value="156"/>
@@ -4606,7 +4606,7 @@
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="209"/>
                 <skill id="TwoHanded" value="199"/>
                 <skill id="Polearm" value="199"/>
@@ -4788,7 +4788,7 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0005240892FC1005B69C29549444BE8759679A7778478C8D78BA785C77A5C7880177761307D8873D000000000000000000000000000000000000000054F40083"/>
             </face>
-                                                                                    <skills>
+                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -7907,7 +7907,7 @@
             <face>
                 <BodyProperties version="4" key="0005280140001242947E068A709500460C7250703EB70F135C85021887733A070089B6030822BA9000000000000000000000000000000000000000003F1C7002"/>
             </face>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="190"/>
                 <skill id="Polearm" value="215"/>
@@ -8044,7 +8044,7 @@
             <face>
                 <BodyProperties version="4" weight="0.01" build="0.61" key="0002B00000001345DD80090A71069A53BF55834D3FC9DF00500D53098CC0F04800A906030AAAA15A00000000000000000000000000000000000000003F4C3002"/>
             </face>
-                                                            <skills>
+                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="78"/>
                 <skill id="TwoHanded" value="42"/>
                 <skill id="Polearm" value="63"/>
@@ -8093,7 +8093,7 @@
             <face>
                 <BodyProperties version="4" weight="0.1" build="0.5" key="00052C028000000200752A737881DC04A918866245A806069451821B8F4319050097260309119F0800000000000000000000000000000000000000003D2C2002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="160"/>
                 <skill id="Polearm" value="225"/>
@@ -8443,7 +8443,7 @@
             <face>
                 <BodyProperties version="4" weight="1" build="0.6157" key="000AD40000001343EE7E000F4AAB0022AB5E70F090EDE6067446100F8B5B0F080099F60309F6E0FE00000000000000000000000000000000000000003D2C7002"/>
             </face>
-                                                                                                                                                <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="160"/>
                 <skill id="Polearm" value="225"/>
@@ -8639,7 +8639,7 @@
             <face>
                 <BodyProperties version="4" weight="0.7222" build="0.5995" key="000218000000394336706B475208F01E9F1686E2F9C7C211D1617519811A11190099B6030948B49500000000000000000000000000000000000000003F2C3002"/>
             </face>
-                                                                                    <skills>
+                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="160"/>
                 <skill id="Polearm" value="225"/>
@@ -8689,7 +8689,7 @@
             <face>
                 <BodyProperties version="4" weight="0.7292" build="0.4074" key="00050806C00017822070081EF773F1B4A05380615D95FB11D1650217800A61110096B6030948E0B500000000000000000000000000000000000000003F349002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="130"/>
                 <skill id="TwoHanded" value="70"/>
                 <skill id="Polearm" value="95"/>
@@ -8739,7 +8739,7 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.6134" key="00020800000013810070FB1FF911EFBBE0238BA15DDCF5450019011F890AB111008906030818E00800000000000000000000000000000000000000003F145002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="160"/>
                 <skill id="Polearm" value="225"/>
@@ -8789,7 +8789,7 @@
             <face>
                 <BodyProperties version="4" weight="0.38" build="0.1644" key="0000500FC0CC100378A061BC61A180068D4BA177F0C1E601B0FF1B008FE78B00007276030720F81100000000000000000000000000000000000000003AF40102"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="160"/>
                 <skill id="Polearm" value="225"/>
@@ -8898,7 +8898,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4491" build="0.7222" key="000A14080000168200800A1F0530F00E660F8960B08860020019011F8E0BA101008B76030805E60600000000000000000000000000000000000000003F049002"/>
             </face>
-                                                <skills>
+                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="160"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="85"/>
@@ -8948,7 +8948,7 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.5" key="0008D40A400010149E70FF0790609008AB9D709070EF9600744D70098DB2D404007706030707A09500000000000000000000000000000000000000003CF47042"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="160"/>
                 <skill id="Polearm" value="225"/>
@@ -8999,7 +8999,7 @@
             <face>
                 <BodyProperties version="4" weight="0.1" build="0.5" key="0002B404000011826B700D6F80961035305E80B2BFEB0E00775161048C771F0400AB36030A62AA0300000000000000000000000000000000000000003D447002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="83"/>
                 <skill id="TwoHanded" value="41"/>
                 <skill id="Polearm" value="51"/>
@@ -9079,7 +9079,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4524" build="0.5804" key="0005340140CC00017071527435736265B7BE7A79B0614997BAB7F9397C2A987203597635053CBA5A00000000000000000000000000000000000000005CB41044"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="50"/>
                 <skill id="TwoHanded" value="25"/>
                 <skill id="Polearm" value="40"/>
@@ -9156,7 +9156,7 @@
             <face>
                 <BodyProperties version="4" weight="0.2639" build="0.7222" key="000D3C0140FC0001E08010E3E2E7E2117EF887621E988104A009041F8A870A07009B4603090CE6F500000000000000000000000000000000000000003F1C2003"/>
             </face>
-                                    <skills>
+                                                                                                            <skills>
                 <skill id="OneHanded" value="120"/>
                 <skill id="TwoHanded" value="60"/>
                 <skill id="Polearm" value="75"/>
@@ -9321,7 +9321,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4769" build="0.6042" key="000D3006D014200A8E8000120BC13021A78A806C0FC77034A4591B1C8A87119900797603070CEF0C00000000000000000000000000000000000000003EFC2003"/>
             </face>
-                                                                        <skills>
+                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="91"/>
                 <skill id="TwoHanded" value="45"/>
                 <skill id="Polearm" value="79"/>
@@ -9436,7 +9436,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4306" build="0.4699" key="0005CC0D800013436E8F6EF11905A009717CC2604DB77E03C01904008E50E60400776603075AC59900000000000000000000000000000000000000003EFC1002"/>
             </face>
-                                                <skills>
+                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="160"/>
                 <skill id="TwoHanded" value="90"/>
                 <skill id="Polearm" value="145"/>
@@ -9771,7 +9771,7 @@
             <face>
                 <BodyProperties version="4" key="00054408800027875CA466A563442BD406899779A794573B86A7C473581AB487000546550E46C99D000000000000000000000000000000000000000000F03180"/>
             </face>
-                                                                                                                                                <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="220"/>
                 <skill id="TwoHanded" value="190"/>
                 <skill id="Polearm" value="200"/>
@@ -12573,7 +12573,7 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40FC0CC12C897B8079E76258849839B767CB9CA744999BBA2614817BB7801377613037A459900000000000000000000000000000000000000006A642102"/>
             </face>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="81"/>
                 <skill id="TwoHanded" value="45"/>
                 <skill id="Polearm" value="31"/>
@@ -12624,7 +12624,7 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40FD0CC100497B8079E76258849839B767CB9CA744999BBA2614817BB7801377613037A459900000000000000000000000000000000000000006A6420C3"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="83"/>
                 <skill id="TwoHanded" value="68"/>
                 <skill id="Polearm" value="77"/>
@@ -12675,7 +12675,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6" build="0.75" key="00009C0FC0CC3286677834B57545557BA665A4BB733C359B45DA64699C84577801377613034C439C00000000000000000000000000000000000000006A644002"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="200"/>
                 <skill id="TwoHanded" value="220"/>
                 <skill id="Polearm" value="170"/>
@@ -12726,7 +12726,7 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.5" key="0000200FD0CC200E978EB857E594B2FE6929595C8998514499BBA261B3BB76B201377613037A459900000000000000000000000000000000000000006A6400C3"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -13122,7 +13122,7 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.6" key="000BDC0FCFCC038F3D38B65122600AD02FEE2A646411F7F894359F648858075D064976670485629500000000000000000000000044FC1002000000007E7C4084"/>
             </face>
-                                                                                                                                                            <skills>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="211"/>
                 <skill id="TwoHanded" value="144"/>
                 <skill id="Polearm" value="153"/>
@@ -13262,7 +13262,7 @@
             <face>
                 <BodyProperties version="4" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002"/>
             </face>
-                                                            <skills>
+                                                                                                                                                                                                            <skills>
                 <skill id="OneHanded" value="78"/>
                 <skill id="TwoHanded" value="38"/>
                 <skill id="Polearm" value="28"/>
@@ -13310,7 +13310,7 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="82"/>
                 <skill id="TwoHanded" value="40"/>
                 <skill id="Polearm" value="30"/>
@@ -13358,7 +13358,7 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003"/>
             </face>
-                        <skills>
+                                                            <skills>
                 <skill id="OneHanded" value="210"/>
                 <skill id="TwoHanded" value="170"/>
                 <skill id="Polearm" value="210"/>

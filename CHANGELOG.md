@@ -4,9 +4,10 @@
 
 ### Lords Skill Rebalancing (Phase 2)
 
-- Created `tools/rebalance_lords.py` — baseline + cultural modifier balancing for all 389 lords
+- Created `tools/rebalance_lords.py` — baseline + cultural modifier balancing for all 914 lords
+- Processes both `lords.xslt` (389 vanilla-transform lords) and `characters/lords.xml` (525 custom lords)
 - 12 archetypes derived from vanilla `sandbox_skill_sets.xml`: ruler, warrior_knight, warrior_infantry, warrior_ranged, tactician, siege_engineer, politician, manager, spymaster, scholar, trader, dandy
-- Cultural modifiers for 6 cultures (dunland, dale, harad, rohan, mirkwood, rhun) — e.g., Rohan gets +riding, Dale gets +trade/steward
+- Cultural modifiers for 13 cultures: 6 vanilla (dunland, dale, harad, rohan, mirkwood, rhun) + 7 custom (dolguldur, erebor, gundabad, isengard, lothlorien, rivendell, umbar)
 - Age scaling: peak at 25-50, gentle decline after 55
 - Junior lords (rookie skill_template) at 60% of senior baselines
 - 10 legendary lords (Nazgul/Sauron/Witch-King) at 2.5x ruler baseline
