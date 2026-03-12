@@ -2,6 +2,27 @@
 
 ## 2026-03-12
 
+### Lords Skill Rebalancing (Phase 2)
+
+- Created `tools/rebalance_lords.py` — baseline + cultural modifier balancing for all 389 lords
+- 12 archetypes derived from vanilla `sandbox_skill_sets.xml`: ruler, warrior_knight, warrior_infantry, warrior_ranged, tactician, siege_engineer, politician, manager, spymaster, scholar, trader, dandy
+- Cultural modifiers for 6 cultures (dunland, dale, harad, rohan, mirkwood, rhun) — e.g., Rohan gets +riding, Dale gets +trade/steward
+- Age scaling: peak at 25-50, gentle decline after 55
+- Junior lords (rookie skill_template) at 60% of senior baselines
+- 10 legendary lords (Nazgul/Sauron/Witch-King) at 2.5x ruler baseline
+- Non-combat archetypes (politician, manager, scholar) now correctly have LOW combat / HIGH non-combat skills
+- Combat archetypes (warrior_knight, warrior_infantry, warrior_ranged) have HIGH combat / LOW non-combat
+- CLI: `--dry-run`, `--apply`, `--export-csv`
+
+### Lords XSLT Completion (Phase 1)
+
+- Completed `lords.xslt` with all vanilla attributes explicit (was 2-3, now 9-11 per template)
+- Added 16 missing lords: 7 dead lords, 9 new Vlandia/Rohan lords (skipped main_hero)
+- Total templates: 396 (up from 380)
+- Created `tools/complete_lords_xslt.py` for regeneration with `--dry-run`, `--apply`, `--export-csv`
+- Exported lord attribute inventory to `tools/lords_inventory.csv`
+- No passthrough attributes remain — every attribute is now visible and editable in the XSLT
+
 ### Tooling — Claude Code Capabilities Overhaul
 
 **Custom Skills (4 new slash commands):**
