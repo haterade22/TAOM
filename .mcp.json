@@ -14,6 +14,10 @@
         "c:/Users/mikew/source/repos/TAOM"
       ],
       "env": {}
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
     }
   }
 }

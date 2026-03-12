@@ -3,7 +3,10 @@
         "anthropic.claude-code",
         "ms-dotnettools.csharp",
         "ms-dotnettools.csdevkit",
+        "ms-dotnettools.vscode-dotnet-runtime",
         "dotjoshjohnson.xml",
-        "ms-vscode.powershell"
+        "redhat.vscode-xml",
+        "ms-vscode.powershell",
+        "github.vscode-pull-request-github"
     ]
 }

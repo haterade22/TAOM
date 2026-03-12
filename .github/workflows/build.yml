@@ -1,0 +1,87 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  validate-xml:
+    name: Validate XML & XSLT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate XML well-formedness
+        shell: pwsh
+        run: |
+          $errors = 0
+          Get-ChildItem -Path "Main/_Module/ModuleData" -Filter "*.xml" -Recurse | ForEach-Object {
+            try {
+              [xml](Get-Content $_.FullName -Raw)
+            } catch {
+              Write-Error "Malformed XML: $($_.FullName) - $_"
+              $errors++
+            }
+          }
+          if ($errors -gt 0) { exit 1 }
+          Write-Host "All XML files are well-formed."
+
+      - name: Validate XSLT well-formedness
+        shell: pwsh
+        run: |
+          $errors = 0
+          Get-ChildItem -Path "Main/_Module/ModuleData" -Filter "*.xslt" -Recurse | ForEach-Object {
+            try {
+              [xml](Get-Content $_.FullName -Raw)
+            } catch {
+              Write-Error "Malformed XSLT: $($_.FullName) - $_"
+              $errors++
+            }
+          }
+          if ($errors -gt 0) { exit 1 }
+          Write-Host "All XSLT files are well-formed."
+
+      - name: Validate JSON
+        shell: pwsh
+        run: |
+          $errors = 0
+          Get-ChildItem -Path "Main/_Module/ModuleData" -Filter "*.json" -Recurse | ForEach-Object {
+            try {
+              Get-Content $_.FullName -Raw | ConvertFrom-Json | Out-Null
+            } catch {
+              Write-Error "Malformed JSON: $($_.FullName) - $_"
+              $errors++
+            }
+          }
+          if ($errors -gt 0) { exit 1 }
+          Write-Host "All JSON files are well-formed."
+
+  build:
+    name: Build & Test
+    runs-on: windows-latest
+    # Requires Bannerlord game DLLs — runs on self-hosted runner or when BANNERLORD_GAME_DIR is set
+    if: ${{ vars.BANNERLORD_GAME_DIR != '' || github.event_name == 'workflow_dispatch' }}
+    env:
+      BANNERLORD_GAME_DIR: ${{ vars.BANNERLORD_GAME_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore TAOM.sln
+
+      - name: Build
+        run: dotnet build TAOM.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test TAOM.Tests -c Release --no-build --verbosity normal

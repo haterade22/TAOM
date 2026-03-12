@@ -2,17 +2,10 @@
 
 	<PropertyGroup>
 		<Version>0.1.0</Version>
-		<TargetFramework>net472</TargetFramework>
-		<Platforms>x64</Platforms>
-		<LangVersion>10.0</LangVersion>
-		<Nullable>enable</Nullable>
 		<Deterministic>true</Deterministic>
 		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
 		<ModuleId>$(MSBuildProjectName)</ModuleId>
 		<ModuleName>$(MSBuildProjectName)</ModuleName>
-		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
-		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
-		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
 		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625</NoWarn>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>

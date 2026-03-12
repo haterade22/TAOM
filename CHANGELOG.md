@@ -2,6 +2,50 @@
 
 ## 2026-03-12
 
+### Tooling — Claude Code Capabilities Overhaul
+
+**Custom Skills (4 new slash commands):**
+- `/research [Class]` — Decompile and analyze TaleWorlds classes via ilspycmd
+- `/new-feature [Name]` — Scaffold feature modules with IoC, services, adapters, tests
+- `/xslt-check [file]` — Validate XSLT against SandBoxCore vanilla XML
+- `/migration-status` — Summarize v1.2 -> v1.3 migration progress
+
+**Path-Scoped Rules (5 new rules):**
+- `.claude/rules/xslt.md` — XSLT passthrough, SandBoxCore reference (scoped to `**/*.xslt`)
+- `.claude/rules/adapters.md` — Adapter pattern enforcement (scoped to `Main/Adapters/**`)
+- `.claude/rules/tests.md` — TDD naming, AAA pattern, coverage (scoped to `TAOM.Tests/**`)
+- `.claude/rules/xml-data.md` — NPC naming, region codes (scoped to `ModuleData/**/*.xml`)
+- `.claude/rules/harmony-patches.md` — Patch rules, thin entry points (scoped to `Main/**/Hooks/**`)
+
+**Custom Agents (2 new agents):**
+- `.claude/agents/taleworlds-researcher.md` — Specialized decompilation and analysis agent
+- `.claude/agents/feature-builder.md` — Feature scaffolding following TAOM architecture
+
+**Hook Enhancements:**
+- Added `check-changelog-updated.sh` Stop hook — reminds to update CHANGELOG.md at session end
+- Enabled agent teams via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` env var
+
+**Permission & Settings Improvements:**
+- Expanded permission allowlist with `dotnet test`, `dotnet build`, `git log/diff/status/branch`
+- Added VS Code extensions: `vscode-dotnet-runtime`, `redhat.vscode-xml`, `github.vscode-pull-request-github`
+- Enhanced VS Code settings: bracket pair colorization, test peek view, XML validation
+
+**Build Configuration:**
+- Added `Directory.Build.props` — centralizes shared MSBuild properties (TargetFramework, LangVersion, Nullable, GameFolder)
+- Removed duplicated properties from `TAOM.csproj` and `TAOM.Tests.csproj`
+
+**GitHub CI/CD:**
+- Added `.github/workflows/build.yml` — validates XML, XSLT, and JSON well-formedness on every push/PR
+- Build & Test job conditional on `BANNERLORD_GAME_DIR` repo variable (requires game DLLs)
+
+**GitHub MCP Server:**
+- Added GitHub MCP to `.mcp.json` — enables PR, issue, actions, and code search from Claude
+
+**CLAUDE.md Optimization:**
+- Slimmed from 198 to 136 lines — moved detailed XSLT rules, TaleWorlds Research Protocol, and verbose sections to scoped rules and skills
+- Added Skills, Scoped Rules, and Custom Agents sections
+- Saves ~30% context window on every conversation start
+
 ### Tooling — Claude Code Hooks
 
 - Added pre-commit build check hook (`.claude/hooks/check-build-before-commit.sh`) — blocks `git commit` if `dotnet build` fails

@@ -1,15 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net472</TargetFramework>
-		<Platforms>x64</Platforms>
-		<LangVersion>10.0</LangVersion>
-		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
-		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
-		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
-		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
 	</PropertyGroup>
 
 	<ItemGroup>

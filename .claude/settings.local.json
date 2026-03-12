@@ -3,6 +3,12 @@
     "allow": [
       "Bash(tree:*)",
       "Bash(dir:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet build:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git branch:*)",
       "WebFetch(domain:moddocs.bannerlord.com)",
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM/**)",
       "Bash(findstr:*)",

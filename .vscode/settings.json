@@ -4,5 +4,8 @@
         "**/obj": true,
         ".vs": true
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.bracketPairColorization.enabled": true,
+    "testing.automaticallyOpenPeekView": "failureInVisibleDocument",
+    "xml.validation.enabled": true
 }
