@@ -75,6 +75,7 @@ public class NarrativeDataProvider : INarrativeDataProvider
             Description = item.Value<string>("description") ?? "",
             Skills = item["skills"]?.ToObject<string[]>() ?? Array.Empty<string>(),
             Attribute = item.Value<string>("attribute") ?? "",
+            OccupationType = item.Value<string>("occupation_type") ?? "",
             FocusToAdd = item.Value<int?>("focus_to_add") ?? 1,
             SkillLevelToAdd = item.Value<int?>("skill_level_to_add") ?? 10,
             AttributeLevelToAdd = item.Value<int?>("attribute_level_to_add") ?? 1

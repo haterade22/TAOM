@@ -57,6 +57,7 @@ public class NarrativeMenuBuilder
         var skills = ResolveSkills(definition.Skills);
         var attribute = ResolveAttribute(definition.Attribute);
         var cultureId = definition.CultureId;
+        var occupationType = definition.OccupationType;
         var focusToAdd = definition.FocusToAdd;
         var skillLevelToAdd = definition.SkillLevelToAdd;
         var attributeLevelToAdd = definition.AttributeLevelToAdd;
@@ -87,7 +88,12 @@ public class NarrativeMenuBuilder
                     return selectedCulture != null &&
                            string.Equals(selectedCulture.StringId, cultureId, StringComparison.OrdinalIgnoreCase);
                 },
-            onSelect: null,
+            onSelect: string.IsNullOrEmpty(occupationType)
+                ? (NarrativeMenuOptionOnSelectDelegate)null
+                : (CharacterCreationManager manager) =>
+                {
+                    manager.CharacterCreationContent.SetParentOccupation(occupationType);
+                },
             onConsequence: null
         );
     }
