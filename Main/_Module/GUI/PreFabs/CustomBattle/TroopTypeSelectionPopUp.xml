@@ -1,0 +1,107 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="PopUpDataSource" DefaultValue="" />
+  </Parameters>
+  
+  <Window>
+    <Widget DataSource="*PopUpDataSource" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsOpen">
+      <Children>
+
+				<NavigationForcedScopeCollectionTargeter CollectionParent="..\." />
+				
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#000000B0"/>
+
+        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalBottomToTop">
+          <Children>
+            <!--Popup-->
+            <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="900" MarginTop="70" MarginBottom="110" SuggestedWidth="930" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.TroopSelection.PopUp.Window">
+              <Children>
+
+                <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" VerticalAlignment="Bottom"  ClipRect="ClipRect" InnerPanel="ClipRect\TroopsGrid" VerticalScrollbar="..\HideoutTroopsScrollbar\Scrollbar" >
+                  <Children>
+
+										<NavigationScopeTargeter ScopeID="CustomBattleTroopTypeSelectionItemsScope" ScopeParent="..\ClipRect" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="3" />
+                    <Widget Id="ClipRect" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="810" SuggestedHeight="680" HorizontalAlignment="Center" VerticalAlignment="Center" ClipContents="true">
+                      <Children>
+
+                        <NavigatableGridWidget Id="TroopsGrid" DataSource="{Items}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" ColumnCount="3" DefaultCellHeight="150" DefaultCellWidth="240" LayoutImp="GridLayout" MarginTop="10" MarginRight="20">
+                          <ItemTemplate>
+                            <!--Troop Card-->
+                            <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="140" HorizontalAlignment="Center" Brush="TroopSelection.Card" IsSelected="@IsSelected" Command.Click="ExecuteToggleSelection">
+                              <Children>
+                                <ImageIdentifierWidget DataSource= "{Visual}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="67" SuggestedWidth="100" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" MarginLeft="20" MarginTop="10" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <Widget DataSource="{..\TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
+                                      <Children>
+                                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                                      </Children>
+                                    </Widget>
+                                    <Widget DataSource="{..\TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
+                                      <Children>
+                                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent"/>
+                                      </Children>
+                                    </Widget>
+                                  </Children>
+                                </ImageIdentifierWidget>
+
+                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="175" SuggestedHeight="55" Brush="GameMenu.ManageHideoutTroops.NameText" Text="@Name" MarginLeft="20" MarginTop="80" DoNotAcceptEvents="true" />
+
+                                <Widget Id="CheckmarkVisualWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="47" SuggestedHeight="38" HorizontalAlignment="Right" MarginTop="20" MarginRight="20" Sprite="SPGeneral\GameMenu\companion_selected_check" Color="#F4E1C4FF" DoNotAcceptEvents="true" IsVisible="@IsSelected"/>
+
+                                <HintWidget DataSource="{TroopSkillsHint}" DoNotAcceptEvents="true" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </NavigatableGridWidget>
+
+                        <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" VertialAlignment="Center" Sprite="SPGeneral\SPScoreboard\leaderboard_shadow" Color="#000000FF" />
+
+                        <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" VertialAlignment="Center" MarginTop="650" Sprite="SPGeneral\SPScoreboard\leaderboard_shadow"  Color="#000000FF" VerticalFlip="true"/>
+
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </ScrollablePanel>
+
+                <Standard.VerticalScrollbar Id="HideoutTroopsScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="677" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="60"/>
+
+                <!--Header-->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="140" SuggestedWidth="634" HorizontalAlignment="Center" PositionYOffset="-17" Sprite="StdAssets\tabbar_popup" IsDisabled="true">
+                  <Children>
+                    <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" PositionYOffset="-22" PositionXOffset="0" Brush="Recruitment.Popup.Title.Text" Text="@Title" Brush.FontSize="40"/>
+                  </Children>
+                </Widget>
+
+                <!--Select All Button-->
+								<NavigationScopeTargeter ScopeID="CustomBattleTroopTypeSelectionButtonsScope" ScopeParent="..\ActionButtonsContainer" ScopeMovements="Horizontal" />
+								<ListPanel Id="ActionButtonsContainer" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="580" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="35" StackLayout.LayoutMethod="HorizontalSpaced" >
+									<Children>
+										<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="269" SuggestedHeight="41" Brush="CustomBattle.Menu.PopUp.SelectAll.Button" Command.Click="ExecuteSelectAll" GamepadNavigationIndex="0">
+											<Children>
+												<RichTextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CustomBattle.PopUp.Buttons.Text" Text="@SelectAllLbl" />
+											</Children>
+										</ButtonWidget>
+
+										<!--Back To Default Button-->
+										<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="269" SuggestedHeight="41" Brush="CustomBattle.Menu.PopUp.SelectAll.Button" Command.Click="ExecuteBackToDefault" GamepadNavigationIndex="1">
+											<Children>
+												<RichTextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CustomBattle.PopUp.Buttons.Text" Text="@BackToDefaultLbl" />
+											</Children>
+										</ButtonWidget>
+									</Children>
+								</ListPanel>
+
+              </Children>
+            </BrushWidget>
+
+            <!--Close Buttons-->
+            <Standard.TriplePopupCloseButtons VerticalAlignment="Bottom" PositionYOffset="-110" Parameter.CancelButtonText="@CancelLbl" Parameter.DoneButtonText="@DoneLbl" Parameter.CancelButtonAction="ExecuteCancel" Parameter.ResetButtonAction="ExecuteReset" Parameter.DoneButtonAction="ExecuteDone" Parameter.IsDoneEnabled="true" Parameter.ResetInputKeyDataSource="{ResetInputKey}" Parameter.DoneInputKeyDataSource="{DoneInputKey}" Parameter.CancelInputKeyDataSource="{CancelInputKey}"/>
+          </Children>
+        </ListPanel>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

@@ -1,0 +1,113 @@
+<Prefab>
+
+  <Constants>
+    <Constant Name="Tuple.Height.Additive" Value="0" />
+
+    <Constant Name="Toggle.Width" BrushLayer="Default" BrushName="Party.TroopTupple.Left" BrushValueType="Width" />
+    <Constant Name="Toggle.Height" Additive="!Tuple.Height.Additive" BrushLayer="Default" BrushName="Party.TroopTupple.Left" BrushValueType="Height" />
+    <Constant Name="Toggle.Pressed.Width" BrushLayer="PressedLayer" BrushName="Party.TroopTupple.Left" BrushValueType="Width" />
+
+    <Constant Name="Extension.Width" BrushLayer="Default" BrushName="Party.TroopTupple.Extension.Left" BrushValueType="Width" />
+    <Constant Name="Extension.Height" Additive="!Tuple.Height.Additive" BrushLayer="Default" BrushName="Party.TroopTupple.Extension.Left" BrushValueType="Height" />
+
+    <Constant Name="Extension.Hidden.MarginTop" Value="5" />
+    <Constant Name="Extension.Hidden.Height" Additive="!Tuple.Height.Additive" Value="58" />
+    <Constant Name="Extension.Selected.MarginTop" Value="58" />
+
+    <Constant Name="Extension.DropShadowOverlay.Height" SpriteName="PartyScreen\selected_button_extension_dropshadow_overlay" SpriteValueType="Height" />
+
+    <Constant Name="Party.TroopTuple.Extension.StockButton.Width" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.StockButton" BrushValueType="Width" />
+    <Constant Name="Party.TroopTuple.Extension.StockButton.Height" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.StockButton" BrushValueType="Height" />
+
+    <Constant Name="Party.Slot.Width" BrushLayer="Default" BrushName="Party.UpgradeSlot.Button" BrushValueType="Width" />
+    <Constant Name="Party.Slot.Height" BrushLayer="Default" BrushName="Party.UpgradeSlot.Button" BrushValueType="Height" />
+
+    <Constant Name="Button.Transfer.Width" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.TransferButton" BrushValueType="Width" />
+    <Constant Name="Button.Transfer.Height" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.TransferButton" BrushValueType="Height" />
+
+    <Constant Name="Button.TransferAll.Width" BrushLayer="Default" BrushName="ButtonLeftArrowBrush1" BrushValueType="Width" />
+    <Constant Name="Button.TransferAll.Height" BrushLayer="Default" BrushName="ButtonLeftArrowBrush1" BrushValueType="Width" />
+
+    <Constant Name="Image.Width" Value="130" />
+    <Constant Name="Image.Height" Additive="!Tuple.Height.Additive" Value="63" />
+    <Constant Name="Image.MarginLeft" Value="10" />
+    <Constant Name="Image.MarginTop" Value="0" />
+    <Constant Name="Image.Padding" Value="2" />
+
+    <Constant Name="NameLeft" Value="145" />
+
+    <Constant Name="IconAlpha" Value="0.7" />
+  </Constants>
+  
+  <Window>
+
+    <PartyTroopManagementItemButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Party.UpgradePopup.TroopTupple" IsEnabled="@IsTroopRecruitable" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" Command.AlternateClick="ExecuteOpenTroopEncyclopedia" HoveredCursorState="RightClickLink" ActionButtonsContainer="Character\Contents">
+      <Children>
+
+        <NavigationAutoScrollWidget  TrackedWidget="..\." WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" />
+
+        <Widget Id="Character" DataSource="{PartyCharacter}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="75" MarginLeft="5" MarginRight="22" HorizontalAlignment="Center">
+          <Children>
+
+            <ListPanel Id="Contents" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+
+                <!--Avatar-->
+                <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="135" SuggestedHeight="68" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="!Image.MarginLeft" MarginTop="!Image.MarginTop" Brush="Party.TroopBack">
+                  <Children>
+
+                    <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" IsBig="true" LoadingIconWidget="LoadingIconWidget">
+                      <Children>
+                        <Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>
+                      </Children>
+                    </ImageIdentifierWidget>
+                    <Widget DataSource="{TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
+                      <Children>
+                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                      </Children>
+                    </Widget>
+                    <Widget DataSource="{TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" PositionXOffset="6" PositionYOffset="2" Sprite="@Text">
+                      <Children>
+                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </BrushWidget>
+
+                <!--Troop Name-->
+                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="200" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="10" MarginBottom="10" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@Name"/>
+
+                <!--Troop Count-->
+                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="90" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="15" MarginBottom="10" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@StrNumOfRecruitableTroop"/>
+
+                <!--Recruit Effect-->
+                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="90" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="50" MarginTop="15" MarginBottom="10">
+                  <Children>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="-15" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@RecruitMoraleCostText">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="-36" PositionYOffset="-2" Sprite="General\Icons\Morale@2x"/>
+                      </Children>
+                    </TextWidget>
+                  </Children>
+                </Widget>
+
+                <!--Recruit Button-->
+                <ButtonWidget Id="ActionButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="56" MarginLeft="72" VerticalAlignment="Center" Brush="Party.RecruitPopUp.RecruitButton" Command.Click="ExecuteRecruitTroop" IsEnabled="@IsTroopRecruitable">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="2" PositionYOffset="-2" Sprite="PartyScreen\recruit_prisoner" HueFactor="10" SaturationFactor="60" ValueFactor="20" />
+                    <HintWidget DataSource="{RecruitPrisonerHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+                  </Children>
+                </ButtonWidget>
+
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+      </Children>
+    </PartyTroopManagementItemButtonWidget>
+    
+  </Window>
+</Prefab>

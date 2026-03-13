@@ -1,0 +1,11 @@
+<Config>
+  <SpriteCategory Name="ui_taom_bannericons">
+    <AlwaysLoad />
+  </SpriteCategory>
+  <SpriteCategory Name="ui_loading">
+    <AlwaysLoad />
+  </SpriteCategory>
+  <SpriteCategory Name="ui_taom">
+		<AlwaysLoad />
+	</SpriteCategory>
+</Config>

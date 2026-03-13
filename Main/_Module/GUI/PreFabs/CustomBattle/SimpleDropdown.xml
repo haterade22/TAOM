@@ -1,0 +1,30 @@
+<Prefab>
+  <Variables>
+  </Variables>
+  <Window>
+    <DropdownWidget Id="DropdownParent" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="200" Button="DropdownButton" CurrentSelectedIndex="@SelectedIndex" ListPanel="FactionSelectionList"  RichTextWidget="DropdownButton\SelectedTextWidget" >
+      <Children>
+
+        <ButtonWidget Id="DropdownButton" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="39" HorizontalAlignment="Center" VerticalAlignment="Top" Brush="Crafting.WeaponType.Dropdown">
+          <Children>
+            <RichTextWidget Id="SelectedTextWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Crafting.WeaponType.Dropdown.Text" Text=" " />
+          </Children>
+        </ButtonWidget>
+
+        <ListPanel Id="FactionSelectionList" DataSource="{ItemList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" Sprite="dropdown_popup_9" IsVisible="false" LayoutImp.LayoutMethod="VerticalBottomToTop">
+          <ItemTemplate>
+
+            <ButtonWidget Id="WeaponTypeDropdownItem" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" ButtonType="Radio" UpdateChildrenStates="true">
+              <Children>
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="8" MarginRight="8" Brush="Crafting.WeaponType.Dropdown.Item"/>
+                <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Crafting.WeaponType.Dropdown.Text" Text="@StringItem" />
+              </Children>
+            </ButtonWidget>
+
+          </ItemTemplate>
+        </ListPanel>
+
+      </Children>
+    </DropdownWidget>
+  </Window>
+</Prefab>

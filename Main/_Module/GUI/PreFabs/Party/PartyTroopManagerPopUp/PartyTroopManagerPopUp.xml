@@ -1,0 +1,218 @@
+<Prefab>
+
+  <Constants>
+
+    <Constant Name="Popup.CloseButton.Width" BrushName="Popup.CloseButton" BrushLayer="Default" BrushValueType="Width"/>
+    <Constant Name="Popup.CloseButton.Height" BrushName="Popup.CloseButton" BrushLayer="Default" BrushValueType="Height"/>
+  </Constants>
+
+  <Parameters>
+    <Parameter Name="PanelDataSource" DefaultValue="" />
+  </Parameters>
+  
+  <Window>
+    <PartyManageTroopPopupWidget DataSource="*PanelDataSource" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsPrimaryActionAvailable="@IsPrimaryActionAvailable" IsSecondaryActionAvailable="@IsSecondaryActionAvailable" PrimaryInputKeyVisualParent="PrimaryInputKeyVisualParent" SecondaryInputKeyVisualParent="SecondaryInputKeyVisualParent" IsVisible="@IsOpen">
+      <Children>
+
+				<NavigationForcedScopeCollectionTargeter CollectionID="PartyPopupCollection" CollectionParent="..\." />
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#000000B0"/>
+
+        <!--Done Button-->
+        <Standard.PopupCloseButton VerticalAlignment="Bottom" PositionYOffset="-62" Parameter.ButtonAction="ExecuteDone" Parameter.ButtonText="@DoneLbl" Parameter.InputKeyDataSource="{DoneInputKey}" GamepadNavigationIndex="1000"/>
+
+        <!--Popup-->
+        <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" MarginTop="70" MarginBottom="110" SuggestedWidth="930" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Party.UpgradePopup.Frame">
+          <Children>
+
+            <!--Outer Frame With Padding-->
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="50" MarginRight="50" MarginTop="130" MarginBottom="80" Brush="Party.UpgradePopup.Dent">
+              <Children>
+
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+                  <Children>
+
+                    <!--Top Bar-->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="60" HorizontalAlignment="Center" VerticalAlignment="Top" MarginLeft="15" MarginRight="10" MarginTop="2" MarginBottom="-7" Sprite="PartyScreen\header_left">
+                      <Children>
+
+                        <!--Upgrade PopUp Header-->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginBottom="8" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsUpgradePopUp">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="128" VerticalAlignment="Center" MarginLeft="15" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Left" ClipContents="false" Text="@AvatarText"/>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" VerticalAlignment="Center" MarginLeft="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Left" ClipContents="false" Text="@NameText"/>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="75" VerticalAlignment="Center" MarginLeft="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Center" ClipContents="false" Text="@CountText"/>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="90" VerticalAlignment="Center" MarginLeft="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Center" ClipContents="false" Text="@UpgradeCostText"/>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" MarginRight="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Center" ClipContents="false" Text="@UpgradesAndRequirementsText" />
+                          </Children>
+                        </ListPanel>
+
+                        <!--Recruit PopUp Header-->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginBottom="8" StackLayout.LayoutMethod="HorizontalLeftToRight" IsHidden="@IsUpgradePopUp">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="128" VerticalAlignment="Center" MarginLeft="15" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Left" ClipContents="false" Text="@AvatarText"/>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="200" VerticalAlignment="Center" MarginLeft="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Left" ClipContents="false" Text="@NameText"/>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="90" VerticalAlignment="Center" MarginLeft="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Center" ClipContents="false" Text="@CountText"/>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="90" VerticalAlignment="Center" MarginLeft="50" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Center" ClipContents="false" Text="@EffectText"/>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" MarginRight="10" Brush="Party.UpgradePopup.Dent.Text" Brush.TextHorizontalAlignment="Center" ClipContents="false" Text="@RecruitText"/>
+                          </Children>
+                        </ListPanel>
+                        
+                      </Children>
+                    </Widget>
+
+                    <!--Upgrade Troops List-->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="-7" MarginLeft="15" MarginRight="5" MarginBottom="10" IsVisible="@IsUpgradePopUp">
+                      <Children>
+
+                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="UpgradeClipRect" InnerPanel="UpgradeClipRect\UpgradeTroops" VerticalScrollbar="..\VerticalScrollbar\Scrollbar">
+                          <Children>
+
+														<NavigationScopeTargeter ScopeID="PartyUpgradePopupScope" ScopeParent="..\UpgradeClipRect" ScopeMovements="Vertical" />
+                            <Widget Id="UpgradeClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" >
+                              <Children>
+
+                                <NavigatableListPanel Id="UpgradeTroops" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" AlwaysRefreshAll="true" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                  <ItemTemplate>
+                                    <PartyTroopUpgradeItem />
+                                  </ItemTemplate>
+                                </NavigatableListPanel>
+
+                              </Children>
+                            </Widget>
+
+                          </Children>
+                        </ScrollablePanel>
+
+                        <Standard.VerticalScrollbar Id="VerticalScrollbar" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                        
+                      </Children>
+                    </Widget>
+
+                    <!--Recruit Prisoners List-->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="-7" MarginLeft="15" MarginRight="5" MarginBottom="10" IsHidden="@IsUpgradePopUp">
+                      <Children>
+
+                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="RecruitClipRect" InnerPanel="RecruitClipRect\RecruitTroops" VerticalScrollbar="..\VerticalScrollbar\Scrollbar">
+                          <Children>
+
+														<NavigationScopeTargeter ScopeID="PartyRecruitPopupScope" ScopeParent="..\RecruitClipRect" ScopeMovements="Vertical" />
+                            <Widget Id="RecruitClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" >
+                              <Children>
+
+                                <NavigatableListPanel Id="RecruitTroops" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                  <ItemTemplate>
+                                    <PartyTroopRecruitItem />
+                                  </ItemTemplate>
+                                </NavigatableListPanel>
+
+                              </Children>
+                            </Widget>
+
+                          </Children>
+                        </ScrollablePanel>
+
+                        <Standard.VerticalScrollbar Id="VerticalScrollbar" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+
+                      </Children>
+                    </Widget>
+                    
+                  </Children>
+                </ListPanel>
+                
+              </Children>
+            </BrushWidget>
+
+            <!--Header-->
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="165" SuggestedWidth="634" HorizontalAlignment="Center" PositionYOffset="-17" Sprite="StdAssets\tabbar_popup" IsDisabled="true">
+              <Children>
+                <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" PositionYOffset="-29" PositionXOffset="-8" Brush="Recruitment.Popup.Title.Text" Text="@TitleText" Brush.FontSize="40"/>
+              </Children>
+            </Widget>
+
+            <!--Labels For Upgrade Popup-->
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="40" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsUpgradePopUp">
+              <Children>
+                <!--Morale Change Label-->
+                <Widget Id="MoraleLabelContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="25" MarginRight="25" IsDisabled="true">
+                  <Children>
+                    <AutoHideRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="true" Text="@MoraleChangeText" WidgetToHideIfEmpty="..\..\MoraleLabelContainer"/>
+                  </Children>
+                </Widget>
+                                  
+                <!--Gold Change Label-->
+                <Widget Id="TradeLabelContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="25" MarginRight="25" IsDisabled="true">
+                  <Children>
+                    <AutoHideRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="true" Text="@GoldChangeText" WidgetToHideIfEmpty="..\..\TradeLabelContainer"/>
+                  </Children>
+                </Widget>
+
+                <!--Horse Change Label-->
+                <Widget Id="HorseLabelContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="25" MarginRight="25" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <AutoHideRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="true" Text="@HorseChangeText" WidgetToHideIfEmpty="..\..\HorseLabelContainer"/>
+                  </Children>
+                </Widget>
+              </Children>
+            </ListPanel>
+
+            <!-- Recruit All Button -->
+						<NavigationScopeTargeter ScopeID="RecruitAllScope" ScopeParent="..\RecruitAllButton" />
+            <ButtonWidget Id="RecruitAllButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="269" SuggestedHeight="41" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="35" Brush="Party.RecruitPopup.RecruitAllButton" Command.Click="ExecuteRecruitAll" IsHidden="@IsUpgradePopUp" GamepadNavigationIndex="0">
+              <Children>
+                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CustomBattle.PopUp.Buttons.Text" Text="@RecruitAllText" />
+                
+                <!--Labels For Recruit Popup-->
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginBottom="5" MarginLeft="275" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                  <Children>
+                    <!--Morale Change Label-->
+                    <Widget Id="MoraleLabelContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="10" MarginRight="10" IsDisabled="true">
+                      <Children>
+                        <AutoHideRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="true" Text="@MoraleChangeText" WidgetToHideIfEmpty="..\..\MoraleLabelContainer"/>
+                      </Children>
+                    </Widget>
+
+                    <!--Gold Change Label-->
+                    <Widget Id="TradeLabelContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="10" MarginRight="10" IsDisabled="true">
+                      <Children>
+                        <AutoHideRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="true" Text="@GoldChangeText" WidgetToHideIfEmpty="..\..\TradeLabelContainer"/>
+                      </Children>
+                    </Widget>
+
+                    <!--Horse Change Label-->
+                    <Widget Id="HorseLabelContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="10" MarginRight="10" DoNotPassEventsToChildren="true">
+                      <Children>
+                        <AutoHideRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="true" Text="@HorseChangeText" WidgetToHideIfEmpty="..\..\HorseLabelContainer"/>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ListPanel>
+              </Children>
+            </ButtonWidget>
+
+          </Children>
+        </BrushWidget>
+
+        <!--Close Button-->
+        <ButtonWidget Command.Click="ExecuteCancel" HeightSizePolicy ="Fixed" WidthSizePolicy="Fixed" SuggestedHeight="!Popup.CloseButton.Height" SuggestedWidth="!Popup.CloseButton.Width" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="55" MarginLeft="880" Brush="Popup.CloseButton">
+          <Children>
+            <InputKeyVisualWidget DataSource="{..\CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" PositionXOffset="-20" PositionYOffset="20" KeyID="@KeyID" IsVisible="@IsVisible"/>
+          </Children>
+        </ButtonWidget>
+
+        <Widget Id="PrimaryInputKeyVisualParent" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" HorizontalAlignment="Left" IsVisible="false">
+          <Children>
+            <InputKeyVisualWidget DataSource="{PrimaryActionInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" PositionXOffset="-20" PositionYOffset="-20" KeyID="@KeyID" IsVisible="@IsVisible"/>
+          </Children>
+        </Widget>
+
+        <Widget Id="SecondaryInputKeyVisualParent" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" HorizontalAlignment="Left" IsVisible="false">
+          <Children>
+            <InputKeyVisualWidget DataSource="{SecondaryActionInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" PositionXOffset="-20" PositionYOffset="-20" KeyID="@KeyID" IsVisible="@IsVisible"/>
+          </Children>
+        </Widget>
+
+      </Children>
+    </PartyManageTroopPopupWidget>
+
+  </Window>
+</Prefab>

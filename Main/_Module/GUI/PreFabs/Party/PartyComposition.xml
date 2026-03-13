@@ -1,0 +1,56 @@
+<Prefab>
+  <Constants>
+    <Constant Name="Icon.Width" Value="30" />
+    <Constant Name="Icon.Height" Value="34" />
+    <Constant Name="Text.Width" Value="45" />
+    <Constant Name="Text.Height" Value="34" />
+    <Constant Name="Text.Brush" Value="Party.Text.UpgradeAmount" />
+    <Constant Name="Text.FontSize" Value="24" />
+    <Constant Name="Element.Spacing" Value="14" />
+  </Constants>
+  <Parameters>
+    <Parameter Name="DataSource" DefaultValue="" />
+  </Parameters>
+  <Window>
+    <ListPanel DataSource="*DataSource" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
+      <Children>
+        <!--Infantry-->
+        <ListPanel DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="!Element.Spacing" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Icon.Width" SuggestedHeight="!Icon.Height" Sprite="PartyScreen\icon_troop_type_infantry" Color="#BE945BFF" />
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedWidth="!Text.Width" SuggestedHeight="!Text.Height" Brush="!Text.Brush" Brush.FontSize="!Text.FontSize" IntText="@InfantryCount" />
+            <HintWidget DataSource="{InfantryHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+          </Children>
+        </ListPanel>
+
+        <!--Ranged-->
+        <ListPanel DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="!Element.Spacing" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Icon.Width" SuggestedHeight="!Icon.Height" Sprite="PartyScreen\icon_troop_type_bow" Color="#BE945BFF" />
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedWidth="!Text.Width" SuggestedHeight="!Text.Height" Brush="!Text.Brush" Brush.FontSize="!Text.FontSize" IntText="@RangedCount" />
+            <HintWidget DataSource="{RangedHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+          </Children>
+        </ListPanel>
+
+        <!--Cavalry-->
+        <ListPanel DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="!Element.Spacing" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Icon.Width" SuggestedHeight="!Icon.Height" Sprite="PartyScreen\icon_troop_type_cavalry" Color="#BE945BFF" />
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedWidth="!Text.Width" SuggestedHeight="!Text.Height" Brush="!Text.Brush" Brush.FontSize="!Text.FontSize" IntText="@CavalryCount" />
+            <HintWidget DataSource="{CavalryHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+          </Children>
+        </ListPanel>
+
+        <!--Horse Archer-->
+        <ListPanel DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="!Element.Spacing" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Icon.Width" SuggestedHeight="!Icon.Height" Sprite="PartyScreen\icon_troop_type_horse_archer" Color="#BE945BFF" />
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedWidth="!Text.Width" SuggestedHeight="!Text.Height" Brush="!Text.Brush" Brush.FontSize="!Text.FontSize" IntText="@HorseArcherCount" />
+            <HintWidget DataSource="{HorseArcherHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+          </Children>
+        </ListPanel>
+
+      </Children>
+    </ListPanel>
+  </Window>
+</Prefab>

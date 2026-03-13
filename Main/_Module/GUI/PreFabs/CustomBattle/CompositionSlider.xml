@@ -1,0 +1,98 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="SliderImage" DefaultValue="General\compass\HorseArcher_Light" />
+    <Parameter Name="CompositionDataSource" DefaultValue=""/>
+    <Parameter Name="InvalidHintDataSource" DefaultValue=""/>
+  </Parameters>
+  <Variables>
+  </Variables>
+  <Window>
+    <Widget DataSource="*CompositionDataSource" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
+      <Children>
+				<NavigationScopeTargeter ScopeID="CompositionSliderScope" ScopeParent="..\SliderParent" ScopeMovements="Horizontal" ExtendDiscoveryAreaBottom="-10"/>
+        <ListPanel Id="SliderParent" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight" >
+          <Children>
+
+            <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" HorizontalAlignment="Right" VerticalAlignment="Center" Sprite="*SliderImage"/>
+
+            <!--Slider-->
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="362" SuggestedHeight="38" MarginLeft="35" >
+              <Children>
+
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsValid">
+                  <Children>
+                    <HintWidget DataSource="{InvalidHint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+                  </Children>
+                </Widget>
+                
+                <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="338" SuggestedHeight="42" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" Locked="@IsLocked" MaxValueInt="100" MinValueInt="0" ValueInt="@CompositionValue" IsDisabled="@IsLocked" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" IsDiscrete="true" DoNotUpdateHandleSize="true">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="362" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.Slider.Canvas"/>
+                    <ImageWidget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" VerticalAlignment="Center" Brush="CustomBattle.Slider.Fill" ClipContents="true" UpdateChildrenStates="true">
+                      <Children>
+                        <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CustomBattle.Slider.Fill"/>
+                      </Children>
+                    </ImageWidget>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="65" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.Slider.Frame"/>
+                    <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CustomBattle.Slider.Handle" DoNotAcceptEvents="true" GamepadNavigationIndex="0"/>
+                  </Children>
+                </SliderWidget>
+                
+              </Children>
+            </Widget>
+
+            <CustomBattleSliderLockButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" MarginLeft="0" SuggestedHeight="40" Brush="CustomBattle.Slider.Lock.Opened" ButtonType="Toggle" ToggleIndicator="ToggleIndicator" IsVisible="true" IsSelected="@IsLocked" IsEnabled="@IsValid" UpdateChildrenStates="true" LockOpenedBrush="CustomBattle.Slider.Lock.Opened" LockClosedBrush="CustomBattle.Slider.Lock.Closed" GamepadNavigationIndex="1"/>
+
+            <IntegerInputTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="30" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="CustomBattle.SliderValue.Text" IntText="@CompositionValue" MaxInt="100" MinInt="0" EnableClamp="true" ClipContents="false" IsDisabled="@IsLocked" UpdateChildrenStates="true" DoNotPassEventsToChildren="true" MaxLength="4" GamepadNavigationIndex="2">
+              <Children>
+                <BrushWidget  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CustomBattle.SliderValue.Input" ClipContents="false"/>
+              </Children>
+            </IntegerInputTextWidget>
+
+          </Children>
+        </ListPanel>
+				
+        <Widget Id="TroopsParent" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="50" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="60" MarginTop="45">
+          <Children>
+
+            <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="40" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\TroopsGrid" VerticalScrollbar="..\SelectedTroopsScrollbar\Scrollbar">
+              <Children>
+
+								<NavigationScopeTargeter ScopeID="CompositionTroopsGridScope" ScopeParent="..\ClipRect" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="9" RightNavigationScope="None" />
+                <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                  <Children>
+
+                    <NavigatableGridWidget Id="TroopsGrid" DataSource="{TroopTypes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" ColumnCount="9" DefaultCellHeight="24" DefaultCellWidth="35" LayoutImp="GridLayout" LayoutImp.HorizontalLayoutMethod="LeftToRight" MinIndex="1">
+                      <ItemTemplate>
+                        <!--Troop Card-->
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="33" SuggestedHeight="24" IsVisible="@IsSelected">
+                          <Children>
+                            <ImageIdentifierWidget DataSource="{Visual}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" />
+                            <HintWidget DataSource="{NameHint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                          </Children>
+                        </Widget>
+                      </ItemTemplate>
+                    </NavigatableGridWidget>
+
+                  </Children>
+                </Widget>
+
+              </Children>
+            </ScrollablePanel>
+
+            <Standard.VerticalScrollbar Id="SelectedTroopsScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="677" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="60" IsVisible="false"/>
+            
+            <!--Add Troop Type Button-->
+						<NavigationScopeTargeter ScopeID="CompositionAddTroopButtonScope" ScopeParent="..\AddTroopButton" />
+						<ButtonWidget Id="AddTroopButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" MarginLeft="5" MarginTop="-2" Brush="CustomBattle.Menu.AddTroopType.Button" IsVisible="@IsValid" Command.Click="ExecuteAddTroopTypes" GamepadNavigationIndex="0">
+							<Children>
+								<HintWidget DataSource="{AddTroopTypeHint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+							</Children>
+						</ButtonWidget>
+						
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

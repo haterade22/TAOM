@@ -1,0 +1,101 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="TitleText" DefaultValue="Player" />
+    <Parameter Name="FactionText" DefaultValue="Player Faction" />
+  </Parameters>
+  <Window>
+    <!--_______Side Panel_______-->
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="585" HorizontalAlignment="Left">
+      <Children>
+
+        <RichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="30" Brush="CustomBattle.Character.Title.Text" Text="@Name" />
+        
+        <!--_____Character Selection_______-->
+        <!--<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="75">
+          <Children>
+            <SimpleDropdown DataSource="{CharacterSelectionGroup}" WidthSizePolicy="Fixed" SuggestedWidth="250" HorizontalAlignment="Center" VerticalAlignment="Top" />
+            <ButtonWidget DataSource="{CharacterSelectionGroup}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="RandomButtonBrush" Command.Click="ExecuteRandomize" />
+          </Children>
+        </ListPanel>-->
+
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="265" MarginTop="140" ClipContents="true">
+          <Children>
+
+            <!--Selected Character Tableau-->
+            <CharacterTableauWidget DataSource="{CurrentSelectedCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy ="Fixed" SuggestedWidth="400" SuggestedHeight="400" BodyProperties="@BodyProperties" IsFemale="@IsFemale" EquipmentCode="@EquipmentCode" CharStringId="@CharStringId" StanceIndex="@StanceIndex" BannerCodeText="@BannerCodeText"  PositionYOffset="-30" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" Race="@Race" IsBannerShownInBackground="true"/>
+
+            <ListPanel DataSource="{ArmorsList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" PositionYOffset="5" MarginLeft="25" LayoutImp.LayoutMethod="VerticalBottomToTop">
+              <ItemTemplate>
+                <EquipmentTypeVisualBrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" HorizontalAlignment="Left" MarginLeft="5" MarginBottom="5" Brush="EquipmentType.Image" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsVisible="@HasItem" Type="@Type" />
+              </ItemTemplate>
+            </ListPanel>
+
+            <ListPanel DataSource="{WeaponsList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" PositionYOffset="5"  MarginRight="25" LayoutImp.LayoutMethod="VerticalBottomToTop">
+              <ItemTemplate>
+                <EquipmentTypeVisualBrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" HorizontalAlignment="Right" MarginRight="5" MarginBottom="5" Brush="EquipmentType.Image" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsVisible="@HasItem" Type="@Type" />
+              </ItemTemplate>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+				<NavigationScopeTargeter ScopeID="ArmyCompositionCharacterSelectionScope" ScopeParent="..\CharacterSelectionDropdown" />
+        <Standard.DropdownWithHorizontalControl Id="CharacterSelectionDropdown" HorizontalAlignment="Center" Parameter.SelectorDataSource="{CharacterSelectionGroup}" MarginTop="85" GamepadNavigationIndex="0"/>
+
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="12" Sprite="StdAssets\subpage_divider" MarginTop="400"/>
+
+        <!--_____Faction Selection - REPLACED WITH DROPDOWN_______-->
+        <RichTextWidget DataSource="{FactionSelectionGroup}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="420" Brush="CustomBattle.Character.Title.Text" Text="@SelectedFactionName" />
+
+        <NavigationScopeTargeter ScopeID="ArmyCompositionFactionSelectionScope" ScopeParent="..\FactionSelectionDropdown" />
+        <Standard.DropdownWithHorizontalControl Id="FactionSelectionDropdown" HorizontalAlignment="Center" Parameter.SelectorDataSource="{FactionSelectionGroup}" MarginTop="480" GamepadNavigationIndex="1"/>
+
+        <!--<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="420">
+          <Children>
+            <SimpleDropdown DataSource="{FactionSelectionGroup}" WidthSizePolicy="Fixed" SuggestedWidth="250" HorizontalAlignment="Center" VerticalAlignment="Top" />
+            <ButtonWidget DataSource="{FactionSelectionGroup}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="RandomButtonBrush" Command.Click="ExecuteRandomize" />
+          </Children>
+        </ListPanel>-->
+
+        <!--_____Army Composition_______-->
+        <ListPanel DataSource="{CompositionGroup}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="560" LayoutImp.LayoutMethod="VerticalBottomToTop">
+          <Children>
+            <CompositionSlider MarginBottom="5" MarginLeft="20" Parameter.SliderImage="General\compass\Infantry_Light" Parameter.CompositionDataSource="{MeleeInfantryComposition}"/>
+            <CompositionSlider MarginBottom="5" MarginLeft="20" Parameter.SliderImage="General\compass\Archer_Light" Parameter.CompositionDataSource="{RangedInfantryComposition}"/>
+            <CompositionSlider MarginBottom="5" MarginLeft="20" Parameter.SliderImage="General\compass\Cavalry_Light" Parameter.CompositionDataSource="{MeleeCavalryComposition}"/>
+            <CompositionSlider MarginLeft="20" Parameter.SliderImage="General\compass\HorseArcher_Light" Parameter.CompositionDataSource="{RangedCavalryComposition}"/>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.Character.Title.Text" Text="@ArmySizeTitle" />
+          </Children>
+        </ListPanel>
+
+        <!--Army Size Slider-->
+				<NavigationScopeTargeter ScopeID="ArmyCompositionSizeSliderScope" ScopeParent="..\CompositionGroup" ScopeMovements="Horizontal" />
+        <Widget Id="CompositionGroup" DataSource="{CompositionGroup}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Center" VerticalAlignment="Bottom" SuggestedWidth="450" SuggestedHeight="38" MarginBottom="40" MarginLeft="80" >
+          <Children>
+
+            <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="338" SuggestedHeight="42" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" Locked="false" MaxValueInt="@MaxArmySize" MinValueInt="@MinArmySize" ValueInt="@ArmySize" IsDisabled="false" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" IsDiscrete="true" DoNotUpdateHandleSize="true">
+              <Children>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="362" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Header.Frame"/>
+                <ImageWidget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" VerticalAlignment="Center" Brush="SPCharacterDeveloper.Statistics.Fill" ClipContents="true" UpdateChildrenStates="true">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="SPCharacterDeveloper.Statistics.Fill"/>
+                  </Children>
+                </ImageWidget>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="65" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Header.Frame"/>
+                <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="ButtonBrush1" DoNotAcceptEvents="true" GamepadNavigationIndex="0"/>
+              </Children>
+            </SliderWidget>
+
+            <IntegerInputTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="30" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="Clan.TextInput" IntText="@ArmySize" MaxInt="@MaxArmySize" MinInt="@MinArmySize" EnableClamp="true" ClipContents="false" IsDisabled="false" UpdateChildrenStates="true" DoNotPassEventsToChildren="true" MaxLength="4" GamepadNavigationIndex="1">
+              <Children>
+                <BrushWidget  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TextBox.Background" ClipContents="false"/>
+              </Children>
+            </IntegerInputTextWidget>
+
+          </Children>
+        </Widget>
+        
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
