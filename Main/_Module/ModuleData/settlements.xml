@@ -531,7 +531,7 @@
 	<!-- ============================================== -->
 	<!-- EMPIRE SOUTH (Mordor) -->
 	<!-- ============================================== -->
-	<Settlement id="castle_ES1" name="{=Settlements.Settlement.name.castle_ES1}Odrysa Castle" owner="Faction.clan_empire_south_3" posX="948.373" posY="768.892" culture="Culture.empire" gate_posX="947.0259" gate_posY="769.5507">
+	<Settlement id="castle_ES1" name="{=Settlements.Settlement.name.castle_ES1}Odrysa Castle" owner="Faction.clan_empire_south_3" posX="948.373" posY="768.892" culture="Culture.mordor" gate_posX="947.0259" gate_posY="769.5507">
 		<Components>
 			<Town id="castle_comp_ES1" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="500">
 				<Buildings>
@@ -581,7 +581,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES2" name="{=Settlements.Settlement.name.castle_ES2}Corenia Castle" owner="Faction.clan_empire_south_5" posX="962.749" posY="741.314" culture="Culture.empire" gate_posX="961.3373" gate_posY="741.9282">
+	<Settlement id="castle_ES2" name="{=Settlements.Settlement.name.castle_ES2}Corenia Castle" owner="Faction.clan_empire_south_5" posX="962.749" posY="741.314" culture="Culture.mordor" gate_posX="961.3373" gate_posY="741.9282">
 		<Components>
 			<Town id="castle_comp_ES2" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="770">
 				<Buildings>
@@ -631,7 +631,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES3" name="{=Settlements.Settlement.name.castle_ES3}Melion Castle" owner="Faction.clan_empire_south_7" posX="973.499" posY="691.321" culture="Culture.empire" gate_posX="975.8359" gate_posY="692.5034">
+	<Settlement id="castle_ES3" name="{=Settlements.Settlement.name.castle_ES3}Melion Castle" owner="Faction.clan_empire_south_7" posX="973.499" posY="691.321" culture="Culture.mordor" gate_posX="975.8359" gate_posY="692.5034">
 		<Components>
 			<Town id="castle_comp_ES3" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="810">
 				<Buildings>
@@ -694,7 +694,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES4" name="{=Settlements.Settlement.name.castle_ES4}Lavenia Castle" owner="Faction.clan_empire_south_3" posX="997.362" posY="667.305" culture="Culture.empire" gate_posX="997.6505" gate_posY="669.8536">
+	<Settlement id="castle_ES4" name="{=Settlements.Settlement.name.castle_ES4}Lavenia Castle" owner="Faction.clan_empire_south_3" posX="997.362" posY="667.305" culture="Culture.mordor" gate_posX="997.6505" gate_posY="669.8536">
 		<Components>
 			<Town id="castle_comp_ES4" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="1100">
 				<Buildings>
@@ -757,7 +757,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES5" name="{=Settlements.Settlement.name.castle_ES5}Morenia Castle" owner="Faction.clan_empire_south_8" posX="1018.618" posY="600.171" culture="Culture.empire" gate_posX="1018.579" gate_posY="601.7681">
+	<Settlement id="castle_ES5" name="{=Settlements.Settlement.name.castle_ES5}Morenia Castle" owner="Faction.clan_empire_south_8" posX="1018.618" posY="600.171" culture="Culture.mordor" gate_posX="1018.579" gate_posY="601.7681">
 		<Components>
 			<Town id="castle_comp_ES5" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="850">
 				<Buildings>
@@ -833,7 +833,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES6" name="{=Settlements.Settlement.name.castle_ES6}Sestadaim Castle" owner="Faction.clan_empire_south_1" posX="1046.415" posY="523.459" culture="Culture.empire" gate_posX="1045.412" gate_posY="524.7082">
+	<Settlement id="castle_ES6" name="{=Settlements.Settlement.name.castle_ES6}Sestadaim Castle" owner="Faction.clan_empire_south_1" posX="1046.415" posY="523.459" culture="Culture.mordor" gate_posX="1045.412" gate_posY="524.7082">
 		<Components>
 			<Town id="castle_comp_ES6" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="670">
 				<Buildings>
@@ -883,7 +883,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES7" name="{=Settlements.Settlement.name.castle_ES7}Jogurys Castle" owner="Faction.clan_empire_south_9" posX="1144.529" posY="632.178" culture="Culture.empire" gate_posX="1143.373" gate_posY="631.4019">
+	<Settlement id="castle_ES7" name="{=Settlements.Settlement.name.castle_ES7}Jogurys Castle" owner="Faction.clan_empire_south_9" posX="1144.529" posY="632.178" culture="Culture.mordor" gate_posX="1143.373" gate_posY="631.4019">
 		<Components>
 			<Town id="castle_comp_ES7" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="1050">
 				<Buildings>
@@ -946,7 +946,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_ES8" name="{=Settlements.Settlement.name.castle_ES8}Chanopsis Castle" owner="Faction.clan_empire_south_1" posX="1242.703" posY="656.781" culture="Culture.empire" gate_posX="1240.885" gate_posY="656.3813">
+	<Settlement id="castle_ES8" name="{=Settlements.Settlement.name.castle_ES8}Chanopsis Castle" owner="Faction.clan_empire_south_1" posX="1242.703" posY="656.781" culture="Culture.mordor" gate_posX="1240.885" gate_posY="656.3813">
 		<Components>
 			<Town id="castle_comp_ES8" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="480">
 				<Buildings>
@@ -1022,7 +1022,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="town_ES1" name="{=Settlements.Settlement.name.town_ES1}Danustica" owner="Faction.clan_empire_south_3" posX="1010.598" posY="722.726" culture="Culture.empire" gate_posX="1011.36" gate_posY="724.7995" text="{=xkkI7ejQ}The frontier city of Danustica dominates the network of lakes and lagoons known as the Calsea. It has long held the line against incursions by the Aserai and various Darshi shahs and padishahs further to the east. Many an imperial legionary stationed here has scribbled graffiti on its walls cursing the city's sweltering summers, brackish water and the mosquitos that rise from the Calsea, but the inhabitants are proud of their role as border defenders and mock the soldiers wilting in the heat around them.">
+	<Settlement id="town_ES1" name="{=Settlements.Settlement.name.town_ES1}Danustica" owner="Faction.clan_empire_south_3" posX="1010.598" posY="722.726" culture="Culture.mordor" gate_posX="1011.36" gate_posY="724.7995" text="{=xkkI7ejQ}The frontier city of Danustica dominates the network of lakes and lagoons known as the Calsea. It has long held the line against incursions by the Aserai and various Darshi shahs and padishahs further to the east. Many an imperial legionary stationed here has scribbled graffiti on its walls cursing the city's sweltering summers, brackish water and the mosquitos that rise from the Calsea, but the inhabitants are proud of their role as border defenders and mock the soldiers wilting in the heat around them.">
 		<Components>
 			<Town id="town_comp_ES1" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_seaside_1" wait_mesh="wait_empire_town" gate_rotation="0.808" prosperity="4900">
 				<Buildings>
@@ -1058,7 +1058,7 @@
 			<Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES1_1" name="{=Settlements.Settlement.name.village_ES1_1}Village ES1_1" posX="989.514" posY="725.507" culture="Culture.empire">
+	<Settlement id="village_ES1_1" name="{=Settlements.Settlement.name.village_ES1_1}Village ES1_1" posX="989.514" posY="725.507" culture="Culture.mordor">
 		<Components>
 			<Village id="village_comp_ES1_1" village_type="VillageType.swine_farm" hearth="350" bound="Settlement.town_ES1" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1071,7 +1071,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES1_2" name="{=Settlements.Settlement.name.village_ES1_2}Polisia" posX="969.522" posY="724.074" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES1_2}Polisia sits among the network of rivers and lakes known as the Calsea near the Aserai borderlands. Villagers harvest salt from a lagoon to their west, a former inlet of the Perassic sea that was cut off by a sandspit. These lowlands are shunned by many others in Calradia, who find the air thick and fetid, but the inhabitants are proud of their role keeping watch on the Aserai.">
+	<Settlement id="village_ES1_2" name="{=Settlements.Settlement.name.village_ES1_2}Polisia" posX="969.522" posY="724.074" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES1_2}Polisia sits among the network of rivers and lakes known as the Calsea near the Aserai borderlands. Villagers harvest salt from a lagoon to their west, a former inlet of the Perassic sea that was cut off by a sandspit. These lowlands are shunned by many others in Calradia, who find the air thick and fetid, but the inhabitants are proud of their role keeping watch on the Aserai.">
 		<Components>
 			<Village id="village_comp_ES1_2" village_type="VillageType.salt_mine" hearth="218" gate_rotation="0.008" bound="Settlement.town_ES1" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1084,7 +1084,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES1_3" name="{=Settlements.Settlement.name.village_ES1_3}Tegresos" posX="1037.336" posY="709.73" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES1_3}Tegresos sits just north of the River Calsa, right before it enters the network of lakes, creeks and lagoons that form the borderlands with the Aserai. The inhabitants of this region have bred sheep that feed on marsh-grasses.">
+	<Settlement id="village_ES1_3" name="{=Settlements.Settlement.name.village_ES1_3}Tegresos" posX="1037.336" posY="709.73" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES1_3}Tegresos sits just north of the River Calsa, right before it enters the network of lakes, creeks and lagoons that form the borderlands with the Aserai. The inhabitants of this region have bred sheep that feed on marsh-grasses.">
 		<Components>
 			<Village id="village_comp_ES1_3" village_type="VillageType.sheep_farm" hearth="231" gate_rotation="0.008" bound="Settlement.town_ES1" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1097,7 +1097,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES1_4" name="{=Settlements.Settlement.name.village_ES1_4}Erebulos" posX="1017.584" posY="703.283" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES1_4}Erebulos lies by a lagoon that was formerly part of the Perassic Sea, closed by a recently formed sandspit. Villagers scoop clay from the creek-bottoms here, selling it to the pottery kilns of Danustica and other nearby towns.">
+	<Settlement id="village_ES1_4" name="{=Settlements.Settlement.name.village_ES1_4}Erebulos" posX="1017.584" posY="703.283" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES1_4}Erebulos lies by a lagoon that was formerly part of the Perassic Sea, closed by a recently formed sandspit. Villagers scoop clay from the creek-bottoms here, selling it to the pottery kilns of Danustica and other nearby towns.">
 		<Components>
 			<Village id="village_comp_ES1_4" village_type="VillageType.clay_mine" hearth="231" gate_rotation="0.008" bound="Settlement.town_ES1" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1110,7 +1110,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="town_ES2" name="{=Settlements.Settlement.name.town_ES2}Vostrum" owner="Faction.clan_empire_south_4" posX="949.306" posY="678.328" culture="Culture.empire" gate_posX="949.2749" gate_posY="681.1852" text="{=ytBRXqt8}Vostrum was founded by the Calradian mercenary Archacos, one of a number of rogue commanders who broke away from the empire during its expansion. Unlike some, who tried to reproduce the empire's republican heritage, he chose to rule as a god-king. His dynasty lasted for generations, until imperial troops overran it and smashed every haloed statue of Archacos and his successors into rubble. Even today, western and northern imperial senators accuse families from this region of being closet monarchists.">
+	<Settlement id="town_ES2" name="{=Settlements.Settlement.name.town_ES2}Vostrum" owner="Faction.clan_empire_south_4" posX="949.306" posY="678.328" culture="Culture.mordor" gate_posX="949.2749" gate_posY="681.1852" text="{=ytBRXqt8}Vostrum was founded by the Calradian mercenary Archacos, one of a number of rogue commanders who broke away from the empire during its expansion. Unlike some, who tried to reproduce the empire's republican heritage, he chose to rule as a god-king. His dynasty lasted for generations, until imperial troops overran it and smashed every haloed statue of Archacos and his successors into rubble. Even today, western and northern imperial senators accuse families from this region of being closet monarchists.">
 		<Components>
 			<Town id="town_comp_ES2" is_castle="false" background_crop_position="0.45" background_mesh="menu_empire_seaside_2" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="5100">
 				<Buildings>
@@ -1146,7 +1146,7 @@
 			<Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES2_1" name="{=Settlements.Settlement.name.village_ES2_1}Village ES2_1" posX="985.759" posY="683.277" culture="Culture.empire">
+	<Settlement id="village_ES2_1" name="{=Settlements.Settlement.name.village_ES2_1}Village ES2_1" posX="985.759" posY="683.277" culture="Culture.mordor">
 		<Components>
 			<Village id="village_comp_ES2_1" village_type="VillageType.trapper" hearth="350" bound="Settlement.town_ES2" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1159,7 +1159,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES2_2" name="{=Settlements.Settlement.name.village_ES2_2}Gorcorys" posX="1010.905" posY="682.561" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES2_2}Gorcorys sits on the Gorea, the southernmost tributary of the Sethys river in the valley of Tripotamia. The dark, well-watered soil here makes this region an imperial breadbasket.">
+	<Settlement id="village_ES2_2" name="{=Settlements.Settlement.name.village_ES2_2}Gorcorys" posX="1010.905" posY="682.561" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES2_2}Gorcorys sits on the Gorea, the southernmost tributary of the Sethys river in the valley of Tripotamia. The dark, well-watered soil here makes this region an imperial breadbasket.">
 		<Components>
 			<Village id="village_comp_ES2_2" village_type="VillageType.wheat_farm" hearth="355" bound="Settlement.town_ES2" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1172,7 +1172,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES2_3" name="{=Settlements.Settlement.name.village_ES2_3}Avalyps" posX="1046.949" posY="677.876" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES2_3}Avalyps sits near the headwaters of the River Calsa in the warm coastal hills of the southern Empire. The dark, well-watered soil here makes this region an imperial breadbasket.">
+	<Settlement id="village_ES2_3" name="{=Settlements.Settlement.name.village_ES2_3}Avalyps" posX="1046.949" posY="677.876" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES2_3}Avalyps sits near the headwaters of the River Calsa in the warm coastal hills of the southern Empire. The dark, well-watered soil here makes this region an imperial breadbasket.">
 		<Components>
 			<Village id="village_comp_ES2_3" village_type="VillageType.wheat_farm" hearth="355" bound="Settlement.town_ES2" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1185,7 +1185,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="town_ES3" name="{=Settlements.Settlement.name.town_ES3}Poros" owner="Faction.clan_empire_south_2" posX="944.526" posY="728.693" culture="Culture.empire" gate_posX="943.4208" gate_posY="726.4747" text="{=rGXdJybe}The town of Poros sits near the northern shores of the Perassic Sea. The warm rolling hills of these parts are well suited to the raising of sheep and horses. The herdsmen have a reputation for being proud and violent, but the nobles of the Leonipardes clan who rule this land are careful to respect their autonomy. Livestock rustling and blood feuds are common here, and it is said that the Leonipardes will never interfere unless invited by both parties, but when they do, their judgments will be obeyed by all.">
+	<Settlement id="town_ES3" name="{=Settlements.Settlement.name.town_ES3}Poros" owner="Faction.clan_empire_south_2" posX="944.526" posY="728.693" culture="Culture.mordor" gate_posX="943.4208" gate_posY="726.4747" text="{=rGXdJybe}The town of Poros sits near the northern shores of the Perassic Sea. The warm rolling hills of these parts are well suited to the raising of sheep and horses. The herdsmen have a reputation for being proud and violent, but the nobles of the Leonipardes clan who rule this land are careful to respect their autonomy. Livestock rustling and blood feuds are common here, and it is said that the Leonipardes will never interfere unless invited by both parties, but when they do, their judgments will be obeyed by all.">
 		<Components>
 			<Town id="town_comp_ES3" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_2" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="4500">
 				<Buildings>
@@ -1221,7 +1221,7 @@
 			<Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES3_1" name="{=Settlements.Settlement.name.village_ES3_1}Canoros" posX="964.021" posY="722.577" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES3_1}Canoros sits in the flat southern reaches of the Lycarea plain. This land has been good horse country since even before the Empire came, furnishing the steeds of the Lycarean riders who routed several Calradian armies before their final defeat and absorption into the imperial cavalry.">
+	<Settlement id="village_ES3_1" name="{=Settlements.Settlement.name.village_ES3_1}Canoros" posX="964.021" posY="722.577" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES3_1}Canoros sits in the flat southern reaches of the Lycarea plain. This land has been good horse country since even before the Empire came, furnishing the steeds of the Lycarean riders who routed several Calradian armies before their final defeat and absorption into the imperial cavalry.">
 		<Components>
 			<Village id="village_comp_ES3_1" village_type="VillageType.europe_horse_ranch" hearth="202" bound="Settlement.town_ES3" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1234,7 +1234,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES3_2" name="{=Settlements.Settlement.name.village_ES3_2}Tevea" posX="953.473" posY="707.271" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES3_2}Tevea sits where the plains of Lycarea slowly ascend to meet the base of the Ornian Rock, named for the vultures who perch on its crags to keep watch on the hazy plains below. Depressions lying in the shadow of the rock remain wet for most of the year, making for good land in which to grow flax.">
+	<Settlement id="village_ES3_2" name="{=Settlements.Settlement.name.village_ES3_2}Tevea" posX="953.473" posY="707.271" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES3_2}Tevea sits where the plains of Lycarea slowly ascend to meet the base of the Ornian Rock, named for the vultures who perch on its crags to keep watch on the hazy plains below. Depressions lying in the shadow of the rock remain wet for most of the year, making for good land in which to grow flax.">
 		<Components>
 			<Village id="village_comp_ES3_2" village_type="VillageType.flax_plant" hearth="440" gate_rotation="0.258" bound="Settlement.town_ES3" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1247,7 +1247,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="town_ES4" name="{=Settlements.Settlement.name.town_ES4}Lycaron" owner="Faction.clan_empire_south_1" posX="1059.955" posY="700.289" culture="Culture.empire" gate_posX="1060.832" gate_posY="702.6086" text="{=WGtzBswe}The natural fortress of Lycaron sits on a spur jutting out of the great Ornian rock. In the final years of the imperial conquest, the Palaic tribe here negotiated a peaceful federation with the empire, only to see their home seized by the rebel leader Gethuz. The ensuing siege was only the first of many that Lycaron would undergo in the ensuing centuries, as its nearby silver mines made it a prize for every imperial pretender who ever tried to seize power in a civil war. It is said that the colony of vultures who inhabit the upper reaches of the Rock have dined on the flesh of every people of Calradia.">
+	<Settlement id="town_ES4" name="{=Settlements.Settlement.name.town_ES4}Lycaron" owner="Faction.clan_empire_south_1" posX="1059.955" posY="700.289" culture="Culture.mordor" gate_posX="1060.832" gate_posY="702.6086" text="{=WGtzBswe}The natural fortress of Lycaron sits on a spur jutting out of the great Ornian rock. In the final years of the imperial conquest, the Palaic tribe here negotiated a peaceful federation with the empire, only to see their home seized by the rebel leader Gethuz. The ensuing siege was only the first of many that Lycaron would undergo in the ensuing centuries, as its nearby silver mines made it a prize for every imperial pretender who ever tried to seize power in a civil war. It is said that the colony of vultures who inhabit the upper reaches of the Rock have dined on the flesh of every people of Calradia.">
 		<Components>
 			<Town id="town_comp_ES4" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_5" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="3800">
 				<Buildings>
@@ -1283,7 +1283,7 @@
 			<Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES4_1" name="{=Settlements.Settlement.name.village_ES4_1}Sagora" posX="1111.852" posY="725.662" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES4_1}Sagora sits on a low ridge in the middle of the Lycarean plain. This district is one of the rockier and less fertile parts of the plain, but the valley scrub still supports the grazing of sheep.">
+	<Settlement id="village_ES4_1" name="{=Settlements.Settlement.name.village_ES4_1}Sagora" posX="1111.852" posY="725.662" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES4_1}Sagora sits on a low ridge in the middle of the Lycarean plain. This district is one of the rockier and less fertile parts of the plain, but the valley scrub still supports the grazing of sheep.">
 		<Components>
 			<Village id="village_comp_ES4_1" village_type="VillageType.sheep_farm" hearth="500" bound="Settlement.town_ES4" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1296,7 +1296,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES4_2" name="{=Settlements.Settlement.name.village_ES4_2}Village ES4_2" posX="1085.096" posY="712.375" culture="Culture.empire">
+	<Settlement id="village_ES4_2" name="{=Settlements.Settlement.name.village_ES4_2}Village ES4_2" posX="1085.096" posY="712.375" culture="Culture.mordor">
 		<Components>
 			<Village id="village_comp_ES4_2" village_type="VillageType.wheat_farm" hearth="350" bound="Settlement.town_ES4" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1309,7 +1309,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES4_3" name="{=Settlements.Settlement.name.village_ES4_3}Canterion" posX="1113.353" posY="698.477" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES4_3}Canterion lies in the east of the Lycarean plain. The slowly rising land here gets more rain than other parts of the plain, and the rich grasses have made it good horse country since even before the coming of the Empire.">
+	<Settlement id="village_ES4_3" name="{=Settlements.Settlement.name.village_ES4_3}Canterion" posX="1113.353" posY="698.477" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES4_3}Canterion lies in the east of the Lycarean plain. The slowly rising land here gets more rain than other parts of the plain, and the rich grasses have made it good horse country since even before the coming of the Empire.">
 		<Components>
 			<Village id="village_comp_ES4_3" village_type="VillageType.europe_horse_ranch" hearth="169" gate_rotation="0.008" bound="Settlement.town_ES4" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1322,7 +1322,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="town_ES5" name="{=Settlements.Settlement.name.town_ES5}Onira" owner="Faction.clan_empire_south_1" posX="1073.727" posY="603.098" culture="Culture.empire" gate_posX="1073.697" gate_posY="605.9549" text="{=4ENGzVaC}The tale of Sarpea of Onira is one of the epic poems of the eastern frontier. Like many, it seems written to justify the Empire's conquest. Sarpea, a senator's daughter, was seized by a Palaic chieftain and carried to his citadel here. When the imperial armies appeared before its walls years later to rescue her, she begged them to retreat for the sake of her infant son, whom her fearsome husband had threatened to hurl from the walls instead of allowing him to be captured and raised by his mother's people. The legions withdrew, so the story says, but the boy grew into a warrior who joined the Empire and slew his father. It is now the center of a horse-breeding industry on the eastern plains.">
+	<Settlement id="town_ES5" name="{=Settlements.Settlement.name.town_ES5}Onira" owner="Faction.clan_empire_south_1" posX="1073.727" posY="603.098" culture="Culture.mordor" gate_posX="1073.697" gate_posY="605.9549" text="{=4ENGzVaC}The tale of Sarpea of Onira is one of the epic poems of the eastern frontier. Like many, it seems written to justify the Empire's conquest. Sarpea, a senator's daughter, was seized by a Palaic chieftain and carried to his citadel here. When the imperial armies appeared before its walls years later to rescue her, she begged them to retreat for the sake of her infant son, whom her fearsome husband had threatened to hurl from the walls instead of allowing him to be captured and raised by his mother's people. The legions withdrew, so the story says, but the boy grew into a warrior who joined the Empire and slew his father. It is now the center of a horse-breeding industry on the eastern plains.">
 		<Components>
 			<Town id="town_comp_ES5" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="3400">
 				<Buildings>
@@ -1358,7 +1358,7 @@
 			<Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES5_1" name="{=Settlements.Settlement.name.village_ES5_1}Lanthas" posX="1067.506" posY="636.789" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES5_1}Lanthas lies in the broad plains south of Lake Tanaesis. This is good sheep country, but in a land scoured by imperial fugitives, wild Eleftheroi riders and steppe nomads, the villagers here have learned to watch their flocks closely.">
+	<Settlement id="village_ES5_1" name="{=Settlements.Settlement.name.village_ES5_1}Lanthas" posX="1067.506" posY="636.789" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES5_1}Lanthas lies in the broad plains south of Lake Tanaesis. This is good sheep country, but in a land scoured by imperial fugitives, wild Eleftheroi riders and steppe nomads, the villagers here have learned to watch their flocks closely.">
 		<Components>
 			<Village id="village_comp_ES5_1" village_type="VillageType.sheep_farm" hearth="402" bound="Settlement.town_ES5" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1371,7 +1371,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES5_2" name="{=Settlements.Settlement.name.village_ES5_2}Lartusys" posX="1101.687" posY="636.657" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES5_2}Lartusys lies near the southern end of Lake Tanaesis. The village sits near a deposit of salt, and salt springs occasionally bubble to the surface, feeding the legend that this was once a gateway to a haunted underground sea.">
+	<Settlement id="village_ES5_2" name="{=Settlements.Settlement.name.village_ES5_2}Lartusys" posX="1101.687" posY="636.657" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES5_2}Lartusys lies near the southern end of Lake Tanaesis. The village sits near a deposit of salt, and salt springs occasionally bubble to the surface, feeding the legend that this was once a gateway to a haunted underground sea.">
 		<Components>
 			<Village id="village_comp_ES5_2" village_type="VillageType.salt_mine" hearth="288" bound="Settlement.town_ES5" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1384,7 +1384,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES5_3" name="{=Settlements.Settlement.name.village_ES5_3}Parasemnos" posX="1056.441" posY="616.106" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES5_3}Parasemnos sits in a low pass linking the Tanaeitic plain with the valley of the Calsa river. The villagers mine salt from deposits beneath the ridges on the Calsean side of the pass.">
+	<Settlement id="village_ES5_3" name="{=Settlements.Settlement.name.village_ES5_3}Parasemnos" posX="1056.441" posY="616.106" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES5_3}Parasemnos sits in a low pass linking the Tanaeitic plain with the valley of the Calsa river. The villagers mine salt from deposits beneath the ridges on the Calsean side of the pass.">
 		<Components>
 			<Village id="village_comp_ES5_3" village_type="VillageType.salt_mine" hearth="282" bound="Settlement.town_ES5" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1397,7 +1397,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="town_ES6" name="{=Settlements.Settlement.name.town_ES6}Phycaon" owner="Faction.clan_empire_south_6" posX="1155.063" posY="683.124" culture="Culture.empire" gate_posX="1153.811" gate_posY="680.9351" text="{=RL2vacqv}Phycaon sits at the head of the Sethys valley, one of the main grain-producing regions of the central Empire. Once the largest of the Palaic cities, its leaders led a league of the tribes against imperial encroachment into the region. But when the empire's victory looked inevitable, they made their peace. The population, now thoroughly Calradicized, have a reputation for being serious, respectable and trade-minded, dependable if a bit humorless.">
+	<Settlement id="town_ES6" name="{=Settlements.Settlement.name.town_ES6}Phycaon" owner="Faction.clan_empire_south_6" posX="1155.063" posY="683.124" culture="Culture.mordor" gate_posX="1153.811" gate_posY="680.9351" text="{=RL2vacqv}Phycaon sits at the head of the Sethys valley, one of the main grain-producing regions of the central Empire. Once the largest of the Palaic cities, its leaders led a league of the tribes against imperial encroachment into the region. But when the empire's victory looked inevitable, they made their peace. The population, now thoroughly Calradicized, have a reputation for being serious, respectable and trade-minded, dependable if a bit humorless.">
 		<Components>
 			<Town id="town_comp_ES6" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_2" wait_mesh="wait_empire_town" gate_rotation="0.508" prosperity="2600">
 				<Buildings>
@@ -1433,7 +1433,7 @@
 			<Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES6_1" name="{=Settlements.Settlement.name.village_ES6_1}Saldannis" posX="1161.366" posY="648.043" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES6_1}Saldannis lies beneath gypsum bluffs overlooking the River Sethys. The fine soil of the hills makes for a sticky clay when it washes down to the river, much prized by the potters of the imperial south.">
+	<Settlement id="village_ES6_1" name="{=Settlements.Settlement.name.village_ES6_1}Saldannis" posX="1161.366" posY="648.043" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES6_1}Saldannis lies beneath gypsum bluffs overlooking the River Sethys. The fine soil of the hills makes for a sticky clay when it washes down to the river, much prized by the potters of the imperial south.">
 		<Components>
 			<Village id="village_comp_ES6_1" village_type="VillageType.clay_mine" hearth="248" gate_rotation="0.258" bound="Settlement.town_ES6" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1446,7 +1446,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES6_2" name="{=Settlements.Settlement.name.village_ES6_2}Spotia" posX="1218.582" posY="677.488" culture="Culture.empire" text="{=Settlements.Settlement.text.village_ES6_2}Spotia lies alongside the gently flowing Sethys river. The low rolling hills of this district comprise one of the breadbaskets of the Empire.">
+	<Settlement id="village_ES6_2" name="{=Settlements.Settlement.name.village_ES6_2}Spotia" posX="1218.582" posY="677.488" culture="Culture.mordor" text="{=Settlements.Settlement.text.village_ES6_2}Spotia lies alongside the gently flowing Sethys river. The low rolling hills of this district comprise one of the breadbaskets of the Empire.">
 		<Components>
 			<Village id="village_comp_ES6_2" village_type="VillageType.wheat_farm" hearth="163" gate_rotation="0.108" bound="Settlement.town_ES6" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1459,7 +1459,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES6_3" name="{=Settlements.Settlement.name.village_ES6_3}Village ES6_3" posX="1226.812" posY="649.911" culture="Culture.empire">
+	<Settlement id="village_ES6_3" name="{=Settlements.Settlement.name.village_ES6_3}Village ES6_3" posX="1226.812" posY="649.911" culture="Culture.mordor">
 		<Components>
 			<Village id="village_comp_ES6_3" village_type="VillageType.cattle_farm" hearth="350" bound="Settlement.town_ES6" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1472,7 +1472,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="village_ES6_4" name="{=Settlements.Settlement.name.village_ES6_4}Village ES6_4" posX="1193.814" posY="648.035" culture="Culture.empire">
+	<Settlement id="village_ES6_4" name="{=Settlements.Settlement.name.village_ES6_4}Village ES6_4" posX="1193.814" posY="648.035" culture="Culture.mordor">
 		<Components>
 			<Village id="village_comp_ES6_4" village_type="VillageType.iron_mine" hearth="350" bound="Settlement.town_ES6" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
 		</Components>
@@ -1488,7 +1488,7 @@
 	<!-- ============================================== -->
 	<!-- GONDOR -->
 	<!-- ============================================== -->
-	<Settlement id="castle_EW1" name="{=Settlements.Settlement.name.castle_EW1}Harlond" owner="Faction.clan_empire_west_2" posX="895.679" posY="622.655" culture="Culture.empire" gate_posX="893.7903" gate_posY="620.8859">
+	<Settlement id="castle_EW1" name="{=Settlements.Settlement.name.castle_EW1}Harlond" owner="Faction.clan_empire_west_2" posX="895.679" posY="622.655" culture="Culture.gondor" gate_posX="893.7903" gate_posY="620.8859">
 		<Components>
 			<Town id="castle_comp_EW1" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="880">
 				<Buildings>
@@ -1901,7 +1901,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_EW2" name="{=Settlements.Settlement.name.castle_EW2}Ethring" owner="Faction.clan_empire_west_4" posX="691.514" posY="677.292" culture="Culture.empire" gate_posX="688.9213" gate_posY="677.1854">
+	<Settlement id="castle_EW2" name="{=Settlements.Settlement.name.castle_EW2}Ethring" owner="Faction.clan_empire_west_4" posX="691.514" posY="677.292" culture="Culture.gondor" gate_posX="688.9213" gate_posY="677.1854">
 		<Components>
 			<Town id="castle_comp_EW2" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="760">
 				<Buildings>
@@ -2051,7 +2051,7 @@
 			<Area type="Bog" name="{=iXA5SttU}Bog" />
 		</CommonAreas>
 	</Settlement>
-	<Settlement id="castle_EW5" name="{=Settlements.Settlement.name.castle_EW5}Min-Rimmon" owner="Faction.clan_empire_west_7" posX="821.016" posY="717.509" culture="Culture.empire" gate_posX="821.7594" gate_posY="720.0016">
+	<Settlement id="castle_EW5" name="{=Settlements.Settlement.name.castle_EW5}Min-Rimmon" owner="Faction.clan_empire_west_7" posX="821.016" posY="717.509" culture="Culture.gondor" gate_posX="821.7594" gate_posY="720.0016">
 		<Components>
 			<Town id="castle_comp_EW5" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="610">
 				<Buildings>

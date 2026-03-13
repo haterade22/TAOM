@@ -74,6 +74,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Core | `Main/Core/` |
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
+| Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | CI/CD | `.github/workflows/build.yml` |
 | Shared build props | `Directory.Build.props` |
@@ -134,3 +135,13 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 - Target: Bannerlord v1.3.12
 - Migration from v1.2 requires API changes - see `docs/migration/`
 - No git actions unless explicitly asked
+
+## Rebalancing Tools
+
+| Tool | Purpose | CLI |
+|------|---------|-----|
+| `tools/complete_lords_xslt.py` | Make all vanilla lord attributes explicit in XSLT | `--dry-run`, `--apply`, `--export-csv` |
+| `tools/rebalance_lords.py` | Balance lord skills (XSLT + XML) via baseline + cultural mod + age | `--dry-run`, `--apply`, `--export-csv` |
+| `tools/rebalance_troops.py` | Balance troop skills | `--dry-run`, `--apply` |
+| `tools/rebalance_armor.py` | Balance armor stats | `--dry-run`, `--apply` |
+| `tools/rebalance_weapons.py` | Balance weapon stats | `--dry-run`, `--apply` |
