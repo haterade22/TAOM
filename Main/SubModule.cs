@@ -9,8 +9,10 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
+using TAOM.Features.InitialChildGeneration;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace TAOM;
 
@@ -25,8 +27,8 @@ public class SubModule : MBSubModuleBase
         IoC.Configure();
 
         _harmony = new Harmony("com.taom.mod");
-        // Battle scenes patch must run before Campaign.InitializeScenes (which fires before OnGameStart)
-        _harmony.PatchCategory("Patch0_BattleScenes");
+        // Battle scenes disabled — custom map not yet ready, will re-enable when TAOM_Map is integrated
+        // _harmony.PatchCategory("Patch0_BattleScenes");
         // Remaining patches applied in OnGameInitializationFinished — View assembly must be initialized first
 
         var pathService = IoC.Resolve<IPathService>();
@@ -51,6 +53,10 @@ public class SubModule : MBSubModuleBase
             var ccContentService = IoC.Resolve<ICharacterCreationContentService>();
             var ccLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new CharacterCreationRegistrationBehavior(ccContentService, ccLogger));
+
+            campaignStarter.RemoveBehaviors<InitialChildGenerationCampaignBehavior>();
+            var childGenService = IoC.Resolve<IInitialChildGenerationService>();
+            campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
 
             var costService = IoC.Resolve<ITroopCostService>();
             var volunteerService = IoC.Resolve<IVolunteerTierService>();

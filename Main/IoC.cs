@@ -8,6 +8,7 @@ using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
+using TAOM.Features.InitialChildGeneration;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM;
@@ -30,6 +31,7 @@ public static class IoC
         TroopProgressionIoC.RegisterTroopProgressionFeature(container);
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
+        InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
 
         _container = container;
     }

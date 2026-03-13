@@ -1,0 +1,17 @@
+{
+  "defaults": {
+    "min_age": 2,
+    "max_age": 17,
+    "female_ratio": 0.49,
+    "child_count_multiplier": 1.0
+  },
+  "excluded_cultures": [
+    "mordor",
+    "isengard",
+    "gundabad",
+    "dolguldur"
+  ],
+  "excluded_clans": [],
+  "culture_overrides": [],
+  "clan_overrides": []
+}
