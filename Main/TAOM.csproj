@@ -69,6 +69,10 @@
 			<_Parameter1>TAOM.Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="_Module\GUI\.vs\GUI\v17\DocumentLayout.json" />
+	  <Content Include="_Module\GUI\.vs\VSWorkspaceState.json" />
+	</ItemGroup>
 
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
 		<!-- Create directories if they don't exist -->
