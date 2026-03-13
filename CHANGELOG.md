@@ -2,6 +2,18 @@
 
 ## 2026-03-12
 
+### Feature — Character Creation Equipment Rosters (Phase 5)
+
+Created culture-specific equipment rosters for all 10 custom cultures, replacing the temporary `EquipmentCultureRemap_Patch` Harmony workaround.
+
+- `tools/generate_char_creation_equipment.py` — Python generator producing 550 equipment rosters from per-culture item mappings
+- `ModuleData/taom_char_creation_equipment.xml` — 550 rosters (55 per culture × 10 cultures)
+  - 2 parent fallback (`none`), 12 parent occupation, 24 childhood/education age, 16 adult career, 1 show per culture
+- Items sourced from LOTRLOME_Armory module with culture-appropriate low-tier gear
+- Lothlorien uses Rivendell items; Umbar uses Rhun/Easterling items
+- Registered in `SubModule.xml` as `EquipmentRosters` node
+- Removed `EquipmentCultureRemap_Patch.cs` and `Patch8_CharacterCreation` from `SubModule.cs`
+
 ### Feature — Character Creation Narrative System (Phases 1-3)
 
 Ported LOTRAOM character creation system to TAOM's Bannerlord 1.3.x handler-based API (`ICharacterCreationContentHandler`). Replaces vanilla Calradia narrative text with LOTR-themed lore for all 16 cultures.

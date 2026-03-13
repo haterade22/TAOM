@@ -576,6 +576,14 @@
 				<GameType value = "EditorGame"/>
 			</IncludedGameTypes>
 		</XmlNode>
+		<!-- Character creation equipment rosters for 10 custom cultures -->
+		<XmlNode>
+			<XmlName id="EquipmentRosters" path="taom_char_creation_equipment"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
 		<!-- XSLT to remove vanilla faction strings and replace with LOTR-themed -->
 		<XmlNode>
 			<XmlName id="GameText" path="module_strings"/>
