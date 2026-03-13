@@ -124,7 +124,7 @@ CULTURES = {
     "isengard": {
         "body_civilian": "sk_uruk_hai_tunic_a1",
         "body_alt": "sk_uruk_hai_tunic_a2",
-        "body_military": "sk_uruk_hai_tunic_a3",
+        "body_military": "sk_uruk_hai_tunic_a2",
         "leg": "sk_uruk_hai_shoes_a1",
         "leg_alt": "sk_uruk_hai_shoes_a1",
         "head_light": "sk_uruk_hai_helmet_sword_light_a1",

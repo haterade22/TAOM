@@ -5919,7 +5919,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6028,7 +6028,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6370,7 +6370,7 @@
 				id="Item.isengard_spear_a" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6412,7 +6412,7 @@
 				id="Item.isengard_spear_a" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6454,7 +6454,7 @@
 				id="Item.isengard_spear_a" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6496,7 +6496,7 @@
 				id="Item.isengard_spear_a" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6541,7 +6541,7 @@
 				id="Item.wm_isengard_arrow_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6586,7 +6586,7 @@
 				id="Item.wm_isengard_arrow_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6628,7 +6628,7 @@
 				id="Item.wm_isengard_arrow_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6670,7 +6670,7 @@
 				id="Item.wm_isengard_arrow_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6709,7 +6709,7 @@
 				id="Item.isengard_spear_a" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6748,7 +6748,7 @@
 				id="Item.isengard_spear_a" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6790,7 +6790,7 @@
 				id="Item.wm_isengard_arrow_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6832,7 +6832,7 @@
 				id="Item.wm_isengard_arrow_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6955,7 +6955,7 @@
 				id="Item.wm_isengard_shield_a03" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -6994,7 +6994,7 @@
 				id="Item.wm_isengard_shield_a03" />
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_uruk_hai_shoes_a1" />
@@ -7028,7 +7028,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_uruk_hai_tunic_a3" />
+				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
 				slot="Gloves"
 				id="Item.sk_uruk_hai_gloves_a1" />
