@@ -2,6 +2,53 @@
 
 ## 2026-03-12
 
+### Feature — Character Creation Narrative System (Phases 1-3)
+
+Ported LOTRAOM character creation system to TAOM's Bannerlord 1.3.x handler-based API (`ICharacterCreationContentHandler`). Replaces vanilla Calradia narrative text with LOTR-themed lore for all 16 cultures.
+
+**Phase 1 — Feature Scaffold + Culture Registration (8 new C# files):**
+- `CharacterCreationIoC.cs` — DI registrations for feature services
+- `CharacterCreationRegistrationBehavior.cs` — CampaignBehavior listening for `OnCharacterCreationInitializedEvent`
+- `TaomCharacterCreationContentHandler.cs` — `ICharacterCreationContentHandler` at priority 1050 (after SandBox 800)
+- `ICharacterCreationContentService.cs` / `CharacterCreationContentService.cs` — Core logic: culture registration, menu management, finalization
+- `ICultureCreationDataProvider.cs` / `CultureCreationDataProvider.cs` — Loads `cultures.json` with caching
+- `Models/CultureCreationData.cs` — POCO for per-culture race, settlement, body property data
+- Registers 10 custom cultures via `AddCharacterCreationCulture()` (6 vanilla already registered by SandBox)
+- Integration: `IoC.cs` + `SubModule.cs` updated
+
+**Phase 2 — Parents Stage (4 new files):**
+- `INarrativeDataProvider.cs` / `NarrativeDataProvider.cs` — Generic JSON loader with `ConcurrentDictionary` cache
+- `NarrativeMenuBuilder.cs` — Maps JSON definitions to v1.3 `NarrativeMenuOption` objects with skill/attribute resolution
+- `Models/NarrativeOptionDefinition.cs` — POCO for narrative option data
+- `parents_menu.json` — 96 options (6 per culture x 16 cultures) with LOTR lore text
+- Removes vanilla parent options, adds TAOM options with culture-filtered `OnCondition` delegates
+
+**Phase 3 — Childhood + Youth Stages (2 new data files):**
+- `childhood_menu.json` — 6 universal LOTR-themed options (no culture filter)
+- `youth_menu.json` — 91 culture-specific options (5-6 per culture x 16 cultures)
+- Refactored `NarrativeDataProvider` to support generic `LoadMenuOptions(menuName)` pattern
+- `NarrativeMenuBuilder` handles universal options (empty `culture_id` = null condition = always visible)
+- Education, Adulthood, Age stages keep vanilla SandBox content (non-culture-specific)
+
+**Data files (4 JSON):**
+- `ModuleData/charactercreation/cultures.json` — 10 custom culture definitions
+- `ModuleData/charactercreation/parents_menu.json` — 96 parent narrative options
+- `ModuleData/charactercreation/childhood_menu.json` — 6 childhood narrative options
+- `ModuleData/charactercreation/youth_menu.json` — 91 youth narrative options
+
+**Phase 4 — Finalization: Player Race Setting (1 new test file):**
+- Added `IRaceManager` + `IHeroRosterAdapter` dependencies to `CharacterCreationContentService`
+- `SetPlayerRace()` uses first race from `CultureCreationData.Races[]` (defaults to "human" if empty/null)
+- Called from `OnCharacterCreationFinalize()` after teleport to starting settlement
+- `CharacterCreationContentServiceTests.cs` — 5 tests (first race, single race, empty/null races, logging)
+
+**Tests (25 new):**
+- `CultureCreationDataProviderTests.cs` — 9 tests (JSON parsing, caching, lookup)
+- `NarrativeDataProviderTests.cs` — 11 tests (multi-menu loading, caching, culture filtering)
+- `CharacterCreationContentServiceTests.cs` — 5 tests (race setting logic)
+
+**Total:** 193 narrative options across 3 stages, 213 tests passing
+
 ### Lords Skill Rebalancing (Phase 2)
 
 - Created `tools/rebalance_lords.py` — baseline + cultural modifier balancing for all 914 lords

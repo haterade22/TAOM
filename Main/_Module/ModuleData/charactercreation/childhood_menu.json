@@ -1,0 +1,62 @@
+[
+    {
+        "string_id": "taom_childhood_leadership",
+        "text": "your leadership skills.",
+        "description": "In the shadow of ancient ruins, your youthful band of companions looked to you for guidance. Whether charting a safe path through the woods or rallying courage against imagined foes, your natural leadership shone like the banners of the kings of old.",
+        "skills": ["Leadership", "Steward"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_childhood_fighting",
+        "text": "your fighting skills.",
+        "description": "Your strength was the stuff of stories among the village children. They marveled at your ability to carry burdens like a seasoned warrior and hurl stones with the force of a trebuchet. Even then, you were compared to the heroes of legend.",
+        "skills": ["TwoHanded", "OneHanded"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_childhood_history",
+        "text": "your history skills.",
+        "description": "With keen eyes that missed no movement and quick feet that outran most, you were often the first to spot a deer trail or the glint of a hidden trinket. Your friends likened you to the rangers of the north, silent and observant.",
+        "skills": ["Scouting", "Tactics"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_childhood_convince",
+        "text": "your ability to convince others.",
+        "description": "While others played, you lingered in the market, watching merchants haggle over prices and tally profits. You were fascinated by the craft of trade, often imagining yourself as a steward of Gondor or a dwarven craftsman counting gems.",
+        "skills": ["Engineering", "Trade"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_childhood_charge",
+        "text": "your ability to take charge of the situation.",
+        "description": "You had a natural gift for understanding others, often diffusing arguments and winning friends with ease. Your elders said you had the charisma of an elven lord, while your peers followed you with unwavering loyalty.",
+        "skills": ["Charm", "Leadership"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_childhood_horses",
+        "text": "your skill with horses.",
+        "description": "You felt a deep bond with animals, particularly horses. The stable hands marveled at how you could calm even the most spirited steed, and your skill in caring for wounds brought whispers that you might rival the horsemasters of Rohan one day.",
+        "skills": ["Riding", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    }
+]

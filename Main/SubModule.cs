@@ -7,6 +7,7 @@ using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
@@ -46,6 +47,10 @@ public class SubModule : MBSubModuleBase
 
             var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
             campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService));
+
+            var ccContentService = IoC.Resolve<ICharacterCreationContentService>();
+            var ccLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new CharacterCreationRegistrationBehavior(ccContentService, ccLogger));
 
             var costService = IoC.Resolve<ITroopCostService>();
             var volunteerService = IoC.Resolve<IVolunteerTierService>();

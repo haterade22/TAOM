@@ -72,6 +72,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Features | `Main/Features/` |
 | Adapters | `Main/Adapters/` |
 | Core | `Main/Core/` |
+| CharacterCreation | `Main/Features/CharacterCreation/` |
+| CC narrative data | `Main/_Module/ModuleData/charactercreation/` (JSON) |
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
