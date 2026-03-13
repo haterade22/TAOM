@@ -2,6 +2,7 @@
     {
         "string_id": "taom_youth_gondor_1",
         "culture_id": "gondor",
+        "title_type": "retainer",
         "text": "Trained with the Swan Knights.",
         "description": "You joined the ranks of the Swan Knights of Dol Amroth, learning the art of mounted combat and chivalric warfare under the banners of Gondor's finest.",
         "skills": ["Riding", "Polearm"],
@@ -13,6 +14,7 @@
     {
         "string_id": "taom_youth_gondor_2",
         "culture_id": "gondor",
+        "title_type": "guard",
         "text": "Stood guard in Minas Tirith.",
         "description": "You served in the garrison of Minas Tirith, defending the White City's walls and learning the art of siege defense from its veteran commanders.",
         "skills": ["Bow", "Tactics"],
@@ -24,6 +26,7 @@
     {
         "string_id": "taom_youth_gondor_3",
         "culture_id": "gondor",
+        "title_type": "hunter",
         "text": "Rode with the Rangers of Ithilien.",
         "description": "You patrolled the wilds of Ithilien, striking at the enemy from the shadows and honing your skills as a ranger in the tradition of Faramir's company.",
         "skills": ["Riding", "Bow"],
@@ -35,6 +38,7 @@
     {
         "string_id": "taom_youth_gondor_4",
         "culture_id": "gondor",
+        "title_type": "infantry",
         "text": "Trained with the Tower Guard.",
         "description": "You joined the elite Tower Guard of Gondor, training in disciplined infantry warfare to protect the Citadel and the White Tree.",
         "skills": ["Polearm", "OneHanded"],
@@ -46,6 +50,7 @@
     {
         "string_id": "taom_youth_gondor_5",
         "culture_id": "gondor",
+        "title_type": "skirmisher",
         "text": "Marched with the camp followers.",
         "description": "You traveled with Gondor's armies as part of the camp followers, learning the arts of supply, survival, and opportunism on the road.",
         "skills": ["Roguery", "Throwing"],
@@ -54,10 +59,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_mordor_1",
         "culture_id": "mordor",
+        "title_type": "retainer",
         "text": "Trained with the Warg Riders.",
         "description": "You were chosen to train with the elite Warg Riders of Mordor, learning to control the fearsome beasts and strike terror into the hearts of the enemy.",
         "skills": ["Riding", "Polearm"],
@@ -69,6 +74,7 @@
     {
         "string_id": "taom_youth_mordor_2",
         "culture_id": "mordor",
+        "title_type": "guard",
         "text": "Patrolled the dark fortresses.",
         "description": "You served as a watchman on the towers and walls of Mordor's fortresses, scanning the horizon for threats and learning the tactics of defense.",
         "skills": ["Bow", "Tactics"],
@@ -80,6 +86,7 @@
     {
         "string_id": "taom_youth_mordor_3",
         "culture_id": "mordor",
+        "title_type": "hunter",
         "text": "Rode with the Black Scouts.",
         "description": "You joined the Black Scouts, riding swiftly through the wastelands to gather intelligence and harry the enemy's flanks.",
         "skills": ["Riding", "Bow"],
@@ -91,6 +98,7 @@
     {
         "string_id": "taom_youth_mordor_4",
         "culture_id": "mordor",
+        "title_type": "infantry",
         "text": "Trained with the Orc Infantry.",
         "description": "You marched among the Orc infantry of Mordor, learning the brutal art of close-quarters combat in Sauron's endless legions.",
         "skills": ["Polearm", "OneHanded"],
@@ -102,6 +110,7 @@
     {
         "string_id": "taom_youth_mordor_5",
         "culture_id": "mordor",
+        "title_type": "skirmisher",
         "text": "Joined the Shadow Skirmishers.",
         "description": "You became a Shadow Skirmisher, harassing the enemy with thrown weapons and quick strikes before melting back into the darkness.",
         "skills": ["Throwing", "OneHanded"],
@@ -113,6 +122,7 @@
     {
         "string_id": "taom_youth_mordor_6",
         "culture_id": "mordor",
+        "title_type": "bard",
         "text": "Marched with the war host.",
         "description": "You avoided the front lines, traveling with the camp followers and supply trains of Mordor's vast war host, surviving by cunning and opportunism.",
         "skills": ["Roguery", "Throwing"],
@@ -121,10 +131,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_erebor_1",
         "culture_id": "erebor",
+        "title_type": "infantry",
         "text": "Served in the Royal Guard of Erebor.",
         "description": "You pledged your loyalty to the King Under the Mountain, serving in the elite Royal Guard and learning to wield axe and hammer in defense of the realm.",
         "skills": ["TwoHanded", "Polearm"],
@@ -136,6 +146,7 @@
     {
         "string_id": "taom_youth_erebor_2",
         "culture_id": "erebor",
+        "title_type": "guard",
         "text": "Defended the gates of Erebor.",
         "description": "As part of Erebor's garrison, you manned the crossbows and held the gates against all comers, learning the art of dwarven siege defense.",
         "skills": ["Crossbow", "Polearm"],
@@ -147,6 +158,7 @@
     {
         "string_id": "taom_youth_erebor_3",
         "culture_id": "erebor",
+        "title_type": "skirmisher",
         "text": "Trained with the Iron Guard.",
         "description": "You joined the Iron Guard, Erebor's shock troops, learning to hurl throwing axes and fight in the tight corridors of the mountain halls.",
         "skills": ["Throwing", "OneHanded"],
@@ -158,6 +170,7 @@
     {
         "string_id": "taom_youth_erebor_4",
         "culture_id": "erebor",
+        "title_type": "hunter",
         "text": "Scouted the foothills of the Lonely Mountain.",
         "description": "You ventured into the wild lands around Erebor, tracking Orcs and wolves and safeguarding the mountain's approaches.",
         "skills": ["Scouting", "Bow"],
@@ -169,6 +182,7 @@
     {
         "string_id": "taom_youth_erebor_5",
         "culture_id": "erebor",
+        "title_type": "infantry",
         "text": "Stood in the vanguard.",
         "description": "You trained as part of Erebor's vanguard, mastering the two-handed axe and polearm in the disciplined dwarven battle formations.",
         "skills": ["Polearm", "TwoHanded"],
@@ -180,6 +194,7 @@
     {
         "string_id": "taom_youth_erebor_6",
         "culture_id": "erebor",
+        "title_type": "bard",
         "text": "Worked with the caravan guards.",
         "description": "You accompanied trading caravans between Erebor and Dale, learning the ways of commerce and the art of defending valuable cargo.",
         "skills": ["OneHanded", "Trade"],
@@ -188,10 +203,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_rivendell_1",
         "culture_id": "rivendell",
+        "title_type": "retainer",
         "text": "Trained with the Guard of Imladris.",
         "description": "You served under the banners of Rivendell, training in mounted combat and the graceful Elven martial arts to defend the Last Homely House.",
         "skills": ["Riding", "Polearm"],
@@ -203,6 +218,7 @@
     {
         "string_id": "taom_youth_rivendell_2",
         "culture_id": "rivendell",
+        "title_type": "guard",
         "text": "Stood watch at the halls of Elrond.",
         "description": "You served as a sentry at the halls of Elrond, learning to read the land and anticipate threats before they could reach the hidden valley.",
         "skills": ["Bow", "Tactics"],
@@ -214,6 +230,7 @@
     {
         "string_id": "taom_youth_rivendell_3",
         "culture_id": "rivendell",
+        "title_type": "hunter",
         "text": "Joined the scouting parties.",
         "description": "You became part of the scouting parties that ranged far from Rivendell, gathering intelligence and tracking the movements of the enemy.",
         "skills": ["Scouting", "Bow"],
@@ -225,6 +242,7 @@
     {
         "string_id": "taom_youth_rivendell_4",
         "culture_id": "rivendell",
+        "title_type": "infantry",
         "text": "Trained in the art of Elven infantry.",
         "description": "You stood with the ranks of Rivendell's warriors, mastering the spear and sword in the precise, deadly style of the High Elves.",
         "skills": ["Polearm", "OneHanded"],
@@ -236,6 +254,7 @@
     {
         "string_id": "taom_youth_rivendell_5",
         "culture_id": "rivendell",
+        "title_type": "bard",
         "text": "Journeyed with the loremasters.",
         "description": "You accompanied Rivendell's loremasters on their journeys, learning diplomacy, persuasion, and the art of leadership among the free peoples.",
         "skills": ["Charm", "Leadership"],
@@ -244,10 +263,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_mirkwood_1",
         "culture_id": "mirkwood",
+        "title_type": "hunter",
         "text": "Trained with the Woodland Riders.",
         "description": "You rode through the dark woods on swift Elven steeds, learning to fight from horseback among the ancient trees of Thranduil's realm.",
         "skills": ["Riding", "Bow"],
@@ -259,6 +278,7 @@
     {
         "string_id": "taom_youth_mirkwood_2",
         "culture_id": "mirkwood",
+        "title_type": "guard",
         "text": "Patrolled the darkened glades.",
         "description": "You joined the wardens who patrolled the glades of Mirkwood, keeping watch against spiders, Orcs, and the creeping shadow of Dol Guldur.",
         "skills": ["Scouting", "OneHanded"],
@@ -270,6 +290,7 @@
     {
         "string_id": "taom_youth_mirkwood_3",
         "culture_id": "mirkwood",
+        "title_type": "infantry",
         "text": "Stood with the Elven Spear Guard.",
         "description": "You took your place among the Spear Guard of the Woodland Realm, learning to fight in disciplined formations beneath the forest canopy.",
         "skills": ["Polearm", "Tactics"],
@@ -281,6 +302,7 @@
     {
         "string_id": "taom_youth_mirkwood_4",
         "culture_id": "mirkwood",
+        "title_type": "skirmisher",
         "text": "Joined the shadow trackers.",
         "description": "You were among those tasked with tracking the dark creatures that lurked in Mirkwood's depths, learning stealth and cunning.",
         "skills": ["Roguery", "Throwing"],
@@ -292,6 +314,7 @@
     {
         "string_id": "taom_youth_mirkwood_5",
         "culture_id": "mirkwood",
+        "title_type": "bard",
         "text": "Marched with the royal banners.",
         "description": "You joined the royal court as part of the Woodland King's entourage, learning the arts of diplomacy and leadership.",
         "skills": ["Charm", "Leadership"],
@@ -300,10 +323,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_lothlorien_1",
         "culture_id": "lothlorien",
+        "title_type": "retainer",
         "text": "Trained with the Galadhrim cavalry.",
         "description": "You joined the elite cavalry of Lothlorien, riding swift horses through the Golden Wood and learning to fight with the grace of the Galadhrim.",
         "skills": ["Riding", "Polearm"],
@@ -315,6 +338,7 @@
     {
         "string_id": "taom_youth_lothlorien_2",
         "culture_id": "lothlorien",
+        "title_type": "guard",
         "text": "Guarded the golden borders.",
         "description": "You patrolled the borders of the Golden Wood, keeping watch from the high flets and ensuring no enemy passed unseen into Lothlorien.",
         "skills": ["Bow", "Scouting"],
@@ -326,6 +350,7 @@
     {
         "string_id": "taom_youth_lothlorien_3",
         "culture_id": "lothlorien",
+        "title_type": "hunter",
         "text": "Joined the archers of Caras Galadhon.",
         "description": "You trained with the famed archers of Lothlorien, learning to send arrows with deadly precision from the platforms among the mallorn trees.",
         "skills": ["Bow", "Tactics"],
@@ -337,6 +362,7 @@
     {
         "string_id": "taom_youth_lothlorien_4",
         "culture_id": "lothlorien",
+        "title_type": "infantry",
         "text": "Joined the wardens of the trees.",
         "description": "You became a warden of the trees, defending the heart of Lothlorien with spear and sword in the ancient Elven tradition.",
         "skills": ["Polearm", "OneHanded"],
@@ -348,6 +374,7 @@
     {
         "string_id": "taom_youth_lothlorien_5",
         "culture_id": "lothlorien",
+        "title_type": "bard",
         "text": "Marched with the singers of tales.",
         "description": "You traveled with the singers of tales, learning the ancient songs and the arts of persuasion that kept the spirit of the Galadhrim alive.",
         "skills": ["Charm", "Roguery"],
@@ -356,10 +383,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_isengard_1",
         "culture_id": "isengard",
+        "title_type": "retainer",
         "text": "Joined Saruman's Warg Riders.",
         "description": "You trained as a rider for Saruman's forces, learning to control Wargs and strike with devastating speed across the plains.",
         "skills": ["Riding", "Polearm"],
@@ -371,6 +398,7 @@
     {
         "string_id": "taom_youth_isengard_2",
         "culture_id": "isengard",
+        "title_type": "guard",
         "text": "Guarded the pits of Orthanc.",
         "description": "You were stationed at Orthanc, manning the crossbows and defending the breeding pits from any who would oppose Saruman's will.",
         "skills": ["Crossbow", "Polearm"],
@@ -382,6 +410,7 @@
     {
         "string_id": "taom_youth_isengard_3",
         "culture_id": "isengard",
+        "title_type": "infantry",
         "text": "Fought among the Uruk-hai infantry.",
         "description": "You trained with the ferocious Uruk-hai, learning their brutal close-quarters fighting style and building endurance through grueling drills.",
         "skills": ["OneHanded", "Athletics"],
@@ -393,6 +422,7 @@
     {
         "string_id": "taom_youth_isengard_4",
         "culture_id": "isengard",
+        "title_type": "hunter",
         "text": "Scouted for Saruman's spies.",
         "description": "You were sent as a scout and spy, ranging across the lands to gather intelligence for Saruman's war machine.",
         "skills": ["Athletics", "Scouting"],
@@ -404,6 +434,7 @@
     {
         "string_id": "taom_youth_isengard_5",
         "culture_id": "isengard",
+        "title_type": "infantry",
         "text": "Joined the ranks of Isengard's pikes.",
         "description": "You became a member of Isengard's formidable pikemen, learning to fight in tight formations that could break any cavalry charge.",
         "skills": ["Polearm", "Athletics"],
@@ -415,6 +446,7 @@
     {
         "string_id": "taom_youth_isengard_6",
         "culture_id": "isengard",
+        "title_type": "mercenary",
         "text": "Marched with Saruman's warbands.",
         "description": "You traveled with Isengard's warbands, learning to survive on the march and fight with whatever weapons came to hand.",
         "skills": ["OneHanded", "TwoHanded"],
@@ -423,10 +455,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_gundabad_1",
         "culture_id": "gundabad",
+        "title_type": "retainer",
         "text": "Joined the Warg riders.",
         "description": "You rode with the Warg riders of Gundabad, learning to control the savage beasts and strike swiftly through the mountain passes.",
         "skills": ["Riding", "Polearm"],
@@ -438,6 +470,7 @@
     {
         "string_id": "taom_youth_gundabad_2",
         "culture_id": "gundabad",
+        "title_type": "guard",
         "text": "Guarded the forges of Gundabad.",
         "description": "You served in the garrison of Gundabad, defending the forges and tunnels from intruders with bow and spear.",
         "skills": ["Bow", "Tactics"],
@@ -449,6 +482,7 @@
     {
         "string_id": "taom_youth_gundabad_3",
         "culture_id": "gundabad",
+        "title_type": "mercenary",
         "text": "Trained with the berserkers.",
         "description": "You were among the berserkers of Gundabad, learning to fight with reckless fury and overwhelming force.",
         "skills": ["TwoHanded", "Athletics"],
@@ -460,6 +494,7 @@
     {
         "string_id": "taom_youth_gundabad_4",
         "culture_id": "gundabad",
+        "title_type": "hunter",
         "text": "Scouted the mountain passes.",
         "description": "You roamed the treacherous mountain paths around Gundabad, tracking enemies and ensuring safe passage for your kin.",
         "skills": ["Scouting", "Bow"],
@@ -471,6 +506,7 @@
     {
         "string_id": "taom_youth_gundabad_5",
         "culture_id": "gundabad",
+        "title_type": "infantry",
         "text": "Joined the spear legions.",
         "description": "You marched with the disciplined spear legions of Gundabad, learning to hold the line against overwhelming odds.",
         "skills": ["Polearm", "Tactics"],
@@ -482,6 +518,7 @@
     {
         "string_id": "taom_youth_gundabad_6",
         "culture_id": "gundabad",
+        "title_type": "bard",
         "text": "Marched with the warbands.",
         "description": "You followed the warbands of Gundabad, surviving through cunning and opportunism on the fringes of battle.",
         "skills": ["Roguery", "Throwing"],
@@ -490,10 +527,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_dolguldur_1",
         "culture_id": "dolguldur",
+        "title_type": "retainer",
         "text": "Served the Necromancer's riders.",
         "description": "You rode in the service of Dol Guldur, commanding dark steeds and spreading terror across the southern reaches of Mirkwood.",
         "skills": ["Riding", "Polearm"],
@@ -505,6 +542,7 @@
     {
         "string_id": "taom_youth_dolguldur_2",
         "culture_id": "dolguldur",
+        "title_type": "guard",
         "text": "Guarded the halls of shadow.",
         "description": "You defended the dark halls of Dol Guldur, standing watch over the Necromancer's domain with bow and blade.",
         "skills": ["Bow", "Tactics"],
@@ -516,6 +554,7 @@
     {
         "string_id": "taom_youth_dolguldur_3",
         "culture_id": "dolguldur",
+        "title_type": "mercenary",
         "text": "Trained in the dark arts of war.",
         "description": "You honed your skills in the dark arts of warfare, learning to fight with cunning and deception in the shadowed corridors of Dol Guldur.",
         "skills": ["OneHanded", "Tactics"],
@@ -527,6 +566,7 @@
     {
         "string_id": "taom_youth_dolguldur_4",
         "culture_id": "dolguldur",
+        "title_type": "hunter",
         "text": "Scouted the borders of Mirkwood.",
         "description": "You patrolled the edges of Mirkwood, tracking intruders and ensuring the Necromancer's domain remained hidden from prying eyes.",
         "skills": ["Scouting", "Bow"],
@@ -538,6 +578,7 @@
     {
         "string_id": "taom_youth_dolguldur_5",
         "culture_id": "dolguldur",
+        "title_type": "infantry",
         "text": "Joined the shadow legions.",
         "description": "You marched under the banners of shadow, wielding heavy weapons in the disciplined ranks of Dol Guldur's dark legions.",
         "skills": ["Polearm", "TwoHanded"],
@@ -549,6 +590,7 @@
     {
         "string_id": "taom_youth_dolguldur_6",
         "culture_id": "dolguldur",
+        "title_type": "bard",
         "text": "Lurked in the shadows.",
         "description": "You avoided open combat, lurking in the shadows and striking from concealment with thrown weapons and quick blades.",
         "skills": ["Roguery", "Throwing"],
@@ -557,10 +599,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_umbar_1",
         "culture_id": "umbar",
+        "title_type": "retainer",
         "text": "Served in the Corsair Fleet.",
         "description": "You joined the Corsair Fleet of Umbar, learning to fight aboard ships and lead boarding parties against Gondor's coastal defenses.",
         "skills": ["Riding", "Polearm"],
@@ -572,6 +614,7 @@
     {
         "string_id": "taom_youth_umbar_2",
         "culture_id": "umbar",
+        "title_type": "guard",
         "text": "Guarded the harbors of Umbar.",
         "description": "You served in the harbor garrisons of Umbar, defending the docks and learning the art of coastal defense.",
         "skills": ["Bow", "Tactics"],
@@ -583,6 +626,7 @@
     {
         "string_id": "taom_youth_umbar_3",
         "culture_id": "umbar",
+        "title_type": "skirmisher",
         "text": "Fought alongside the raiders.",
         "description": "You joined the raiders of Umbar, striking at coastal settlements with javelins and swords before retreating to the ships.",
         "skills": ["Throwing", "OneHanded"],
@@ -594,6 +638,7 @@
     {
         "string_id": "taom_youth_umbar_4",
         "culture_id": "umbar",
+        "title_type": "hunter",
         "text": "Scouted the open seas.",
         "description": "You sailed with the Corsairs as a scout, navigating the treacherous waters and spotting prey on the horizon.",
         "skills": ["Riding", "Bow"],
@@ -605,6 +650,7 @@
     {
         "string_id": "taom_youth_umbar_5",
         "culture_id": "umbar",
+        "title_type": "infantry",
         "text": "Joined the spearline.",
         "description": "You took up the spear and shield in Umbar's infantry, learning to fight in the disciplined formations of the Corsair ground forces.",
         "skills": ["Polearm", "OneHanded"],
@@ -616,6 +662,7 @@
     {
         "string_id": "taom_youth_umbar_6",
         "culture_id": "umbar",
+        "title_type": "bard",
         "text": "Sailed with the outlaws.",
         "description": "You chose a life with the outlaws of Umbar, learning to survive by your wits on the lawless fringes of the Corsair world.",
         "skills": ["Roguery", "Throwing"],
@@ -624,10 +671,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_empire_1",
         "culture_id": "empire",
+        "title_type": "retainer",
         "text": "Rode with the Hill Riders.",
         "description": "Mounted on sturdy hill ponies, you rode with the Hill Riders of Dunland, learning to fight across the rough terrain of the highlands.",
         "skills": ["Riding", "Polearm"],
@@ -639,6 +686,7 @@
     {
         "string_id": "taom_youth_empire_2",
         "culture_id": "empire",
+        "title_type": "guard",
         "text": "Served in the Tribal Longhouse.",
         "description": "Within the tribal longhouses of Dunland, you learned tactics and the art of command, planning raids and defenses for your clan.",
         "skills": ["Bow", "Tactics"],
@@ -650,6 +698,7 @@
     {
         "string_id": "taom_youth_empire_3",
         "culture_id": "empire",
+        "title_type": "skirmisher",
         "text": "Stood guard with the Border Watch.",
         "description": "You joined the Border Watch of Dunland, hurling javelins and fighting with sword to defend your clan's territory.",
         "skills": ["Throwing", "OneHanded"],
@@ -661,6 +710,7 @@
     {
         "string_id": "taom_youth_empire_4",
         "culture_id": "empire",
+        "title_type": "hunter",
         "text": "Scouted the highlands.",
         "description": "You roamed the highlands and forests as a scout, learning to read the land and shoot from horseback.",
         "skills": ["Riding", "Bow"],
@@ -672,6 +722,7 @@
     {
         "string_id": "taom_youth_empire_5",
         "culture_id": "empire",
+        "title_type": "infantry",
         "text": "Joined the Spear Brothers.",
         "description": "You became one of the Spear Brothers of Dunland, learning to fight in tight formations with spear and shield.",
         "skills": ["Polearm", "OneHanded"],
@@ -683,6 +734,7 @@
     {
         "string_id": "taom_youth_empire_6",
         "culture_id": "empire",
+        "title_type": "bard",
         "text": "Trained as a Tribal Skirmisher.",
         "description": "As a Tribal Skirmisher of Dunland, you learned to harass the enemy with thrown weapons and disappear into the hills.",
         "skills": ["Roguery", "Throwing"],
@@ -691,10 +743,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_vlandia_1",
         "culture_id": "vlandia",
+        "title_type": "retainer",
         "text": "Trained with the Riders of the Mark.",
         "description": "You proved your skill as a rider among the Rohirrim, learning to charge with lance and fight from horseback in the traditions of Eorl the Young.",
         "skills": ["Riding", "Polearm"],
@@ -706,6 +758,7 @@
     {
         "string_id": "taom_youth_vlandia_2",
         "culture_id": "vlandia",
+        "title_type": "guard",
         "text": "Served in the city watch of Edoras.",
         "description": "You stood guard over the gates and walls of Edoras, learning tactics and discipline in service of the Golden Hall.",
         "skills": ["Bow", "Tactics"],
@@ -717,6 +770,7 @@
     {
         "string_id": "taom_youth_vlandia_3",
         "culture_id": "vlandia",
+        "title_type": "skirmisher",
         "text": "Joined the skirmishers of the Westfold.",
         "description": "You joined the Westfold skirmishers, learning to fight with thrown weapons and sword on the open plains.",
         "skills": ["Throwing", "OneHanded"],
@@ -728,6 +782,7 @@
     {
         "string_id": "taom_youth_vlandia_4",
         "culture_id": "vlandia",
+        "title_type": "hunter",
         "text": "Rode with the scouts of the Wold.",
         "description": "You rode with the scouts of the Wold, ranging far across the plains to watch for threats from the East.",
         "skills": ["Riding", "Bow"],
@@ -739,6 +794,7 @@
     {
         "string_id": "taom_youth_vlandia_5",
         "culture_id": "vlandia",
+        "title_type": "infantry",
         "text": "Stood among the spearmen of the Eastfold.",
         "description": "As a spearman of the Eastfold, you learned to hold the shieldwall against the enemy's charge.",
         "skills": ["Polearm", "OneHanded"],
@@ -750,6 +806,7 @@
     {
         "string_id": "taom_youth_vlandia_6",
         "culture_id": "vlandia",
+        "title_type": "bard",
         "text": "Traveled with the camp followers of Rohan.",
         "description": "Rather than taking up arms directly, you traveled with the camp followers, learning to survive on the march and profit from the chaos of war.",
         "skills": ["Roguery", "Throwing"],
@@ -758,10 +815,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_sturgia_1",
         "culture_id": "sturgia",
+        "title_type": "retainer",
         "text": "Served in the Royal Guard of Dale.",
         "description": "You pledged your loyalty to the King of Dale, serving in the Royal Guard and learning the martial traditions of the Men of the North.",
         "skills": ["Riding", "Polearm"],
@@ -773,6 +830,7 @@
     {
         "string_id": "taom_youth_sturgia_2",
         "culture_id": "sturgia",
+        "title_type": "guard",
         "text": "Defended the gates of Dale.",
         "description": "As a member of the garrison, you defended the rebuilt gates of Dale, learning the art of siege defense.",
         "skills": ["Bow", "Tactics"],
@@ -784,6 +842,7 @@
     {
         "string_id": "taom_youth_sturgia_3",
         "culture_id": "sturgia",
+        "title_type": "skirmisher",
         "text": "Trained with the infantry of Dale.",
         "description": "You joined the ranks of Dale's infantry, learning to fight with thrown weapons and sword in the defense of the city.",
         "skills": ["Throwing", "OneHanded"],
@@ -795,6 +854,7 @@
     {
         "string_id": "taom_youth_sturgia_4",
         "culture_id": "sturgia",
+        "title_type": "hunter",
         "text": "Rode with the trackers.",
         "description": "As part of the trackers, you ranged through the forests around Dale, hunting and scouting for threats.",
         "skills": ["Riding", "Bow"],
@@ -806,6 +866,7 @@
     {
         "string_id": "taom_youth_sturgia_5",
         "culture_id": "sturgia",
+        "title_type": "infantry",
         "text": "Joined the shieldwall.",
         "description": "You took your place in Dale's shieldwall, learning to stand firm with spear and shield against any enemy.",
         "skills": ["Polearm", "OneHanded"],
@@ -817,6 +878,7 @@
     {
         "string_id": "taom_youth_sturgia_6",
         "culture_id": "sturgia",
+        "title_type": "bard",
         "text": "Traveled with the merchant caravans.",
         "description": "You avoided direct military service, traveling with the merchant caravans that plied the trade routes between Dale and the surrounding kingdoms.",
         "skills": ["Roguery", "Throwing"],
@@ -825,10 +887,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_aserai_1",
         "culture_id": "aserai",
+        "title_type": "retainer",
         "text": "Trained with the war elephants.",
         "description": "You trained alongside Harad's mighty war elephants, learning to ride and fight from their towering backs.",
         "skills": ["Riding", "Polearm"],
@@ -840,6 +902,7 @@
     {
         "string_id": "taom_youth_aserai_2",
         "culture_id": "aserai",
+        "title_type": "guard",
         "text": "Guarded the city walls.",
         "description": "You served as a sentinel on the fortified walls of Harad's desert cities, learning the art of archery and siege tactics.",
         "skills": ["Bow", "Tactics"],
@@ -851,6 +914,7 @@
     {
         "string_id": "taom_youth_aserai_3",
         "culture_id": "aserai",
+        "title_type": "hunter",
         "text": "Rode with the desert outriders.",
         "description": "You joined Harad's swift outriders, scouting the vast deserts on horseback and striking at the enemy's flanks.",
         "skills": ["Riding", "Bow"],
@@ -862,6 +926,7 @@
     {
         "string_id": "taom_youth_aserai_4",
         "culture_id": "aserai",
+        "title_type": "infantry",
         "text": "Trained with the spearmen.",
         "description": "You trained as a spearman, one of the steadfast warriors of Harad who formed the backbone of their armies.",
         "skills": ["Polearm", "OneHanded"],
@@ -873,6 +938,7 @@
     {
         "string_id": "taom_youth_aserai_5",
         "culture_id": "aserai",
+        "title_type": "skirmisher",
         "text": "Joined the skirmishers.",
         "description": "You fought as a skirmisher, using javelins to harry the enemy before closing with sword and shield.",
         "skills": ["Throwing", "OneHanded"],
@@ -884,6 +950,7 @@
     {
         "string_id": "taom_youth_aserai_6",
         "culture_id": "aserai",
+        "title_type": "bard",
         "text": "Marched with the nomadic clans.",
         "description": "You traveled with the nomadic clans of Harad, living by your wits and surviving the harsh desert on the fringes of civilization.",
         "skills": ["Roguery", "Throwing"],
@@ -892,10 +959,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_battania_1",
         "culture_id": "battania",
+        "title_type": "retainer",
         "text": "Trained with the Kheshig Guard.",
         "description": "As one of the most promising riders of Khand, you trained with the Kheshig Guard, mastering mounted lance combat.",
         "skills": ["Riding", "Polearm"],
@@ -907,6 +974,7 @@
     {
         "string_id": "taom_youth_battania_2",
         "culture_id": "battania",
+        "title_type": "guard",
         "text": "Joined the Wall-Watchers.",
         "description": "Stationed at the fortified encampments of Khand, you learned archery and tactical defense from the Wall-Watchers.",
         "skills": ["Bow", "Tactics"],
@@ -918,6 +986,7 @@
     {
         "string_id": "taom_youth_battania_3",
         "culture_id": "battania",
+        "title_type": "hunter",
         "text": "Rode with the Nomadic Scouts.",
         "description": "You joined the swift-moving Nomadic Scouts of Khand, learning to ride and shoot across the vast steppes.",
         "skills": ["Riding", "Bow"],
@@ -929,6 +998,7 @@
     {
         "string_id": "taom_youth_battania_4",
         "culture_id": "battania",
+        "title_type": "infantry",
         "text": "Trained with the Ashkat Warriors.",
         "description": "As a recruit of the Ashkat Warriors, you learned the disciplined fighting style of Khand's elite infantry.",
         "skills": ["Polearm", "OneHanded"],
@@ -940,6 +1010,7 @@
     {
         "string_id": "taom_youth_battania_5",
         "culture_id": "battania",
+        "title_type": "bard",
         "text": "Joined the Shadow Riders.",
         "description": "The Shadow Riders are masters of deception and guerrilla warfare. You learned to strike from the shadows and vanish into the steppes.",
         "skills": ["Roguery", "Throwing"],
@@ -948,10 +1019,10 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
     },
-
     {
         "string_id": "taom_youth_khuzait_1",
         "culture_id": "khuzait",
+        "title_type": "retainer",
         "text": "Rode with the Khelek Warriors.",
         "description": "You proved your worth as a rider among the Khelek Warriors, learning mounted combat on the wide steppes of Rhun.",
         "skills": ["Riding", "Polearm"],
@@ -963,6 +1034,7 @@
     {
         "string_id": "taom_youth_khuzait_2",
         "culture_id": "khuzait",
+        "title_type": "guard",
         "text": "Guarded the settlements of Rhun.",
         "description": "You patrolled the walls of Rhun's settlements, learning archery and the art of defense against raiders.",
         "skills": ["Bow", "Tactics"],
@@ -974,6 +1046,7 @@
     {
         "string_id": "taom_youth_khuzait_3",
         "culture_id": "khuzait",
+        "title_type": "skirmisher",
         "text": "Joined the ranks of the Uruk-thar.",
         "description": "As a member of the Uruk-thar, you learned to fight with thrown weapons and sword in the Easterling skirmishing tradition.",
         "skills": ["Throwing", "OneHanded"],
@@ -985,6 +1058,7 @@
     {
         "string_id": "taom_youth_khuzait_4",
         "culture_id": "khuzait",
+        "title_type": "hunter",
         "text": "Scouted the steppes.",
         "description": "You joined the scouts of Rhun, riding swiftly across the steppes to watch for threats and opportunities.",
         "skills": ["Riding", "Bow"],
@@ -996,6 +1070,7 @@
     {
         "string_id": "taom_youth_khuzait_5",
         "culture_id": "khuzait",
+        "title_type": "infantry",
         "text": "Fought with the spear line.",
         "description": "Standing shoulder to shoulder with your kinsmen, you learned the discipline of the Easterling spear line.",
         "skills": ["Polearm", "OneHanded"],
@@ -1007,6 +1082,7 @@
     {
         "string_id": "taom_youth_khuzait_6",
         "culture_id": "khuzait",
+        "title_type": "bard",
         "text": "Traveled with the Karash bands.",
         "description": "You avoided direct service, traveling with the Karash bands on the fringes of Easterling society.",
         "skills": ["Roguery", "Throwing"],

@@ -180,6 +180,36 @@ public class NarrativeDataProviderTests
     }
 
     [TestMethod]
+    public void LoadMenuOptions_ParsesTitleType()
+    {
+        WriteJson("youth", @"[
+            {
+                ""string_id"": ""taom_youth_gondor_1"",
+                ""culture_id"": ""gondor"",
+                ""text"": ""Trained with the Swan Knights."",
+                ""title_type"": ""retainer"",
+                ""skills"": [""Riding"", ""Polearm""],
+                ""attribute"": ""Endurance""
+            }
+        ]");
+
+        var result = _sut.LoadMenuOptions("youth");
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("retainer", result[0].TitleType);
+    }
+
+    [TestMethod]
+    public void LoadMenuOptions_MissingTitleType_DefaultsToEmpty()
+    {
+        WriteJson("parents", @"[{ ""string_id"": ""opt1"", ""culture_id"": ""gondor"" }]");
+
+        var result = _sut.LoadMenuOptions("parents");
+
+        Assert.AreEqual("", result[0].TitleType);
+    }
+
+    [TestMethod]
     public void LoadMenuOptions_UniversalOptions_HaveEmptyCultureId()
     {
         WriteJson("childhood", @"[

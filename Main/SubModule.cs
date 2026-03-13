@@ -73,6 +73,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Late_ActionSetOverride");
         _harmony.PatchCategory("Patch6_BannerEditor");
         _harmony.PatchCategory("Patch7_FactionMap");
+        _harmony.PatchCategory("Patch9_RaceFilter");
     }
 
     protected override void OnSubModuleUnloaded()

@@ -58,6 +58,7 @@ public class NarrativeMenuBuilder
         var attribute = ResolveAttribute(definition.Attribute);
         var cultureId = definition.CultureId;
         var occupationType = definition.OccupationType;
+        var titleType = definition.TitleType;
         var focusToAdd = definition.FocusToAdd;
         var skillLevelToAdd = definition.SkillLevelToAdd;
         var attributeLevelToAdd = definition.AttributeLevelToAdd;
@@ -88,11 +89,14 @@ public class NarrativeMenuBuilder
                     return selectedCulture != null &&
                            string.Equals(selectedCulture.StringId, cultureId, StringComparison.OrdinalIgnoreCase);
                 },
-            onSelect: string.IsNullOrEmpty(occupationType)
+            onSelect: (string.IsNullOrEmpty(occupationType) && string.IsNullOrEmpty(titleType))
                 ? (NarrativeMenuOptionOnSelectDelegate)null
                 : (CharacterCreationManager manager) =>
                 {
-                    manager.CharacterCreationContent.SetParentOccupation(occupationType);
+                    if (!string.IsNullOrEmpty(occupationType))
+                        manager.CharacterCreationContent.SetParentOccupation(occupationType);
+                    if (!string.IsNullOrEmpty(titleType))
+                        manager.CharacterCreationContent.SelectedTitleType = titleType;
                 },
             onConsequence: null
         );
