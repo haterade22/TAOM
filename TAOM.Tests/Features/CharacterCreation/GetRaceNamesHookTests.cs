@@ -130,7 +130,7 @@ public class GetRaceNamesHookTests
     }
 
     [TestMethod]
-    public void FilteredIndex_MappedThroughRaceManager_ReturnsCorrectGlobalId()
+    public void MapFilteredIndexToGlobalId_DwarfAtFilteredIndex0_ReturnsGlobalIndex2()
     {
         _selectedCultureId = "erebor";
         _dataProvider.GetCultureData("erebor").Returns(new CultureCreationData
@@ -139,17 +139,54 @@ public class GetRaceNamesHookTests
             Races = new[] { "dwarf" }
         });
 
-        var filtered = _sut.FilterRaceNames(_allRaces);
-        var selectedFilteredIndex = 0;
-        var selectedRaceName = filtered[selectedFilteredIndex];
+        _sut.FilterRaceNames(_allRaces);
 
-        var faceGenAdapter = Substitute.For<IFaceGenAdapter>();
-        faceGenAdapter.GetRaceNames().Returns(_allRaces);
-        var raceManager = new RaceManager(Substitute.For<IModLogger>(), faceGenAdapter);
+        var globalId = _sut.MapFilteredIndexToGlobalId(0);
 
-        var globalId = raceManager.GetRaceIdFromName(selectedRaceName);
-
-        Assert.AreEqual("dwarf", selectedRaceName);
         Assert.AreEqual(2, globalId, "Filtered index 0 ('dwarf') should map to global race ID 2, not 0 ('human')");
+    }
+
+    [TestMethod]
+    public void MapFilteredIndexToGlobalId_MultiRaceCulture_MapsCorrectly()
+    {
+        _selectedCultureId = "mordor";
+        _dataProvider.GetCultureData("mordor").Returns(new CultureCreationData
+        {
+            CultureId = "mordor",
+            Races = new[] { "uruk", "goblin", "orc", "human" }
+        });
+
+        _sut.FilterRaceNames(_allRaces);
+
+        Assert.AreEqual(0, _sut.MapFilteredIndexToGlobalId(0), "human at filtered[0] should map to global 0");
+        Assert.AreEqual(3, _sut.MapFilteredIndexToGlobalId(1), "uruk at filtered[1] should map to global 3");
+        Assert.AreEqual(4, _sut.MapFilteredIndexToGlobalId(2), "goblin at filtered[2] should map to global 4");
+        Assert.AreEqual(5, _sut.MapFilteredIndexToGlobalId(3), "orc at filtered[3] should map to global 5");
+    }
+
+    [TestMethod]
+    public void MapFilteredIndexToGlobalId_NoFiltering_ReturnsOriginalIndex()
+    {
+        _selectedCultureId = null;
+
+        _sut.FilterRaceNames(_allRaces);
+
+        Assert.AreEqual(0, _sut.MapFilteredIndexToGlobalId(0));
+        Assert.AreEqual(2, _sut.MapFilteredIndexToGlobalId(2));
+    }
+
+    [TestMethod]
+    public void MapFilteredIndexToGlobalId_OutOfBounds_ReturnsOriginalIndex()
+    {
+        _selectedCultureId = "erebor";
+        _dataProvider.GetCultureData("erebor").Returns(new CultureCreationData
+        {
+            CultureId = "erebor",
+            Races = new[] { "dwarf" }
+        });
+
+        _sut.FilterRaceNames(_allRaces);
+
+        Assert.AreEqual(99, _sut.MapFilteredIndexToGlobalId(99));
     }
 }

@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation.Hooks;
+using TAOM.Features.HeroRace.Hooks;
 
 namespace TAOM.Features.CharacterCreation;
 
@@ -30,5 +31,6 @@ public static class CharacterCreationIoC
 
         var raceHook = container.Resolve<IOnGetRaceNames>();
         FaceGen_GetRaceNames_Patch.Initialize(raceHook);
+        CharacterTableau_SetRace_Patch.InitializeRaceMapper(raceHook.MapFilteredIndexToGlobalId);
     }
 }
