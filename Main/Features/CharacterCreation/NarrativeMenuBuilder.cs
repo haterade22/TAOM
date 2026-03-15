@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -12,6 +13,7 @@ namespace TAOM.Features.CharacterCreation;
 public class NarrativeMenuBuilder
 {
     private readonly IModLogger _logger;
+    private readonly IEquipmentRosterProvider _equipmentRosterProvider;
 
     private static readonly Dictionary<string, Func<SkillObject>> SkillMap =
         new Dictionary<string, Func<SkillObject>>(StringComparer.OrdinalIgnoreCase)
@@ -47,9 +49,15 @@ public class NarrativeMenuBuilder
             ["Intelligence"] = () => DefaultCharacterAttributes.Intelligence,
         };
 
-    public NarrativeMenuBuilder(IModLogger logger)
+    public NarrativeMenuBuilder(IModLogger logger, IEquipmentRosterProvider equipmentRosterProvider)
     {
         _logger = logger;
+        _equipmentRosterProvider = equipmentRosterProvider;
+    }
+
+    internal static string BuildEquipmentRosterId(string cultureId, string titleType, bool isFemale)
+    {
+        return $"player_char_creation_{cultureId}_{titleType}_{(isFemale ? "f" : "m")}";
     }
 
     public NarrativeMenuOption BuildOption(NarrativeOptionDefinition definition)
@@ -96,7 +104,10 @@ public class NarrativeMenuBuilder
                     if (!string.IsNullOrEmpty(occupationType))
                         manager.CharacterCreationContent.SetParentOccupation(occupationType);
                     if (!string.IsNullOrEmpty(titleType))
+                    {
                         manager.CharacterCreationContent.SelectedTitleType = titleType;
+                        UpdateYouthEquipment(manager, titleType);
+                    }
                 },
             onConsequence: null
         );
@@ -160,5 +171,30 @@ public class NarrativeMenuBuilder
 
         _logger.LogWarning($"Unknown attribute name: '{attributeName}'");
         return null;
+    }
+
+    private void UpdateYouthEquipment(CharacterCreationManager manager, string titleType)
+    {
+        var cultureId = manager.CharacterCreationContent.SelectedCulture?.StringId;
+        if (string.IsNullOrEmpty(cultureId))
+            return;
+
+        var isFemale = Hero.MainHero?.IsFemale ?? false;
+        var rosterId = BuildEquipmentRosterId(cultureId, titleType, isFemale);
+        var roster = _equipmentRosterProvider.GetRoster(rosterId);
+        if (roster == null)
+        {
+            _logger.LogWarning($"Equipment roster '{rosterId}' not found");
+            return;
+        }
+
+        foreach (var character in manager.CurrentMenu.Characters)
+        {
+            if (character.StringId == "player_youth_character")
+            {
+                character.SetEquipment(roster);
+                break;
+            }
+        }
     }
 }

@@ -23,6 +23,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     private readonly INarrativeDataProvider _narrativeDataProvider;
     private readonly IRaceManager _raceManager;
     private readonly IHeroRosterAdapter _heroRosterAdapter;
+    private readonly IEquipmentRosterProvider _equipmentRosterProvider;
     private readonly IModLogger _logger;
 
     // Vanilla cultures already registered by SandBox handler — skip these
@@ -36,12 +37,14 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         INarrativeDataProvider narrativeDataProvider,
         IRaceManager raceManager,
         IHeroRosterAdapter heroRosterAdapter,
+        IEquipmentRosterProvider equipmentRosterProvider,
         IModLogger logger)
     {
         _dataProvider = dataProvider;
         _narrativeDataProvider = narrativeDataProvider;
         _raceManager = raceManager;
         _heroRosterAdapter = heroRosterAdapter;
+        _equipmentRosterProvider = equipmentRosterProvider;
         _logger = logger;
     }
 
@@ -81,7 +84,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
 
     public void RegisterNarrativeMenus(CharacterCreationManager manager)
     {
-        var builder = new NarrativeMenuBuilder(_logger);
+        var builder = new NarrativeMenuBuilder(_logger, _equipmentRosterProvider);
 
         ReplaceMenuOptions(manager, builder, ParentMenuId, "parents");
         ReplaceMenuOptions(manager, builder, ChildhoodMenuId, "childhood");
