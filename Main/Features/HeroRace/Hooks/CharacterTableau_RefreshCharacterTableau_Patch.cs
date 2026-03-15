@@ -34,13 +34,6 @@ public class CharacterTableau_FirstTimeInit_Patch
 [HarmonyPatchCategory("Patch2_RefreshTableau")]
 public class CharacterTableau_RefreshCharacterTableau_Patch
 {
-    private static MBActionSet GetActionSetTableau(int raceId, bool isFemale)
-    {
-        var monsterName = FaceGen.GetRaceNames()[raceId];
-        string isFemaleText = isFemale ? "_female_" : "";
-        return MBGlobals.GetActionSet($"as_{monsterName}{isFemaleText}_warrior");
-    }
-
     [HarmonyPrefix]
     public static void Prefix(ref AgentVisuals ____oldAgentVisuals, int ____race, bool ____isFemale)
     {
@@ -49,12 +42,18 @@ public class CharacterTableau_RefreshCharacterTableau_Patch
             if (____oldAgentVisuals == null || ____race < 0)
                 return;
 
+            var monster = FaceGen.GetBaseMonsterFromRace(____race);
+            if (monster == null)
+                return;
+
+            string isFemaleText = ____isFemale ? "_female_" : "";
+            var actionSet = MBGlobals.GetActionSet($"as_{monster.StringId}{isFemaleText}_warrior");
+
             var newData = ____oldAgentVisuals.GetCopyAgentVisualsData();
-            var raceName = FaceGen.GetRaceNames()[____race];
             newData
-                .ActionSet(GetActionSetTableau(____race, ____isFemale))
+                .ActionSet(actionSet)
                 .Race(____race)
-                .Monster(FaceGen.GetMonster(raceName));
+                .Monster(monster);
             ____oldAgentVisuals.Refresh(false, newData, false);
         }
         catch (Exception)
