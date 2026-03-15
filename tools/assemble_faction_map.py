@@ -124,24 +124,41 @@ REGION_META = {
 }
 
 
-def find_region_position(full_map_arr, region_arr):
+def downsample(arr, factor):
+    """Downsample an array by averaging factor x factor blocks."""
+    h, w = arr.shape[:2]
+    new_h = h // factor
+    new_w = w // factor
+    cropped = arr[:new_h * factor, :new_w * factor]
+    if arr.ndim == 3:
+        return cropped.reshape(new_h, factor, new_w, factor, -1).mean(axis=(1, 3)).astype(np.float32)
+    return cropped.reshape(new_h, factor, new_w, factor).mean(axis=(1, 3)).astype(np.float32)
+
+
+def ssd_at(full_f, region_f, mask, x, y):
+    """Compute masked SSD at a given position."""
+    rh, rw = region_f.shape[:2]
+    patch = full_f[y:y+rh, x:x+rw]
+    diff = patch - region_f
+    if mask is not None:
+        diff[~mask] = 0
+    return np.sum(diff * diff)
+
+
+def find_region_position(full_map_arr, region_arr, full_map_small=None, ds_factor=8):
     """
     Find where a cropped region PNG sits on the full map using
-    normalized cross-correlation on the RGB channels.
-    Returns (x, y) of the top-left corner on the full map, or None.
+    two-pass template matching: coarse at 1/8 resolution, then refine at full res.
+    Returns ((x, y), avg_error) or None.
     """
-    # Region must have alpha channel
     if region_arr.shape[2] < 4:
-        print("    Warning: Region has no alpha channel, using full image")
         region_rgb = region_arr[:, :, :3]
         mask = None
     else:
         alpha = region_arr[:, :, 3]
         region_rgb = region_arr[:, :, :3]
-        # Create binary mask where alpha > 10
         mask = alpha > 10
 
-        # Check if mask has enough pixels
         if np.sum(mask) < 100:
             print(f"    Warning: Only {np.sum(mask)} opaque pixels")
             return None
@@ -153,52 +170,54 @@ def find_region_position(full_map_arr, region_arr):
         print(f"    Error: Region ({rw}x{rh}) larger than map ({fw}x{fh})")
         return None
 
-    # Use sum of squared differences with mask
+    # --- Pass 1: Coarse search at reduced resolution ---
+    ds = ds_factor
+    region_small = downsample(region_rgb, ds)
+    mask_small = None
+    if mask is not None:
+        # Downsample mask: a block is opaque if any pixel in it is opaque
+        mh, mw = mask.shape
+        new_mh, new_mw = mh // ds, mw // ds
+        mask_cropped = mask[:new_mh * ds, :new_mw * ds]
+        mask_small = mask_cropped.reshape(new_mh, ds, new_mw, ds).any(axis=(1, 3))
+
+    srh, srw = region_small.shape[:2]
+    sfh, sfw = full_map_small.shape[:2]
+
     best_score = float('inf')
     best_pos = None
 
-    # Convert to float for correlation
-    full_f = full_map_arr[:, :, :3].astype(np.float32)
-    region_f = region_rgb.astype(np.float32)
-
-    # Slide region over full map - use step for speed on initial pass
-    # First pass: coarse search (step=4)
-    step = 4
-    for y in range(0, fh - rh + 1, step):
-        for x in range(0, fw - rw + 1, step):
-            patch = full_f[y:y+rh, x:x+rw]
-            diff = patch - region_f
-            if mask is not None:
-                # Only compare opaque pixels
-                diff[~mask] = 0
-            ssd = np.sum(diff * diff)
-            if ssd < best_score:
-                best_score = ssd
+    for y in range(sfh - srh + 1):
+        for x in range(sfw - srw + 1):
+            score = ssd_at(full_map_small, region_small, mask_small, x, y)
+            if score < best_score:
+                best_score = score
                 best_pos = (x, y)
 
     if best_pos is None:
         return None
 
-    # Second pass: refine around best position (pixel-level)
-    cx, cy = best_pos
-    search_range = step * 2
+    # --- Pass 2: Refine at full resolution around the coarse match ---
+    full_f = full_map_arr[:, :, :3].astype(np.float32)
+    region_f = region_rgb.astype(np.float32)
+
+    # Map coarse position back to full resolution
+    cx, cy = best_pos[0] * ds, best_pos[1] * ds
+    search_range = ds * 2  # search +/- 16 pixels around coarse match
+
     best_score_fine = float('inf')
-    best_pos_fine = best_pos
+    best_pos_fine = (cx, cy)
 
     for y in range(max(0, cy - search_range), min(fh - rh + 1, cy + search_range + 1)):
         for x in range(max(0, cx - search_range), min(fw - rw + 1, cx + search_range + 1)):
-            patch = full_f[y:y+rh, x:x+rw]
-            diff = patch - region_f
-            if mask is not None:
-                diff[~mask] = 0
-            ssd = np.sum(diff * diff)
-            if ssd < best_score_fine:
-                best_score_fine = ssd
+            score = ssd_at(full_f, region_f, mask, x, y)
+            if score < best_score_fine:
+                best_score_fine = score
                 best_pos_fine = (x, y)
 
-    # Compute a confidence metric (average per-pixel error)
+    # Confidence metric
     n_pixels = np.sum(mask) if mask is not None else (rw * rh)
-    avg_error = np.sqrt(best_score_fine / (n_pixels * 3))  # per channel per pixel
+    avg_error = np.sqrt(best_score_fine / (n_pixels * 3))
 
     return best_pos_fine, avg_error
 
@@ -222,6 +241,11 @@ def main():
     full_map_arr = np.array(full_map)
     canvas_w, canvas_h = full_map.size
     print(f"  Map size: {canvas_w}x{canvas_h}")
+
+    # Pre-compute downsampled map for fast coarse matching
+    DS_FACTOR = 8
+    print(f"  Pre-computing {canvas_w // DS_FACTOR}x{canvas_h // DS_FACTOR} downsampled map...")
+    full_map_small = downsample(full_map_arr[:, :, :3], DS_FACTOR)
 
     # Create output directories
     output_path = Path(OUTPUT_DIR)
@@ -260,7 +284,7 @@ def main():
 
         # Find position on full map
         print(f"  Searching for position on map...", end=" ", flush=True)
-        result = find_region_position(full_map_arr, region_arr)
+        result = find_region_position(full_map_arr, region_arr, full_map_small, DS_FACTOR)
 
         if result is None:
             print("FAILED - could not locate")

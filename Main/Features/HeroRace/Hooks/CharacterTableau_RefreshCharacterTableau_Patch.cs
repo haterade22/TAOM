@@ -46,8 +46,8 @@ public class CharacterTableau_RefreshCharacterTableau_Patch
             if (monster == null)
                 return;
 
-            string isFemaleText = ____isFemale ? "_female_" : "";
-            var actionSet = MBGlobals.GetActionSet($"as_{monster.StringId}{isFemaleText}_warrior");
+            string prefix = ____isFemale ? $"as_{monster.StringId}_female" : $"as_{monster.StringId}";
+            var actionSet = MBGlobals.GetActionSet($"{prefix}_warrior");
 
             var newData = ____oldAgentVisuals.GetCopyAgentVisualsData();
             newData

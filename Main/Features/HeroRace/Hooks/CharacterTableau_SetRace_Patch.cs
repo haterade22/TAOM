@@ -10,25 +10,6 @@ namespace TAOM.Features.HeroRace.Hooks;
 [HarmonyPatchCategory("Patch3_SetRace")]
 public class CharacterTableau_SetRace_Patch
 {
-    private static Func<int, int> _raceIndexMapper;
-
-    public static void InitializeRaceMapper(Func<int, int> mapper) => _raceIndexMapper = mapper;
-
-    [HarmonyPrefix]
-    static void Prefix(ref int race)
-    {
-        if (_raceIndexMapper == null) return;
-
-        try
-        {
-            race = _raceIndexMapper(race);
-        }
-        catch (Exception)
-        {
-            // Fall through with original race value
-        }
-    }
-
     [HarmonyPostfix]
     static void Postfix(CharacterTableau __instance)
     {
