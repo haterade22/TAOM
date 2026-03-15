@@ -1,6 +1,8 @@
 using HarmonyLib;
 using System;
+using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.Tableaus;
 
@@ -10,6 +12,27 @@ namespace TAOM.Features.HeroRace.Hooks;
 [HarmonyPatchCategory("Patch3_SetRace")]
 public class CharacterTableau_SetRace_Patch
 {
+    private static IRaceManager _raceManager;
+
+    public static void Initialize(IRaceManager raceManager) => _raceManager = raceManager;
+
+    [HarmonyPrefix]
+    static void Prefix(ref int race)
+    {
+        if (_raceManager == null) return;
+
+        try
+        {
+            var raceNames = FaceGen.GetRaceNames();
+            if (race >= 0 && race < raceNames.Length)
+                race = _raceManager.GetRaceIdFromName(raceNames[race]);
+        }
+        catch (Exception)
+        {
+            // Fall through with original race value
+        }
+    }
+
     [HarmonyPostfix]
     static void Postfix(CharacterTableau __instance)
     {

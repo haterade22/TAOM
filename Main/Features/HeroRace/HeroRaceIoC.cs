@@ -1,4 +1,5 @@
 using DryIoc;
+using TAOM.Core.Domain;
 using TAOM.Features.HeroRace.Hooks;
 
 namespace TAOM.Features.HeroRace;
@@ -17,6 +18,9 @@ public static class HeroRaceIoC
 
         var eyeHeightHook = container.Resolve<IOnFaceGenGetBaseMonsterFromRace>();
         FaceGen_GetBaseMonsterFromRace_Patch.Initialize(eyeHeightHook);
+
+        var raceManager = container.Resolve<IRaceManager>();
+        CharacterTableau_SetRace_Patch.Initialize(raceManager);
 
         container.Register<IRacePersistenceService, RacePersistenceService>(Reuse.Singleton);
     }

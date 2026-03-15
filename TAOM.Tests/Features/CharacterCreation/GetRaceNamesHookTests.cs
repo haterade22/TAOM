@@ -1,6 +1,8 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Adapters;
+using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.CharacterCreation.Hooks;
@@ -125,5 +127,29 @@ public class GetRaceNamesHookTests
         var result = _sut.FilterRaceNames(new[] { "human", "elf", "dwarf" });
 
         CollectionAssert.AreEqual(new[] { "human", "elf" }, result);
+    }
+
+    [TestMethod]
+    public void FilteredIndex_MappedThroughRaceManager_ReturnsCorrectGlobalId()
+    {
+        _selectedCultureId = "erebor";
+        _dataProvider.GetCultureData("erebor").Returns(new CultureCreationData
+        {
+            CultureId = "erebor",
+            Races = new[] { "dwarf" }
+        });
+
+        var filtered = _sut.FilterRaceNames(_allRaces);
+        var selectedFilteredIndex = 0;
+        var selectedRaceName = filtered[selectedFilteredIndex];
+
+        var faceGenAdapter = Substitute.For<IFaceGenAdapter>();
+        faceGenAdapter.GetRaceNames().Returns(_allRaces);
+        var raceManager = new RaceManager(Substitute.For<IModLogger>(), faceGenAdapter);
+
+        var globalId = raceManager.GetRaceIdFromName(selectedRaceName);
+
+        Assert.AreEqual("dwarf", selectedRaceName);
+        Assert.AreEqual(2, globalId, "Filtered index 0 ('dwarf') should map to global race ID 2, not 0 ('human')");
     }
 }
