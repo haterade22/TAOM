@@ -74,7 +74,7 @@
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_erebor"
     start_point_position_x="949.3796"
     start_point_position_y="1191.117">
     <caravan_party_templates>
@@ -434,7 +434,7 @@
     duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Tablut"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_rivendell"
     start_point_position_x="675.238"
     start_point_position_y="1087.961">
     <caravan_party_templates>
@@ -801,7 +801,7 @@
     duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Tablut"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_mirkwood"
     start_point_position_x="879.6932"
     start_point_position_y="1219.841">
     <caravan_party_templates>
@@ -1159,7 +1159,7 @@
     duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Tablut"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_rivendell"
     start_point_position_x="724.6088"
     start_point_position_y="975.238">
     <caravan_party_templates>
@@ -1517,7 +1517,7 @@
     duel_preset_equipment_roster="EquipmentRoster.isengard_bat_template_medium_a"
     marriage_bride_equipment_roster="EquipmentRoster.isengard_civ_template_a"
     board_game_type="Konane"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_uruk_hai"
     start_point_position_x="633.4053"
     start_point_position_y="837.9393">
     <caravan_party_templates>
@@ -1874,7 +1874,7 @@
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_gundabad"
     start_point_position_x="738.8926"
     start_point_position_y="1248.349">
     <caravan_party_templates>
@@ -2590,7 +2590,7 @@
     duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
     marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
     board_game_type="Konane"
-    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    default_character_creation_body_property="BodyProperty.fighter_dolguldur"
     start_point_position_x="835.0524"
     start_point_position_y="975.238">
     <caravan_party_templates>
