@@ -1,23 +1,35 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-15
+
+### Bug Fix — Character Creation Race Display (#22)
+
+Non-human races (dwarf, elf, uruk, etc.) displayed as human models during character creation. Two root causes:
+
+**Race filtering broke FaceGenVM** — The `FaceGen_GetRaceNames_Patch` postfix filtered `GetRaceNames()` globally, but `FaceGenVM` uses array index as global race ID. Filtering shifted all indices (dwarf→uruk, uruk→orc, nazgul→goblin).
+- Disabled race filtering in `FaceGen_GetRaceNames_Patch` (now a no-op, all races shown in dropdown)
+- Removed `CharacterTableau_SetRace_Patch` race index mapper prefix (no longer needed)
+- Stripped `FilterRaceNames` and `MapFilteredIndexToGlobalId` from `GetRaceNamesHook` / `IOnGetRaceNames`
+- Simplified `CharacterCreationIoC` — removed filter/mapper wiring
+
+**Body property templates pointed to human** — 7 non-human cultures had `default_character_creation_body_property` set to empire (human) template instead of race-specific templates.
+- Updated `taom_spcultures.xml`: erebor→`fighter_erebor`, rivendell→`fighter_rivendell`, mirkwood→`fighter_mirkwood`, lothlorien→`fighter_rivendell`, isengard→`fighter_uruk_hai`, gundabad→`fighter_gundabad`, dolguldur→`fighter_dolguldur`
+
+**Secondary fix** — Female action set name had double underscore in `CharacterTableau_RefreshCharacterTableau_Patch` (`as_dwarf_female__warrior` → `as_dwarf_female_warrior`).
+
+240 tests passing.
+
 ## 2026-03-12
 
-### Bug Fix — Youth Equipment Differentiation + Race Filtering (Phase 6)
+### Bug Fix — Youth Equipment Differentiation (Phase 6)
 
-Fixed two bugs discovered during in-game testing of character creation:
+Fixed bug discovered during in-game testing of character creation:
 
 **Youth equipment all identical** — Youth narrative options were not setting `SelectedTitleType`, causing all options to produce the same equipment regardless of selection.
 - Added `TitleType` property to `NarrativeOptionDefinition` model
 - Updated `NarrativeMenuBuilder.BuildOption()` to set `SelectedTitleType` when `title_type` is present (vs `SetParentOccupation` for parent menus)
 - Updated `NarrativeDataProvider.ParseOption()` to parse `title_type` from JSON
 - Added `title_type` to all 91 entries in `youth_menu.json` mapping each option to a career (retainer, guard, hunter, infantry, skirmisher, bard, mercenary)
-
-**Race selector shows all races** — Face generator race dropdown showed every race regardless of selected culture.
-- `IOnGetRaceNames` / `GetRaceNamesHook` — Filters `FaceGen.GetRaceNames()` by culture's `Races[]` from `cultures.json`
-- `FaceGen_GetRaceNames_Patch` — Harmony postfix on `FaceGen.GetRaceNames()` (`Patch9_RaceFilter`)
-- No-op when not in character creation (barber/face gen in-game still shows all races)
-- Wired via `CharacterCreationIoC.cs` with injectable `Func<string>` for testability
-- 7 new unit tests in `GetRaceNamesHookTests.cs`
 
 ### Feature — Character Creation Equipment Rosters (Phase 5)
 

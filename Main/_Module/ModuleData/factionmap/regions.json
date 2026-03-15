@@ -1,186 +1,548 @@
 {
-  "easterlings_of_rhun": {
-    "faction": "easterlings_of_rhun",
-    "norm_bbox": [0.5963, 0.2324, 0.3536, 0.3833],
-    "capital_pos": [0.7731, 0.4241]
+  "chajaphan_of_abanissa": {
+    "faction": "chajaphan_of_abanissa",
+    "norm_bbox": [
+      0.7388,
+      0.6894,
+      0.2612,
+      0.31
+    ],
+    "capital_pos": [
+      0.8694,
+      0.8444
+    ]
   },
-  "tribes_of_harad": {
-    "faction": "tribes_of_harad",
-    "norm_bbox": [0.4809, 0.748, 0.3706, 0.252],
-    "capital_pos": [0.6662, 0.874]
+  "clans_of_andrast": {
+    "faction": "clans_of_andrast",
+    "norm_bbox": [
+      0.2378,
+      0.467,
+      0.0903,
+      0.1177
+    ],
+    "capital_pos": [
+      0.283,
+      0.5259
+    ]
   },
-  "variags_of_khand": {
-    "faction": "variags_of_khand",
-    "norm_bbox": [0.7418, 0.5862, 0.2582, 0.4138],
-    "capital_pos": [0.8709, 0.7931]
+  "anduin_vale": {
+    "faction": "anduin_vale",
+    "norm_bbox": [
+      0.4497,
+      0.1382,
+      0.0762,
+      0.2042
+    ],
+    "capital_pos": [
+      0.4878,
+      0.2403
+    ]
   },
-  "kingdom_of_gondor": {
-    "faction": "kingdom_of_gondor",
-    "norm_bbox": [0.2368, 0.5305, 0.3501, 0.2561],
-    "capital_pos": [0.4700, 0.5700]
+  "kingdom_of_angaladh": {
+    "faction": "kingdom_of_angaladh",
+    "norm_bbox": [
+      0.7773,
+      0.1166,
+      0.0879,
+      0.0865
+    ],
+    "capital_pos": [
+      0.8213,
+      0.1598
+    ]
   },
-  "iron_hills": {
-    "faction": "iron_hills",
-    "norm_bbox": [0.5582, 0.0, 0.3686, 0.1851],
-    "capital_pos": [0.7425, 0.0926]
-  },
-  "orcs_of_narager": {
-    "faction": "orcs_of_narager",
-    "norm_bbox": [0.8532, 0.0, 0.1468, 0.356],
-    "capital_pos": [0.9266, 0.178]
-  },
-  "dark_lands_of_mordor": {
-    "faction": "dark_lands_of_mordor",
-    "norm_bbox": [0.5162, 0.4146, 0.2932, 0.3662],
-    "capital_pos": [0.6628, 0.5977]
-  },
-  "dwarves_of_orocarni": {
-    "faction": "dwarves_of_orocarni",
-    "norm_bbox": [0.9022, 0.3491, 0.0978, 0.3464],
-    "capital_pos": [0.9511, 0.5223]
-  },
-  "realm_of_dorwinion": {
-    "faction": "realm_of_dorwinion",
-    "norm_bbox": [0.5637, 0.2986, 0.1912, 0.1545],
-    "capital_pos": [0.6593, 0.3759]
-  },
-  "clans_of_enedwaith": {
-    "faction": "clans_of_enedwaith",
-    "norm_bbox": [0.1943, 0.2957, 0.1572, 0.2781],
-    "capital_pos": [0.2729, 0.4348]
-  },
-  "dwarves_of_erebor": {
-    "faction": "dwarves_of_erebor",
-    "norm_bbox": [0.5462, 0.0728, 0.2546, 0.2026],
-    "capital_pos": [0.6350, 0.1200]
-  },
-  "kingdom_of_dale": {
-    "faction": "kingdom_of_dale",
-    "norm_bbox": [0.5647, 0.1511, 0.1917, 0.1733],
-    "capital_pos": [0.6606, 0.2378]
-  },
-  "havens_of_umbar": {
-    "faction": "havens_of_umbar",
-    "norm_bbox": [0.3767, 0.8076, 0.1781, 0.1509],
-    "capital_pos": [0.4658, 0.8831]
-  },
-  "realm_of_cardolan": {
-    "faction": "realm_of_cardolan",
-    "norm_bbox": [0.1818, 0.1504, 0.18, 0.1807],
-    "capital_pos": [0.2718, 0.2408]
-  },
-  "elves_of_lindon": {
-    "faction": "elves_of_lindon",
-    "norm_bbox": [0.0608, 0.0388, 0.1291, 0.3149],
-    "capital_pos": [0.0879, 0.246]
-  },
-  "orcs_of_gwaer": {
-    "faction": "orcs_of_gwaer",
-    "norm_bbox": [0.8717, 0.6804, 0.1283, 0.2102],
-    "capital_pos": [0.9359, 0.7855]
-  },
-  "hill_men_of_dunland": {
-    "faction": "hill_men_of_dunland",
-    "norm_bbox": [0.2918, 0.3325, 0.1186, 0.199],
-    "capital_pos": [0.3511, 0.432]
-  },
-  "kingdom_of_rohan": {
-    "faction": "kingdom_of_rohan",
-    "norm_bbox": [0.3263, 0.4033, 0.2006, 0.1794],
-    "capital_pos": [0.4266, 0.493]
-  },
-  "faithful_of_bellakar": {
-    "faction": "faithful_of_bellakar",
-    "norm_bbox": [0.3117, 0.8979, 0.2486, 0.1021],
-    "capital_pos": [0.436, 0.949]
-  },
-  "dwarves_of_ered_luin": {
-    "faction": "dwarves_of_ered_luin",
-    "norm_bbox": [0.1187, 0.0, 0.1137, 0.2295],
-    "capital_pos": [0.1756, 0.1148]
-  },
-  "orcs_of_the_misty_mountains": {
-    "faction": "orcs_of_the_misty_mountains",
-    "norm_bbox": [0.3488, 0.2209, 0.091, 0.1426],
-    "capital_pos": [0.3943, 0.2922]
-  },
-  "forodwaith": {
-    "faction": "forodwaith",
-    "norm_bbox": [0.3093, 0.0, 0.2767, 0.0828],
-    "capital_pos": [0.4477, 0.0414]
+  "remnants_of_angmar": {
+    "faction": "remnants_of_angmar",
+    "norm_bbox": [
+      0.3022,
+      0.0165,
+      0.146,
+      0.1024
+    ],
+    "capital_pos": [
+      0.3752,
+      0.0677
+    ]
   },
   "kingdom_of_arthedain": {
     "faction": "kingdom_of_arthedain",
-    "norm_bbox": [0.1943, 0.0605, 0.1336, 0.1418],
-    "capital_pos": [0.2611, 0.1314]
+    "norm_bbox": [
+      0.1509,
+      0.0529,
+      0.1973,
+      0.2799
+    ],
+    "capital_pos": [
+      0.2495,
+      0.1928
+    ]
   },
-  "hill_men_of_rhudaur": {
-    "faction": "hill_men_of_rhudaur",
-    "norm_bbox": [0.3124, 0.0605, 0.1085, 0.2449],
-    "capital_pos": [0.3667, 0.183]
+  "aru_thani_of_bellakar": {
+    "faction": "aru_thani_of_bellakar",
+    "norm_bbox": [
+      0.2134,
+      0.8794,
+      0.2656,
+      0.1206
+    ],
+    "capital_pos": [
+      0.3462,
+      0.9397
+    ]
   },
-  "vale_of_anduin": {
-    "faction": "vale_of_anduin",
-    "norm_bbox": [0.4478, 0.1082, 0.113, 0.2478],
-    "capital_pos": [0.5043, 0.2321]
+  "goblins_of_blue_craig": {
+    "faction": "goblins_of_blue_craig",
+    "norm_bbox": [
+      0.1211,
+      0.0353,
+      0.0693,
+      0.0757
+    ],
+    "capital_pos": [
+      0.1558,
+      0.0731
+    ]
   },
-  "shadow_of_dol_guldur": {
-    "faction": "shadow_of_dol_guldur",
-    "norm_bbox": [0.5054, 0.1963, 0.0915, 0.189],
-    "capital_pos": [0.5512, 0.2908]
+  "kingdom_of_cardolan": {
+    "faction": "kingdom_of_cardolan",
+    "norm_bbox": [
+      0.2007,
+      0.2327,
+      0.1782,
+      0.1678
+    ],
+    "capital_pos": [
+      0.2898,
+      0.3166
+    ]
   },
-  "orcs_of_ered_luin": {
-    "faction": "orcs_of_ered_luin",
-    "norm_bbox": [0.1288, 0.2383, 0.1181, 0.1614],
-    "capital_pos": [0.1879, 0.319]
+  "kingdom_of_dale": {
+    "faction": "kingdom_of_dale",
+    "norm_bbox": [
+      0.5747,
+      0.1234,
+      0.123,
+      0.1217
+    ],
+    "capital_pos": [
+      0.6362,
+      0.1843
+    ]
   },
-  "elves_of_neldoreth": {
-    "faction": "elves_of_neldoreth",
-    "norm_bbox": [0.7778, 0.1353, 0.1276, 0.1055],
-    "capital_pos": [0.8416, 0.1881]
+  "overlordship_of_dol_guldur": {
+    "faction": "overlordship_of_dol_guldur",
+    "norm_bbox": [
+      0.5088,
+      0.252,
+      0.0898,
+      0.0751
+    ],
+    "capital_pos": [
+      0.5537,
+      0.2895
+    ]
   },
-  "deco_1": {
-    "faction": null,
-    "norm_bbox": [0.3933, 0.1443, 0.0835, 0.2705]
+  "kingdom_of_dorwinion": {
+    "faction": "kingdom_of_dorwinion",
+    "norm_bbox": [
+      0.6724,
+      0.1894,
+      0.0947,
+      0.1769
+    ],
+    "capital_pos": [
+      0.7197,
+      0.2779
+    ]
   },
-  "orcs_of_forochel": {
-    "faction": "orcs_of_forochel",
-    "norm_bbox": [0.1958, 0.0, 0.1336, 0.0947],
-    "capital_pos": [0.2626, 0.0474]
+  "clans_of_druwaith_iaur": {
+    "faction": "clans_of_druwaith_iaur",
+    "norm_bbox": [
+      0.2676,
+      0.4226,
+      0.1284,
+      0.0825
+    ],
+    "capital_pos": [
+      0.3318,
+      0.4639
+    ]
   },
-  "orcs_of_gundabad": {
-    "faction": "orcs_of_gundabad",
-    "norm_bbox": [0.3909, 0.0667, 0.169, 0.0913],
-    "capital_pos": [0.4754, 0.0850]
+  "clans_of_dunland": {
+    "faction": "clans_of_dunland",
+    "norm_bbox": [
+      0.8486,
+      0.2122,
+      0.0884,
+      0.1377
+    ],
+    "capital_pos": [
+      0.8928,
+      0.281
+    ]
   },
-  "realm_of_angmar": {
-    "faction": "realm_of_angmar",
-    "norm_bbox": [0.3248, 0.0229, 0.1241, 0.1162],
-    "capital_pos": [0.3869, 0.081]
+  "wildmen_of_enedwaith": {
+    "faction": "wildmen_of_enedwaith",
+    "norm_bbox": [
+      0.7988,
+      0.2139,
+      0.1162,
+      0.1695
+    ],
+    "capital_pos": [
+      0.8569,
+      0.2986
+    ]
   },
-  "elves_of_mirkwood": {
-    "faction": "elves_of_mirkwood",
-    "norm_bbox": [0.4912, 0.1248, 0.0916, 0.0928],
-    "capital_pos": [0.537, 0.1712]
+  "kingdom_of_erebor": {
+    "faction": "kingdom_of_erebor",
+    "norm_bbox": [
+      0.5645,
+      0.0728,
+      0.2275,
+      0.1576
+    ],
+    "capital_pos": [
+      0.6782,
+      0.1516
+    ]
   },
-  "fangorn_forest": {
-    "faction": "fangorn_forest",
-    "norm_bbox": [0.4763, 0.3401, 0.0931, 0.1228],
-    "capital_pos": [0.5229, 0.4015]
+  "stronghold_of_ered_gwaer": {
+    "faction": "stronghold_of_ered_gwaer",
+    "norm_bbox": [
+      0.8779,
+      0.529,
+      0.1221,
+      0.2014
+    ],
+    "capital_pos": [
+      0.939,
+      0.6297
+    ]
+  },
+  "kingdom_of_ered_duin": {
+    "faction": "kingdom_of_ered_duin",
+    "norm_bbox": [
+      0.1113,
+      0.0563,
+      0.1265,
+      0.2429
+    ],
+    "capital_pos": [
+      0.1746,
+      0.1778
+    ]
+  },
+  "kingdom_of_ered_mithrin": {
+    "faction": "kingdom_of_ered_mithrin",
+    "norm_bbox": [
+      0.6309,
+      0.0739,
+      0.1562,
+      0.0688
+    ],
+    "capital_pos": [
+      0.709,
+      0.1084
+    ]
+  },
+  "clans_of_forochel": {
+    "faction": "clans_of_forochel",
+    "norm_bbox": [
+      0.3203,
+      0.8106,
+      0.1685,
+      0.0887
+    ],
+    "capital_pos": [
+      0.4045,
+      0.8549
+    ]
+  },
+  "goblins_of_goblin_town": {
+    "faction": "goblins_of_goblin_town",
+    "norm_bbox": [
+      0.9087,
+      0.7105,
+      0.0542,
+      0.0853
+    ],
+    "capital_pos": [
+      0.9358,
+      0.7531
+    ]
+  },
+  "stewardship_of_gondor": {
+    "faction": "stewardship_of_gondor",
+    "norm_bbox": [
+      0.3096,
+      0.4278,
+      0.2812,
+      0.2099
+    ],
+    "capital_pos": [
+      0.4502,
+      0.5327
+    ]
+  },
+  "overlordship_of_gundabad": {
+    "faction": "overlordship_of_gundabad",
+    "norm_bbox": [
+      0.3931,
+      0.0552,
+      0.1211,
+      0.0995
+    ],
+    "capital_pos": [
+      0.4536,
+      0.1049
+    ]
+  },
+  "taskralan_of_harwan": {
+    "faction": "taskralan_of_harwan",
+    "norm_bbox": [
+      0.46,
+      0.62,
+      0.3438,
+      0.1962
+    ],
+    "capital_pos": [
+      0.6318,
+      0.7181
+    ]
+  },
+  "kingdom_of_imladris": {
+    "faction": "kingdom_of_imladris",
+    "norm_bbox": [
+      0.0659,
+      0.0592,
+      0.0718,
+      0.1138
+    ],
+    "capital_pos": [
+      0.1018,
+      0.116
+    ]
   },
   "dominion_of_isengard": {
     "faction": "dominion_of_isengard",
-    "norm_bbox": [0.3849, 0.3875, 0.0795, 0.1199],
-    "capital_pos": [0.4247, 0.4475]
+    "norm_bbox": [
+      0.6733,
+      0.3237,
+      0.0469,
+      0.0375
+    ],
+    "capital_pos": [
+      0.6968,
+      0.3424
+    ]
   },
-  "elves_of_rivendell": {
-    "faction": "elves_of_rivendell",
-    "norm_bbox": [0.3883, 0.1472, 0.0636, 0.0942],
-    "capital_pos": [0.4201, 0.1943]
+  "khudorom_of_khand": {
+    "faction": "khudorom_of_khand",
+    "norm_bbox": [
+      0.7158,
+      0.4812,
+      0.2202,
+      0.3424
+    ],
+    "capital_pos": [
+      0.8259,
+      0.6524
+    ]
   },
-  "elves_of_lothlorien": {
-    "faction": "elves_of_lothlorien",
-    "norm_bbox": [0.4353, 0.3379, 0.071, 0.0867],
-    "capital_pos": [0.4708, 0.3813]
+  "high_kingdom_of_lindon": {
+    "faction": "high_kingdom_of_lindon",
+    "norm_bbox": [
+      0.0581,
+      0.0176,
+      0.1489,
+      0.2929
+    ],
+    "capital_pos": [
+      0.1326,
+      0.1641
+    ]
+  },
+  "kingdom_of_lothlorien": {
+    "faction": "kingdom_of_lothlorien",
+    "norm_bbox": [
+      0.4805,
+      0.6212,
+      0.0923,
+      0.0757
+    ],
+    "capital_pos": [
+      0.5266,
+      0.659
+    ]
+  },
+  "kingdom_of_lasgalen": {
+    "faction": "kingdom_of_lasgalen",
+    "norm_bbox": [
+      0.4902,
+      0.1041,
+      0.0967,
+      0.0927
+    ],
+    "capital_pos": [
+      0.5386,
+      0.1505
+    ]
+  },
+  "dominion_of_mordor": {
+    "faction": "dominion_of_mordor",
+    "norm_bbox": [
+      0.5742,
+      0.4317,
+      0.2437,
+      0.2156
+    ],
+    "capital_pos": [
+      0.696,
+      0.5395
+    ]
+  },
+  "kingdom_of_moria": {
+    "faction": "kingdom_of_moria",
+    "norm_bbox": [
+      0.1914,
+      0.0865,
+      0.0679,
+      0.1359
+    ],
+    "capital_pos": [
+      0.2253,
+      0.1544
+    ]
+  },
+  "stronghold_of_narager": {
+    "faction": "stronghold_of_narager",
+    "norm_bbox": [
+      0.8228,
+      0.1337,
+      0.1772,
+      0.1684
+    ],
+    "capital_pos": [
+      0.9114,
+      0.2179
+    ]
+  },
+  "kingdom_of_neldoreth": {
+    "faction": "kingdom_of_neldoreth",
+    "norm_bbox": [
+      0.7773,
+      0.0927,
+      0.1387,
+      0.1189
+    ],
+    "capital_pos": [
+      0.8467,
+      0.1522
+    ]
+  },
+  "nurunkhizdin": {
+    "faction": "nurunkhizdin",
+    "norm_bbox": [
+      0.8457,
+      0.1109,
+      0.0654,
+      0.0973
+    ],
+    "capital_pos": [
+      0.8784,
+      0.1596
+    ]
+  },
+  "kingdom_of_rhudaur": {
+    "faction": "kingdom_of_rhudaur",
+    "norm_bbox": [
+      0.293,
+      0.0489,
+      0.1602,
+      0.2025
+    ],
+    "capital_pos": [
+      0.373,
+      0.1502
+    ]
+  },
+  "golden_realm_of_rhun": {
+    "faction": "golden_realm_of_rhun",
+    "norm_bbox": [
+      0.5967,
+      0.2036,
+      0.3525,
+      0.3055
+    ],
+    "capital_pos": [
+      0.7729,
+      0.3564
+    ]
+  },
+  "kingdom_of_rohan": {
+    "faction": "kingdom_of_rohan",
+    "norm_bbox": [
+      0.3403,
+      0.3339,
+      0.1807,
+      0.1502
+    ],
+    "capital_pos": [
+      0.4307,
+      0.409
+    ]
+  },
+  "taskralan_of_shaghana": {
+    "faction": "taskralan_of_shaghana",
+    "norm_bbox": [
+      0.4106,
+      0.7782,
+      0.3887,
+      0.2218
+    ],
+    "capital_pos": [
+      0.605,
+      0.8891
+    ]
+  },
+  "kingdom_of_south_rhovanion": {
+    "faction": "kingdom_of_south_rhovanion",
+    "norm_bbox": [
+      0.5005,
+      0.2133,
+      0.2202,
+      0.1718
+    ],
+    "capital_pos": [
+      0.6106,
+      0.2992
+    ]
+  },
+  "havens_of_umbar": {
+    "faction": "havens_of_umbar",
+    "norm_bbox": [
+      0.3042,
+      0.7167,
+      0.2065,
+      0.1854
+    ],
+    "capital_pos": [
+      0.4075,
+      0.8094
+    ]
+  },
+  "kingdom_of_zigalnara": {
+    "faction": "kingdom_of_zigalnara",
+    "norm_bbox": [
+      0.8716,
+      0.2924,
+      0.1284,
+      0.2548
+    ],
+    "capital_pos": [
+      0.9358,
+      0.4198
+    ]
   }
 }

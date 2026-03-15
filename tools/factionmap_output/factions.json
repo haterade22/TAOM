@@ -246,10 +246,10 @@
   },
   "kingdom_of_moria": {
     "name": "Kingdom of Moria",
-    "color": "#706838FF",
+    "color": "#604830FF",
     "playable": false,
     "game_faction": "",
-    "side": "neutral",
+    "side": "evil",
     "description": "The Kingdom of Moria.",
     "image": "faction_kingdom_of_moria",
     "traits": []
@@ -984,7 +984,7 @@
     "color": "#6E8088FF",
     "playable": true,
     "game_faction": "khuzait",
-    "side": "evil",
+    "side": "neutral",
     "description": "The realm of the Variags, fierce mounted warriors from the eastern steppe of Khand. They serve as mercenaries and allies to both Mordor and the Easterlings.",
     "image": "faction_khudorom_of_khand",
     "traits": [
@@ -1103,7 +1103,7 @@
     "color": "#685848FF",
     "playable": true,
     "game_faction": "umbar",
-    "side": "evil",
+    "side": "neutral",
     "description": "The great corsair haven of Umbar, a port city of pirates and Black Numenorean lords. Once a colony of Gondor, now its bitterest rival upon the seas.",
     "image": "faction_havens_of_umbar",
     "traits": [
@@ -1189,7 +1189,7 @@
     "name": "Nurunkhizdin",
     "color": "#706838FF",
     "playable": false,
-    "game_faction": "",
+    "game_faction": "erebor",
     "side": "neutral",
     "description": "The Nurunkhizdin.",
     "image": "faction_nurunkhizdin",
