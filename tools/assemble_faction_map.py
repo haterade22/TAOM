@@ -91,7 +91,7 @@ REGION_META = {
     "goblins_of_goblin_town":       ("Goblins of Goblin Town",       "orcs_of_the_misty_mountains",  "",           False, "evil"),
     "overlordship_of_gundabad":     ("Overlordship of Gundabad",     "orcs_of_gundabad",             "gundabad",   True,  "evil"),
     "kingdom_of_imladris":          ("Kingdom of Imladris",          "elves_of_rivendell",           "rivendell",  True,  "free"),
-    "kingdom_of_moria":             ("Kingdom of Moria",             None,                           "",           False, "neutral"),
+    "kingdom_of_moria":             ("Kingdom of Moria",             None,                           "",           False, "evil"),
     "anduin_vale":                  ("Anduin Vale",                  "vale_of_anduin",               "sturgia",    False, "free"),
     "kingdom_of_lothlorien":        ("Kingdom of Lothlorien",        "elves_of_lothlorien",          "lothlorien", True,  "free"),
     "wildmen_of_enedwaith":         ("Wildmen of Enedwaith",         "clans_of_enedwaith",           "battania",   False, "neutral"),
@@ -113,14 +113,14 @@ REGION_META = {
     "golden_realm_of_rhun":         ("Golden-Realm of Rhun",         "easterlings_of_rhun",          "khuzait",    True,  "evil"),
     "kingdom_of_zigalnara":         ("Kingdom of Zigalnara",         None,                           "",           False, "evil"),
     "stronghold_of_narager":        ("Stronghold of Narager",        "orcs_of_narager",              "",           False, "evil"),
-    "khudorom_of_khand":            ("Khudorom of Khand",            "variags_of_khand",             "khuzait",    True,  "evil"),
+    "khudorom_of_khand":            ("Khudorom of Khand",            "variags_of_khand",             "khuzait",    True,  "neutral"),
     "stronghold_of_ered_gwaer":     ("Stronghold of Ered Gwaer",     "orcs_of_gwaer",                "",           False, "evil"),
     "taskralan_of_harwan":          ("Taskralan of Harwan",          "tribes_of_harad",              "aserai",     True,  "evil"),
-    "havens_of_umbar":              ("Havens of Umbar",              "havens_of_umbar",              "umbar",      True,  "evil"),
+    "havens_of_umbar":              ("Havens of Umbar",              "havens_of_umbar",              "umbar",      True,  "neutral"),
     "taskralan_of_shaghana":        ("Taskralan of Shaghana",        None,                           "aserai",     False, "evil"),
     "aru_thani_of_bellakar":        ("Aru-Thani of Bellakar",        "faithful_of_bellakar",         "aserai",     False, "free"),
     "chajaphan_of_abanissa":        ("Chajaphan of Abanissa",        None,                           "",           False, "neutral"),
-    "nurunkhizdin":                 ("Nurunkhizdin",                 None,                           "",           False, "neutral"),
+    "nurunkhizdin":                 ("Nurunkhizdin",                 None,                           "erebor",     False, "neutral"),
 }
 
 
