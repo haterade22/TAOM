@@ -190054,7 +190054,7 @@
 			  body_mesh_suffix=""
 			  min_scale ="1.18"
 			  skeleton="human_skeleton"
-			  body_meta_mesh="sk_full_body_saruman"
+			  body_meta_mesh="sk_body_male_a"
 			  body_meta_mesh_shoulders="body_male_a_sh"
 			  body_meta_mesh_upperbody="box_a"
 			  legs_mesh="sk_feet_male_a"
@@ -191307,7 +191307,7 @@
 				<eye_color_gradient_point point="1.00, 0.01, 0.014" />
 			</eye_color_gradient_points>
 			<face_textures group_id="1">
-				<face_texture name="sk_saruman_head"
+				<face_texture name="head_male_a_saruman"
 							  lod_material="head_male_a.lod"
 							  color="0xFFFFFFFF"
 							  tags="face_texture1,face_texture2,face_texture3,face_texture4,face_texture5,face_texture6,face_texture7,face_texture8,face_texture9,face_texture10">
@@ -191315,7 +191315,7 @@
 			</face_textures>
 
 			<mouth_textures group_id="4">
-				<mouth_texture name="sk_saruman_mouth"
+				<mouth_texture name="mouth_mat"
 							   lod_material="mouth_mat"
 							   color="0xFFFFFFFF"
 							   tags="mouth_texture1,mouth_texture2,mouth_texture3,mouth_texture4">
