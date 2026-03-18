@@ -1694,6 +1694,7 @@
 	<!-- ==================== SARUMAN ==================== -->
 	<Monster id="saruman"
 			 action_set="as_saruman_warrior"
+			 female_action_set="as_saruman_female_warrior"
 			 monster_usage="human"
 			 weight="100"
 			 hit_points="125"

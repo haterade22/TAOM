@@ -132,19 +132,6 @@
 		</XmlNode>
 
 		<!-- ============================================== -->
-		<!-- TAOM Monster Types                              -->
-		<!-- ============================================== -->
-
-		<XmlNode>
-			<XmlName id="Monsters" path="races/monsters"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-
-		<!-- ============================================== -->
 		<!-- TAOM Troop Trees                               -->
 		<!-- ============================================== -->
 
