@@ -61,7 +61,7 @@
   },
   {
     "culture_id": "isengard",
-    "races": ["uruk_hai", "berserker", "human"],
+    "races": ["uruk_hai", "berserker", "human", "saruman"],
     "starting_settlement": "town_isengard",
     "default_age": 20.0,
     "default_weight": 0.5417,
