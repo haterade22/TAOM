@@ -12,8 +12,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 ARMORY_BASE = os.path.join(
-    "E:", os.sep, "Steam", "steamapps", "common",
-    "Mount & Blade II Bannerlord", "Modules", "LOTRLOME_Armory",
+    "E:", os.sep, "repos", "lotraom-assets", "shared", "LOTRLOME_Armory",
     "ModuleData", "LOTRLOME_items", "gondor"
 )
 
@@ -81,7 +80,7 @@ class ArmorItem:
 
 
 # =============================================================================
-# ITEM DEFINITIONS — ALL 83 ITEMS
+# ITEM DEFINITIONS — ALL 93 ITEMS
 # =============================================================================
 
 HEAD_ARMORS = [
@@ -138,17 +137,20 @@ BODY_ARMORS = [
     ArmorItem("sk_gd_mns_citadel_chest_heavy_a", "Citadel Guard Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=16),
     # Fountain Guard chest
     ArmorItem("sk_gd_mns_fount_chest_heavy_a", "Fountain Guard Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=16),
+    ArmorItem("sk_gd_mns_fount_chest_elite_a", "Fountain Guard Elite Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
     # Osgiliath chest
     ArmorItem("sk_gd_osg_inf_chest_med_a", "Osgiliath Armour A", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
     ArmorItem("sk_gd_osg_inf_chest_med_b", "Osgiliath Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
     ArmorItem("sk_gd_osg_inf_chest_heavy_a", "Osgiliath Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_osg_inf_chest_heavy_b", "Osgiliath Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_osg_inf_chest_elite_a", "Osgiliath Elite Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
     # Cair Andros chest
     ArmorItem("sk_gd_cair_chainmail_half_b", "Cair Andros Half Chainmail", "body", "light", "Chainmail", covers_body=True),
     ArmorItem("sk_gd_cair_inf_chest_med_a", "Cair Andros Armour A", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
     ArmorItem("sk_gd_cair_inf_chest_med_b", "Cair Andros Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
     ArmorItem("sk_gd_cair_inf_chest_heavy_a", "Cair Andros Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_cair_inf_chest_heavy_b", "Cair Andros Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_cair_inf_chest_elite_a", "Cair Andros Elite Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
     # Ithil Guard chest
     ArmorItem("sk_gd_ith_chest_noble_med_a", "Ithil Guard Armour A", "body", "medium", "Plate", covers_body=True, arm_armor_stat=12),
     ArmorItem("sk_gd_ith_chest_noble_med_b", "Ithil Guard Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=12),
@@ -162,9 +164,17 @@ SHOULDER_ARMORS = [
     ArmorItem("sk_gd_ano_pauld_inf_med_b", "Anorien Infantry Pauldron B", "shoulder", "medium", "Plate"),
     ArmorItem("sk_gd_ano_pauld_inf_heavy_a", "Anorien Infantry Heavy Pauldron", "shoulder", "heavy", "Plate"),
     ArmorItem("sk_gd_ano_pauld_inf_elite_a", "Anorien Infantry Elite Pauldron", "shoulder", "elite", "Plate"),
-    # Anorien capes
-    ArmorItem("sk_gd_ano_cape_noble_b", "Anorien Noble Cape", "shoulder", "light", "Cloth"),
+    # Anorien Noble capes
+    ArmorItem("sk_gd_ano_cape_noble_a", "Anorien Noble Cape A", "shoulder", "light", "Cloth"),
+    ArmorItem("sk_gd_ano_cape_noble_b", "Anorien Noble Cape B", "shoulder", "light", "Cloth"),
+    # Anorien Generic capes
+    ArmorItem("sk_gd_ano_cape_a", "Anorien Cape A", "shoulder", "light", "Cloth"),
+    ArmorItem("sk_gd_ano_cape_b", "Anorien Cape B", "shoulder", "light", "Cloth"),
+    # Anorien Infantry cape+pauldron
     ArmorItem("sk_gd_ano_pauld_cape_inf_elite_a", "Anorien Infantry Cape Pauldron", "shoulder", "elite", "Plate"),
+    # Fountain Guard pauldrons/capes
+    ArmorItem("sk_gd_ano_pauld_fount_heavy_a", "Fountain Guard Heavy Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_ano_pauld_fount_elite_a", "Fountain Guard Elite Pauldron", "shoulder", "elite", "Plate"),
     ArmorItem("sk_gd_ano_pauld_cape_fount_elite_a", "Fountain Guard Cape Pauldron", "shoulder", "elite", "Plate"),
     # Anorien Noble pauldrons
     ArmorItem("sk_gd_ano_pauld_noble_med_a", "Anorien Noble Pauldron A", "shoulder", "medium", "Plate"),
@@ -189,8 +199,10 @@ ARM_ARMORS = [
     ArmorItem("sk_gd_ano_bracer_inf_med_a", "Anorien Infantry Bracer", "arm", "medium", "Plate", covers_hands=True),
     ArmorItem("sk_gd_ano_bracer_noble_med_a", "Anorien Noble Bracer", "arm", "medium", "Plate", covers_hands=True),
     ArmorItem("sk_gd_ano_bracer_noble_heavy_a", "Anorien Noble Heavy Bracer", "arm", "heavy", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_ano_bracer_noble_elite_a", "Anorien Noble Elite Bracer", "arm", "elite", "Plate", covers_hands=True),
     ArmorItem("sk_gd_osg_bracer_noble_med_a", "Osgiliath Noble Bracer", "arm", "medium", "Plate", covers_hands=True),
     ArmorItem("sk_gd_osg_bracer_noble_heavy_a", "Osgiliath Noble Heavy Bracer", "arm", "heavy", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_osg_bracer_noble_elite_a", "Osgiliath Noble Elite Bracer", "arm", "elite", "Plate", covers_hands=True),
     ArmorItem("sk_gd_cair_bracer_inf_med_a", "Cair Andros Infantry Bracer", "arm", "medium", "Plate", covers_hands=True),
 ]
 

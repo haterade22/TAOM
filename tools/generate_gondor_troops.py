@@ -1830,9 +1830,9 @@ def build_all_troops() -> list[Troop]:
     # =========================================================================
     t = Troop("gondor_militia_spearman", "Gondor Militia Spearman", 2, "Infantry", weapon_spec="spear")
     equip_generic_spear(t)
-    # Override with militia-specific gear
+    # Override with militia-specific gear (use generic Anorien items)
     t.head = "gondor_generic_helmet_5_b"
-    t.body = "gondor_noble_jerkin_a"
+    t.body = "sk_gd_ano_chainmail_full_a"
     t.leg = "gondor_boots"
     t.cape = "gondor_pauldrons"
     t.gloves = ""
@@ -1841,7 +1841,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("gondor_militia_archer", "Gondor Militia Archer", 2, "Ranged")
     equip_generic_ranged(t)
     t.head = ""
-    t.body = "gondor_noble_jerkin_b"
+    t.body = "sk_gd_ano_chainmail_half_a"
     t.leg = "gondor_boots"
     t.cape = ""
     t.gloves = ""
@@ -1851,7 +1851,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("gondor_militia_veteran_spearman", "Gondor Veteran Militia Spearman", 3, "Infantry", weapon_spec="spear")
     equip_generic_spear(t)
     t.head = "gondor_generic_helmet_5_a"
-    t.body = "gond_tab_9ld"
+    t.body = "sk_gd_ano_chainmail_full_b"
     t.leg = "gondor_boots"
     t.cape = "gondor_pauldrons"
     t.gloves = ""
@@ -1860,7 +1860,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("gondor_militia_veteran_archer", "Gondor Veteran Militia Archer", 3, "Ranged")
     equip_generic_ranged(t)
     t.head = "gondor_generic_helmet_5_b"
-    t.body = "gondor_noble_coat_a"
+    t.body = "sk_gd_ano_chainmail_half_b"
     t.leg = "ithilien_boots"
     t.cape = ""
     t.gloves = ""
