@@ -8,4 +8,10 @@
   <SpriteCategory Name="ui_taom">
 		<AlwaysLoad />
 	</SpriteCategory>
+  <SpriteCategory Name="ui_custom_fonts">
+        <PackAllSpritesToUniqueTextures/>
+        <SingleChannel/>
+        <AlwaysLoad/>
+        <EdgeSize Value="0" />
+    </SpriteCategory>
 </Config>

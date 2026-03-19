@@ -1,0 +1,25 @@
+<Window>
+  <Widget HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+    <Children>
+      
+      <SettlementNameplateManagerWidget DataSource="{SmallNameplates}" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+        <ItemTemplate>
+          <SettlementNameplateItemSmall />
+        </ItemTemplate>
+      </SettlementNameplateManagerWidget>
+      
+      <SettlementNameplateManagerWidget DataSource="{MediumNameplates}" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+        <ItemTemplate>
+          <SettlementNameplateItemMedium />
+        </ItemTemplate>
+      </SettlementNameplateManagerWidget>
+      
+      <SettlementNameplateManagerWidget DataSource="{LargeNameplates}" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+        <ItemTemplate>
+          <SettlementNameplateItemLarge />
+        </ItemTemplate>
+      </SettlementNameplateManagerWidget>
+      
+    </Children>
+  </Widget>
+</Window>
