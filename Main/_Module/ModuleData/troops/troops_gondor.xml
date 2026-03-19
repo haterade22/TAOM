@@ -31,8 +31,8 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -66,8 +66,10 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -100,10 +102,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_b" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -136,10 +139,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_b" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -170,11 +174,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -207,10 +211,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_b" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -243,10 +248,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_b" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -279,11 +285,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -314,11 +320,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -355,11 +361,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -392,11 +398,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a" />
-                <equipment slot="Body" id="Item.sk_gondor_lossarnach_chest_a" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -429,11 +435,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -466,11 +472,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -501,11 +507,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -656,10 +662,10 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -692,10 +698,10 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -766,10 +772,10 @@
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -801,10 +807,10 @@
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor1" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -841,10 +847,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_pelargir_sword_a01" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b" />
-                <equipment slot="Body" id="Item.lrd_marines_gondor_2_armour" />
-                <equipment slot="Gloves" id="Item.lrd_marines_gondor_1_gloves" />
-                <equipment slot="Leg" id="Item.lrd_marines_gondor_1_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -877,10 +884,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_pelargir_sword_a01" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b" />
-                <equipment slot="Body" id="Item.lrd_marines_gondor_2_armour" />
-                <equipment slot="Gloves" id="Item.lrd_marines_gondor_1_gloves" />
-                <equipment slot="Leg" id="Item.lrd_marines_gondor_1_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -913,11 +921,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_plume" />
-                <equipment slot="Body" id="Item.lrd_gondor_marines_1_armour" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.lrd_marines_gondor_3_gloves" />
-                <equipment slot="Leg" id="Item.lrd_marines_gondor_1_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -950,11 +958,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_plume" />
-                <equipment slot="Body" id="Item.lrd_gondor_marines_1_armour" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.lrd_marines_gondor_3_gloves" />
-                <equipment slot="Leg" id="Item.lrd_marines_gondor_1_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -985,11 +993,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
                 <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_plume" />
-                <equipment slot="Body" id="Item.lrd_gondor_marines_1_armour" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.lrd_marines_gondor_3_gloves" />
-                <equipment slot="Leg" id="Item.lrd_marines_gondor_1_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1026,8 +1034,8 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_1h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Body" id="Item.layered_leather_tunic" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1060,8 +1068,10 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_1h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Body" id="Item.layered_leather_tunic" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1094,10 +1104,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_1h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4" />
-                <equipment slot="Body" id="Item.cts_gondor_armor3" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1130,11 +1141,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4_b" />
-                <equipment slot="Body" id="Item.cts_gondor_armor2" />
-                <equipment slot="Cape" id="Item.cts_gondor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1165,11 +1176,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4_b" />
-                <equipment slot="Body" id="Item.cts_gondor_armor2" />
-                <equipment slot="Cape" id="Item.cts_gondor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1206,10 +1217,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_1h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4" />
-                <equipment slot="Body" id="Item.cts_gondor_armor3" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1242,10 +1254,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_1h_sword_a" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4" />
-                <equipment slot="Body" id="Item.cts_gondor_armor3" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1278,11 +1291,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_b" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4_b" />
-                <equipment slot="Body" id="Item.cts_gondor_armor2" />
-                <equipment slot="Cape" id="Item.cts_gondor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1315,11 +1328,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_c" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4_c" />
-                <equipment slot="Body" id="Item.cts_gondor_armor1" />
-                <equipment slot="Cape" id="Item.cts_gondor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1350,11 +1363,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_c" />
                 <equipment slot="Item1" id="Item.gond_shield_one_red" />
-                <equipment slot="Head" id="Item.gondor_lamedon_helmet_4_c" />
-                <equipment slot="Body" id="Item.cts_gondor_armor1" />
-                <equipment slot="Cape" id="Item.cts_gondor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.cts_gondor_boot" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1391,8 +1404,8 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.gond_spear2" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-                <equipment slot="Body" id="Item.layered_leather_tunic" />
-                <equipment slot="Leg" id="Item.battania_leather_boots" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1426,9 +1439,9 @@
                 <equipment slot="Item0" id="Item.gond_spear2" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-                <equipment slot="Body" id="Item.layered_leather_tunic" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-                <equipment slot="Leg" id="Item.battania_leather_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1462,7 +1475,7 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-                <equipment slot="Body" id="Item.gondor_chainmaila" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
@@ -1499,7 +1512,7 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.gondor_chainmaila" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -1536,8 +1549,8 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
@@ -1571,8 +1584,8 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear_a" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
@@ -1612,8 +1625,8 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-                <equipment slot="Body" id="Item.imperial_padded_cloth" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1648,9 +1661,9 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-                <equipment slot="Body" id="Item.imperial_padded_cloth" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1758,11 +1771,11 @@
                 <equipment slot="Item0" id="Item.gondor_steel_bow_b" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1796,9 +1809,9 @@
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-                <equipment slot="Body" id="Item.imperial_padded_cloth" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1905,11 +1918,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1940,11 +1953,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-                <equipment slot="Head" id="Item.gondor_generic_helmet_5_a_coif" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -1981,10 +1994,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.gondor_chainmail_helmeta" />
-                <equipment slot="Body" id="Item.dol_amroth_armor_b1" />
-                <equipment slot="Gloves" id="Item.swan_bracer_a" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2018,10 +2032,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.gondor_chainmail_helmeta" />
-                <equipment slot="Body" id="Item.dol_amroth_armor_b1" />
-                <equipment slot="Gloves" id="Item.swan_bracer_a" />
-                <equipment slot="Leg" id="Item.sk_gondor_lossarnach_boots_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2054,11 +2069,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_basic" />
-                <equipment slot="Body" id="Item.swan_knight_armor_1a_t1" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_b1" />
-                <equipment slot="Gloves" id="Item.swan_bracer_b" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
             <equipment slot="Horse" id="Item.noble_horse_imperial" />
@@ -2093,11 +2108,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_swanknight_spearb" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_elite_mask" />
-                <equipment slot="Body" id="Item.swan_knight_armor_2a_t2" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_c1" />
-                <equipment slot="Gloves" id="Item.swan_gauntlet_a" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_b_full" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
             <equipment slot="Horse" id="Item.noble_horse_imperial" />
@@ -2132,11 +2147,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_swanknight_spearb" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_elite_mask" />
-                <equipment slot="Body" id="Item.swan_knight_armor_2a_t2" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_c1" />
-                <equipment slot="Gloves" id="Item.swan_gauntlet_a" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_b_full" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
             <equipment slot="Horse" id="Item.noble_horse_imperial" />
@@ -2171,11 +2186,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_swanknight_spearb" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.swan_knight_helmet_winged" />
-                <equipment slot="Body" id="Item.swan_knight_armor_2a_t3" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_c2" />
-                <equipment slot="Gloves" id="Item.swan_gauntlet_b" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_b_sabatons" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
             <equipment slot="Horse" id="Item.noble_horse_imperial" />
@@ -2208,11 +2223,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_swanknight_spearb" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.swan_knight_helmet_winged" />
-                <equipment slot="Body" id="Item.swan_knight_armor_2a_t3" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_c2" />
-                <equipment slot="Gloves" id="Item.swan_gauntlet_b" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_b_sabatons" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
             <equipment slot="Horse" id="Item.noble_horse_imperial" />
@@ -2247,11 +2262,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_swan_knight_sworda" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_basic" />
-                <equipment slot="Body" id="Item.dol_amroth_armor_b2" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_a1" />
-                <equipment slot="Gloves" id="Item.swan_bracer_b" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2284,11 +2299,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_swan_knight_sworda" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_basic" />
-                <equipment slot="Body" id="Item.dol_amroth_armor_b2" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_a1" />
-                <equipment slot="Gloves" id="Item.swan_bracer_b" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_a" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2321,11 +2336,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.numenorean_sword_2h_a" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_elite" />
-                <equipment slot="Body" id="Item.dol_amroth_armor_b3" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_a2" />
-                <equipment slot="Gloves" id="Item.swan_bracer_reinforced_a" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_a_full" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2356,11 +2371,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.numenorean_sword_2h_b" />
                 <equipment slot="Item1" id="Item.gond_shield_two_swan" />
-                <equipment slot="Head" id="Item.dol_amroth_helmet_swan" />
-                <equipment slot="Body" id="Item.swan_knight_armor_1a_t2" />
-                <equipment slot="Cape" id="Item.swan_knight_pauldrons_a3" />
-                <equipment slot="Gloves" id="Item.swan_bracer_reinforced_b" />
-                <equipment slot="Leg" id="Item.swan_knight_greaves_a_sabatons" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2472,10 +2487,10 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2509,10 +2524,10 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2544,10 +2559,10 @@
                 <equipment slot="Item0" id="Item.wm_gondor_spear_a" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor1" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2776,8 +2791,8 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
                 <equipment slot="Item1" id="Item.gond_shield_three_green" />
-                <equipment slot="Body" id="Item.imperial_padded_cloth" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2810,8 +2825,10 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
                 <equipment slot="Item1" id="Item.gond_shield_three_green" />
-                <equipment slot="Body" id="Item.imperial_padded_cloth" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2845,10 +2862,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
                 <equipment slot="Item1" id="Item.gond_shield_three_green" />
-                <equipment slot="Head" id="Item.pg_helmet_4" />
-                <equipment slot="Body" id="Item.pg_spearman_armor_01" />
-                <equipment slot="Gloves" id="Item.pg_spearman_glove" />
-                <equipment slot="Leg" id="Item.pg_spearman_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2882,10 +2900,11 @@
                 <equipment slot="Item0" id="Item.composite_steppe_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-                <equipment slot="Head" id="Item.pg_helmet_4" />
-                <equipment slot="Body" id="Item.pg_spearman_armor_01" />
-                <equipment slot="Gloves" id="Item.pg_spearman_glove" />
-                <equipment slot="Leg" id="Item.pg_spearman_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2917,11 +2936,11 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-                <equipment slot="Head" id="Item.pg_helmet_4_coif" />
-                <equipment slot="Body" id="Item.pg_spearman_armor_02" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2954,10 +2973,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
                 <equipment slot="Item1" id="Item.gond_shield_three_green" />
-                <equipment slot="Head" id="Item.pg_helmet_4" />
-                <equipment slot="Body" id="Item.pg_spearman_armor_01" />
-                <equipment slot="Gloves" id="Item.pg_spearman_glove" />
-                <equipment slot="Leg" id="Item.pg_spearman_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -2990,11 +3010,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
                 <equipment slot="Item1" id="Item.gond_shield_three_green" />
-                <equipment slot="Head" id="Item.pg_helmet_4_coif" />
-                <equipment slot="Body" id="Item.pg_spearman_armor_02" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3025,11 +3045,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
                 <equipment slot="Item1" id="Item.gond_shield_three_green" />
-                <equipment slot="Head" id="Item.pg_helmet_4_coif" />
-                <equipment slot="Body" id="Item.pg_spearman_armor_03" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3296,7 +3316,7 @@
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -3333,7 +3353,7 @@
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -3368,8 +3388,8 @@
                 <equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-                <equipment slot="Body" id="Item.citidel_guard_armor1" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
@@ -3410,9 +3430,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
-                <equipment slot="Body" id="Item.mail_shirt" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.gond_bts_lth_ld" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3447,9 +3469,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a05" />
-                <equipment slot="Body" id="Item.mail_shirt" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.gond_bts_lth_ld" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3484,11 +3508,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_plume" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3524,11 +3548,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a08" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_plume" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3563,11 +3587,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a09" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_coif_plume" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3600,11 +3624,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_coif_plume" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3637,11 +3661,11 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item3" id="Item.wm_gondor_sword_a09" />
-                <equipment slot="Head" id="Item.pelargirmarine_helmet_6_b_coif_plume" />
-                <equipment slot="Body" id="Item.citidel_guard_armor4" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+                <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -3902,8 +3926,8 @@
                 <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
-            <equipment slot="Horse" id="Item.empire_horse" />
-            <equipment slot="HorseHarness" id="Item.gondor_horse_armor_2" />
+            <equipment slot="Horse" id="Item.t2_empire_horse" />
+            <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
         </Equipments>
     </NPCCharacter>
 

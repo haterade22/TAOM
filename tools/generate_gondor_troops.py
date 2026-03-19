@@ -314,266 +314,277 @@ def equip_generic_cavalry(t: Troop):
         t.horse = "t2_empire_horse"
         t.horse_harness = "gondor_horse_armor_4"
 
+# =============================================================================
+# REGION-SPECIFIC ARMOR DICTIONARIES
+# tier -> item_id. Empty string ("") falls back to GENERIC_* dictionaries.
+# Fill in with region-specific sk_gd_* IDs when armor guides are provided.
+# =============================================================================
+
+def _apply_region_armor(t: Troop, head_d, body_d, leg_d, cape_d, gloves_d):
+    """Apply region armor dicts. Empty string falls back to GENERIC_*."""
+    tier = t.tier
+    t.head = head_d.get(tier, "") or GENERIC_HEAD.get(tier, "")
+    t.body = body_d.get(tier, "") or GENERIC_BODY.get(tier, "")
+    t.leg = leg_d.get(tier, "") or GENERIC_LEG.get(tier, "")
+    t.cape = cape_d.get(tier, "") or GENERIC_CAPE.get(tier, "")
+    t.gloves = gloves_d.get(tier, "") or GENERIC_GLOVES.get(tier, "")
+
+# ---- LOSSARNACH REGULAR (T1-T6) ----
+LOSS_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LOSS_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LOSS_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LOSS_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LOSS_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+
+# ---- LOSSARNACH NOBLE (T4-T8) ----
+LOSS_NOB_HEAD    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LOSS_NOB_BODY    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LOSS_NOB_LEG     = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LOSS_NOB_CAPE    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LOSS_NOB_GLOVES  = {4: "", 5: "", 6: "", 7: "", 8: ""}
+
+# ---- LEBENNIN (T2-T7) ----
+LEB_HEAD    = {2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+LEB_BODY    = {2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+LEB_LEG     = {2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+LEB_CAPE    = {2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+LEB_GLOVES  = {2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+
+# ---- PELARGIR (T4-T8) ----
+PEL_HEAD    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+PEL_BODY    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+PEL_LEG     = {4: "", 5: "", 6: "", 7: "", 8: ""}
+PEL_CAPE    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+PEL_GLOVES  = {4: "", 5: "", 6: "", 7: "", 8: ""}
+
+# ---- LAMEDON (T1-T6) ----
+LAM_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LAM_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LAM_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LAM_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+LAM_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+
+# ---- CALEMBEL (T4-T8) ----
+CAL_HEAD    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+CAL_BODY    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+CAL_LEG     = {4: "", 5: "", 6: "", 7: "", 8: ""}
+CAL_CAPE    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+CAL_GLOVES  = {4: "", 5: "", 6: "", 7: "", 8: ""}
+
+# ---- RINGLO VALE (T1-T7) ----
+RING_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+RING_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+RING_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+RING_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+RING_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
+
+# ---- BELFALAS (T1-T6) ----
+BEL_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+BEL_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+BEL_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+BEL_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+BEL_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+
+# ---- DOL AMROTH INFANTRY (T3-T8) ----
+DA_INF_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+DA_INF_BODY    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+DA_INF_LEG     = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+DA_INF_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+DA_INF_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+
+# ---- DOL AMROTH CAVALRY (T5-T9) ----
+DA_CAV_HEAD    = {5: "", 6: "", 7: "", 8: "", 9: ""}
+DA_CAV_BODY    = {5: "", 6: "", 7: "", 8: "", 9: ""}
+DA_CAV_LEG     = {5: "", 6: "", 7: "", 8: "", 9: ""}
+DA_CAV_CAPE    = {5: "", 6: "", 7: "", 8: "", 9: ""}
+DA_CAV_GLOVES  = {5: "", 6: "", 7: "", 8: "", 9: ""}
+
+# ---- LINHIR (T3-T7) ----
+LIN_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+LIN_BODY    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+LIN_LEG     = {3: "", 4: "", 5: "", 6: "", 7: ""}
+LIN_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+LIN_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: ""}
+
+# ---- TOLFALAS (T3-T7) ----
+TOL_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+TOL_BODY    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+TOL_LEG     = {3: "", 4: "", 5: "", 6: "", 7: ""}
+TOL_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+TOL_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: ""}
+
+# ---- PINNATH GELIN (T1-T6) ----
+PG_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+PG_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+PG_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+PG_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+PG_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+
+# ---- ARNDIR INFANTRY (T3-T7) ----
+ARN_INF_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+ARN_INF_BODY    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+ARN_INF_LEG     = {3: "", 4: "", 5: "", 6: "", 7: ""}
+ARN_INF_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+ARN_INF_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: ""}
+
+# ---- ARNDIR CAVALRY (T5-T8) ----
+ARN_CAV_HEAD    = {5: "", 6: "", 7: "", 8: ""}
+ARN_CAV_BODY    = {5: "", 6: "", 7: "", 8: ""}
+ARN_CAV_LEG     = {5: "", 6: "", 7: "", 8: ""}
+ARN_CAV_CAPE    = {5: "", 6: "", 7: "", 8: ""}
+ARN_CAV_GLOVES  = {5: "", 6: "", 7: "", 8: ""}
+
+# ---- BLACKROOT VALE (T3-T8) ----
+BRV_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+BRV_BODY    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+BRV_LEG     = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+BRV_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+BRV_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+
+# ---- ANFALAS (T1-T6) ----
+ANF_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+ANF_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+ANF_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+ANF_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+ANF_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+
+# ---- SERELOND (T3-T7) --- shared by pike + mace branches ----
+SER_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+SER_BODY    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+SER_LEG     = {3: "", 4: "", 5: "", 6: "", 7: ""}
+SER_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: ""}
+SER_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: ""}
+
+# ---- LOND-GALEN (T4-T8) ----
+LG_HEAD    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LG_BODY    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LG_LEG     = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LG_CAPE    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+LG_GLOVES  = {4: "", 5: "", 6: "", 7: "", 8: ""}
+
+# ---- HARONDOR (T1-T6) ----
+HAR_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+HAR_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+HAR_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+HAR_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+HAR_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+
+# ---- METHIR (T4-T8) --- shared by glaive + archer branches ----
+MET_HEAD    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+MET_BODY    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+MET_LEG     = {4: "", 5: "", 6: "", 7: "", 8: ""}
+MET_CAPE    = {4: "", 5: "", 6: "", 7: "", 8: ""}
+MET_GLOVES  = {4: "", 5: "", 6: "", 7: "", 8: ""}
+
+
 # Region-specific equipment helpers
 def equip_lossarnach(t: Troop, is_throwing=False):
     tier = t.tier
     if is_throwing:
-        # Skirmisher/axe-thrower line - ranged with throwing axes
         t.weapons = ["wm_gondor_lossarnach_1h_axe_a", "wm_gondor_lossarnach_1h_axe_b"]
         t.shield = ""
     else:
-        # Axebearer/guard line - melee with axes
         if tier <= 4:
             t.weapons = ["wm_gondor_lossarnach_1h_axe_a"]
             t.shield = "gond_shield_one_greyscale"
         else:
             t.weapons = ["wm_gondor_lossarnach_2h_axe_a"]
             t.shield = "gond_shield_one_greyscale"
-    if tier <= 2:
-        t.head = ""
-        t.body = "sk_gondor_lossarnach_chest_a"
-        t.leg = "sk_gondor_lossarnach_boots_a"
-        t.cape = ""
-        t.gloves = ""
-    elif tier <= 4:
-        t.head = "gondor_generic_helmet_5_b"
-        t.body = "sk_gondor_lossarnach_chest_a"
-        t.leg = "sk_gondor_lossarnach_boots_a"
-        t.cape = ""
-        t.gloves = "citidel_guard_gloves"
-    else:
-        t.head = "gondor_generic_helmet_5_a_coif"
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots"
-        t.cape = "citidel_guard_armor_pauldrons_light"
-        t.gloves = "citidel_guard_bracers"
+    _apply_region_armor(t, LOSS_HEAD, LOSS_BODY, LOSS_LEG, LOSS_CAPE, LOSS_GLOVES)
 
 def equip_lossarnach_noble(t: Troop):
     tier = t.tier
     if tier <= 5:
         t.weapons = ["wm_gondor_lossarnach_2h_axe_a"]
-        t.shield = "gond_shield_one_greyscale"
     else:
         t.weapons = ["wm_gondor_lossarnach_2h_axe_b"]
-        t.shield = "gond_shield_one_greyscale"
-    if tier <= 5:
-        t.head = "gondor_generic_helmet_5_a"
-        t.body = "sk_gondor_lossarnach_chest_a"
-        t.leg = "sk_gondor_lossarnach_boots_a"
-        t.cape = "citidel_guard_armor_pauldrons_light"
-        t.gloves = "citidel_guard_gloves"
-    else:
-        t.head = "gondor_generic_helmet_5_a_coif"
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots"
-        t.cape = "citidel_guard_armor_pauldrons"
-        t.gloves = "citidel_guard_bracers"
+    t.shield = "gond_shield_one_greyscale"
+    _apply_region_armor(t, LOSS_NOB_HEAD, LOSS_NOB_BODY, LOSS_NOB_LEG, LOSS_NOB_CAPE, LOSS_NOB_GLOVES)
 
 def equip_lebennin(t: Troop, is_ranged=False):
     tier = t.tier
     if is_ranged:
-        equip_generic_ranged(t)
+        t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
     else:
-        equip_generic_infantry(t)
-    # Override with regional flavor at higher tiers
-    if tier >= 5:
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots"
-    if tier >= 7:
-        t.body = "citidel_guard_armor1"
-        t.cape = "citidel_guard_armor_pauldrons"
+        t.weapons = [GENERIC_SWORDS[tier]]
+        t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, LEB_HEAD, LEB_BODY, LEB_LEG, LEB_CAPE, LEB_GLOVES)
 
 def equip_pelargir(t: Troop):
     tier = t.tier
     t.weapons = ["wm_pelargir_sword_a01" if tier <= 5 else "wm_pelargir_sword_a02"]
     t.shield = "gond_shield_one_greyscale"
-    if tier <= 5:
-        t.head = "pelargirmarine_helmet_6_b"
-        t.body = "lrd_marines_gondor_2_armour"
-        t.leg = "lrd_marines_gondor_1_boots"
-        t.gloves = "lrd_marines_gondor_1_gloves"
-        t.cape = ""
-    else:
-        t.head = "pelargirmarine_helmet_6_b_plume"
-        t.body = "lrd_gondor_marines_1_armour"
-        t.leg = "lrd_marines_gondor_1_boots"
-        t.gloves = "lrd_marines_gondor_3_gloves"
-        t.cape = "citidel_guard_armor_pauldrons_light"
+    _apply_region_armor(t, PEL_HEAD, PEL_BODY, PEL_LEG, PEL_CAPE, PEL_GLOVES)
 
 def equip_lamedon(t: Troop):
     tier = t.tier
-    if tier <= 2:
+    if tier <= 4:
         t.weapons = ["wm_gondor_lamedon_1h_sword_a"]
-        t.shield = "gond_shield_one_red"
-        t.head = ""
-        t.body = "layered_leather_tunic"
-        t.leg = "cts_gondor_boot"
-        t.cape = ""
-        t.gloves = ""
-    elif tier <= 4:
-        t.weapons = ["wm_gondor_lamedon_1h_sword_a"]
-        t.shield = "gond_shield_one_red"
-        t.head = "gondor_lamedon_helmet_4"
-        t.body = "cts_gondor_armor3"
-        t.leg = "cts_gondor_boot"
-        t.cape = ""
-        t.gloves = "citidel_guard_bracers"
     else:
         t.weapons = ["wm_gondor_lamedon_2h_sword_a"]
-        t.shield = "gond_shield_one_red"
-        t.head = "gondor_lamedon_helmet_4_b"
-        t.body = "cts_gondor_armor2"
-        t.leg = "cts_gondor_boot"
-        t.cape = "cts_gondor_pauldrons"
-        t.gloves = "citidel_guard_bracers"
+    t.shield = "gond_shield_one_red"
+    _apply_region_armor(t, LAM_HEAD, LAM_BODY, LAM_LEG, LAM_CAPE, LAM_GLOVES)
 
 def equip_calembel(t: Troop):
     tier = t.tier
     if tier <= 5:
         t.weapons = ["wm_gondor_lamedon_1h_sword_a"]
-        t.shield = "gond_shield_one_red"
-        t.head = "gondor_lamedon_helmet_4"
-        t.body = "cts_gondor_armor3"
-        t.leg = "cts_gondor_boot"
-        t.cape = ""
-        t.gloves = "citidel_guard_bracers"
     elif tier <= 6:
         t.weapons = ["wm_gondor_lamedon_2h_sword_b"]
-        t.shield = "gond_shield_one_red"
-        t.head = "gondor_lamedon_helmet_4_b"
-        t.body = "cts_gondor_armor2"
-        t.leg = "cts_gondor_boot"
-        t.cape = "cts_gondor_pauldrons"
-        t.gloves = "citidel_guard_bracers"
     else:
         t.weapons = ["wm_gondor_lamedon_2h_sword_c"]
-        t.shield = "gond_shield_one_red"
-        t.head = "gondor_lamedon_helmet_4_c"
-        t.body = "cts_gondor_armor1"
-        t.leg = "cts_gondor_boot"
-        t.cape = "cts_gondor_pauldrons"
-        t.gloves = "citidel_guard_bracers"
+    t.shield = "gond_shield_one_red"
+    _apply_region_armor(t, CAL_HEAD, CAL_BODY, CAL_LEG, CAL_CAPE, CAL_GLOVES)
 
 def equip_ringlo(t: Troop):
     tier = t.tier
-    equip_generic_spear(t)
-    if tier <= 2:
-        t.body = "layered_leather_tunic"
-        t.leg = "battania_leather_boots"
-    elif tier <= 4:
-        t.body = "gondor_chainmaila"
-    if tier >= 6:
-        t.body = "citidel_guard_armor4"
-        t.cape = "citidel_guard_armor_pauldrons"
+    t.weapons = [GENERIC_SPEARS[tier]]
+    t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, RING_HEAD, RING_BODY, RING_LEG, RING_CAPE, RING_GLOVES)
 
 def equip_belfalas(t: Troop, is_ranged=False):
-    if is_ranged:
-        equip_generic_ranged(t)
-    else:
-        equip_generic_infantry(t)
     tier = t.tier
-    if tier <= 2:
-        t.body = "imperial_padded_cloth"
-        t.leg = "citidel_guard_boots_light"
-    elif tier >= 5:
-        t.head = "gondor_generic_helmet_5_a_coif"
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots"
-        t.cape = "citidel_guard_armor_pauldrons_light"
-        t.gloves = "citidel_guard_bracers"
+    if is_ranged:
+        t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
+    else:
+        t.weapons = [GENERIC_SWORDS[tier]]
+        t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, BEL_HEAD, BEL_BODY, BEL_LEG, BEL_CAPE, BEL_GLOVES)
 
 def equip_dol_amroth_infantry(t: Troop):
     tier = t.tier
     if tier <= 4:
         t.weapons = ["wm_gondor_sword_a01"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "gondor_chainmail_helmeta"
-        t.body = "dol_amroth_armor_b1"
-        t.leg = "sk_gondor_lossarnach_boots_a"
-        t.cape = ""
-        t.gloves = "swan_bracer_a"
     elif tier <= 6:
         t.weapons = ["wm_swan_knight_sworda"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "dol_amroth_helmet_basic"
-        t.body = "dol_amroth_armor_b2"
-        t.leg = "swan_knight_greaves_a"
-        t.cape = "swan_knight_pauldrons_a1"
-        t.gloves = "swan_bracer_b"
     elif tier <= 7:
         t.weapons = ["numenorean_sword_2h_a"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "dol_amroth_helmet_elite"
-        t.body = "dol_amroth_armor_b3"
-        t.leg = "swan_knight_greaves_a_full"
-        t.cape = "swan_knight_pauldrons_a2"
-        t.gloves = "swan_bracer_reinforced_a"
     else:
         t.weapons = ["numenorean_sword_2h_b"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "dol_amroth_helmet_swan"
-        t.body = "swan_knight_armor_1a_t2"
-        t.leg = "swan_knight_greaves_a_sabatons"
-        t.cape = "swan_knight_pauldrons_a3"
-        t.gloves = "swan_bracer_reinforced_b"
+    t.shield = "gond_shield_two_swan"
+    _apply_region_armor(t, DA_INF_HEAD, DA_INF_BODY, DA_INF_LEG, DA_INF_CAPE, DA_INF_GLOVES)
 
 def equip_dol_amroth_cavalry(t: Troop):
     tier = t.tier
     if tier <= 5:
         t.weapons = ["wm_gondor_swanknight_speara"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "dol_amroth_helmet_basic"
-        t.body = "swan_knight_armor_1a_t1"
-        t.leg = "swan_knight_greaves_a"
-        t.cape = "swan_knight_pauldrons_b1"
-        t.gloves = "swan_bracer_b"
-        t.horse = "noble_horse_imperial"
-        t.horse_harness = "gondor_swan_horse_armor_1"
-    elif tier <= 7:
-        t.weapons = ["wm_gondor_swanknight_spearb"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "dol_amroth_helmet_elite_mask"
-        t.body = "swan_knight_armor_2a_t2"
-        t.leg = "swan_knight_greaves_b_full"
-        t.cape = "swan_knight_pauldrons_c1"
-        t.gloves = "swan_gauntlet_a"
-        t.horse = "noble_horse_imperial"
-        t.horse_harness = "gondor_swan_horse_armor_2"
     else:
         t.weapons = ["wm_gondor_swanknight_spearb"]
-        t.shield = "gond_shield_two_swan"
-        t.head = "swan_knight_helmet_winged"
-        t.body = "swan_knight_armor_2a_t3"
-        t.leg = "swan_knight_greaves_b_sabatons"
-        t.cape = "swan_knight_pauldrons_c2"
-        t.gloves = "swan_gauntlet_b"
-        t.horse = "noble_horse_imperial"
-        t.horse_harness = "gondor_swan_horse_armor_2"
+    t.shield = "gond_shield_two_swan"
+    t.horse = "noble_horse_imperial"
+    t.horse_harness = "gondor_swan_horse_armor_1" if tier <= 5 else "gondor_swan_horse_armor_2"
+    _apply_region_armor(t, DA_CAV_HEAD, DA_CAV_BODY, DA_CAV_LEG, DA_CAV_CAPE, DA_CAV_GLOVES)
 
 def equip_linhir(t: Troop):
-    equip_generic_spear(t)
     tier = t.tier
-    if tier >= 5:
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots"
-        t.cape = "citidel_guard_armor_pauldrons_light"
-    if tier >= 7:
-        t.body = "citidel_guard_armor1"
-        t.cape = "citidel_guard_armor_pauldrons"
+    t.weapons = [GENERIC_SPEARS[tier]]
+    t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, LIN_HEAD, LIN_BODY, LIN_LEG, LIN_CAPE, LIN_GLOVES)
 
 def equip_tolfalas(t: Troop):
     tier = t.tier
-    # Crossbow units
-    if tier <= 4:
-        t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
-    else:
-        t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
-    # Swap bow for crossbow-appropriate items (use same bow items, crossbow spec handles skills)
-    t.head = GENERIC_HEAD[tier]
-    t.body = GENERIC_BODY[tier]
-    t.leg = GENERIC_LEG[tier]
-    t.cape = GENERIC_CAPE[tier]
-    t.gloves = GENERIC_GLOVES[tier]
+    t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
+    _apply_region_armor(t, TOL_HEAD, TOL_BODY, TOL_LEG, TOL_CAPE, TOL_GLOVES)
 
 def equip_pinnath_gelin(t: Troop, is_ranged=False, is_spear=False):
     tier = t.tier
@@ -585,108 +596,82 @@ def equip_pinnath_gelin(t: Troop, is_ranged=False, is_spear=False):
     else:
         t.weapons = [GENERIC_SWORDS[tier]]
         t.shield = "gond_shield_three_green"
-    if tier <= 2:
-        t.head = ""
-        t.body = "imperial_padded_cloth"
-        t.leg = "citidel_guard_boots_light"
-        t.cape = ""
-        t.gloves = ""
-    elif tier <= 4:
-        t.head = "pg_helmet_4"
-        t.body = "pg_spearman_armor_01"
-        t.leg = "pg_spearman_boots"
-        t.cape = ""
-        t.gloves = "pg_spearman_glove"
-    else:
-        t.head = "pg_helmet_4_coif"
-        t.body = "pg_spearman_armor_02" if tier <= 5 else "pg_spearman_armor_03"
-        t.leg = "citidel_guard_boots"
-        t.cape = "citidel_guard_armor_pauldrons_light"
-        t.gloves = "citidel_guard_bracers"
+    _apply_region_armor(t, PG_HEAD, PG_BODY, PG_LEG, PG_CAPE, PG_GLOVES)
 
 def equip_arndir_infantry(t: Troop):
-    equip_generic_infantry(t)
     tier = t.tier
-    if tier >= 5:
-        t.body = "citidel_guard_armor4"
-    if tier >= 7:
-        t.body = "citidel_guard_armor1"
-        t.cape = "citidel_guard_armor_pauldrons"
+    t.weapons = [GENERIC_SWORDS[tier]]
+    t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, ARN_INF_HEAD, ARN_INF_BODY, ARN_INF_LEG, ARN_INF_CAPE, ARN_INF_GLOVES)
 
 def equip_arndir_cavalry(t: Troop):
-    equip_generic_cavalry(t)
+    tier = t.tier
+    t.weapons = [GENERIC_SPEARS[tier]]
+    t.shield = GENERIC_SHIELDS[tier]
+    t.horse = "t2_empire_horse"
+    t.horse_harness = "gondor_horse_armor_4"
+    _apply_region_armor(t, ARN_CAV_HEAD, ARN_CAV_BODY, ARN_CAV_LEG, ARN_CAV_CAPE, ARN_CAV_GLOVES)
 
 def equip_blackroot(t: Troop):
     tier = t.tier
     t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS, GENERIC_SWORDS[tier]]
-    if tier <= 4:
-        t.head = ""
-        t.body = "mail_shirt"
-        t.leg = "gond_bts_lth_ld"
-        t.cape = ""
-        t.gloves = "citidel_guard_bracers"
-    elif tier <= 6:
-        t.head = "pelargirmarine_helmet_6_b_plume"
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots_light"
-        t.cape = "citidel_guard_armor_pauldrons_light"
-        t.gloves = "citidel_guard_bracers"
-    else:
-        t.head = "pelargirmarine_helmet_6_b_coif_plume"
-        t.body = "citidel_guard_armor4"
-        t.leg = "citidel_guard_boots_light"
-        t.cape = "citidel_guard_armor_pauldrons"
-        t.gloves = "citidel_guard_bracers"
+    _apply_region_armor(t, BRV_HEAD, BRV_BODY, BRV_LEG, BRV_CAPE, BRV_GLOVES)
 
 def equip_anfalas(t: Troop, is_cavalry=False):
+    tier = t.tier
     if is_cavalry:
-        equip_generic_cavalry(t)
+        t.weapons = [GENERIC_SPEARS[tier]]
+        t.shield = GENERIC_SHIELDS[tier]
+        t.horse = "t2_empire_horse"
+        t.horse_harness = "gondor_horse_armor_4"
     else:
-        equip_generic_infantry(t)
+        t.weapons = [GENERIC_SWORDS[tier]]
+        t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, ANF_HEAD, ANF_BODY, ANF_LEG, ANF_CAPE, ANF_GLOVES)
 
 def equip_serelond_pike(t: Troop):
-    equip_generic_spear(t)
     tier = t.tier
     if tier >= 5:
         t.weapons = ["fine_pike_t4" if tier <= 6 else "vlandia_pike_1_t5"]
         t.shield = ""
+    else:
+        t.weapons = [GENERIC_SPEARS[tier]]
+        t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, SER_HEAD, SER_BODY, SER_LEG, SER_CAPE, SER_GLOVES)
 
 def equip_serelond_mace(t: Troop):
-    equip_generic_infantry(t)
-    # Mace-wielders use generic swords as placeholder (no specific mace items found)
+    tier = t.tier
+    t.weapons = [GENERIC_SWORDS[tier]]
+    t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, SER_HEAD, SER_BODY, SER_LEG, SER_CAPE, SER_GLOVES)
 
 def equip_lond_galen(t: Troop):
-    equip_tolfalas(t)
     tier = t.tier
+    t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
     if tier >= 6:
-        # Pavise guard - add shield
         t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, LG_HEAD, LG_BODY, LG_LEG, LG_CAPE, LG_GLOVES)
 
 def equip_harondor(t: Troop, is_skirmisher=False):
+    tier = t.tier
     if is_skirmisher:
-        tier = t.tier
         t.weapons = ["western_javelin_3_t4", "western_javelin_3_t4", GENERIC_SWORDS[tier]]
         t.shield = GENERIC_SHIELDS[tier]
-        t.head = GENERIC_HEAD[tier]
-        t.body = GENERIC_BODY[tier]
-        t.leg = GENERIC_LEG[tier]
-        t.cape = GENERIC_CAPE[tier]
-        t.gloves = GENERIC_GLOVES[tier]
     else:
-        equip_generic_infantry(t)
+        t.weapons = [GENERIC_SWORDS[tier]]
+        t.shield = GENERIC_SHIELDS[tier]
+    _apply_region_armor(t, HAR_HEAD, HAR_BODY, HAR_LEG, HAR_CAPE, HAR_GLOVES)
 
 def equip_methir_glaive(t: Troop):
     tier = t.tier
-    t.weapons = [GENERIC_SPEARS[tier]]  # Glaive uses spear models
+    t.weapons = [GENERIC_SPEARS[tier]]
     t.shield = GENERIC_SHIELDS[tier]
-    t.head = GENERIC_HEAD[tier]
-    t.body = GENERIC_BODY[tier]
-    t.leg = GENERIC_LEG[tier]
-    t.cape = GENERIC_CAPE[tier]
-    t.gloves = GENERIC_GLOVES[tier]
+    _apply_region_armor(t, MET_HEAD, MET_BODY, MET_LEG, MET_CAPE, MET_GLOVES)
 
 def equip_methir_archer(t: Troop):
-    equip_generic_ranged(t)
+    tier = t.tier
+    t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
+    _apply_region_armor(t, MET_HEAD, MET_BODY, MET_LEG, MET_CAPE, MET_GLOVES)
 
 def equip_citadel(t: Troop, is_ranged=False):
     """MT Citadel Guard Noble (T5-T9) — from Citadel Guard + Fountain Guard armor guides."""

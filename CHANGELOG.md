@@ -2,6 +2,22 @@
 
 ## 2026-03-19
 
+### Gondor Equipment Pass — 6 Guided Groups + Scaffolding
+
+Created 83 new armor item definitions (`sk_gd_*` prefix) in LOTRLOME_Armory for 6 guided groups:
+- **Anorien Regular** — Generic infantry base armor (chainmail → heavy chest progression)
+- **MT Citadel Guard** (T5-T8) — Citadel-specific chest/helmet progression
+- **MT Fountain Guard** (T9) — Elite fountain helmet + cape+pauldron combo
+- **Osgiliath** (T3-T7) — Branch-specific helmets (Infantry/Dome Guard vs Longbow)
+- **Cair Andros** (T3-T7) — Branch-specific helmets (Pike vs Warden)
+- **Minas Ithil** (T5-T9) — Noble armor progression, Moon Guard at T9
+
+Refactored remaining 17 region equip functions to tier-based dictionary structure:
+- 20 dict sets (LOSS_*, PEL_*, DA_INF_*, etc.) with empty slots ready for future armor guides
+- `_apply_region_armor()` helper falls back to GENERIC_* when dict values are empty
+- All region-specific weapons preserved (axes, swan knight spears, etc.)
+- Generator: `tools/generate_gondor_armor.py` (--dry-run / --apply)
+
 ### New Gondor Troop Tree
 
 Replaced the existing 77-troop Gondor tree with a comprehensive 182-troop tree spanning 23 unit groups across 18 sub-regions:
