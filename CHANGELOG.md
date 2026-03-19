@@ -2,6 +2,23 @@
 
 ## 2026-03-19
 
+### Gondor Old Asset Cleanup
+
+Removed 66 orphaned armor item entries from LOTRLOME_Armory gondor XMLs whose FBX source
+files were deleted in lotraom-assets commit `defb2642`:
+- head_armors.xml: -31 items (citadel helmets, fountain helmets, old soldier helmets)
+- body_armors.xml: -14 items (citadel/fountain/king/noble armor, old tabard)
+- shoulder_armors.xml: -9 items (citadel/fountain/king/noble/old pauldrons)
+- arm_armors.xml: -5 items (citadel bracers/gloves, king/noble bracers)
+- leg_armors.xml: -7 items (citadel/fountain/king/noble/old boots)
+
+Fixed 4 militia troops referencing deleted body armor (gondor_noble_jerkin_a/b,
+gond_tab_9ld, gondor_noble_coat_a) — replaced with sk_gd_ano_chainmail_* items.
+
+Added 10 missing armor items (total now 93): 3 elite body, 5 shoulders, 2 elite bracers.
+
+Cleanup script: `tools/cleanup_deleted_gondor_armor.py`
+
 ### Gondor Equipment Pass — 6 Guided Groups + Scaffolding
 
 Created 83 new armor item definitions (`sk_gd_*` prefix) in LOTRLOME_Armory for 6 guided groups:
