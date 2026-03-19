@@ -8695,11 +8695,11 @@
             <EquipmentRoster>
                 <equipment slot="Item1" id="Item.anduril" />
                 <equipment slot="Item2" id="Item.gond_shld2" />
-                <equipment slot="Head" id="Item.gondor_nobke_helmet1" />
+                <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment slot="Body" id="Item.gondor_armor" />
                 <equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
-                <equipment slot="Leg" id="Item.gondor_boots" />
-                <equipment slot="Cape" id="Item.gondor_pauldrons" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
             </EquipmentRoster>
             <EquipmentSet id="emp_civ_template_flamboyant" civilian="true" />
         </Equipments>

@@ -11,7 +11,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -26,7 +26,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
@@ -46,7 +46,7 @@
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -64,8 +64,8 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 				<equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-				<equipment slot="Head" id="Item.gondor_helmet" />
-				<equipment slot="Body" id="Item.gondor_chainmaila" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots" />
 			</EquipmentRoster>
@@ -83,7 +83,7 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
 				<equipment slot="Body" id="Item.gond_tab_9ld" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -100,8 +100,8 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 				<equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-				<equipment slot="Head" id="Item.gondor_solider_helm" />
-				<equipment slot="Body" id="Item.gondor_chainmaila" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots" />
 			</EquipmentRoster>
@@ -122,7 +122,7 @@
 				<equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 				<equipment slot="Item2" id="Item.wm_gondor_spear" />
 				<equipment slot="Head" id="Item.gondor_generic_helmet_5_a" />
-				<equipment slot="Body" id="Item.gondor_chainmaila" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots" />
 			</EquipmentRoster>
@@ -157,7 +157,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
 				<equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-				<equipment slot="Head" id="Item.gondor_solider_helm" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 				<equipment slot="Body" id="Item.gond_tab_9ld" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots" />
@@ -172,7 +172,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
@@ -187,7 +187,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
@@ -212,7 +212,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -223,7 +223,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -277,7 +277,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -310,7 +310,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
@@ -327,7 +327,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
@@ -345,7 +345,7 @@
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
@@ -363,10 +363,10 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gond_tab_9ld" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_chainmaila" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots" />
 			</EquipmentRoster>
@@ -379,7 +379,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
@@ -395,7 +395,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
@@ -410,7 +410,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
@@ -425,7 +425,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
@@ -444,7 +444,7 @@
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -456,7 +456,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
@@ -471,7 +471,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
@@ -486,7 +486,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gond_tab_9ld" />
@@ -516,7 +516,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -538,7 +538,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
@@ -555,7 +555,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -578,7 +578,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -623,7 +623,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -635,7 +635,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -647,7 +647,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -680,7 +680,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -704,7 +704,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -727,7 +727,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -747,7 +747,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -758,7 +758,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -778,7 +778,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -800,7 +800,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -844,7 +844,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -854,7 +854,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.gondor_boots" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -873,7 +873,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_chainmaila" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
 				<equipment slot="Leg" id="Item.citidel_guard_boots" />
 			</EquipmentRoster>

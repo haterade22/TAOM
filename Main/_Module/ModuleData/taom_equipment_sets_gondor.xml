@@ -41,7 +41,7 @@
 	<EquipmentRoster id="gondor_bat_template_medium_d" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
-			<Equipment slot="Head" id="Item.gondor_nobke_helmet" />
+			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
 			<Equipment slot="Body" id="Item.gondor_king_armor" />
 			<Equipment slot="Cape" id="Item.gondor_nobke_pauldrons" />
 			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
@@ -54,7 +54,7 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
 			<Equipment slot="Head" id="Item.citidel_guard_helmet5" />
 			<Equipment slot="Body" id="Item.citidel_guard_armor4" />
-			<Equipment slot="Cape" id="Item.gondor_pauldrons" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
 			<Equipment slot="Gloves" id="Item.citidel_guard_bracers_shield" />
 			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
 		</EquipmentSet>
@@ -65,7 +65,7 @@
 	<EquipmentRoster id="gondor_civ_template_default_a" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Body" id="Item.gondor_noble_coat_a" />
-			<Equipment slot="Leg" id="Item.gondor_boots" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -79,7 +79,7 @@
 	<EquipmentRoster id="gondor_civ_template_default_c" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-			<Equipment slot="Leg" id="Item.gondor_boots" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

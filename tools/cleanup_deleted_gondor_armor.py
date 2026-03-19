@@ -14,9 +14,10 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-ARMORY_BASE = Path(
-    "E:/repos/lotraom-assets/shared/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor"
-)
+ARMORY_PATHS = [
+    Path("E:/repos/lotraom-assets/shared/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor"),
+    Path("E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor"),
+]
 
 # Item IDs to remove, grouped by source XML file
 ITEMS_TO_REMOVE = {
@@ -55,6 +56,15 @@ ITEMS_TO_REMOVE = {
         "gond_hlm_b_ld",
         "gond_hlm_ld",
         "gond_hlm_mask_b_ld",
+        # Replaced by sk_gd_* items — no longer needed
+        "gondor_helmet",
+        "gondor_solider_helm",
+        "gondor_solider_helm_gold",
+        "gondor_nobke_helmet",
+        "gondor_nobke_helmet1",
+        "gondor_chainmail_helmeta",
+        "ga_helmet021",
+        "ga_helmet022",
     ],
     "body_armors.xml": [
         # From citidel_guard_armors.fbx (deleted)
@@ -76,6 +86,8 @@ ITEMS_TO_REMOVE = {
         "gondor_noble_jerkin_b",
         # From gondor_soldier_old/ (deleted)
         "gond_tab_9ld",
+        # Replaced by sk_gd_* items — no longer needed
+        "gondor_chainmaila",
     ],
     "shoulder_armors.xml": [
         # From citidel_guard_shoulders.fbx (deleted)
@@ -92,6 +104,9 @@ ITEMS_TO_REMOVE = {
         "gondor_nobke_pauldrons",
         # From gondor_soldier_old/ (deleted) — id differs from mesh name
         "gondor_shldr_plt_ld",
+        # Replaced by sk_gd_* items — no longer needed
+        "gondor_pauldrons",
+        "cts_gondor_pauldrons",
     ],
     "arm_armors.xml": [
         # From citidel_guard_gloves.fbx (deleted)
@@ -102,6 +117,8 @@ ITEMS_TO_REMOVE = {
         "gondor_king_bracers",
         # From gondor_noble.fbx (deleted)
         "gondor_nobke_bracers",
+        # Replaced by sk_gd_* items — no longer needed
+        "boromir_gloves",
     ],
     "leg_armors.xml": [
         # From citidel_guard_boots.fbx (deleted)
@@ -116,6 +133,8 @@ ITEMS_TO_REMOVE = {
         # From gondor_soldier_old/ (deleted)
         "gond_bts_lth_ld",
         "gond_bts_plt_b_ld",
+        # Replaced by sk_gd_* items — no longer needed
+        "gondor_boots",
     ],
 }
 
@@ -165,25 +184,26 @@ def main():
     group.add_argument("--apply", action="store_true", help="Remove items from XMLs")
     args = parser.parse_args()
 
-    if not ARMORY_BASE.exists():
-        print(f"ERROR: Armory path not found: {ARMORY_BASE}")
-        sys.exit(1)
-
-    total = 0
-    for xml_name, ids in ITEMS_TO_REMOVE.items():
-        xml_path = ARMORY_BASE / xml_name
-        if not xml_path.exists():
-            print(f"WARNING: {xml_path} not found, skipping")
+    grand_total = 0
+    for armory_base in ARMORY_PATHS:
+        if not armory_base.exists():
+            print(f"SKIP: {armory_base} not found")
             continue
-        count = process_file(xml_path, ids, apply=args.apply)
-        total += count
+        print(f"\n=== {armory_base} ===")
+        total = 0
+        for xml_name, ids in ITEMS_TO_REMOVE.items():
+            xml_path = armory_base / xml_name
+            if not xml_path.exists():
+                print(f"WARNING: {xml_path} not found, skipping")
+                continue
+            count = process_file(xml_path, ids, apply=args.apply)
+            total += count
+        print(f"  Subtotal: {total}")
+        grand_total += total
 
     expected = sum(len(ids) for ids in ITEMS_TO_REMOVE.values())
-    print(f"\nTotal: {total} items {'removed' if args.apply else 'to remove'} "
-          f"(expected {expected})")
-
-    if total != expected:
-        print("WARNING: Count mismatch — some items were not found in the XMLs")
+    print(f"\nGrand total: {grand_total} items {'removed' if args.apply else 'to remove'} "
+          f"(expected up to {expected} per location)")
 
 
 if __name__ == "__main__":

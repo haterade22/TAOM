@@ -17,6 +17,15 @@ gond_tab_9ld, gondor_noble_coat_a) — replaced with sk_gd_ano_chainmail_* items
 
 Added 10 missing armor items (total now 93): 3 elite body, 5 shoulders, 2 elite bracers.
 
+Replaced 13 additional old Gondor items with `sk_gd_*` equivalents across all equipment sets
+(troops, lords, NPCs, wanderers, char creation, equipment sets):
+- 7 helmets → `sk_gd_ano_inf_helmet_med_a` / `heavy_a` / `sk_gd_ano_noble_helmet_med_a`
+- 1 body → `sk_gd_ano_chainmail_half_a`
+- 2 shoulders → `sk_gd_ano_pauld_inf_med_a`
+- 1 arm → `sk_gd_ano_bracer_noble_med_a`
+- 1 leg → `sk_gd_ano_boots_a`
+- Removed all 79 orphaned items from both lotraom-assets and Steam armory XMLs
+
 Cleanup script: `tools/cleanup_deleted_gondor_armor.py`
 
 ### Gondor Equipment Pass — 6 Guided Groups + Scaffolding

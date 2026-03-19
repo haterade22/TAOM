@@ -65,7 +65,7 @@
 				id="Item.cts_gondor_boot" />
 			<Equipment
 				slot="Head"
-				id="Item.gondor_solider_helm" />
+				id="Item.sk_gd_ano_inf_helmet_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!--2.Merchant-->

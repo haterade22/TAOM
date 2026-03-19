@@ -6690,8 +6690,8 @@
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.gondor_generic_helmet_5_b" />
                 <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
-                <equipment slot="Cape" id="Item.gondor_pauldrons" />
-                <equipment slot="Leg" id="Item.gondor_boots" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -6724,7 +6724,7 @@
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.default_arrows" />
                 <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-                <equipment slot="Leg" id="Item.gondor_boots" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>
@@ -6757,8 +6757,8 @@
                 <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.gondor_generic_helmet_5_a" />
                 <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_b" />
-                <equipment slot="Cape" id="Item.gondor_pauldrons" />
-                <equipment slot="Leg" id="Item.gondor_boots" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             </EquipmentRoster>
             <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
         </Equipments>

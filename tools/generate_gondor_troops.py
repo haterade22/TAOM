@@ -1833,8 +1833,8 @@ def build_all_troops() -> list[Troop]:
     # Override with militia-specific gear (use generic Anorien items)
     t.head = "gondor_generic_helmet_5_b"
     t.body = "sk_gd_ano_chainmail_full_a"
-    t.leg = "gondor_boots"
-    t.cape = "gondor_pauldrons"
+    t.leg = "sk_gd_ano_boots_a"
+    t.cape = "sk_gd_ano_pauld_inf_med_a"
     t.gloves = ""
     troops.append(t)
 
@@ -1842,7 +1842,7 @@ def build_all_troops() -> list[Troop]:
     equip_generic_ranged(t)
     t.head = ""
     t.body = "sk_gd_ano_chainmail_half_a"
-    t.leg = "gondor_boots"
+    t.leg = "sk_gd_ano_boots_a"
     t.cape = ""
     t.gloves = ""
     t.weapons = ["hunting_bow", "default_arrows", "default_arrows"]
@@ -1852,8 +1852,8 @@ def build_all_troops() -> list[Troop]:
     equip_generic_spear(t)
     t.head = "gondor_generic_helmet_5_a"
     t.body = "sk_gd_ano_chainmail_full_b"
-    t.leg = "gondor_boots"
-    t.cape = "gondor_pauldrons"
+    t.leg = "sk_gd_ano_boots_a"
+    t.cape = "sk_gd_ano_pauld_inf_med_a"
     t.gloves = ""
     troops.append(t)
 

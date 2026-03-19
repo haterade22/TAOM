@@ -56,7 +56,7 @@
                     id="Item.varangian_bra_padded" />
                 <equipment
                     slot="Body"
-                    id="Item.gondor_chainmaila" />
+                    id="Item.sk_gd_ano_chainmail_half_a" />
                 <equipment
                     slot="Leg"
                     id="Item.citidel_guard_boots_light" />
@@ -76,7 +76,7 @@
                     id="Item.varangian_bra_padded" />
                 <equipment
                     slot="Body"
-                    id="Item.gondor_chainmaila" />
+                    id="Item.sk_gd_ano_chainmail_half_a" />
                 <equipment
                     slot="Leg"
                     id="Item.citidel_guard_boots_light" />
@@ -96,7 +96,7 @@
                     id="Item.varangian_bra_padded" />
                 <equipment
                     slot="Body"
-                    id="Item.gondor_chainmaila" />
+                    id="Item.sk_gd_ano_chainmail_half_a" />
                 <equipment
                     slot="Leg"
                     id="Item.citidel_guard_boots_light" />
@@ -192,7 +192,7 @@
                     id="Item.northern_round_sparring_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_chainmail_helmeta" />
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.hood" />
@@ -212,7 +212,7 @@
                     id="Item.northern_round_sparring_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_chainmail_helmeta" />
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.hood" />
@@ -232,7 +232,7 @@
                     id="Item.northern_round_sparring_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_chainmail_helmeta" />
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.hood" />
@@ -252,7 +252,7 @@
                     id="Item.northern_round_sparring_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_chainmail_helmeta" />
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.hood" />
@@ -611,7 +611,7 @@
                     id="Item.isengard_pike_b" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -631,7 +631,7 @@
                     id="Item.isengard_pike_b" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -651,7 +651,7 @@
                     id="Item.isengard_pike_b" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -671,7 +671,7 @@
                     id="Item.isengard_pike_b" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -756,7 +756,7 @@
                     id="Item.desert_round_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -779,7 +779,7 @@
                     id="Item.desert_round_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -802,7 +802,7 @@
                     id="Item.desert_round_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -825,7 +825,7 @@
                     id="Item.desert_round_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -901,7 +901,7 @@
                     id="Item.numenorean_sword_2h_y" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -921,7 +921,7 @@
                     id="Item.numenorean_sword_2h_y" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -941,7 +941,7 @@
                     id="Item.numenorean_sword_2h_y" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -961,7 +961,7 @@
                     id="Item.numenorean_sword_2h_y" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1046,7 +1046,7 @@
                     id="Item.wide_heater_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1069,7 +1069,7 @@
                     id="Item.wide_heater_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1092,7 +1092,7 @@
                     id="Item.wide_heater_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1115,7 +1115,7 @@
                     id="Item.wide_heater_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1197,7 +1197,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1229,7 +1229,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1261,7 +1261,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1293,7 +1293,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1381,7 +1381,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1407,7 +1407,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1433,7 +1433,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1459,7 +1459,7 @@
                     id="Item.wm_swan_knight_swordb" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1535,7 +1535,7 @@
                     id="Item.isengard_pike_a" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1555,7 +1555,7 @@
                     id="Item.isengard_pike_a" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1575,7 +1575,7 @@
                     id="Item.isengard_pike_a" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -1595,7 +1595,7 @@
                     id="Item.isengard_pike_a" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -2018,7 +2018,7 @@
                     id="Item.wm_gondor_sword_a06" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -2047,7 +2047,7 @@
                     id="Item.wm_gondor_sword_a06" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -2076,7 +2076,7 @@
                     id="Item.wm_gondor_sword_a06" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
@@ -2105,7 +2105,7 @@
                     id="Item.wm_gondor_sword_a06" />
                 <equipment
                     slot="Head"
-                    id="Item.gondor_nobke_helmet1" />
+                    id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment
                     slot="Cape"
                     id="Item.swan_knight_pauldrons_c2" />
