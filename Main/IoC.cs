@@ -44,6 +44,7 @@ public static class IoC
         container.Register<IReflectionService, ReflectionService>(Reuse.Singleton);
         container.Register<IRaceManager, RaceManager>(Reuse.Singleton);
         container.Register<IHeroRosterAdapter, HeroRosterAdapter>(Reuse.Singleton);
+        container.Register<IVolunteerContextAdapter, VolunteerContextAdapter>(Reuse.Singleton);
     }
 
     private static void RegisterLoggingServices(IContainer container)

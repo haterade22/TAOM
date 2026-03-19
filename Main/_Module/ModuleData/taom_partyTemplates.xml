@@ -585,34 +585,34 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_gondor_template">
 		<stacks>
-			<PartyTemplateStack min_value="3" max_value="7" troop="NPCCharacter.gondor_levyman" />
-			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.gondor_footman" />
-			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.gondor_bowman" />
-			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_swordsman" />
-			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_spearman" />
-			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_archer" />
-			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_scout" />
-			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_veteran_swordsman" />
-			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_veteran_spearman" />
-			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_knight" />
-			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_fountain_guard_spearman" />
-			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_militiaman" />
+			<PartyTemplateStack min_value="3" max_value="7" troop="NPCCharacter.gondor_ano_peasant" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.gondor_ano_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_ano_guardsman" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_pg_spearman" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_ano_archer" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_ano_mt_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_ano_infantry" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_pg_vet_spearman" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_ano_mt_knight" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_mt_sergeant" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_ano_militia" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mercenary_gondor_template">
 		<stacks>
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_veteran_swordsman" />
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.gondor_swordsman" />
-			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.gondor_footman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_ano_infantry" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.gondor_ano_guardsman" />
+			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.gondor_ano_footman" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_outlaw_gondor_template">
 		<stacks>
-			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.gondor_levyman" />
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.gondor_footman" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_swordsman" />
+			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.gondor_ano_peasant" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_ano_guardsman" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -625,45 +625,45 @@
 
 	<MBPartyTemplate id="patrol_party_gondor_template_level_1">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.gondor_levyman" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_footman" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_bowman" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_swordsman" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.gondor_ano_peasant" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_ano_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_ano_guardsman" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="patrol_party_gondor_template_level_2">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.gondor_swordsman" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.gondor_archer" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.gondor_spearman" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_scout" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_veteran_swordsman" />
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.gondor_ano_guardsman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.gondor_ano_archer" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.gondor_pg_spearman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_ano_mt_cavalry" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_ano_infantry" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="patrol_party_gondor_template_level_3">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.gondor_veteran_spearman" />
-			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.gondor_veteran_swordsman" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_knight" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.gondor_fountain_guard_spearman" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_archer" />
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.gondor_pg_vet_spearman" />
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.gondor_ano_infantry" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.gondor_ano_mt_knight" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.gondor_mt_sergeant" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.gondor_ano_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="rebels_gondor_template">
 		<stacks>
-			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.gondor_levyman" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.gondor_footman" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.gondor_bowman" />
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.gondor_ano_peasant" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.gondor_ano_skirmisher" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="vassal_reward_troops_gondor">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_fountain_guard_noble" />
-			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.gondor_knight" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_mt_fountain_guard" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.gondor_ano_mt_knight" />
 		</stacks>
 	</MBPartyTemplate>
 

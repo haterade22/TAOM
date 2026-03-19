@@ -1,5 +1,22 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-19
+
+### New Gondor Troop Tree
+
+Replaced the existing 77-troop Gondor tree with a comprehensive 182-troop tree spanning 23 unit groups across 18 sub-regions:
+
+**8 Regular Lines** (village recruitment): Lossarnach, Lebennin, Lamedon, Belfalas, Pinnath Gelin, Anfalas, Harondor, Anorien
+**15 Noble Lines** (notable recruitment): Lossarnach Noble, Pelargir, Calembel, Ringlo Vale, Dol Amroth, Linhir, Tolfalas, Arndir, Blackroot Vale, Serelond, Lond-Galen, Methir, Minas Ithil, Cair Andros, Osgiliath, Minas-Tirith
+
+- 24 is_basic_troop roots for recruitment
+- Skills balanced via rebalance_troops.py (Gondor cultural modifiers + weapon specializations)
+- Equipment reused from existing Gondor item pool, themed by sub-region
+- Generator script: `tools/generate_gondor_troops.py`
+- Notable elite units: Swan Knights (T9), Fountain Guard (T9), Moon Guard (T9)
+
+**Note**: spcultures.xml and partyTemplates.xml references not yet updated — old troop IDs still referenced.
+
 ## 2026-03-15
 
 ### Bug Fix — Character Creation Race Display (#22)

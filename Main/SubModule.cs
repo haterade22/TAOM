@@ -10,6 +10,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
 using TAOM.Features.InitialChildGeneration;
+using TAOM.Adapters;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -60,9 +61,11 @@ public class SubModule : MBSubModuleBase
 
             var costService = IoC.Resolve<ITroopCostService>();
             var volunteerService = IoC.Resolve<IVolunteerTierService>();
+            var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
+            var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
             campaignStarter.AddModel(new TaomCharacterStatsModel());
             campaignStarter.AddModel(new TaomPartyWageModel(costService));
-            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService));
+            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter));
         }
     }
 
