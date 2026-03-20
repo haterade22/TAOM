@@ -297,6 +297,7 @@
 	<MBPartyTemplate id="kingdom_hero_party_outlaw_dolguldur_template">
 		<stacks>
 			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.dg_goblin_slave" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.dg_goblin_harrier" />
 			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.dg_goblin_hunter" />
 			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.dg_orc_warrior" />
 		</stacks>
@@ -312,6 +313,7 @@
 	<MBPartyTemplate id="patrol_party_dolguldur_template_level_1">
 		<stacks>
 			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.dg_orc_gnasher" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.dg_goblin_harrier" />
 			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.dg_goblin_skirmisher" />
 			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dg_orc_warrior" />
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_uruk_warrior" />
@@ -335,12 +337,15 @@
 			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.dg_uruk_fell_archer" />
 			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dg_warg_raider" />
 			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dg_uruk_black_slayer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dg_khamul_shadow_warden" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_khamul_shadow_marksman" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="rebels_dolguldur_template">
 		<stacks>
 			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.dg_goblin_slave" />
+			<PartyTemplateStack min_value="4" max_value="6" troop="NPCCharacter.dg_goblin_harrier" />
 			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.dg_orc_warrior" />
 			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.dg_goblin_hunter" />
 		</stacks>
@@ -350,6 +355,8 @@
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_uruk_black_slayer" />
 			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.dg_uruk_berserker" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dg_khamul_shadow_infantry" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_khamul_shadow_archer" />
 		</stacks>
 	</MBPartyTemplate>
 

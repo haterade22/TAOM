@@ -39,6 +39,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `adapters.md` | `Main/Adapters/**` | Adapter pattern, research-first |
 | `tests.md` | `TAOM.Tests/**` | TDD, naming, AAA pattern, coverage |
 | `xml-data.md` | `ModuleData/**/*.xml` | NPC naming, region codes, formatting |
+| `troops.md` | `troops/**`, `taom_partyTemplates.xml`, `TroopProgression/**` | Troop checklist, races, party templates, save compat |
 | `harmony-patches.md` | `Main/**/Hooks/**` | Patch types, thin entry points, thread-local state |
 
 ## Custom Agents

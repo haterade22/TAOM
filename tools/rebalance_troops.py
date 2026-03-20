@@ -22,8 +22,7 @@ from collections import defaultdict
 TROOPS_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData', 'troops')
 SKILL_NAMES = ['Athletics', 'Riding', 'OneHanded', 'TwoHanded', 'Polearm', 'Bow', 'Crossbow', 'Throwing']
 
-# Skip the old rhun file (replaced by rhun_new)
-SKIP_FILES = {'troops_rhun.xml'}
+SKIP_FILES = set()
 
 # =============================================================================
 # Baseline Skill Tables (center values per level per group)
@@ -141,7 +140,7 @@ CULTURAL_MODS = {
         'Riding': 15, 'OneHanded': 5, 'Bow': 10,
         'TwoHanded': -10, 'Polearm': -5,
     },
-    'rhun_new': {
+    'rhun': {
         'Athletics': 5, 'Riding': 18, 'Polearm': 15,
         'Bow': -10, 'Crossbow': -10, 'Throwing': -5,
     },

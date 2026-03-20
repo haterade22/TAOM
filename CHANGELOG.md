@@ -2,6 +2,25 @@
 
 ## 2026-03-20
 
+### Rhûn Troop Generator
+
+Created `tools/generate_rhun_troops.py` — Python generator replacing manually-maintained XML with
+113 troops across 11 unit groups:
+- **Easterling Regular** (T1-T5, 13 troops) — `sk_rh_loke_` spiky/east armor
+- **Loke-Rim Noble** (T3-T7, 14 troops) — `sk_rh_loke_` half-plate → plate, role-specific helmets
+- **Dragon-Wrath** (T5-T9, 14 troops) — `sk_rh_drag_` half-plate → plate
+- **Wainriders** (T3-T7, 8 troops) — `sk_rh_loke_` lamellar/arch helmets
+- **Black Sun Mercenaries** (T2-T8, 11 troops) — `sk_rh_drag_` lamellar (shock) / spiky (archer)
+- **Darkhûn Mercenaries** (T2-T8, 11 troops) — `sk_dg_khml_` half-plate (inf) / lamellar (cav)
+- **Sagarûn** (T3-T7, 10 troops) — Loke scalemail (marines) / Drag scalemail (naffatun/arbalest)
+- **Balcoth** (T2-T6, 9 troops) — Easterling Regular armor
+- **Far-Rhun** (T3-T7, 9 troops) — Easterling Regular armor
+- **Kharaghûl** (T2-T7, 10 troops) — Easterling Regular armor
+- **Militia** (T2-T3, 4 troops) — old easterling armor (preserved)
+
+Deleted `troops_rhun_new.xml` (superseded) and removed its SubModule.xml entry.
+Updated `rebalance_troops.py` to process `troops_rhun.xml` (was skipped when old/new coexisted).
+
 ### Dol Guldur Troop Tree Restructure
 
 Restructured all three non-Khamul DG troop lines to match artist spec:
@@ -22,7 +41,15 @@ Restructured all three non-Khamul DG troop lines to match artist spec:
 - "Uruk Warrior" (T3) renamed to "Uruk Fighter" to match spec
 - "Uruk Veteran Warrior" (T4) renamed to "Uruk Warrior" to match spec
 
-Added new goblin troops to `kingdom_hero_party_dolguldur_template`.
+Updated ALL Dol Guldur party templates:
+- `kingdom_hero_party_dolguldur_template`: added Harrier, Archer, Impaler, Fellbow stacks
+- `kingdom_hero_party_outlaw_dolguldur_template`: added Harrier
+- `patrol_party_dolguldur_template_level_1`: added Harrier
+- `patrol_party_dolguldur_template_level_3`: added Khamul Shadow Warden + Marksman
+- `rebels_dolguldur_template`: added Harrier
+- `vassal_reward_troops_dolguldur`: added Khamul Shadow Infantry + Archer
+
+Added `.claude/rules/troops.md` — troop management checklist, race attributes, party template types, save compatibility rules.
 
 ## 2026-03-19
 

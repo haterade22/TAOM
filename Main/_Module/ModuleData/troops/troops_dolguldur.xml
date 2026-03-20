@@ -313,25 +313,25 @@
         <skills>
             <skill
                 id="Athletics"
-                value="85" />
+                value="80" />
             <skill
                 id="Riding"
                 value="5" />
             <skill
                 id="OneHanded"
-                value="75" />
+                value="95" />
             <skill
                 id="TwoHanded"
-                value="50" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="45" />
+                value="95" />
             <skill
                 id="Bow"
-                value="80" />
+                value="10" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="5" />
             <skill
                 id="Throwing"
                 value="30" />
@@ -650,19 +650,19 @@
         <skills>
             <skill
                 id="Athletics"
-                value="35" />
+                value="33" />
             <skill
                 id="Riding"
                 value="0" />
             <skill
                 id="OneHanded"
-                value="40" />
+                value="33" />
             <skill
                 id="TwoHanded"
-                value="30" />
+                value="23" />
             <skill
                 id="Polearm"
-                value="35" />
+                value="28" />
             <skill
                 id="Bow"
                 value="0" />
@@ -671,7 +671,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="15" />
+                value="10" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -743,19 +743,19 @@
         <skills>
             <skill
                 id="Athletics"
-                value="100" />
+                value="95" />
             <skill
                 id="Riding"
                 value="5" />
             <skill
                 id="OneHanded"
-                value="110" />
+                value="130" />
             <skill
                 id="TwoHanded"
-                value="75" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="120" />
+                value="130" />
             <skill
                 id="Bow"
                 value="10" />
@@ -764,7 +764,7 @@
                 value="5" />
             <skill
                 id="Throwing"
-                value="45" />
+                value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -858,22 +858,22 @@
         <skills>
             <skill
                 id="Athletics"
-                value="110" />
+                value="105" />
             <skill
                 id="Riding"
-                value="5" />
+                value="10" />
             <skill
                 id="OneHanded"
-                value="120" />
+                value="145" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="85" />
+                value="90" />
             <skill
                 id="Bow"
-                value="150" />
+                value="165" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -4774,7 +4774,6 @@
         level="11"
         name="{=aom_dg_warg_scout_name}[Dol Guldur] Warg Scout"
         occupation="Soldier"
-        is_basic_troop="true"
         culture="Culture.dolguldur">
         <face>
             <face_key_template
@@ -6427,13 +6426,13 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="40" />
+            <skill id="Athletics" value="95" />
+            <skill id="Riding" value="5" />
             <skill id="OneHanded" value="130" />
-            <skill id="TwoHanded" value="40" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="30" />
+            <skill id="TwoHanded" value="115" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="10" />
+            <skill id="Crossbow" value="5" />
             <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
@@ -6480,14 +6479,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="50" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="50" />
-            <skill id="Polearm" value="75" />
-            <skill id="Bow" value="50" />
-            <skill id="Crossbow" value="40" />
-            <skill id="Throwing" value="60" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="70" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6541,14 +6540,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="165" />
-            <skill id="Riding" value="60" />
-            <skill id="OneHanded" value="200" />
-            <skill id="TwoHanded" value="65" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="60" />
-            <skill id="Crossbow" value="50" />
-            <skill id="Throwing" value="70" />
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="235" />
+            <skill id="TwoHanded" value="215" />
+            <skill id="Polearm" value="235" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="80" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6600,14 +6599,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="107" />
-            <skill id="Riding" value="55" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="65" />
-            <skill id="Bow" value="180" />
-            <skill id="Crossbow" value="45" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="115" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="200" />
+            <skill id="Crossbow" value="35" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6665,14 +6664,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="195" />
-            <skill id="Riding" value="70" />
-            <skill id="OneHanded" value="240" />
-            <skill id="TwoHanded" value="75" />
-            <skill id="Polearm" value="105" />
-            <skill id="Bow" value="70" />
-            <skill id="Crossbow" value="60" />
-            <skill id="Throwing" value="80" />
+            <skill id="Athletics" value="140" />
+            <skill id="Riding" value="20" />
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="255" />
+            <skill id="Polearm" value="275" />
+            <skill id="Bow" value="25" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="90" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6728,14 +6727,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="65" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="70" />
-            <skill id="Polearm" value="80" />
-            <skill id="Bow" value="215" />
-            <skill id="Crossbow" value="55" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="130" />
+            <skill id="Riding" value="20" />
+            <skill id="OneHanded" value="200" />
+            <skill id="TwoHanded" value="125" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="240" />
+            <skill id="Crossbow" value="45" />
+            <skill id="Throwing" value="70" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6793,14 +6792,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="178" />
-            <skill id="Riding" value="316" />
-            <skill id="OneHanded" value="305" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="316" />
-            <skill id="Bow" value="110" />
-            <skill id="Crossbow" value="70" />
-            <skill id="Throwing" value="90" />
+            <skill id="Athletics" value="170" />
+            <skill id="Riding" value="310" />
+            <skill id="OneHanded" value="315" />
+            <skill id="TwoHanded" value="165" />
+            <skill id="Polearm" value="340" />
+            <skill id="Bow" value="45" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="70" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6861,14 +6860,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="201" />
-            <skill id="Riding" value="380" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="350" />
             <skill id="OneHanded" value="345" />
-            <skill id="TwoHanded" value="140" />
-            <skill id="Polearm" value="380" />
-            <skill id="Bow" value="120" />
-            <skill id="Crossbow" value="80" />
-            <skill id="Throwing" value="100" />
+            <skill id="TwoHanded" value="185" />
+            <skill id="Polearm" value="370" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="35" />
+            <skill id="Throwing" value="70" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -6926,14 +6925,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="220" />
-            <skill id="Riding" value="80" />
-            <skill id="OneHanded" value="280" />
-            <skill id="TwoHanded" value="90" />
-            <skill id="Polearm" value="120" />
-            <skill id="Bow" value="80" />
-            <skill id="Crossbow" value="70" />
-            <skill id="Throwing" value="90" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="25" />
+            <skill id="OneHanded" value="315" />
+            <skill id="TwoHanded" value="295" />
+            <skill id="Polearm" value="310" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="100" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -6985,13 +6984,13 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="240" />
-            <skill id="Riding" value="90" />
-            <skill id="OneHanded" value="310" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="130" />
-            <skill id="Bow" value="90" />
-            <skill id="Crossbow" value="80" />
+            <skill id="Athletics" value="175" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="335" />
+            <skill id="TwoHanded" value="315" />
+            <skill id="Polearm" value="330" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="25" />
             <skill id="Throwing" value="100" />
         </skills>
         <upgrade_targets />
@@ -7041,14 +7040,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="210" />
-            <skill id="Riding" value="60" />
-            <skill id="OneHanded" value="130" />
-            <skill id="TwoHanded" value="280" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="60" />
-            <skill id="Crossbow" value="50" />
-            <skill id="Throwing" value="80" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="25" />
+            <skill id="OneHanded" value="315" />
+            <skill id="TwoHanded" value="295" />
+            <skill id="Polearm" value="310" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="100" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -7097,14 +7096,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="230" />
-            <skill id="Riding" value="70" />
-            <skill id="OneHanded" value="150" />
-            <skill id="TwoHanded" value="320" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="70" />
-            <skill id="Crossbow" value="60" />
-            <skill id="Throwing" value="90" />
+            <skill id="Athletics" value="175" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="335" />
+            <skill id="TwoHanded" value="315" />
+            <skill id="Polearm" value="330" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="25" />
+            <skill id="Throwing" value="100" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -7536,14 +7535,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="140" />
-            <skill id="Riding" value="80" />
-            <skill id="OneHanded" value="200" />
-            <skill id="TwoHanded" value="80" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="250" />
-            <skill id="Crossbow" value="70" />
-            <skill id="Throwing" value="90" />
+            <skill id="Athletics" value="150" />
+            <skill id="Riding" value="25" />
+            <skill id="OneHanded" value="225" />
+            <skill id="TwoHanded" value="145" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="275" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="80" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -7601,14 +7600,14 @@
                 value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
-            <skill id="Athletics" value="160" />
-            <skill id="Riding" value="90" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="90" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="270" />
-            <skill id="Crossbow" value="80" />
-            <skill id="Throwing" value="100" />
+            <skill id="Athletics" value="165" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="245" />
+            <skill id="TwoHanded" value="165" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="295" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="80" />
         </skills>
         <upgrade_targets />
         <Equipments>
