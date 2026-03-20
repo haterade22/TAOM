@@ -2,6 +2,24 @@
 
 ## 2026-03-20
 
+### Fix Gondor Equipment — Replace Armory_2-Only Items
+
+Replaced 367 equipment item references across 10 files that pointed to items only
+available in `LOTRLOME_Armory_2` (not in `LOTRLOME_Armory` which TAOM depends on).
+Characters in CC, NPCs, lords, and troops were appearing in underwear because the
+body/head/leg/arm/cape items didn't exist at runtime.
+
+**Item mapping (29 items replaced):**
+- Body: `gondor_noble_coat_a/b` → `ithilien_jerkin_long/_var`, `gondor_noble_jerkin_a/b` → `ithilien_jerkin_short`/`boromir_jerkin`, `gond_tab_9ld` → `cts_gondor_armor3`, `citidel_guard_armor1/2/4` → `sk_gd_mns_citadel_chest_*`/`sk_gd_ano_inf_chest_heavy_a`, `fountain_armor1` → `sk_gd_mns_fount_chest_heavy_a`, `gondor_king_armor` → `sk_gd_ano_inf_chest_heavy_b`
+- Head: `citidel_guard_helmet1/3/5` → `sk_gd_mns_cita_helmet_heavy_a/b`/`sk_gd_mns_noble_helmet_heavy_a`, `fountain_guard_helmet` → `sk_gd_mns_fount_helmet_heavy_a`
+- Leg: `citidel_guard_boots/_light` → `sk_gd_ano_grvs_inf_med_a/_light_a`, `fountain_guard_boots` → `sk_gd_ano_grvs_noble_med_a`, `gondor_nobke_boots` → `sk_gd_ano_boots_a`
+- Arms: `citidel_guard_gloves/bracers/bracers_shield` → `sk_gd_ano_gloves_a`/`sk_gd_ano_bracer_inf_med_a`/`sk_gd_ano_bracer_noble_med_a`, `gondor_nobke_bracers` → `sk_gd_ano_bracer_noble_heavy_a`
+- Cape: `citidel_guard_armor_pauldrons/_light` → `sk_gd_ano_pauld_inf_heavy_a/_med_a`, `fountain_guard_pauldrons` → `sk_gd_ano_pauld_cape_fount_elite_a`, `fountain_shoulders2` → `sk_gd_ano_pauld_noble_med_a`, `gondor_nobke_pauldrons` → `sk_gd_ano_pauld_noble_heavy_a`
+
+**Files modified:** `taom_char_creation_equipment.xml`, `taom_equipment_sets_gondor.xml`, `npcs_gondor.xml`, `npcs_umbar.xml`, `troops_gondor.xml`, `troops_umbar.xml`, `troops_rohan.xml`, `troops_rivendell.xml`, `taom_wanderer_equipment.xml`, `lords.xml`
+
+Also removed non-existent `spc_wanderer_rohan_9` reference from `spcultures.xslt`.
+
 ### Fix Null Object Reference Errors
 
 - Added missing `spc_wanderer_rohan_9` wanderer (definition, skill set, backstory strings)

@@ -139,6 +139,18 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 - Migration from v1.2 requires API changes - see `docs/migration/`
 - No git actions unless explicitly asked
 
+## Equipment & Armory
+
+| Item | Details |
+|------|---------|
+| **Armory dependency** | `LOTRLOME_Armory` (NOT `Armory_2` — it will be deleted) |
+| **Item definitions** | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\<culture>\` |
+| **Item files per culture** | `body_armors.xml`, `head_armors.xml`, `leg_armors.xml`, `shoulder_armors.xml`, `arm_armors.xml` |
+| **Global items** | `LOTRLOME_items\LOTRAOM_weapons.xml`, `LOTRAOM_shields.xml`, `LOTRAOM_horses.xml` |
+| **Gondor prefix** | `sk_gd_ano_` (Anorien), `sk_gd_mns_` (Minas Tirith), `sk_gd_osg_` (Osgiliath), `sk_gd_cair_` (Cair Andros), `sk_gd_ith_` (Ithilien) |
+
+**Validation:** When adding/changing equipment, always verify item IDs exist in Armory. Characters appear in underwear when items are missing. Cross-reference with `grep -o 'id="[^"]*"' <armory-file>` to get valid IDs.
+
 ## Rebalancing Tools
 
 | Tool | Purpose | CLI |
