@@ -675,7 +675,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -720,7 +720,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -762,7 +762,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -804,7 +804,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -924,7 +924,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -966,7 +966,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -1008,7 +1008,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
@@ -1050,7 +1050,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Item2"
-				id="Item.gondor_steel_bow_starter" />
+				id="Item.wm_gondor_bow" />
 			<Equipment
 				slot="Item3"
 				id="Item.default_arrows" />
