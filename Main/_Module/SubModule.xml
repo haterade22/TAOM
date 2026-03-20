@@ -20,7 +20,6 @@
 		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
-		<DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
 	<SubModules>
 		<SubModule>
