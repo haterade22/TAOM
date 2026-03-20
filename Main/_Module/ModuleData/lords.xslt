@@ -1108,7 +1108,19 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentRoster>
+                    <equipment slot="Item1" id="Item.wm_gondor_boromir_sword" />
+                    <equipment slot="Item2" id="Item.wm_boromir_shield" />
+                    <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
+                    <equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
+                    <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
+                    <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
+                    <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+                </EquipmentRoster>
+                <xsl:apply-templates select="Equipments/*[@civilian='true']"/>
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
