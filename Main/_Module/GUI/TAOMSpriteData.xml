@@ -2,13 +2,6 @@
 <SpriteData>
   <SpriteCategories>
     <SpriteCategory>
-      <Name>ui_custom_fonts</Name>
-      <AlwaysLoad />
-      <SpriteSheetCount>2</SpriteSheetCount>
-      <SpriteSheetSize ID="1" Width="2048" Height="2048" />
-      <SpriteSheetSize ID="2" Width="2048" Height="2048" />
-    </SpriteCategory>
-    <SpriteCategory>
       <Name>ui_loading</Name>
       <AlwaysLoad />
       <SpriteSheetCount>2</SpriteSheetCount>
@@ -26,7 +19,7 @@
     <SpriteCategory>
       <Name>ui_taom_bannericons</Name>
       <AlwaysLoad />
-      <SpriteSheetCount>23</SpriteSheetCount>
+      <SpriteSheetCount>20</SpriteSheetCount>
       <SpriteSheetSize ID="1" Width="4096" Height="4096" />
       <SpriteSheetSize ID="2" Width="4096" Height="4096" />
       <SpriteSheetSize ID="3" Width="4096" Height="4096" />
@@ -47,30 +40,9 @@
       <SpriteSheetSize ID="18" Width="4096" Height="4096" />
       <SpriteSheetSize ID="19" Width="4096" Height="4096" />
       <SpriteSheetSize ID="20" Width="4096" Height="4096" />
-      <SpriteSheetSize ID="21" Width="4096" Height="4096" />
-      <SpriteSheetSize ID="22" Width="4096" Height="4096" />
-      <SpriteSheetSize ID="23" Width="4096" Height="4096" />
     </SpriteCategory>
   </SpriteCategories>
   <SpriteParts>
-    <SpritePart>
-      <SheetID>1</SheetID>
-      <Name>aniron</Name>
-      <Width>2048</Width>
-      <Height>2048</Height>
-      <SheetX>0</SheetX>
-      <SheetY>0</SheetY>
-      <CategoryName>ui_custom_fonts</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>2</SheetID>
-      <Name>minionpro</Name>
-      <Width>2048</Width>
-      <Height>2048</Height>
-      <SheetX>0</SheetX>
-      <SheetY>0</SheetY>
-      <CategoryName>ui_custom_fonts</CategoryName>
-    </SpritePart>
     <SpritePart>
       <SheetID>2</SheetID>
       <Name>ui_loading_10</Name>
@@ -4734,53 +4706,35 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>15</SheetID>
+      <SheetID>13</SheetID>
       <Name>10001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>15</SheetID>
+      <SheetID>13</SheetID>
       <Name>10002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
+      <SheetX>2068</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>15</SheetID>
+      <SheetID>13</SheetID>
       <Name>10003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>15</SheetID>
-      <Name>10004</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>15</SheetID>
-      <Name>10005</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>4</SheetX>
       <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>15</SheetID>
-      <Name>10006</Name>
+      <SheetID>13</SheetID>
+      <Name>10004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -4788,8 +4742,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>15</SheetID>
-      <Name>10007</Name>
+      <SheetID>13</SheetID>
+      <Name>10005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
@@ -4797,8 +4751,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>16</SheetID>
-      <Name>10008</Name>
+      <SheetID>14</SheetID>
+      <Name>10006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -4806,26 +4760,35 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>16</SheetID>
+      <SheetID>14</SheetID>
+      <Name>10007</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>14</SheetID>
+      <Name>10008</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>14</SheetID>
       <Name>10009</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>16</SheetID>
+      <SheetID>15</SheetID>
       <Name>10010</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>16</SheetID>
-      <Name>10011</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -4833,7 +4796,16 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>17</SheetID>
+      <SheetID>14</SheetID>
+      <Name>10011</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>14</SheetID>
       <Name>10012</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -4842,70 +4814,70 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>16</SheetID>
+      <SheetID>14</SheetID>
       <Name>10013</Name>
       <Width>1024</Width>
       <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>14</SheetID>
+      <Name>10014</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
       <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>15</SheetID>
+      <Name>10015</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>15</SheetID>
+      <Name>10016</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>15</SheetID>
+      <Name>10017</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>15</SheetID>
+      <Name>10018</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>16</SheetID>
-      <Name>10014</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>16</SheetID>
-      <Name>10015</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>16</SheetID>
-      <Name>10016</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>17</SheetID>
-      <Name>10017</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>17</SheetID>
-      <Name>10018</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>17</SheetID>
+      <SheetID>13</SheetID>
       <Name>10019</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>17</SheetID>
+      <SheetID>14</SheetID>
       <Name>10020</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -4914,35 +4886,26 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>17</SheetID>
+      <SheetID>13</SheetID>
       <Name>10021</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>17</SheetID>
-      <Name>10022</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>15</SheetID>
-      <Name>10023</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>15</SheetID>
-      <Name>10024</Name>
+      <SheetID>11</SheetID>
+      <Name>10022</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>11</SheetID>
+      <Name>10023</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -4950,25 +4913,34 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>14</SheetID>
+      <SheetID>11</SheetID>
+      <Name>10024</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>11</SheetID>
       <Name>10025</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>14</SheetID>
+      <SheetID>11</SheetID>
       <Name>10026</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>12</SheetID>
+      <SheetID>11</SheetID>
       <Name>10027</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -4977,7 +4949,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>12</SheetID>
+      <SheetID>11</SheetID>
       <Name>10028</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -4986,7 +4958,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>12</SheetID>
+      <SheetID>11</SheetID>
       <Name>10029</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -4995,7 +4967,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>12</SheetID>
+      <SheetID>11</SheetID>
       <Name>10030</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5008,8 +4980,8 @@
       <Name>10500</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5022,7 +4994,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>10502</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5031,7 +5003,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>10503</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5040,7 +5012,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>10504</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5049,7 +5021,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>10505</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5058,7 +5030,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>10506</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5067,7 +5039,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>11000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5076,7 +5048,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>11001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5085,7 +5057,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>13</SheetID>
+      <SheetID>12</SheetID>
       <Name>11002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5094,97 +5066,97 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>14</SheetID>
+      <SheetID>13</SheetID>
       <Name>11003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
+      <SheetX>1036</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>14</SheetID>
+      <SheetID>15</SheetID>
       <Name>11004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>14</SheetID>
+      <SheetID>15</SheetID>
       <Name>11005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>14</SheetID>
+      <SheetID>15</SheetID>
       <Name>11006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>14</SheetID>
-      <Name>12000</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>14</SheetID>
-      <Name>12001</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>14</SheetID>
-      <Name>12002</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
       <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>16</SheetID>
-      <Name>12003</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>17</SheetID>
-      <Name>12004</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>22</SheetID>
-      <Name>12005</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>18</SheetID>
+      <Name>12000</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>18</SheetID>
+      <Name>12001</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>18</SheetID>
+      <Name>12002</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>18</SheetID>
+      <Name>12003</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>18</SheetID>
+      <Name>12004</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>18</SheetID>
+      <Name>12005</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>19</SheetID>
       <Name>12006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5193,80 +5165,62 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>20</SheetID>
+      <SheetID>19</SheetID>
       <Name>13000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
+      <SheetID>19</SheetID>
       <Name>13001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
+      <SheetX>2068</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
+      <SheetID>19</SheetID>
       <Name>13002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
+      <SheetID>19</SheetID>
       <Name>13003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
+      <SheetID>19</SheetID>
       <Name>13004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
+      <SheetX>2068</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
+      <SheetID>19</SheetID>
       <Name>14000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>21</SheetID>
-      <Name>14001</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>21</SheetID>
-      <Name>14002</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>4</SheetX>
       <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
-      <Name>14003</Name>
+      <SheetID>19</SheetID>
+      <Name>14001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -5274,8 +5228,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>21</SheetID>
-      <Name>14004</Name>
+      <SheetID>19</SheetID>
+      <Name>14002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
@@ -5283,8 +5237,17 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>22</SheetID>
-      <Name>14005</Name>
+      <SheetID>20</SheetID>
+      <Name>14003</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>20</SheetID>
+      <Name>14004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -5292,7 +5255,16 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>23</SheetID>
+      <SheetID>20</SheetID>
+      <Name>14005</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>20</SheetID>
       <Name>14006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5301,7 +5273,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>22</SheetID>
+      <SheetID>18</SheetID>
       <Name>14007</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5310,115 +5282,79 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>22</SheetID>
+      <SheetID>18</SheetID>
       <Name>14008</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>22</SheetID>
+      <SheetID>18</SheetID>
       <Name>14009</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>22</SheetID>
-      <Name>14010</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>22</SheetID>
-      <Name>14011</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>22</SheetID>
-      <Name>14012</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>22</SheetID>
-      <Name>14013</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>23</SheetID>
+      <SheetID>16</SheetID>
       <Name>14500</Name>
       <Width>1024</Width>
       <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>15</SheetID>
+      <Name>14501</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>16</SheetID>
+      <Name>14502</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
       <SheetX>4</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>23</SheetID>
-      <Name>14501</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>23</SheetID>
-      <Name>14502</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>20</SheetID>
+      <SheetID>16</SheetID>
       <Name>14503</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>20</SheetID>
+      <SheetID>16</SheetID>
       <Name>15000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>20</SheetID>
+      <SheetID>16</SheetID>
       <Name>15001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>20</SheetID>
+      <SheetID>16</SheetID>
       <Name>15002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5427,197 +5363,71 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>18</SheetID>
+      <SheetID>16</SheetID>
       <Name>15003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>18</SheetID>
+      <SheetID>16</SheetID>
       <Name>15004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>18</SheetID>
+      <SheetID>16</SheetID>
       <Name>15005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>18</SheetID>
-      <Name>15006</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>18</SheetID>
-      <Name>15007</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>18</SheetID>
+      <SheetID>17</SheetID>
       <Name>16000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
+      <SheetX>2068</SheetX>
       <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>18</SheetID>
+      <SheetID>17</SheetID>
       <Name>16001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>18</SheetID>
+      <SheetID>17</SheetID>
       <Name>16002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>19</SheetID>
+      <SheetID>17</SheetID>
       <Name>16003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
+      <SheetX>2068</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>19</SheetID>
+      <SheetID>17</SheetID>
       <Name>16004</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>16005</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>16006</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>16007</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>17000</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>17001</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>17002</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>19</SheetID>
-      <Name>17003</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>20</SheetID>
-      <Name>17004</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>20</SheetID>
-      <Name>17005</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>20</SheetID>
-      <Name>17006</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>20</SheetID>
-      <Name>17007</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>12</SheetID>
-      <Name>17008</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -5626,25 +5436,7 @@
     </SpritePart>
     <SpritePart>
       <SheetID>17</SheetID>
-      <Name>18000</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>12</SheetID>
-      <Name>18001</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>6</SheetID>
-      <Name>18002</Name>
+      <Name>16005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -5652,8 +5444,98 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
+      <SheetID>17</SheetID>
+      <Name>16006</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>17</SheetID>
+      <Name>16007</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>17</SheetID>
+      <Name>17000</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>10</SheetID>
+      <Name>17001</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>20</SheetID>
+      <Name>17002</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>10</SheetID>
+      <Name>17003</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>10</SheetID>
+      <Name>18000</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>18001</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>18002</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
       <SheetID>3</SheetID>
       <Name>18003</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>19000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
@@ -5662,19 +5544,10 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>19000</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
       <Name>19001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -5683,7 +5556,7 @@
       <Name>19002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>1036</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -5692,8 +5565,8 @@
       <Name>19003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5701,7 +5574,7 @@
       <Name>19004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -5715,12 +5588,12 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>5</SheetID>
       <Name>19006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5728,7 +5601,7 @@
       <Name>19007</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -5737,26 +5610,26 @@
       <Name>19008</Name>
       <Width>1024</Width>
       <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>19009</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
       <SheetX>2068</SheetX>
       <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>5</SheetID>
-      <Name>19009</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>6</SheetID>
       <Name>19010</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5764,7 +5637,7 @@
       <Name>19011</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>1036</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -5773,8 +5646,8 @@
       <Name>19012</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5782,7 +5655,7 @@
       <Name>19013</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -5791,39 +5664,39 @@
       <Name>19014</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>1036</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>5</SheetID>
+      <SheetID>3</SheetID>
       <Name>19015</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>5</SheetID>
+      <SheetID>4</SheetID>
       <Name>20000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>5</SheetID>
+      <SheetID>3</SheetID>
       <Name>20001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>6</SheetID>
+      <SheetID>2</SheetID>
       <Name>20002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5832,7 +5705,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>6</SheetID>
+      <SheetID>1</SheetID>
       <Name>20003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5841,7 +5714,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>6</SheetID>
+      <SheetID>1</SheetID>
       <Name>20004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5850,25 +5723,25 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>1</SheetID>
       <Name>20005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>1</SheetID>
       <Name>20006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>1</SheetID>
       <Name>21000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -5877,12 +5750,12 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>1</SheetID>
       <Name>21001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5891,7 +5764,7 @@
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5900,61 +5773,61 @@
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>2</SheetID>
+      <Name>21004</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
-      <Name>21004</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>3</SheetID>
       <Name>21005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>2</SheetID>
       <Name>21006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>2</SheetID>
       <Name>21007</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>2</SheetID>
       <Name>21008</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>2</SheetID>
       <Name>21009</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5963,7 +5836,7 @@
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5972,7 +5845,7 @@
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5981,39 +5854,30 @@
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
+      <SheetID>3</SheetID>
       <Name>22003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
-      <Name>23000</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>2</SheetID>
-      <Name>23001</Name>
+      <SheetID>3</SheetID>
+      <Name>22004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
-      <Name>23002</Name>
+      <SheetID>5</SheetID>
+      <Name>23000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -6021,8 +5885,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
-      <Name>23003</Name>
+      <SheetID>5</SheetID>
+      <Name>23001</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -6030,7 +5894,7 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
+      <SheetID>5</SheetID>
       <Name>24000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -6039,8 +5903,53 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>8</SheetID>
       <Name>24001</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>8</SheetID>
+      <Name>24002</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>8</SheetID>
+      <Name>24003</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>8</SheetID>
+      <Name>24004</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>8</SheetID>
+      <Name>24005</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>9</SheetID>
+      <Name>24006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -6048,8 +5957,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
-      <Name>24002</Name>
+      <SheetID>9</SheetID>
+      <Name>24007</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -6057,57 +5966,12 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
-      <Name>24003</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>3</SheetID>
-      <Name>24004</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>5</SheetID>
-      <Name>24005</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>6</SheetID>
-      <Name>24006</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>10</SheetID>
-      <Name>24007</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>6</SheetID>
+      <SheetID>9</SheetID>
       <Name>24008</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6115,7 +5979,7 @@
       <Name>24009</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -6124,8 +5988,8 @@
       <Name>24010</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6133,8 +5997,8 @@
       <Name>24011</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6142,26 +6006,26 @@
       <Name>24012</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>10</SheetID>
+      <SheetID>9</SheetID>
       <Name>24013</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>10</SheetID>
+      <SheetID>9</SheetID>
       <Name>24014</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6169,7 +6033,7 @@
       <Name>24015</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -6178,8 +6042,8 @@
       <Name>24016</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6187,8 +6051,8 @@
       <Name>24017</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6196,7 +6060,7 @@
       <Name>24018</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
@@ -6206,137 +6070,56 @@
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>12</SheetID>
+      <SheetID>8</SheetID>
       <Name>24020</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>10</SheetID>
+      <SheetID>8</SheetID>
       <Name>24021</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24022</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24023</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24024</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24025</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24026</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24027</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24028</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24029</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>11</SheetID>
-      <Name>24030</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>9</SheetID>
+      <SheetID>8</SheetID>
       <Name>24500</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>9</SheetID>
-      <Name>24501</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>9</SheetID>
-      <Name>24502</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>9</SheetID>
+      <SheetID>6</SheetID>
+      <Name>24501</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>2068</SheetX>
+      <SheetY>2068</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>6</SheetID>
+      <Name>24502</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>6</SheetID>
       <Name>24503</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -6349,8 +6132,8 @@
       <Name>24504</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>2068</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -6358,67 +6141,31 @@
       <Name>24505</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>24506</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>24507</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>24508</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>24509</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
       <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>24510</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>1036</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>7</SheetID>
+      <SheetID>6</SheetID>
       <Name>25000</Name>
       <Width>1024</Width>
       <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>6</SheetID>
+      <Name>25001</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
       <SheetX>2068</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>25001</Name>
+      <SheetID>6</SheetID>
+      <Name>25002</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -6426,8 +6173,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>7</SheetID>
-      <Name>25002</Name>
+      <SheetID>6</SheetID>
+      <Name>25003</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -6436,15 +6183,6 @@
     </SpritePart>
     <SpritePart>
       <SheetID>7</SheetID>
-      <Name>25003</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>2068</SheetX>
-      <SheetY>2068</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>8</SheetID>
       <Name>25004</Name>
       <Width>1024</Width>
       <Height>1024</Height>
@@ -6457,49 +6195,58 @@
       <Name>25005</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
+      <SheetID>7</SheetID>
       <Name>25006</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>2068</SheetX>
+      <SheetX>1036</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
+      <SheetID>7</SheetID>
       <Name>25007</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1036</SheetY>
+      <SheetX>2068</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
+      <SheetID>7</SheetID>
       <Name>25008</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
+      <SheetID>7</SheetID>
       <Name>25009</Name>
       <Width>1024</Width>
       <Height>1024</Height>
+      <SheetX>1036</SheetX>
+      <SheetY>1036</SheetY>
+      <CategoryName>ui_taom_bannericons</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>7</SheetID>
+      <Name>25010</Name>
+      <Width>1024</Width>
+      <Height>1024</Height>
       <SheetX>2068</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
-      <Name>25010</Name>
+      <SheetID>7</SheetID>
+      <Name>25011</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>4</SheetX>
@@ -6507,8 +6254,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
-      <Name>25011</Name>
+      <SheetID>7</SheetID>
+      <Name>25012</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>1036</SheetX>
@@ -6516,8 +6263,8 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>8</SheetID>
-      <Name>25012</Name>
+      <SheetID>7</SheetID>
+      <Name>25013</Name>
       <Width>1024</Width>
       <Height>1024</Height>
       <SheetX>2068</SheetX>
@@ -6525,42 +6272,25 @@
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>9</SheetID>
-      <Name>25013</Name>
-      <Width>1024</Width>
-      <Height>1024</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom_bannericons</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>12</SheetID>
+      <SheetID>10</SheetID>
       <Name>25014</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>2068</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>23</SheetID>
+      <SheetID>20</SheetID>
       <Name>25015</Name>
       <Width>1024</Width>
       <Height>1024</Height>
-      <SheetX>1036</SheetX>
+      <SheetX>2068</SheetX>
       <SheetY>1036</SheetY>
       <CategoryName>ui_taom_bannericons</CategoryName>
     </SpritePart>
   </SpriteParts>
   <Sprites>
-    <GenericSprite>
-      <Name>aniron</Name>
-      <SpritePartName>aniron</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>minionpro</Name>
-      <SpritePartName>minionpro</SpritePartName>
-    </GenericSprite>
     <GenericSprite>
       <Name>ui_loading_10</Name>
       <SpritePartName>ui_loading_10</SpritePartName>
@@ -8898,22 +8628,6 @@
       <SpritePartName>14009</SpritePartName>
     </GenericSprite>
     <GenericSprite>
-      <Name>14010</Name>
-      <SpritePartName>14010</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>14011</Name>
-      <SpritePartName>14011</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>14012</Name>
-      <SpritePartName>14012</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>14013</Name>
-      <SpritePartName>14013</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
       <Name>14500</Name>
       <SpritePartName>14500</SpritePartName>
     </GenericSprite>
@@ -8952,14 +8666,6 @@
     <GenericSprite>
       <Name>15005</Name>
       <SpritePartName>15005</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>15006</Name>
-      <SpritePartName>15006</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>15007</Name>
-      <SpritePartName>15007</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>16000</Name>
@@ -9008,26 +8714,6 @@
     <GenericSprite>
       <Name>17003</Name>
       <SpritePartName>17003</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>17004</Name>
-      <SpritePartName>17004</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>17005</Name>
-      <SpritePartName>17005</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>17006</Name>
-      <SpritePartName>17006</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>17007</Name>
-      <SpritePartName>17007</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>17008</Name>
-      <SpritePartName>17008</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>18000</Name>
@@ -9194,20 +8880,16 @@
       <SpritePartName>22003</SpritePartName>
     </GenericSprite>
     <GenericSprite>
+      <Name>22004</Name>
+      <SpritePartName>22004</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
       <Name>23000</Name>
       <SpritePartName>23000</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>23001</Name>
       <SpritePartName>23001</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>23002</Name>
-      <SpritePartName>23002</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>23003</Name>
-      <SpritePartName>23003</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>24000</Name>
@@ -9298,42 +8980,6 @@
       <SpritePartName>24021</SpritePartName>
     </GenericSprite>
     <GenericSprite>
-      <Name>24022</Name>
-      <SpritePartName>24022</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24023</Name>
-      <SpritePartName>24023</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24024</Name>
-      <SpritePartName>24024</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24025</Name>
-      <SpritePartName>24025</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24026</Name>
-      <SpritePartName>24026</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24027</Name>
-      <SpritePartName>24027</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24028</Name>
-      <SpritePartName>24028</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24029</Name>
-      <SpritePartName>24029</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24030</Name>
-      <SpritePartName>24030</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
       <Name>24500</Name>
       <SpritePartName>24500</SpritePartName>
     </GenericSprite>
@@ -9356,26 +9002,6 @@
     <GenericSprite>
       <Name>24505</Name>
       <SpritePartName>24505</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24506</Name>
-      <SpritePartName>24506</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24507</Name>
-      <SpritePartName>24507</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24508</Name>
-      <SpritePartName>24508</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24509</Name>
-      <SpritePartName>24509</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>24510</Name>
-      <SpritePartName>24510</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>25000</Name>
