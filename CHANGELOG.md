@@ -1,5 +1,29 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-20
+
+### Dol Guldur Troop Tree Restructure
+
+Restructured all three non-Khamul DG troop lines to match artist spec:
+
+**Goblin line** — converted from linear chain to branching tree:
+- Renamed "Goblin Slave" display to "Goblin Runt" (ID unchanged for save compat)
+- Added 3 new troops: Goblin Harrier (T2 melee), Goblin Impaler (T4 melee), Goblin Fellbow (T5 ranged)
+- Runt now splits into Harrier (melee branch) and Crawler (ranged branch)
+- Skirmisher moved to melee branch (Infantry), retooled equipment from bows to melee weapons
+- Hunter now upgrades directly to Archer (was Skirmisher)
+
+**Orc line** — connected Warg branch:
+- Orc Recruit now upgrades to both Orc Gnasher AND Warg Scout (was Gnasher only)
+- Removed Orc Scout branch from Orc Warrior upgrade path (Warrior → Reaver only)
+- Orc Scout and Orc Archer kept as orphaned troops for save compatibility
+
+**Uruk line** — display name corrections:
+- "Uruk Warrior" (T3) renamed to "Uruk Fighter" to match spec
+- "Uruk Veteran Warrior" (T4) renamed to "Uruk Warrior" to match spec
+
+Added new goblin troops to `kingdom_hero_party_dolguldur_template`.
+
 ## 2026-03-19
 
 ### Khamul's Troop Tree (Dol Guldur)

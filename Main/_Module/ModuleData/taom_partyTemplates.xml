@@ -252,9 +252,13 @@
 	<MBPartyTemplate id="kingdom_hero_party_dolguldur_template">
 		<stacks>
 			<PartyTemplateStack min_value="10" max_value="30" troop="NPCCharacter.dg_goblin_slave" />
+			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.dg_goblin_harrier" />
 			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.dg_goblin_crawler" />
 			<PartyTemplateStack min_value="6" max_value="15" troop="NPCCharacter.dg_goblin_hunter" />
 			<PartyTemplateStack min_value="6" max_value="15" troop="NPCCharacter.dg_goblin_skirmisher" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.dg_goblin_archer" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.dg_goblin_impaler" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.dg_goblin_fellbow" />
 			<PartyTemplateStack min_value="5" max_value="12" troop="NPCCharacter.dg_orc_recruit" />
 			<PartyTemplateStack min_value="5" max_value="12" troop="NPCCharacter.dg_orc_gnasher" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.dg_orc_warrior" />
