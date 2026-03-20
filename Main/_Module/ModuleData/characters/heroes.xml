@@ -785,6 +785,62 @@
 		text="{=ulzara_description}Ulzara is an orc seer, interpreting signs from the dark lords as in Tolkien's prophetic elements. Her visions direct the clan's fateful actions." />
 
 	<!-- ============================================== -->
+	<!-- ASERAI / HARAD CLAN OWNERS (A10-A26)           -->
+	<!-- ============================================== -->
+
+	<Hero
+		id="lord_A10_1"
+		faction="Faction.clan_aserai_10" />
+	<Hero
+		id="lord_A11_1"
+		faction="Faction.clan_aserai_11" />
+	<Hero
+		id="lord_A12_1"
+		faction="Faction.clan_aserai_12" />
+	<Hero
+		id="lord_A13_1"
+		faction="Faction.clan_aserai_13" />
+	<Hero
+		id="lord_A14_1"
+		faction="Faction.clan_aserai_14" />
+	<Hero
+		id="lord_A15_1"
+		faction="Faction.clan_aserai_15" />
+	<Hero
+		id="lord_A16_1"
+		faction="Faction.clan_aserai_16" />
+	<Hero
+		id="lord_A17_1"
+		faction="Faction.clan_aserai_17" />
+	<Hero
+		id="lord_A18_1"
+		faction="Faction.clan_aserai_18" />
+	<Hero
+		id="lord_A19_1"
+		faction="Faction.clan_aserai_19" />
+	<Hero
+		id="lord_A20_1"
+		faction="Faction.clan_aserai_20" />
+	<Hero
+		id="lord_A21_1"
+		faction="Faction.clan_aserai_21" />
+	<Hero
+		id="lord_A22_1"
+		faction="Faction.clan_aserai_22" />
+	<Hero
+		id="lord_A23_1"
+		faction="Faction.clan_aserai_23" />
+	<Hero
+		id="lord_A24_1"
+		faction="Faction.clan_aserai_24" />
+	<Hero
+		id="lord_A25_1"
+		faction="Faction.clan_aserai_25" />
+	<Hero
+		id="lord_A26_1"
+		faction="Faction.clan_aserai_26" />
+
+	<!-- ============================================== -->
 	<!-- UMBAR HEROES (umbar culture)                   -->
 	<!-- ============================================== -->
 
@@ -809,6 +865,23 @@
 	<Hero id="lord_U1_2"
 		faction="Faction.clan_umbar_1"
 		text="{=lord_U1_2_text}Zimraphel, a descendant of the Black Númenóreans, commands the Corsair fleet with cunning and grace. Her knowledge of the sea and its treacherous currents is unrivaled among the captains of Umbar." />
+
+	<!-- Umbar Clan Owners (U2-U6) -->
+	<Hero
+		id="lord_U2_1"
+		faction="Faction.clan_umbar_2" />
+	<Hero
+		id="lord_U3_1"
+		faction="Faction.clan_umbar_3" />
+	<Hero
+		id="lord_U4_1"
+		faction="Faction.clan_umbar_4" />
+	<Hero
+		id="lord_U5_1"
+		faction="Faction.clan_umbar_5" />
+	<Hero
+		id="lord_U6_1"
+		faction="Faction.clan_umbar_6" />
 
 	<!-- ============================================== -->
 	<!-- DOLGULDUR HEROES (dolguldur culture)           -->

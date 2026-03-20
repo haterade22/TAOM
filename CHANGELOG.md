@@ -2,6 +2,12 @@
 
 ## 2026-03-20
 
+### Fix Clan Owner NRE Crash
+
+- Created 17 unique Harad lord heroes (`lord_A10_1` through `lord_A26_1`) for clans `clan_aserai_10`-`clan_aserai_26`
+- Created 5 unique Umbar lord heroes (`lord_U2_1` through `lord_U6_1`) for clans `clan_umbar_2`-`clan_umbar_6`
+- All 22 clans previously shared placeholder owners (`lord_3_1` / `lord_U1_1`), causing orphaned clans with null Kingdom at runtime and NRE in `ChangeKingdomAction.ApplyInternal`
+
 ### Fix Gondor Equipment — Replace Armory_2-Only Items
 
 Replaced 367 equipment item references across 10 files that pointed to items only
