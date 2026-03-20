@@ -24,6 +24,10 @@
 			<upgrade_target id="NPCCharacter.harad_levy" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.aserai_civil_b" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />

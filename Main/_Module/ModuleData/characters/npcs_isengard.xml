@@ -30,6 +30,10 @@
 			<upgrade_target id="NPCCharacter.urukhai_recruit" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />

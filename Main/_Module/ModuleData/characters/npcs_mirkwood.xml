@@ -26,6 +26,10 @@
 			<upgrade_target id="NPCCharacter.mirkwood_recruit" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.mirkwood_body" />
+				<equipment slot="Leg" id="Item.mirkwood_boots" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.mirkwood_body" />
 				<equipment slot="Leg" id="Item.mirkwood_boots" />

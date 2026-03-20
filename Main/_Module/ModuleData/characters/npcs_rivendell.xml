@@ -25,6 +25,10 @@
 			<upgrade_target id="NPCCharacter.imladris_recruit" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />

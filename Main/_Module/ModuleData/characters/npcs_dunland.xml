@@ -110,6 +110,10 @@
 			<upgrade_target id="NPCCharacter.dunland_peasant" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />

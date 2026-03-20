@@ -24,6 +24,10 @@
 			<upgrade_target id="NPCCharacter.easterling_recruit" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
 				<equipment slot="Leg" id="Item.easterling_boots" />

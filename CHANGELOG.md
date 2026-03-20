@@ -2,6 +2,13 @@
 
 ## 2026-03-20
 
+### Fix Villager Party Settlement Menu NRE
+
+- Added battle equipment rosters to all 13 custom villager NPCs across all cultures
+- Villagers only had `civilian="true"` equipment, causing `FirstBattleEquipment` to return null
+- `CampaignUIHelper.GetCharacterCode` crashes on `.Clone()` when rendering the settlement party overlay
+- Cultures fixed: Gondor, Dale, Erebor, Dunland, Dol Guldur, Gundabad, Harad, Isengard, Mordor, Rhûn, Rivendell, Mirkwood, Khand
+
 ### Fix Clan Owner NRE Crash
 
 - Created 17 unique Harad lord heroes (`lord_A10_1` through `lord_A26_1`) for clans `clan_aserai_10`-`clan_aserai_26`

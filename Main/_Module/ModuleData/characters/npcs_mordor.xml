@@ -32,6 +32,10 @@
 			<upgrade_target id="NPCCharacter.mordor_uruk_grunt" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />

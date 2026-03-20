@@ -106,6 +106,10 @@
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_battania" /></face>
 		<skills></skills>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.highland_jerkin" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />

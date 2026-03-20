@@ -106,6 +106,10 @@
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills></skills>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.thick_padded_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.thick_padded_leather" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />

@@ -24,6 +24,10 @@
 			<upgrade_target id="NPCCharacter.gondor_ano_peasant" />
 		</upgrade_targets>
 		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
