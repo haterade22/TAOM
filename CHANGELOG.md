@@ -2,6 +2,13 @@
 
 ## 2026-03-20
 
+### Fix Siege Camp IndexOutOfRangeException
+
+- Added Harmony Prefix patch on `BesiegerCamp.GetSiegeCampPartyPosition` to guard against empty `siegeCamp1GlobalFrames`
+- Settlement "Gwígar" (and potentially others) has no `siege_camp_1` scene entities, causing `IndexOutOfRangeException` when a party starts a siege
+- Patch swaps camp2 frames into camp1 slot when camp1 is empty, preserving vanilla positioning logic
+- Falls back to settlement gate position if both camp frame arrays are empty
+
 ### Fix Villager Party Settlement Menu NRE
 
 - Added battle equipment rosters to all 13 custom villager NPCs across all cultures
