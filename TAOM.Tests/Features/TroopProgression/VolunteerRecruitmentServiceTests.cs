@@ -278,4 +278,117 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual(expectedTroopId, result);
     }
+
+    // --- Dol Guldur settlement verifications ---
+
+    [TestMethod]
+    [DataRow("town_DG1", "dg_goblin_slave")]
+    [DataRow("castle_DG1", "dg_goblin_slave")]
+    [DataRow("castle_DG2", "dg_goblin_slave")]
+    [DataRow("castle_DG3", "dg_goblin_slave")]
+    public void GetVolunteerTroopId_DolGuldurSettlements_ReturnExpectedRegularTroop(
+        string settlementId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurSettlement_HighRoll_ReturnsShadowInitiate()
+    {
+        // town_DG1: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) = total 10
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: "town_DG1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dg_khamul_shadow_initiate", result);
+    }
+
+    // --- Dol Guldur clan verifications ---
+
+    [TestMethod]
+    [DataRow("clan_dolguldur_1", "dg_goblin_slave")]
+    [DataRow("clan_dolguldur_2", "dg_goblin_slave")]
+    [DataRow("clan_dolguldur_3", "dg_goblin_slave")]
+    [DataRow("clan_dolguldur_4", "dg_goblin_slave")]
+    [DataRow("clan_dolguldur_5", "dg_goblin_slave")]
+    [DataRow("clan_dolguldur_6", "dg_goblin_slave")]
+    public void GetVolunteerTroopId_DolGuldurClans_ReturnExpectedRegularTroop(
+        string clanId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: clanId,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    // --- Dol Guldur culture fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurCulture_ReturnsGoblinSlave()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dg_goblin_slave", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurCulture_ContainsKhamulInitiate()
+    {
+        // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) = 10
+        // Roll 8 should land in khamul_shadow_initiate range
+        _random.Next(10).Returns(8);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dg_khamul_shadow_initiate", result);
+    }
+
+    // --- Dol Guldur village bound settlement fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurVillage_InheritsBoundSettlement()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "village_DG1_1",
+            boundSettlementId: "town_DG1",
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dg_goblin_slave", result);
+    }
 }

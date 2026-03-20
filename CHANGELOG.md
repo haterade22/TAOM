@@ -2,6 +2,20 @@
 
 ## 2026-03-19
 
+### Khamul's Troop Tree (Dol Guldur)
+
+Added complete Khamul human troop tree (T4-T9, 14 troops total):
+- 8 new troops: Shadow Initiate → Disciple → Infantry/Archer split → Warden/Marksman → 3-way elite split
+- Updated 6 existing troops (Veiled Knight/Guard/Marksman, Shadow Knight/Guard/Bowman) with Khamul-specific equipment
+- Shadow Initiate marked as `is_basic_troop` — standalone entry point, disconnected from generic DG feeder troops
+- All Khamul troops are human (no race attribute), using `fighter_dolguldur` face template
+- PLATE armor line (Guard/Knight), SPIKY armor line (Reaper/Archer)
+
+Integration:
+- Added Khamul troops to `kingdom_hero_party_dolguldur_template` party template
+- Added Dol Guldur settlement/clan/culture mappings to `VolunteerRecruitmentService` (with tests)
+- Removed Khamul upgrade targets from generic `dg_warden` and `dg_marksman` feeder troops
+
 ### Gondor Old Asset Cleanup
 
 Removed 66 orphaned armor item entries from LOTRLOME_Armory gondor XMLs whose FBX source

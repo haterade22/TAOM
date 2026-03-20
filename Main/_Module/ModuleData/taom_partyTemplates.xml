@@ -268,6 +268,17 @@
 			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.dg_warg_raider" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dg_uruk_black_slayer" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dg_fell_warg_rider" />
+			<!-- Khamul's Shadow Line (human elite troops) -->
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.dg_khamul_shadow_initiate" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.dg_khamul_shadow_disciple" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.dg_khamul_shadow_infantry" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dg_khamul_shadow_archer" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dg_khamul_shadow_warden" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dg_khamul_shadow_marksman" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dg_khamul_veiled_knight" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dg_khamul_veiled_guard" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dg_khamul_veiled_reaper" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dg_khamul_veiled_marksman" />
 		</stacks>
 	</MBPartyTemplate>
 

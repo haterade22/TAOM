@@ -15,6 +15,9 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeGondorSettlements();
         InitializeGondorClans();
         InitializeGondorCulture();
+        InitializeDolGuldurSettlements();
+        InitializeDolGuldurClans();
+        InitializeDolGuldurCulture();
     }
 
     public VolunteerRecruitmentService(IRandomProvider random)
@@ -122,6 +125,40 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("gondor_bel_recruit", 1),
             new VolunteerChance("gondor_lam_clansman", 1),
             new VolunteerChance("gondor_loss_lumberman", 1)
+        };
+    }
+
+    // --- Dol Guldur Settlement Mappings ---
+
+    private static void InitializeDolGuldurSettlements()
+    {
+        AddSettlement("town_DG1", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddSettlement("castle_DG1", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddSettlement("castle_DG2", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddSettlement("castle_DG3", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+    }
+
+    // --- Dol Guldur Clan Mappings ---
+
+    private static void InitializeDolGuldurClans()
+    {
+        AddClan("clan_dolguldur_1", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddClan("clan_dolguldur_2", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddClan("clan_dolguldur_3", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddClan("clan_dolguldur_4", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddClan("clan_dolguldur_5", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+        AddClan("clan_dolguldur_6", "dg_goblin_slave", 7, "dg_khamul_shadow_initiate", 3);
+    }
+
+    // --- Dol Guldur Culture Fallback ---
+
+    private static void InitializeDolGuldurCulture()
+    {
+        CultureMap["dolguldur"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("dg_goblin_slave", 5),
+            new VolunteerChance("dg_uruk_warrior", 3),
+            new VolunteerChance("dg_khamul_shadow_initiate", 2)
         };
     }
 
