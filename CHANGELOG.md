@@ -15,6 +15,14 @@
 - Created 5 unique Umbar lord heroes (`lord_U2_1` through `lord_U6_1`) for clans `clan_umbar_2`-`clan_umbar_6`
 - All 22 clans previously shared placeholder owners (`lord_3_1` / `lord_U1_1`), causing orphaned clans with null Kingdom at runtime and NRE in `ChangeKingdomAction.ApplyInternal`
 
+### Fix Orphaned Clan Owners — Missing XSLT Faction Reassignment
+
+- Fixed 9 custom clans whose owner heroes still had vanilla faction assignments in `heroes.xslt`
+- Added `faction` attribute to XSLT templates for: `lord_6_21`-`lord_6_24` (Rhûn clans 10-13), `lord_1_34` (Faramir → Garvirionath), `lord_1_48` (Khamûl → Hîondrûs), `lord_4_23` (Marhad), `lord_4_28` (Morcargas), `lord_V11_l` (Deáfringas)
+- Updated `spclans.xslt` to reassign vanilla clan owners for `clan_vlandia_7` (→ `lord_4_23_1`), `clan_vlandia_10` (→ `lord_4_28_1`), `clan_vlandia_11` (→ `lord_V11_u`)
+- Also moved family members (spouses/children) to correct custom clans via `heroes.xslt`
+- Root cause: `CharacterRelationCampaignBehavior.OnClanChangedKingdom` NRE when `oldKingdom` is null
+
 ### Fix Gondor Equipment — Replace Armory_2-Only Items
 
 Replaced 367 equipment item references across 10 files that pointed to items only

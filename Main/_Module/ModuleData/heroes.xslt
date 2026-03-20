@@ -572,9 +572,10 @@
 
 	<xsl:template match="Hero[@id='lord_1_34']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_34}Faramir is the younger son of Denethor, Captain of Ithilien. Though his father favors his brother, Faramir is beloved by his men for his wisdom and mercy.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_7</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_empire_west_12</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1041,32 +1042,36 @@
 
 	<xsl:template match="Hero[@id='lord_1_48']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48}Khamul the Easterling, second of the Nine, once ruled a great kingdom in Rhun before accepting a Ring of Power.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_48_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48_1}The Tainted spreads corruption wherever he rides.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_48_2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48_2}The Shadow of the Northmen hunts in the cold lands.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_48_3']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48_3}The Shadow of Umbar haunts the southern coasts.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2586,12 +2591,14 @@
 
 	<xsl:template match="Hero[@id='lord_4_23']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_23}Marhath leads horse breeders of the southern grasslands.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_vlandia_19</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- lord_4_23_1 stays in clan_vlandia_7 as new owner -->
 	<xsl:template match="Hero[@id='lord_4_23_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
@@ -2602,18 +2609,20 @@
 
 	<xsl:template match="Hero[@id='lord_4_23_2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_23_2}Eleduran trains warhorses for the king's army.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_4_23</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_4_23_1</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_vlandia_19</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_23_3']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_23_3}Eleduran the younger serves as a horse warden.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_vlandia_19</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2702,12 +2711,14 @@
 
 	<xsl:template match="Hero[@id='lord_4_28']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_28}Fasthelm Morcargas commands the southern watch posts.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_vlandia_20</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- lord_4_28_1 stays in clan_vlandia_10 as new owner -->
 	<xsl:template match="Hero[@id='lord_4_28_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
@@ -2719,9 +2730,10 @@
 
 	<xsl:template match="Hero[@id='lord_4_28_2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_28_2}Hereswith is daughter of the southern watch commander.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_4_28</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_vlandia_20</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3381,48 +3393,54 @@
 
 	<xsl:template match="Hero[@id='lord_6_21']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_6_21}Molluk Illnoria commands a powerful clan of horse warriors.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_khuzait_10</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_6_21_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_6_21_1}Esachei is wife to Molluk.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_khuzait_10</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_6_22']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_6_22}Shakhal II Shakhalian rules a wealthy trading clan of the Sea of Rhun.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_khuzait_11</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_6_22_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_6_22_1}Eselen is wife to Shakhal.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_khuzait_11</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_6_23']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_6_23}Huz-Margoz Huz commands fortress garrisons along the western frontier.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_khuzait_12</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_6_24']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_6_24}Nikath Adekig guards the southern passes into Rhun.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_khuzait_13</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3462,11 +3480,12 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- Vlandia 11 -->
+	<!-- Vlandia 11 — lord_V11_l moves to clan_vlandia_18 (Deáfringas) -->
 	<xsl:template match="Hero[@id='lord_V11_l']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_V11_l}A Rohirrim lord of the western vales.</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_vlandia_18</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>

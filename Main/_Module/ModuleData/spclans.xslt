@@ -467,8 +467,9 @@
 
 	<xsl:template match="Faction[@id='clan_vlandia_7']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner']"/>
 			<xsl:attribute name="name">{=TAOM_clan_vlandia_7}House of Æthellafing</xsl:attribute>
+			<xsl:attribute name="owner">Hero.lord_4_23_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -492,16 +493,18 @@
 
 	<xsl:template match="Faction[@id='clan_vlandia_10']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner']"/>
 			<xsl:attribute name="name">{=TAOM_clan_vlandia_10}House of Eoforing</xsl:attribute>
+			<xsl:attribute name="owner">Hero.lord_4_28_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Faction[@id='clan_vlandia_11']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'name']"/>
+			<xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner']"/>
 			<xsl:attribute name="name">{=TAOM_clan_vlandia_11}House of Tordaging</xsl:attribute>
+			<xsl:attribute name="owner">Hero.lord_V11_u</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
