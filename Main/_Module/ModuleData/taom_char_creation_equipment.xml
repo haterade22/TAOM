@@ -13,7 +13,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -28,7 +28,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -41,7 +41,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -59,7 +59,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -75,7 +75,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -87,7 +87,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -103,7 +103,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -115,7 +115,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -128,7 +128,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -143,7 +143,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -156,7 +156,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -168,7 +168,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -187,7 +187,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -199,7 +199,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -212,7 +212,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -224,7 +224,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -236,7 +236,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -248,7 +248,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -260,7 +260,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -272,7 +272,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -284,7 +284,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -296,7 +296,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -308,7 +308,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -320,7 +320,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -332,7 +332,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -344,7 +344,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -356,7 +356,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -368,7 +368,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -380,7 +380,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -392,7 +392,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -404,7 +404,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -416,7 +416,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.cts_gondor_boot" />
@@ -428,7 +428,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -440,7 +440,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -452,7 +452,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -464,7 +464,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -476,7 +476,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -488,7 +488,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -510,7 +510,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -528,7 +528,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -552,7 +552,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -570,7 +570,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -594,7 +594,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -612,7 +612,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -636,7 +636,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -654,7 +654,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_b" />
+				id="Item.ithilien_jerkin_long_var" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -681,7 +681,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -699,7 +699,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -726,7 +726,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -744,7 +744,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -768,7 +768,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -786,7 +786,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -810,7 +810,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -828,7 +828,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -849,7 +849,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -867,7 +867,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -888,7 +888,7 @@
 				id="Item.gond_spear2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -906,7 +906,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -930,7 +930,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -948,7 +948,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -972,7 +972,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -990,7 +990,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -1014,7 +1014,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -1032,7 +1032,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -1056,7 +1056,7 @@
 				id="Item.default_arrows" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -1074,7 +1074,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -1095,7 +1095,7 @@
 				id="Item.gond_shld2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -1113,7 +1113,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -1134,7 +1134,7 @@
 				id="Item.gond_shld2" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -1152,7 +1152,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Cape"
 				id="Item.ithilien_cloak" />
@@ -1168,10 +1168,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_jerkin_a" />
+				id="Item.ithilien_jerkin_short" />
 			<Equipment
 				slot="Gloves"
-				id="Item.citidel_guard_gloves" />
+				id="Item.sk_gd_ano_gloves_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />
@@ -1183,7 +1183,7 @@
 				id="Item.wm_gondor_lossarnach_1h_axe_a" />
 			<Equipment
 				slot="Body"
-				id="Item.gondor_noble_coat_a" />
+				id="Item.ithilien_jerkin_long" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_gondor_lossarnach_boots_a" />

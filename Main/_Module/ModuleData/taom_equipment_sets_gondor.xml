@@ -7,11 +7,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet1" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor1" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -19,22 +19,22 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet3" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor2" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons_light" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="gondor_bat_template_medium_c" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
-			<Equipment slot="Head" id="Item.fountain_guard_helmet" />
-			<Equipment slot="Body" id="Item.fountain_armor1" />
-			<Equipment slot="Cape" id="Item.fountain_guard_pauldrons" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
-			<Equipment slot="Leg" id="Item.fountain_guard_boots" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_fount_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_fount_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_fount_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -42,21 +42,21 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
-			<Equipment slot="Body" id="Item.gondor_king_armor" />
-			<Equipment slot="Cape" id="Item.gondor_nobke_pauldrons" />
-			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="gondor_bat_template_medium_e" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet5" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor4" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_bracers_shield" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -64,36 +64,36 @@
 
 	<EquipmentRoster id="gondor_civ_template_default_a" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.gondor_noble_coat_a" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="gondor_civ_template_default_b" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.gondor_noble_coat_b" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="gondor_civ_template_default_c" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="gondor_civ_template_default_d" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="gondor_civ_template_default_e" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.gondor_noble_coat_a" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

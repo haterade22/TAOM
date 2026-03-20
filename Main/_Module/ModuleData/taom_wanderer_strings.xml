@@ -543,6 +543,14 @@
 	<string id="response_2.spc_wanderer_rohan_8" text="{=aom_response_2.spc_wanderer_rohan_8_text}Abandoning your king seems like treachery." />
 	<string id="backstory_d.spc_wanderer_rohan_8" text="{=aom_backstory_d.spc_wanderer_rohan_8_text}I offer elite training and unwavering purpose, if you need them." />
 
+	<string id="prebackstory.spc_wanderer_rohan_9" text="{=aom_prebackstory.spc_wanderer_rohan_9_text}The plains taught me more than any hall of warriors ever could..." />
+	<string id="backstory_a.spc_wanderer_rohan_9" text="{=aom_backstory_a.spc_wanderer_rohan_9_text}I grew up in the Eastfold, where the wild horses still run free and the Easterlings probe our borders. My father was a herder, not a soldier, but he taught me to read the land and the wind." />
+	<string id="backstory_b.spc_wanderer_rohan_9" text="{=aom_backstory_b.spc_wanderer_rohan_9_text}When raiders came, our village had no éored to protect it. I rallied the young riders and we drove them off ourselves. Word spread, and the Marshal offered me a place in the muster." />
+	<string id="backstory_c.spc_wanderer_rohan_9" text="{=aom_backstory_c.spc_wanderer_rohan_9_text}But the marshals quarrel among themselves while the real enemy gathers. I left the muster to find a leader worth following — someone who sees beyond petty border disputes to the true darkness rising in the East." />
+	<string id="response_1.spc_wanderer_rohan_9" text="{=aom_response_1.spc_wanderer_rohan_9_text}A rider who knows the land is worth ten who only know the charge." />
+	<string id="response_2.spc_wanderer_rohan_9" text="{=aom_response_2.spc_wanderer_rohan_9_text}Leaving your people undefended seems reckless." />
+	<string id="backstory_d.spc_wanderer_rohan_9" text="{=aom_backstory_d.spc_wanderer_rohan_9_text}I know every trail and ford in the Riddermark, and my horse has never failed me. That is what I bring." />
+
 
 	<!-- RIVENDELL wanderer backstories -->
 	<string id="prebackstory.spc_wanderer_rivendell_0" text="{=aom_prebackstory.spc_wanderer_rivendell_0_text}Knowledge is the truest weapon, and I have spent a lifetime gathering it..." />

@@ -6449,11 +6449,11 @@
             <EquipmentRoster>
                 <equipment slot="Item1" id="Item.anduril" />
                 <equipment slot="Item2" id="Item.gond_shld2" />
-                <equipment slot="Head" id="Item.citidel_guard_helmet3" />
-                <equipment slot="Body" id="Item.citidel_guard_armor1" />
-                <equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-                <equipment slot="Leg" id="Item.citidel_guard_boots" />
-                <equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+                <equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
+                <equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="emp_civ_template_default" civilian="true" />
         </Equipments>
@@ -8697,7 +8697,7 @@
                 <equipment slot="Item2" id="Item.gond_shld2" />
                 <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment slot="Body" id="Item.gondor_armor" />
-                <equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
                 <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
             </EquipmentRoster>

@@ -1110,16 +1110,16 @@
 		faction="Faction.clan_empire_west_14" />
 	<Hero
 		id="lord_EW_9"
-		faction="Faction.clan_empire_west_15" />
+		faction="Faction.clan_empire_west_10" />
 	<Hero
 		id="lord_EW_14"
-		faction="Faction.clan_empire_west_16" />
+		faction="Faction.clan_empire_west_11" />
 	<Hero
 		id="lord_EW_23"
-		faction="Faction.clan_empire_west_17" />
+		faction="Faction.clan_empire_west_12" />
 	<Hero
 		id="lord_EW_20"
-		faction="Faction.clan_empire_west_18" />
+		faction="Faction.clan_empire_west_13" />
 
 	<!-- ========== ROHAN (VLANDIA) - Additional Heroes ========== -->
 	<Hero
@@ -1185,13 +1185,13 @@
 		faction="Faction.clan_empire_south_15" />
 	<Hero
 		id="lord_M16_1"
-		faction="Faction.clan_empire_south_16" />
+		faction="Faction.clan_empire_south_10" />
 	<Hero
 		id="lord_M17_1"
-		faction="Faction.clan_empire_south_17" />
+		faction="Faction.clan_empire_south_11" />
 	<Hero
 		id="lord_M18_1"
-		faction="Faction.clan_empire_south_18" />
+		faction="Faction.clan_empire_south_12" />
 
 	<!-- ========== RHUN (KHUZAIT) - Additional Heroes ========== -->
 	<Hero

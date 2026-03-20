@@ -813,7 +813,6 @@
 				<template name="NPCCharacter.spc_wanderer_rohan_6" />
 				<template name="NPCCharacter.spc_wanderer_rohan_7" />
 				<template name="NPCCharacter.spc_wanderer_rohan_8" />
-				<template name="NPCCharacter.spc_wanderer_rohan_9" />
 				<template name="NPCCharacter.spc_notable_rohan_0" />
 				<template name="NPCCharacter.spc_notable_rohan_0b" />
 				<template name="NPCCharacter.spc_notable_rohan_1" />
@@ -870,8 +869,8 @@
 			<!-- Party templates -->
 			<xsl:attribute name="villager_party_template">PartyTemplate.villager_khuzait_template</xsl:attribute>
 			<xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_rhun_template</xsl:attribute>
-			<xsl:attribute name="caravan_party_template">PartyTemplate.caravan_template_khuzait</xsl:attribute>
-			<xsl:attribute name="elite_caravan_party_template">PartyTemplate.elite_caravan_template_khuzait</xsl:attribute>
+			<xsl:attribute name="caravan_party_template">PartyTemplate.caravan_template_rhun</xsl:attribute>
+			<xsl:attribute name="elite_caravan_party_template">PartyTemplate.elite_caravan_template_rhun</xsl:attribute>
 			<xsl:attribute name="militia_party_template">PartyTemplate.militia_khuzait_template</xsl:attribute>
 			<xsl:attribute name="rebels_party_template">PartyTemplate.rebels_khuzait_template</xsl:attribute>
 			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_khuzait</xsl:attribute>

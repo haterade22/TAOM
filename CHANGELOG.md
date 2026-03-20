@@ -2,6 +2,13 @@
 
 ## 2026-03-20
 
+### Fix Null Object Reference Errors
+
+- Added missing `spc_wanderer_rohan_9` wanderer (definition, skill set, backstory strings)
+- Reassigned Gondor heroes (lord_EW_9/14/23/20) from non-existent clans 15-18 to existing empire_west clans 10-13
+- Reassigned Mordor heroes (lord_M16_1/17_1/18_1) from non-existent clans 16-18 to existing empire_south clans 10-12
+- Fixed Easterling caravan templates: `caravan_template_khuzait` → `caravan_template_rhun` (matching Rohan pattern)
+
 ### Rhûn Troop Generator
 
 Created `tools/generate_rhun_troops.py` — Python generator replacing manually-maintained XML with

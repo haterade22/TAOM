@@ -1393,6 +1393,27 @@
 		<skill id="Engineering" value="80" />
 	</SkillSet>
 
+	<SkillSet id="spc_wanderer_rohan_9_skills">
+		<skill id="OneHanded" value="180" />
+		<skill id="TwoHanded" value="140" />
+		<skill id="Polearm" value="200" />
+		<skill id="Bow" value="160" />
+		<skill id="Crossbow" value="20" />
+		<skill id="Throwing" value="120" />
+		<skill id="Riding" value="240" />
+		<skill id="Athletics" value="180" />
+		<skill id="Roguery" value="60" />
+		<skill id="Crafting" value="80" />
+		<skill id="Scouting" value="180" />
+		<skill id="Tactics" value="140" />
+		<skill id="Charm" value="120" />
+		<skill id="Leadership" value="160" />
+		<skill id="Trade" value="60" />
+		<skill id="Steward" value="120" />
+		<skill id="Medicine" value="80" />
+		<skill id="Engineering" value="60" />
+	</SkillSet>
+
 
 	<!-- RIVENDELL wanderer skills -->
 	<SkillSet id="spc_wanderer_rivendell_0_skills">

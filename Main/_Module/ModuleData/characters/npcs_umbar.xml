@@ -8,7 +8,7 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -19,9 +19,9 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -31,7 +31,7 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -42,8 +42,8 @@
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -65,9 +65,9 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -77,7 +77,7 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -88,8 +88,8 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -100,8 +100,8 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -112,7 +112,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -124,7 +124,7 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -134,9 +134,9 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -145,7 +145,7 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -157,8 +157,8 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -169,7 +169,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -180,8 +180,8 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -191,8 +191,8 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -201,8 +201,8 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -212,7 +212,7 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Body" id="Item.boromir_jerkin" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -223,7 +223,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -232,8 +232,8 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -245,7 +245,7 @@
 		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -255,8 +255,8 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -267,8 +267,8 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers" />
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -288,8 +288,8 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
-				<equipment slot="Leg" id="Item.citidel_guard_boots_light" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

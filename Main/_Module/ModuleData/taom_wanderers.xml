@@ -1700,6 +1700,31 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<NPCCharacter
+		id="spc_wanderer_rohan_9"
+		name="{=aom_spc_wanderer_rohan_9_name}{FIRSTNAME} Wulfheortan"
+		voice="earnest"
+		age="26"
+		is_template="true"
+		default_group="Cavalry"
+		is_hero="false"
+		culture="Culture.vlandia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="0" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" />
+		</Equipments>
+	</NPCCharacter>
+
 
 	<!-- ==================== RIVENDELL WANDERERS ==================== -->
 	<NPCCharacter

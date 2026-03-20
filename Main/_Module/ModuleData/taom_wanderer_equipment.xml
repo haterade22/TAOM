@@ -8,8 +8,8 @@
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
@@ -17,64 +17,64 @@
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet1" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor1" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet1" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor1" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet3" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor2" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-			<Equipment slot="Head" id="Item.citidel_guard_helmet3" />
-			<Equipment slot="Body" id="Item.citidel_guard_armor2" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_gloves" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-			<Equipment slot="Gloves" id="Item.citidel_guard_bracers" />
-			<Equipment slot="Leg" id="Item.citidel_guard_boots" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
@@ -1253,24 +1253,24 @@
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_e" />
 			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
 			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item2" id="Item.composite_bow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
 			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
-			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
@@ -1279,7 +1279,7 @@
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
 			<Equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
 		</EquipmentSet>
@@ -1288,16 +1288,16 @@
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.gond_spear2" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
@@ -1306,7 +1306,7 @@
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_e" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
@@ -1314,7 +1314,7 @@
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_e" />
 			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
 		</EquipmentSet>
@@ -1322,16 +1322,16 @@
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
-			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
@@ -1340,16 +1340,16 @@
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.ithilien_hood_masked_var" />
 			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
-			<Equipment slot="Cape" id="Item.fountain_shoulders2" />
-			<Equipment slot="Gloves" id="Item.gondor_nobke_bracers" />
-			<Equipment slot="Leg" id="Item.gondor_nobke_boots" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
 			<Equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
-			<Equipment slot="Cape" id="Item.citidel_guard_armor_pauldrons" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
