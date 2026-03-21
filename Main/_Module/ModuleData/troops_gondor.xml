@@ -2785,7 +2785,7 @@
                     id="Item.sk_gd_ano_pauld_noble_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -2817,7 +2817,7 @@
                     id="Item.sk_gd_ano_pauld_inf_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -2849,7 +2849,7 @@
                     id="Item.sk_gd_ano_pauld_inf_med_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -2881,7 +2881,7 @@
                     id="Item.sk_gd_ano_pauld_noble_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_heavy_b" />
+                    id="Item.sk_gd_ano_inf_chest_heavy_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -2914,7 +2914,7 @@
                     id="Item.sk_gd_ano_pauld_noble_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_heavy_b" />
+                    id="Item.sk_gd_ano_inf_chest_heavy_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -2991,7 +2991,7 @@
                     id="Item.sk_gd_ano_pauld_noble_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_elite_a" />
+                    id="Item.sk_gd_mns_fount_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -3023,7 +3023,7 @@
                     id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_fount_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -3055,7 +3055,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_elite_a" />
+                    id="Item.sk_gd_mns_fount_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -3087,7 +3087,7 @@
                     id="Item.sk_gd_ano_pauld_noble_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_b" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -3120,7 +3120,7 @@
                     id="Item.sk_gd_ano_pauld_noble_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_b" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -3193,7 +3193,7 @@
                     id="Item.sk_gd_ano_pauld_noble_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_elite_a" />
+                    id="Item.sk_gd_mns_fount_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_osg_bracer_noble_elite_a" />
@@ -3225,7 +3225,7 @@
                     id="Item.sk_gd_ano_pauld_inf_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_fount_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -3257,7 +3257,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_elite_a" />
+                    id="Item.sk_gd_mns_fount_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_osg_bracer_noble_elite_a" />
@@ -3289,7 +3289,7 @@
                     id="Item.sk_gd_ano_pauld_noble_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_b" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -3322,7 +3322,7 @@
                     id="Item.sk_gd_ano_pauld_noble_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_b" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -6177,7 +6177,7 @@
                     id="Item.sk_gd_ano_pauld_inf_med_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -6200,7 +6200,7 @@
                     id="Item.sk_gd_ano_pauld_noble_heavy_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_b" />
+                    id="Item.sk_gd_ano_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -6223,7 +6223,7 @@
                     id="Item.sk_gd_ano_pauld_inf_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -6246,7 +6246,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -6270,7 +6270,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -6342,7 +6342,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -6365,7 +6365,7 @@
                     id="Item.sk_gd_ano_pauld_inf_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_b" />
+                    id="Item.sk_gd_ano_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -6388,7 +6388,7 @@
                     id="Item.sk_gd_ano_pauld_inf_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_heavy_a" />
@@ -6411,7 +6411,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_b" />
+                    id="Item.sk_gd_ano_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -6435,7 +6435,7 @@
                     id="Item.sk_gd_ano_pauld_inf_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_b" />
+                    id="Item.sk_gd_ano_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_med_a" />
@@ -6500,7 +6500,7 @@
                     id="Item.sk_gd_mns_noble_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -6571,7 +6571,7 @@
                     id="Item.sk_gd_mns_noble_helmet_heavy_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -6638,7 +6638,7 @@
                     id="Item.sk_gd_mns_fount_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_elite_a" />
+                    id="Item.sk_gd_mns_fount_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_osg_bracer_noble_elite_a" />
@@ -6714,7 +6714,7 @@
                     id="Item.sk_gd_mns_noble_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_a" />
+                    id="Item.sk_gd_mns_citadel_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -6740,7 +6740,7 @@
                     id="Item.sk_gd_mns_noble_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_ano_noble_chest_med_b" />
+                    id="Item.sk_gd_ano_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -6814,7 +6814,7 @@
                     id="Item.sk_gd_mns_noble_helmet_heavy_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_b" />
+                    id="Item.sk_gd_mns_citadel_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />
@@ -6840,7 +6840,7 @@
                     id="Item.sk_gd_mns_noble_helmet_heavy_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gd_mns_noble_chest_heavy_a" />
+                    id="Item.sk_gd_mns_fount_chest_heavy_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gd_ano_bracer_noble_elite_a" />

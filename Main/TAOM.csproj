@@ -63,10 +63,13 @@
 		<PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
 	</ItemGroup>
 
-	<!-- InternalsVisibleTo for unit testing -->
+	<!-- InternalsVisibleTo for unit testing and TAOM_Online multiplayer module -->
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>TAOM.Tests</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>TAOM_Online</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
