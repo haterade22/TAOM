@@ -18,6 +18,6 @@ public class DefaultMapWeatherModel_UpdateWeatherForPosition_Patch
 
         Vec2 terrainSize = wrapper.GetTerrainSize();
         var (x, y) = WeatherPositionClamper.ClampPosition(position.X, position.Y, terrainSize.X, terrainSize.Y);
-        position = new CampaignVec2(new Vec2(x, y));
+        position = new CampaignVec2(new Vec2(x, y), position.IsOnLand);
     }
 }
