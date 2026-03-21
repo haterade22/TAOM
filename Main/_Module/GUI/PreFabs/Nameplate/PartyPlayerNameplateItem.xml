@@ -72,12 +72,12 @@
           </Children>
         </Widget>
 
-				<ButtonWidget Id="MainPartyArrowWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="88" Brush="Map.MainHeroParty.Tracker" CircularClipEnabled="true" CircularClipRadius="40" HorizontalAlignment="Center" Command.Click="ExecuteSetCameraPosition">
+				<ButtonWidget Id="MainPartyArrowWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="88" Brush="Map.MainHeroParty.Tracker" CircularClipEnabled="true" CircularClipRadius="40" HorizontalAlignment="Center" Command.Click="ExecuteSetCameraPosition" IsVisible="false" IsEnabled="false">
 					<Children>
 						<ImageIdentifierWidget DataSource="{MainHeroVisual}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!MainHeroVisual.Padding" MarginRight="!MainHeroVisual.Padding" MarginTop="!MainHeroVisual.Padding" MarginBottom="!MainHeroVisual.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsDisabled="true" MaterialAlphaFactor="0.5" />
 					</Children>
 				</ButtonWidget>
-				<Widget Id="TrackerFrame" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="115" SuggestedHeight="115" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-10" Sprite="SPGeneral\Nameplates\DayFrame@2x" AlphaFactor="0.6" IsEnabled="false" />
+				<Widget Id="TrackerFrame" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="115" SuggestedHeight="115" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-10" Sprite="SPGeneral\Nameplates\DayFrame@2x" AlphaFactor="0.6" IsEnabled="false" IsVisible="false" />
 
 				<!-- Size Setter (used to keep a uniform size independent of which set of widgets visible currently.) -->
 				<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="120" IsEnabled="false" />

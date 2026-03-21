@@ -1,0 +1,19 @@
+<Window>
+  <Widget HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+    <Children>
+      
+      <Widget DataSource="{Nameplates}" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+        <ItemTemplate>
+          <PartyNameplateItem />
+        </ItemTemplate>
+      </Widget>
+      
+      <Widget DataSource="{PlayerNameplate}" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+        <Children>
+          <PartyPlayerNameplateItem />
+        </Children>
+      </Widget>
+      
+    </Children>
+  </Widget>
+</Window>
