@@ -10,14 +10,14 @@ namespace TAOM.Features.WeatherBoundsGuard.Hooks;
 public class DefaultMapWeatherModel_UpdateWeatherForPosition_Patch
 {
     [HarmonyPrefix]
-    public static void Prefix(ref Vec2 pos)
+    public static void Prefix(ref CampaignVec2 position)
     {
         var wrapper = Campaign.Current?.MapSceneWrapper;
         if (wrapper == null)
             return;
 
         Vec2 terrainSize = wrapper.GetTerrainSize();
-        var (x, y) = WeatherPositionClamper.ClampPosition(pos.x, pos.y, terrainSize.X, terrainSize.Y);
-        pos = new Vec2(x, y);
+        var (x, y) = WeatherPositionClamper.ClampPosition(position.X, position.Y, terrainSize.X, terrainSize.Y);
+        position = new CampaignVec2(new Vec2(x, y));
     }
 }
