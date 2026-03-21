@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCCharacters>
+
+    <!-- ==================== -->
+    <!-- Erebor Regular Troops -->
+    <!-- ==================== -->
+
+    <!-- T2 - Miner (Infantry, is_basic_troop) -->
+
+    <NPCCharacter
+        id="erebor_reg_miner"
+        race="dwarf"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_erebor_reg_miner_name}[Erebor] Miner"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="35" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="25" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.erebor_reg_militia" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T3 - Militia (Infantry) -->
+
+    <NPCCharacter
+        id="erebor_reg_militia"
+        race="dwarf"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_erebor_reg_militia_name}[Erebor] Militia"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="55" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="40" />
+            <skill id="Bow" value="25" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.erebor_reg_skirmisher" />
+            <upgrade_target id="NPCCharacter.erebor_reg_company" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T4 - Skirmisher (Ranged) -->
+
+    <NPCCharacter
+        id="erebor_reg_skirmisher"
+        race="dwarf"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_erebor_reg_skirmisher_name}[Erebor] Skirmisher"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="65" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="50" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="25" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="20" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.erebor_reg_bowman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T5 - Bowman (Ranged) -->
+
+    <NPCCharacter
+        id="erebor_reg_bowman"
+        race="dwarf"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_erebor_reg_bowman_name}[Erebor] Bowman"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="25" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="110" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_b" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_b" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_b" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_b" />
+                <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T4 - Company (Infantry) -->
+
+    <NPCCharacter
+        id="erebor_reg_company"
+        race="dwarf"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_erebor_reg_company_name}[Erebor] Company"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="75" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="45" />
+            <skill id="Polearm" value="55" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.erebor_reg_fighter" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T5 - Fighter (Infantry) -->
+
+    <NPCCharacter
+        id="erebor_reg_fighter"
+        race="dwarf"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_erebor_reg_fighter_name}[Erebor] Fighter"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="95" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="70" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.erebor_reg_mattock_warrior" />
+            <upgrade_target id="NPCCharacter.erebor_reg_warrior" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_chain_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_chain_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T6 - Mattock Warrior (Infantry, 2H) -->
+
+    <NPCCharacter
+        id="erebor_reg_mattock_warrior"
+        race="dwarf"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_erebor_reg_mattock_warrior_name}[Erebor] Mattock Warrior"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="115" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="50" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="10" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_iron_mattock_a" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_chain_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_iron_mattock_b" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_scale_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_iron_mattock_c" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_c" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_chain_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_iron_mattock_d" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_d" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_scale_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- T6 - Warrior (Infantry, 1H+Shield) -->
+
+    <NPCCharacter
+        id="erebor_reg_warrior"
+        race="dwarf"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_erebor_reg_warrior_name}[Erebor] Warrior"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_empire" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="115" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="55" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_chain_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_scale_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_e" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_c" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_chain_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
+                <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_d" />
+                <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_scale_a" />
+                <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Body" id="Item.sk_dwarf_dress_normal_e" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+</NPCCharacters>

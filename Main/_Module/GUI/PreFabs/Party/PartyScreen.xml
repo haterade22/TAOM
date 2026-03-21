@@ -274,11 +274,11 @@
                           <Children>
 
                             <!--_____Other Party Troops_______-->
-                            <PartyListPanel Id="List" DataSource="{OtherPartyTroops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="OtherPartyTroops" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1" MaxIndex="1000000" StepSize="10" AutoScrollTopOffset="150" AutoScrollBottomOffset="150">
+                            <NavigatableListPanel Id="List" DataSource="{OtherPartyTroops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="OtherPartyTroops" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1" MaxIndex="1000000" StepSize="10" AutoScrollYOffset="150">
                               <ItemTemplate>
-                                <PartyTroopTupleLeft/>
+                                <PartyTroopTupleLeft ButtonType="Radio" />
                               </ItemTemplate>
-                            </PartyListPanel>
+                            </NavigatableListPanel>
 
                             <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="0" VerticalAlignment="Top" IsDisabled="true">
                               <Children>
@@ -297,11 +297,12 @@
                           <Children>
 
                             <!--_____Other Party Prisoners_______-->
-                            <PartyListPanel Id="List" DataSource="{OtherPartyPrisoners}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="OtherPartyPrisoners" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1000002" MaxIndex="2000000" StepSize="10" AutoScrollTopOffset="150" AutoScrollBottomOffset="150">
+                            <NavigatableListPanel Id="List" DataSource="{OtherPartyPrisoners}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="OtherPartyPrisoners" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1000002" MaxIndex="2000000" StepSize="10" AutoScrollYOffset="150">
                               <ItemTemplate>
-                                <PartyTroopTupleLeft/>
+                                <PartyTroopTupleLeft ButtonType="Radio">
+                                </PartyTroopTupleLeft>
                               </ItemTemplate>
-                            </PartyListPanel>
+                            </NavigatableListPanel>
 
                             <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="0" VerticalAlignment="Top" IsDisabled="true">
                               <Children>
@@ -401,11 +402,12 @@
                           <Children>
 
                             <!--_____Main Party Troops_______-->
-                            <PartyListPanel Id="List" DataSource="{MainPartyTroops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="MainPartyTroops" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1" MaxIndex="1000000" StepSize="10" AutoScrollTopOffset="150" AutoScrollBottomOffset="150">
+                            <NavigatableListPanel Id="List" DataSource="{MainPartyTroops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="MainPartyTroops" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1" MaxIndex="1000000" StepSize="10" AutoScrollYOffset="150">
                               <ItemTemplate>
-                                <PartyTroopTuple/>
+                                <PartyTroopTuple ButtonType="Radio">
+                                </PartyTroopTuple>
                               </ItemTemplate>
-                            </PartyListPanel>
+                            </NavigatableListPanel>
 
                             <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="0" VerticalAlignment="Top" IsDisabled="true">
                               <Children>
@@ -424,11 +426,12 @@
                         <Widget Id="MainPartyPrisonersList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="20">
                           <Children>
 
-                            <PartyListPanel Id="List" DataSource="{MainPartyPrisoners}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="MainPartyPrisoners" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1000002" MaxIndex="2000000" StepSize="10" AutoScrollTopOffset="150" AutoScrollBottomOffset="150">
+                            <NavigatableListPanel Id="List" DataSource="{MainPartyPrisoners}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" AcceptDrop="true" Command.Drop="..\ExecuteTransferWithParameters" CommandParameter.Drop="MainPartyPrisoners" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="1000002" MaxIndex="2000000" StepSize="10" AutoScrollYOffset="150">
                               <ItemTemplate>
-                                <PartyTroopTuple/>
+                                <PartyTroopTuple ButtonType="Radio">
+                                </PartyTroopTuple>
                               </ItemTemplate>
-                            </PartyListPanel>
+                            </NavigatableListPanel>
 
                             <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="0" VerticalAlignment="Top" IsDisabled="true">
                               <Children>
