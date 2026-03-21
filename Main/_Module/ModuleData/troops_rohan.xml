@@ -3088,7 +3088,7 @@
                     id="Item.rohan_militia_armour_c" />
                 <equipment
                     slot="Gloves"
-                    id="Item.pg_spearman_glove" />
+                    id="Item.cts_rohan_armguard1" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
@@ -3140,7 +3140,7 @@
                     id="Item.rohan_militia_armour_c" />
                 <equipment
                     slot="Gloves"
-                    id="Item.pg_spearman_glove" />
+                    id="Item.cts_rohan_armguard1" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
@@ -3167,7 +3167,7 @@
                     id="Item.rohan_militia_armour_c" />
                 <equipment
                     slot="Gloves"
-                    id="Item.pg_spearman_glove" />
+                    id="Item.cts_rohan_armguard1" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
