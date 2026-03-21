@@ -18,6 +18,9 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeDolGuldurSettlements();
         InitializeDolGuldurClans();
         InitializeDolGuldurCulture();
+        InitializeEreborSettlements();
+        InitializeEreborClans();
+        InitializeEreborCulture();
     }
 
     public VolunteerRecruitmentService(IRandomProvider random)
@@ -159,6 +162,53 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("dg_goblin_slave", 5),
             new VolunteerChance("dg_uruk_warrior", 3),
             new VolunteerChance("dg_khamul_shadow_initiate", 2)
+        };
+    }
+
+    // --- Erebor Settlement Mappings ---
+
+    private static void InitializeEreborSettlements()
+    {
+        // Towns
+        AddSettlement("town_E1", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("town_E2", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("town_E3", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("town_E4", "erebor_reg_miner", 5, "erebor_noble", 3);
+
+        // Castles
+        AddSettlement("castle_E1", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E2", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E3", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E4", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E5", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E6", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E7", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E8", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddSettlement("castle_E9", "erebor_reg_miner", 5, "erebor_noble", 3);
+    }
+
+    // --- Erebor Clan Mappings ---
+
+    private static void InitializeEreborClans()
+    {
+        AddClan("clan_erebor_1", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddClan("clan_erebor_2", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddClan("clan_erebor_3", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddClan("clan_erebor_4", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddClan("clan_erebor_5", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddClan("clan_erebor_6", "erebor_reg_miner", 5, "erebor_noble", 3);
+        AddClan("clan_erebor_7", "erebor_reg_miner", 5, "erebor_noble", 3);
+    }
+
+    // --- Erebor Culture Fallback ---
+
+    private static void InitializeEreborCulture()
+    {
+        CultureMap["erebor"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("erebor_reg_miner", 5),
+            new VolunteerChance("erebor_noble", 3),
+            new VolunteerChance("iron_hills_reg_recruit", 2)
         };
     }
 

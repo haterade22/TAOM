@@ -86,7 +86,7 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
-				<equipment slot="Body" id="Item.cts_gondor_armor3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -125,7 +125,7 @@
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
 				<equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 				<equipment slot="Item2" id="Item.wm_gondor_spear" />
-				<equipment slot="Head" id="Item.gondor_generic_helmet_5_a" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -162,7 +162,7 @@
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
 				<equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-				<equipment slot="Body" id="Item.cts_gondor_armor3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
 			</EquipmentRoster>
@@ -365,7 +365,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.cts_gondor_armor3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
@@ -493,7 +493,7 @@
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.cts_gondor_armor3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -506,7 +506,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-				<equipment slot="Body" id="Item.cts_gondor_armor3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
@@ -867,7 +867,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.cts_gondor_armor3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 		</Equipments>

@@ -1,5 +1,43 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-21
+
+### Erebor & Iron Hills Troop Tree Restructure
+
+Complete overhaul of the Erebor faction troop trees based on artist specifications (41 new troops):
+
+**Erebor Regular (T2-T6, 8 troops):** Miner → Militia → Skirmisher/Company branches → Bowman/Fighter → Mattock Warrior/Warrior terminals. Leather-to-chain armor progression.
+
+**Erebor Noble (T3-T9, 13 troops):** Noble → Ranger/Longbeard branches → Archer line (Veteran Archer T6) + Infantry line (Guard → Shield-Guard → Gate Warden → Royal Warden T9) + 2H line (Axe-Guard → Veteran Axe-Guard → Shield-Breaker T8). Plate armor progression.
+
+**Erebor Oathsworn (T7-T9, 3 troops):** Special rare line with legionary helmets. Oathsworn → Legionary → Royal Legionary. Chariots planned for future.
+
+**Iron Hills Regular (T2-T6, 8 troops):** Recruit → Militia → Skirmisher/Company → Bowman/Fighter → Axe Warrior/Warrior. Uses Iron Hills items (sm_dwarf_iron_sword, iron shields, iron armor).
+
+**Ironpass Regional Noble (T2-T7, 9 troops):** Recruit → Warrior → Infantry/Arbalest branches → Axeman → Veteran Axeman → Mountain Guard (T7). Uses crossbows and tower shields with Iron Hills heavy armor.
+
+**Integration:**
+- Old 47 troops orphaned (upgrade_targets cleared) for save compatibility
+- Updated all 9 Erebor party templates with new troop IDs
+- Updated spcultures: basic_troop=erebor_reg_miner, elite_basic_troop=erebor_noble
+- Added Erebor settlement/clan/culture mappings to VolunteerRecruitmentService (13 settlements, 7 clans, 3-tier culture fallback)
+- 24 new recruitment tests added (63 total passing)
+- All item IDs validated against LOTRLOME_Armory
+
+### Khamul's Troop Tree (Dol Guldur)
+
+Added complete Khamul human troop tree (T4-T9, 14 troops total):
+- 8 new troops: Shadow Initiate → Disciple → Infantry/Archer split → Warden/Marksman → 3-way elite split
+- Updated 6 existing troops with Khamul-specific equipment
+- Shadow Initiate marked as `is_basic_troop` — standalone entry point
+- All Khamul troops are human (no race attribute), using `fighter_dolguldur` face template
+- Added Khamul troops to DG party template + recruitment service
+
+### Dol Guldur Troop Tree Fixes
+
+- Fixed Goblin Skirmisher Bow skill 80 → 10 (was leftover from Ranged role)
+- Removed `is_basic_troop` from `dg_warg_scout` (now upgrade from Orc Recruit)
+
 ## 2026-03-20
 
 ### Fix Siege Camp IndexOutOfRangeException

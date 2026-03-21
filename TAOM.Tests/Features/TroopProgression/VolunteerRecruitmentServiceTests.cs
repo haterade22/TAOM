@@ -391,4 +391,127 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual("dg_goblin_slave", result);
     }
+
+    // --- Erebor settlement verifications ---
+
+    [TestMethod]
+    [DataRow("town_E1", "erebor_reg_miner")]
+    [DataRow("town_E2", "erebor_reg_miner")]
+    [DataRow("town_E3", "erebor_reg_miner")]
+    [DataRow("town_E4", "erebor_reg_miner")]
+    [DataRow("castle_E1", "erebor_reg_miner")]
+    [DataRow("castle_E2", "erebor_reg_miner")]
+    [DataRow("castle_E3", "erebor_reg_miner")]
+    [DataRow("castle_E4", "erebor_reg_miner")]
+    [DataRow("castle_E5", "erebor_reg_miner")]
+    [DataRow("castle_E6", "erebor_reg_miner")]
+    [DataRow("castle_E7", "erebor_reg_miner")]
+    [DataRow("castle_E8", "erebor_reg_miner")]
+    [DataRow("castle_E9", "erebor_reg_miner")]
+    public void GetVolunteerTroopId_EreborSettlements_ReturnExpectedRegularTroop(
+        string settlementId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborSettlement_HighRoll_ReturnsNoble()
+    {
+        // town_E1: erebor_reg_miner(5) + erebor_noble(3) = total 8
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(
+            settlementId: "town_E1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("erebor_noble", result);
+    }
+
+    // --- Erebor clan verifications ---
+
+    [TestMethod]
+    [DataRow("clan_erebor_1", "erebor_reg_miner")]
+    [DataRow("clan_erebor_2", "erebor_reg_miner")]
+    [DataRow("clan_erebor_3", "erebor_reg_miner")]
+    [DataRow("clan_erebor_4", "erebor_reg_miner")]
+    [DataRow("clan_erebor_5", "erebor_reg_miner")]
+    [DataRow("clan_erebor_6", "erebor_reg_miner")]
+    [DataRow("clan_erebor_7", "erebor_reg_miner")]
+    public void GetVolunteerTroopId_EreborClans_ReturnExpectedRegularTroop(
+        string clanId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: clanId,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    // --- Erebor culture fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborCulture_LowRoll_ReturnsMiner()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("erebor_reg_miner", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborCulture_HighRoll_ReturnsIronHills()
+    {
+        // Culture pool: erebor_reg_miner(5) + erebor_noble(3) + iron_hills_reg_recruit(2) = 10
+        // Roll 8 should land in iron_hills_reg_recruit range
+        _random.Next(10).Returns(8);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("iron_hills_reg_recruit", result);
+    }
+
+    // --- Erebor village bound settlement fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborVillage_InheritsBoundSettlement()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "village_E1_1",
+            boundSettlementId: "town_E1",
+            ownerClanId: null,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("erebor_reg_miner", result);
+    }
 }

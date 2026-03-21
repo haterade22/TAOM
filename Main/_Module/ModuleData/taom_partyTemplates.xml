@@ -139,38 +139,61 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_erebor_template">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="30" troop="NPCCharacter.erebor_recruit" />
-			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.erebor_warrior" />
-			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.erebor_scout" />
-			<PartyTemplateStack min_value="5" max_value="15" troop="NPCCharacter.erebor_archer" />
-			<PartyTemplateStack min_value="5" max_value="15" troop="NPCCharacter.erebor_axe_guard" />
-			<PartyTemplateStack min_value="4" max_value="12" troop="NPCCharacter.erebor_shield_guard" />
-			<PartyTemplateStack min_value="3" max_value="10" troop="NPCCharacter.erebor_spear_guard" />
-			<PartyTemplateStack min_value="3" max_value="10" troop="NPCCharacter.erebor_axe_infantry" />
-			<PartyTemplateStack min_value="3" max_value="10" troop="NPCCharacter.erebor_shield_breaker" />
-			<PartyTemplateStack min_value="2" max_value="8" troop="NPCCharacter.erebor_spear_infantry" />
-			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.erebor_gate_warden" />
-			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.erebor_veteran_archer" />
-			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.erebor_veteran_axe_guard" />
-			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.erebor_veteran_shield_guard" />
-			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.erebor_legionary" />
-			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.erebor_khazad_royal_guard" />
+			<!-- Erebor Regular Line -->
+			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.erebor_reg_miner" />
+			<PartyTemplateStack min_value="6" max_value="15" troop="NPCCharacter.erebor_reg_militia" />
+			<PartyTemplateStack min_value="4" max_value="12" troop="NPCCharacter.erebor_reg_skirmisher" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.erebor_reg_bowman" />
+			<PartyTemplateStack min_value="4" max_value="12" troop="NPCCharacter.erebor_reg_company" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.erebor_reg_fighter" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.erebor_reg_mattock_warrior" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.erebor_reg_warrior" />
+			<!-- Erebor Noble Line -->
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.erebor_noble" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.erebor_noble_longbeard" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.erebor_noble_ranger" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.erebor_noble_infantry" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.erebor_noble_archer" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.erebor_noble_guard" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.erebor_noble_axe_guard" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.erebor_noble_veteran_archer" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.erebor_noble_shield_guard" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.erebor_noble_veteran_axe_guard" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.erebor_noble_gate_warden" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.erebor_noble_shield_breaker" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.erebor_noble_royal_warden" />
+			<!-- Iron Hills Regular Line -->
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.iron_hills_reg_recruit" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.iron_hills_reg_militia" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.iron_hills_reg_company" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.iron_hills_reg_fighter" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.iron_hills_reg_warrior" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.iron_hills_reg_axe_warrior" />
+			<!-- Ironpass Line -->
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.ironpass_recruit" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.ironpass_warrior" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.ironpass_infantry" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.ironpass_arbalest" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.ironpass_axeman" />
+			<!-- Oathsworn Line (rare) -->
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.erebor_oathsworn" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.erebor_oathsworn_legionary" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mercenary_erebor_template">
 		<stacks>
-			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.erebor_warrior" />
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.erebor_axe_guard" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_gate_warden" />
+			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.erebor_reg_fighter" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.erebor_noble_axe_guard" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_noble_gate_warden" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_outlaw_erebor_template">
 		<stacks>
-			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.erebor_recruit" />
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.erebor_scout" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_axe_infantry" />
+			<PartyTemplateStack min_value="16" max_value="16" troop="NPCCharacter.erebor_reg_miner" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.erebor_reg_skirmisher" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_reg_company" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -183,45 +206,46 @@
 
 	<MBPartyTemplate id="patrol_party_erebor_template_level_1">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.erebor_warrior" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_scout" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_axe_guard" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_shield_guard" />
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.erebor_reg_militia" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_reg_skirmisher" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_reg_company" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_noble" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="patrol_party_erebor_template_level_2">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.erebor_axe_guard" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_archer" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_spear_guard" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_shield_breaker" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_gate_warden" />
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.erebor_reg_fighter" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_reg_bowman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_noble_guard" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_reg_warrior" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_reg_mattock_warrior" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="patrol_party_erebor_template_level_3">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.erebor_veteran_axe_guard" />
-			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.erebor_veteran_shield_guard" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_veteran_spear_guard" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_veteran_archer" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_legionary" />
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.erebor_noble_veteran_axe_guard" />
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.erebor_noble_shield_guard" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_noble_gate_warden" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_noble_veteran_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_oathsworn" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="rebels_erebor_template">
 		<stacks>
-			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.erebor_recruit" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.erebor_axe_guard" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.erebor_scout" />
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.erebor_reg_miner" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.erebor_reg_company" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.erebor_reg_skirmisher" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="vassal_reward_troops_erebor">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_khazad_royal_guard" />
-			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.erebor_legionary" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_noble_royal_warden" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_oathsworn_legionary" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_noble_shield_breaker" />
 		</stacks>
 	</MBPartyTemplate>
 
