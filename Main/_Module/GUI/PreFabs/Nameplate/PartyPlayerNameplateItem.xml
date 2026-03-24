@@ -1,6 +1,6 @@
 <Prefab>
 	<Constants>
-		<Constant Name="MainHeroVisual.Padding" Value="5" />
+		<Constant Name="MainHeroVisual.Padding" Value="4" />
 
 		<Constant Name="Party.Banner.Width" BrushLayer="Default" BrushName="Nameplate.FlatBanner.Party" BrushValueType="Width" />
 		<Constant Name="Party.Banner.Height" BrushLayer="Default" BrushName="Nameplate.FlatBanner.Party" BrushValueType="Height" />
@@ -72,15 +72,15 @@
           </Children>
         </Widget>
 
-				<ButtonWidget Id="MainPartyArrowWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="88" Brush="Map.MainHeroParty.Tracker" CircularClipEnabled="true" CircularClipRadius="40" HorizontalAlignment="Center" Command.Click="ExecuteSetCameraPosition" IsVisible="false" IsEnabled="false">
+				<ButtonWidget Id="MainPartyArrowWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="81" SuggestedHeight="81" Brush="Map.MainHeroParty.Tracker" CircularClipEnabled="true" CircularClipRadius="28" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-7" Command.Click="ExecuteSetCameraPosition" IsVisible="false" IsEnabled="false">
 					<Children>
-						<ImageIdentifierWidget DataSource="{MainHeroVisual}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!MainHeroVisual.Padding" MarginRight="!MainHeroVisual.Padding" MarginTop="!MainHeroVisual.Padding" MarginBottom="!MainHeroVisual.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsDisabled="true" MaterialAlphaFactor="0.5" />
+						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="68" SuggestedHeight="68" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Nameplates\player_ring_icon" IsEnabled="false" />
 					</Children>
 				</ButtonWidget>
-				<Widget Id="TrackerFrame" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="115" SuggestedHeight="115" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-10" Sprite="SPGeneral\Nameplates\DayFrame@2x" AlphaFactor="0.6" IsEnabled="false" IsVisible="false" />
+				<Widget Id="TrackerFrame" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="0" SuggestedHeight="0" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-7" Sprite="BlankWhiteSquare_9" AlphaFactor="0.0" IsEnabled="false" IsVisible="false" />
 
 				<!-- Size Setter (used to keep a uniform size independent of which set of widgets visible currently.) -->
-				<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="120" IsEnabled="false" />
+				<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="81" SuggestedHeight="81" IsEnabled="false" />
 
 			</Children>
 		</PartyPlayerNameplateWidget>

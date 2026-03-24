@@ -1,0 +1,40 @@
+<Window>
+  <GameMenuItemWidget Id="ParentGameMenuItemWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" IsWaitActive="@IsWaitActive" ItemType="@ItemType" LeaveType="@OptionLeaveType" ParentButton="ParentButton" LeaveTypeIcon="ParentButton\LeaveTypeIcon" ProgressBar="ParentButton\ProgressBar" ProgressTextWidget="ParentButton\ProgressTextWidget" WaitStateWidget="ParentButton\WaitStateWidget" ItemRichTextWidget="ParentButton\ItemRichTextWidget" DefaultTextBrush="GameMenu.Items.Text.Default" HoveredTextBrush="GameMenu.Items.Text.Hovered" PressedTextBrush="GameMenu.Items.Text.Pressed" DisabledTextBrush="GameMenu.Items.Text.Disabled" GameMenuStringId="@GameMenuStringId" BattleSize="@BattleSize" IsNavalBattle="@IsNavalBattle">
+    <Children>
+
+      <ButtonWidget Id="ParentButton" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="GameMenu.Button" Command.Click="ExecuteAction" IsEnabled="@IsEnabled" UpdateChildrenStates="true">
+        <Children>
+          <ImageWidget Id="LeaveTypeIcon" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="56" SuggestedHeight="42" VerticalAlignment="Center" Brush="GameMenu.LeaveType" OverrideDefaultStateSwitchingEnabled="true"/>
+
+          <ListPanel DataSource="{Quests}" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="10" StackLayout.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Right" VerticalAlignment="Center" >
+            <ItemTemplate>
+
+              <QuestMarkerBrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="42" QuestMarkerType="@QuestMarkerType" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="GameMenu.QuestMarker">
+                <Children>
+                  <HintWidget DataSource="{QuestHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+                </Children>
+              </QuestMarkerBrushWidget>
+              
+            </ItemTemplate>
+          </ListPanel>
+
+          <TutorialHighlightItemBrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedWidth="0" SuggestedHeight="0" Brush="TutorialHighlightBrush" IsEnabled="false" IsHighlightEnabled="@IsHighlightEnabled" IsVisible="false" CustomSizeSyncTarget="..\ItemRichTextWidget" DoNotOverrideWidth="true" />
+          <RichTextWidget DoNotAcceptEvents="true" Id="ItemRichTextWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="GameMenu.Items.Text.Default" MarginLeft="55" MarginRight="35" IsEnabled="@IsEnabled" Text="@Item" >
+            <Children>
+				<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40" HorizontalAlignment="Right" VerticalAlignment="Center" PositionXOffset="38">
+					<Children>
+						<InputKeyVisualWidget DataSource="{ShortcutKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="48" SuggestedHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center" KeyID="@KeyID" IsVisible="@IsVisible"/>
+            </Children>
+				</Widget>
+            </Children>
+          </RichTextWidget>
+          <HintWidget DataSource="{ItemHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false"/>
+          <Widget WidthSizePolicy = "StretchToParent" HeightSizePolicy = "Fixed" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Sprite="GradientDivider_9" AlphaFactor="0.4" MarginLeft="10" MarginRight="10"/>
+        </Children>
+      </ButtonWidget>
+
+      <HintWidget DataSource="{ItemHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false"/>
+
+    </Children>
+  </GameMenuItemWidget>
+</Window>

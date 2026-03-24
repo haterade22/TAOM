@@ -1,0 +1,166 @@
+<Prefab>
+  <Constants>
+    <Constant Name="HingesTopBottomMargin" Value="280" />
+    <Constant Name="Text.Width" Value="850" />
+    <Constant Name="InfoPanel.Width" Additive="!Text.Width" Value="50" />
+    <Constant Name="SiegeMachine.Image.Dimension" Value="52" />
+
+    <Constant Name="EncounterMode.Menu.Width" Value="493" />
+    <Constant Name="EncounterMode.Menu.Height" Value="825" />
+    <Constant Name="NormalMode.Menu.Width" Value="493" />
+    <Constant Name="NormalMode.Menu.Height" Value="891" />
+
+    <Constant Name="EncounterMode.Menu.MarginTop" Value="66" />
+    <Constant Name="NormalMode.Menu.MarginTop" Value="0" />
+  </Constants>
+  <VisualDefinitions>
+    <VisualDefinition Name="Menu" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.65">
+      <VisualState PositionXOffset="0" State="Default" />
+      <VisualState PositionXOffset="-530" State="Disabled" />
+    </VisualDefinition>
+    <VisualDefinition Name="InfoPanel" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.45">
+      <VisualState SuggestedWidth="!InfoPanel.Width" SuggestedHeight="170" PositionXOffset="50" State="Default" />
+      <VisualState SuggestedWidth="!InfoPanel.Width" SuggestedHeight="0" PositionXOffset="50" State="Disabled" />
+    </VisualDefinition>
+  </VisualDefinitions>
+  <Window>
+    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+        <!--Right Side-->
+        <!--<Widget VisualDefinition="InfoPanel" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="0" SuggestedHeight="0" HorizontalAlignment="Center" VerticalAlignment="Top" PositionXOffset="50" MarginTop="200" Sprite="text_box_9" ClipContents="true" IsHidden="@IsInSiegeMode">
+          <Children>
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+              <Children>
+
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>-->
+        <Widget Id="Overlay" VisualDefinition="Menu" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" PositionYOffset="20" PositionXOffset="-550">
+          <Children>
+
+            <!--Extend Button-->
+            <!--<NavigationScopeTargeter ScopeID="GameMenuExtendButtonScope" ScopeParent="..\ExtendButton" ExtendDiscoveryAreaBottom="580" DiscoveryAreaOffsetY="100" FollowMobileTargets="true" />-->
+            <ButtonWidget Id="ExtendButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="122" SuggestedWidth="58" Brush="GameMenu.Extend.Button" VerticalAlignment="Top" MarginLeft="522" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="0">
+              <Children>
+                <BrushWidget Id="ExtendButtonArrow" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" VerticalAlignment="Center" MarginBottom="15" MarginLeft="8" Brush="GameMenu.Extend.Button.Arrow" />
+              </Children>
+            </ButtonWidget>
+
+            <!--Hinges-->
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" VerticalAlignment="Center" SuggestedHeight="608" PositionXOffset="-10" Sprite="StdAssets\game_menu_hinges" />
+
+            <!--Left Panel-->
+            <NavigationScopeTargeter Id="ScopeTargeter" ScopeID="GameMenuScope" ScopeParent="..\GameMenuParent" ScopeMovements="Vertical" IsDefaultNavigationScope="true" NavigateFromScopeEdges="true" />
+            <GameMenuWidget Id="GameMenuParent" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Left" MarginLeft="27" SpriteName="TAOM\GameMenu\game_menu_frame_canvas" Sprite="TAOM\GameMenu\game_menu_frame_canvas" MenuId="@MenuId" IsNight="@IsNight" IsEncounterMenu="@IsEncounterMenu" ScopeTargeter="..\ScopeTargeter" TitleContainerWidget="TitleContainerWidget" TitleTextWidget="TitleContainerWidget\TitleTextWidget" Overlay="..\..\Overlay" ExtendButtonWidget="..\ExtendButton" ExtendButtonArrowWidget="..\ExtendButton\ExtendButtonArrow" OptionItemsList="ContentContainerWidget\ScrollablePanel\ClipRect\ItemListPanel\OptionItemsList" EncounterModeMenuHeight="!EncounterMode.Menu.Height" EncounterModeMenuWidth="!EncounterMode.Menu.Width" NormalModeMenuWidth="!NormalMode.Menu.Width" NormalModeMenuHeight="!NormalMode.Menu.Height" NormalModeMenuMarginTop="!NormalMode.Menu.MarginTop" EncounterModeMenuMarginTop="!EncounterMode.Menu.MarginTop" OverriddenSpriteMapBrush="GameMenu.Background.MappingBrush">
+              <Children>
+
+                <Widget Id="TitleContainerWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="343" SuggestedHeight="60" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="-69" >
+                  <Children>
+                    <TextWidget Id="TitleTextWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" PositionYOffset="13" Brush="GameMenu.Text" Brush.FontSize="30"/>
+                  </Children>
+                </Widget>
+                <!--<Widget WidthSizePolicy="Fixed" SuggestedWidth="476" HeightSizePolicy="Fixed" SuggestedHeight="825" HorizontalAlignment="Left" PositionYOffset="-13" PositionXOffset="-18" Sprite="SPGeneral\GameMenu\panel_frame" />-->
+
+                <Widget Id="ContentContainerWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                  <Children>
+
+                    <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" VerticalAlignment="Top" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\ItemListPanel" VerticalScrollbar="..\ScrollbarContainer\Scrollbar">
+                      <Children>
+                        <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                          <Children>
+
+                            <DimensionSyncWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" Sprite="BlankWhiteSquare_9" AlphaFactor="0" WidgetToCopyHeightFrom="..\ItemListPanel" DimensionToSync="Vertical"/>
+
+                            <ListPanel Id="ItemListPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                              <Children>
+
+                                <!--Context Text-->
+                                <AutoHideRichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" SuggestedWidth="!Text.Width" HorizontalAlignment="Center" MarginTop="15" MarginBottom="10" MarginLeft="15" MarginRight="15" Brush="GameMenu.InfoText" Brush.FontSize="24" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" Command.LinkClick="ExecuteLink" Text="@ContextText"/>
+
+                                <!--Progress Slider-->
+                                <ListPanel DataSource="{ProgressItemList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="12" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                  <ItemTemplate>
+
+                                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10" MarginBottom="10" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                      <Children>
+                                        <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="33.6" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" Locked="false" MaxValueFloat="100" MinValueInt="0" ValueFloat="@Progress">
+                                          <Children>
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_canvas" IsEnabled="false" />
+                                            <Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="276" SuggestedHeight="30" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_fill" ClipContents="true">
+                                              <Children>
+                                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="276" SuggestedHeight="28" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_fill" />
+                                              </Children>
+                                            </Widget>
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="52" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_frame" IsEnabled="false" />
+                                            <Widget Id="SliderHandle" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" IsVisible="false" />
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" IsEnabled="false" Text="@ProgressText" />
+                                          </Children>
+                                        </SliderWidget>
+
+                                      </Children>
+                                    </ListPanel>
+
+                                  </ItemTemplate>
+                                </ListPanel>
+
+                                <!--Option List-->
+                                <NavigatableListPanel Id="OptionItemsList" DataSource="{ItemList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="15" MarginBottom="15" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                  <ItemTemplate>
+                                    <GameMenuItem />
+                                  </ItemTemplate>
+                                </NavigatableListPanel>
+
+
+                                <!--Plunder Items-->
+                                <GridWidget Id="PlunderItemsGrid" DataSource="{PlunderItems}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" DefaultCellWidth="55" DefaultCellHeight="35" ColumnCount="8" MarginLeft="20" MarginRight="20" LayoutImp="GridLayout" MarginBottom="100">
+                                  <ItemTemplate>
+                                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                      <Children>
+                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="FaceGen.Card.Only.Default" ClipContents="true" Command.HoverBegin="ExecuteBeginTooltip" Command.HoverEnd="ExecuteEndTooltip">
+                                          <Children>
+                                            <ImageIdentifierWidget Id="ImageIdentifierWidget" DataSource="{Visual}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="22" VerticalAlignment="Center" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsBig="true"/>
+                                          </Children>
+                                        </ButtonWidget>
+                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="2" IntText="@Amount" Brush.FontSize="14" />
+                                      </Children>
+                                    </Widget>
+                                  </ItemTemplate>
+                                </GridWidget>
+
+
+                              </Children>
+                            </ListPanel>
+
+                          </Children>
+                        </Widget>
+
+
+                      </Children>
+                    </ScrollablePanel>
+
+                    <Widget Id="ScrollbarContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" IsVisible="false" HorizontalAlignment="Right">
+                      <Children>
+                        <ScrollbarWidget Id="Scrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="20" VerticalAlignment="Top" MarginTop="20" MarginBottom="10" Sprite="scrollbar_9" AlignmentAxis="Vertical" Handle="ScrollbarHandle" MaxValue="100" MinValue="0" ValueInt="0">
+                          <Children>
+                            <Widget Id="ScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" HorizontalAlignment="Left" VerticalAlignment="Top" Sprite="scroll_button_9" />
+                          </Children>
+                        </ScrollbarWidget>
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </Widget>
+
+                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Frame1.Border" IsEnabled="false" />
+
+              </Children>
+            </GameMenuWidget>
+
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

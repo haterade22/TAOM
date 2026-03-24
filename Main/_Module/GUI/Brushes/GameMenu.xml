@@ -183,7 +183,7 @@
 		<Layers>
 		</Layers>
 		<Styles>
-			<Style Name="Default" FontColor="#FAF4DEFF" FontSize="22" TextBlur="0" TextGlowColor="#000000FF" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#FFFFFF00" />
+			<Style Name="Default" FontColor="#000000FF" FontSize="22" TextBlur="0" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
 		</Styles>
 	</Brush>
 
@@ -386,11 +386,11 @@
 		</SoundProperties>
 	</Brush>
 
-	<Brush Name="GameMenu.Text" Font="aniron" FontColor="#EEE0C7FF" FontSize="22" TextHorizontalAlignment="Center">
+	<Brush Name="GameMenu.Text" Font="aniron" FontColor="#000000FF" FontSize="22" TextHorizontalAlignment="Center">
 		<Layers>
 		</Layers>
 		<Styles>
-			<Style Name="Default" FontColor="#EEE0C7FF" TextBlur="0" TextGlowColor="#EEE0C7FF" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#EEE0C7FF" />
+			<Style Name="Default" FontColor="#000000FF" TextBlur="0" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
 		</Styles>
 	</Brush>
 
@@ -407,25 +407,25 @@
 
 	<Brush Name="GameMenu.Items.Text.Default" Font="Galahad" FontSize="24" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
 		<Styles>
-			<Style Name="Default" FontColor="#FFFFFFFF" TextAlphaFactor="1" TextBlur="0" TextGlowColor="#EEE0C7FF" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#EEE0C7FF" />
+			<Style Name="Default" FontColor="#000000FF" TextAlphaFactor="1" TextBlur="0" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
 		</Styles>
 	</Brush>
 
 	<Brush Name="GameMenu.Items.Text.Hovered" Font="Galahad" FontSize="24" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
 		<Styles>
-			<Style Name="Default" FontColor="#EEE0C7FF" TextAlphaFactor="1" TextBlur="0" TextColorFactor="1.2" TextGlowColor="#EEE0C7FF" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#EEE0C7FF" />
+			<Style Name="Default" FontColor="#000000FF" TextAlphaFactor="1" TextBlur="0" TextColorFactor="1" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
 		</Styles>
 	</Brush>
 
 	<Brush Name="GameMenu.Items.Text.Pressed" Font="Galahad" FontSize="24" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
 		<Styles>
-			<Style Name="Default" FontColor="#EEE0C7FF" TextAlphaFactor="0.5" TextBlur="0" TextColorFactor="1.4" TextGlowColor="#EEE0C7FF" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#EEE0C7FF" />
+			<Style Name="Default" FontColor="#000000FF" TextAlphaFactor="0.65" TextBlur="0" TextColorFactor="1" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
 		</Styles>
 	</Brush>
 
 	<Brush Name="GameMenu.Items.Text.Disabled" Font="Galahad" FontSize="24" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
 		<Styles>
-			<Style Name="Default" FontColor="#FFFFFFFF" TextColorFactor="0.8" TextBlur="0" TextGlowColor="#EEE0C7FF" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#EEE0C7FF" />
+			<Style Name="Default" FontColor="#000000FF" TextColorFactor="0.6" TextBlur="0" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
 		</Styles>
 	</Brush>
 

@@ -1,0 +1,33 @@
+<Brushes>
+
+  <Brush Name="Nameplate.FlatBanner.Big">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="StdAssets\banner_flat" OverlayXOffset="0" OverlayYOffset="-3"/>
+    </Layers>
+  </Brush>
+
+  <Brush Name="Nameplate.FlatBanner.Normal">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="StdAssets\banner_flat" OverlayXOffset="0" OverlayYOffset="-3" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="Nameplate.FlatBanner.Small">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="StdAssets\banner_flat" OverlayXOffset="0" OverlayYOffset="-3" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="Nameplate.FlatBanner.Party">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="StdAssets\banner_flat" OverlayXOffset="0" OverlayYOffset="-3" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="TAOM.Nameplate.SettlementBanner.Large.Diamond">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="TAOM\Nameplates\settlement_banner_large" />
+    </Layers>
+  </Brush>
+
+</Brushes>

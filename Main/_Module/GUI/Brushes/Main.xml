@@ -1,8 +1,8 @@
 <Brushes>
   <Brush Name="Frame1Brush">
     <Layers>
-      <BrushLayer Name="Default" Sprite="Frame1_canvas" />
-      <BrushLayer Name="Frame" ExtendTop="27" ExtendLeft="26" ExtendRight="27" ExtendBottom="29" Sprite="Frame1_frame"  OverlayMethod="CoverWithTexture" OverlaySprite="stone_texture_overlay"/>
+      <BrushLayer Name="Default" Sprite="TAOM\GameMenu\game_menu_frame_canvas" />
+      <BrushLayer Name="Frame" ExtendTop="6" ExtendLeft="2" ExtendRight="3" ExtendBottom="7" Sprite="TAOM\GameMenu\game_menu_frame_border" />
     </Layers>
     <Styles>
       <Style Name="Default">
@@ -13,7 +13,7 @@
   </Brush>
   <Brush Name="Frame1Canvas">
     <Layers>
-      <BrushLayer Name="Default" Sprite="Frame1_canvas" />
+      <BrushLayer Name="Default" Sprite="TAOM\GameMenu\game_menu_frame_canvas" />
     </Layers>
     <Styles>
       <Style Name="Default">
@@ -24,7 +24,7 @@
   <Brush Name="Frame1.Border">
     <Layers>
       <BrushLayer Name="Default" ExtendLeft="3" ExtendTop="4" ExtendRight="3" ExtendBottom="3" />
-      <BrushLayer Name="Frame" ExtendTop="27" ExtendLeft="26" ExtendRight="25" ExtendBottom="29" Sprite="Frame1_frame" OverlayMethod="CoverWithTexture" OverlaySprite="stone_texture_overlay" />
+      <BrushLayer Name="Frame" ExtendTop="6" ExtendLeft="2" ExtendRight="3" ExtendBottom="7" Sprite="TAOM\GameMenu\game_menu_frame_border" />
     </Layers>
     <Styles>
       <Style Name="Default">

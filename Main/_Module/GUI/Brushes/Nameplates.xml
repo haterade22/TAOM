@@ -189,6 +189,18 @@
     </Layers>
   </Brush>
 
+  <Brush Name="Settlement.Large.DiamondBanner">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="TAOM\Nameplates\settlement_banner_large" OverlayXOffset="0" OverlayYOffset="0" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="TAOM.Nameplate.SettlementBanner.Large.Square">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" OverlayXOffset="0" OverlayYOffset="0" />
+    </Layers>
+  </Brush>
+
   <Brush Name="PartyNameplate.FullName.Text" Font="aniron" TextHorizontalAlignment="Left">
     <Styles>
       <Style Name="Default" FontColor="#A1A1A1FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" TextGlowRadius="0" TextBlur="0.5" FontSize="25" />

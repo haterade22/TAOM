@@ -27,6 +27,12 @@
     <Constant Name="Large.BannerHeight"  MultiplyResult="1.33333" Value="!Large.BannerWidth" />
     <Constant Name="Large.TrackerWidthHeight" Additive="-26" Value="!Large.Height" />
     <Constant Name="Large.TrackerTextMargin" Additive="14" Value="!Large.TrackerWidthHeight" />
+    <Constant Name="Large.BannerDiamondSize" Value="66" />
+    <Constant Name="Large.BannerDiamondInnerSize" Value="56" />
+    <Constant Name="Large.BarStartX" Value="42" />
+    <Constant Name="Large.TotalWidth" Value="350" />
+    <Constant Name="Large.BarTextLeftMargin" Value="26" />
+    <Constant Name="Large.BarTextRightMargin" Value="42" />
 
   </Constants>
   <Window>
@@ -63,12 +69,10 @@
         </ListPanel>
 
         <!--Big Size Nameplate-->
-        <SettlementNameplateItemWidget Id="NameplateWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedWidth="!Large.Width" SuggestedHeight="!Large.Height" SettlementBannerWidget="SettlementNameplateCapsuleWidget\SettlementBannerWidget" SettlementNameplateCapsuleWidget="SettlementNameplateCapsuleWidget" InspectedIconWidget="SettlementNameplateCapsuleWidget\InspectedWidget" PortIconWidget="SettlementNameplateCapsuleWidget\LeftSideIcons\PortIconWidget" SettlementNameTextWidget="SettlementNameplateCapsuleWidget\SettlementNameTextWidget" SettlementPartiesGridWidget="PartiesInSettlementGridWidget" WidgetToShow="SettlementNameplateCapsuleWidget\TrackButton" MapEventVisualWidget="MapEventVisualWidget" ParleyIconWidget="SettlementNameplateCapsuleWidget\LeftSideIcons\ParleyIconWidget">
+        <SettlementNameplateItemWidget Id="NameplateWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TotalWidth" SuggestedHeight="!Large.Height" SettlementBannerWidget="SettlementNameplateCapsuleWidget\SettlementNameplateLayout\DiamondSlot\SettlementBannerWidget" SettlementNameplateCapsuleWidget="SettlementNameplateCapsuleWidget" InspectedIconWidget="SettlementNameplateCapsuleWidget\InspectedWidget" PortIconWidget="SettlementNameplateCapsuleWidget\LeftSideIcons\PortIconWidget" SettlementNameTextWidget="SettlementNameplateCapsuleWidget\SettlementNameplateLayout\BarContainer\SettlementNameTextWidget" SettlementPartiesGridWidget="PartiesInSettlementGridWidget" WidgetToShow="SettlementNameplateCapsuleWidget\SettlementNameplateLayout\BarContainer\TrackButton" MapEventVisualWidget="MapEventVisualWidget" ParleyIconWidget="SettlementNameplateCapsuleWidget\LeftSideIcons\ParleyIconWidget">
           <Children>
 
-            <Widget Id="SettlementBarBackgroundWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.Width" SuggestedHeight="!Large.Height" HorizontalAlignment="Left" VerticalAlignment="Bottom" PositionXOffset="-22" Sprite="TAOM\Nameplates\settlement_nameplate_large" />
-
-            <ButtonWidget Id="SettlementNameplateCapsuleWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedWidth="!Large.Width" SuggestedHeight="!Large.Height" VerticalAlignment="Bottom" Command.AlternateClick="ExecuteOpenEncyclopedia" Command.Click="ExecuteSetCameraPosition">
+            <ButtonWidget Id="SettlementNameplateCapsuleWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TotalWidth" SuggestedHeight="!Large.Height" VerticalAlignment="Bottom" Command.AlternateClick="ExecuteOpenEncyclopedia" Command.Click="ExecuteSetCameraPosition">
               <Children>
 
                 <!--Inspected Range Dot-->
@@ -82,19 +86,32 @@
                   </Children>
                 </ListPanel>
                 
-                <TextWidget Id="SettlementNameTextWidget" WidthSizePolicy="StretchToParent" MinWidth="84" HeightSizePolicy="StretchToParent" MarginLeft="54" MarginRight="18" MarginTop="4" MarginBottom="4" PositionYOffset="-4" Brush="GameMenu.Text" Brush.Font="aniron" Brush.FontSize="21" Brush.FontColor="#000000FF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@Name" />
-
-                <Widget Id="SettlementBannerBackgroundWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="39" SuggestedHeight="59" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="6" PositionYOffset="3" Sprite="TAOM\Nameplates\settlement_banner_large_background" />
-
-                <MaskedTextureWidget Id="SettlementBannerWidget" DataSource="{Banner}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.BannerWidth" SuggestedHeight="!Large.BannerHeight" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="6" PositionYOffset="2" Brush="Nameplate.FlatBanner.Big" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsDisabled="true"  />
-
-                <ButtonWidget Id="TrackButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TrackerWidthHeight" SuggestedHeight="!Large.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10" Sprite="SPGeneral\Nameplates\hover_ring" Command.Click="ExecuteTrack">
+                <Widget Id="SettlementNameplateLayout" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TotalWidth" SuggestedHeight="!Large.BannerDiamondSize" VerticalAlignment="Center">
                   <Children>
-                    <TutorialHighlightItemBrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsEnabled="false" IsHighlightEnabled="@IsTrackerHighlightEnabled" IsVisible="false" />
-                  </Children>
-                </ButtonWidget>
+                    <Widget Id="BarContainer" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.Width" SuggestedHeight="!Large.Height" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="!Large.BarStartX">
+                      <Children>
+                        <Widget Id="SettlementBarBackgroundWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="TAOM\Nameplates\settlement_nameplate_background" />
 
-                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TrackerWidthHeight" SuggestedHeight="!Large.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10" Sprite="SPGeneral\Nameplates\tracked_ring" ColorFactor="10" IsDisabled="true" IsVisible="@IsTracked" />
+                        <TextWidget Id="SettlementNameTextWidget" WidthSizePolicy="CoverChildren" MinWidth="84" HeightSizePolicy="StretchToParent" MarginLeft="!Large.BarTextLeftMargin" MarginRight="!Large.BarTextRightMargin" MarginTop="4" MarginBottom="4" PositionYOffset="-2" Brush="GameMenu.Text" Brush.Font="aniron" Brush.FontSize="21" Brush.FontColor="#000000FF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@Name" />
+
+                        <ButtonWidget Id="TrackButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TrackerWidthHeight" SuggestedHeight="!Large.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10" Sprite="SPGeneral\Nameplates\hover_ring" Command.Click="ExecuteTrack">
+                          <Children>
+                            <TutorialHighlightItemBrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsEnabled="false" IsHighlightEnabled="@IsTrackerHighlightEnabled" IsVisible="false" />
+                          </Children>
+                        </ButtonWidget>
+
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.TrackerWidthHeight" SuggestedHeight="!Large.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10" Sprite="SPGeneral\Nameplates\tracked_ring" ColorFactor="10" IsDisabled="true" IsVisible="@IsTracked" />
+                      </Children>
+                    </Widget>
+
+                    <Widget Id="DiamondSlot" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.BannerDiamondSize" SuggestedHeight="!Large.BannerDiamondSize" HorizontalAlignment="Left" VerticalAlignment="Center">
+                      <Children>
+                        <MaskedTextureWidget Id="SettlementBannerWidget" DataSource="{Banner}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.BannerDiamondInnerSize" SuggestedHeight="!Large.BannerDiamondInnerSize" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Settlement.Large.DiamondBanner" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsDisabled="true" />
+                        <Widget Id="SettlementBannerBorderWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Large.BannerDiamondSize" SuggestedHeight="!Large.BannerDiamondSize" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Nameplates\settlement_banner_large_background" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
 
               </Children>
             </ButtonWidget>
