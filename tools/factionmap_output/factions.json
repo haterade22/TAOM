@@ -1194,5 +1194,35 @@
     "description": "The Nurunkhizdin.",
     "image": "faction_nurunkhizdin",
     "traits": []
+  },
+  "browlands": {
+    "name": "Browlands",
+    "color": "#706838FF",
+    "playable": false,
+    "game_faction": "",
+    "side": "neutral",
+    "description": "The Browlands.",
+    "image": "faction_browlands",
+    "traits": []
+  },
+  "eregion": {
+    "name": "Eregion",
+    "color": "#706838FF",
+    "playable": false,
+    "game_faction": "",
+    "side": "neutral",
+    "description": "The Eregion.",
+    "image": "faction_eregion",
+    "traits": []
+  },
+  "fangorn_forest": {
+    "name": "Fangorn Forest",
+    "color": "#706838FF",
+    "playable": false,
+    "game_faction": "",
+    "side": "neutral",
+    "description": "The Fangorn Forest.",
+    "image": "faction_fangorn_forest",
+    "traits": []
   }
 }

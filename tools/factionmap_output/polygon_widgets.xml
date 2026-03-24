@@ -9,6 +9,7 @@
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_arthedain" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="aru_thani_of_bellakar" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="goblins_of_blue_craig" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="browlands" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_cardolan" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_dale" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="overlordship_of_dol_guldur" Command.Click="ExecuteSelectRegion" />
@@ -20,6 +21,8 @@
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="stronghold_of_ered_gwaer" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_ered_duin" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_ered_mithrin" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="eregion" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="fangorn_forest" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="clans_of_forochel" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="goblins_of_goblin_town" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="stewardship_of_gondor" Command.Click="ExecuteSelectRegion" />
@@ -30,6 +33,7 @@
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="khudorom_of_khand" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="high_kingdom_of_lindon" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_lothlorien" Command.Click="ExecuteSelectRegion" />
+                <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="map_boundary" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_lasgalen" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="dominion_of_mordor" Command.Click="ExecuteSelectRegion" />
                 <PolygonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" RegionName="kingdom_of_moria" Command.Click="ExecuteSelectRegion" />

@@ -27,54 +27,58 @@ from PIL import Image
 # CONFIGURATION
 # ============================================================================
 
-FULL_MAP_PATH = r"C:\Users\mikew\Downloads\Map.png"
-REGIONS_DIR = r"C:\Users\mikew\Downloads\map regions"
+FULL_MAP_PATH = r"C:\Users\mikew\Downloads\Vista_dot-settlements-with-borders.png"
+REGIONS_DIR = r"E:\LOTRAOMAssets\Culture Selection"
 OUTPUT_DIR = r"C:\Users\mikew\source\repos\TAOM\tools\factionmap_output"
 
 # Mapping: user filename (without .png) -> region_id
 FILE_TO_REGION = {
-    "Abanissa":        "chajaphan_of_abanissa",
-    "Andrast":         "clans_of_andrast",
-    "Anduin_Vale":     "anduin_vale",
-    "Angaladh":        "kingdom_of_angaladh",
-    "Angmar":          "remnants_of_angmar",
-    "Arthedain":       "kingdom_of_arthedain",
-    "Bellakar":        "aru_thani_of_bellakar",
-    "Blue_Crag":       "goblins_of_blue_craig",
-    "Cardolan":        "kingdom_of_cardolan",
-    "Dale":            "kingdom_of_dale",
-    "Dol_Guldur":      "overlordship_of_dol_guldur",
-    "Dorwinion":       "kingdom_of_dorwinion",
-    "Druwaith_Iaur":   "clans_of_druwaith_iaur",
-    "Dunland":         "clans_of_dunland",
-    "Enedwaith":       "wildmen_of_enedwaith",
-    "Erebor":          "kingdom_of_erebor",
-    "Ered_Gwaer":      "stronghold_of_ered_gwaer",
-    "Ered_Luin":       "kingdom_of_ered_duin",
-    "Ered_Mithrin":    "kingdom_of_ered_mithrin",
-    "Forochel":        "clans_of_forochel",
-    "Goblin_Town":     "goblins_of_goblin_town",
-    "Gondor":          "stewardship_of_gondor",
-    "Gundabad":        "overlordship_of_gundabad",
-    "Harwan":          "taskralan_of_harwan",
-    "Imladris":        "kingdom_of_imladris",
-    "Isengard":        "dominion_of_isengard",
-    "Khand":           "khudorom_of_khand",
-    "Lindon":          "high_kingdom_of_lindon",
-    "Lothlorien":      "kingdom_of_lothlorien",
-    "Mirkwood_Realm":  "kingdom_of_lasgalen",
-    "Mordor":          "dominion_of_mordor",
-    "Moria":           "kingdom_of_moria",
-    "Narager":         "stronghold_of_narager",
-    "Neldoreth":       "kingdom_of_neldoreth",
-    "Nurunkhizdin":    "nurunkhizdin",
-    "Rhudaur":         "kingdom_of_rhudaur",
-    "Rhun":            "golden_realm_of_rhun",
-    "Rohan":           "kingdom_of_rohan",
-    "Shaghana":        "taskralan_of_shaghana",
-    "South_Rhovanion": "kingdom_of_south_rhovanion",
-    "Umbar":           "havens_of_umbar",
-    "Zigalnara":       "kingdom_of_zigalnara",
+    "Abanissa":                       "chajaphan_of_abanissa",
+    "Andrast":                        "clans_of_andrast",
+    "Anduin_Vale":                    "anduin_vale",
+    "Angaladh":                       "kingdom_of_angaladh",
+    "Angmar":                         "remnants_of_angmar",
+    "Arthedain":                      "kingdom_of_arthedain",
+    "Bellakar":                       "aru_thani_of_bellakar",
+    "Blue_Crag":                      "goblins_of_blue_craig",
+    "Browlands (not playable)":       "browlands",
+    "Cardolan":                       "kingdom_of_cardolan",
+    "Dale":                           "kingdom_of_dale",
+    "Dol_Guldur":                     "overlordship_of_dol_guldur",
+    "Dorwinion":                      "kingdom_of_dorwinion",
+    "Druwaith_Iaur":                  "clans_of_druwaith_iaur",
+    "Dunland":                        "clans_of_dunland",
+    "Enedwaith":                      "wildmen_of_enedwaith",
+    "Erebor":                         "kingdom_of_erebor",
+    "Ered_Gwaer":                     "stronghold_of_ered_gwaer",
+    "Ered_Luin":                      "kingdom_of_ered_duin",
+    "Ered_Mithrin":                   "kingdom_of_ered_mithrin",
+    "Eregion (not playable)":         "eregion",
+    "Fangorn_Forest (not playable)":  "fangorn_forest",
+    "Forochel":                       "clans_of_forochel",
+    "Goblin_Town":                    "goblins_of_goblin_town",
+    "Gondor":                         "stewardship_of_gondor",
+    "Gundabad":                       "overlordship_of_gundabad",
+    "Harwan":                         "taskralan_of_harwan",
+    "Imladris":                       "kingdom_of_imladris",
+    "Isengard":                       "dominion_of_isengard",
+    "Khand":                          "khudorom_of_khand",
+    "Lindon":                         "high_kingdom_of_lindon",
+    "Lothlorien":                     "kingdom_of_lothlorien",
+    "Map_Boundary":                   "map_boundary",
+    "Mirkwood_Realm":                 "kingdom_of_lasgalen",
+    "Mordor":                         "dominion_of_mordor",
+    "Moria":                          "kingdom_of_moria",
+    "Narager":                        "stronghold_of_narager",
+    "Neldoreth":                      "kingdom_of_neldoreth",
+    "Nurunkhizdin":                   "nurunkhizdin",
+    "Rhudaur":                        "kingdom_of_rhudaur",
+    "Rhun":                           "golden_realm_of_rhun",
+    "Rohan":                          "kingdom_of_rohan",
+    "Shaghana":                       "taskralan_of_shaghana",
+    "South_Rhovanion":                "kingdom_of_south_rhovanion",
+    "Umbar":                          "havens_of_umbar",
+    "Zigalnara":                      "kingdom_of_zigalnara",
 }
 
 # Region metadata: region_id -> (display_name, old_region_id, game_faction, playable, side)
@@ -121,7 +125,24 @@ REGION_META = {
     "aru_thani_of_bellakar":        ("Aru-Thani of Bellakar",        "faithful_of_bellakar",         "aserai",     False, "free"),
     "chajaphan_of_abanissa":        ("Chajaphan of Abanissa",        None,                           "",           False, "neutral"),
     "nurunkhizdin":                 ("Nurunkhizdin",                 None,                           "erebor",     False, "neutral"),
+    "browlands":                    ("Browlands",                    None,                           "",           False, "neutral"),
+    "eregion":                      ("Eregion",                      None,                           "",           False, "neutral"),
+    "fangorn_forest":               ("Fangorn Forest",               "fangorn_forest",               "",           False, "neutral"),
+    "map_boundary":                 ("Map Boundary",                 None,                           "",           False, "neutral"),
 }
+
+
+def ncc_at(full_gray, region_gray, mask, x, y):
+    """Compute masked normalized cross-correlation at a given position."""
+    rh, rw = region_gray.shape[:2]
+    patch = full_gray[y:y+rh, x:x+rw]
+    p_masked = patch[mask]
+    r_masked = region_gray[mask]
+    p_mean = p_masked.mean()
+    p_std = p_masked.std() + 1e-6
+    r_mean = r_masked.mean()
+    r_std = r_masked.std() + 1e-6
+    return np.sum(((p_masked - p_mean) / p_std) * ((r_masked - r_mean) / r_std))
 
 
 def downsample(arr, factor):
@@ -135,91 +156,78 @@ def downsample(arr, factor):
     return cropped.reshape(new_h, factor, new_w, factor).mean(axis=(1, 3)).astype(np.float32)
 
 
-def ssd_at(full_f, region_f, mask, x, y):
-    """Compute masked SSD at a given position."""
-    rh, rw = region_f.shape[:2]
-    patch = full_f[y:y+rh, x:x+rw]
-    diff = patch - region_f
-    if mask is not None:
-        diff[~mask] = 0
-    return np.sum(diff * diff)
-
-
-def find_region_position(full_map_arr, region_arr, full_map_small=None, ds_factor=8):
+def find_region_position_ncc(full_gray, region_arr, initial_pos=None, search_radius=32):
     """
-    Find where a cropped region PNG sits on the full map using
-    two-pass template matching: coarse at 1/8 resolution, then refine at full res.
-    Returns ((x, y), avg_error) or None.
+    Find region position using normalized cross-correlation on grayscale.
+    If initial_pos is provided, only searches within search_radius of it.
+    Otherwise does a coarse full-map search then refines.
+    Returns ((x, y), ncc_score) or None.
     """
-    if region_arr.shape[2] < 4:
-        region_rgb = region_arr[:, :, :3]
-        mask = None
-    else:
-        alpha = region_arr[:, :, 3]
-        region_rgb = region_arr[:, :, :3]
-        mask = alpha > 10
+    alpha = region_arr[:, :, 3]
+    mask = alpha > 10
+    if np.sum(mask) < 100:
+        print(f"    Warning: Only {np.sum(mask)} opaque pixels")
+        return None
 
-        if np.sum(mask) < 100:
-            print(f"    Warning: Only {np.sum(mask)} opaque pixels")
-            return None
-
-    rh, rw = region_rgb.shape[:2]
-    fh, fw = full_map_arr.shape[:2]
+    region_gray = np.mean(region_arr[:, :, :3], axis=2).astype(np.float32)
+    rh, rw = region_gray.shape[:2]
+    fh, fw = full_gray.shape[:2]
 
     if rh > fh or rw > fw:
         print(f"    Error: Region ({rw}x{rh}) larger than map ({fw}x{fh})")
         return None
 
-    # --- Pass 1: Coarse search at reduced resolution ---
-    ds = ds_factor
-    region_small = downsample(region_rgb, ds)
-    mask_small = None
-    if mask is not None:
-        # Downsample mask: a block is opaque if any pixel in it is opaque
+    if initial_pos is not None:
+        # Refine around known position
+        cx, cy = initial_pos
+        best_score = -float('inf')
+        best_pos = (cx, cy)
+        for y in range(max(0, cy - search_radius), min(fh - rh + 1, cy + search_radius + 1)):
+            for x in range(max(0, cx - search_radius), min(fw - rw + 1, cx + search_radius + 1)):
+                score = ncc_at(full_gray, region_gray, mask, x, y)
+                if score > best_score:
+                    best_score = score
+                    best_pos = (x, y)
+        return best_pos, best_score
+    else:
+        # Full coarse search at 1/8 resolution, then refine
+        ds = 8
+        region_small_gray = downsample(region_gray[:, :, np.newaxis], ds)[:, :, 0]
+        full_small_gray = downsample(full_gray[:, :, np.newaxis], ds)[:, :, 0]
+
         mh, mw = mask.shape
         new_mh, new_mw = mh // ds, mw // ds
         mask_cropped = mask[:new_mh * ds, :new_mw * ds]
         mask_small = mask_cropped.reshape(new_mh, ds, new_mw, ds).any(axis=(1, 3))
 
-    srh, srw = region_small.shape[:2]
-    sfh, sfw = full_map_small.shape[:2]
+        srh, srw = region_small_gray.shape[:2]
+        sfh, sfw = full_small_gray.shape[:2]
 
-    best_score = float('inf')
-    best_pos = None
+        best_score = -float('inf')
+        best_pos = None
+        for y in range(sfh - srh + 1):
+            for x in range(sfw - srw + 1):
+                score = ncc_at(full_small_gray, region_small_gray, mask_small, x, y)
+                if score > best_score:
+                    best_score = score
+                    best_pos = (x, y)
 
-    for y in range(sfh - srh + 1):
-        for x in range(sfw - srw + 1):
-            score = ssd_at(full_map_small, region_small, mask_small, x, y)
-            if score < best_score:
-                best_score = score
-                best_pos = (x, y)
+        if best_pos is None:
+            return None
 
-    if best_pos is None:
-        return None
+        # Refine at full resolution
+        cx, cy = best_pos[0] * ds, best_pos[1] * ds
+        search_range = ds * 2
+        best_score_fine = -float('inf')
+        best_pos_fine = (cx, cy)
+        for y in range(max(0, cy - search_range), min(fh - rh + 1, cy + search_range + 1)):
+            for x in range(max(0, cx - search_range), min(fw - rw + 1, cx + search_range + 1)):
+                score = ncc_at(full_gray, region_gray, mask, x, y)
+                if score > best_score_fine:
+                    best_score_fine = score
+                    best_pos_fine = (x, y)
 
-    # --- Pass 2: Refine at full resolution around the coarse match ---
-    full_f = full_map_arr[:, :, :3].astype(np.float32)
-    region_f = region_rgb.astype(np.float32)
-
-    # Map coarse position back to full resolution
-    cx, cy = best_pos[0] * ds, best_pos[1] * ds
-    search_range = ds * 2  # search +/- 16 pixels around coarse match
-
-    best_score_fine = float('inf')
-    best_pos_fine = (cx, cy)
-
-    for y in range(max(0, cy - search_range), min(fh - rh + 1, cy + search_range + 1)):
-        for x in range(max(0, cx - search_range), min(fw - rw + 1, cx + search_range + 1)):
-            score = ssd_at(full_f, region_f, mask, x, y)
-            if score < best_score_fine:
-                best_score_fine = score
-                best_pos_fine = (x, y)
-
-    # Confidence metric
-    n_pixels = np.sum(mask) if mask is not None else (rw * rh)
-    avg_error = np.sqrt(best_score_fine / (n_pixels * 3))
-
-    return best_pos_fine, avg_error
+        return best_pos_fine, best_score_fine
 
 
 def default_color_for_side(side):
@@ -235,17 +243,24 @@ def main():
     print("FACTION MAP ASSEMBLER")
     print("=" * 70)
 
-    # Load full map
+    # Load full map for NCC matching (grayscale)
     print(f"\nLoading full map: {FULL_MAP_PATH}")
     full_map = Image.open(FULL_MAP_PATH).convert("RGBA")
     full_map_arr = np.array(full_map)
     canvas_w, canvas_h = full_map.size
     print(f"  Map size: {canvas_w}x{canvas_h}")
+    full_gray = np.mean(full_map_arr[:, :, :3], axis=2).astype(np.float32)
 
-    # Pre-compute downsampled map for fast coarse matching
-    DS_FACTOR = 8
-    print(f"  Pre-computing {canvas_w // DS_FACTOR}x{canvas_h // DS_FACTOR} downsampled map...")
-    full_map_small = downsample(full_map_arr[:, :, :3], DS_FACTOR)
+    # Load existing regions.json (42 entries from previous run) for seeding
+    current_regions_path = Path(__file__).parent.parent / "Main" / "_Module" / "ModuleData" / "factionmap" / "regions.json"
+    seed_positions = {}
+    if current_regions_path.exists():
+        with open(current_regions_path, "r", encoding="utf-8") as f:
+            current_regions = json.load(f)
+        for region_id, rdata in current_regions.items():
+            bbox = rdata["norm_bbox"]
+            seed_positions[region_id] = (int(bbox[0] * canvas_w), int(bbox[1] * canvas_h))
+        print(f"  Loaded {len(seed_positions)} seed positions from current regions.json")
 
     # Create output directories
     output_path = Path(OUTPUT_DIR)
@@ -282,18 +297,46 @@ def main():
         rw, rh = region_img.size
         print(f"  Size: {rw}x{rh}")
 
-        # Find position on full map
-        print(f"  Searching for position on map...", end=" ", flush=True)
-        result = find_region_position(full_map_arr, region_arr, full_map_small, DS_FACTOR)
+        # Map boundary is a decorative overlay, not a region — skip template matching
+        if region_id == "map_boundary":
+            deploy_dest = deploy_dir / f"region_{region_id}.png"
+            region_img.save(str(deploy_dest), "PNG")
+            fullres_dest = fullres_dir / f"region_{region_id}_full.png"
+            region_img.save(str(fullres_dest), "PNG")
+            regions_data[region_id] = {
+                "faction": region_id,
+                "norm_bbox": [0.0, 0.0, round(rw / canvas_w, 4), round(rh / canvas_h, 4)],
+                "capital_pos": [0.5, 0.5],
+            }
+            results.append((region_id, filename, (0, 0), 0.0, rw, rh))
+            print(f"  Decorative overlay — saved directly (no template matching)")
+            continue
+
+        # Determine initial position from backup
+        initial_pos = seed_positions.get(region_id)
+        if initial_pos:
+            print(f"  Seeding from backup position: ({initial_pos[0]}, {initial_pos[1]})")
+
+        # Find position using NCC (normalized cross-correlation on grayscale)
+        # NCC handles color differences between region art and source map
+        if initial_pos:
+            print(f"  Refining position (±32px NCC)...", end=" ", flush=True)
+            result = find_region_position_ncc(full_gray, region_arr, initial_pos, search_radius=32)
+        else:
+            print(f"  Full map search (new region, NCC)...", end=" ", flush=True)
+            result = find_region_position_ncc(full_gray, region_arr)
 
         if result is None:
             print("FAILED - could not locate")
             results.append((region_id, filename, None, None, rw, rh))
             continue
 
-        (x, y), avg_error = result
-        confidence = "GOOD" if avg_error < 15 else ("OK" if avg_error < 30 else "POOR")
-        print(f"found at ({x}, {y}) - error: {avg_error:.1f} ({confidence})")
+        (x, y), ncc_score = result
+        n_pixels = max(np.sum(region_arr[:, :, 3] > 10), 1)
+        norm_score = ncc_score / n_pixels
+        confidence = "GOOD" if norm_score > 0.5 else ("OK" if norm_score > 0.3 else "POOR")
+        print(f"found at ({x}, {y}) - NCC: {norm_score:.3f} ({confidence})")
+        avg_error = norm_score  # store for results
 
         # Store bbox
         norm_x = round(x / canvas_w, 4)
@@ -327,17 +370,27 @@ def main():
         json.dump(regions_data, f, indent=2)
     print(f"\nWrote {len(regions_data)} regions to {regions_json_path}")
 
-    # Write factions.json (migrate from old)
-    old_factions_path = Path(__file__).parent.parent / "Main" / "_Module" / "ModuleData" / "factionmap" / "factions.json"
-    old_factions = {}
-    if old_factions_path.exists():
-        with open(old_factions_path, "r", encoding="utf-8") as f:
-            old_factions = json.load(f)
+    # Write factions.json (migrate from current deployed version, then old vanilla)
+    current_factions_path = Path(__file__).parent.parent / "Main" / "_Module" / "ModuleData" / "factionmap" / "factions.json"
+    current_factions = {}
+    if current_factions_path.exists():
+        with open(current_factions_path, "r", encoding="utf-8") as f:
+            current_factions = json.load(f)
 
     new_factions = {}
     for region_id, (display_name, old_id, game_faction, playable, side) in REGION_META.items():
-        if old_id and old_id in old_factions:
-            entry = dict(old_factions[old_id])
+        if region_id == "map_boundary":
+            continue  # decorative, not a faction
+        # First try to migrate from current factions (already has migrated data)
+        if region_id in current_factions:
+            entry = dict(current_factions[region_id])
+            # Update fields that may have changed
+            entry["name"] = display_name
+            entry["playable"] = playable
+            entry["game_faction"] = game_faction
+            entry["side"] = side
+        elif old_id and old_id in current_factions:
+            entry = dict(current_factions[old_id])
             entry["name"] = display_name
             entry["image"] = f"faction_{region_id}"
             entry["playable"] = playable
@@ -388,12 +441,12 @@ def main():
             if pos is None:
                 print(f"    - {fn} ({rid})")
 
-    # Show any high-error matches
-    high_error = [(rid, fn, err) for rid, fn, pos, err, _, _ in results if pos and err > 20]
-    if high_error:
-        print(f"\n  High error matches (review manually):")
-        for rid, fn, err in high_error:
-            print(f"    - {fn} ({rid}): avg_error={err:.1f}")
+    # Show any low-confidence matches
+    low_conf = [(rid, fn, score) for rid, fn, pos, score, _, _ in results if pos and score is not None and score < 0.3]
+    if low_conf:
+        print(f"\n  Low confidence matches (review manually):")
+        for rid, fn, score in low_conf:
+            print(f"    - {fn} ({rid}): NCC={score:.3f}")
 
     print(f"\nOutput directory: {OUTPUT_DIR}")
     print(f"\nNext steps:")
