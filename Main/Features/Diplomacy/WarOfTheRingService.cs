@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy.Models;
+using TAOM.Features;
 
 namespace TAOM.Features.Diplomacy;
 
@@ -11,8 +12,6 @@ public class WarOfTheRingService : IWarOfTheRingService
     private readonly IAllianceAdapter _allianceAdapter;
     private readonly IModLogger _logger;
     private readonly WarOfTheRingConfig _config;
-    private readonly int _phase1Day;
-    private readonly int _phase2Day;
 
     public WarPhase CurrentPhase { get; private set; } = WarPhase.Peace;
     public bool IsWarOfTheRingActive => CurrentPhase == WarPhase.FullWar;
@@ -28,17 +27,6 @@ public class WarOfTheRingService : IWarOfTheRingService
         _logger = logger;
 
         _config = configProvider.LoadConfig();
-
-        if (_config.TestMode.Enabled)
-        {
-            _phase1Day = _config.TestMode.Phase1Day;
-            _phase2Day = _config.TestMode.Phase2Day;
-        }
-        else
-        {
-            _phase1Day = _config.Phase1.TriggerDay;
-            _phase2Day = _config.Phase2.TriggerDay;
-        }
     }
 
     public bool ShouldBlockPeace(string kingdomAId, string kingdomBId)
@@ -51,17 +39,42 @@ public class WarOfTheRingService : IWarOfTheRingService
 
     public void CheckPhaseTransition(float elapsedDays)
     {
-        if (!_config.Enabled) return;
+        if (!GetEffectiveEnabled()) return;
 
-        if (CurrentPhase == WarPhase.Peace && elapsedDays >= _phase1Day)
+        var (phase1Day, phase2Day) = GetEffectivePhaseDays();
+
+        if (CurrentPhase == WarPhase.Peace && elapsedDays >= phase1Day)
         {
             TransitionToPhase(WarPhase.IsengardWar);
         }
 
-        if (CurrentPhase == WarPhase.IsengardWar && elapsedDays >= _phase2Day)
+        if (CurrentPhase == WarPhase.IsengardWar && elapsedDays >= phase2Day)
         {
             TransitionToPhase(WarPhase.FullWar);
         }
+    }
+
+    private bool GetEffectiveEnabled()
+    {
+        var mcm = TaomSettings.Instance;
+        if (mcm != null) return mcm.WarOfTheRingEnabled;
+        return _config.Enabled;
+    }
+
+    private (int phase1Day, int phase2Day) GetEffectivePhaseDays()
+    {
+        var mcm = TaomSettings.Instance;
+
+        if (mcm != null && mcm.TestMode)
+            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
+
+        if (_config.TestMode.Enabled)
+            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
+
+        if (mcm != null)
+            return (mcm.Phase1TriggerDay, mcm.Phase2TriggerDay);
+
+        return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay);
     }
 
     private void TransitionToPhase(WarPhase newPhase)
