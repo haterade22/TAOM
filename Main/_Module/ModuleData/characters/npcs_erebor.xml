@@ -17,12 +17,12 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Villager (upgrades to erebor_recruit) -->
+	<!-- Villager (upgrades to erebor_reg_miner) -->
 	<NPCCharacter id="villager_erebor" race="dwarf" default_group="Infantry" level="1" name="{=aom_er_villager}Villager" occupation="Villager" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<upgrade_targets>
-			<upgrade_target id="NPCCharacter.erebor_recruit" />
+			<upgrade_target id="NPCCharacter.erebor_reg_miner" />
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
