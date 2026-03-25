@@ -18,9 +18,6 @@ public class DiplomacyBehavior : CampaignBehaviorBase
 
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(
             this, _ => _service.EnforcePermanentAlliances());
-
-        CampaignEvents.OnAllianceEndedEvent.AddNonSerializedListener(
-            this, OnAllianceEnded);
     }
 
     public override void SyncData(IDataStore dataStore)
@@ -33,10 +30,5 @@ public class DiplomacyBehavior : CampaignBehaviorBase
         {
             _service.EstablishInitialAlliances();
         }
-    }
-
-    private void OnAllianceEnded(Kingdom kingdom1, Kingdom kingdom2)
-    {
-        _service.HandleAllianceEnded(kingdom1.StringId, kingdom2.StringId);
     }
 }

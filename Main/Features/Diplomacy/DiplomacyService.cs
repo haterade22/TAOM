@@ -12,7 +12,6 @@ public class DiplomacyService : IDiplomacyService
     private readonly IModLogger _logger;
     private readonly Dictionary<(string, string), AllianceTier> _relationships;
     private readonly List<KingdomRelationship> _permanentRelationships;
-    private bool _isReCreating;
 
     public DiplomacyService(
         IDiplomacyConfigProvider configProvider,
@@ -81,25 +80,6 @@ public class DiplomacyService : IDiplomacyService
                 _logger.LogWarning($"Permanent alliance missing, restoring: {rel.KingdomA} <-> {rel.KingdomB}");
                 _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
             }
-        }
-    }
-
-    public void HandleAllianceEnded(string kingdomAId, string kingdomBId)
-    {
-        if (_isReCreating) return;
-
-        var tier = GetRelationshipTier(kingdomAId, kingdomBId);
-        if (tier != AllianceTier.Permanent) return;
-
-        _isReCreating = true;
-        try
-        {
-            _logger.LogWarning($"Permanent alliance ended, re-creating: {kingdomAId} <-> {kingdomBId}");
-            _allianceAdapter.StartAlliance(kingdomAId, kingdomBId);
-        }
-        finally
-        {
-            _isReCreating = false;
         }
     }
 

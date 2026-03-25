@@ -9,5 +9,4 @@ public interface IDiplomacyService
     bool IsAllianceAllowed(string kingdomAId, string kingdomBId);
     void EstablishInitialAlliances();
     void EnforcePermanentAlliances();
-    void HandleAllianceEnded(string kingdomAId, string kingdomBId);
 }

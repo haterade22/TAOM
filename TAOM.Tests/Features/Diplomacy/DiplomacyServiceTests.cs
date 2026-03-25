@@ -149,27 +149,4 @@ public class DiplomacyServiceTests
         _allianceAdapter.DidNotReceive().StartAlliance("rivendell", "lothlorien");
     }
 
-    [TestMethod]
-    public void HandleAllianceEnded_PermanentTier_ReCreatesAlliance()
-    {
-        _sut.HandleAllianceEnded("empire_w", "vlandia");
-
-        _allianceAdapter.Received(1).StartAlliance("empire_w", "vlandia");
-    }
-
-    [TestMethod]
-    public void HandleAllianceEnded_NonPermanentTier_DoesNothing()
-    {
-        _sut.HandleAllianceEnded("erebor", "mirkwood");
-
-        _allianceAdapter.DidNotReceive().StartAlliance(Arg.Any<string>(), Arg.Any<string>());
-    }
-
-    [TestMethod]
-    public void HandleAllianceEnded_UnknownPair_DoesNothing()
-    {
-        _sut.HandleAllianceEnded("empire_w", "battania");
-
-        _allianceAdapter.DidNotReceive().StartAlliance(Arg.Any<string>(), Arg.Any<string>());
-    }
 }

@@ -12,6 +12,7 @@ using TAOM.Features.FactionMap;
 using TAOM.Features.InitialChildGeneration;
 using TAOM.Adapters;
 using TAOM.Features.Diplomacy;
+using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
@@ -37,6 +38,9 @@ public class SubModule : MBSubModuleBase
         var pathService = IoC.Resolve<IPathService>();
         var logger = IoC.Resolve<IModLogger>();
         FactionMapPaths.Initialize(pathService.ModuleRootPath, logger);
+
+        var allianceHook = IoC.Resolve<IOnAllianceAction>();
+        DiplomacyIoC.InitializeHooks(allianceHook);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -92,6 +96,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch9_RaceFilter");
         _harmony.PatchCategory("Patch8_SiegeCampGuard");
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
+        _harmony.PatchCategory("Patch11_Diplomacy");
     }
 
     protected override void OnSubModuleUnloaded()
