@@ -507,7 +507,7 @@
 				id="Item.gond_shld2" />
 			<Equipment
 				slot="Item2"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.ithilien_jerkin_short" />
@@ -549,7 +549,7 @@
 				id="Item.gond_shld2" />
 			<Equipment
 				slot="Item2"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.ithilien_jerkin_short" />
@@ -591,7 +591,7 @@
 				id="Item.gond_shld2" />
 			<Equipment
 				slot="Item2"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.ithilien_jerkin_short" />
@@ -633,7 +633,7 @@
 				id="Item.gond_shld2" />
 			<Equipment
 				slot="Item2"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.ithilien_jerkin_short" />
@@ -846,7 +846,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.ithilien_jerkin_short" />
@@ -885,7 +885,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.ithilien_jerkin_short" />
@@ -1005,7 +1005,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.wm_gondor_bow" />
@@ -1047,7 +1047,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.gond_spear2" />
+				id="Item.wm_gondor_spear_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.wm_gondor_bow" />
