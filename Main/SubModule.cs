@@ -11,6 +11,8 @@ using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
 using TAOM.Features.InitialChildGeneration;
 using TAOM.Adapters;
+using TAOM.Features.Diplomacy;
+using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -66,6 +68,11 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomCharacterStatsModel());
             campaignStarter.AddModel(new TaomPartyWageModel(costService));
             campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter));
+
+            var diplomacyService = IoC.Resolve<IDiplomacyService>();
+            campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService));
+            campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
+            campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService));
         }
     }
 
