@@ -14,6 +14,8 @@ using TAOM.Adapters;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
+using TAOM.Features.RaceAge;
+using TAOM.Features.RaceAge.Models;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopProgression.Models;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -40,7 +42,8 @@ public class SubModule : MBSubModuleBase
         FactionMapPaths.Initialize(pathService.ModuleRootPath, logger);
 
         var allianceHook = IoC.Resolve<IOnAllianceAction>();
-        DiplomacyIoC.InitializeHooks(allianceHook);
+        var peaceHook = IoC.Resolve<IOnPeaceAction>();
+        DiplomacyIoC.InitializeHooks(allianceHook, peaceHook);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -73,10 +76,22 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomPartyWageModel(costService));
             campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter));
 
+            var raceAgeService = IoC.Resolve<IRaceAgeService>();
+            var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
+            var raceAgeLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new RaceAgeBehavior(raceAgeService, heroAgeAdapter, raceAgeLogger));
+            campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
+            campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
+
             var diplomacyService = IoC.Resolve<IDiplomacyService>();
+            var wotrService = IoC.Resolve<IWarOfTheRingService>();
             campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService));
             campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
-            campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService));
+            campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService));
+            campaignStarter.AddModel(new TaomDiplomacyModel(wotrService));
+
+            var wotrLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
         }
     }
 
@@ -97,6 +112,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch8_SiegeCampGuard");
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
         _harmony.PatchCategory("Patch11_Diplomacy");
+        _harmony.PatchCategory("Patch12_WarOfTheRing");
     }
 
     protected override void OnSubModuleUnloaded()

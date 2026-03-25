@@ -56,6 +56,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Bannerlord.MCM" Version="5.11.3" />
 		<PackageReference Include="DryIoc.dll" Version="4.8.8" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" IncludeAssets="compile" />

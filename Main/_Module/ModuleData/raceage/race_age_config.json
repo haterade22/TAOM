@@ -1,0 +1,18 @@
+{
+  "defaultRace": "human",
+  "races": {
+    "human":      { "maxAge": 85,    "becomeOld": 55,   "comesOfAge": 18, "middleAge": 35,  "fertilityEnd": 45,   "fertilityMod": 1.0 },
+    "dwarf":      { "maxAge": 250,   "becomeOld": 180,  "comesOfAge": 30, "middleAge": 80,  "fertilityEnd": 120,  "fertilityMod": 0.6 },
+    "orc":        { "maxAge": 60,    "becomeOld": 40,   "comesOfAge": 12, "middleAge": 25,  "fertilityEnd": 50,   "fertilityMod": 2.0 },
+    "uruk_hai":   { "maxAge": 50,    "becomeOld": 35,   "comesOfAge": 8,  "middleAge": 20,  "fertilityEnd": 40,   "fertilityMod": 2.5 },
+    "uruk":       { "maxAge": 55,    "becomeOld": 38,   "comesOfAge": 10, "middleAge": 22,  "fertilityEnd": 45,   "fertilityMod": 2.0 },
+    "pale_uruk":  { "maxAge": 55,    "becomeOld": 38,   "comesOfAge": 10, "middleAge": 22,  "fertilityEnd": 45,   "fertilityMod": 2.0 },
+    "dg_uruk":    { "maxAge": 55,    "becomeOld": 38,   "comesOfAge": 10, "middleAge": 22,  "fertilityEnd": 45,   "fertilityMod": 2.0 },
+    "berserker":  { "maxAge": 40,    "becomeOld": 30,   "comesOfAge": 6,  "middleAge": 15,  "fertilityEnd": 30,   "fertilityMod": 3.0 },
+    "goblin":     { "maxAge": 50,    "becomeOld": 35,   "comesOfAge": 10, "middleAge": 20,  "fertilityEnd": 40,   "fertilityMod": 2.0 },
+    "cave_troll": { "maxAge": 500,   "becomeOld": 300,  "comesOfAge": 20, "middleAge": 100, "fertilityEnd": 200,  "fertilityMod": 0.1 },
+    "hill_troll": { "maxAge": 500,   "becomeOld": 300,  "comesOfAge": 20, "middleAge": 100, "fertilityEnd": 200,  "fertilityMod": 0.1 },
+    "nazghul":    { "maxAge": 10000, "becomeOld": 9999, "comesOfAge": 18, "middleAge": 100, "fertilityEnd": 0,    "fertilityMod": 0.0, "immortal": true },
+    "saruman":    { "maxAge": 10000, "becomeOld": 9999, "comesOfAge": 18, "middleAge": 100, "fertilityEnd": 0,    "fertilityMod": 0.0, "immortal": true }
+  }
+}

@@ -12,11 +12,15 @@ public static class DiplomacyIoC
         container.Register<IDiplomacyConfigProvider, DiplomacyConfigProvider>(Reuse.Singleton);
         container.Register<IDiplomacyService, DiplomacyService>(Reuse.Singleton);
         container.Register<IOnAllianceAction, AllianceActionHook>(Reuse.Singleton);
+        container.Register<IWarOfTheRingConfigProvider, WarOfTheRingConfigProvider>(Reuse.Singleton);
+        container.Register<IWarOfTheRingService, WarOfTheRingService>(Reuse.Singleton);
+        container.Register<IOnPeaceAction, PeaceActionHook>(Reuse.Singleton);
     }
 
-    public static void InitializeHooks(IOnAllianceAction hook)
+    public static void InitializeHooks(IOnAllianceAction allianceHook, IOnPeaceAction peaceHook)
     {
-        AllianceCampaignBehavior_EndAlliance_Patch.Initialize(hook);
-        DeclareWarAction_ApplyInternal_Patch.Initialize(hook);
+        AllianceCampaignBehavior_EndAlliance_Patch.Initialize(allianceHook);
+        DeclareWarAction_ApplyInternal_Patch.Initialize(allianceHook);
+        MakePeaceAction_ApplyInternal_Patch.Initialize(peaceHook);
     }
 }

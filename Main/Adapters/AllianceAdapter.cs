@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace TAOM.Adapters;
@@ -32,6 +33,27 @@ public class AllianceAdapter : IAllianceAdapter
 
         var allianceBehavior = Campaign.Current?.GetCampaignBehavior<IAllianceCampaignBehavior>();
         allianceBehavior?.StartAlliance(kingdomA, kingdomB);
+    }
+
+    public bool AreAtWar(string kingdomAId, string kingdomBId)
+    {
+        var kingdomA = FindKingdom(kingdomAId);
+        var kingdomB = FindKingdom(kingdomBId);
+        if (kingdomA == null || kingdomB == null) return false;
+
+        return kingdomA.IsAtWarWith(kingdomB);
+    }
+
+    public void DeclareWar(string kingdomAId, string kingdomBId)
+    {
+        var kingdomA = FindKingdom(kingdomAId);
+        var kingdomB = FindKingdom(kingdomBId);
+        if (kingdomA == null || kingdomB == null) return;
+
+        if (!kingdomA.IsAtWarWith(kingdomB))
+        {
+            DeclareWarAction.ApplyByDefault(kingdomA, kingdomB);
+        }
     }
 
     private static Kingdom FindKingdom(string stringId)
