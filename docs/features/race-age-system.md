@@ -119,12 +119,43 @@ Elves have no explicit race entry — any race not in the config falls back to h
 
 ## How Pregnancy Works
 
-`TaomPregnancyModel` overrides `GetDailyChanceOfPregnancyForHero(Hero hero)`:
+`TaomPregnancyModel` **reimplements** `GetDailyChanceOfPregnancyForHero(Hero hero)` rather than calling `base`. This is necessary because the vanilla `DefaultPregnancyModel` hardcodes fertility age bounds to 18-45 in a private `IsHeroAgeSuitableForPregnancy` method — calling `base` would return 0 for any hero over age 45, defeating race-specific fertility windows (e.g., Dwarves with `fertilityEnd: 120`).
+
+### Calculation Steps
 
 1. If the hero's race is immortal → return 0 (no children)
-2. Get the base chance from vanilla (which checks age 18-45, spouse exists, etc.)
-3. If base chance is 0 → return 0
-4. If hero's age exceeds race-specific `fertilityEnd` → return 0
-5. Multiply base chance by `fertilityMod`
+2. If hero has no spouse → return 0
+3. If hero's age is outside race-specific `[comesOfAge, fertilityEnd]` window → return 0
+4. Calculate age-decline factor: the fertility curve spans the full racial window, declining linearly from peak (1.2) at `comesOfAge` to floor (0.12) at `fertilityEnd`
+5. Apply vanilla clan population cap (based on clan tier) and children penalty (quadratic decay)
+6. Multiply by race-specific `fertilityMod`
+7. Apply Charm.Virile perk bonus (checked on both hero and spouse)
+
+### Age-Decline Formula
+
+```
+declineRate = 1.08 / (fertilityEnd - comesOfAge)
+ageFactor = 1.2 - (heroAge - comesOfAge) * declineRate
+```
+
+This preserves the vanilla curve shape but stretches or compresses it to fit each race's fertility window. A Dwarf at age 60 (early in their 30-120 window) has roughly the same relative fertility as a Human at age 25 (early in their 18-45 window).
+
+### Effective Fertility Rates
+
+| Race | Window | Peak Daily Chance | Modifier | Notes |
+|------|--------|-------------------|----------|-------|
+| human | 18-45 | ~14.4% | 1.0x | Vanilla baseline |
+| dwarf | 30-120 | ~14.4% | 0.6x | Same peak, 60% rate, much wider window |
+| orc | 12-50 | ~14.4% | 2.0x | 2x rate, compensates for shorter lifespan |
+| uruk_hai | 8-40 | ~14.4% | 2.5x | Highest rate, shortest window |
+| nazghul | — | 0% | 0.0x | Immortal flag blocks fertility entirely |
 
 This means Orc women have 2x the daily pregnancy chance of human women, while Dwarven women have 0.6x and Nazgul have 0x.
+
+## Performance
+
+The daily tick iterates all alive heroes to check age-based death. Several optimizations minimize per-tick cost:
+
+- **Lazy enumeration** — `IHeroAgeAdapter.GetAllAliveHeroAges()` returns `IEnumerable<HeroAgeInfo>` (not a materialized list). No heap allocation per tick; `HeroAgeInfo` structs are created on the stack during iteration.
+- **O(1) hero lookup** — `KillByOldAge` uses `Hero.Find(heroId)` (dictionary-backed via `CampaignObjectManager`) instead of `Hero.FindFirst` (O(n) linear scan over all characters).
+- **Race entry cache** — `RaceAgeService` caches `raceId → RaceAgeEntry` in a `Dictionary<int, RaceAgeEntry>`. The string-based race name lookup (`IRaceManager.GetRaceNameFromId`) happens once per race ID ever, not on every property access for every hero every tick. This cache is purely in-memory on the singleton service — no save/load impact.

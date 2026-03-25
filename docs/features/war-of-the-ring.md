@@ -55,7 +55,24 @@ Overrides `IsPeaceDecisionAllowedBetweenKingdoms`. When WotR blocks peace for th
 
 ### Layer 3: MakePeaceAction Harmony Patch
 
-Prefix on `MakePeaceAction.ApplyInternal` (private static method). Safety net that catches any peace attempt that bypasses the GameModel checks (e.g., direct API calls, other mods). Returns `false` to skip execution.
+Prefix on `MakePeaceAction.ApplyInternal` (private static method with signature `void ApplyInternal(IFaction, IFaction, int, int, MakePeaceDetail)`). Safety net that catches any peace attempt that bypasses the GameModel checks (e.g., direct API calls, other mods). Returns `false` to skip execution.
+
+### Verified Coverage (All Vanilla Peace Paths)
+
+The three layers were verified against decompiled 1.3.x source to cover every vanilla peace-making path:
+
+| Path | Blocked By |
+|------|-----------|
+| AI proposes kingdom peace decision | Layer 1 (AI checks `IsAtConstantWar` before proposing) |
+| Player proposes peace in kingdom menu | Layer 2 (`IsPeaceDecisionAllowed` returns false) |
+| AI peace offer to player (ruler accepts directly) | Layer 3 (Harmony prefix on `ApplyInternal`) |
+| AI peace offer to player (vassal, goes to vote) | Layer 2 (`IsAllowed()` fails) |
+| Clan joining kingdom triggers auto-peace | Layer 1 (checks `IsAtConstantWar` first) |
+| Clan leaving kingdom triggers auto-peace | Layer 1 (checks `IsAtConstantWar` first) |
+| Minor faction/clan AI peace | Layer 1 (checks `IsAtConstantWar`) |
+| Cheat console `declare_peace` | Layer 1 (checks `IsAtConstantWarAgainstFaction`) |
+
+All paths ultimately funnel through `MakePeaceAction.ApplyInternal`, which Layer 3 catches as an absolute safety net.
 
 ## Configuration
 
@@ -123,30 +140,40 @@ JSON provides the structural data (which kingdoms fight, war declarations). MCM 
 ```
 war_of_the_ring.json     TaomSettings (MCM)
          \                  /
-    WarOfTheRingConfigProvider
-              |
-      WarOfTheRingService ←── IDiplomacyService (hostile tier lookup)
-         /       |       \
-        /        |        \
-TaomDiplomacy  TaomKingdom   MakePeace
-Model          DecisionModel  Patch
-(IsAtConstant  (IsPeaceAllow  (Harmony
- War)           ed)            prefix)
-        \        |        /
-         \       |       /
-      WarOfTheRingBehavior
-      (DailyTick timer)
+    WarOfTheRingConfig   ITaomSettingsProvider
+        Provider        (injected, testable)
+              \          /
+          WarOfTheRingService ←── IDiplomacyService (hostile tier lookup)
+             /       |       \
+            /        |        \
+    TaomDiplomacy  TaomKingdom   MakePeace
+    Model          DecisionModel  Patch
+    (IsAtConstant  (IsPeaceAllow  (Harmony
+     War)           ed)            prefix)
+            \        |        /
+             \       |       /
+          WarOfTheRingBehavior
+          (DailyTick — uses CampaignStartTime)
 ```
 
 ### Stateless Design
 
 The WotR system stores **no save data**. Each campaign tick:
-1. Calculates elapsed days since first tick
-2. Compares against phase thresholds
+1. Calculates elapsed campaign days via `CampaignStartTime.ElapsedDaysUntilNow` (engine-provided, survives save/load)
+2. Compares against phase thresholds (from MCM or JSON config)
 3. Declares wars only for pairs not already at war (`AreAtWar` guard)
 4. Peace blocking checks elapsed time in real-time
 
-Benefits: MCM config changes take effect immediately on next tick. No save migration needed.
+The behavior uses the engine's built-in `Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow` — the same pattern vanilla uses internally. This is computed from the persisted `MapTimeTracker` ticks and the deterministic campaign start constant. No custom `SyncData` serialization is needed, avoiding any save/load performance impact.
+
+Benefits: MCM config changes take effect immediately on next tick. No save migration needed. Phase state is reconstructed from elapsed time on every tick, so save/load is seamless.
+
+### MCM Integration via ITaomSettingsProvider
+
+MCM settings are accessed through an injected `ITaomSettingsProvider` interface rather than direct static access to `TaomSettings.Instance`. This:
+- Keeps the service testable (tests inject a mock with `IsAvailable = false`)
+- Follows the explicit-dependency-via-constructor-injection principle
+- Gracefully falls back to JSON config when MCM is unavailable
 
 ## Key Files
 
@@ -159,7 +186,9 @@ Benefits: MCM config changes take effect immediately on next tick. No save migra
 | `Main/Features/Diplomacy/WarOfTheRingService.cs` | Core logic — phase transitions, war declarations |
 | `Main/Features/Diplomacy/IWarOfTheRingConfigProvider.cs` | Config loading interface |
 | `Main/Features/Diplomacy/WarOfTheRingConfigProvider.cs` | JSON loader |
-| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | DailyTick timer |
+| `Main/Features/Diplomacy/ITaomSettingsProvider.cs` | MCM settings interface (testable) |
+| `Main/Features/Diplomacy/TaomSettingsProvider.cs` | MCM settings implementation |
+| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | DailyTick timer (uses CampaignStartTime) |
 | `Main/Features/Diplomacy/Hooks/IOnPeaceAction.cs` | Peace hook interface |
 | `Main/Features/Diplomacy/Hooks/PeaceActionHook.cs` | Hook implementation |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony safety net |
@@ -170,6 +199,7 @@ Benefits: MCM config changes take effect immediately on next tick. No save migra
 
 - `IDiplomacyService` — Relationship tier lookups (determines which pairs are "Hostile")
 - `IAllianceAdapter` — War declaration and war-status checks
+- `ITaomSettingsProvider` — MCM settings access (injected, testable)
 - `IPathService` / `IModLogger` — Standard infrastructure
 
 ## Relationship to Diplomacy Feature
