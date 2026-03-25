@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Lords - New lords from LOTRAOM not in vanilla Bannerlord 
      NOT registered in SubModule.xml - staged for future activation -->
 <NPCCharacters>
@@ -10345,7 +10345,7 @@
             <EquipmentSet id="emp_civ_template_default" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_EW_9" name="{=aom_lord_EW_9_name}Thingol" age="133" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_EW_9" name="{=aom_lord_EW_9_name}Thingol" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <!--Placeholder face-->
             <BodyProperties version="4" age="133.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
