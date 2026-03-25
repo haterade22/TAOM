@@ -14,6 +14,7 @@ public class WarOfTheRingServiceTests
     private IWarOfTheRingConfigProvider _configProvider;
     private IDiplomacyService _diplomacyService;
     private IAllianceAdapter _allianceAdapter;
+    private ITaomSettingsProvider _settingsProvider;
     private IModLogger _logger;
     private WarOfTheRingService _sut;
 
@@ -47,8 +48,10 @@ public class WarOfTheRingServiceTests
         _configProvider = Substitute.For<IWarOfTheRingConfigProvider>();
         _diplomacyService = Substitute.For<IDiplomacyService>();
         _allianceAdapter = Substitute.For<IAllianceAdapter>();
+        _settingsProvider = Substitute.For<ITaomSettingsProvider>();
         _logger = Substitute.For<IModLogger>();
 
+        _settingsProvider.IsAvailable.Returns(false);
         _configProvider.LoadConfig().Returns(CreateDefaultConfig());
 
         _allianceAdapter.GetAllKingdomIds().Returns(new List<string>
@@ -61,7 +64,7 @@ public class WarOfTheRingServiceTests
 
     private void CreateSut()
     {
-        _sut = new WarOfTheRingService(_configProvider, _diplomacyService, _allianceAdapter, _logger);
+        _sut = new WarOfTheRingService(_configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, _logger);
     }
 
     [TestMethod]
@@ -126,7 +129,6 @@ public class WarOfTheRingServiceTests
     [TestMethod]
     public void CheckPhaseTransition_Phase2_DeclaresWarBetweenHostilePairs()
     {
-        _diplomacyService.GetRelationshipTier("empire_w", "empire_s").Returns(AllianceTier.Hostile);
         _diplomacyService.GetRelationshipTier(Arg.Any<string>(), Arg.Any<string>()).Returns(AllianceTier.Neutral);
         _diplomacyService.GetRelationshipTier("empire_w", "empire_s").Returns(AllianceTier.Hostile);
 

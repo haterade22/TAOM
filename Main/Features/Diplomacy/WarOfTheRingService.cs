@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy.Models;
-using TAOM.Features;
 
 namespace TAOM.Features.Diplomacy;
 
@@ -10,6 +9,7 @@ public class WarOfTheRingService : IWarOfTheRingService
 {
     private readonly IDiplomacyService _diplomacyService;
     private readonly IAllianceAdapter _allianceAdapter;
+    private readonly ITaomSettingsProvider _settingsProvider;
     private readonly IModLogger _logger;
     private readonly WarOfTheRingConfig _config;
 
@@ -20,10 +20,12 @@ public class WarOfTheRingService : IWarOfTheRingService
         IWarOfTheRingConfigProvider configProvider,
         IDiplomacyService diplomacyService,
         IAllianceAdapter allianceAdapter,
+        ITaomSettingsProvider settingsProvider,
         IModLogger logger)
     {
         _diplomacyService = diplomacyService;
         _allianceAdapter = allianceAdapter;
+        _settingsProvider = settingsProvider;
         _logger = logger;
 
         _config = configProvider.LoadConfig();
@@ -56,23 +58,20 @@ public class WarOfTheRingService : IWarOfTheRingService
 
     private bool GetEffectiveEnabled()
     {
-        var mcm = TaomSettings.Instance;
-        if (mcm != null) return mcm.WarOfTheRingEnabled;
+        if (_settingsProvider.IsAvailable) return _settingsProvider.WarOfTheRingEnabled;
         return _config.Enabled;
     }
 
     private (int phase1Day, int phase2Day) GetEffectivePhaseDays()
     {
-        var mcm = TaomSettings.Instance;
-
-        if (mcm != null && mcm.TestMode)
+        if (_settingsProvider.IsAvailable && _settingsProvider.TestMode)
             return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
 
         if (_config.TestMode.Enabled)
             return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
 
-        if (mcm != null)
-            return (mcm.Phase1TriggerDay, mcm.Phase2TriggerDay);
+        if (_settingsProvider.IsAvailable)
+            return (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay);
 
         return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay);
     }

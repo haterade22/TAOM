@@ -8,6 +8,7 @@ public class RaceAgeService : IRaceAgeService
 {
     private readonly IRaceManager _raceManager;
     private readonly Dictionary<string, RaceAgeEntry> _races;
+    private readonly Dictionary<int, RaceAgeEntry> _raceIdCache = new Dictionary<int, RaceAgeEntry>();
     private readonly RaceAgeEntry _defaultEntry;
 
     public RaceAgeService(IRaceAgeConfigProvider configProvider, IRaceManager raceManager)
@@ -33,17 +34,22 @@ public class RaceAgeService : IRaceAgeService
 
     public bool ShouldDieOfOldAge(int raceId, float currentAge)
     {
-        if (IsImmortal(raceId)) return false;
-        return currentAge > GetMaxAge(raceId);
+        var entry = GetEntry(raceId);
+        if (entry.Immortal) return false;
+        return currentAge > entry.MaxAge;
     }
 
     private RaceAgeEntry GetEntry(int raceId)
     {
+        if (_raceIdCache.TryGetValue(raceId, out var cached))
+            return cached;
+
         var raceName = _raceManager.GetRaceNameFromId(raceId);
-        if (raceName != null && _races.TryGetValue(raceName, out var entry))
-        {
-            return entry;
-        }
-        return _defaultEntry;
+        var entry = (raceName != null && _races.TryGetValue(raceName, out var found))
+            ? found
+            : _defaultEntry;
+
+        _raceIdCache[raceId] = entry;
+        return entry;
     }
 }

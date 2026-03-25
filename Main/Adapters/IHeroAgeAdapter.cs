@@ -18,6 +18,6 @@ public readonly struct HeroAgeInfo
 
 public interface IHeroAgeAdapter
 {
-    IReadOnlyList<HeroAgeInfo> GetAllAliveHeroAges();
+    IEnumerable<HeroAgeInfo> GetAllAliveHeroAges();
     void KillByOldAge(string heroId);
 }

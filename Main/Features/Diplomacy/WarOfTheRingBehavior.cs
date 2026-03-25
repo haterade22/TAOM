@@ -7,7 +7,6 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
 {
     private readonly IWarOfTheRingService _wotrService;
     private readonly IModLogger _logger;
-    private double _gameStartDay = -1.0;
 
     public WarOfTheRingBehavior(IWarOfTheRingService wotrService, IModLogger logger)
     {
@@ -24,12 +23,7 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
-        if (_gameStartDay < 0.0)
-        {
-            _gameStartDay = CampaignTime.Now.ToDays;
-        }
-
-        var elapsedDays = (float)(CampaignTime.Now.ToDays - _gameStartDay);
+        var elapsedDays = Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow;
         _wotrService.CheckPhaseTransition(elapsedDays);
     }
 }

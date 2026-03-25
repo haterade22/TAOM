@@ -13,6 +13,7 @@ public static class DiplomacyIoC
         container.Register<IDiplomacyService, DiplomacyService>(Reuse.Singleton);
         container.Register<IOnAllianceAction, AllianceActionHook>(Reuse.Singleton);
         container.Register<IWarOfTheRingConfigProvider, WarOfTheRingConfigProvider>(Reuse.Singleton);
+        container.Register<ITaomSettingsProvider, TaomSettingsProvider>(Reuse.Singleton);
         container.Register<IWarOfTheRingService, WarOfTheRingService>(Reuse.Singleton);
         container.Register<IOnPeaceAction, PeaceActionHook>(Reuse.Singleton);
     }
