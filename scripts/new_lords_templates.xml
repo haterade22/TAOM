@@ -1312,7 +1312,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_53_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_1_53_2_name}ItarildÃº</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_53_2_name}Itarildú</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -1333,7 +1333,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_53_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_1_53_3_name}AncalimÃº</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_53_3_name}Ancalimú</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -1451,7 +1451,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_59_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_1_59_2_name}Dervorin, Lord of RinglÃ³ Vale</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_59_2_name}Dervorin, Lord of Ringló Vale</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -1636,7 +1636,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_48_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_1_48_1_name}NazgÃ»l, the Tainted</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_48_1_name}Nazgûl, the Tainted</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -1677,7 +1677,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_48_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_1_48_2_name}NazgÃ»l, the Shadow of Northmen</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -1718,7 +1718,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_48_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_1_48_3_name}NazgÃ»l, the Shadow of Umbar</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -2372,7 +2372,7 @@
     <xsl:template match="NPCCharacter[@id='lord_SE9_l']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_SE9_l_name}GrishnÃ¡kh, Uruk Captain</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_SE9_l_name}Grishnákh, Uruk Captain</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -3500,7 +3500,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_3_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_3_1_name}Ã‰omer Eoforing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_3_1_name}Éomer Eoforing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -3543,7 +3543,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_3_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_3_2_name}Ã‰owyn Eoforing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_3_2_name}Éowyn Eoforing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -3586,7 +3586,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_3_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_3_3_name}ThÃ©odwyn Eoforing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_3_3_name}Théodwyn Eoforing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -3629,7 +3629,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_6_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_6_1_name}DÃ©orwyn Grimingas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_6_1_name}Déorwyn Grimingas</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -3676,7 +3676,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_16_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_16_1_name}MÃ©rthÃº FelÃ¡nding</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_16_1_name}Mérthú Felánding</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -3719,7 +3719,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_16_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_16_2_name}Herubrand FelÃ¡nding</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_16_2_name}Herubrand Felánding</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4068,7 +4068,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_27_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_27_1_name}WÃ¦rburg Ã†thellafing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_27_1_name}Wærburg Æthellafing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -4111,7 +4111,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_27_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_27_2_name}Ã†lfstan Ã†thellafing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_27_2_name}Ælfstan Æthellafing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4138,7 +4138,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_27_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_27_3_name}Ã†lfwynn Ã†thellafing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_27_3_name}Ælfwynn Æthellafing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -4181,7 +4181,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_27_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_27_4_name}SÃ¦weald Ã†thellafing</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_27_4_name}Sæweald Æthellafing</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4291,7 +4291,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_29_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_29_1_name}Octreda Ã†lfwiging</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_29_1_name}Octreda Ælfwiging</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -4334,7 +4334,7 @@
     <xsl:template match="NPCCharacter[@id='lord_4_29_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_4_29_2_name}Eadweald Ã†lfwiging</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_4_29_2_name}Eadweald Ælfwiging</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4361,7 +4361,7 @@
     <xsl:template match="NPCCharacter[@id='lord_V11_l']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_V11_l_name}LÃ©omund DeÃ¡fringas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_V11_l_name}Léomund Deáfringas</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4402,7 +4402,7 @@
     <xsl:template match="NPCCharacter[@id='lord_V11_l_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_V11_l_1_name}WynnÃ°ryÃ° DeÃ¡fringas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_V11_l_1_name}Wynnðryð Deáfringas</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -4445,7 +4445,7 @@
     <xsl:template match="NPCCharacter[@id='lord_V11_l_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_V11_l_2_name}LÃ©othen DeÃ¡fringas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_V11_l_2_name}Léothen Deáfringas</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4472,7 +4472,7 @@
     <xsl:template match="NPCCharacter[@id='lord_V11_l_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_V11_l_3_name}LÃ©obrand DeÃ¡fringas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_V11_l_3_name}Léobrand Deáfringas</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4515,7 +4515,7 @@
     <xsl:template match="NPCCharacter[@id='lord_V11_l_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_V11_l_4_name}LÃ©owynn DeÃ¡fringas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_V11_l_4_name}Léowynn Deáfringas</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -4644,7 +4644,7 @@
     <xsl:template match="NPCCharacter[@id='lord_rohan_9_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_rohan_9_1_name}DÃºnhere DÃºning</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_rohan_9_1_name}Dúnhere Dúning</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -4859,7 +4859,7 @@
     <xsl:template match="NPCCharacter[@id='lord_rohan_15_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_rohan_15_1_name}FrÃ³da Ordgaring</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_rohan_15_1_name}Fróda Ordgaring</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -4945,7 +4945,7 @@
     <xsl:template match="NPCCharacter[@id='lord_rohan_17_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_rohan_17_1_name}WaldÃ¦g Bregdaning</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_rohan_17_1_name}Waldæg Bregdaning</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -5031,7 +5031,7 @@
     <xsl:template match="NPCCharacter[@id='lord_rohan_22_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_rohan_22_1_name}BÃ©owyrt Rungaring</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_rohan_22_1_name}Béowyrt Rungaring</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -5777,7 +5777,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E1_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E1_1_name}DÃ¡in II Ironfoot</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E1_1_name}Dáin II Ironfoot</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -5847,7 +5847,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E1_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E1_3_name}DÃ­sa</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E1_3_name}Dísa</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -5874,7 +5874,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E1_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E1_4_name}NÃ¡in</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E1_4_name}Náin</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -5982,7 +5982,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E2_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E2_1_name}NÃ¡th</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E2_1_name}Náth</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6036,7 +6036,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E2_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E2_3_name}RÃºni</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E2_3_name}Rúni</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6063,7 +6063,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E2_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E2_4_name}LÃ³mi</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E2_4_name}Lómi</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6117,7 +6117,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E3_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E3_1_name}GÃ¡rjan</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E3_1_name}Gárjan</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6144,7 +6144,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E3_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E3_2_name}ThÃ¡lfi</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E3_2_name}Thálfi</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6171,7 +6171,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E3_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E3_3_name}ImÃ¡k</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E3_3_name}Imák</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6198,7 +6198,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E3_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E3_4_name}NÃ­li</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E3_4_name}Níli</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6279,7 +6279,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E4_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E4_1_name}NÃ¡r</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E4_1_name}Nár</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6306,7 +6306,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E4_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E4_2_name}TÃ­li</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E4_2_name}Tíli</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6360,7 +6360,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E4_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E4_4_name}TÃ¡li</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E4_4_name}Táli</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6387,7 +6387,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E4_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E4_11_name}Ã”rn</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E4_11_name}Órn</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6414,7 +6414,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E5_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E5_1_name}GÃ³rli</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E5_1_name}Górli</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6468,7 +6468,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E5_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E5_3_name}GaÃ­n</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E5_3_name}Gaín</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6549,7 +6549,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E5_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E5_11_name}ThÃ©lor</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E5_11_name}Thélor</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6576,7 +6576,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E6_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E6_1_name}FlÃ³i</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E6_1_name}Flói</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6603,7 +6603,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E6_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E6_2_name}DrÃ¡li</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E6_2_name}Dráli</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6630,7 +6630,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E6_3']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E6_3_name}FlÃ¡si</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E6_3_name}Flási</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6657,7 +6657,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E6_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E6_4_name}IdrÃºn</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E6_4_name}Idrún</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6684,7 +6684,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E6_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E6_11_name}ThrÃ¢n</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E6_11_name}Thrân</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6711,7 +6711,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E7_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E7_1_name}NÃ¡ran</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E7_1_name}Náran</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -6738,7 +6738,7 @@
     <xsl:template match="NPCCharacter[@id='lord_E7_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_E7_11_name}ThÃ¡lia</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_E7_11_name}Thália</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -6807,7 +6807,7 @@
     <xsl:template match="NPCCharacter[@id='lord_R1_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_R1_2_name}CelebrÃ­an</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_R1_2_name}Celebrían</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -7467,7 +7467,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M2_4']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M2_4_name}AnairÃ«</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M2_4_name}Anairë</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -7754,7 +7754,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M4_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M4_2_name}AmariÃ«</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M4_2_name}Amarië</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -8287,7 +8287,7 @@
     <xsl:template match="NPCCharacter[@id='lord_L1_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_L1_1_name}Galadriel, Lady of LothlÃ³rien</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_L1_1_name}Galadriel, Lady of Lothlórien</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <face>
@@ -8330,7 +8330,7 @@
     <xsl:template match="NPCCharacter[@id='lord_L1_2']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_L1_2_name}Celeborn, Lord of LothlÃ³rien</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_L1_2_name}Celeborn, Lord of Lothlórien</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -8400,7 +8400,7 @@
     <xsl:template match="NPCCharacter[@id='lord_L2_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_L2_1_name}CaurmÃ­nas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_L2_1_name}Caurmínas</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -8443,7 +8443,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I1_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I1_1_name}UglÃºk, Chieftain of Isengard</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I1_1_name}Uglúk, Chieftain of Isengard</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -8485,7 +8485,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I1_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I1_11_name}UglÃºk Child</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I1_11_name}Uglúk Child</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -8512,7 +8512,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I2_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I2_1_name}MauhÃºr, Uruk-Hai Warlord</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I2_1_name}Mauhúr, Uruk-Hai Warlord</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -8554,7 +8554,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I2_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I2_11_name}MauhÃºr Child</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I2_11_name}Mauhúr Child</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -9208,7 +9208,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I4_31']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I4_31_name}DrÃ»gash</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I4_31_name}Drûgash</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -9450,7 +9450,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I1_7']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I1_7_name}KrÃ»klash, Uruk-hai Enforcer</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I1_7_name}Krûklash, Uruk-hai Enforcer</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -9493,7 +9493,7 @@
     <xsl:template match="NPCCharacter[@id='lord_I1_8']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_I1_8_name}DÃ»shrat, Uruk-hai Champion</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_I1_8_name}Dûshrat, Uruk-hai Champion</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -11855,7 +11855,7 @@
     <xsl:template match="NPCCharacter[@id='lord_U1_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_U1_1_name}Ar-GimilkhÃ¢d</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_U1_1_name}Ar-Gimilkhâd</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -11882,7 +11882,7 @@
     <xsl:template match="NPCCharacter[@id='lord_U1_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_U1_11_name}Lord GimilzÃ´r</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_U1_11_name}Lord Gimilzôr</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -11909,7 +11909,7 @@
     <xsl:template match="NPCCharacter[@id='lord_U1_12']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_U1_12_name}GimilthÃ´n</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_U1_12_name}Gimilthôn</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -11936,7 +11936,7 @@
     <xsl:template match="NPCCharacter[@id='lord_U1_13']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_U1_13_name}PharazÃ´n</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_U1_13_name}Pharazôn</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14569,7 +14569,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M12_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M12_1_name}RÃ»klash</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M12_1_name}Rûklash</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14637,7 +14637,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M13_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M13_1_name}ThÃ»rak</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M13_1_name}Thûrak</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14678,7 +14678,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M13_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M13_11_name}GÃ»drak</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M13_11_name}Gûdrak</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14746,7 +14746,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M14_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M14_11_name}MÃ¢gzÃ»k</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M14_11_name}Mâgzûk</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14773,7 +14773,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M15_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M15_1_name}DÃ»rzan</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M15_1_name}Dûrzan</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14814,7 +14814,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M15_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M15_11_name}RÃ»zkhan</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M15_11_name}Rûzkhan</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14841,7 +14841,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M16_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M16_1_name}GÃ»lnak</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M16_1_name}Gûlnak</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14909,7 +14909,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M17_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M17_1_name}ThÃ»lnar</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M17_1_name}Thûlnar</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14950,7 +14950,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M17_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M17_11_name}GÃ»ltor</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M17_11_name}Gûltor</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -14977,7 +14977,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M18_1']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M18_1_name}KÃ»ragh</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M18_1_name}Kûragh</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
@@ -15018,7 +15018,7 @@
     <xsl:template match="NPCCharacter[@id='lord_M18_11']">
         <xsl:copy>
             <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'default_group' and local-name() != 'is_female']"/>
-            <xsl:attribute name="name">{=aom_lord_M18_11_name}LÃ»rtag</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_M18_11_name}Lûrtag</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <face>

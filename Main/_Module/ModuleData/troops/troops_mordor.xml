@@ -3076,7 +3076,7 @@
         id="mordor_black_numenorean"
         default_group="Infantry"
         level="31"
-        name="{=aom_mordor_black_numenorean_name}[Mordor] Black NÃƒÂºmenÃƒÂ³rean Marshal"
+        name="{=aom_mordor_black_numenorean_name}[Mordor] Black Númenórean Marshal"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
