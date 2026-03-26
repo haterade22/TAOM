@@ -74,10 +74,11 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 | goblin | 50 | 10 | 2.0x | Similar to orcs |
 | cave_troll | 500 | 20 | 0.1x | Very long-lived, rare breeding |
 | hill_troll | 500 | 20 | 0.1x | Same as cave troll |
-| nazghul | 10000 | 18 | 0.0x | Immortal, no children |
-| saruman | 10000 | 18 | 0.0x | Immortal, no children |
+| elf | 10000 | 18 | 0.15x | Effectively immortal (maxAge 10000), very rare children |
+| nazghul | 10000 | 18 | 0.0x | Immortal flag, no children |
+| saruman | 10000 | 18 | 0.0x | Immortal flag, no children |
 
-Elves have no explicit race entry — any race not in the config falls back to human defaults. If you need Elven immortality, add an explicit entry with `"immortal": true`.
+**Elf vs Nazgul immortality:** Elves use `maxAge: 10000` without the `immortal` flag — they effectively never die of age, but can still have rare children (`fertilityMod: 0.15`, `fertilityEnd: 300`). Nazgul/Saruman use `"immortal": true` which additionally blocks all fertility. Any race not in the config falls back to human defaults.
 
 ## Key Files
 
@@ -156,6 +157,6 @@ This means Orc women have 2x the daily pregnancy chance of human women, while Dw
 
 The daily tick iterates all alive heroes to check age-based death. Several optimizations minimize per-tick cost:
 
-- **Lazy enumeration** — `IHeroAgeAdapter.GetAllAliveHeroAges()` returns `IEnumerable<HeroAgeInfo>` (not a materialized list). No heap allocation per tick; `HeroAgeInfo` structs are created on the stack during iteration.
+- **Lazy enumeration with two-pass death** — `IHeroAgeAdapter.GetAllAliveHeroAges()` returns `IEnumerable<HeroAgeInfo>` (not a materialized list). `RaceAgeBehavior` uses a two-pass approach: first iterates the lazy enumerable to collect heroes that should die into a reusable `_deathList` field, then kills them in a second pass after enumeration is complete. This avoids both unnecessary list allocation AND the "collection was modified during enumeration" crash that occurs when killing a hero removes it from `Hero.AllAliveHeroes` mid-iteration. The `_deathList` is `.Clear()`'d each tick — zero GC allocation in the common case (no deaths).
 - **O(1) hero lookup** — `KillByOldAge` uses `Hero.Find(heroId)` (dictionary-backed via `CampaignObjectManager`) instead of `Hero.FindFirst` (O(n) linear scan over all characters).
 - **Race entry cache** — `RaceAgeService` caches `raceId → RaceAgeEntry` in a `Dictionary<int, RaceAgeEntry>`. The string-based race name lookup (`IRaceManager.GetRaceNameFromId`) happens once per race ID ever, not on every property access for every hero every tick. This cache is purely in-memory on the singleton service — no save/load impact.

@@ -238,6 +238,13 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
+			<XmlName id="EquipmentRosters" path="taom_child_equipment_templates"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
 			<XmlName id="NPCCharacters" path="troops/troops_gundabad"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>

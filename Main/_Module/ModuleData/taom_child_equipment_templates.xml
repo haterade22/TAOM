@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- ==================== GONDOR ==================== -->
+	<EquipmentRoster id="child_template_gondor_noble_male" culture="Culture.gondor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gondor_noble_female" culture="Culture.gondor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gondor_townsman_male" culture="Culture.gondor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gondor_townsman_female" culture="Culture.gondor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gondor_villager_male" culture="Culture.gondor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gondor_villager_female" culture="Culture.gondor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== EREBOR ==================== -->
+	<EquipmentRoster id="child_template_erebor_noble_male" culture="Culture.erebor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_erebor_noble_female" culture="Culture.erebor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_erebor_townsman_male" culture="Culture.erebor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_erebor_townsman_female" culture="Culture.erebor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_erebor_villager_male" culture="Culture.erebor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_erebor_villager_female" culture="Culture.erebor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== RIVENDELL ==================== -->
+	<EquipmentRoster id="child_template_rivendell_noble_male" culture="Culture.rivendell">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_rivendell_noble_female" culture="Culture.rivendell">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_rivendell_townsman_male" culture="Culture.rivendell">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_rivendell_townsman_female" culture="Culture.rivendell">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_rivendell_villager_male" culture="Culture.rivendell">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_rivendell_villager_female" culture="Culture.rivendell">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== MIRKWOOD ==================== -->
+	<EquipmentRoster id="child_template_mirkwood_noble_male" culture="Culture.mirkwood">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mirkwood_noble_female" culture="Culture.mirkwood">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mirkwood_townsman_male" culture="Culture.mirkwood">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mirkwood_townsman_female" culture="Culture.mirkwood">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mirkwood_villager_male" culture="Culture.mirkwood">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mirkwood_villager_female" culture="Culture.mirkwood">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== LOTHLORIEN (reuses rivendell items) ==================== -->
+	<EquipmentRoster id="child_template_lothlorien_noble_male" culture="Culture.lothlorien">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lothlorien_noble_female" culture="Culture.lothlorien">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lothlorien_townsman_male" culture="Culture.lothlorien">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lothlorien_townsman_female" culture="Culture.lothlorien">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lothlorien_villager_male" culture="Culture.lothlorien">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lothlorien_villager_female" culture="Culture.lothlorien">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== ISENGARD ==================== -->
+	<EquipmentRoster id="child_template_isengard_noble_male" culture="Culture.isengard">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_isengard_noble_female" culture="Culture.isengard">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_isengard_townsman_male" culture="Culture.isengard">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_isengard_townsman_female" culture="Culture.isengard">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_isengard_villager_male" culture="Culture.isengard">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_isengard_villager_female" culture="Culture.isengard">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== GUNDABAD ==================== -->
+	<EquipmentRoster id="child_template_gundabad_noble_male" culture="Culture.gundabad">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gundabad_noble_female" culture="Culture.gundabad">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gundabad_townsman_male" culture="Culture.gundabad">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gundabad_townsman_female" culture="Culture.gundabad">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gundabad_villager_male" culture="Culture.gundabad">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_gundabad_villager_female" culture="Culture.gundabad">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== MORDOR ==================== -->
+	<EquipmentRoster id="child_template_mordor_noble_male" culture="Culture.mordor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mordor_noble_female" culture="Culture.mordor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mordor_townsman_male" culture="Culture.mordor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mordor_townsman_female" culture="Culture.mordor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mordor_villager_male" culture="Culture.mordor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mordor_villager_female" culture="Culture.mordor">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== DOL GULDUR ==================== -->
+	<EquipmentRoster id="child_template_dolguldur_noble_male" culture="Culture.dolguldur">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_dolguldur_noble_female" culture="Culture.dolguldur">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_dolguldur_townsman_male" culture="Culture.dolguldur">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_dolguldur_townsman_female" culture="Culture.dolguldur">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_dolguldur_villager_male" culture="Culture.dolguldur">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_dolguldur_villager_female" culture="Culture.dolguldur">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+	<!-- ==================== UMBAR (reuses gondor items) ==================== -->
+	<EquipmentRoster id="child_template_umbar_noble_male" culture="Culture.umbar">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_umbar_noble_female" culture="Culture.umbar">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_umbar_townsman_male" culture="Culture.umbar">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_umbar_townsman_female" culture="Culture.umbar">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_umbar_villager_male" culture="Culture.umbar">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_umbar_villager_female" culture="Culture.umbar">
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<EquipmentSet civilian="true">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
+	</EquipmentRoster>
+
+</EquipmentRosters>
