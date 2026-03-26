@@ -349,7 +349,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills_ruler</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -404,7 +404,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -435,7 +435,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -490,7 +490,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -522,7 +522,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -557,7 +557,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <face>
@@ -590,7 +590,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -629,7 +629,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -662,7 +662,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -695,7 +695,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_ruler</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -734,7 +734,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -788,7 +788,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -843,7 +843,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -897,7 +897,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -951,7 +951,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -984,7 +984,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1016,7 +1016,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1070,7 +1070,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1124,7 +1124,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1157,7 +1157,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1190,7 +1190,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1229,7 +1229,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1263,7 +1263,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1317,7 +1317,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1371,7 +1371,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1406,7 +1406,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1461,7 +1461,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1516,7 +1516,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1549,7 +1549,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_horse_archer_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1643,7 +1643,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1676,7 +1676,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1712,7 +1712,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1767,7 +1767,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1800,7 +1800,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1854,7 +1854,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1908,7 +1908,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1962,7 +1962,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2016,7 +2016,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2049,7 +2049,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2083,7 +2083,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2117,7 +2117,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2171,7 +2171,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2225,7 +2225,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2279,7 +2279,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2333,7 +2333,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2387,7 +2387,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2427,7 +2427,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2458,7 +2458,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2512,7 +2512,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2551,7 +2551,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2585,7 +2585,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2639,7 +2639,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2673,7 +2673,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2724,7 +2724,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2778,7 +2778,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2832,7 +2832,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2866,7 +2866,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2901,7 +2901,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2955,7 +2955,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3009,7 +3009,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3063,7 +3063,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3102,7 +3102,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3156,7 +3156,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3210,7 +3210,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3264,7 +3264,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3318,7 +3318,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_peltast_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3372,7 +3372,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4027,7 +4027,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4058,7 +4058,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4113,7 +4113,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4147,7 +4147,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4179,7 +4179,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4207,7 +4207,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4235,7 +4235,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4268,7 +4268,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4492,7 +4492,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4524,7 +4524,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4561,7 +4561,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4593,7 +4593,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4627,7 +4627,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4661,7 +4661,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4692,7 +4692,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4720,7 +4720,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4760,7 +4760,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4800,7 +4800,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4830,7 +4830,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4862,7 +4862,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4893,7 +4893,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4921,7 +4921,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4949,7 +4949,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5004,7 +5004,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5059,7 +5059,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5114,7 +5114,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5146,7 +5146,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5176,7 +5176,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5209,7 +5209,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5237,7 +5237,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5265,7 +5265,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5320,7 +5320,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5352,7 +5352,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5382,7 +5382,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5413,7 +5413,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5441,7 +5441,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -5472,7 +5472,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>

@@ -12,6 +12,8 @@
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
 			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -24,6 +26,8 @@
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
 			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -35,6 +39,8 @@
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
 			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -47,6 +53,8 @@
 			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
 			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -59,6 +67,8 @@
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_silver" />
 			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_silver" />
 			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_silver" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -112,6 +122,8 @@
 			<Equipment slot="Gloves" id="Item.thranduil_gloves" />
 			<Equipment slot="Leg" id="Item.thranduil_boots" />
 			<Equipment slot="Cape" id="Item.thranduil_shoulder" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -135,6 +147,8 @@
 			<Equipment slot="Gloves" id="Item.legolas_gloves" />
 			<Equipment slot="Leg" id="Item.legolas_boots" />
 			<Equipment slot="Cape" id="Item.legolas_shoulder" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

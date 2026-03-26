@@ -10,6 +10,8 @@
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+        <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_bat_template_medium_b" culture="Culture.empire">
@@ -20,6 +22,8 @@
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__heavy_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_sword_2h_a" />
+        <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_bat_template_medium_c" culture="Culture.empire">
@@ -31,6 +35,8 @@
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__medium_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_heavy_a" />
+        <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_bat_template_medium_d" culture="Culture.empire">
@@ -40,6 +46,8 @@
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_b" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+        <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_bat_template_medium_e" culture="Culture.empire">
@@ -51,6 +59,8 @@
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_lord_a" />
+        <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>
     </EquipmentRoster>
     <!-- Civilian Equipment Sets (Lord Civilian) -->

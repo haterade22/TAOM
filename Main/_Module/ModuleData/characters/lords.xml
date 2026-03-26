@@ -5488,7 +5488,7 @@
             <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_46_1" name="{=aom_lord_1_46_1_name}Seorgys" voice="ironic" age="19" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
+    <NPCCharacter id="lord_1_46_1" name="{=aom_lord_1_46_1_name}Seorgys" voice="ironic" age="19" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
         <face>
             <!--face_key
 			value="000e812b4000234d875c989a8860996a1879956888677896699a8679a86723690000000407a6889600001105000030a30000001f000000000000000000000000"
@@ -5541,7 +5541,7 @@
             <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_45_1" name="{=aom_lord_1_45_1_name}Vanyalos" age="40" voice="earnest" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+    <NPCCharacter id="lord_1_45_1" name="{=aom_lord_1_45_1_name}Vanyalos" age="40" voice="earnest" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
         <face>
             <BodyProperties version="4" age="40.11" weight="0.0023" build="0.5116" key="000AF80010FC0005B0801020FC60E000A74780010BBD1001654A350A7FFE930400A806030A97B6481F6410605020004000000000000017670000000045441003" />
             <hair_tags>
@@ -5582,7 +5582,7 @@
             <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_57_1" name="{=aom_lord_1_57_1_name}Sophalia" voice="curt" is_female="true" age="24" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_1_57_1" name="{=aom_lord_1_57_1_name}Sophalia" voice="curt" is_female="true" age="24" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
@@ -5625,7 +5625,7 @@
             <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_57_2" name="{=aom_lord_1_57_2_name}Jephalia" age="2" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
+    <NPCCharacter id="lord_1_57_2" name="{=aom_lord_1_57_2_name}Jephalia" age="2" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
             <!--face_key
 			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
@@ -5757,7 +5757,7 @@
             <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_73_1" name="{=aom_lord_1_73_1_name}Popilia" voice="softspoken" is_female="true" age="31" is_hero="true" culture="Culture.empire" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_1_73_1" name="{=aom_lord_1_73_1_name}Popilia" voice="softspoken" is_female="true" age="31" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <!--face_key
 			value="0011b45b402410088733440e80468f1fff4f9274c862b448941b5637963e5d3e000a68810b7247a6000000000000000000000000000000000000000000003101"
@@ -5799,7 +5799,7 @@
             <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_62_1" name="{=aom_lord_1_62_1_name}Arytha" age="35" voice="softspoken" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_1_62_1" name="{=aom_lord_1_62_1_name}Arytha" age="35" voice="softspoken" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <!--face_key
 			value="000ba52cc03c300d658918a66a565a686aaab3a57a485991a57a63282749b75400056aa402ae984800001105000030a30000001f000000000000000000001000"
@@ -5844,7 +5844,7 @@
             <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_30_2" name="{=aom_lord_1_30_2_name}Callinia" voice="softspoken" age="3" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_1_30_2" name="{=aom_lord_1_30_2_name}Callinia" voice="softspoken" age="3" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016c92e0000200dbc4597a5256457a995879939bbeca7a766c7893aa68945570006435409b1876400001105000030a30000001f000000000000000000002000"
@@ -5883,7 +5883,7 @@
             <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_30_3" name="{=aom_lord_1_30_3_name}Synesios" voice="softspoken" age="2" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
+    <NPCCharacter id="lord_1_30_3" name="{=aom_lord_1_30_3_name}Synesios" voice="softspoken" age="2" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
             <!--face_key
 			value="0016c92e0000200dbc4597a5256457a995879939bbeca7a766c7893aa68945570006435409b1876400001105000030a30000001f000000000000000000002000"
@@ -5925,7 +5925,7 @@
             <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_56_1" name="{=aom_lord_1_56_1_name}Gwenna" is_female="true" voice="curt" age="22" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
+    <NPCCharacter id="lord_1_56_1" name="{=aom_lord_1_56_1_name}Gwenna" is_female="true" voice="curt" age="22" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
             <!--face_key
 			value="0005c9258000100e63727ac8926a687a1a85878578987c9b437e6347545abcb7000aa894057768c900001105000030a30000001f000000000000000000004000"
@@ -5973,7 +5973,7 @@
             <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_56_2" name="{=aom_lord_1_56_2_name}Rustica" is_female="true" voice="softspoken" age="17" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_1_56_2" name="{=aom_lord_1_56_2_name}Rustica" is_female="true" voice="softspoken" age="17" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0005c9258000100e63727ac8926a687a1a85878578987c9b437e6347545abcb7000aa894057768c900001105000030a30000001f000000000000000000004000"
@@ -9013,7 +9013,7 @@
             <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_40_1" name="{=aom_lord_1_40_1_name}Catella" voice="earnest" is_female="True" default_group="Cavalry" age="33" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_1_40_1" name="{=aom_lord_1_40_1_name}Catella" voice="earnest" is_female="True" default_group="Cavalry" age="33" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <!--face_key
 			value="000e812b4000234d875c989a8860996a1879956888677896699a8679a86723690000000407a6889600001105000030a30000001f000000000000000000000000"
@@ -9058,7 +9058,7 @@
             <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_45_2" name="{=aom_lord_1_45_2_name}Brandir" age="27" voice="earnest" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
+    <NPCCharacter id="lord_1_45_2" name="{=aom_lord_1_45_2_name}Brandir" age="27" voice="earnest" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
         <face>
             <BodyProperties version="4" age="25.11" weight="0.1782" build="0.4236" key="0010D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002" />
             <hair_tags>
@@ -9104,7 +9104,7 @@
             <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_45_3" name="{=aom_lord_1_45_3_name}Borlong" age="25" voice="earnest" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
+    <NPCCharacter id="lord_1_45_3" name="{=aom_lord_1_45_3_name}Borlong" age="25" voice="earnest" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
         <face>
             <BodyProperties version="4" age="38.11" weight="0.4236" build="0.4236" key="000AD806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002" />
             <hair_tags>
@@ -9273,7 +9273,7 @@
             <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_52_1" name="{=aom_lord_1_52_1_name}Arador" age="23" voice="ironic" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_1_52_1" name="{=aom_lord_1_52_1_name}Arador" age="23" voice="ironic" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <BodyProperties version="4" age="30.08" weight="0.2269" build="0.7361" key="0008700E4000138897700694F0015167328081FFB2570E00756880008F96C80300AB36030A39320100000000000000000000000000000000000000003D3C1002" />
             <hair_tags>
@@ -9325,7 +9325,7 @@
             <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_52_2" name="{=aom_lord_1_52_2_name}Arvedui" age="22" voice="ironic" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_1_52_2" name="{=aom_lord_1_52_2_name}Arvedui" age="22" voice="ironic" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <BodyProperties version="4" age="38.11" weight="0.3981" build="0.4861" key="0020FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002" />
             <hair_tags>

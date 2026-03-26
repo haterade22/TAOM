@@ -11,6 +11,8 @@
 			<Equipment slot="Body" id="Item.haradrim_torso" />
 			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
 			<Equipment slot="Leg" id="Item.haradrim_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -23,6 +25,8 @@
 			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
 			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -35,6 +39,8 @@
 			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
 			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -48,6 +54,8 @@
 			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
 			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -60,6 +68,8 @@
 			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
 			<Equipment slot="Leg" id="Item.haradrim_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

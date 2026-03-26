@@ -12,6 +12,8 @@
 			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -24,6 +26,8 @@
 			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_b" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_b" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -36,6 +40,8 @@
 			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_c" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_c" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_c" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -47,6 +53,8 @@
 			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_d" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_d" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_d" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -58,6 +66,8 @@
 			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_e" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_e" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_e" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -108,6 +118,8 @@
 			<Equipment slot="Gloves" id="Item.sauron_vambraces" />
 			<Equipment slot="Leg" id="Item.sauron_greaves" />
 			<Equipment slot="Cape" id="Item.sauron_pauldrons" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -121,6 +133,8 @@
 			<Equipment slot="Gloves" id="Item.witch_king_gloves" />
 			<Equipment slot="Leg" id="Item.witch_king_boots" />
 			<Equipment slot="Cape" id="Item.witch_king_pauldrons" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -134,6 +148,8 @@
 			<Equipment slot="Gloves" id="Item.nazgul_gloves" />
 			<Equipment slot="Leg" id="Item.nazgul_boots" />
 			<Equipment slot="Cape" id="Item.nazgul_pauldrons" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -147,6 +163,8 @@
 			<Equipment slot="Gloves" id="Item.nazgul_v1_gloves" />
 			<Equipment slot="Leg" id="Item.nazgul_boots" />
 			<Equipment slot="Cape" id="Item.nazgul_v1_pauldrons" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

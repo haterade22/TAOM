@@ -12,6 +12,8 @@
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+		<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -24,6 +26,8 @@
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_b" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
+		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+		<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -36,6 +40,8 @@
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_c" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
+		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+		<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -48,6 +54,8 @@
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
+		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+		<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -60,6 +68,8 @@
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_b" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+		<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

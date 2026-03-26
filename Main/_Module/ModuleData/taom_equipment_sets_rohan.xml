@@ -12,6 +12,8 @@
 			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
 			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
 			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -24,6 +26,8 @@
 			<Equipment slot="Cape" id="Item.cts_rohan_cape3" />
 			<Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
 			<Equipment slot="Leg" id="Item.cts_rohan_boots1" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -36,6 +40,8 @@
 			<Equipment slot="Cape" id="Item.cts_rohan_cape2" />
 			<Equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
 			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -47,6 +53,8 @@
 			<Equipment slot="Cape" id="Item.roh_nbl_shldr_c" />
 			<Equipment slot="Gloves" id="Item.cts_rohan_armguard3" />
 			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -58,6 +66,8 @@
 			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
 			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
 			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -148,6 +158,8 @@
 			<Equipment slot="Gloves" id="Item.theoden_glove" />
 			<Equipment slot="Leg" id="Item.theoden_boots" />
 			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
