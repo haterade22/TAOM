@@ -31,6 +31,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/xslt-check [file]` | Validate XSLT against SandBoxCore vanilla XML |
 | `/migration-status` | Check v1.2 -> v1.3 migration progress |
 | `/scope-check [change]` | Assess whether a proposed change fits current work context |
+| `/build-fix [error]` | Incrementally fix dotnet build errors, one at a time, minimal diffs |
+| `/verify [quick\|full]` | Run build + test + git status and produce pass/fail report |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -49,6 +51,16 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 |-------|---------|
 | `taleworlds-researcher` | Decompile and analyze TaleWorlds DLLs |
 | `feature-builder` | Build features following TAOM architecture |
+
+## Model Routing
+
+| Task | Model | Why |
+|------|-------|-----|
+| Architecture decisions, complex design | **Opus** | Deepest reasoning for trade-off analysis |
+| Feature implementation, code review | **Sonnet** | Best coding model, fast enough for iteration |
+| Lightweight research, documentation, exploration | **Haiku** | 90% of Sonnet capability at 3x cost savings |
+| Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
+| Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |
 
 ## Doc Lookup
 
@@ -166,6 +178,10 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 | `session-start.sh` | SessionStart | Prints branch, recent commits, CHANGELOG summary on startup |
 | `pre-compact.sh` | PreCompact | Dumps modified files list before context compaction |
 | `log-agent.sh` | SubagentStart | Audit logs agent invocations to `.claude/logs/agent-audit.log` |
+| `config-protection.sh` | PreToolUse (Edit\|Write) | Blocks edits to CLAUDE.md, Directory.Build.props, ADRs without explicit request |
+| `suggest-compact.sh` | PreToolUse (*) | Suggests `/compact` after 50 tool calls, then every 25 |
+| `mcp-health-check.sh` | PreToolUse (mcp__*) | Blocks MCP calls to servers marked unhealthy in last 60s |
+| `mcp-health-mark.sh` | PostToolUseFailure (mcp__*) | Marks MCP server unhealthy after failed tool call, 60s backoff |
 
 ## Notes
 

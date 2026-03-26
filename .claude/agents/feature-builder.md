@@ -57,6 +57,16 @@ internal static class {FeatureName}IoC
 - AAA pattern: Arrange, Act, Assert
 - Coverage: 100% for services, 80%+ for hooks
 
+## Iterative Retrieval
+
+When exploring the codebase for patterns or related code, use progressive refinement:
+
+1. **Cycle 1 (Broad):** Search for similar features in `Main/Features/` to understand patterns.
+2. **Cycle 2 (Focused):** Read the specific interfaces, adapters, and services relevant to your feature.
+3. **Cycle 3 (Targeted):** Check how existing features wire into IoC.cs and SubModule.cs.
+
+Stop when you have enough context. Don't read everything — 3 high-relevance files beats 10 shallow reads.
+
 ## Integration
 After building the feature:
 1. Wire IoC into `Main/IoC.cs`

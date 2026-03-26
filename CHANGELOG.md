@@ -2,6 +2,21 @@
 
 ## 2026-03-26
 
+### Everything-Claude-Code Cherry-Pick: Developer Workflow Hooks & Skills
+
+Reviewed the everything-claude-code repository (125+ skills, 28 agents, 60 commands) and adapted the most valuable patterns for TAOM's C#/Bannerlord workflow.
+
+- **New skill:** `/build-fix [error]` — incremental dotnet build error fixer with C#/Bannerlord-specific error patterns (CS0246, CS0115, CS0234, etc.), one error at a time, minimal diffs
+- **New skill:** `/verify [quick|full]` — comprehensive build + test + git verification with structured pass/fail report
+- **New hook:** `config-protection.sh` (PreToolUse Edit|Write) — blocks AI edits to CLAUDE.md, Directory.Build.props, settings.json, and ADR files without explicit user request
+- **New hook:** `suggest-compact.sh` (PreToolUse *) — counts tool calls per session, suggests `/compact` at 50 calls then every 25 after
+- **New hook:** `mcp-health-check.sh` (PreToolUse mcp__*) — blocks MCP tool calls to servers marked unhealthy in last 60 seconds
+- **New hook:** `mcp-health-mark.sh` (PostToolUseFailure mcp__*) — marks MCP server as unhealthy after failed tool call, 60s backoff
+- **Updated hook:** `check-build-before-commit.sh` — added `--no-verify` flag blocking to protect pre-commit hooks
+- **Updated agents:** `taleworlds-researcher.md` and `feature-builder.md` — added iterative retrieval (3-cycle progressive refinement) guidance
+- **Updated:** `CLAUDE.md` with model routing table (Opus/Sonnet/Haiku guidance)
+- **Updated:** `settings.json` with 4 new hook entries (config-protection, suggest-compact, mcp-health-check, mcp-health-mark)
+
 ### Claude Code Session Hooks, Agent Audit Logging & Scope-Check Skill
 
 Cherry-picked ideas from the Claude Code Game Studios template and adapted them to TAOM's workflow. Adds session awareness, context recovery, agent tracking, and a scope assessment tool.

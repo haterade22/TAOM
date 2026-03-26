@@ -20,6 +20,33 @@
             "command": ".claude/hooks/check-build-before-commit.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/config-protection.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/suggest-compact.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/mcp-health-check.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -29,6 +56,17 @@
           {
             "type": "command",
             "command": ".claude/hooks/notify-csharp-edit.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/mcp-health-mark.sh"
           }
         ]
       }

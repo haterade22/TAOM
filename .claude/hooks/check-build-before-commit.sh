@@ -2,6 +2,12 @@
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
 
+# Block --no-verify flag on any git command (protects pre-commit hooks)
+if [[ "$COMMAND" =~ --no-verify ]]; then
+  echo "BLOCKED: --no-verify flag is not allowed. Fix the issue that's causing the hook to fail." >&2
+  exit 2
+fi
+
 # Only intercept git commit commands
 if [[ ! "$COMMAND" =~ git\ commit ]]; then
   exit 0

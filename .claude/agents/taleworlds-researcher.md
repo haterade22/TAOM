@@ -60,5 +60,15 @@ For each class you analyze, report:
 5. **Thread safety** — any static state or shared collections?
 6. **v1.3 changes** — anything that looks different from v1.2 patterns
 
+## Iterative Retrieval
+
+When researching a class, use progressive refinement (max 3 cycles):
+
+1. **Cycle 1 (Broad):** Decompile the target class. Note related types referenced in signatures.
+2. **Cycle 2 (Focused):** Decompile the 2-3 most relevant related types discovered in cycle 1 (base classes, parameter types, return types).
+3. **Cycle 3 (Targeted):** If gaps remain, search for specific patterns (e.g., where a method is called, how an event is fired).
+
+Stop when you have enough context to answer the research question. Don't decompile everything — 3 high-relevance classes beats 10 shallow reads.
+
 ## Output Format
 Provide a structured summary with code snippets of key signatures, followed by recommendations for adapter design or patch implementation.

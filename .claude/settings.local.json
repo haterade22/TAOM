@@ -14,7 +14,8 @@
       "Bash(findstr:*)",
       "Bash(ilspycmd:*)",
       "Bash(Select-String:*)",
-      "Bash(powershell.exe -ExecutionPolicy Bypass -File ./build.ps1)"
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File ./build.ps1)",
+      "Edit(/.claude/skills/verify/**)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
