@@ -11,6 +11,7 @@ using TAOM.Features.FactionMap;
 using TAOM.Features.InitialChildGeneration;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.RaceAge;
+using TAOM.Features.Execution;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM;
@@ -36,6 +37,7 @@ public static class IoC
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
         DiplomacyIoC.RegisterDiplomacyFeature(container);
         RaceAgeIoC.RegisterRaceAgeFeature(container);
+        ExecutionIoC.RegisterExecutionFeature(container);
 
         _container = container;
     }

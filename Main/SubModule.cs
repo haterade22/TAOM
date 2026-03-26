@@ -14,6 +14,9 @@ using TAOM.Adapters;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
+using TAOM.Features.Execution;
+using TAOM.Features.Execution.Hooks;
+using TAOM.Features.Execution.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
 using TAOM.Features.TroopProgression;
@@ -44,6 +47,9 @@ public class SubModule : MBSubModuleBase
         var allianceHook = IoC.Resolve<IOnAllianceAction>();
         var peaceHook = IoC.Resolve<IOnPeaceAction>();
         DiplomacyIoC.InitializeHooks(allianceHook, peaceHook);
+
+        var executionHook = IoC.Resolve<IOnExecutionAction>();
+        ExecutionIoC.InitializeHooks(executionHook);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -92,6 +98,9 @@ public class SubModule : MBSubModuleBase
 
             var wotrLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
+
+            var executionAction = IoC.Resolve<IOnExecutionAction>();
+            campaignStarter.AddModel(new TaomExecutionRelationModel(executionAction));
         }
     }
 
@@ -113,6 +122,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
         _harmony.PatchCategory("Patch11_Diplomacy");
         _harmony.PatchCategory("Patch12_WarOfTheRing");
+        _harmony.PatchCategory("Patch14_Execution");
     }
 
     protected override void OnSubModuleUnloaded()

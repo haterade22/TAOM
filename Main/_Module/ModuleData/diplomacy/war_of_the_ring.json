@@ -1,14 +1,14 @@
 {
   "enabled": true,
   "phase1": {
-    "triggerDay": 30,
+    "triggerDay": 1,
     "wars": [
       { "attacker": "isengard", "defender": "vlandia" },
       { "attacker": "empire", "defender": "vlandia" }
     ]
   },
   "phase2": {
-    "triggerDay": 45,
+    "triggerDay": 1,
     "autoWarBetweenHostileTiers": true,
     "blockPeaceBetweenHostileTiers": true,
     "wars": []
