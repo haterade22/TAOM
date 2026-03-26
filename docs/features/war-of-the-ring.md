@@ -39,7 +39,7 @@ At the configured day (default: 1), the system:
 
 **What gets blocked:** Any pair with `Hostile` relationship tier cannot make peace. This includes Gondor-Mordor, Rohan-Isengard, Erebor-Gundabad, all Elven kingdoms vs all evil kingdoms, etc.
 
-**What stays free:** Southern kingdoms (Harad, Umbar, Khand, Easterlings) have `Natural` or `Neutral` relationships with each other. They are NOT blocked from making peace with each other. Mordor calls them to war via vanilla call-to-war mechanics, but they can still fight amongst themselves.
+**What stays free:** Southern kingdoms (Harad, Umbar, Khand) have `Natural` or `Neutral` relationships with each other. They are NOT blocked from making peace with each other. Note: Rhun (Easterlings) is now a Dark Power with Permanent alliances to Mordor, Isengard, Gundabad, and Dol Guldur — it is fully hostile to all Free Peoples and cannot make peace with them.
 
 ## Three-Layer Peace Blocking
 
@@ -221,7 +221,7 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 2. Start a new campaign
 3. Phase 1 triggers on Day 2 — check Rohan is at war with Isengard and Dunland
 4. Phase 2 triggers on Day 5 — check all hostile pairs are at war, peace proposals blocked
-5. Verify Harad/Umbar/Khand can still make peace with each other
+5. Verify Harad/Umbar/Khand can still make peace with each other (Rhun cannot — it's a Dark Power)
 
 ## How to Add New War Phases
 
@@ -241,12 +241,12 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 | rivendell | Rivendell | Free |
 | lothlorien | Lothlorien | Free |
 | mirkwood | Mirkwood | Free |
-| empire_s | Mordor | Evil |
-| isengard | Isengard | Evil |
-| gundabad | Gundabad | Evil |
-| dolguldur | Dol Guldur | Evil |
-| empire | Dunland | Evil |
+| empire_s | Mordor | Dark Power |
+| isengard | Isengard | Dark Power |
+| gundabad | Gundabad | Dark Power |
+| dolguldur | Dol Guldur | Dark Power |
+| khuzait | Easterlings (Rhun) | Dark Power |
+| empire | Dunland | Evil (independent) |
 | aserai | Harad | Southern |
-| khuzait | Easterlings | Southern |
 | umbar | Umbar | Southern |
 | battania | Khand | Neutral |

@@ -15,7 +15,7 @@
 	<string id="str_faction_noble_name_with_title.empire" text="{=taom_str_faction_noble_name_with_title.empire}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.empire" text="{=taom_str_adjective_for_faction.empire}Dunlending" />
 	<string id="str_short_term_for_faction.empire" text="{=taom_str_short_term_for_faction.empire}Dunland" />
-	<string id="str_faction_formal_name_for_culture.empire" text="{=taom_str_faction_formal_name_for_culture.empire}The Clans of Dunland" />
+	<string id="str_faction_formal_name_for_culture.empire" text="{=taom_str_faction_formal_name_for_culture.empire}Clans of Dunland" />
 	<string id="str_faction_informal_name_for_culture.empire" text="{=taom_str_faction_informal_name_for_culture.empire}Dunland" />
 	<string id="str_neutral_term_for_culture.empire" text="{=taom_str_neutral_term_for_culture.empire}Dunlendings" />
 
@@ -29,7 +29,7 @@
 	<string id="str_faction_noble_name_with_title.vlandia" text="{=taom_str_faction_noble_name_with_title.vlandia}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.vlandia" text="{=taom_str_adjective_for_faction.vlandia}Rohirric" />
 	<string id="str_short_term_for_faction.vlandia" text="{=taom_str_short_term_for_faction.vlandia}Rider" />
-	<string id="str_faction_formal_name_for_culture.vlandia" text="{=taom_str_faction_formal_name_for_culture.vlandia}The Riddermark" />
+	<string id="str_faction_formal_name_for_culture.vlandia" text="{=taom_str_faction_formal_name_for_culture.vlandia}Riddermark" />
 	<string id="str_faction_informal_name_for_culture.vlandia" text="{=taom_str_faction_informal_name_for_culture.vlandia}Rohan" />
 	<string id="str_neutral_term_for_culture.vlandia" text="{=taom_str_neutral_term_for_culture.vlandia}Rohirrim" />
 
@@ -43,7 +43,7 @@
 	<string id="str_faction_noble_name_with_title.battania" text="{=taom_str_faction_noble_name_with_title.battania}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.battania" text="{=taom_str_adjective_for_faction.battania}Variag" />
 	<string id="str_short_term_for_faction.battania" text="{=taom_str_short_term_for_faction.battania}Variag" />
-	<string id="str_faction_formal_name_for_culture.battania" text="{=taom_str_faction_formal_name_for_culture.battania}The Variags of Khand" />
+	<string id="str_faction_formal_name_for_culture.battania" text="{=taom_str_faction_formal_name_for_culture.battania}Variags of Khand" />
 	<string id="str_faction_informal_name_for_culture.battania" text="{=taom_str_faction_informal_name_for_culture.battania}Khand" />
 	<string id="str_neutral_term_for_culture.battania" text="{=taom_str_neutral_term_for_culture.battania}Variags" />
 
@@ -57,7 +57,7 @@
 	<string id="str_faction_noble_name_with_title.khuzait" text="{=taom_str_faction_noble_name_with_title.khuzait}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.khuzait" text="{=taom_str_adjective_for_faction.khuzait}Easterling" />
 	<string id="str_short_term_for_faction.khuzait" text="{=taom_str_short_term_for_faction.khuzait}Rhun" />
-	<string id="str_faction_formal_name_for_culture.khuzait" text="{=taom_str_faction_formal_name_for_culture.khuzait}The Easterlings of Rhûn" />
+	<string id="str_faction_formal_name_for_culture.khuzait" text="{=taom_str_faction_formal_name_for_culture.khuzait}Easterlings of Rhûn" />
 	<string id="str_faction_informal_name_for_culture.khuzait" text="{=taom_str_faction_informal_name_for_culture.khuzait}Rhûn" />
 	<string id="str_neutral_term_for_culture.khuzait" text="{=taom_str_neutral_term_for_culture.khuzait}Easterlings" />
 
@@ -71,7 +71,7 @@
 	<string id="str_faction_noble_name_with_title.aserai" text="{=taom_str_faction_noble_name_with_title.aserai}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.aserai" text="{=taom_str_adjective_for_faction.aserai}Haradrim" />
 	<string id="str_short_term_for_faction.aserai" text="{=taom_str_short_term_for_faction.aserai}Harad" />
-	<string id="str_faction_formal_name_for_culture.aserai" text="{=taom_str_faction_formal_name_for_culture.aserai}The Kingdom of Harad" />
+	<string id="str_faction_formal_name_for_culture.aserai" text="{=taom_str_faction_formal_name_for_culture.aserai}Kingdom of Harad" />
 	<string id="str_faction_informal_name_for_culture.aserai" text="{=taom_str_faction_informal_name_for_culture.aserai}Harad" />
 	<string id="str_neutral_term_for_culture.aserai" text="{=taom_str_neutral_term_for_culture.aserai}Haradrim" />
 
@@ -103,7 +103,7 @@
 	<string id="str_faction_noble_name_with_title.dolguldur" text="{=taom_str_faction_noble_name_with_title.dolguldur}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.dolguldur" text="{=taom_str_adjective_for_faction.dolguldur}Guldurian" />
 	<string id="str_short_term_for_faction.dolguldur" text="{=taom_str_short_term_for_faction.dolguldur}Dol Guldur" />
-	<string id="str_faction_formal_name_for_culture.dolguldur" text="{=taom_str_faction_formal_name_for_culture.dolguldur}The Forces of Dol Guldur" />
+	<string id="str_faction_formal_name_for_culture.dolguldur" text="{=taom_str_faction_formal_name_for_culture.dolguldur}Forces of Dol Guldur" />
 	<string id="str_faction_informal_name_for_culture.dolguldur" text="{=taom_str_faction_informal_name_for_culture.dolguldur}Dol Guldur" />
 	<string id="str_neutral_term_for_culture.dolguldur" text="{=taom_str_neutral_term_for_culture.dolguldur}Servants of Dol Guldur" />
 
@@ -117,7 +117,7 @@
 	<string id="str_faction_noble_name_with_title.isengard" text="{=taom_str_faction_noble_name_with_title.isengard}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.isengard" text="{=taom_str_adjective_for_faction.isengard}Isengard" />
 	<string id="str_short_term_for_faction.isengard" text="{=taom_str_short_term_for_faction.isengard}Isengard" />
-	<string id="str_faction_formal_name_for_culture.isengard" text="{=taom_str_faction_formal_name_for_culture.isengard}The Forces of Isengard" />
+	<string id="str_faction_formal_name_for_culture.isengard" text="{=taom_str_faction_formal_name_for_culture.isengard}Forces of Isengard" />
 	<string id="str_faction_informal_name_for_culture.isengard" text="{=taom_str_faction_informal_name_for_culture.isengard}Isengard" />
 	<string id="str_neutral_term_for_culture.isengard" text="{=taom_str_neutral_term_for_culture.isengard}Isengard Forces" />
 
@@ -131,7 +131,7 @@
 	<string id="str_faction_noble_name_with_title.gundabad" text="{=taom_str_faction_noble_name_with_title.gundabad}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.gundabad" text="{=taom_str_adjective_for_faction.gundabad}Gundabad" />
 	<string id="str_short_term_for_faction.gundabad" text="{=taom_str_short_term_for_faction.gundabad}Gundabad" />
-	<string id="str_faction_formal_name_for_culture.gundabad" text="{=taom_str_faction_formal_name_for_culture.gundabad}The Orcs of Gundabad" />
+	<string id="str_faction_formal_name_for_culture.gundabad" text="{=taom_str_faction_formal_name_for_culture.gundabad}Orcs of Gundabad" />
 	<string id="str_faction_informal_name_for_culture.gundabad" text="{=taom_str_faction_informal_name_for_culture.gundabad}Gundabad" />
 	<string id="str_neutral_term_for_culture.gundabad" text="{=taom_str_neutral_term_for_culture.gundabad}Gundabad Orcs" />
 
@@ -145,7 +145,7 @@
 	<string id="str_faction_noble_name_with_title.umbar" text="{=taom_str_faction_noble_name_with_title.umbar}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.umbar" text="{=taom_str_adjective_for_faction.umbar}Corsair" />
 	<string id="str_short_term_for_faction.umbar" text="{=taom_str_short_term_for_faction.umbar}Umbar" />
-	<string id="str_faction_formal_name_for_culture.umbar" text="{=taom_str_faction_formal_name_for_culture.umbar}The Corsairs of Umbar" />
+	<string id="str_faction_formal_name_for_culture.umbar" text="{=taom_str_faction_formal_name_for_culture.umbar}Corsairs of Umbar" />
 	<string id="str_faction_informal_name_for_culture.umbar" text="{=taom_str_faction_informal_name_for_culture.umbar}Umbar" />
 	<string id="str_neutral_term_for_culture.umbar" text="{=taom_str_neutral_term_for_culture.umbar}Corsairs" />
 
@@ -201,7 +201,7 @@
 	<string id="str_faction_noble_name_with_title.lothlorien" text="{=taom_str_faction_noble_name_with_title.lothlorien}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.lothlorien" text="{=taom_str_adjective_for_faction.lothlorien}Galadhrim" />
 	<string id="str_short_term_for_faction.lothlorien" text="{=taom_str_short_term_for_faction.lothlorien}Elf" />
-	<string id="str_faction_formal_name_for_culture.lothlorien" text="{=taom_str_faction_formal_name_for_culture.lothlorien}The Golden Wood" />
+	<string id="str_faction_formal_name_for_culture.lothlorien" text="{=taom_str_faction_formal_name_for_culture.lothlorien}Golden Wood" />
 	<string id="str_faction_informal_name_for_culture.lothlorien" text="{=taom_str_faction_informal_name_for_culture.lothlorien}Lothlórien" />
 	<string id="str_neutral_term_for_culture.lothlorien" text="{=taom_str_neutral_term_for_culture.lothlorien}Elves of the Golden Wood" />
 
@@ -215,7 +215,7 @@
 	<string id="str_faction_noble_name_with_title.rivendell" text="{=taom_str_faction_noble_name_with_title.rivendell}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.rivendell" text="{=taom_str_adjective_for_faction.rivendell}Rivendellian" />
 	<string id="str_short_term_for_faction.rivendell" text="{=taom_str_short_term_for_faction.rivendell}Elf" />
-	<string id="str_faction_formal_name_for_culture.rivendell" text="{=taom_str_faction_formal_name_for_culture.rivendell}The Last Homely House" />
+	<string id="str_faction_formal_name_for_culture.rivendell" text="{=taom_str_faction_formal_name_for_culture.rivendell}Last Homely House" />
 	<string id="str_faction_informal_name_for_culture.rivendell" text="{=taom_str_faction_informal_name_for_culture.rivendell}Rivendell" />
 	<string id="str_neutral_term_for_culture.rivendell" text="{=taom_str_neutral_term_for_culture.rivendell}Elves of Rivendell" />
 
@@ -325,6 +325,56 @@
 	<string id="str_player_father_name.mordor" text="{=taom_str_player_father_name.mordor}Gorbag" />
 	<string id="str_player_mother_name.mordor" text="{=taom_str_player_mother_name.mordor}Zhelob" />
 
+	<!-- ============================================== -->
+	<!-- Vanilla String Overrides (remove "The" prefix) -->
+	<!-- ============================================== -->
+
+	<!-- SandBox action_strings overrides -->
+	<string id="str_factions_make_peace_news" text="{=taom_peace_news}{FACTION1} and {FACTION2} have made peace." />
+	<string id="str_factions_declare_war_news" text="{=taom_war_news}{RULER_NAME} of {FACTION1_NAME} declares war on {FACTION2_NAME}." />
+	<string id="str_factions_declare_war_news_direct" text="{=taom_war_news_direct}{FACTION1_NAME} declares war on {FACTION2_NAME}." />
+	<string id="str_party_besieging_news_with_link" text="{=taom_siege_party_link}{TOWN_NAME} has been besieged by forces led by {LORD.LINK} of {FACTION_NAME}!" />
+	<string id="str_party_besieging_news" text="{=taom_siege_party}{TOWN_NAME} has been besieged by forces led by {LORD.LINK} of {FACTION_NAME}!" />
+	<string id="str_army_besieging_news_with_link" text="{=taom_siege_army_link}{TOWN_NAME} has been besieged by the army led by {LORD.LINK} of {FACTION_NAME}!" />
+	<string id="str_army_besieging_news" text="{=taom_siege_army}{TOWN_NAME} has been besieged by army led by {LORD.LINK} of {FACTION_NAME}!" />
+	<string id="str_army_raiding_news" text="{=taom_raid_army}{SETTLEMENT} is raided by the army led by {LORD.LINK} of {FACTION_NAME}" />
+	<string id="str_party_raiding_news" text="{=taom_raid_party}{SETTLEMENT} is raided by {LORD.LINK} of {FACTION_NAME}" />
+	<string id="str_destroy_party_news" text="{=taom_destroy_party}{VICTOR_PARTY} of {VICTOR_FACTION} defeats {DEFEATED_PARTY} of {DEFEATED_FACTION}." />
+	<string id="str_notification_secondary_peace" text="{=taom_secondary_peace}{FACTION1} and {FACTION2} have made peace." />
+	<string id="str_notification_change_faction" text="{=taom_change_faction}{CLAN_NAME} clan has joined {FACTION}." />
+	<string id="str_notification_mercenary_contract" text="{=taom_merc_contract}{CLAN} has contracted to fight alongside {KINGDOM}." />
+	<string id="str_notification_mercenary_contract_end" text="{=taom_merc_end}{CLAN} no longer serves {KINGDOM}." />
+
+	<!-- SandBox comment_strings overrides -->
+	<string id="str_comment_minor_faction_leader_introduces_self.default" text="{=taom_minor_intro}I am {CONVERSATION_CHARACTER.LINK}, of {FACTION}." />
+
+	<!-- Native module_strings overrides (faction titles) -->
+	<string id="str_kingdom_decision_start_alliance_desc" text="{=taom_alliance_desc}Form an Alliance with {FACTION}" />
+	<string id="str_hero_rank_of_faction.0" text="{=taom_vassal_rank}Vassal of {FACTION_INFORMAL_NAME}" />
+	<string id="str_hero_rank_of_faction.1" text="{=taom_ruler_rank}Ruler of {FACTION_INFORMAL_NAME}" />
+	<string id="str_hero_rank_of_faction_nobleman" text="{=taom_noble_rank}Noble of {FACTION_INFORMAL_NAME}" />
+	<string id="str_hero_rank_of_faction_mercenary" text="{=taom_merc_rank}Mercenary fighting for {FACTION_INFORMAL_NAME}" />
+
+	<!-- Native module_strings overrides (call to war) -->
+	<string id="str_kingdom_decision_accept_call_to_war_agreement_desc" text="{=taom_answer_call}Answer the Call of {CALLING_KINGDOM} to Declare War on {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+	<string id="str_kingdom_decision_propose_call_to_war_agreement_desc" text="{=taom_propose_call}Call on {CALLED_KINGDOM} to Declare War on {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+	<!-- Native module_strings overrides (peace warning prompts) -->
+	<string id="str_you_have_encountered_settlement_to_raid_with_resisting_on_peace" text="{=taom_raid_resist_peace}You have arrived at {SETTLEMENT} to raid it. Some of the residents have gathered to resist you. Raiding this village will cause a war with {KINGDOM}." />
+	<string id="str_you_have_encountered_settlement_to_force_supplies_with_resisting_on_peace" text="{=taom_force_supply_peace}As you attempt to force the villagers to give you goods, some of the residents gather to resist you. Fighting them will cause a war with {KINGDOM}." />
+	<string id="str_you_have_encountered_settlement_to_force_volunteers_with_resisting_on_peace" text="{=taom_force_vol_peace}As you attempt to force the notables to give you recruits, some of the residents gather to resist you. Fighting them will cause a war with {KINGDOM}." />
+	<string id="str_you_have_encountered_settlement_to_raid_no_resisting_on_peace" text="{=taom_raid_noresist_peace}You have arrived at {SETTLEMENT} to raid it. You do not meet any resistance. Raiding this village will cause a war with {KINGDOM}." />
+	<string id="str_you_have_encountered_PARTY_on_peace" text="{=taom_encounter_peace}You have encountered {PARTY}. Fighting them will cause a war with {KINGDOM}." />
+
+	<!-- DLL localization token overrides (diplomacy/policy messages) -->
+	<!-- These reuse the same localization tokens as vanilla C# code to override at load time -->
+	<string id="taom_alliance_formed" text="{=0cdXddA9}{KINGDOM1_LINK} has formed an alliance with {KINGDOM2_LINK}." />
+	<string id="taom_no_longer_enemies" text="{=1rbg3Hz2}{FACTION_1} and {FACTION_2} are no longer enemies." />
+	<string id="taom_policy_stop" text="{=2BVDp7Tg}{KINGDOM} will stop {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_policy_start" text="{=Lbs2bNlg}{KINGDOM} will start {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_policy_continue" text="{=jnYwiCAz}{KINGDOM} will continue {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_policy_reject" text="{=faUooB7V}{KINGDOM} will not be {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
 	<!-- Erebor -->
 	<string id="str_faction_official.erebor" text="{=taom_str_faction_official.erebor}a noble dwarf" />
 	<string id="str_faction_official.erebor_f" text="{=taom_str_faction_official.erebor_f}a lady dwarf" />
@@ -335,7 +385,7 @@
 	<string id="str_faction_noble_name_with_title.erebor" text="{=taom_str_faction_noble_name_with_title.erebor}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.erebor" text="{=taom_str_adjective_for_faction.erebor}Ereborian" />
 	<string id="str_short_term_for_faction.erebor" text="{=taom_str_short_term_for_faction.erebor}Dwarf" />
-	<string id="str_faction_formal_name_for_culture.erebor" text="{=taom_str_faction_formal_name_for_culture.erebor}The Kingdom Under the Mountain" />
+	<string id="str_faction_formal_name_for_culture.erebor" text="{=taom_str_faction_formal_name_for_culture.erebor}Kingdom Under the Mountain" />
 	<string id="str_faction_informal_name_for_culture.erebor" text="{=taom_str_faction_informal_name_for_culture.erebor}Erebor" />
 	<string id="str_neutral_term_for_culture.erebor" text="{=taom_str_neutral_term_for_culture.erebor}Dwarves of Erebor" />
 

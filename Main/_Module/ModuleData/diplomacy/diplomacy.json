@@ -26,7 +26,10 @@
     { "kingdomA": "isengard", "kingdomB": "dolguldur", "tier": "Permanent" },
 
     { "kingdomA": "empire_s", "kingdomB": "aserai", "tier": "Natural" },
-    { "kingdomA": "empire_s", "kingdomB": "khuzait", "tier": "Natural" },
+    { "kingdomA": "empire_s", "kingdomB": "khuzait", "tier": "Permanent" },
+    { "kingdomA": "khuzait", "kingdomB": "isengard", "tier": "Permanent" },
+    { "kingdomA": "khuzait", "kingdomB": "gundabad", "tier": "Permanent" },
+    { "kingdomA": "khuzait", "kingdomB": "dolguldur", "tier": "Permanent" },
     { "kingdomA": "empire_s", "kingdomB": "umbar", "tier": "Natural" },
 
     { "kingdomA": "empire_w", "kingdomB": "empire_s", "tier": "Hostile" },
@@ -57,6 +60,17 @@
     { "kingdomA": "mirkwood", "kingdomB": "dolguldur", "tier": "Hostile" },
     { "kingdomA": "mirkwood", "kingdomB": "gundabad", "tier": "Hostile" },
     { "kingdomA": "mirkwood", "kingdomB": "isengard", "tier": "Hostile" },
-    { "kingdomA": "empire", "kingdomB": "vlandia", "tier": "Hostile" }
+    { "kingdomA": "empire", "kingdomB": "vlandia", "tier": "Hostile" },
+
+    { "kingdomA": "empire_w", "kingdomB": "aserai", "tier": "Hostile" },
+    { "kingdomA": "empire_w", "kingdomB": "empire", "tier": "Hostile" },
+    { "kingdomA": "vlandia", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "erebor", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "sturgia", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "rivendell", "kingdomB": "empire", "tier": "Hostile" },
+    { "kingdomA": "rivendell", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "lothlorien", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "mirkwood", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "empire_w", "kingdomB": "khuzait", "tier": "Hostile" }
   ]
 }

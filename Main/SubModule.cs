@@ -88,6 +88,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new RaceAgeBehavior(raceAgeService, heroAgeAdapter, raceAgeLogger));
             campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
             campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
+            campaignStarter.AddModel(new TaomHeroCreationModel());
 
             var diplomacyService = IoC.Resolve<IDiplomacyService>();
             var wotrService = IoC.Resolve<IWarOfTheRingService>();
@@ -122,6 +123,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
         _harmony.PatchCategory("Patch11_Diplomacy");
         _harmony.PatchCategory("Patch12_WarOfTheRing");
+        _harmony.PatchCategory("Patch13_RaceAge");
         _harmony.PatchCategory("Patch14_Execution");
     }
 

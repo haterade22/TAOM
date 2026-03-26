@@ -2,6 +2,16 @@
 
 ## 2026-03-25
 
+### Remove "The" Prefix from Kingdom/Faction Names (#38)
+
+Fixed in-game messages displaying awkward text like "The Erebor have formed an alliance with the Imladris" and "Daeron of the Mirkwood". The "The" came from two sources: TAOM's own formal name strings and vanilla localization templates designed for plural names like "Vlandians".
+
+- **Stripped "The"** from 12 `str_faction_formal_name_for_culture.*` strings (e.g., "The Clans of Dunland" → "Clans of Dunland")
+- **Overrode ~30 vanilla localization templates** in `taom_module_strings.xml` using GameText last-write-wins mechanism
+- **Categories overridden:** diplomacy notifications, siege/raid news, battle results, faction titles, policy decisions, alliance/war decisions, peace warning prompts, minor faction dialogue
+- **Grammar fixes:** adjusted plural verbs to singular ("have formed" → "has formed") for proper noun kingdom names
+- **DLL token overrides** for policy/alliance messages (reuse same `{=TOKEN}` IDs) — needs in-game verification
+
 ### Alignment-Aware Execution System
 
 Replaced vanilla Bannerlord's one-size-fits-all lord execution penalties with LOTR-thematic alignment logic. Free Peoples executing servants of Sauron now incur zero honor or relation penalties with allies. Same-alignment executions are treated as kinslaying with 50% harsher penalties.
