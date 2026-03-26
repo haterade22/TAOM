@@ -9,8 +9,10 @@ public class TaomHeroCreationModel : DefaultHeroCreationModel
     public override CharacterObject GetCharacterTemplateForOffspring(
         Hero mother, Hero father, bool isOffspringFemale)
     {
-        // LOTR: Father's race always determines the child's race
-        // Eldarion (Aragorn + Arwen) is a Man, not an Elf
+        // LOTR: Children inherit the same-sex parent's race and appearance
+        // Male children take after the father, female children take after the mother
+        if (isOffspringFemale)
+            return mother.CharacterObject;
         return father.CharacterObject;
     }
 }

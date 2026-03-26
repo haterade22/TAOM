@@ -2,26 +2,17 @@
 
 ## Overview
 
-TAOM overrides Bannerlord's offspring race system so that children always inherit their father's race. This is lore-accurate for Middle-earth — Eldarion, son of Aragorn (Man) and Arwen (Elf), is a Man of the Dunedain, not an Elf.
+TAOM uses same-sex parent race inheritance: male children inherit the father's race and appearance, female children inherit the mother's race and facial features. This is thematically appropriate for Middle-earth — sons take after their fathers, daughters take after their mothers.
 
 ## Why This Exists
 
-Vanilla Bannerlord determines offspring race by same-sex parent:
-- Male child → father's `CharacterObject` (and race)
-- Female child → mother's `CharacterObject` (and race)
-
-This creates inconsistencies in LOTR:
-- A daughter of a Human lord and Elven lady would be classified as an Elf
-- A son of the same couple would be classified as a Human
-- Siblings would have different races
-
-Additionally, vanilla includes a `Debug.SilentAssert` that checks `mother.Race == father.Race`, which fires on every cross-race birth. While not a crash in release builds, it triggers debugger breakpoints and logs noise.
+Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.SilentAssert` that checks `mother.Race == father.Race`, which fires on every cross-race birth (e.g., Human + Elf). While not a crash in release builds, it triggers debugger breakpoints and logs noise. TAOM removes this assert since cross-race couples are expected in Middle-earth.
 
 ## Architecture
 
 ### Two-Layer Solution
 
-1. **TaomHeroCreationModel** (GameModel override) — Overrides `GetCharacterTemplateForOffspring` to always return `father.CharacterObject`, regardless of child gender. The child inherits the father's race, culture template, and character properties.
+1. **TaomHeroCreationModel** (GameModel override) — Overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic.
 
 2. **DeliverOffSpring_RaceAssert_Patch** (Harmony Transpiler) — Surgically removes the `Debug.SilentAssert(mother.Race == father.Race)` call from `HeroCreator.DeliverOffSpring` at IL level. The assert checks the parents' races (not the child's), so it still fires for cross-race couples even with the GameModel override.
 
