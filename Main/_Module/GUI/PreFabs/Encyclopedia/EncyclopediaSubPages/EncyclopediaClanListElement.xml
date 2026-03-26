@@ -1,0 +1,18 @@
+<Prefab>
+  <Constants>
+    <Constant Name="ElementSize" Value="88" />
+    <Constant Name="BannerInnerSize" Value="74" />
+    <Constant Name="NameOffsetY" Value="92" />
+    <Constant Name="NameHeight" Value="54" />
+  </Constants>
+  <Window>
+    <ButtonWidget DoNotPassEventsToChildren="true" Command.Click="ExecuteLink" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!ElementSize" SuggestedWidth="!ElementSize" HorizontalAlignment="Center" Brush="Encyclopedia.SubPage.Element.Clan.List.Button" UpdateChildrenStates="true">
+      <Children>
+        <MaskedTextureWidget Id="ElementImage" DataSource="{ImageIdentifier}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!BannerInnerSize" SuggestedHeight="!BannerInnerSize" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush="Encyclopedia.Clan.List.Banner.Diamond" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!ElementSize" SuggestedHeight="!ElementSize" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.SubPage.Element.Clan.List.Border" />
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="!NameHeight" VerticalAlignment="Top" PositionYOffset="!NameOffsetY" Text="@NameText" Brush="Encyclopedia.SubPage.Element.Name.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Top" />
+        <HintWidget HeightSizePolicy="StretchToParent" WidthSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+      </Children>
+    </ButtonWidget>
+  </Window>
+</Prefab>

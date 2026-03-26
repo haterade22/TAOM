@@ -1,0 +1,41 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="IsBig" DefaultValue="false" />
+  </Parameters>
+  <Constants>
+    <Constant Name="Encyclopedia.SubPage.Element.Width" BrushName="Encyclopedia.SubPage.Element" BrushLayer="Default" BrushValueType="Width"/>
+    <Constant Name="Encyclopedia.SubPage.Element.Height" BrushName="Encyclopedia.SubPage.Element" BrushLayer="Default" BrushValueType="Height"/>
+
+    <Constant Name="BannerBrush" BooleanCheck="*IsBig" OnFalse="Encyclopedia.Clan.SubElement.Banner" OnTrue="Encyclopedia.Clan.SubElement.Banner.Big" />
+    <Constant Name="ScaleFactor" BooleanCheck="*IsBig" OnFalse="1.5" OnTrue="2.1" />
+  </Constants>
+  <Window>
+    <ButtonWidget DoNotPassEventsToChildren="true" Command.Click="ExecuteLink" WidthSizePolicy = "Fixed" HeightSizePolicy = "Fixed" SuggestedHeight="!Encyclopedia.SubPage.Element.Height" SuggestedWidth="!Encyclopedia.SubPage.Element.Width" HorizontalAlignment="Center" Brush="Encyclopedia.SubPage.Element.Clan" UpdateChildrenStates="true">
+      <Children>
+        
+        <!--NOT Destroyed Element Image-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsDestroyed" UpdateChildrenStates="true">
+          <Children>
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.SubPage.Element.Clan"  />
+            <MaskedTextureWidget Id="ElementImage" DataSource="{ImageIdentifier}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush="!BannerBrush" HorizontalAlignment="Center" MarginRight="3" MarginLeft="3" MarginBottom="3" MarginTop="3" />
+          </Children>
+        </Widget>
+
+        <!--Destroyed Element Image-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsDestroyed" UpdateChildrenStates="true">
+          <Children>
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.SubPage.Element.Dead" />
+            <MaskedTextureWidget Id="ElementImage" DataSource="{ImageIdentifier}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush="!BannerBrush" HorizontalAlignment="Center" MarginRight="3" MarginLeft="3" MarginBottom="3" MarginTop="3" />
+          </Children>
+        </Widget>
+
+        <!--Element Name-->
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" VerticalAlignment="Bottom" PositionYOffset="34" Text="@NameText" Brush="Encyclopedia.SubPage.Element.Name.Text" Brush.TextVerticalAlignment="Top"/>
+
+        <!--Element Hint-->
+        <HintWidget HeightSizePolicy="StretchToParent" WidthSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+
+      </Children>
+    </ButtonWidget>
+  </Window>
+</Prefab>

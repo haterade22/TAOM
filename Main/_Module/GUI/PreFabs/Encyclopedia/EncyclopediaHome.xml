@@ -1,0 +1,41 @@
+<Prefab>
+  <Constants>
+    <Constant Name="Search.Popup.MarginLeft" Value="221"/>
+    <Constant Name="Search.Popup.MarginRight" Value="221"/>
+    <Constant Name="Search.Popup.MarginBottom" Value="0"/>
+    <Constant Name="Search.Popup.MarginTop" Value="0"/>
+
+    <Constant Name="Encyclopedia.Canvas.Width" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Width"/>
+    <Constant Name="Encyclopedia.Canvas.Height" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Height"/>
+
+    <Constant Name="Encyclopedia.Width" Value="!Encyclopedia.Canvas.Width" Additive="-35"/>
+    <Constant Name="Encyclopedia.Height" Value="!Encyclopedia.Canvas.Height" Additive="-48" />
+
+  </Constants>
+  <Window>
+    <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" Brush="Encyclopedia.Page.SoundBrush">
+      <Children>
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!Encyclopedia.Height" SuggestedWidth="!Encyclopedia.Width" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+          <Children>
+
+            <NavigationScopeTargeter ScopeID="EncyclopediaHomeScope" ScopeParent="..\EncyclopediaHomeList" ScopeMovements="Horizontal" IsDefaultNavigationScope="true" HasCircularMovement="false" />
+            <NavigatableListPanel Id="EncyclopediaHomeList" DataSource="{Lists}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="195" MarginBottom="40" MarginLeft="15" MarginRight="15" HorizontalAlignment="Left">
+              <ItemTemplate>
+                <ButtonWidget Command.Click="Execute" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" VerticalAlignment="Center" HorizontalAlignment="Center" Brush="@ImageID" MarginLeft="5" MarginRight="5" FrictionEnabled="false" ClipContents="true">
+                  <Children>
+                    <TextWidget HeightSizePolicy="Fixed" WidthSizePolicy="StretchToParent" SuggestedHeight="80" VerticalAlignment="Top" Text="@Name" Brush="EncyclopediaHome.Type.Text">
+                    </TextWidget>
+                  </Children>
+                </ButtonWidget>
+
+              </ItemTemplate>
+            </NavigatableListPanel>
+
+          </Children>
+        </Widget>
+
+      </Children>
+    </BrushWidget>
+  </Window>
+</Prefab>

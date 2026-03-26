@@ -1,0 +1,203 @@
+<Prefab>
+  <Constants>
+
+    <Constant Name="Encyclopedia.Canvas.Width" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Width"/>
+    <Constant Name="Encyclopedia.Canvas.Height" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Height"/>
+
+    <Constant Name="Encyclopedia.Width" Value="!Encyclopedia.Canvas.Width" Additive="-35"/>
+    <Constant Name="Encyclopedia.Height" Value="!Encyclopedia.Canvas.Height" Additive="-202"/>
+
+  </Constants>
+
+  <Window>
+    <BrushWidget HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true" Brush="Encyclopedia.Page.SoundBrush">
+      <Children>
+
+        <Widget HeightSizePolicy ="Fixed" WidthSizePolicy="Fixed" SuggestedHeight="!Encyclopedia.Height" SuggestedWidth="!Encyclopedia.Width" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="156" DoNotAcceptEvents="true">
+          <Children>
+
+            <ListPanel HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+              <Children>
+
+                <!--Left Side Faction Image Properties-->
+                <Widget HeightSizePolicy ="StretchToParent" WidthSizePolicy="Fixed" SuggestedWidth="370">
+                  <Children>
+
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" StackLayout.LayoutMethod="VerticalBottomToTop">
+                      <Children>
+
+                        <!--Kingdom Name-->
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="50" MarginRight="50" MaxHeight="150" Brush="Encyclopedia.SubPage.Title.Text" Brush.TextHorizontalAlignment="Center" Text="@NameText" />
+                        
+                        <!--Banner-->
+                        <MaskedTextureWidget DataSource="{Banner}" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="243" SuggestedHeight="398" HorizontalAlignment="Center" Brush="Encyclopedia.Faction.Banner" />
+
+                      </Children>
+                    </ListPanel>
+
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Sprite="Encyclopedia\divider_vertical" />
+
+                    <!--Bookmark Button-->
+                    <NavigationScopeTargeter ScopeID="EncyclopediaClanBookmarkButtonScope" ScopeParent="..\BookmarkButton" ScopeMovements="Vertical" />
+                    <ButtonWidget Id="BookmarkButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="5" MarginTop="5" Brush="Encyclopedia.Bookmark.Button" Command.Click="ExecuteSwitchBookmarkedState" IsSelected="@IsBookmarked" GamepadNavigationIndex="0">
+                      <Children>
+                        <HintWidget DataSource="{BookmarkHint}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+                      </Children>
+                    </ButtonWidget>
+
+                  </Children>
+                </Widget>
+                <ScrollablePanel Id="RightSideScrollablePanel"  HeightSizePolicy ="StretchToParent"  WidthSizePolicy="StretchToParent" InnerPanel="RightSideRect\RightSideList" ClipRect="RightSideRect" MouseScrollAxis="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" VerticalScrollbar="..\RightSideScrollbar" AutoHideScrollBars="true">
+                  <Children>
+
+                    <!--Right Side Character Clan, Friends, Enemies-->
+                    <Widget Id="RightSideRect" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true" >
+                      <Children>
+
+                        <ListPanel Id="RightSideList" HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" DoNotAcceptEvents="true" MarginLeft="25" MarginBottom="10">
+                          <Children>
+
+                            <!--Leader, Members, Allies, Enemies, Settlements-->
+                            <Widget HeightSizePolicy ="CoverChildren" WidthSizePolicy="Fixed" SuggestedWidth="739" DoNotAcceptEvents="true" >
+                              <Children>
+
+                                <ListPanel HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod = "VerticalBottomToTop" DoNotAcceptEvents="true">
+                                  <Children>
+
+                                    <!--Kingdom Info Text-->
+                                    <RichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" Brush="Encyclopedia.SubPage.Info.Text" Text="@InformationText" MarginTop="25" MarginLeft="20" MarginRight="25"/>
+
+                                    <!--Leader Divider-->
+                                    <EncyclopediaDivider Id="LeaderDivider" MarginTop="20" Parameter.Title="@LeaderText" Parameter.ItemList="..\Leader" GamepadNavigationIndex="0"/>
+
+                                    <!--Leader-->
+                                    <NavigationScopeTargeter ScopeID="EncyclopediaFactionLeaderContentScope" ScopeParent="..\Leader" ScopeMovements="Vertical" ExtendDiscoveryAreaRight="580" />
+                                    <NavigationAutoScrollWidget TrackedWidget="..\Leader" AutoScrollTopOffset="35" AutoScrollBottomOffset="35" />
+                                    <EncyclopediaSubPageElement Id="Leader" DataSource="{Leader}" HorizontalAlignment="Left" SuggestedHeight="89" SuggestedWidth="123" MarginLeft="20" MarginTop="10" GamepadNavigationIndex="0"/>
+
+                                    <!--Clans Divider-->
+                                    <EncyclopediaDivider Id="ClansDivider" MarginTop="50" Parameter.Title="@ClansText" Parameter.ItemList="..\ClansGrid" GamepadNavigationIndex="0"/>
+
+                                    <!--Clans Grid-->
+                                    <NavigationScopeTargeter ScopeID="EncyclopediaFactionClansContentScope" ScopeParent="..\ClansGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="7" />
+                                    <NavigatableGridWidget Id="ClansGrid" DataSource="{Clans}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "CoverChildren" SuggestedWidth="350" SuggestedHeight="350" DefaultCellWidth="100" DefaultCellHeight="150" HorizontalAlignment="Left" ColumnCount="7" MarginTop="10" MarginLeft="15" AutoScrollTopOffset="35" AutoScrollBottomOffset="35" >
+                                      <ItemTemplate>
+
+                                        <!--Clan-->
+                                        <EncyclopediaClanListElement/>
+
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+
+                                    <!--Settlements Divider-->
+                                    <EncyclopediaDivider Id="SettlementsDivider" MarginTop="35" Parameter.Title="@SettlementsText" Parameter.ItemList="..\SettlementsGrid" GamepadNavigationIndex="0"/>
+
+                                    <!--Settlements Grid-->
+                                    <NavigationScopeTargeter ScopeID="EncyclopediaFactionSettlementsContentScope" ScopeParent="..\SettlementsGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="7" />
+                                    <NavigatableGridWidget Id="SettlementsGrid" DataSource="{Settlements}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "CoverChildren" SuggestedWidth="350" SuggestedHeight="350" DefaultCellWidth="100" DefaultCellHeight="140" HorizontalAlignment="Left" MarginLeft="25" ColumnCount="7" MarginTop="10" AutoScrollTopOffset="35" AutoScrollBottomOffset="35" >
+                                      <ItemTemplate>
+
+                                        <!--Settlement-->
+                                        <ButtonWidget DoNotPassEventsToChildren="true" Command.Click="ExecuteLink" WidthSizePolicy = "Fixed" HeightSizePolicy = "Fixed" SuggestedHeight="90" SuggestedWidth="90" Brush="Encyclopedia.SubPage.Element.Settlement" UpdateChildrenStates="true">
+                                          <Children>
+
+                                            <DefaultLayerSpriteChangerBrushWidget Id="VillageImage" WidthSizePolicy = "Fixed" HeightSizePolicy = "Fixed" SuggestedHeight="84" SuggestedWidth="84" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.SubPage.Element.Settlement.ButtonBrush" SpriteBrush="Encyclopedia.SubPage.Element.Settlement.SpriteBrush" SpriteBrushLayerName="@FileName"/>
+                                            <HintWidget HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+                                            <TextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" VerticalAlignment="Top" Text="@NameText" Brush="Encyclopedia.SubPage.Element.Name.Text" PositionYOffset="95" Brush.FontSize="18"/>
+
+                                          </Children>
+                                        </ButtonWidget>
+
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+
+
+                                    <!--Enemies Divider-->
+                                    <EncyclopediaDivider Id="EnemiesDivider" MarginTop="35" Parameter.Title="@EnemiesText" Parameter.ItemList="..\EnemiesGrid" GamepadNavigationIndex="0"/>
+
+                                    <!--Enemies Grid-->
+                                    <NavigationScopeTargeter ScopeID="EncyclopediaFactionEnemiesContentScope" ScopeParent="..\EnemiesGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="7" />
+                                    <NavigatableGridWidget Id="EnemiesGrid" DataSource="{Enemies}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "CoverChildren" SuggestedWidth="350" SuggestedHeight="350" DefaultCellWidth="100" DefaultCellHeight="150" HorizontalAlignment="Left" MarginLeft="25" ColumnCount="7" MarginTop="10" AutoScrollTopOffset="35" AutoScrollBottomOffset="35">
+                                      <ItemTemplate>
+
+                                        <!--Member-->
+                                        <EncyclopediaClanListElement/>
+
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+
+                                    <!--Alliances Divider-->
+                                    <EncyclopediaDivider Id="AlliancesDivider" MarginTop="35" Parameter.Title="@AlliancesText" Parameter.ItemList="..\AlliancesGrid" GamepadNavigationIndex="0"/>
+
+                                    <!--Alliances Grid-->
+                                    <NavigationScopeTargeter ScopeID="EncyclopediaFactionAlliancesContentScope" ScopeParent="..\AlliancesGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="7" />
+                                    <NavigatableGridWidget Id="AlliancesGrid" DataSource="{Alliances}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "CoverChildren" SuggestedWidth="350" SuggestedHeight="350" DefaultCellWidth="100" DefaultCellHeight="150" HorizontalAlignment="Left" MarginLeft="25" ColumnCount="7" MarginTop="10" AutoScrollTopOffset="35" AutoScrollBottomOffset="35">
+                                      <ItemTemplate>
+
+                                        <!--Member-->
+                                        <EncyclopediaClanListElement/>
+
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+
+                                    <!--Trade Agreements Divider-->
+                                    <EncyclopediaDivider Id="TradeAgreementsDivider" MarginTop="35" Parameter.Title="@TradeAgreementsText" Parameter.ItemList="..\TradeAgreementsGrid" GamepadNavigationIndex="0"/>
+
+                                    <!--Trade Agreements Grid-->
+                                    <NavigationScopeTargeter ScopeID="EncyclopediaFactionTradeAgreementsContentScope" ScopeParent="..\TradeAgreementsGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="7" />
+                                    <NavigatableGridWidget Id="TradeAgreementsGrid" DataSource="{TradeAgreements}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "CoverChildren" SuggestedWidth="350" SuggestedHeight="350" DefaultCellWidth="100" DefaultCellHeight="150" HorizontalAlignment="Left" MarginLeft="25" ColumnCount="7" MarginTop="10" AutoScrollTopOffset="35" AutoScrollBottomOffset="35">
+                                      <ItemTemplate>
+
+                                        <!--Member-->
+                                        <EncyclopediaClanListElement/>
+
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+
+                                    <!--Bottom Padding Widget-->
+                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50"/>
+
+                                  </Children>
+                                </ListPanel>
+
+                              </Children>
+                            </Widget>
+
+                            <!--Event Log-->
+                            <ListPanel DataSource="{History}" HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod = "VerticalBottomToTop" MarginTop="34" MarginLeft="11" MarginRight="10" MarginBottom="55">
+                              <ItemTemplate>
+                                <EncyclopediaSubPageHistoryElement/>
+                              </ItemTemplate>
+                            </ListPanel>
+
+                          </Children>
+                        </ListPanel>
+
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </ScrollablePanel>
+                
+                <ScrollbarWidget Id="RightSideScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="4" MarginBottom="54" MarginTop="15" AlignmentAxis="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center" Handle="RightSideScrollbarHandle" MinValue="0" MaxValue="100">
+                  <Children>
+                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed" />
+                    <BrushWidget Id="RightSideScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="50" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle"/>
+                  </Children>
+                </ScrollbarWidget>
+                
+              </Children>
+            </ListPanel>
+
+            <!--Bottom Shadow-->
+            <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="150" MarginRight="5" VerticalAlignment="Bottom" HorizontalAlignment="Center" Brush="Encyclopedia.Scroll.Shadow" Brush.VerticalFlip="false"/>
+
+            <!--Previous And Next Buttons-->
+            <EncyclopediaQuickNavigation/>
+
+          </Children>
+        </Widget>
+      </Children>
+    </BrushWidget>
+  </Window>
+</Prefab>

@@ -1,0 +1,78 @@
+
+  <Prefab>
+  <Constants>
+
+    <Constant Name="Encyclopedia.SubPage.Element.Width" BrushName="Encyclopedia.SubPage.Element" BrushLayer="Default" BrushValueType="Width"/>
+    <Constant Name="Encyclopedia.SubPage.Element.Height" BrushName="Encyclopedia.SubPage.Element" BrushLayer="Default" BrushValueType="Height"/>
+  
+  <Constant Name="Encyclopedia.CharacterTree.Line.Height" BrushName="Encyclopedia.CharacterTree.Line" BrushLayer="Default" BrushValueType="Height"/>
+
+  <Constant Name="IconAlpha" Value="0.7"/>
+  </Constants>
+  <Window>
+    <EncyclopediaUnitTreeNodeItemBrushWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" MarginLeft="10" MarginRight="10" IsAlternativeUpgrade="@IsAlternativeUpgrade" ButtonContainer="ButtonContainer" ChildContainer="ChildContainer" LineContainer="LineContainer" LineBrush="Encyclopedia.CharacterTree.Line" AlternateLineBrush="Encyclopedia.CharacterTree.Line.Alternative">
+      <Children>
+
+        <Widget Id="ButtonContainer" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="130" HorizontalAlignment="Center" MarginRight="20">
+          <Children>
+
+            <ButtonWidget DataSource="{Unit}" Command.Click="ExecuteLink" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="80" SuggestedWidth="110" HorizontalAlignment="Right" Brush="Encyclopedia.SubPage.Element.Troop">
+              <Children>
+
+                <!-- Troop Visual -->
+                <NavigationAutoScrollWidget TrackedWidget="..\ElementImage" AutoScrollTopOffset="150" AutoScrollBottomOffset="150" />
+                <NavigationScopeTargeter ScopeID="EncyclopediaUnitTreeItemScope" ScopeParent="..\ElementImage" />
+                <ImageIdentifierWidget Id="ElementImage" DataSource="{ImageIdentifier}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" HorizontalAlignment="Center" MarginRight="3" MarginLeft="3" MarginBottom="3" MarginTop="3" GamepadNavigationIndex="0"/>
+                
+                <!-- Troop Tier -->
+                <Widget DataSource="{TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" PositionXOffset="-2" PositionYOffset="5" Sprite="@Text">
+                  <Children>
+                    <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"/>
+                  </Children>
+                </Widget>
+
+                <!-- Troop Type Icon -->
+                <Widget DataSource="{TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" PositionXOffset="6" PositionYOffset="5" Sprite="@Text">
+                  <Children>
+                    <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"/>
+                  </Children>
+                </Widget>
+      
+                <!-- Hint -->
+                <HintWidget DoNotAcceptEvents="true" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+
+                <!-- Selection Border -->
+                <Widget DoNotAcceptEvents="true" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" Sprite="SelectionBorder@2x_9" IsVisible="@IsActiveUnit"/>
+                  
+              </Children>
+            </ButtonWidget>
+
+            <!-- Upgrade Perk Info Tooltip -->
+            <ButtonWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginRight="127" IsVisible="@IsAlternativeUpgrade" UpdateChildrenStates="true">
+              <Children>
+                <BrushWidget DataSource="{AlternativeUpgradeTooltip}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="18" Brush="Encyclopedia.PerkInfo.Button" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+              </Children>
+            </ButtonWidget>
+
+            <!--Element Name-->
+            <TextWidget DataSource="{Unit}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="180" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="80" MarginLeft="20" Text="@NameText" Brush="Encyclopedia.SubPage.Element.Name.Text"/>
+          </Children>
+        </Widget>
+
+        <!-- Tree Connection Lines Container (Lines are added from the code) -->
+        <Widget Id="LineContainer" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="!Encyclopedia.CharacterTree.Line.Height" HorizontalAlignment="Center" MarginTop="134">
+          <Children>
+
+          </Children>
+        </Widget>
+
+        <ListPanel Id="ChildContainer" DataSource="{Branch}" HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" SuggestedWidth="800" MarginTop="169" DoNotAcceptEvents="true"  StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <ItemTemplate>
+            <EncyclopediaUnitTreeNodeItem/>
+          </ItemTemplate>
+        </ListPanel>
+
+      </Children>
+    </EncyclopediaUnitTreeNodeItemBrushWidget>
+  </Window>
+</Prefab>

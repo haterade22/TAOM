@@ -215,7 +215,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_dolguldur"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_dolguldur"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -231,14 +231,14 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_education_equipment_templates"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_education_equipment_templates"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_child_equipment_templates"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_child_equipment_templates"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -272,7 +272,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_gundabad"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_gundabad"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -290,7 +290,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_mirkwood"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_mirkwood"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -308,7 +308,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_erebor"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_erebor"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -326,7 +326,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_rivendell"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_rivendell"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -344,7 +344,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_gondor"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_gondor"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -362,7 +362,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_mordor"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_mordor"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -416,7 +416,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_rohan"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_rohan"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -434,7 +434,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_dunland"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_dunland"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -452,7 +452,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_harad"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_harad"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -470,7 +470,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_rhun"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_rhun"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -479,7 +479,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_dale"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_dale"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -488,7 +488,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_lothlorien"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_lothlorien"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -497,7 +497,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_umbar"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_umbar"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -551,7 +551,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_equipment_sets_isengard"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_isengard"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -578,7 +578,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_wanderer_equipment"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_wanderer_equipment"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>
@@ -588,7 +588,7 @@
 		</XmlNode>
 		<!-- Character creation equipment rosters for 10 custom cultures -->
 		<XmlNode>
-			<XmlName id="EquipmentRosters" path="taom_char_creation_equipment"/>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_char_creation_equipment"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>

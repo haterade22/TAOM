@@ -1,0 +1,40 @@
+<Prefab>
+  <Constants>
+    <Constant Name="Encyclopedia.SubPage.Element.Width" BrushLayer="Default" BrushName="Encyclopedia.SubPage.Element" BrushValueType="Width" />
+    <Constant Name="Encyclopedia.SubPage.Element.Height" BrushLayer="Default" BrushName="Encyclopedia.SubPage.Element" BrushValueType="Height" />
+  </Constants>
+  <Window>
+    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Encyclopedia.SubPage.Element.Width" SuggestedHeight="!Encyclopedia.SubPage.Element.Height" HorizontalAlignment="Center" Brush="Encyclopedia.NoAudioButton" Command.Click="ExecuteLink" UpdateChildrenStates="true">
+      <Children>
+
+        <!--Alive Element Image-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsDead" UpdateChildrenStates="true">
+          <Children>
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.SubPage.Element.Lord"  />
+            <ImageIdentifierWidget Id="ElementImageAlive" DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" />
+          </Children>
+        </Widget>
+
+        <!--Dead Element Image-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsDead" UpdateChildrenStates="true">
+          <Children>
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.SubPage.Element.Dead" />
+            <ImageIdentifierWidget Id="ElementImageDead" DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" Brush.SaturationFactor="-100"/>
+          </Children>
+        </Widget>
+
+        <!--Child Image-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3" IsVisible="@IsChild" Sprite="Encyclopedia\portrait_baby"/>
+        
+        <!--Kingdom Leader Crown-->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="3" MarginRight="3" Sprite="SPGeneral\SPScoreboard\leader_crown_icon" IsVisible="@IsKingdomLeader"/>
+
+        <!--Element Name-->
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" VerticalAlignment="Bottom" PositionYOffset="34" Brush="Encyclopedia.SubPage.Element.Name.Text" Brush.TextVerticalAlignment="Top" Text="@NameText" />
+
+        <!--Element Hint-->
+        <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+      </Children>
+    </ButtonWidget>
+  </Window>
+</Prefab>

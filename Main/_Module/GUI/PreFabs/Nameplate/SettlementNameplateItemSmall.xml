@@ -92,7 +92,7 @@
                       <Children>
                         <Widget Id="SettlementBarBackgroundWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="TAOM\Nameplates\settlement_nameplate_background" />
 
-                        <TextWidget Id="SettlementNameTextWidget" WidthSizePolicy="CoverChildren" MinWidth="70" HeightSizePolicy="StretchToParent" MarginLeft="!Small.BarTextLeftMargin" MarginRight="!Small.BarTextRightMargin" MarginTop="2" MarginBottom="2" PositionYOffset="-1" Brush="GameMenu.Text" Brush.Font="aniron" Brush.FontSize="13" Brush.FontColor="#000000FF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@Name" />
+                        <TextWidget Id="SettlementNameTextWidget" WidthSizePolicy="CoverChildren" MinWidth="70" HeightSizePolicy="StretchToParent" MarginLeft="!Small.BarTextLeftMargin" MarginRight="!Small.BarTextRightMargin" MarginTop="2" MarginBottom="2" PositionYOffset="-1" Brush="Settlement.Nameplate.Small.Text" IsDisabled="true" Text="@Name" />
 
                         <ButtonWidget Id="TrackButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Small.TrackerWidthHeight" SuggestedHeight="!Small.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="6" Sprite="SPGeneral\Nameplates\hover_ring" Command.Click="ExecuteTrack">
                           <Children>

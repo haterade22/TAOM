@@ -124,7 +124,7 @@
     </Styles>
   </Brush>
 
-  <Brush Name="Map.Tracker.Name" Font="aniron" TextHorizontalAlignment="Center">
+  <Brush Name="Map.Tracker.Name" Font="ringbearer" TextHorizontalAlignment="Center">
     <Styles>
       <Style Name="Default" FontColor="#F5E2C4FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.15" TextGlowRadius="0" TextBlur="1" FontSize="20" />
     </Styles>
@@ -201,23 +201,41 @@
     </Layers>
   </Brush>
 
-  <Brush Name="PartyNameplate.FullName.Text" Font="aniron" TextHorizontalAlignment="Left">
+  <Brush Name="PartyNameplate.FullName.Text" Font="ringbearer" TextHorizontalAlignment="Left">
     <Styles>
       <Style Name="Default" FontColor="#A1A1A1FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" TextGlowRadius="0" TextBlur="0.5" FontSize="25" />
     </Styles>
   </Brush>
-  <Brush Name="Settlement.Notification.Name.Text" Font="aniron" TextHorizontalAlignment="Left">
+  <Brush Name="Settlement.Notification.Name.Text" Font="ringbearer" TextHorizontalAlignment="Left">
     <Styles>
       <Style Name="Default" FontColor="#FFFFFFFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0" TextGlowRadius="0" TextBlur="0" FontSize="14" />
     </Styles>
   </Brush>
-  <Brush Name="Settlement.Notification.Value.Text" Font="aniron" TextHorizontalAlignment="Left">
+  <Brush Name="Settlement.Notification.Value.Text" Font="ringbearer" TextHorizontalAlignment="Left">
     <Styles>
       <Style Name="Default" FontColor="#ECB05BFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0" TextGlowRadius="0" TextBlur="0" FontSize="14" />
     </Styles>
   </Brush>
 
-  <Brush Name="Map.Party.Mencount.Number" Font="aniron" TextHorizontalAlignment="Left">
+  <Brush Name="Settlement.Nameplate.Large.Text" Font="ringbearer" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#000000FF" TextGlowColor="#00000000" TextOutlineColor="#00000000" TextOutlineAmount="0" TextGlowRadius="0" TextBlur="0" FontSize="21" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="Settlement.Nameplate.Medium.Text" Font="ringbearer" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#000000FF" TextGlowColor="#00000000" TextOutlineColor="#00000000" TextOutlineAmount="0" TextGlowRadius="0" TextBlur="0" FontSize="17" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="Settlement.Nameplate.Small.Text" Font="ringbearer" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#000000FF" TextGlowColor="#00000000" TextOutlineColor="#00000000" TextOutlineAmount="0" TextGlowRadius="0" TextBlur="0" FontSize="13" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="Map.Party.Mencount.Number" Font="ringbearer" TextHorizontalAlignment="Left">
     <Styles>
       <Style Name="Default" FontColor="#FFFFFFFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.15" TextGlowRadius="0" TextBlur="1" FontSize="20" />
     </Styles>
