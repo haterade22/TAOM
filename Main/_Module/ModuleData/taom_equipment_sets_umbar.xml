@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- ==================== UMBAR LORD BATTLE EQUIPMENT ==================== -->
+	<!-- Corsairs of Umbar - reuses Harad items (Southern Men) -->
+
+	<EquipmentRoster id="umbar_bat_template_medium_a" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim_head" />
+			<Equipment slot="Body" id="Item.haradrim_torso" />
+			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_bat_template_medium_b" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_bat_template_medium_c" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_bat_template_medium_d" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+			<Equipment slot="Item1" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item2" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02c_head" />
+			<Equipment slot="Body" id="Item.haradrim02c_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_bat_template_medium_e" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== UMBAR LORD CIVILIAN EQUIPMENT ==================== -->
+
+	<EquipmentRoster id="umbar_civ_template_default_a" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.aserai_civil_c" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_civ_template_default_b" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.aserai_civil_d" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_civ_template_default_c" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.aserai_civil_e" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_civ_template_default_d" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.aserai_civil_d_hscarf" />
+			<Equipment slot="Body" id="Item.aserai_civil_f" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="umbar_civ_template_default_e" culture="Culture.umbar">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.aserai_civil_hscarf_b" />
+			<Equipment slot="Body" id="Item.aserai_civil_c" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+</EquipmentRosters>

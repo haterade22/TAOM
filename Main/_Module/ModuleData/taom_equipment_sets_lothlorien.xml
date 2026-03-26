@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- ==================== LOTHLORIEN LORD BATTLE EQUIPMENT ==================== -->
+	<!-- Reuses Rivendell elven items (shared High Elf aesthetic) -->
+
+	<EquipmentRoster id="lothlorien_bat_template_medium_a" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_bat_template_medium_b" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_bat_template_medium_c" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_vambraces_3" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_bat_template_medium_d" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_bat_template_medium_e" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circletmask" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_c" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== LOTHLORIEN LORD CIVILIAN EQUIPMENT ==================== -->
+
+	<EquipmentRoster id="lothlorien_civ_template_default_a" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_civ_template_default_b" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_civ_template_default_c" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_civ_template_default_d" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lothlorien_civ_template_default_e" culture="Culture.lothlorien">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_leather_robe" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+</EquipmentRosters>

@@ -60,7 +60,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -111,7 +115,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -161,7 +169,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -212,7 +224,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -262,7 +278,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -312,7 +332,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -362,7 +386,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -390,7 +418,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -440,7 +472,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -469,7 +505,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -500,7 +540,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -529,7 +573,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -564,7 +612,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_e" />
+                <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -592,7 +644,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -621,7 +677,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -657,7 +717,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -707,7 +771,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -757,7 +825,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -808,7 +880,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -858,7 +934,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -886,7 +966,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -915,7 +999,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -965,7 +1053,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1015,7 +1107,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1044,7 +1140,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1073,7 +1173,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1150,7 +1254,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1200,7 +1308,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1250,7 +1362,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1280,7 +1396,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1331,7 +1451,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1382,7 +1506,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1412,7 +1540,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1462,7 +1594,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1497,7 +1633,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1526,7 +1666,11 @@
                 <Trait id="Manager" value="10"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1558,7 +1702,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1609,7 +1757,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1639,7 +1791,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1689,7 +1845,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1739,7 +1899,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1789,7 +1953,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1839,7 +2007,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1868,7 +2040,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1898,7 +2074,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1927,7 +2107,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -1978,7 +2162,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2028,7 +2216,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2078,7 +2270,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2128,7 +2324,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2178,7 +2378,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2213,7 +2417,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2241,7 +2449,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2291,7 +2503,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2326,7 +2542,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2356,7 +2576,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2406,7 +2630,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2436,7 +2664,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2483,7 +2715,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2533,7 +2769,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2583,7 +2823,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2613,7 +2857,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2644,7 +2892,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2694,7 +2946,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2744,7 +3000,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2794,7 +3054,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2829,7 +3093,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2879,7 +3147,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2929,7 +3201,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -2979,7 +3255,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3029,7 +3309,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3079,7 +3363,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3109,7 +3397,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3160,7 +3452,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3211,7 +3507,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3262,7 +3562,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3313,7 +3617,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3364,7 +3672,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3415,7 +3727,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3466,7 +3782,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3493,7 +3813,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3521,7 +3845,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3548,7 +3876,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3575,7 +3907,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3626,7 +3962,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3677,7 +4017,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3704,7 +4048,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3755,7 +4103,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3785,7 +4137,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3813,7 +4169,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3837,7 +4197,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3861,7 +4225,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3890,7 +4258,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3914,7 +4286,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3965,7 +4341,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -3992,7 +4372,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4043,7 +4427,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4094,7 +4482,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4122,7 +4514,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4155,7 +4551,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4183,7 +4583,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4213,7 +4617,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4243,7 +4651,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4270,7 +4682,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4294,7 +4710,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4330,7 +4750,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4366,7 +4790,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4392,7 +4820,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4420,7 +4852,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4447,7 +4883,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4471,7 +4911,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4495,7 +4939,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4546,7 +4994,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4597,7 +5049,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4648,7 +5104,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4676,7 +5136,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4702,7 +5166,11 @@
                 <Trait id="Manager" value="10"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4731,7 +5199,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4755,7 +5227,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4779,7 +5255,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4830,7 +5310,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4858,7 +5342,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4884,7 +5372,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4911,7 +5403,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4935,7 +5431,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4962,7 +5462,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -4988,7 +5492,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5028,7 +5536,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5056,7 +5568,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5091,7 +5607,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5124,7 +5644,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5159,7 +5683,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5186,7 +5714,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5215,7 +5747,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5247,7 +5783,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5277,7 +5817,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5306,7 +5850,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5334,7 +5882,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5364,7 +5916,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5394,7 +5950,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5423,7 +5983,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5453,7 +6017,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5483,7 +6051,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5512,7 +6084,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5547,7 +6123,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5582,7 +6162,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5617,7 +6201,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5652,7 +6240,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5687,7 +6279,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5717,7 +6313,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5747,7 +6347,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5777,7 +6381,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5807,7 +6415,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5840,7 +6452,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5870,7 +6486,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5897,7 +6517,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5924,7 +6548,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5948,7 +6576,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -5972,7 +6604,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6000,7 +6636,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6027,7 +6667,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6051,7 +6695,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6079,7 +6727,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6106,7 +6758,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6134,7 +6790,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6164,7 +6824,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6191,7 +6855,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6219,7 +6887,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6247,7 +6919,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6273,7 +6949,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6299,7 +6979,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6326,7 +7010,11 @@
                 <Trait id="Politician" value="8"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6357,7 +7045,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6386,7 +7078,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6414,7 +7110,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6504,7 +7204,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6540,7 +7244,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6577,7 +7285,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6605,7 +7317,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6639,7 +7355,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6670,7 +7390,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6698,7 +7422,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6729,7 +7457,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6761,7 +7493,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6790,7 +7526,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6818,7 +7558,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6849,7 +7593,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6877,7 +7625,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6905,7 +7657,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6934,7 +7690,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6963,7 +7723,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -6996,7 +7760,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7030,7 +7798,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7065,7 +7837,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7100,7 +7876,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7129,7 +7909,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7158,7 +7942,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7193,7 +7981,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7222,7 +8014,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7252,7 +8048,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7278,7 +8078,11 @@
                 <Trait id="Manager" value="10"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7304,7 +8108,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7331,7 +8139,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7358,7 +8170,11 @@
                 <Trait id="Manager" value="10"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7382,7 +8198,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7410,7 +8230,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7438,7 +8262,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7462,7 +8290,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7489,7 +8321,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7517,7 +8353,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7546,7 +8386,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7570,7 +8414,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7599,7 +8447,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7628,7 +8480,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7656,7 +8512,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7682,7 +8542,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7706,7 +8570,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7733,7 +8601,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7762,7 +8634,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7790,7 +8666,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7815,7 +8695,11 @@
             <Traits>
                 <Trait id="Manager" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7839,7 +8723,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7869,7 +8757,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_c" />
+                <EquipmentSet id="harad_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7949,7 +8841,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -7977,7 +8873,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8005,7 +8905,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8035,7 +8939,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8086,7 +8994,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8135,7 +9047,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8166,7 +9082,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8196,7 +9116,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8224,7 +9148,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8256,7 +9184,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8287,7 +9219,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8318,7 +9254,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8346,7 +9286,11 @@
                 <Trait id="Manager" value="10"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8376,7 +9320,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8405,7 +9353,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8435,7 +9387,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8485,7 +9441,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8514,7 +9474,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8546,7 +9510,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8575,7 +9543,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8602,7 +9574,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8632,7 +9608,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8681,7 +9661,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8731,7 +9715,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8781,7 +9769,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8831,7 +9823,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8861,7 +9857,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8890,7 +9890,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8940,7 +9944,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -8990,7 +9998,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9041,7 +10053,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9070,7 +10086,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9121,7 +10141,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9147,7 +10171,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9198,7 +10226,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9227,7 +10259,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9256,7 +10292,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9285,7 +10325,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9312,7 +10356,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9363,7 +10411,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9399,7 +10451,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9427,7 +10483,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9478,7 +10538,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9507,7 +10571,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9534,7 +10602,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9561,7 +10633,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9588,7 +10664,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9612,7 +10692,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9641,7 +10725,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_d" />
+                <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9671,7 +10759,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_e" />
+                <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9700,7 +10792,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_a" />
+                <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9729,7 +10825,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_b" />
+                <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9758,7 +10858,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rohan_bat_template_medium_c" />
+                <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9813,7 +10917,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9848,7 +10956,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9879,7 +10991,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9908,7 +11024,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9938,7 +11058,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9965,7 +11089,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -9995,7 +11123,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10024,7 +11156,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10053,7 +11189,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10083,7 +11223,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10111,7 +11255,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10140,7 +11288,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10168,7 +11320,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10195,7 +11351,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10224,7 +11384,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10253,7 +11417,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10285,7 +11453,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10316,7 +11488,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10346,7 +11522,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10377,7 +11557,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10405,7 +11589,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10433,7 +11621,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10462,7 +11654,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10486,7 +11682,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10516,7 +11716,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10547,7 +11751,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10575,7 +11783,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10599,7 +11811,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10628,7 +11844,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10659,7 +11879,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10683,7 +11907,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10712,7 +11940,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10740,7 +11972,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10764,7 +12000,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10791,7 +12031,11 @@
                 <Trait id="Manager" value="10"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10819,7 +12063,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10848,7 +12096,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10875,7 +12127,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10915,7 +12171,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10943,7 +12203,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -10972,7 +12236,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11008,7 +12276,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11042,7 +12314,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11070,7 +12346,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11098,7 +12378,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11129,7 +12413,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11157,7 +12445,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11185,7 +12477,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11214,7 +12510,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11241,7 +12541,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11269,7 +12573,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11300,7 +12608,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11330,7 +12642,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11359,7 +12675,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11389,7 +12709,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11424,7 +12748,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11459,7 +12787,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11494,7 +12826,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11529,7 +12865,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11564,7 +12904,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11593,7 +12937,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11628,7 +12976,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11663,7 +13015,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11698,7 +13054,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11725,7 +13085,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11753,7 +13117,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11780,7 +13148,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Valor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11810,7 +13182,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11838,7 +13214,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11862,7 +13242,11 @@
             <skills/>
             <Traits>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11890,7 +13274,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11917,7 +13305,11 @@
                 <Trait id="Manager" value="4"/>
                 <Trait id="Mercy" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11944,7 +13336,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -11971,7 +13367,11 @@
                 <Trait id="Manager" value="2"/>
                 <Trait id="Valor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12002,7 +13402,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12033,7 +13437,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12060,7 +13468,11 @@
                 <Trait id="Manager" value="8"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12088,7 +13500,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12124,7 +13540,11 @@
                 <Trait id="Oligarchic" value="2"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12151,7 +13571,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12181,7 +13605,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12211,7 +13639,11 @@
                 <Trait id="Honor" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12349,7 +13781,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_d" />
+                <EquipmentSet id="harad_civ_template_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12385,7 +13821,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_e" />
+                <EquipmentSet id="harad_civ_template_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12412,7 +13852,11 @@
                 <Trait id="Manager" value="6"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_a" />
+                <EquipmentSet id="harad_civ_template_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12443,7 +13887,11 @@
                 <Trait id="Calculating" value="-1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="harad_bat_template_medium_b" />
+                <EquipmentSet id="harad_civ_template_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12473,7 +13921,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Generosity" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12503,7 +13955,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Generosity" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12533,7 +13989,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12564,7 +14024,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Mercy" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12615,7 +14079,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12666,7 +14134,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12717,7 +14189,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12768,7 +14244,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12796,7 +14276,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12832,7 +14316,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12862,7 +14350,11 @@
                 <Trait id="Valor" value="1"/>
                 <Trait id="Calculating" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12894,7 +14386,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Oligarchic" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12925,7 +14421,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12961,7 +14461,11 @@
                 <Trait id="Oligarchic" value="0"/>
                 <Trait id="Authoritarian" value="0"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -12991,7 +14495,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Oligarchic" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13022,7 +14530,11 @@
                 <Trait id="Mercy" value="-1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13052,7 +14564,11 @@
                 <Trait id="Valor" value="-1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_c" />
+                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13083,7 +14599,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_d" />
+                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13113,7 +14633,11 @@
                 <Trait id="Honor" value="-1"/>
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_e" />
+                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13164,7 +14688,11 @@
                 <Trait id="Oligarchic" value="1"/>
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_a" />
+                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13193,7 +14721,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Honor" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13223,7 +14755,11 @@
                 <Trait id="Calculating" value="1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13253,7 +14789,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Calculating" value="-1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13301,7 +14841,11 @@
                 <Trait id="Mercy" value="1"/>
                 <Trait id="Valor" value="2"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_e" />
+                <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13349,7 +14893,11 @@
                 <Trait id="Generosity" value="1"/>
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
@@ -13399,7 +14947,11 @@
                 <Trait id="Generosity" value="-1"/>
                 <Trait id="Honor" value="1"/>
             </Traits>
-            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits)]"/>
+            <Equipments>
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
+            </Equipments>
+            <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
     </xsl:template>
 
