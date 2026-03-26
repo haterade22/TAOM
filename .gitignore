@@ -17,6 +17,7 @@ packages/
 
 # Logs
 *.log
+.claude/logs/
 
 # OS files
 .DS_Store

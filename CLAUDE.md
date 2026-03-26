@@ -30,6 +30,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/new-feature [Name]` | Scaffold a new feature module with IoC, services, tests |
 | `/xslt-check [file]` | Validate XSLT against SandBoxCore vanilla XML |
 | `/migration-status` | Check v1.2 -> v1.3 migration progress |
+| `/scope-check [change]` | Assess whether a proposed change fits current work context |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -162,6 +163,9 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 | `check-build-before-commit.sh` | PreToolUse (Bash) | Blocks `git commit` if build fails |
 | `notify-csharp-edit.sh` | PostToolUse (Edit\|Write) | Logs C# file modifications |
 | `check-changelog-updated.sh` | Stop | Reminds to update CHANGELOG.md |
+| `session-start.sh` | SessionStart | Prints branch, recent commits, CHANGELOG summary on startup |
+| `pre-compact.sh` | PreCompact | Dumps modified files list before context compaction |
+| `log-agent.sh` | SubagentStart | Audit logs agent invocations to `.claude/logs/agent-audit.log` |
 
 ## Notes
 
