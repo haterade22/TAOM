@@ -70,6 +70,9 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 | dwarf | 250 | 30 | 0.6x | Long-lived, low fertility |
 | orc | 60 | 12 | 2.0x | Short-lived, high fertility |
 | uruk_hai | 50 | 8 | 2.5x | Even shorter, highest fertility |
+| uruk | 55 | 10 | 2.0x | Standard Uruk variant |
+| pale_uruk | 55 | 10 | 2.0x | Pale Uruk variant |
+| dg_uruk | 55 | 10 | 2.0x | Dol Guldur Uruk variant |
 | berserker | 40 | 6 | 3.0x | Very short-lived |
 | goblin | 50 | 10 | 2.0x | Similar to orcs |
 | cave_troll | 500 | 20 | 0.1x | Very long-lived, rare breeding |
@@ -93,9 +96,11 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 | `Main/Features/RaceAge/Models/TaomPregnancyModel.cs` | GameModel override (race fertility) |
 | `Main/Features/RaceAge/RaceAgeBehavior.cs` | DailyTick age-death check |
 | `Main/Features/RaceAge/RaceAgeIoC.cs` | DryIoc registration |
+| `Main/Features/RaceAge/Hooks/GetCivilianEquipment_Patch.cs` | Harmony patch — defensive fallback for missing child equipment rosters |
 | `Main/Adapters/IHeroAgeAdapter.cs` | Adapter interface |
 | `Main/Adapters/HeroAgeAdapter.cs` | TaleWorlds API wrapper |
 | `Main/_Module/ModuleData/raceage/race_age_config.json` | Race age data |
+| `Main/_Module/ModuleData/taom_child_equipment_templates.xml` | Child equipment rosters for all 10 custom cultures |
 
 ## How Race Is Determined
 
@@ -149,9 +154,20 @@ This preserves the vanilla curve shape but stretches or compresses it to fit eac
 | dwarf | 30-120 | ~14.4% | 0.6x | Same peak, 60% rate, much wider window |
 | orc | 12-50 | ~14.4% | 2.0x | 2x rate, compensates for shorter lifespan |
 | uruk_hai | 8-40 | ~14.4% | 2.5x | Highest rate, shortest window |
+| elf | 18-300 | ~14.4% | 0.15x | Very rare children, extremely wide window |
 | nazghul | — | 0% | 0.0x | Immortal flag blocks fertility entirely |
 
 This means Orc women have 2x the daily pregnancy chance of human women, while Dwarven women have 0.6x and Nazgul have 0x.
+
+## Offspring Equipment
+
+When a hero gives birth, vanilla `DefaultHeroCreationModel.GetCivilianEquipment` calls `GetEquipmentRostersForDeliveredOffspring(hero)`, which filters `EquipmentRoster` entries by `culture == hero.Culture` with flags `IsChildEquipmentTemplate="true"`. Each culture needs 6 child equipment roster entries: noble/townsman/villager × male/female.
+
+### Child Equipment Templates
+
+`taom_child_equipment_templates.xml` provides 60 equipment rosters (6 per culture × 10 custom cultures). Each roster has 2 `EquipmentSet` variants with Body + Leg slots using the lightest civilian items from each culture's Armory. Lothlorien shares rivendell items; umbar shares gondor items.
+
+The 6 XSLT cultures (empire/dunland, aserai/harad, vlandia/rohan, khuzait/rhun, sturgia/dale, battania/variag) are covered by vanilla `sandbox_equipment_sets.xml` since they retain their original culture IDs.
 
 ## Performance
 

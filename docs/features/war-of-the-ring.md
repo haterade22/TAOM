@@ -19,12 +19,12 @@ Key design goals:
 | Phase | Name | Trigger | Effects |
 |-------|------|---------|---------|
 | 0 | **Peace** | Game start | Normal diplomacy. Alliances and hostility tiers from `diplomacy.json` apply. |
-| 1 | **Isengard War** | Day 30 (configurable) | Isengard and Dunland declare war on Rohan. No peace blocking yet. |
-| 2 | **Full War** | Day 45 (configurable) | All `Hostile`-tier kingdom pairs go to war. Peace is permanently blocked between hostile pairs. |
+| 1 | **Isengard War** | Day 1 (configurable) | Isengard and Dunland declare war on Rohan. No peace blocking yet. |
+| 2 | **Full War** | Day 1 (configurable) | All `Hostile`-tier kingdom pairs go to war. Peace is permanently blocked between hostile pairs. |
 
 ### Phase 1: The Isengard War
 
-At the configured day (default: 30), the system declares war:
+At the configured day (default: 1), the system declares war:
 - **Isengard** → **Rohan** (vlandia)
 - **Dunland** (empire) → **Rohan** (vlandia)
 
@@ -32,7 +32,7 @@ This mirrors the lore — Saruman's assault on Rohan is the opening salvo of the
 
 ### Phase 2: The Full War
 
-At the configured day (default: 45), the system:
+At the configured day (default: 1), the system:
 1. Iterates all kingdom pairs from `diplomacy.json` that have `Hostile` tier
 2. Declares war between any hostile pair not already at war
 3. Activates permanent peace blocking
@@ -82,14 +82,14 @@ All paths ultimately funnel through `MakePeaceAction.ApplyInternal`, which Layer
 {
   "enabled": true,
   "phase1": {
-    "triggerDay": 30,
+    "triggerDay": 1,
     "wars": [
       { "attacker": "isengard", "defender": "vlandia" },
       { "attacker": "empire", "defender": "vlandia" }
     ]
   },
   "phase2": {
-    "triggerDay": 45,
+    "triggerDay": 1,
     "autoWarBetweenHostileTiers": true,
     "blockPeaceBetweenHostileTiers": true,
     "wars": []

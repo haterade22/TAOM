@@ -1,5 +1,33 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-25
+
+### Alignment-Aware Execution System
+
+Replaced vanilla Bannerlord's one-size-fits-all lord execution penalties with LOTR-thematic alignment logic. Free Peoples executing servants of Sauron now incur zero honor or relation penalties with allies. Same-alignment executions are treated as kinslaying with 50% harsher penalties.
+
+- **New feature:** `Main/Features/Execution/` — full execution override system (12 new files)
+- **GameModel override:** `TaomExecutionRelationModel` replaces `DefaultExecutionRelationModel` — alignment-aware relation penalties
+- **Harmony patches:** `KillCharacterAction.ApplyInternal` (thread-local context) + `TraitLevelingHelper.OnLordExecuted` (honor penalty skip)
+- **Alignment data:** `Main/_Module/ModuleData/execution/alignment.json` — 16 kingdoms mapped to Free/Evil/Neutral
+- **Cross-alignment kills:** 0 honor penalty, 0 relation penalty with executor's allies
+- **Kinslaying (same-alignment kills):** 1.5x vanilla penalties (-90 same-clan, -45 friend, -15 faction)
+- **Neutral kingdoms (Umbar):** treated as enemy by both sides
+- **28 new tests** covering AlignmentService and ExecutionActionHook
+- **Documentation:** `docs/features/alignment-aware-execution.md`
+- **Modified:** `IoC.cs`, `SubModule.cs` (registration + Patch14_Execution category)
+
+### Child Equipment Templates for Custom Cultures
+
+Added child equipment roster templates for all 10 custom TAOM cultures to prevent NullReferenceException during offspring delivery and ensure children spawn with culture-appropriate clothing.
+
+- **New file:** `taom_child_equipment_templates.xml` — 60 equipment rosters (6 per culture: noble/townsman/villager × male/female)
+- **Cultures covered:** gondor, erebor, rivendell, mirkwood, lothlorien, isengard, gundabad, mordor, dolguldur, umbar
+- **Item selection:** lightest civilian items from each culture's Armory (tunics, dresses, boots)
+- **Fallback sharing:** lothlorien reuses rivendell items, umbar reuses gondor items
+- **Safety net:** existing `GetCivilianEquipment_Patch` Harmony patch retained as a defensive fallback
+- Registered in SubModule.xml as EquipmentRosters
+
 ## 2026-03-21
 
 ### Erebor & Iron Hills Troop Tree Restructure
