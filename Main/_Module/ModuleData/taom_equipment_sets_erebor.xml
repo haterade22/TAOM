@@ -100,4 +100,29 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== DAIN II IRONFOOT ==================== -->
+
+	<EquipmentRoster id="dain_bat_equipment" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_dain_hammer_a" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_crown_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="dain_civ_equipment" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_crown_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

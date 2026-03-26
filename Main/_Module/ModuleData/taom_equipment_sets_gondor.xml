@@ -97,4 +97,47 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== BOROMIR ==================== -->
+
+	<EquipmentRoster id="boromir_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_boromir_sword" />
+			<Equipment slot="Item1" id="Item.wm_boromir_shield" />
+			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.boromir_armor" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
+			<Equipment slot="Leg" id="Item.boromir_boots" />
+			<Equipment slot="Cape" id="Item.boromir_pauldrons" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="boromir_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.boromir_jerkin" />
+			<Equipment slot="Leg" id="Item.boromir_boots" />
+			<Equipment slot="Cape" id="Item.boromir_cloak" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== FARAMIR ==================== -->
+
+	<EquipmentRoster id="faramir_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_faramir_sword" />
+			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.faramir_armor" />
+			<Equipment slot="Gloves" id="Item.faramir_bracers" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="faramir_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.faramir_armor_slim" />
+			<Equipment slot="Gloves" id="Item.faramir_bracers" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

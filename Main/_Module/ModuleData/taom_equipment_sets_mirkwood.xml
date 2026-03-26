@@ -102,4 +102,49 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== THRANDUIL ==================== -->
+
+	<EquipmentRoster id="thranduil_bat_equipment" culture="Culture.mirkwood">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_thranduil_sword" />
+			<Equipment slot="Head" id="Item.thranduil_helmet" />
+			<Equipment slot="Body" id="Item.thranduil_body" />
+			<Equipment slot="Gloves" id="Item.thranduil_gloves" />
+			<Equipment slot="Leg" id="Item.thranduil_boots" />
+			<Equipment slot="Cape" id="Item.thranduil_shoulder" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="thranduil_civ_equipment" culture="Culture.mirkwood">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.thranduil_helmet" />
+			<Equipment slot="Body" id="Item.thranduil_body" />
+			<Equipment slot="Gloves" id="Item.thranduil_gloves" />
+			<Equipment slot="Leg" id="Item.thranduil_boots" />
+			<Equipment slot="Cape" id="Item.thranduil_shoulder" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== LEGOLAS ==================== -->
+
+	<EquipmentRoster id="legolas_bat_equipment" culture="Culture.mirkwood">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_legolas_sword" />
+			<Equipment slot="Item1" id="Item.wm_mirkwood_bow_a01" />
+			<Equipment slot="Body" id="Item.legolas_body" />
+			<Equipment slot="Gloves" id="Item.legolas_gloves" />
+			<Equipment slot="Leg" id="Item.legolas_boots" />
+			<Equipment slot="Cape" id="Item.legolas_shoulder" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="legolas_civ_equipment" culture="Culture.mirkwood">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.legolas_body" />
+			<Equipment slot="Gloves" id="Item.legolas_gloves" />
+			<Equipment slot="Leg" id="Item.legolas_boots" />
+			<Equipment slot="Cape" id="Item.legolas_shoulder" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

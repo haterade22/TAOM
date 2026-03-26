@@ -99,4 +99,56 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== THEODEN ==================== -->
+
+	<EquipmentRoster id="theoden_bat_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.theoden_sword" />
+			<Equipment slot="Item1" id="Item.wm_theoden_shield" />
+			<Equipment slot="Head" id="Item.theoden_helmet" />
+			<Equipment slot="Body" id="Item.theoden_torso" />
+			<Equipment slot="Gloves" id="Item.theoden_glove" />
+			<Equipment slot="Leg" id="Item.theoden_boots" />
+			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+			<Equipment slot="HorseHarness" id="Item.rohan_horse_armor_theoden" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="theoden_civ_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Body" id="Item.theoden_torso" />
+			<Equipment slot="Gloves" id="Item.theoden_glove" />
+			<Equipment slot="Leg" id="Item.theoden_boots" />
+			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== EOMER ==================== -->
+
+	<EquipmentRoster id="eomer_bat_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.eomer_sword" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+			<Equipment slot="Body" id="Item.theoden_torso" />
+			<Equipment slot="Gloves" id="Item.theoden_glove" />
+			<Equipment slot="Leg" id="Item.theoden_boots" />
+			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== EOWYN ==================== -->
+
+	<EquipmentRoster id="eowyn_bat_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.eowyn_sword" />
+			<Equipment slot="Head" id="Item.cts_rohan_helmet4a" />
+			<Equipment slot="Body" id="Item.theoden_torso" />
+			<Equipment slot="Gloves" id="Item.theoden_glove" />
+			<Equipment slot="Leg" id="Item.theoden_boots" />
+			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

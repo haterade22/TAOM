@@ -6595,24 +6595,8 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
-                <equipment slot="Item1" id="Item.sm_dwarf_dain_hammer_a" />
-                <equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
-                <equipment slot="Head" id="Item.sk_dwarf_dain_crown_a" />
-                <equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
-                <equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
-                <equipment slot="Item1" id="Item.sm_dwarf_dain_hammer_a" />
-                <equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
-                <equipment slot="Head" id="Item.sk_dwarf_dain_crown_a" />
-                <equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
-                <equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
-            </EquipmentRoster>
+            <EquipmentSet id="dain_bat_equipment" />
+            <EquipmentSet id="dain_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_E1_2" race="dwarf" name="{=aom_lord_E1_2_name}Thorin Stonehelm" age="33" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
@@ -16614,7 +16598,7 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="lothlorien_bat_template_medium_a" />
+            <EquipmentSet id="galadriel_bat_equipment" />
             <EquipmentSet id="lothlorien_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -16815,8 +16799,8 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mirkwood_bat_template_medium_a" />
-            <EquipmentSet id="mirkwood_civ_template_default_a" civilian="true" />
+            <EquipmentSet id="thranduil_bat_equipment" />
+            <EquipmentSet id="thranduil_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M1_2" name="{=aom_lord_M1_2_name}Lothuial" age="28" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
@@ -17049,8 +17033,8 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mirkwood_bat_template_medium_a" />
-            <EquipmentSet id="mirkwood_civ_template_default_a" civilian="true" />
+            <EquipmentSet id="legolas_bat_equipment" />
+            <EquipmentSet id="legolas_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M1_12" name="{=aom_lord_M1_12_name}PlaceHolder Child To Not Break Game" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
@@ -22138,7 +22122,7 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="rohan_bat_template_medium_a" />
+            <EquipmentSet id="eomer_bat_equipment" />
             <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -22183,7 +22167,7 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="rohan_bat_template_medium_b" />
+            <EquipmentSet id="eowyn_bat_equipment" />
             <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
