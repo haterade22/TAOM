@@ -575,6 +575,21 @@
 				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
+		<!-- XSLT to remove "the" before faction names in action/comment strings -->
+		<XmlNode>
+			<XmlName id="GameText" path="action_strings"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="GameText" path="comment_strings"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
 		<!-- TAOM faction/culture strings for all cultures -->
 		<XmlNode>
 			<XmlName id="GameText" path="taom_module_strings"/>

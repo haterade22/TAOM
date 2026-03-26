@@ -1,0 +1,177 @@
+	<string id="taom_the_fix_0aXG8dvJ" text="{=0aXG8dvJ}Make peace with {KINGDOM_NAME}. No tribute will be paid." />
+	<string id="taom_the_fix_0bPb5btR" text="{=0bPb5btR}{LORD.NAME} is a member of {CLAN_NAME}, {CLAN_DESCRIPTION} of {FACTION_NAME} that is backing {RULER} in the civil war. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_the_fix_0CsbbwtN" text="{=0CsbbwtN}Call {CALLED_KINGDOM} to War Against {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+	<string id="taom_the_fix_0nhqJewP" text="{=0nhqJewP}{RULER.NAME} of {KINGDOM} grants {SETTLEMENT} to {LEADER.NAME} with {?RULER.GENDER}her{?}his{\?} council's support." />
+	<string id="taom_the_fix_17A2DDgD" text="{=17A2DDgD}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM} with the support of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_1aQAmENB" text="{=1aQAmENB}{ENEMY_KINGDOM_INFORMAL_NAME} may be strong, but their lands are rich and ripe for the taking." />
+	<string id="taom_the_fix_1o8vgwTf" text="{=1o8vgwTf}{RULER.NAME} of {KINGDOM} has decided to sign a trade agreement with {OTHER_KINGDOM} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_1V8f9vRM" text="{=1V8f9vRM}A courier bearing an alliance offer from {PROPOSER_KINGDOM} has arrived at the court of your realm." />
+	<string id="taom_the_fix_21yUheIy" text="{=21yUheIy}{KINGDOM_NAME} was created in {CREATION_YEAR} by {RULER.NAME}, a rising {CULTURE_ADJECTIVE} warlord." />
+	<string id="taom_the_fix_22LCyCoA" text="{=22LCyCoA}I can offer your realm {GOLD}{GOLD_ICON} to declare war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_2b1xZGaQ" text="{=2b1xZGaQ}Make peace with {KINGDOM_NAME}. Our kingdom will pay {TRIBUTE_AMOUNT} tribute daily for {TRIBUTE_DURATION} days." />
+	<string id="taom_the_fix_2BVDp7Tg" text="{=2BVDp7Tg}{KINGDOM} will stop {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_the_fix_2KaXj3Qa" text="{=2KaXj3Qa}The depredations of {NEARBY_ENEMY_FACTION} has driven many farmers from their homes. Those who have land usually return to it, but many of the poorer are seeking a new place to live. You speak to a few encamped on the outskirts of your village. There is no land for them. They seem eager to work as tenants, but there is always a possibility of tensions with the more established village families." />
+	<string id="taom_the_fix_2mVZORaE" text="{=2mVZORaE}a servant of {FACTION_NAME}" />
+	<string id="taom_the_fix_4fXpOe4N" text="{=4fXpOe4N}A courier arrives from {CLAN_NAME}. They hold {CAPTIVE_HERO.NAME} and are demanding {GOLD_AMOUNT}{GOLD_ICON} in ransom." />
+	<string id="taom_the_fix_4GgfFDWG" text="{=4GgfFDWG}Making peace with {KINGDOM_NAME}" />
+	<string id="taom_the_fix_4JSzHkpt" text="{=4JSzHkpt}As {?IS_FEMALE}queen{?}king{\?}, you must decide if war will be declared on {KINGDOM_NAME}" />
+	<string id="taom_the_fix_4pmvrnmN" text="{=4pmvrnmN}The castle of {SETTLEMENT_LINK} is owned by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {KEEP_INFO}" />
+	<string id="taom_the_fix_4z1t75be" text="{=4z1t75be}{FIRSTNAME} of {CLAN_NAME}" />
+	<string id="taom_the_fix_5bBAOHmC" text="{=5bBAOHmC}{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief, with {?RULER.GENDER}her{?}his{\?} council evenly split." />
+	<string id="taom_the_fix_5bza9sDs" text="{=5bza9sDs}I'm very sorry to hear that. You'll find no better employers than {FACTION_NAME}, be sure of that." />
+	<string id="taom_the_fix_5DdbkWLu" text="{=5DdbkWLu}{RULER.NAME} of {KINGDOM} has decided to sign a trade agreement with {OTHER_KINGDOM} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_5L0wDGhR" text="{=5L0wDGhR}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} chose not to go to war with {KINGDOM}, with {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council evenly split." />
+	<string id="taom_the_fix_5pOKmHsf" text="{=5pOKmHsf}{RULER.NAME} has decided to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_6d4ZTvGv" text="{=6d4ZTvGv}{LORD.NAME} is {TITLE} of {FACTION_NAME} and head of {CLAN_NAME}, {CLAN_DESCRIPTION} of the realm. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_the_fix_79lEPn1u" text="{=79lEPn1u}{ENEMY_KINGDOM_INFORMAL_NAME} have occupied our ancestral lands and they oppress our kinfolk." />
+	<string id="taom_the_fix_7ouzFASf" text="{=7ouzFASf}A courier arrives, bearing a message from {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}She{?}He{\?} remarks on your growing reputation, and asks if you would consider pledging yourself as a vassal of {OFFERED_KINGDOM_NAME}. You should speak in person if you are interested." />
+	<string id="taom_the_fix_8RBZaQKk" text="{=8RBZaQKk}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} chose not to go to war with {KINGDOM} with the support of {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_940TwBPs" text="{=940TwBPs}{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM} over the objections of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_9Obe3S6L" text="{=9Obe3S6L}{LORD.FIRSTNAME} is a member of {CLAN_NAME}, {CLAN_DESCRIPTION} from the lands of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_the_fix_9WDK03GW" text="{=9WDK03GW}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} chose not to go to war with {KINGDOM}." />
+	<string id="taom_the_fix_aE7OQDMS" text="{=aE7OQDMS}Form alliance with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_aEt1kqxm" text="{=aEt1kqxm}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM}, with his {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council evenly divided on the matter." />
+	<string id="taom_the_fix_AGdmoIUc" text="{=AGdmoIUc}{RULER.NAME} has decided to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision went against the advice of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_amdgO9Hr" text="{=amdgO9Hr}I am {CONVERSATION_HERO.FIRSTNAME}. I am a humble follower of the fellowship known as {FACTION_NAME}, whom the {DIVINITY} have chosen to bear their message in this present Age." />
+	<string id="taom_the_fix_aQAI99d4" text="{=aQAI99d4}Declaring War on {KINGDOM_NAME}" />
+	<string id="taom_the_fix_AThZtg7U" text="{=AThZtg7U}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided against making peace with {KINGDOM}, with his {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council evenly divided on the matter." />
+	<string id="taom_the_fix_AwCnrOan" text="{=AwCnrOan}As {RULER_NAME_AND_TITLE}, you must decide if {CALLED_KINGDOM} will be called to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_COST}{GOLD_ICON}." />
+	<string id="taom_the_fix_AWm7Kb9Y" text="{=AWm7Kb9Y}{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_awoeb3br" text="{=awoeb3br}{FACTION_LEADER} will decide if {KINGDOM_CONSIDERING_PEACE_NAME} will make peace with {KINGDOM_NAME}. You can pick your stance regarding this decision." />
+	<string id="taom_the_fix_AXsbnTBb" text="{=AXsbnTBb}{QUEST_GIVER.LINK} has made peace with {ENEMYFACTION_INFORMALNAME}. Your agreement with {QUEST_GIVER.LINK} has been canceled." />
+	<string id="taom_the_fix_az3K3j4C" text="{=az3K3j4C}Right now we are stronger than {ENEMY_KINGDOM_INFORMAL_NAME}. We should strike while we can." />
+	<string id="taom_the_fix_B818zx3W" text="{=B818zx3W}Your clan is at war with factions with which {KINGDOM} is at peace." />
+	<string id="taom_the_fix_bjEN2OzZ" text="{=bjEN2OzZ}As a result of your hostile intent towards a neutral village, {KINGDOM} declares war on you." />
+	<string id="taom_the_fix_Bk3Wqy5j" text="{=Bk3Wqy5j}{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_BlVjIlZF" text="{=BlVjIlZF}{FACTION_LEADER} will decide if {KINGDOM_CONSIDERING_PEACE_NAME} will make peace with {KINGDOM_NAME} by paying {TRIBUTE_AMOUNT} as tribute for {TRIBUTE_DURATION} days. You can pick your stance regarding this decision." />
+	<string id="taom_the_fix_bMCZ5rWQ" text="{=bMCZ5rWQ}{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_bR7MIkFi" text="{=bR7MIkFi}{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_bXN2fbcv" text="{=bXN2fbcv}Your men treat the residents of {SETTLEMENT_NAME} as wayward subjects of {SETTLEMENT_CULTURE_NAME} rather than foes, and treat them relatively well." />
+	<string id="taom_the_fix_bYmc9fi3" text="{=bYmc9fi3}{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_Cf0amFBD" text="{=Cf0amFBD}Accepting {CALLING_KINGDOM} Call to War Against {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
+	<string id="taom_the_fix_cRpsjvOM" text="{=cRpsjvOM}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} has declared war on {KINGDOM} with the support of {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_CrzFdo2H" text="{=CrzFdo2H}Yes. It's about the war with {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]We need to tie up some of their forces. A relatively small force moving quickly through their lands and raiding their villages succesfully should be a good distraction. Their lords will need to chase the raiders and won't be able to threaten us elsewhere. You seem to be the right {?PLAYER.GENDER}warrior{?}man{\?} for the job. What do you say? You'll have my gratitude and you'll be well rewarded if you succeed." />
+	<string id="taom_the_fix_CswzBb02" text="{=CswzBb02}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM}." />
+	<string id="taom_the_fix_d6KbdIWg" text="{=d6KbdIWg} As a result of your hostile intent towards a neutral village, {MERCENARY_KINGDOM} ends its contract with you, and {KINGDOM} declares war on you." />
+	<string id="taom_the_fix_dCDBqYsh" text="{=dCDBqYsh}{RULER.NAME} of {KINGDOM} has chosen not to sign a trade agreement with {OTHER_KINGDOM} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_dDsJyerw" text="{=dDsJyerw}Call {CALLED_KINGDOM} to War Against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_dEsIQDo3" text="{=dEsIQDo3}It is time to call our ally {CALLED_KINGDOM} to war!" />
+	<string id="taom_the_fix_dov3iRlt" text="{=dov3iRlt}{ENEMY_RULER.NAME} of {ENEMY_KINGDOM_INFORMAL_NAME} is vile and dangerous. We must deal with {?ENEMY_RULER.GENDER}her{?}him{\?} before it is too late." />
+	<string id="taom_the_fix_DphlPaF9" text="{=DphlPaF9}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} has declared war on {KINGDOM} despite opposition from {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_dPOOmYGQ" text="{=dPOOmYGQ}You think the lords and warriors of {KINGDOM} won't just stand by idly when their people are kidnapped? You'd best let us go!" />
+	<string id="taom_the_fix_drZC1Frp" text="{=drZC1Frp}{KINGDOM_NAME} was created in {CREATION_YEAR} by {RULER.NAME}, leader of a group of {CULTURE_ADJECTIVE} rebels." />
+	<string id="taom_the_fix_eAhgrwkZ" text="{=eAhgrwkZ}As {RULER_NAME_AND_TITLE}, you must decide if an alliance will be formed with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_eEmFbQet" text="{=eEmFbQet}{RULER.NAME} has decided to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_efTah9rk" text="{=efTah9rk}I do not have the authority to make peace on behalf of {ENEMY_INFORMAL_NAME}. Our council should decide whether to offer peace, and what the terms will be." />
+	<string id="taom_the_fix_eiGl6XBr" text="{=eiGl6XBr}Vote on whether to answer {CALLING_KINGDOM} call to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
+	<string id="taom_the_fix_EqevKYZD" text="{=EqevKYZD}As {RULER_NAME_AND_TITLE}, you must decide if {CALLED_KINGDOM} will be called to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_COST}{GOLD_ICON}" />
+	<string id="taom_the_fix_eTylgLCc" text="{=eTylgLCc}A courier has arrived from {KINGDOM_NAME}. They offer you an alliance. Your kingdom will vote whether to accept the offer." />
+	<string id="taom_the_fix_eUWYqwE6" text="{=eUWYqwE6}{CALLING_KINGDOM} is not at war with {KINGDOM_TO_CALL_TO_WAR_AGAINST} anymore." />
+	<string id="taom_the_fix_F7CMsDyG" text="{=F7CMsDyG}{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_faUooB7V" text="{=faUooB7V}{KINGDOM} will not be {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_the_fix_fcuUcjYV" text="{=fcuUcjYV}{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_FNCq25P1" text="{=FNCq25P1}{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_FuNbouTu" text="{=FuNbouTu}A courier has arrived from {KINGDOM_NAME}. They call your kingdom to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Your kingdom will vote whether to accept the offer." />
+	<string id="taom_the_fix_G3qGLAeQ" text="{=G3qGLAeQ}{RULER.NAME} has expelled {CLAN} clan from {KINGDOM} against the wishes of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_gf2Lje7o" text="{=gf2Lje7o}{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_GiaTh92Q" text="{=GiaTh92Q}{QUEST_GIVER.LINK}, commanding an army of {QUEST_GIVER_FACTION}, has told you that they need food supplies for their upcoming military campaign. {?QUEST_GIVER.GENDER}She{?}He{\?} wanted you to deliver {GRAIN_AMOUNT} sacks of grain and although it's not necessary, to provide {LIVESTOCK_AMOUNT} live stocks and {WINE_AMOUNT} barrels of wine {?QUEST_GIVER.GENDER}she{?}he{\?} would appreciate it." />
+	<string id="taom_the_fix_Gj5d9y2g" text="{=Gj5d9y2g}{RULER.NAME} of {KINGDOM} has decided to sign a trade agreement with {OTHER_KINGDOM}." />
+	<string id="taom_the_fix_gNf0ALKw" text="{=gNf0ALKw}A courier has arrived from {MAP_FACTION_NAME}. They offer you a white peace. Your kingdom will vote whether to accept the offer." />
+	<string id="taom_the_fix_h5eTEYON" text="{=h5eTEYON}{RULER.NAME} has expelled {CLAN} clan from {KINGDOM}." />
+	<string id="taom_the_fix_h9bWTLgK" text="{=h9bWTLgK}It is time to join our allies, {KINGDOM_NAME}, in their war." />
+	<string id="taom_the_fix_hRfXSdlP" text="{=hRfXSdlP}{LORD.FIRSTNAME} is a head of {CLAN_NAME}, {CLAN_DESCRIPTION} from the lands of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_the_fix_IB1xsVEr" text="{=IB1xsVEr}A courier has arrived from {MAP_FACTION_NAME}. They offer you a white peace. Your vassals have left the decision with you." />
+	<string id="taom_the_fix_INfHUqxT" text="{=INfHUqxT}{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_Ing5gFbO" text="{=Ing5gFbO}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has chosen not to make peace with {KINGDOM} over the objections of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_iOmgCFDI" text="{=iOmgCFDI}Vote to form an alliance with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_ItueKmqd" text="{=ItueKmqd}Your clan is now at war with {QUEST_GIVER_SETTLEMENT_FACTION}. You contract with {QUEST_GIVER.LINK} is canceled." />
+	<string id="taom_the_fix_izwKmH2I" text="{=izwKmH2I}{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_jaioXYDc" text="{=jaioXYDc}{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_JDfnPFsW" text="{=JDfnPFsW}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM} despite the opposition of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_JJQ0Hp4m" text="{=JJQ0Hp4m}A courier has arrived from {MAP_FACTION_NAME}. {MAP_FACTION_NAME} will pay {GOLD_AMOUNT} {GOLD_ICON} in tribute each day to end the war between your realms. Your vassals have left the decision with you." />
+	<string id="taom_the_fix_jnYwiCAz" text="{=jnYwiCAz}{KINGDOM} will continue {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_the_fix_JOe3BC41" text="{=JOe3BC41}{ENEMY_KINGDOM_INFORMAL_NAME} is currently more powerful than us. We need time to build up our strength." />
+	<string id="taom_the_fix_JQligd8z" text="{=JQligd8z}The council of {KINGDOM} has chosen {KING.NAME} as the new ruler." />
+	<string id="taom_the_fix_JuPUG5wX" text="{=JuPUG5wX}{LORD.NAME} is {TITLE} of {FACTION_NAME} and head of {CLAN_NAME}, {CLAN_DESCRIPTION} that is backing {RULER} in the civil war. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_the_fix_JY717hPW" text="{=JY717hPW}I do not have the authority to make peace on behalf of {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} and {?ENEMY_RULER.GENDER}her{?}his{\?} council should decide whether to offer peace, and what the terms will be." />
+	<string id="taom_the_fix_K5w135N9" text="{=K5w135N9}{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision was taken against the advice of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_KFHj7ckm" text="{=KFHj7ckm}As the ruler, you must decide if peace will be made with {KINGDOM_NAME}" />
+	<string id="taom_the_fix_KlATZEbb" text="{=KlATZEbb}Forming an Alliance with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_KSrNutEO" text="{=KSrNutEO}{FACTION_LEADER} will decide if war will be declared on {KINGDOM_NAME}. You can pick your stance regarding this decision." />
+	<string id="taom_the_fix_Ktpia7Pa" text="{=Ktpia7Pa}{RULER.NAME} of {KINGDOM} grants {SETTLEMENT} to {LEADER.NAME} despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
+	<string id="taom_the_fix_l5H9x7Lo" text="{=l5H9x7Lo}{RULER.NAME} of {KINGDOM} grants {SETTLEMENT} to {LEADER.NAME}, with {?RULER.GENDER}her{?}his{\?} council evenly split." />
+	<string id="taom_the_fix_L802I9W2" text="{=L802I9W2}Aye, I'll join {FACTION_NAME}." />
+	<string id="taom_the_fix_L81DPSom" text="{=L81DPSom}As {RULER_NAME_AND_TITLE}, you must decide if your realm will answer the call of {CALLING_KINGDOM} and declare war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_COST}{GOLD_ICON}." />
+	<string id="taom_the_fix_Lalj0T1i" text="{=Lalj0T1i}{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} despite opposition from {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_Lbs2bNlg" text="{=Lbs2bNlg}{KINGDOM} will start {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+	<string id="taom_the_fix_lseJ70y0" text="{=lseJ70y0}Your realm is at war with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_LVX2x6Jf" text="{=LVX2x6Jf}I would like to end my contract with {SERVED_FACTION}." />
+	<string id="taom_the_fix_m69pvful" text="{=m69pvful}{KINGDOM_LEADER} will decide if your realm will answer the call of {CALLING_KINGDOM} and declare war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. You can pick your stance regarding this decision." />
+	<string id="taom_the_fix_m6OVl6Dg" text="{=m6OVl6Dg}{RULER.NAME} has expelled {CLAN} clan from {KINGDOM}, with {?RULER.GENDER}her{?}his{\?} council evenly split on the matter." />
+	<string id="taom_the_fix_mfYzCeGR" text="{=mfYzCeGR}{CHARACTER.NAME} was {TITLE} of {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+	<string id="taom_the_fix_mRrYn2qm" text="{=mRrYn2qm}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has chosen not to make peace with {KINGDOM} with the support of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_MSr3HRa1" text="{=MSr3HRa1}{QUEST_GIVER.NAME}, a {?QUEST_GIVER.GENDER}lady{?}lord{\?} of {CLAN}, wants young member of the clan trained in the arts of war." />
+	<string id="taom_the_fix_mvkKP6OE" text="{=mvkKP6OE}{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM}." />
+	<string id="taom_the_fix_MYIgSsfk" text="{=MYIgSsfk}{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision went against the advice of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_n4I3pWOn" text="{=n4I3pWOn}As the ruler, you must decide if peace will be made with {KINGDOM_NAME} by paying {TRIBUTE_AMOUNT} as tribute for {TRIBUTE_DURATION} days." />
+	<string id="taom_the_fix_Nd0Vhkxn" text="{=Nd0Vhkxn}A courier has arrived from {MAP_FACTION_NAME}. They offer you peace if you agree to pay a {GOLD_AMOUNT} {GOLD_ICON} daily tribute. Your vassals have left the decision with you." />
+	<string id="taom_the_fix_NFuezpbG" text="{=NFuezpbG}{CALLED_KINGDOM} are at war with {KINGDOM_NAME} already." />
+	<string id="taom_the_fix_NjPMRWbW" text="{=NjPMRWbW}Make peace with {KINGDOM_NAME}. Our kingdom will receive {TRIBUTE_AMOUNT} tribute daily for {TRIBUTE_DURATION} days." />
+	<string id="taom_the_fix_nkvT88r2" text="{=nkvT88r2}You don't have enough money to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_NuYzgBZB" text="{=NuYzgBZB}You are going too far. {KINGDOM} won't stand for the destruction of its caravans." />
+	<string id="taom_the_fix_o4IxXHnB" text="{=o4IxXHnB}{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_o5AUljbW" text="{=o5AUljbW}{LORD.NAME} is a member of {CLAN_NAME}, {CLAN_DESCRIPTION} of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_the_fix_o69PZuce" text="{=o69PZuce}{OLD_LEADER.LINK} is no longer the head of {CLAN_NAME}. {NEW_LEADER.LINK} has taken over as ruler of the clan." />
+	<string id="taom_the_fix_O9XpB5Ah" text="{=O9XpB5Ah}As the ruler, you must decide if a trade agreement will be made with {KINGDOM}" />
+	<string id="taom_the_fix_oAw74q3r" text="{=oAw74q3r}As {RULER_NAME_AND_TITLE}, you must decide if your realm will answer the call of {CALLING_KINGDOM} and declare war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
+	<string id="taom_the_fix_Oe1NdVLe" text="{=Oe1NdVLe}{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM} with {?RULER.GENDER}her{?}his{\?} council evenly split on the matter." />
+	<string id="taom_the_fix_Oi20UrO2" text="{=Oi20UrO2}Our war with {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} is going well enough. But there are some who say that we don't have enough to show for all the blood and silver we've spent. A clear victory at this stage would do a lot of good. I think I would like to see our banner flying from the towers of {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
+	<string id="taom_the_fix_OlIWwLbP" text="{=OlIWwLbP}Yes. It's about the war with {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]We need to tie up some of their forces, and the easiest way to do that would be to raid their villages. It's a cruel business and will be hard on the common folk, but their lords will need to chase the raiders and it will prevent them from doing the same to us. If you take this on, I shall reward you if you succeed." />
+	<string id="taom_the_fix_Ouj6eSWC" text="{=Ouj6eSWC}{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_PneX4Ayw" text="{=PneX4Ayw}A courier bearing a call to war offer from {KINGDOM_NAME} against {KINGDOM_TO_CALL_TO_WAR_AGAINST} has arrived at the court of your realm." />
+	<string id="taom_the_fix_PP7KD7OC" text="{=PP7KD7OC}{RULER.NAME} of {KINGDOM} has decided to sign a trade agreement with {OTHER_KINGDOM}, with his {?RULER.GENDER}her{?}his{\?} council evenly divided on the matter." />
+	<string id="taom_the_fix_PutoRsWp" text="{=PutoRsWp}A courier arrives from {CLAN_NAME}. They offer you {GOLD_AMOUNT}{GOLD_ICON} in ransom if you will free {CAPTIVE_HERO.NAME}." />
+	<string id="taom_the_fix_q3wD0rbq" text="{=q3wD0rbq}{SETTLEMENT_LINK} is governed by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {KEEP_INFO}" />
+	<string id="taom_the_fix_q9DnHVcZ" text="{=q9DnHVcZ}It is not in our interests to join {KINGDOM_NAME} in their war." />
+	<string id="taom_the_fix_qa4FlTWS" text="{=qa4FlTWS}{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
+	<string id="taom_the_fix_qgN9o2ip" text="{=qgN9o2ip}It is time to call our ally {KINGDOM_NAME} to war againts {KINGDOM_TO_CALL_TO_WAR_AGAINST}!. Your kingdom will vote whether to propose a call to war agreement to them." />
+	<string id="taom_the_fix_qN3x2usk" text="{=qN3x2usk}Vote on whether to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_COST}{GOLD_ICON}." />
+	<string id="taom_the_fix_R0bJS0pn" text="{=R0bJS0pn}Make peace with {OTHER_FACTION}" />
+	<string id="taom_the_fix_r0Kq0aeB" text="{=r0Kq0aeB}{FACTION_LEADER} will decide if {CALLED_KINGDOM} will be called to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST} for {CALL_TO_WAR_COST}{GOLD_ICON}. You can pick your stance on this decision.." />
+	<string id="taom_the_fix_rd229FYG" text="{=rd229FYG}{RULER.NAME} has expelled {CLAN} clan from {KINGDOM} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_RH8mgLEk" text="{=RH8mgLEk}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} has declared war on {KINGDOM} with support from half of {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_rJIuQ0hc" text="{=rJIuQ0hc}{RULER.NAME} of {KINGDOM} has chosen not to sign a trade agreement with {OTHER_KINGDOM} over the objections of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_rtfoywJl" text="{=rtfoywJl}Declare war on {KINGDOM_NAME}" />
+	<string id="taom_the_fix_RVDojUOM" text="{=RVDojUOM}The lands around {SETTLEMENT_LINK} are owned mostly by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {PROSPERITY_INFO}" />
+	<string id="taom_the_fix_sbFboHmV" text="{=sbFboHmV}A courier has arrived from {MAP_FACTION_NAME}. They offer you peace if you agree to pay a {GOLD_AMOUNT} {GOLD_ICON} daily tribute. Your kingdom will vote whether to accept the offer." />
+	<string id="taom_the_fix_Shk9QCDg" text="{=Shk9QCDg}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} has declared war on {KINGDOM}." />
+	<string id="taom_the_fix_SR9FC5jH" text="{=SR9FC5jH}A courier has arrived from {MAP_FACTION_NAME} bearing a peace offer. {MAP_FACTION_NAME} will pay {GOLD_AMOUNT} {GOLD_ICON} in tribute each day to end the war between your realms. Your kingdom will vote whether to accept the offer." />
+	<string id="taom_the_fix_syGyjjKE" text="{=syGyjjKE}Answer the call of {CALLING_KINGDOM}, and declare war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_TauRjAud" text="{=TauRjAud}{NAME} of {FACTION}" />
+	<string id="taom_the_fix_TENbJKpP" text="{=TENbJKpP}{OFFERED_KINGDOM_NAME} is offering you work as a mercenary, paying {GOLD_AMOUNT}{GOLD_ICON} per influence point that you would gain from fighting on their behalf. Do you accept?" />
+	<string id="taom_the_fix_uc4M4bhG" text="{=uc4M4bhG}Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
+	<string id="taom_the_fix_uiY3ds0Z" text="{=uiY3ds0Z}{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_UQq4ekeu" text="{=UQq4ekeu}{RULER.NAME} of {KINGDOM} has chosen not to sign a trade agreement with {OTHER_KINGDOM}." />
+	<string id="taom_the_fix_UtnItjeJ" text="{=UtnItjeJ}{CALLING_KINGDOM_LINK} has called on {CALLED_KINGDOM_LINK} to declare war against {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
+	<string id="taom_the_fix_uWdj1X2c" text="{=uWdj1X2c}{CHARACTER.NAME} was a member of {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+	<string id="taom_the_fix_UWzQsHA2" text="{=UWzQsHA2}{SETTLEMENT_LINK} is governed by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
+	<string id="taom_the_fix_V097rA1v" text="{=V097rA1v}{LORD.FIRSTNAME} is a head of {CLAN_NAME}, a rising new clan. {?LORD.GENDER}She{?}He{\?} is still making {?LORD.GENDER}her{?}his{\?} reputation." />
+	<string id="taom_the_fix_vf2pb7Ts" text="{=vf2pb7Ts}{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_Vg5RmOqL" text="{=Vg5RmOqL}{FACTION_LEADER} will decide if {KINGDOM} will sign a trade agreement with {OTHER_KINGDOM}. You can pick your stance regarding this decision." />
+	<string id="taom_the_fix_VWoHoUin" text="{=VWoHoUin}There will be no peace between us and {ENEMY_INFORMAL_NAME}, any more than the wolf makes peace with the sheep." />
+	<string id="taom_the_fix_wijL0mTy" text="{=wijL0mTy}{FACTION_LEADER} will decide if an alliance will be formed with {KINGDOM_NAME}. You can pick your stance regarding this decision." />
+	<string id="taom_the_fix_wsDNxArW" text="{=wsDNxArW}{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has chosen not to make peace with {KINGDOM}." />
+	<string id="taom_the_fix_xAuejv91" text="{=xAuejv91}{RULER.NAME} of {KINGDOM} has decided against making peace with {OTHER_KINGDOM}, with his {?RULER.GENDER}her{?}his{\?} council evenly divided on the matter." />
+	<string id="taom_the_fix_XaZyU3Cn" text="{=XaZyU3Cn}{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} chose not to go to war with {KINGDOM} despite the wishes of {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_XbYCVCbR" text="{=XbYCVCbR}We oppose calling our ally {CALLED_KINGDOM} to war." />
+	<string id="taom_the_fix_xhK4zMec" text="{=xhK4zMec}{RULER.NAME} has decided to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+	<string id="taom_the_fix_xKev8i5B" text="{=xKev8i5B}The call that {CALLING_KINGDOM_LINK} issued to {CALLED_KINGDOM_LINK}, to go to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, has ended." />
+	<string id="taom_the_fix_xM97H0oR" text="{=xM97H0oR}Vote for declaring war on {KINGDOM_NAME}." />
+	<string id="taom_the_fix_yAOQnMVw" text="{=yAOQnMVw}You're of {FACTION}, right? That means you're my prisoner." />
+	<string id="taom_the_fix_yBL3TzXw" text="{=yBL3TzXw}{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+	<string id="taom_the_fix_YT4OvaAG" text="{=YT4OvaAG}Very well. You may consider yourself under the protection of {FACTION_NAME}. You have until this time tomorrow to complete your journey, or we may ask for another payment from you." />
+	<string id="taom_the_fix_yUYNlQhU" text="{=yUYNlQhU}Good, I'll have my men write up a simple contract. On behalf of {KINGDOM_FORMAL_NAME}, I welcome you. May you put your sword to good use against our enemies." />
+	<string id="taom_the_fix_Zckbdm4Z" text="{=Zckbdm4Z}{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief with {?RULER.GENDER}her{?}his{\?} council's support." />
+	<string id="taom_the_fix_zd9sawl9" text="{=zd9sawl9}You are already allied with {KINGDOM_NAME}." />
+	<string id="taom_the_fix_zXuo0Wbj" text="{=zXuo0Wbj}Signing a trade agreement with {KINGDOM}" />
+	<string id="taom_the_fix_ZZ1oLfEq" text="{=ZZ1oLfEq}{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} with the support of {?RULER.GENDER}her{?}his{\?} council." />
