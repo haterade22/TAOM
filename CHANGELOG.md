@@ -1,5 +1,19 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-26
+
+### Claude Code Session Hooks, Agent Audit Logging & Scope-Check Skill
+
+Cherry-picked ideas from the Claude Code Game Studios template and adapted them to TAOM's workflow. Adds session awareness, context recovery, agent tracking, and a scope assessment tool.
+
+- **New hook:** `session-start.sh` (SessionStart) — prints branch, last 5 commits, latest CHANGELOG features, uncommitted file counts, and TODO/FIXME count on fresh session startup. Skips on resume/compact/clear.
+- **New hook:** `pre-compact.sh` (PreCompact) — dumps all modified/staged/untracked files before context compaction so the file list survives summarization.
+- **New hook:** `log-agent.sh` (SubagentStart) — silently logs every subagent invocation (type, ID, timestamp) to `.claude/logs/agent-audit.log`.
+- **New skill:** `/scope-check [change]` — read-only assessment that classifies a proposed change as GREEN (natural extension), YELLOW (adjacent work), or RED (scope creep) based on CHANGELOG themes, recent commits, and in-progress work.
+- **Updated:** `settings.json` with SessionStart, PreCompact, SubagentStart hook entries
+- **Updated:** `.gitignore` with `.claude/logs/` exclusion
+- **Updated:** `CLAUDE.md` hooks and skills tables, `agent-teams.md` troubleshooting and limitations sections
+
 ## 2026-03-25
 
 ### Remove "The" Prefix from Kingdom/Faction Names (#38)

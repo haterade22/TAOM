@@ -281,13 +281,14 @@ Report findings to lead via message. You are read-only — do NOT edit files.
 | **Adapter file conflicts** | Coordinate new adapter creation through lead. Only one agent adds to `Main/Adapters/` at a time. |
 | **Permission prompts** | Each teammate gets its own permission prompts in its own context. |
 | **Teammate appears stuck** | Send a message to the teammate. Idle status is normal — it means they're waiting for input. |
+| **Which agents were used?** | Check `.claude/logs/agent-audit.log` — the `log-agent.sh` SubagentStart hook logs every agent invocation with timestamp and type. |
 | **SubModule.cs conflicts** | Lead owns this file. If a feature needs new behavior registrations, report to lead. |
 
 ---
 
 ## Limitations
 
-- **No session resumption** — if a teammate crashes, its context is lost
+- **No session resumption** — if a teammate crashes, its context is lost (the `pre-compact.sh` hook helps the lead session recover by dumping modified file lists before context compaction)
 - **No file locking** — agents can overwrite each other's changes if ownership isn't respected
 - **No nested teams** — a teammate cannot spawn its own team
 - **One team per session** — the lead manages one team at a time
