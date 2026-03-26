@@ -9531,6 +9531,7 @@
         </Traits>
         <Equipments>
             <EquipmentSet id="gondor_bat_template_medium_e" />
+            <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_1_53_2" name="{=aom_lord_1_53_2_name}Itarildú" age="6" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
