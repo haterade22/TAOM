@@ -123,7 +123,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
         _harmony.PatchCategory("Patch11_Diplomacy");
         _harmony.PatchCategory("Patch12_WarOfTheRing");
-        _harmony.PatchCategory("Patch13_RaceAge");
+
         _harmony.PatchCategory("Patch14_Execution");
     }
 

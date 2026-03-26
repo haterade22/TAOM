@@ -6,15 +6,11 @@ TAOM uses same-sex parent race inheritance: male children inherit the father's r
 
 ## Why This Exists
 
-Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.SilentAssert` that checks `mother.Race == father.Race`, which fires on every cross-race birth (e.g., Human + Elf). While not a crash in release builds, it triggers debugger breakpoints and logs noise. TAOM removes this assert since cross-race couples are expected in Middle-earth.
+Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.SilentAssert` that checks `mother.Race == father.Race`. This is a soft assert — it only logs, never crashes or prevents execution. Since cross-race couples are expected in Middle-earth, this assert fires harmlessly and is ignored.
 
 ## Architecture
 
-### Two-Layer Solution
-
-1. **TaomHeroCreationModel** (GameModel override) — Overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic.
-
-2. **DeliverOffSpring_RaceAssert_Patch** (Harmony Transpiler) — Surgically removes the `Debug.SilentAssert(mother.Race == father.Race)` call from `HeroCreator.DeliverOffSpring` at IL level. The assert checks the parents' races (not the child's), so it still fires for cross-race couples even with the GameModel override.
+**TaomHeroCreationModel** (GameModel override) overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic.
 
 ### Component Diagram
 
@@ -26,7 +22,7 @@ TaomHeroCreationModel (GameModel)
               │
               ▼
 HeroCreator.DeliverOffSpring (vanilla, static)
-  └─ Debug.SilentAssert ← REMOVED by Transpiler
+  └─ Debug.SilentAssert ← harmless soft assert, ignored
               │
               ▼
   CreateHero(template) → CharacterObject.CreateFrom(parent)
@@ -35,29 +31,19 @@ HeroCreator.DeliverOffSpring (vanilla, static)
   New Hero with same-sex parent's race
 ```
 
-### Why Not Just a GameModel Override?
-
-The `SilentAssert` in `DeliverOffSpring` checks `mother.CharacterObject.Race == father.CharacterObject.Race` — the **parents'** races, not the child's template. Even though our GameModel ensures the child always gets the father's race, the assert still fires because the parents are different races. The transpiler is needed to eliminate this.
-
-### Why Not Just a Transpiler?
-
-A transpiler alone would suppress the assert but leave vanilla's same-sex-parent race logic in place. Female children would still get the mother's race. The GameModel override is the proper extension point for changing race inheritance behavior.
-
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/RaceAge/Models/TaomHeroCreationModel.cs` | GameModel — father's CharacterObject always used as offspring template |
-| `Main/Features/RaceAge/Hooks/DeliverOffSpring_RaceAssert_Patch.cs` | Harmony transpiler — removes SilentAssert from DeliverOffSpring |
+| `Main/Features/RaceAge/Models/TaomHeroCreationModel.cs` | GameModel — same-sex parent CharacterObject used as offspring template |
 
 ## Integration
 
 - `TaomHeroCreationModel` registered in `SubModule.OnGameStart` via `campaignStarter.AddModel()`
-- Transpiler registered under `Patch13_RaceAge` category in `SubModule.OnGameInitializationFinished`
 
 ## Dependencies
 
-- None beyond standard TaleWorlds assemblies and HarmonyLib
+- None beyond standard TaleWorlds assemblies
 
 ## Relationship to RaceAge Feature
 
