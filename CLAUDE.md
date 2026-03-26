@@ -33,6 +33,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/scope-check [change]` | Assess whether a proposed change fits current work context |
 | `/build-fix [error]` | Incrementally fix dotnet build errors, one at a time, minimal diffs |
 | `/verify [quick\|full]` | Run build + test + git status and produce pass/fail report |
+| `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -87,10 +88,12 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Adapters | `Main/Adapters/` |
 | Core | `Main/Core/` |
 | CharacterCreation | `Main/Features/CharacterCreation/` |
+| AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
 | CC narrative data | `Main/_Module/ModuleData/charactercreation/` (JSON) |
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
+| StartupResources config | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | CI/CD | `.github/workflows/build.yml` |
 | Shared build props | `Directory.Build.props` |
@@ -110,6 +113,28 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) |
 
+## Harmony Patch Categories
+
+| Category | Feature | Target |
+|----------|---------|--------|
+| `Patch0_BattleScenes` | Battle scenes (DISABLED) | `Campaign.InitializeScenes` |
+| `Patch1_FirstTimeInit` | First-time initialization | Various |
+| `Patch2_RefreshTableau` | Banner tableau refresh | Various |
+| `Patch3_SetRace` | Race assignment | Various |
+| `Patch4_CharacterSpawner` | Character spawning | Various |
+| `Patch5_FaceGen` | Face generation | Various |
+| `Patch6_BannerEditor` | Banner editor | Various |
+| `Patch7_FactionMap` | Faction map | Various |
+| `Patch8_SiegeCampGuard` | Siege camp guard | Various |
+| `Patch9_RaceFilter` | Race filter | Various |
+| `Patch10_WeatherBoundsGuard` | Weather bounds clamping | `DefaultMapWeatherModel` |
+| `Patch11_Diplomacy` | Diplomacy system | Various |
+| `Patch12_WarOfTheRing` | War of the Ring | Various |
+| `Patch14_Execution` | Execution system | Various |
+| `Patch15_BannerLayerLimit` | Banner layer limit | Various |
+| `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` |
+| `Patch17_TroopWeight` | Troop weight system | `PartyBase`, `TroopRoster` |
+
 ## Agent Teams
 
 Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent-teams.md).
@@ -124,6 +149,75 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 | **CLAUDE.md** | New files, paths, patterns | `CLAUDE.md` |
 | **ADRs** | Architectural decisions | `docs/adrs/` |
 | **Migration tracking** | Migration tasks | `docs/migration/TRACKING.md` |
+| **GitHub Issues** | Every feature, bug, crash, system fix | `gh issue create/close` |
+| **Feature docs** | Every completed feature | `docs/features/<name>.md` |
+
+## GitHub Issue & Knowledge Base Requirements (MANDATORY)
+
+### GitHub Issues — Create for ALL Work
+
+Every feature, bug fix, crash fix, or system change MUST have a GitHub issue. No exceptions.
+
+**When to create:**
+- Starting a new feature → create issue BEFORE implementation
+- Fixing a bug/crash → create issue documenting the problem FIRST
+- Completing a fix that was done without an issue → create issue retroactively with full details
+
+**Issue content — be exhaustive:**
+
+For **bug/crash fixes**, the issue body MUST include:
+1. **Problem** — exact error message, stack trace, reproduction steps
+2. **Analysis** — root cause investigation, what was examined, why it happened
+3. **Solution** — what was changed and WHY that approach was chosen
+4. **Files changed** — list of modified files with one-line descriptions
+5. **Testing** — how the fix was verified
+
+For **features**, the issue body MUST include:
+1. **Motivation** — why this feature exists, what problem it solves
+2. **Design** — architecture decisions, alternatives considered
+3. **Implementation** — key files, patterns used, configuration
+4. **Testing** — test coverage, how to verify it works
+
+**Lifecycle:**
+- Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
+- Reference the issue number in commits when possible
+- **Close the issue** with `gh issue close` when the work is complete and verified
+
+**Commands:** Use `gh issue create` and `gh issue close` via Bash.
+
+### Feature Documentation — `docs/features/`
+
+Every completed feature MUST have a documentation file at `docs/features/<feature-name>.md`. This is the **knowledge base** that prevents future sessions from re-analyzing solved problems.
+
+**Use template:** `docs/features/TEMPLATE.md`
+
+**Sections required:**
+- Overview — what it does in 2-3 sentences
+- Why This Exists — the problem it solves, with specific examples
+- Architecture — design challenge, solution approach, component diagram
+- Configuration — config files, data formats, current values
+- Key Files — table of all files with their purpose
+- Dependencies — what it relies on
+- Tests — test file locations and coverage summary
+- How-To — common operations (e.g., "How to add a new X")
+- Performance — any optimization notes (if applicable)
+
+**Existing examples:** `docs/features/race-age-system.md`, `docs/features/offspring-race-inheritance.md`
+
+**Rule:** If a future session needs to understand a feature, the doc should contain enough detail that ZERO decompilation, code reading, or re-analysis is needed for the conceptual understanding. Code reading is only for the current state of the implementation.
+
+### Completion Workflow (MANDATORY)
+
+Before closing out any feature or fix, run this sequence:
+
+1. `/verify` — build + tests pass
+2. `/deep-review [feature-name]` — launches 4 parallel agents (standards, Bannerlord 1.3 compat, efficiency, completeness)
+3. Fix any issues flagged by the review
+4. Create/close GitHub issue with full details
+5. Write/update `docs/features/<name>.md`
+6. Update `CHANGELOG.md`
+
+**Do not skip `/deep-review`.** It catches adapter pattern violations, v1.3 API incompatibilities, performance issues, and missing docs/tests before they become bugs.
 
 ## Commits
 
@@ -182,6 +276,7 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 | `suggest-compact.sh` | PreToolUse (*) | Suggests `/compact` after 50 tool calls, then every 25 |
 | `mcp-health-check.sh` | PreToolUse (mcp__*) | Blocks MCP calls to servers marked unhealthy in last 60s |
 | `mcp-health-mark.sh` | PostToolUseFailure (mcp__*) | Marks MCP server unhealthy after failed tool call, 60s backoff |
+| `check-deep-review.sh` | Stop | Reminds to run `/deep-review` if real work was done |
 
 ## Notes
 
