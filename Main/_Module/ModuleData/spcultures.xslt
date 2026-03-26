@@ -46,6 +46,7 @@
 			<!-- Equipment rosters -->
 			<xsl:attribute name="default_battle_equipment_roster">EquipmentRoster.dunland_bat_template_medium_a</xsl:attribute>
 			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.dunland_civ_template_default_a</xsl:attribute>
+			<xsl:attribute name="default_stealth_equipment_roster">EquipmentRoster.default_stealth_equipment_roster</xsl:attribute>
 
 			<!-- NPC references -->
 			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_dunland</xsl:attribute>
@@ -325,6 +326,7 @@
 			<!-- Equipment rosters -->
 			<xsl:attribute name="default_battle_equipment_roster">EquipmentRoster.harad_bat_template_medium_a</xsl:attribute>
 			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.harad_civ_template_a</xsl:attribute>
+			<xsl:attribute name="default_stealth_equipment_roster">EquipmentRoster.default_stealth_equipment_roster</xsl:attribute>
 
 			<!-- NPC references -->
 			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_harad</xsl:attribute>
@@ -604,6 +606,7 @@
 			<!-- Equipment rosters -->
 			<xsl:attribute name="default_battle_equipment_roster">EquipmentRoster.rohan_bat_template_medium_a</xsl:attribute>
 			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.rohan_civ_template_default_a</xsl:attribute>
+			<xsl:attribute name="default_stealth_equipment_roster">EquipmentRoster.default_stealth_equipment_roster</xsl:attribute>
 
 			<!-- NPC references -->
 			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_rohan</xsl:attribute>
@@ -882,6 +885,7 @@
 			<!-- Equipment rosters -->
 			<xsl:attribute name="default_battle_equipment_roster">EquipmentRoster.rhun_bat_template_medium_a</xsl:attribute>
 			<xsl:attribute name="default_civilian_equipment_roster">EquipmentRoster.rhun_civ_template_a</xsl:attribute>
+			<xsl:attribute name="default_stealth_equipment_roster">EquipmentRoster.default_stealth_equipment_roster</xsl:attribute>
 
 			<!-- NPC references -->
 			<xsl:attribute name="tournament_master">NPCCharacter.tournament_master_rhun</xsl:attribute>

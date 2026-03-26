@@ -125,6 +125,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch12_WarOfTheRing");
 
         _harmony.PatchCategory("Patch14_Execution");
+        _harmony.PatchCategory("Patch15_BannerLayerLimit");
     }
 
     protected override void OnSubModuleUnloaded()
