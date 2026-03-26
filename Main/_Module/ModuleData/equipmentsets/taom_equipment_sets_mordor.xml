@@ -153,6 +153,20 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== KHAMUL, THE EASTERLING ==================== -->
+
+	<EquipmentRoster id="khamul_bat_equipment">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.nazgul_sword" />
+			<Equipment slot="Head" id="Item.khamul_helmet" />
+			<Equipment slot="Body" id="Item.khamul_body" />
+			<Equipment slot="Gloves" id="Item.khamul_gloves" />
+			<Equipment slot="Leg" id="Item.khamul_boots" />
+			<Equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<!-- ==================== NAZGUL (VARIANT) ==================== -->
 
 	<EquipmentRoster id="nazgul_v1_bat_equipment">

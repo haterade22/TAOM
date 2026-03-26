@@ -3,7 +3,7 @@
     "Bannerlord": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\$(GameBinariesFolder)\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.UIExtenderEx*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*Alliance.Wargs*TAOM_Map*LOTRLOME_Armory*$(ModuleId)*TAOM_Online*_MODULES_",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.MBOptionScreen*Bannerlord.UIExtenderEx*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*Alliance.Wargs*TAOM_Map*LOTRLOME_Armory*$(ModuleId)*TAOM_Online*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\$(GameBinariesFolder)",
       "nativeDebugging": false
     },

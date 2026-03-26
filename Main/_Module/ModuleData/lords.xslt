@@ -2960,7 +2960,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
+                <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000000001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
                                                             <skills>
                 <skill id="OneHanded" value="210"/>
@@ -2993,7 +2993,7 @@
                 <Trait id="Authoritarian" value="2"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
+                <EquipmentSet id="khamul_bat_equipment" />
                 <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
