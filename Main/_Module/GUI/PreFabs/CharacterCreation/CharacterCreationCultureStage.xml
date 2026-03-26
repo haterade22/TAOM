@@ -1,6 +1,7 @@
 <Prefab>
   <Constants>
     <Constant Name="Panel.Width" Value="420"/>
+    <Constant Name="Showcase.Width" Value="450"/>
   </Constants>
   <Window>
     <!-- Root: transparent so the game scene shows through -->
@@ -9,7 +10,7 @@
 
         <!-- Map area — map first, then frame ON TOP -->
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                MarginRight="!Panel.Width">
+                MarginLeft="!Showcase.Width" MarginRight="!Panel.Width">
           <Children>
             <!-- Map content — blue ocean bg, full size. Frame overlays the edges. -->
             <MapContainerWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
@@ -72,6 +73,94 @@
           </Children>
         </Widget>
 
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="!Showcase.Width" HorizontalAlignment="Left"
+                MarginTop="4" MarginBottom="4"
+                DoNotAcceptEvents="true"
+                IsVisible="@HasSelection">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                    SuggestedWidth="440" SuggestedHeight="1023"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    MarginRight="10" MarginBottom="6"
+                    DoNotAcceptEvents="true">
+              <Children>
+                <FactionImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                    SuggestedWidth="429" SuggestedHeight="792"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    MarginTop="4" MarginRight="-20"
+                                    ImageId="@FactionImageId"
+                                    DoNotAcceptEvents="true" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                        SuggestedWidth="396" SuggestedHeight="220"
+                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        DoNotAcceptEvents="true">
+                  <Children>
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                            Sprite="BlankWhiteSquare_9" Color="#0A0B0DCC"
+                            DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                            SuggestedHeight="4" VerticalAlignment="Top"
+                            Sprite="BlankWhiteSquare_9" Color="@FactionAccentColorHex"
+                            DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                            SuggestedHeight="1" VerticalAlignment="Bottom"
+                            MarginLeft="18" MarginRight="18" MarginBottom="30"
+                            Sprite="BlankWhiteSquare_9" Color="#C6AC8D45"
+                            DoNotAcceptEvents="true"
+                            IsVisible="@HasDifficulty" />
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                            MarginTop="12" MarginBottom="12" MarginLeft="16" MarginRight="16"
+                            DoNotAcceptEvents="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    HorizontalAlignment="Center"
+                                    Text="@SelectedFactionName"
+                                    Brush="FactionMap.Title"
+                                    DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    HorizontalAlignment="Center"
+                                    MarginTop="30"
+                                    Text="@SideDisplayText"
+                                    Brush="FactionMap.SideFree"
+                                    DoNotAcceptEvents="true"
+                                    IsVisible="@IsFreePeoples" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    HorizontalAlignment="Center"
+                                    MarginTop="30"
+                                    Text="@SideDisplayText"
+                                    Brush="FactionMap.SideEvil"
+                                    DoNotAcceptEvents="true"
+                                    IsVisible="@IsEvil" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    HorizontalAlignment="Center"
+                                    MarginTop="54"
+                                    Text="@SelectedFactionDesc"
+                                    Brush="FactionMap.BodySmall"
+                                    DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                    MarginBottom="8"
+                                    Text="@DifficultyText"
+                                    Brush="FactionMap.Difficulty"
+                                    DoNotAcceptEvents="true"
+                                    IsVisible="@HasDifficulty" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                    MarginBottom="8"
+                                    Text="This realm is not playable"
+                                    Brush="FactionMap.Warning"
+                                    DoNotAcceptEvents="true"
+                                    IsVisible="@SelectedFactionNotPlayable" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+
         <!-- Drop shadow strips left of panel -->
         <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
                 SuggestedWidth="6" HorizontalAlignment="Right"
@@ -130,69 +219,13 @@
                           <Children>
 
                             <!-- ═══════ FACTION TITLE with faction-colored background ═══════ -->
-                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                    SuggestedHeight="36" MarginBottom="2"
-                                    IsVisible="@HasSelection">
-                              <Children>
-                                <!-- Faction-colored background -->
-                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                        Sprite="BlankWhiteSquare_9" Color="@FactionAccentColorHex" />
-                                <!-- Gold border top/bottom -->
-                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                        SuggestedHeight="1" VerticalAlignment="Top"
-                                        Sprite="BlankWhiteSquare_9" Color="#C6AC8D90" />
-                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                        SuggestedHeight="1" VerticalAlignment="Bottom"
-                                        Sprite="BlankWhiteSquare_9" Color="#C6AC8D90" />
-                                <!-- Title text -->
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="@SelectedFactionName"
-                                            Brush="FactionMap.Title" />
-                              </Children>
-                            </Widget>
-
-                            <!-- Side label -->
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        HorizontalAlignment="Center" MarginTop="1" MarginBottom="1"
-                                        Text="@SideDisplayText"
-                                        Brush="FactionMap.SideFree"
-                                        IsVisible="@IsFreePeoples" />
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        HorizontalAlignment="Center" MarginTop="1" MarginBottom="1"
-                                        Text="@SideDisplayText"
-                                        Brush="FactionMap.SideEvil"
-                                        IsVisible="@IsEvil" />
-
                             <!-- ═══════ FACTION IMAGE ═══════ -->
-                            <FactionImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                                SuggestedHeight="200"
-                                                HorizontalAlignment="Center"
-                                                ImageId="@FactionImageId"
-                                                MarginTop="4" MarginBottom="4"
-                                                IsVisible="@HasSelection" />
 
                             <!-- ═══════ SECTION: Lore ═══════ -->
-                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                         SuggestedHeight="26" MarginTop="4"
-                                         Brush="FactionMap.SectionBar"
-                                         IsVisible="@HasSelection">
-                              <Children>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Lore" Brush="FactionMap.SectionTitle" />
-                              </Children>
-                            </BrushWidget>
-
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        HorizontalAlignment="Center" MarginTop="4" MarginBottom="6"
-                                        Text="@SelectedFactionDesc"
-                                        Brush="FactionMap.Body"
-                                        IsVisible="@HasSelection" />
 
                             <!-- ═══════ SECTION: Perks ═══════ -->
                             <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                         SuggestedHeight="26" MarginTop="2"
+                                         SuggestedHeight="26" MarginTop="4"
                                          Brush="FactionMap.SectionBar"
                                          IsVisible="@HasSelection">
                               <Children>
@@ -311,24 +344,6 @@
                             </ListPanel>
 
                             <!-- ═══════ DIFFICULTY ═══════ -->
-                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                    SuggestedHeight="1" MarginTop="8" MarginLeft="30" MarginRight="30"
-                                    Sprite="BlankWhiteSquare_9" Color="#C6AC8D40"
-                                    IsVisible="@HasDifficulty" />
-
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        HorizontalAlignment="Center" MarginTop="4" MarginBottom="4"
-                                        Text="@DifficultyText"
-                                        Brush="FactionMap.Difficulty"
-                                        IsVisible="@HasDifficulty" />
-
-                            <!-- Non-playable warning -->
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        HorizontalAlignment="Center" MarginTop="6"
-                                        Text="This realm is not playable"
-                                        Brush="FactionMap.Warning"
-                                        IsVisible="@SelectedFactionNotPlayable" />
-
                             <!-- "Choose your Realm" when nothing selected -->
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                         HorizontalAlignment="Center" MarginTop="80"
