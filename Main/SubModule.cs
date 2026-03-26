@@ -19,8 +19,14 @@ using TAOM.Features.Execution.Hooks;
 using TAOM.Features.Execution.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
+using TAOM.Features.StartupResources;
 using TAOM.Features.TroopProgression;
+using TAOM.Features.TroopWeight;
+using TAOM.Features.TroopWeight.Hooks;
 using TAOM.Features.TroopProgression.Models;
+using TAOM.Features.AdvancedCombat;
+using TAOM.Features.Warg;
+using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace TAOM;
@@ -50,6 +56,14 @@ public class SubModule : MBSubModuleBase
 
         var executionHook = IoC.Resolve<IOnExecutionAction>();
         ExecutionIoC.InitializeHooks(executionHook);
+
+        TroopWeightIoC.InitializeHooks(
+            IoC.Resolve<IOnPartyBaseNumberOfAllMembers>(),
+            IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
+            IoC.Resolve<IOnTroopRosterTotalManCount>(),
+            IoC.Resolve<IOnTroopRosterTotalHealthyCount>(),
+            IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
+            IoC.Resolve<IOnPartyVMPopulatePartyListLabel>());
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -102,6 +116,10 @@ public class SubModule : MBSubModuleBase
 
             var executionAction = IoC.Resolve<IOnExecutionAction>();
             campaignStarter.AddModel(new TaomExecutionRelationModel(executionAction));
+
+            var goldService = IoC.Resolve<IStartupGoldService>();
+            var influenceService = IoC.Resolve<IStartupInfluenceService>();
+            campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService));
         }
     }
 
@@ -126,6 +144,17 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch14_Execution");
         _harmony.PatchCategory("Patch15_BannerLayerLimit");
+        _harmony.PatchCategory("Patch16_AtmospherePersistence");
+        _harmony.PatchCategory("Patch17_TroopWeight");
+    }
+
+    public override void OnMissionBehaviorInitialize(Mission mission)
+    {
+        base.OnMissionBehaviorInitialize(mission);
+        mission.AddMissionBehavior(new AdvancedCombatBehavior());
+        mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
+        mission.AddMissionBehavior(new AutonomousMovementPlayerController());
+        mission.AddMissionBehavior(new WargMissionBehavior());
     }
 
     protected override void OnSubModuleUnloaded()

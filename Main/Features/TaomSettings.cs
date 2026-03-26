@@ -11,6 +11,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public override string FolderName => "TAOM";
     public override string FormatType => "json2";
 
+    // --- Troop Weight ---
+
+    [SettingPropertyGroup("Troop Weight")]
+    [SettingPropertyBool("Enable Troop Weight", Order = 0,
+        HintText = "Weighted party size — elite units consume more party capacity. Cave trolls (4x), elves (2x), warg riders (2x).")]
+    public bool EnableTroopWeight { get; set; } = true;
+
     // --- War of the Ring ---
 
     [SettingPropertyGroup("War of the Ring")]

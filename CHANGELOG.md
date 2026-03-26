@@ -2,6 +2,39 @@
 
 ## 2026-03-26
 
+### Feature: Troop Weight System — Elite Unit Party Capacity
+
+- **New feature:** Elite/supernatural units consume more party capacity, preventing armies of pure elite troops
+- **Weights:** Cave trolls (4x), legendary elf commanders (3x), all elves/warg riders/elite guards (2x), standard troops (1x default)
+- **Mechanism:** Harmony postfixes on `PartyBase.NumberOfAllMembers`, `NumberOfRegularMembers`, `TroopRoster.TotalManCount`, `TotalHealthyCount` + 2 UI patches for recruitment and party screens
+- **Config:** `ModuleData/TroopWeights/troop_weights.xml` — data-driven weight assignments for ~80 troop types across all cultures
+- **MCM toggle:** "Enable Troop Weight" in Troop Weight settings group (enabled by default)
+- **Architecture:** `ITroopWeightService` + `TroopWeightXmlLoader` + 6 hook implementations + 6 Harmony patches (`Patch17_TroopWeight`)
+- **Ported from:** LOTRAOM's TroopWeight feature, adapted to TAOM conventions (static Initialize pattern, IPathService, simplified caching)
+
+### Feature: Atmosphere Persistence for Forced-Atmosphere Scenes
+
+- **New feature:** Scenes with "forceatmo" in their name bypass campaign weather, preserving scene-embedded atmosphere
+- **Ported from:** LOTRAOM's `AtmospherePersistence` feature (originally from The Old Realms mod)
+- **1.3 refactor:** Replaced fragile string-based patch (`ScriptingInterfaceOfIMBMission`) with type-safe `Mission.Initialize()` prefix
+- **Architecture:** Static `AtmosphereOverrideService` + thin Harmony patch (`Patch16_AtmospherePersistence`), follows `WeatherBoundsGuard` pattern
+- **Tests:** 7 new tests for scene name detection (null, empty, case-insensitive, position variants)
+
+### Feature: Startup Resources — Culture-Based Gold & Influence Distribution
+
+- **New feature:** Lords receive startup gold and clans receive startup influence at new game creation, configured per culture via XML
+- **Config:** `ModuleData/startup_resources/startup_resources_config.xml` — data-driven, all 15 cultures with gold (500K–6M) and influence (50–2000)
+- **Architecture:** `StartupResourcesBehavior` fires at `OnNewGameCreatedPartialFollowUpEvent` index 1, delegates to `StartupGoldService` and `StartupInfluenceService`
+- **Adapters:** `IStartupHeroAdapter`, `IGoldGiftAdapter`, `IClanStartupAdapter` wrap TaleWorlds sealed types
+- **Tests:** 22 new tests covering config parsing, gold distribution, influence distribution, and behavior trigger logic
+- **Ported from:** LOTRAOM's `StartupFunds` and `StartingInfluence` features
+
+### Fix: NullReferenceException on Minor Faction Hero Spawning
+
+- **Fixed:** Game crash (`NullReferenceException` at `CharacterObject.get_StealthEquipments()`) when spawning minor faction heroes (e.g. Ghilman) on new campaign start
+- **Root cause:** Bannerlord v1.3 added `default_stealth_equipment_roster` attribute to cultures; the 4 XSLT-transformed cultures (Dunland, Harad, Rohan, Rhun) were missing it while the 10 custom cultures in `taom_spcultures.xml` had it
+- **Fix:** Explicitly set `default_stealth_equipment_roster` in all 4 XSLT culture templates in `spcultures.xslt`
+
 ### Everything-Claude-Code Cherry-Pick: Developer Workflow Hooks & Skills
 
 Reviewed the everything-claude-code repository (125+ skills, 28 agents, 60 commands) and adapted the most valuable patterns for TAOM's C#/Bannerlord workflow.

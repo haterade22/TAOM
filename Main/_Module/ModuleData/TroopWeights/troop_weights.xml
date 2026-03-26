@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TroopWeights>
+    <!-- Default weight is 1.0 for all unlisted troops -->
+
+    <!-- ===== CAVE TROLLS (Weight 4.0) — Massive monster units ===== -->
+    <TroopWeight id="cave_troll" weight="4.0" />
+
+    <!-- ===== RIVENDELL / IMLADRIS — High Elves ===== -->
+    <!-- Legendary commanders (Weight 3.0) -->
+    <TroopWeight id="rivendell_glorfindel_guard" weight="3.0" />
+    <TroopWeight id="rivendell_gondolin_battlemaster" weight="3.0" />
+    <TroopWeight id="rivendell_high_captain" weight="3.0" />
+    <TroopWeight id="rivendell_knight_golden_flower" weight="3.0" />
+    <TroopWeight id="rivendell_warden_gondolin" weight="3.0" />
+    <!-- Elite tier (Weight 2.0) -->
+    <TroopWeight id="rivendell_royal_knight" weight="2.0" />
+    <TroopWeight id="rivendell_royal_guard" weight="2.0" />
+    <TroopWeight id="noldorin_lancer" weight="2.0" />
+    <TroopWeight id="rider_of_himring" weight="2.0" />
+    <TroopWeight id="battlemaster_of_the_first_age" weight="2.0" />
+    <TroopWeight id="imladris_blademaster" weight="2.0" />
+    <TroopWeight id="imladris_horse_archer" weight="2.0" />
+    <TroopWeight id="imladris_marchwarden" weight="2.0" />
+    <TroopWeight id="imladris_outrider" weight="2.0" />
+    <TroopWeight id="imladris_warden" weight="2.0" />
+    <TroopWeight id="imladris_guardsman" weight="2.0" />
+    <TroopWeight id="imladris_marksman" weight="2.0" />
+    <TroopWeight id="imladris_nobleman" weight="2.0" />
+    <TroopWeight id="imladris_swordguard" weight="2.0" />
+    <TroopWeight id="imladris_archer" weight="2.0" />
+    <TroopWeight id="rivendell_noble" weight="2.0" />
+
+    <!-- ===== MIRKWOOD — Wood Elves ===== -->
+    <!-- Legendary (Weight 3.0) -->
+    <TroopWeight id="mirkwood_palaceguard" weight="3.0" />
+    <TroopWeight id="mirkwood_thingolheir" weight="3.0" />
+    <!-- Elite tier (Weight 2.0) -->
+    <TroopWeight id="mirkwood_beleglas" weight="2.0" />
+    <TroopWeight id="mirkwood_borderwardens" weight="2.0" />
+    <TroopWeight id="mirkwood_glaivesman" weight="2.0" />
+    <TroopWeight id="mirkwood_guardians" weight="2.0" />
+    <TroopWeight id="mirkwood_guards" weight="2.0" />
+    <TroopWeight id="mirkwood_rochenlas" weight="2.0" />
+    <TroopWeight id="mirkwood_sentinels" weight="2.0" />
+    <TroopWeight id="mirkwood_swordsman" weight="2.0" />
+    <TroopWeight id="mirkwood_wardens" weight="2.0" />
+    <TroopWeight id="mirkwood_woodsman" weight="2.0" />
+    <TroopWeight id="mirkwood_recruit" weight="2.0" />
+
+    <!-- ===== EREBOR — Elite Dwarven Warriors ===== -->
+    <!-- Royal elite (Weight 3.0) -->
+    <TroopWeight id="erebor_oathsworn_royal_legionary" weight="3.0" />
+    <TroopWeight id="erebor_noble_royal_warden" weight="3.0" />
+    <!-- Elite tier (Weight 2.0) -->
+    <TroopWeight id="erebor_oathsworn" weight="2.0" />
+    <TroopWeight id="erebor_oathsworn_legionary" weight="2.0" />
+    <TroopWeight id="erebor_noble_gate_warden" weight="2.0" />
+    <TroopWeight id="erebor_noble_shield_breaker" weight="2.0" />
+
+    <!-- ===== MORDOR ===== -->
+    <TroopWeight id="mordor_black_numenorean" weight="2.0" />
+    <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />
+    <TroopWeight id="mordor_uruk_captain" weight="2.0" />
+    <TroopWeight id="mordor_uruk_darkblade" weight="2.0" />
+    <TroopWeight id="mordor_uruk_deathwarden" weight="2.0" />
+
+    <!-- ===== DOL GULDUR ===== -->
+    <!-- Khamul's Shadow Line (Weight 2.0) -->
+    <TroopWeight id="dg_khamul_shadow_knight" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_reaper" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_guard" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_bowman" weight="2.0" />
+    <TroopWeight id="dg_khamul_veiled_guard" weight="2.0" />
+    <TroopWeight id="dg_khamul_veiled_knight" weight="2.0" />
+    <TroopWeight id="dg_khamul_veiled_marksman" weight="2.0" />
+    <TroopWeight id="dg_khamul_veiled_reaper" weight="2.0" />
+    <!-- Uruk Black Guard Line (Weight 2.0) -->
+    <TroopWeight id="dg_uruk_black_guard" weight="2.0" />
+    <TroopWeight id="dg_uruk_black_slayer" weight="2.0" />
+    <TroopWeight id="dg_uruk_black_sharpshooter" weight="2.0" />
+    <TroopWeight id="dg_uruk_black_howler" weight="2.0" />
+    <TroopWeight id="dg_uruk_rage_bearer" weight="2.0" />
+    <!-- Warg Riders (Weight 2.0) -->
+    <TroopWeight id="dg_warg_red_fang" weight="2.0" />
+    <TroopWeight id="dg_fell_warg_rider" weight="2.0" />
+    <TroopWeight id="dg_warg_scout" weight="2.0" />
+    <TroopWeight id="dg_warg_raider" weight="2.0" />
+    <TroopWeight id="dg_warg_skirmisher" weight="2.0" />
+
+    <!-- ===== GUNDABAD ===== -->
+    <TroopWeight id="gundabad_chosen_of_tharzog" weight="2.0" />
+    <TroopWeight id="gundabad_warg_tamer" weight="2.0" />
+    <TroopWeight id="gundabad_warg_warrior" weight="2.0" />
+
+    <!-- ===== ISENGARD ===== -->
+    <!-- Orthanc Guard Line (Weight 2.0) -->
+    <TroopWeight id="orthanc_guard" weight="2.0" />
+    <TroopWeight id="orthanc_warden" weight="2.0" />
+    <TroopWeight id="orthanc_bodyguard" weight="2.0" />
+    <!-- Urukhai Elites (Weight 2.0) -->
+    <TroopWeight id="urukhai_nazg_hai" weight="2.0" />
+    <!-- Warg Riders (Weight 2.0) -->
+    <TroopWeight id="orc_warg_scout" weight="2.0" />
+    <TroopWeight id="orc_warg_overseer" weight="2.0" />
+    <TroopWeight id="orc_warg_enforcer" weight="2.0" />
+    <TroopWeight id="orc_warg_lieutenant" weight="2.0" />
+</TroopWeights>
