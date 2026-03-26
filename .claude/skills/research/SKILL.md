@@ -22,8 +22,12 @@ Decompile and analyze: `$ARGUMENTS`
    - `TaleWorlds.Library.dll` — Base types, PropertyOwner
    - `SandBox.dll` / `SandBox.ViewModelCollection.dll` — Sandbox-specific logic
 
-2. **Decompile the class**:
-   ```powershell
+2. **Decompile the class** — Use the ILSpy MCP server (preferred) or fall back to `ilspycmd`:
+   ```
+   # Preferred: ILSpy MCP (configured in .vscode/mcp.json)
+   mcp__ilspy__decompile_type("E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<ClassName>")
+
+   # Fallback: CLI
    ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\<DLL>" -t "TaleWorlds.<Namespace>.<ClassName>"
    ```
 

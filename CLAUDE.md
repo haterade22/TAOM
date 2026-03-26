@@ -118,12 +118,42 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 ## MCP Servers
 
-| Server | Scope | Purpose |
-|--------|-------|---------|
-| **Serena** | Project | Symbolic code navigation |
-| **GitHub** | Project | PRs, issues, actions, code search |
-| **sequential-thinking** | Global | Extended reasoning |
-| **context7** | Global | Library documentation |
+| Server | Scope | Purpose | Config |
+|--------|-------|---------|--------|
+| **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | Global |
+| **GitHub** | Project | PRs, issues, actions, code search | Global |
+| **sequential-thinking** | Global | Extended reasoning for complex design decisions | Global |
+| **context7** | Global | Library documentation lookup | Global |
+| **filesystem** | Project | File operations across TAOM, Bannerlord Modules, LOTRAOM assets | `.vscode/mcp.json` |
+| **git** | Project | Rich git operations (diff, blame, log, branch management) | `.vscode/mcp.json` |
+| **ilspy** | Project | Decompile TaleWorlds DLLs — use for `/research` and adapter work | `.vscode/mcp.json` |
+
+### MCP Usage Guide
+
+| Task | Use This MCP | Instead Of |
+|------|-------------|------------|
+| Navigate C# symbols, find references | **Serena** (`find_symbol`, `get_symbols_overview`) | Grep for class names |
+| Decompile TaleWorlds classes | **ilspy** (`decompile_type`, `list_types`) | `ilspycmd` via Bash |
+| Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
+| Git blame, diff analysis | **git** (`git_blame`, `git_diff`) | `git` via Bash |
+| Create/close GitHub issues | **GitHub** | `gh` via Bash |
+| Research before implementing | **ilspy** + **Serena** together | Manual decompilation workflow |
+
+### ILSpy MCP for TaleWorlds Research
+
+The `ilspy` MCP server wraps `ilspycmd` and provides direct decompilation tools. Use it instead of manual `ilspycmd` bash commands when researching TaleWorlds internals:
+
+```
+# These MCP tools replace manual ilspycmd usage:
+mcp__ilspy__decompile_type  — Decompile a specific class/type from a DLL
+mcp__ilspy__list_types      — List all types in an assembly
+```
+
+**Accessible DLL path**: `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+
+### Configuration
+
+Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (Serena, GitHub, sequential-thinking, context7) are configured in VS Code extension settings.
 
 ## Hooks
 

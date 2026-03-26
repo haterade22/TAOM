@@ -16,8 +16,8 @@ You are a specialized agent for decompiling and analyzing TaleWorlds Bannerlord 
 Research TaleWorlds sealed types by decompiling DLLs and providing actionable analysis for the TAOM mod.
 
 ## Environment
-- Game DLLs: `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\`
-- Decompiler: `ilspycmd`
+- Game DLLs: `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+- Decompiler: `ilspycmd` (CLI) or `ilspy` MCP server (preferred)
 - Target version: Bannerlord v1.3.12
 
 ## Key DLLs
@@ -31,9 +31,21 @@ Research TaleWorlds sealed types by decompiling DLLs and providing actionable an
 | `SandBox.dll` | Sandbox-specific implementations |
 
 ## Decompilation Commands
+
+### Preferred: ILSpy MCP Server
+The `ilspy` MCP server is configured in `.vscode/mcp.json`. Use it for direct decompilation:
+```
+# Decompile a specific type
+mcp__ilspy__decompile_type("E:\Steam\...\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<Class>")
+
+# List all types in an assembly
+mcp__ilspy__list_types("E:\Steam\...\Win64_Shipping_Client\<DLL>")
+```
+
+### Fallback: CLI
 ```powershell
 # Full class decompilation
-ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\<DLL>" -t "TaleWorlds.<Namespace>.<Class>"
+ilspycmd "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\<DLL>" -t "TaleWorlds.<Namespace>.<Class>"
 
 # Search for patterns
 ilspycmd "<path>" -t "<Class>" 2>&1 | Select-String -Pattern "<pattern>"

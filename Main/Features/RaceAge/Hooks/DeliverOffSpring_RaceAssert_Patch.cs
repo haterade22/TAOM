@@ -17,21 +17,17 @@ public static class DeliverOffSpring_RaceAssert_Patch
     [HarmonyTranspiler]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var silentAssert = AccessTools.Method(
-            typeof(Debug), nameof(Debug.SilentAssert),
-            new[] { typeof(bool), typeof(string), typeof(bool), typeof(string), typeof(string), typeof(int) });
-
-        if (silentAssert == null)
-            throw new ArgumentException(
-                "Cannot find Debug.SilentAssert method. Patch: DeliverOffSpring_RaceAssert_Patch");
-
         var newInstructions = new List<CodeInstruction>(instructions);
         var callIndex = -1;
 
+        // Find the SilentAssert call by matching method name on the operand,
+        // since CallerXxx default parameter attributes can cause MethodInfo.Equals mismatch
         for (int i = 0; i < newInstructions.Count; i++)
         {
             if (newInstructions[i].opcode == OpCodes.Call &&
-                silentAssert.Equals(newInstructions[i].operand))
+                newInstructions[i].operand is MethodInfo mi &&
+                mi.Name == "SilentAssert" &&
+                mi.DeclaringType?.Name == "Debug")
             {
                 callIndex = i;
                 break;
@@ -42,10 +38,14 @@ public static class DeliverOffSpring_RaceAssert_Patch
             throw new ArgumentException(
                 "Cannot find Debug.SilentAssert call in DeliverOffSpring IL. Patch: DeliverOffSpring_RaceAssert_Patch");
 
-        // SilentAssert takes 6 parameters. Walk backwards from the call to find
-        // the start of the argument loading sequence. The IL pattern is:
-        //   load mother, get CharacterObject, get Race
-        //   load father, get CharacterObject, get Race
+        // Walk backwards from the call to find the start of the argument sequence.
+        // The IL pattern is:
+        //   ldarg.0 (mother)
+        //   callvirt get_CharacterObject
+        //   callvirt get_Race
+        //   ldarg.1 (father)
+        //   callvirt get_CharacterObject
+        //   callvirt get_Race
         //   ceq
         //   ldstr "" (message)
         //   ldc.i4.0 (getDump)
@@ -54,26 +54,19 @@ public static class DeliverOffSpring_RaceAssert_Patch
         //   ldc.i4 275 (callerLine)
         //   call Debug.SilentAssert
         //
-        // We NOP from the first instruction that loads arguments for this assert
-        // through the call itself. Scan backwards to find where arg loading begins.
-        // The race comparison starts with loading the mother argument (ldarg.0 for
-        // a static method where mother is the first parameter).
-
-        // Find the start by looking for the Race property getter sequence.
-        // Walk backwards from callIndex to find the earliest instruction that feeds
-        // into this SilentAssert. We look for the pattern starting with ldarg.0
-        // (mother parameter) before any get_Race call.
-        var raceGetter = AccessTools.PropertyGetter(typeof(BasicCharacterObject), nameof(BasicCharacterObject.Race));
+        // Find ldarg.0 that starts the race comparison by scanning backwards
         var startIndex = -1;
 
         for (int i = callIndex - 1; i >= 0; i--)
         {
             if (newInstructions[i].opcode == OpCodes.Ldarg_0)
             {
-                // Verify this ldarg.0 is followed by a path that reaches get_Race
-                for (int j = i + 1; j < callIndex && j <= i + 3; j++)
+                // Verify this ldarg.0 is followed (within a few instructions) by
+                // a call to a property getter named "get_Race"
+                for (int j = i + 1; j < callIndex && j <= i + 4; j++)
                 {
-                    if (raceGetter != null && raceGetter.Equals(newInstructions[j].operand))
+                    if (newInstructions[j].operand is MethodInfo propGetter &&
+                        propGetter.Name == "get_Race")
                     {
                         startIndex = i;
                         break;
@@ -89,7 +82,7 @@ public static class DeliverOffSpring_RaceAssert_Patch
             throw new ArgumentException(
                 "Cannot find race comparison start in DeliverOffSpring IL. Patch: DeliverOffSpring_RaceAssert_Patch");
 
-        // NOP out the entire SilentAssert sequence
+        // NOP out the entire SilentAssert sequence (args + call)
         for (int i = startIndex; i <= callIndex; i++)
         {
             newInstructions[i].opcode = OpCodes.Nop;

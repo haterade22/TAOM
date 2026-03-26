@@ -20,17 +20,19 @@ Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.Si
 
 ```
 TaomHeroCreationModel (GameModel)
-  └─ GetCharacterTemplateForOffspring → always father.CharacterObject
-        │
-        ▼
+  └─ GetCharacterTemplateForOffspring
+        ├─ male child  → father.CharacterObject (father's race)
+        └─ female child → mother.CharacterObject (mother's race)
+              │
+              ▼
 HeroCreator.DeliverOffSpring (vanilla, static)
   └─ Debug.SilentAssert ← REMOVED by Transpiler
-        │
-        ▼
-  CreateHero(template) → CharacterObject.CreateFrom(father)
-        │                   └─ FillFrom copies Race from father
-        ▼
-  New Hero with father's race
+              │
+              ▼
+  CreateHero(template) → CharacterObject.CreateFrom(parent)
+              │            └─ FillFrom copies Race from same-sex parent
+              ▼
+  New Hero with same-sex parent's race
 ```
 
 ### Why Not Just a GameModel Override?

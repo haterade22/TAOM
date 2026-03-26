@@ -74,7 +74,36 @@ AI assistants **MUST** research TaleWorlds decompiled source code before proceed
 
 ## Decompilation Workflow
 
-### Initial Setup (First Time)
+### Preferred: ILSpy MCP Server (Recommended)
+
+The `ilspy` MCP server provides direct decompilation without manual CLI commands. It's configured in `.vscode/mcp.json` and available to Claude Code automatically.
+
+**Usage — decompile a specific type:**
+```
+mcp__ilspy__decompile_type(assembly_path, type_name)
+```
+
+**Usage — list all types in an assembly:**
+```
+mcp__ilspy__list_types(assembly_path)
+```
+
+**DLL path**: `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+
+**When to use**: For all TaleWorlds research — Harmony patches, adapter design, GameModel overrides, bug investigation. The MCP server handles decompilation in-process, avoiding shell overhead and providing structured output.
+
+### Alternative: Manual ilspycmd (Fallback)
+
+If the MCP server is unavailable, use `ilspycmd` directly:
+
+```powershell
+# Decompile a specific type
+ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\<DLL>" -t "TaleWorlds.<Namespace>.<Class>"
+```
+
+### Batch Decompilation Script (Full Codebase)
+
+For bulk decompilation of all assemblies (useful for IDE-based searching):
 
 **1. Run Decompilation Script**
 ```powershell
@@ -142,9 +171,18 @@ Common assemblies by feature area:
 | Mission/battle logic | `TaleWorlds.MountAndBlade` | `Decompiled/TaleWorlds.MountAndBlade/` |
 | AI and automation | `TaleWorlds.CampaignSystem.AI` | `Decompiled/TaleWorlds.CampaignSystem/AI/` |
 
-**3. Search Decompiled Source**
+**3. Search and Decompile**
 
-Use IDE search or grep:
+**Preferred — Use the ILSpy MCP server:**
+```
+# Decompile a specific class directly
+mcp__ilspy__decompile_type("E:\Steam\...\TaleWorlds.CampaignSystem.dll", "TaleWorlds.CampaignSystem.Party.MobileParty")
+
+# List all types in an assembly to find the right class
+mcp__ilspy__list_types("E:\Steam\...\SandBox.dll")
+```
+
+**Alternative — Search pre-decompiled source with grep:**
 ```powershell
 # Search for class definition
 grep -r "class MobileParty" Decompiled/TaleWorlds.CampaignSystem/

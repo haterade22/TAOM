@@ -375,6 +375,22 @@
 	<string id="taom_policy_continue" text="{=jnYwiCAz}{KINGDOM} will continue {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
 	<string id="taom_policy_reject" text="{=faUooB7V}{KINGDOM} will not be {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
 
+	<!-- DLL localization token overrides (hero titles and lord descriptions) -->
+	<string id="taom_hero_of_faction" text="{=TauRjAud}{NAME} of {FACTION}" />
+	<string id="taom_servant_of_faction" text="{=2mVZORaE}a servant of {FACTION_NAME}" />
+	<string id="taom_lord_ruler_desc" text="{=6d4ZTvGv}{LORD.NAME} is {TITLE} of {FACTION_NAME} and head of the {CLAN_NAME}, {CLAN_DESCRIPTION} of the realm. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_lord_member_desc" text="{=o5AUljbW}{LORD.NAME} is a member of the {CLAN_NAME}, {CLAN_DESCRIPTION} of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_lord_member_desc2" text="{=9Obe3S6L}{LORD.FIRSTNAME} is a member of the {CLAN_NAME}, {CLAN_DESCRIPTION} from the lands of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_lord_head_desc" text="{=hRfXSdlP}{LORD.FIRSTNAME} is a head of the {CLAN_NAME}, {CLAN_DESCRIPTION} from the lands of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_lord_civilwar_member" text="{=0bPb5btR}{LORD.NAME} is a member of the {CLAN_NAME}, {CLAN_DESCRIPTION} of {FACTION_NAME} that is backing {RULER} in the civil war. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_lord_civilwar_ruler" text="{=JuPUG5wX}{LORD.NAME} is {TITLE} of {FACTION_NAME} and head of the {CLAN_NAME}, {CLAN_DESCRIPTION} that is backing {RULER} in the civil war. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
+	<string id="taom_castle_desc" text="{=4pmvrnmN}The castle of {SETTLEMENT_LINK} is owned by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {KEEP_INFO}" />
+	<string id="taom_settlement_gov" text="{=q3wD0rbq}{SETTLEMENT_LINK} is governed by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {KEEP_INFO}" />
+	<string id="taom_settlement_land" text="{=RVDojUOM}The lands around {SETTLEMENT_LINK} are owned mostly by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {PROSPERITY_INFO}" />
+	<string id="taom_settlement_gov2" text="{=UWzQsHA2}{SETTLEMENT_LINK} is governed by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
+	<string id="taom_prisoner_dialogue" text="{=yAOQnMVw}You're of {FACTION}, right? That means you're my prisoner." />
+	<string id="taom_protection_dialogue" text="{=YT4OvaAG}Very well. You may consider yourself under the protection of {FACTION_NAME}. You have until this time tomorrow to complete your journey, or we may ask for another payment from you." />
+
 	<!-- Erebor -->
 	<string id="str_faction_official.erebor" text="{=taom_str_faction_official.erebor}a noble dwarf" />
 	<string id="str_faction_official.erebor_f" text="{=taom_str_faction_official.erebor_f}a lady dwarf" />
