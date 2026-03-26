@@ -12,8 +12,8 @@
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -26,8 +26,8 @@
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -40,8 +40,8 @@
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_robe" />
 			<Equipment slot="Gloves" id="Item.rivendell_vambraces_3" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -54,8 +54,8 @@
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
 			<Equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -68,8 +68,8 @@
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

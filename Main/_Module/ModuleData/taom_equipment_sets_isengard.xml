@@ -11,8 +11,8 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
-		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-		<Equipment slot="Horse" id="Item.warg_brown" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -24,8 +24,8 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
-		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-		<Equipment slot="Horse" id="Item.warg_brown" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -36,8 +36,8 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
-		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-		<Equipment slot="Horse" id="Item.warg_brown" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -48,8 +48,8 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
-		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-		<Equipment slot="Horse" id="Item.warg_brown" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -61,8 +61,8 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
-		<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-		<Equipment slot="Horse" id="Item.warg_brown" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

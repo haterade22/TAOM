@@ -12,8 +12,6 @@
 			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -26,8 +24,6 @@
 			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_b" />
 			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_b" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -40,8 +36,6 @@
 			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_c" />
 			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_c" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_c" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -54,8 +48,6 @@
 			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_d" />
 			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_a" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_d" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -68,8 +60,6 @@
 			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_b" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

@@ -11,8 +11,8 @@
 			<Equipment slot="Body" id="Item.easterling_torso" />
 			<Equipment slot="Gloves" id="Item.easterling_glove" />
 			<Equipment slot="Leg" id="Item.easterling_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -25,8 +25,8 @@
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
 			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -38,8 +38,8 @@
 			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
 			<Equipment slot="Gloves" id="Item.easterling_glove" />
 			<Equipment slot="Leg" id="Item.easterling_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -52,8 +52,8 @@
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
 			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -66,8 +66,8 @@
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
 			<Equipment slot="Gloves" id="Item.easterling_glove" />
 			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

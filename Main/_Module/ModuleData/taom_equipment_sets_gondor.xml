@@ -12,8 +12,8 @@
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -26,8 +26,8 @@
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -39,8 +39,8 @@
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_fount_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -52,8 +52,8 @@
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -65,8 +65,8 @@
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_med_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -118,8 +118,8 @@
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
 			<Equipment slot="Leg" id="Item.boromir_boots" />
 			<Equipment slot="Cape" id="Item.boromir_pauldrons" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -141,8 +141,8 @@
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

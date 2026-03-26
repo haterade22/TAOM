@@ -12,8 +12,8 @@
 			<Equipment slot="Cape" id="Item.scarf" />
 			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
 			<Equipment slot="Leg" id="Item.plated_strip_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -25,8 +25,8 @@
 			<Equipment slot="Body" id="Item.sturgian_lamellar_base" />
 			<Equipment slot="Gloves" id="Item.reinforced_leather_vambraces" />
 			<Equipment slot="Leg" id="Item.plated_strip_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -39,8 +39,8 @@
 			<Equipment slot="Cape" id="Item.scarf" />
 			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
 			<Equipment slot="Leg" id="Item.plated_strip_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -53,8 +53,8 @@
 			<Equipment slot="Cape" id="Item.scarf" />
 			<Equipment slot="Gloves" id="Item.reinforced_leather_vambraces" />
 			<Equipment slot="Leg" id="Item.plated_strip_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -69,8 +69,8 @@
 			<Equipment slot="Cape" id="Item.scarf" />
 			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
 			<Equipment slot="Leg" id="Item.plated_strip_boots" />
-		<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-		<Equipment slot="Horse" id="Item.charger" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
