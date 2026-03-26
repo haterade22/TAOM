@@ -54,14 +54,14 @@
                       </Children>
                     </Widget>
 
-                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsVisible="@IsClanDestroyed" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="25">
+                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsVisible="@IsClanDestroyed" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="40">
                       <Children>
                         <!--Banner-->
                         <MaskedTextureWidget Id="ClanBannerVisual" DataSource="{Banner}" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" IsBig="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="243" SuggestedHeight="398" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.Clan.Banner"  />
                       </Children>
                     </Widget>
 
-                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsHidden="@IsClanDestroyed" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="25">
+                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsHidden="@IsClanDestroyed" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="40">
                       <Children>
                         <!--Banner-->
                         <MaskedTextureWidget Id="ClanBannerVisual" DataSource="{Banner}" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" IsBig="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="243" SuggestedHeight="398" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.Clan.Banner"  />

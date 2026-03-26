@@ -259,7 +259,7 @@
       <Width>18</Width>
       <Height>23</Height>
       <SheetX>4063</SheetX>
-      <SheetY>397</SheetY>
+      <SheetY>428</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -268,7 +268,7 @@
       <Width>18</Width>
       <Height>23</Height>
       <SheetX>4063</SheetX>
-      <SheetY>428</SheetY>
+      <SheetY>397</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -277,7 +277,7 @@
       <Width>20</Width>
       <Height>24</Height>
       <SheetX>4065</SheetX>
-      <SheetY>4022</SheetY>
+      <SheetY>3990</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -286,7 +286,7 @@
       <Width>20</Width>
       <Height>24</Height>
       <SheetX>4065</SheetX>
-      <SheetY>3990</SheetY>
+      <SheetY>4022</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -303,8 +303,8 @@
       <Name>ArmyManagement\army_card</Name>
       <Width>160</Width>
       <Height>140</Height>
-      <SheetX>3378</SheetX>
-      <SheetY>1079</SheetY>
+      <SheetX>3878</SheetX>
+      <SheetY>1042</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -312,8 +312,8 @@
       <Name>ArmyManagement\header_gather_army_1</Name>
       <Width>139</Width>
       <Height>55</Height>
-      <SheetX>1783</SheetX>
-      <SheetY>1078</SheetY>
+      <SheetX>3772</SheetX>
+      <SheetY>764</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -330,8 +330,8 @@
       <Name>ArmyManagement\header_gather_army_3</Name>
       <Width>76</Width>
       <Height>55</Height>
-      <SheetX>1779</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>3951</SheetX>
+      <SheetY>2032</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -339,8 +339,8 @@
       <Name>ArmyManagement\header_gather_army_4</Name>
       <Width>85</Width>
       <Height>55</Height>
-      <SheetX>794</SheetX>
-      <SheetY>1189</SheetY>
+      <SheetX>3858</SheetX>
+      <SheetY>1983</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -348,8 +348,8 @@
       <Name>ArmyManagement\header_gather_army_5</Name>
       <Width>71</Width>
       <Height>55</Height>
-      <SheetX>997</SheetX>
-      <SheetY>1289</SheetY>
+      <SheetX>3038</SheetX>
+      <SheetY>1778</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -393,7 +393,7 @@
       <Name>Barter\barter_collapser</Name>
       <Width>523</Width>
       <Height>140</Height>
-      <SheetX>4</SheetX>
+      <SheetX>1066</SheetX>
       <SheetY>3380</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -411,7 +411,7 @@
       <Name>Barter\barter_collapser_pressed</Name>
       <Width>523</Width>
       <Height>140</Height>
-      <SheetX>1066</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>3380</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -420,8 +420,8 @@
       <Name>Barter\barter_header</Name>
       <Width>496</Width>
       <Height>68</Height>
-      <SheetX>597</SheetX>
-      <SheetY>610</SheetY>
+      <SheetX>1797</SheetX>
+      <SheetY>423</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -438,8 +438,8 @@
       <Name>Barter\barter_item_tuple_hover</Name>
       <Width>467</Width>
       <Height>66</Height>
-      <SheetX>1854</SheetX>
-      <SheetY>423</SheetY>
+      <SheetX>3613</SheetX>
+      <SheetY>315</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -447,8 +447,8 @@
       <Name>Barter\barter_item_tuple_pressed</Name>
       <Width>467</Width>
       <Height>66</Height>
-      <SheetX>3613</SheetX>
-      <SheetY>315</SheetY>
+      <SheetX>2971</SheetX>
+      <SheetY>846</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -456,8 +456,8 @@
       <Name>Barter\barter_item_tuple_selected</Name>
       <Width>467</Width>
       <Height>66</Height>
-      <SheetX>566</SheetX>
-      <SheetY>857</SheetY>
+      <SheetX>3446</SheetX>
+      <SheetY>846</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -483,8 +483,8 @@
       <Name>Barter\deal_button</Name>
       <Width>94</Width>
       <Height>94</Height>
-      <SheetX>2637</SheetX>
-      <SheetY>1557</SheetY>
+      <SheetX>3030</SheetX>
+      <SheetY>1310</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -492,8 +492,8 @@
       <Name>Barter\deal_button_enabled</Name>
       <Width>94</Width>
       <Height>94</Height>
-      <SheetX>2751</SheetX>
-      <SheetY>1355</SheetY>
+      <SheetX>3921</SheetX>
+      <SheetY>1727</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -501,8 +501,8 @@
       <Name>Barter\Gold</Name>
       <Width>63</Width>
       <Height>63</Height>
-      <SheetX>448</SheetX>
-      <SheetY>1239</SheetY>
+      <SheetX>3168</SheetX>
+      <SheetY>1610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -519,8 +519,8 @@
       <Name>Barter\Peace</Name>
       <Width>63</Width>
       <Height>63</Height>
-      <SheetX>377</SheetX>
-      <SheetY>1186</SheetY>
+      <SheetX>3284</SheetX>
+      <SheetY>1697</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -528,8 +528,8 @@
       <Name>Barter\War</Name>
       <Width>63</Width>
       <Height>63</Height>
-      <SheetX>519</SheetX>
-      <SheetY>1248</SheetY>
+      <SheetX>4023</SheetX>
+      <SheetY>1798</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -556,7 +556,7 @@
       <Width>50</Width>
       <Height>50</Height>
       <SheetX>4035</SheetX>
-      <SheetY>3512</SheetY>
+      <SheetY>3570</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -582,8 +582,8 @@
       <Name>CharacterDeveloper\attribute_point_icon</Name>
       <Width>38</Width>
       <Height>38</Height>
-      <SheetX>3416</SheetX>
-      <SheetY>1668</SheetY>
+      <SheetX>3784</SheetX>
+      <SheetY>265</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -609,17 +609,17 @@
       <Name>CharacterDeveloper\character_perk_background_active</Name>
       <Width>80</Width>
       <Height>86</Height>
-      <SheetX>2523</SheetX>
-      <SheetY>1335</SheetY>
+      <SheetX>2161</SheetX>
+      <SheetY>1586</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>3</SheetID>
       <Name>CharacterDeveloper\character_progress_bar</Name>
       <Width>244</Width>
       <Height>14</Height>
-      <SheetX>4</SheetX>
-      <SheetY>3242</SheetY>
+      <SheetX>3458</SheetX>
+      <SheetY>3861</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -709,7 +709,7 @@
       <Width>38</Width>
       <Height>59</Height>
       <SheetX>4048</SheetX>
-      <SheetY>2290</SheetY>
+      <SheetY>2357</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -718,7 +718,7 @@
       <Width>38</Width>
       <Height>59</Height>
       <SheetX>4048</SheetX>
-      <SheetY>2357</SheetY>
+      <SheetY>2290</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -726,8 +726,8 @@
       <Name>CharacterDeveloper\focus_point_small_1</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2711</SheetX>
-      <SheetY>1171</SheetY>
+      <SheetX>2356</SheetX>
+      <SheetY>1282</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -735,8 +735,8 @@
       <Name>CharacterDeveloper\focus_point_small_10</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2616</SheetX>
-      <SheetY>1171</SheetY>
+      <SheetX>2803</SheetX>
+      <SheetY>1174</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -744,8 +744,8 @@
       <Name>CharacterDeveloper\focus_point_small_2</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>3192</SheetX>
-      <SheetY>1723</SheetY>
+      <SheetX>2708</SheetX>
+      <SheetY>1174</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -753,8 +753,8 @@
       <Name>CharacterDeveloper\focus_point_small_3</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2409</SheetX>
-      <SheetY>1335</SheetY>
+      <SheetX>3117</SheetX>
+      <SheetY>1814</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -762,8 +762,8 @@
       <Name>CharacterDeveloper\focus_point_small_4</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2288</SheetX>
-      <SheetY>922</SheetY>
+      <SheetX>3615</SheetX>
+      <SheetY>1438</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -771,8 +771,8 @@
       <Name>CharacterDeveloper\focus_point_small_5</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2193</SheetX>
-      <SheetY>922</SheetY>
+      <SheetX>3520</SheetX>
+      <SheetY>1438</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -780,8 +780,8 @@
       <Name>CharacterDeveloper\focus_point_small_6</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2521</SheetX>
-      <SheetY>1171</SheetY>
+      <SheetX>920</SheetX>
+      <SheetY>1095</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -789,8 +789,8 @@
       <Name>CharacterDeveloper\focus_point_small_7</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>2611</SheetX>
-      <SheetY>1335</SheetY>
+      <SheetX>3612</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -798,8 +798,8 @@
       <Name>CharacterDeveloper\focus_point_small_8</Name>
       <Width>87</Width>
       <Height>43</Height>
-      <SheetX>3239</SheetX>
-      <SheetY>1171</SheetY>
+      <SheetX>3736</SheetX>
+      <SheetY>1672</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -817,7 +817,7 @@
       <Width>41</Width>
       <Height>41</Height>
       <SheetX>4048</SheetX>
-      <SheetY>2633</SheetY>
+      <SheetY>2584</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -834,8 +834,8 @@
       <Name>CharacterDeveloper\learning_rate_limit_triangle</Name>
       <Width>50</Width>
       <Height>50</Height>
-      <SheetX>1867</SheetX>
-      <SheetY>3110</SheetY>
+      <SheetX>4035</SheetX>
+      <SheetY>3512</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -870,7 +870,7 @@
       <Name>CharacterDeveloper\little_progressbar_frame</Name>
       <Width>31</Width>
       <Height>17</Height>
-      <SheetX>547</SheetX>
+      <SheetX>508</SheetX>
       <SheetY>3242</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -888,8 +888,8 @@
       <Name>CharacterDeveloper\notification</Name>
       <Width>37</Width>
       <Height>40</Height>
-      <SheetX>2706</SheetX>
-      <SheetY>1335</SheetY>
+      <SheetX>3739</SheetX>
+      <SheetY>265</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -987,8 +987,8 @@
       <Name>CharacterDeveloper\skills_icon_shadow</Name>
       <Width>92</Width>
       <Height>94</Height>
-      <SheetX>2739</SheetX>
-      <SheetY>1635</SheetY>
+      <SheetX>1344</SheetX>
+      <SheetY>1304</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -997,7 +997,7 @@
       <Width>41</Width>
       <Height>41</Height>
       <SheetX>4048</SheetX>
-      <SheetY>2584</SheetY>
+      <SheetY>2633</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1014,8 +1014,8 @@
       <Name>CharacterDeveloper\skill_icon_large_frame</Name>
       <Width>151</Width>
       <Height>151</Height>
-      <SheetX>2103</SheetX>
-      <SheetY>983</SheetY>
+      <SheetX>3440</SheetX>
+      <SheetY>1042</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1041,8 +1041,8 @@
       <Name>CharacterDeveloper\AttributePopup\attribute_popup_divider</Name>
       <Width>565</Width>
       <Height>55</Height>
-      <SheetX>1867</SheetX>
-      <SheetY>709</SheetY>
+      <SheetX>2398</SheetX>
+      <SheetY>846</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1055,12 +1055,12 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>4</SheetID>
       <Name>CharacterDeveloper\AttributePopup\plus_button</Name>
       <Width>77</Width>
       <Height>77</Height>
-      <SheetX>2804</SheetX>
-      <SheetY>2906</SheetY>
+      <SheetX>2998</SheetX>
+      <SheetY>1610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1068,17 +1068,17 @@
       <Name>CharacterDeveloper\AttributePopup\plus_button_hover</Name>
       <Width>77</Width>
       <Height>77</Height>
-      <SheetX>1019</SheetX>
-      <SheetY>1103</SheetY>
+      <SheetX>3083</SheetX>
+      <SheetY>1610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>3</SheetID>
       <Name>CharacterDeveloper\AttributePopup\plus_button_pressed</Name>
       <Width>77</Width>
       <Height>77</Height>
-      <SheetX>1019</SheetX>
-      <SheetY>1188</SheetY>
+      <SheetX>2804</SheetX>
+      <SheetY>2906</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1087,7 +1087,7 @@
       <Width>73</Width>
       <Height>138</Height>
       <SheetX>4018</SheetX>
-      <SheetY>3038</SheetY>
+      <SheetY>3184</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1096,7 +1096,7 @@
       <Width>73</Width>
       <Height>138</Height>
       <SheetX>4018</SheetX>
-      <SheetY>3184</SheetY>
+      <SheetY>3038</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1122,8 +1122,8 @@
       <Name>CharacterDeveloper\SkillBackgrounds\skill_plate1</Name>
       <Width>152</Width>
       <Height>152</Height>
-      <SheetX>1783</SheetX>
-      <SheetY>918</SheetY>
+      <SheetX>3120</SheetX>
+      <SheetY>992</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1131,8 +1131,8 @@
       <Name>CharacterDeveloper\SkillBackgrounds\skill_plate2</Name>
       <Width>152</Width>
       <Height>152</Height>
-      <SheetX>1943</SheetX>
-      <SheetY>983</SheetY>
+      <SheetX>3280</SheetX>
+      <SheetY>1042</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1140,8 +1140,8 @@
       <Name>CharacterDeveloper\SkillBackgrounds\skill_plate3</Name>
       <Width>152</Width>
       <Height>152</Height>
-      <SheetX>1623</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>2960</SheetX>
+      <SheetY>1042</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1158,8 +1158,8 @@
       <Name>Clan\clan_collapser</Name>
       <Width>585</Width>
       <Height>96</Height>
-      <SheetX>4</SheetX>
-      <SheetY>216</SheetY>
+      <SheetX>3082</SheetX>
+      <SheetY>211</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1167,8 +1167,8 @@
       <Name>Clan\clan_collapser_pressed</Name>
       <Width>585</Width>
       <Height>96</Height>
-      <SheetX>3082</SheetX>
-      <SheetY>211</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>216</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1185,8 +1185,8 @@
       <Name>Clan\clan_tuple</Name>
       <Width>585</Width>
       <Height>87</Height>
-      <SheetX>4</SheetX>
-      <SheetY>616</SheetY>
+      <SheetX>597</SheetX>
+      <SheetY>148</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1203,8 +1203,8 @@
       <Name>Clan\clan_tuple_selected</Name>
       <Width>585</Width>
       <Height>87</Height>
-      <SheetX>597</SheetX>
-      <SheetY>515</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>616</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1230,8 +1230,8 @@
       <Name>Clan\fiefs_sort_header_governor</Name>
       <Width>164</Width>
       <Height>98</Height>
-      <SheetX>3160</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3781</SheetX>
+      <SheetY>1494</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1239,13 +1239,22 @@
       <Name>Clan\fiefs_sort_header_profit</Name>
       <Width>128</Width>
       <Height>98</Height>
-      <SheetX>3712</SheetX>
-      <SheetY>1609</SheetY>
+      <SheetX>2655</SheetX>
+      <SheetY>1334</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>3</SheetID>
       <Name>Clan\finance_collapser</Name>
+      <Width>851</Width>
+      <Height>119</Height>
+      <SheetX>1287</SheetX>
+      <SheetY>3679</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>Clan\finance_collapser_hover</Name>
       <Width>851</Width>
       <Height>119</Height>
       <SheetX>4</SheetX>
@@ -1254,20 +1263,11 @@
     </SpritePart>
     <SpritePart>
       <SheetID>3</SheetID>
-      <Name>Clan\finance_collapser_hover</Name>
+      <Name>Clan\finance_collapser_pressed</Name>
       <Width>851</Width>
       <Height>119</Height>
       <SheetX>863</SheetX>
       <SheetY>3110</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>3</SheetID>
-      <Name>Clan\finance_collapser_pressed</Name>
-      <Width>851</Width>
-      <Height>119</Height>
-      <SheetX>1287</SheetX>
-      <SheetY>3679</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1311,8 +1311,8 @@
       <Name>Clan\other_sort_header_income</Name>
       <Width>128</Width>
       <Height>98</Height>
-      <SheetX>3961</SheetX>
-      <SheetY>1592</SheetY>
+      <SheetX>2519</SheetX>
+      <SheetY>1310</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1320,8 +1320,8 @@
       <Name>Clan\other_sort_header_location</Name>
       <Width>173</Width>
       <Height>98</Height>
-      <SheetX>2979</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3600</SheetX>
+      <SheetY>1494</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1347,8 +1347,8 @@
       <Name>Clan\parties_sort_header_location</Name>
       <Width>205</Width>
       <Height>98</Height>
-      <SheetX>3546</SheetX>
-      <SheetY>1141</SheetY>
+      <SheetX>1991</SheetX>
+      <SheetY>969</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1356,8 +1356,8 @@
       <Name>Clan\parties_sort_header_name</Name>
       <Width>250</Width>
       <Height>98</Height>
-      <SheetX>3772</SheetX>
-      <SheetY>772</SheetY>
+      <SheetX>3704</SheetX>
+      <SheetY>159</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1365,8 +1365,8 @@
       <Name>Clan\parties_sort_header_size</Name>
       <Width>133</Width>
       <Height>98</Height>
-      <SheetX>3153</SheetX>
-      <SheetY>1617</SheetY>
+      <SheetX>1960</SheetX>
+      <SheetY>1282</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1374,17 +1374,17 @@
       <Name>Clan\portrait_slot_right_panel</Name>
       <Width>113</Width>
       <Height>84</Height>
-      <SheetX>2158</SheetX>
-      <SheetY>1350</SheetY>
+      <SheetX>3958</SheetX>
+      <SheetY>945</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>1</SheetID>
       <Name>Clan\progress_bar</Name>
       <Width>244</Width>
       <Height>14</Height>
-      <SheetX>3458</SheetX>
-      <SheetY>3861</SheetY>
+      <SheetX>2476</SheetX>
+      <SheetY>3444</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1401,8 +1401,8 @@
       <Name>Clan\progress_bar_glow</Name>
       <Width>244</Width>
       <Height>14</Height>
-      <SheetX>2476</SheetX>
-      <SheetY>3444</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>3242</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1437,8 +1437,8 @@
       <Name>Crafting\crafting_leave_button</Name>
       <Width>142</Width>
       <Height>69</Height>
-      <SheetX>302</SheetX>
-      <SheetY>913</SheetY>
+      <SheetX>1194</SheetX>
+      <SheetY>1304</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1446,8 +1446,8 @@
       <Name>Crafting\crafting_leave_button_hover</Name>
       <Width>142</Width>
       <Height>69</Height>
-      <SheetX>152</SheetX>
-      <SheetY>931</SheetY>
+      <SheetX>1044</SheetX>
+      <SheetY>1255</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1464,8 +1464,8 @@
       <Name>Crafting\crafting_weapon_type_stone</Name>
       <Width>576</Width>
       <Height>49</Height>
-      <SheetX>2557</SheetX>
-      <SheetY>920</SheetY>
+      <SheetX>3374</SheetX>
+      <SheetY>985</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1473,8 +1473,8 @@
       <Name>Crafting\header_button1</Name>
       <Width>169</Width>
       <Height>51</Height>
-      <SheetX>2839</SheetX>
-      <SheetY>1723</SheetY>
+      <SheetX>1444</SheetX>
+      <SheetY>1395</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1482,8 +1482,8 @@
       <Name>Crafting\header_button1_pressed</Name>
       <Width>165</Width>
       <Height>50</Height>
-      <SheetX>3715</SheetX>
-      <SheetY>1862</SheetY>
+      <SheetX>836</SheetX>
+      <SheetY>1037</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1491,8 +1491,8 @@
       <Name>Crafting\header_button2</Name>
       <Width>163</Width>
       <Height>51</Height>
-      <SheetX>3544</SheetX>
-      <SheetY>1833</SheetY>
+      <SheetX>836</SheetX>
+      <SheetY>978</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1500,8 +1500,8 @@
       <Name>Crafting\header_button2_pressed</Name>
       <Width>237</Width>
       <Height>50</Height>
-      <SheetX>1041</SheetX>
-      <SheetY>855</SheetY>
+      <SheetX>1230</SheetX>
+      <SheetY>355</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1509,8 +1509,8 @@
       <Name>Crafting\header_button3</Name>
       <Width>247</Width>
       <Height>51</Height>
-      <SheetX>3294</SheetX>
-      <SheetY>1609</SheetY>
+      <SheetX>2101</SheetX>
+      <SheetY>1282</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1518,8 +1518,8 @@
       <Name>Crafting\header_button3_pressed</Name>
       <Width>168</Width>
       <Height>50</Height>
-      <SheetX>3720</SheetX>
-      <SheetY>1804</SheetY>
+      <SheetX>836</SheetX>
+      <SheetY>920</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1536,7 +1536,7 @@
       <Name>Crafting\main_tab_default</Name>
       <Width>444</Width>
       <Height>136</Height>
-      <SheetX>665</SheetX>
+      <SheetX>2021</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -1545,7 +1545,7 @@
       <Name>Crafting\main_tab_hovered</Name>
       <Width>444</Width>
       <Height>136</Height>
-      <SheetX>2021</SheetX>
+      <SheetX>665</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -1554,7 +1554,7 @@
       <Name>Crafting\main_tab_pressed</Name>
       <Width>444</Width>
       <Height>136</Height>
-      <SheetX>1569</SheetX>
+      <SheetX>1117</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -1563,7 +1563,7 @@
       <Name>Crafting\main_tab_selected</Name>
       <Width>444</Width>
       <Height>136</Height>
-      <SheetX>1117</SheetX>
+      <SheetX>1569</SheetX>
       <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -1590,8 +1590,8 @@
       <Name>Crafting\smelt_tuple_default</Name>
       <Width>559</Width>
       <Height>80</Height>
-      <SheetX>1190</SheetX>
-      <SheetY>609</SheetY>
+      <SheetX>1757</SheetX>
+      <SheetY>621</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1599,8 +1599,8 @@
       <Name>Crafting\smelt_tuple_pressed</Name>
       <Width>559</Width>
       <Height>80</Height>
-      <SheetX>1757</SheetX>
-      <SheetY>621</SheetY>
+      <SheetX>1230</SheetX>
+      <SheetY>423</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1608,22 +1608,13 @@
       <Name>Crafting\smelt_tuple_selected</Name>
       <Width>559</Width>
       <Height>80</Height>
-      <SheetX>2324</SheetX>
-      <SheetY>621</SheetY>
+      <SheetX>1190</SheetX>
+      <SheetY>609</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>3</SheetID>
       <Name>Crafting\tuple_refine</Name>
-      <Width>567</Width>
-      <Height>135</Height>
-      <SheetX>1154</SheetX>
-      <SheetY>3237</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>3</SheetID>
-      <Name>Crafting\tuple_refine_pressed</Name>
       <Width>567</Width>
       <Height>135</Height>
       <SheetX>4</SheetX>
@@ -1632,10 +1623,19 @@
     </SpritePart>
     <SpritePart>
       <SheetID>3</SheetID>
-      <Name>Crafting\tuple_refine_selected</Name>
+      <Name>Crafting\tuple_refine_pressed</Name>
       <Width>567</Width>
       <Height>135</Height>
       <SheetX>579</SheetX>
+      <SheetY>3237</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>Crafting\tuple_refine_selected</Name>
+      <Width>567</Width>
+      <Height>135</Height>
+      <SheetX>1154</SheetX>
       <SheetY>3237</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -1658,21 +1658,21 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
-      <Name>Encyclopedia\clan</Name>
-      <Width>223</Width>
-      <Height>514</Height>
-      <SheetX>3860</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
       <SheetID>3</SheetID>
-      <Name>Encyclopedia\concept</Name>
+      <Name>Encyclopedia\clan</Name>
       <Width>223</Width>
       <Height>514</Height>
       <SheetX>3688</SheetX>
       <SheetY>1026</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>Encyclopedia\concept</Name>
+      <Width>223</Width>
+      <Height>514</Height>
+      <SheetX>524</SheetX>
+      <SheetY>2720</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1681,7 +1681,7 @@
       <Width>223</Width>
       <Height>514</Height>
       <SheetX>3860</SheetX>
-      <SheetY>526</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1699,7 +1699,7 @@
       <Width>223</Width>
       <Height>514</Height>
       <SheetX>3860</SheetX>
-      <SheetY>1048</SheetY>
+      <SheetY>526</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1707,8 +1707,8 @@
       <Name>Encyclopedia\navbar</Name>
       <Width>508</Width>
       <Height>48</Height>
-      <SheetX>2557</SheetX>
-      <SheetY>857</SheetY>
+      <SheetX>1712</SheetX>
+      <SheetY>913</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1725,8 +1725,8 @@
       <Name>Encyclopedia\settlements</Name>
       <Width>223</Width>
       <Height>514</Height>
-      <SheetX>3850</SheetX>
-      <SheetY>1570</SheetY>
+      <SheetX>3860</SheetX>
+      <SheetY>1048</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1734,8 +1734,8 @@
       <Name>Encyclopedia\subpage_notable_portrait</Name>
       <Width>88</Width>
       <Height>63</Height>
-      <SheetX>2865</SheetX>
-      <SheetY>1525</SheetY>
+      <SheetX>3858</SheetX>
+      <SheetY>1912</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1766,12 +1766,12 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>2</SheetID>
       <Name>Encyclopedia\units</Name>
       <Width>223</Width>
       <Height>514</Height>
-      <SheetX>524</SheetX>
-      <SheetY>2720</SheetY>
+      <SheetX>3850</SheetX>
+      <SheetY>1570</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1779,8 +1779,8 @@
       <Name>General\Button\button_cancel</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>2820</SheetX>
-      <SheetY>1079</SheetY>
+      <SheetX>1712</SheetX>
+      <SheetY>969</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1788,8 +1788,8 @@
       <Name>General\Button\button_cancel_hover</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>3378</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>2651</SheetX>
+      <SheetY>1082</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1797,8 +1797,8 @@
       <Name>General\Button\main_button_done</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>3657</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>3599</SheetX>
+      <SheetY>1134</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1806,8 +1806,8 @@
       <Name>General\Button\main_button_done_hover</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>2262</SheetX>
-      <SheetY>1075</SheetY>
+      <SheetX>3599</SheetX>
+      <SheetY>1042</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1815,8 +1815,8 @@
       <Name>General\Button\main_button_regular</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>2262</SheetX>
-      <SheetY>977</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>515</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1824,8 +1824,8 @@
       <Name>General\Button\main_button_regular_big</Name>
       <Width>480</Width>
       <Height>64</Height>
-      <SheetX>1041</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>2398</SheetX>
+      <SheetY>909</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1833,8 +1833,8 @@
       <Name>General\Button\main_button_regular_big_hover</Name>
       <Width>480</Width>
       <Height>64</Height>
-      <SheetX>1529</SheetX>
-      <SheetY>846</SheetY>
+      <SheetX>2886</SheetX>
+      <SheetY>920</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1842,8 +1842,8 @@
       <Name>General\Button\main_button_regular_hover</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>3099</SheetX>
-      <SheetY>1079</SheetY>
+      <SheetX>2372</SheetX>
+      <SheetY>1082</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1878,8 +1878,8 @@
       <Name>General\Frame1\canvas</Name>
       <Width>618</Width>
       <Height>798</Height>
-      <SheetX>3062</SheetX>
-      <SheetY>1026</SheetY>
+      <SheetX>2436</SheetX>
+      <SheetY>1012</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1901,21 +1901,21 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
+      <SheetID>3</SheetID>
       <Name>General\Frame1.Broken\canvas</Name>
       <Width>512</Width>
       <Height>512</Height>
       <SheetX>4</SheetX>
-      <SheetY>2720</SheetY>
+      <SheetY>3559</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>1</SheetID>
       <Name>General\Frame1.Broken\frame</Name>
       <Width>512</Width>
       <Height>512</Height>
       <SheetX>4</SheetX>
-      <SheetY>3559</SheetY>
+      <SheetY>2720</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1932,8 +1932,8 @@
       <Name>General\Icons\Coin@2x</Name>
       <Width>45</Width>
       <Height>45</Height>
-      <SheetX>3794</SheetX>
-      <SheetY>1715</SheetY>
+      <SheetX>4046</SheetX>
+      <SheetY>1037</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1941,8 +1941,8 @@
       <Name>General\Icons\Food</Name>
       <Width>64</Width>
       <Height>64</Height>
-      <SheetX>234</SheetX>
-      <SheetY>1156</SheetY>
+      <SheetX>4025</SheetX>
+      <SheetY>600</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1950,8 +1950,8 @@
       <Name>General\Icons\Food@2x</Name>
       <Width>80</Width>
       <Height>80</Height>
-      <SheetX>935</SheetX>
-      <SheetY>931</SheetY>
+      <SheetX>2530</SheetX>
+      <SheetY>1522</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1959,8 +1959,8 @@
       <Name>General\Icons\Garrison</Name>
       <Width>68</Width>
       <Height>54</Height>
-      <SheetX>1076</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>2365</SheetX>
+      <SheetY>1506</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -1973,17 +1973,8 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>1</SheetID>
-      <Name>General\Icons\Health_Sick@2x</Name>
-      <Width>55</Width>
-      <Height>55</Height>
-      <SheetX>1189</SheetX>
-      <SheetY>3928</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
       <SheetID>3</SheetID>
-      <Name>General\Icons\Influence@2x</Name>
+      <Name>General\Icons\Health_Sick@2x</Name>
       <Width>55</Width>
       <Height>55</Height>
       <SheetX>4035</SheetX>
@@ -1991,12 +1982,21 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>General\Icons\Influence@2x</Name>
+      <Width>55</Width>
+      <Height>55</Height>
+      <SheetX>1189</SheetX>
+      <SheetY>3928</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
       <SheetID>4</SheetID>
       <Name>General\Icons\Level@2x</Name>
       <Width>80</Width>
       <Height>80</Height>
-      <SheetX>847</SheetX>
-      <SheetY>931</SheetY>
+      <SheetX>2442</SheetX>
+      <SheetY>1522</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2004,8 +2004,8 @@
       <Name>General\Icons\Militia</Name>
       <Width>64</Width>
       <Height>54</Height>
-      <SheetX>1152</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>3212</SheetX>
+      <SheetY>1814</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2013,8 +2013,8 @@
       <Name>General\Icons\Morale</Name>
       <Width>64</Width>
       <Height>64</Height>
-      <SheetX>1104</SheetX>
-      <SheetY>1103</SheetY>
+      <SheetX>4023</SheetX>
+      <SheetY>1416</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2022,8 +2022,8 @@
       <Name>General\Icons\Morale@2x</Name>
       <Width>80</Width>
       <Height>80</Height>
-      <SheetX>1101</SheetX>
-      <SheetY>610</SheetY>
+      <SheetX>2618</SheetX>
+      <SheetY>1586</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2032,7 +2032,7 @@
       <Width>54</Width>
       <Height>54</Height>
       <SheetX>4038</SheetX>
-      <SheetY>2689</SheetY>
+      <SheetY>2813</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2049,8 +2049,8 @@
       <Name>General\Icons\Prosperity</Name>
       <Width>64</Width>
       <Height>64</Height>
-      <SheetX>887</SheetX>
-      <SheetY>1190</SheetY>
+      <SheetX>4023</SheetX>
+      <SheetY>1344</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2058,8 +2058,8 @@
       <Name>General\Icons\Speed@2x</Name>
       <Width>45</Width>
       <Height>44</Height>
-      <SheetX>1970</SheetX>
-      <SheetY>1442</SheetY>
+      <SheetX>2902</SheetX>
+      <SheetY>1804</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2068,7 +2068,7 @@
       <Width>54</Width>
       <Height>54</Height>
       <SheetX>4038</SheetX>
-      <SheetY>2813</SheetY>
+      <SheetY>2689</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2094,8 +2094,8 @@
       <Name>General\InitialMenu\main_menu_logo</Name>
       <Width>480</Width>
       <Height>131</Height>
-      <SheetX>1910</SheetX>
-      <SheetY>2731</SheetY>
+      <SheetX>1932</SheetX>
+      <SheetY>2358</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2103,8 +2103,8 @@
       <Name>General\InitialMenu\main_menu_logo_960</Name>
       <Width>480</Width>
       <Height>131</Height>
-      <SheetX>1932</SheetX>
-      <SheetY>2358</SheetY>
+      <SheetX>1910</SheetX>
+      <SheetY>2731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2139,8 +2139,8 @@
       <Name>General\Mission\health_bar_frame</Name>
       <Width>249</Width>
       <Height>54</Height>
-      <SheetX>3546</SheetX>
-      <SheetY>1079</SheetY>
+      <SheetX>1560</SheetX>
+      <SheetY>1183</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2148,8 +2148,8 @@
       <Name>General\Mission\hero_canvas</Name>
       <Width>249</Width>
       <Height>54</Height>
-      <SheetX>3137</SheetX>
-      <SheetY>706</SheetY>
+      <SheetX>1303</SheetX>
+      <SheetY>1183</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2175,7 +2175,7 @@
       <Name>General\Mission\horse_frame</Name>
       <Width>191</Width>
       <Height>26</Height>
-      <SheetX>2109</SheetX>
+      <SheetX>1910</SheetX>
       <SheetY>2870</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -2184,7 +2184,7 @@
       <Name>General\Mission\mission_health_bar_fill</Name>
       <Width>31</Width>
       <Height>17</Height>
-      <SheetX>508</SheetX>
+      <SheetX>547</SheetX>
       <SheetY>3242</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -2202,8 +2202,8 @@
       <Name>General\Mission\mount_icon</Name>
       <Width>58</Width>
       <Height>58</Height>
-      <SheetX>4030</SheetX>
-      <SheetY>772</SheetY>
+      <SheetX>4032</SheetX>
+      <SheetY>1190</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2211,7 +2211,7 @@
       <Name>General\Mission\shield_canvas</Name>
       <Width>191</Width>
       <Height>26</Height>
-      <SheetX>1910</SheetX>
+      <SheetX>2109</SheetX>
       <SheetY>2870</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -2238,8 +2238,8 @@
       <Name>Inventory\armorSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>2199</SheetX>
-      <SheetY>1167</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1226</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2247,8 +2247,8 @@
       <Name>Inventory\armorSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3447</SheetX>
-      <SheetY>1355</SheetY>
+      <SheetX>3332</SheetX>
+      <SheetY>1226</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2256,17 +2256,17 @@
       <Name>Inventory\bannerSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>2615</SheetX>
-      <SheetY>1227</SheetY>
+      <SheetX>2084</SheetX>
+      <SheetY>1174</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>3</SheetID>
       <Name>Inventory\bannerSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>1783</SheetX>
-      <SheetY>1143</SheetY>
+      <SheetX>2244</SheetX>
+      <SheetY>3559</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2274,8 +2274,8 @@
       <Name>Inventory\bootSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>2407</SheetX>
-      <SheetY>1227</SheetY>
+      <SheetX>2500</SheetX>
+      <SheetY>1202</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2283,8 +2283,8 @@
       <Name>Inventory\bootSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>1991</SheetX>
-      <SheetY>1143</SheetY>
+      <SheetX>2292</SheetX>
+      <SheetY>1174</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2292,17 +2292,17 @@
       <Name>Inventory\cloakSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3759</SheetX>
-      <SheetY>1141</SheetY>
+      <SheetX>1876</SheetX>
+      <SheetY>1075</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>4</SheetID>
       <Name>Inventory\cloakSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>2244</SheetX>
-      <SheetY>3559</SheetY>
+      <SheetX>2916</SheetX>
+      <SheetY>1202</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2319,8 +2319,8 @@
       <Name>Inventory\filterAll</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>384</SheetX>
-      <SheetY>1020</SheetY>
+      <SheetX>3202</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2328,8 +2328,8 @@
       <Name>Inventory\filterAllDark</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>302</SheetX>
-      <SheetY>990</SheetY>
+      <SheetX>3284</SheetX>
+      <SheetY>1786</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2337,8 +2337,8 @@
       <Name>Inventory\filterAllDown</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>654</SheetX>
-      <SheetY>1020</SheetY>
+      <SheetX>3366</SheetX>
+      <SheetY>1786</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2346,8 +2346,8 @@
       <Name>Inventory\filterAllHighlight</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>572</SheetX>
-      <SheetY>990</SheetY>
+      <SheetX>3530</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2355,8 +2355,8 @@
       <Name>Inventory\filterArmors</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>933</SheetX>
-      <SheetY>1019</SheetY>
+      <SheetX>3694</SheetX>
+      <SheetY>1912</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2364,8 +2364,8 @@
       <Name>Inventory\filterArmorsDark</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>1186</SheetX>
-      <SheetY>1205</SheetY>
+      <SheetX>3940</SheetX>
+      <SheetY>1829</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2373,35 +2373,35 @@
       <Name>Inventory\filterArmorsDown</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>1104</SheetX>
-      <SheetY>1205</SheetY>
+      <SheetX>3776</SheetX>
+      <SheetY>1829</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
+      <SheetID>4</SheetID>
       <Name>Inventory\filterArmorsHighlight</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>4018</SheetX>
-      <SheetY>3989</SheetY>
+      <SheetX>3612</SheetX>
+      <SheetY>1786</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
+      <SheetID>4</SheetID>
       <Name>Inventory\filterFood</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>4018</SheetX>
-      <SheetY>3906</SheetY>
+      <SheetX>3448</SheetX>
+      <SheetY>1829</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>2</SheetID>
+      <SheetID>4</SheetID>
       <Name>Inventory\filterFoodDark</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>4018</SheetX>
-      <SheetY>3823</SheetY>
+      <SheetX>2792</SheetX>
+      <SheetY>1669</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2410,7 +2410,7 @@
       <Width>74</Width>
       <Height>75</Height>
       <SheetX>4018</SheetX>
-      <SheetY>3740</SheetY>
+      <SheetY>3989</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2419,16 +2419,16 @@
       <Width>74</Width>
       <Height>75</Height>
       <SheetX>4018</SheetX>
-      <SheetY>3657</SheetY>
+      <SheetY>3906</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>2</SheetID>
       <Name>Inventory\filterMounts</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>630</SheetX>
-      <SheetY>1106</SheetY>
+      <SheetX>4018</SheetX>
+      <SheetY>3740</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2436,8 +2436,8 @@
       <Name>Inventory\filterMountsDark</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>466</SheetX>
-      <SheetY>1020</SheetY>
+      <SheetX>3776</SheetX>
+      <SheetY>1912</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2445,17 +2445,17 @@
       <Name>Inventory\filterMountsDown</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>480</SheetX>
-      <SheetY>1156</SheetY>
+      <SheetX>3858</SheetX>
+      <SheetY>1829</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>2</SheetID>
       <Name>Inventory\filterMountsHighlight</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>398</SheetX>
-      <SheetY>1103</SheetY>
+      <SheetX>4018</SheetX>
+      <SheetY>3823</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2463,17 +2463,17 @@
       <Name>Inventory\filterShields</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>234</SheetX>
-      <SheetY>1073</SheetY>
+      <SheetX>3612</SheetX>
+      <SheetY>1869</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>2</SheetID>
       <Name>Inventory\filterShieldsDark</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>794</SheetX>
-      <SheetY>1106</SheetY>
+      <SheetX>4018</SheetX>
+      <SheetY>3657</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2481,8 +2481,8 @@
       <Name>Inventory\filterShieldsDown</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>152</SheetX>
-      <SheetY>1103</SheetY>
+      <SheetX>3530</SheetX>
+      <SheetY>1869</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2490,8 +2490,8 @@
       <Name>Inventory\filterShieldsHighlight</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>316</SheetX>
-      <SheetY>1103</SheetY>
+      <SheetX>3694</SheetX>
+      <SheetY>1786</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2499,8 +2499,8 @@
       <Name>Inventory\filterWeapons</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>548</SheetX>
-      <SheetY>1073</SheetY>
+      <SheetX>3120</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2508,8 +2508,8 @@
       <Name>Inventory\filterWeaponsDark</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>508</SheetX>
-      <SheetY>515</SheetY>
+      <SheetX>3038</SheetX>
+      <SheetY>1695</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2517,8 +2517,8 @@
       <Name>Inventory\filterWeaponsDown</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>712</SheetX>
-      <SheetY>1106</SheetY>
+      <SheetX>2956</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2526,8 +2526,8 @@
       <Name>Inventory\filterWeaponsHighlight</Name>
       <Width>74</Width>
       <Height>75</Height>
-      <SheetX>736</SheetX>
-      <SheetY>1020</SheetY>
+      <SheetX>2874</SheetX>
+      <SheetY>1669</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2535,8 +2535,8 @@
       <Name>Inventory\gloveSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3655</SheetX>
-      <SheetY>1357</SheetY>
+      <SheetX>1460</SheetX>
+      <SheetY>980</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2544,8 +2544,8 @@
       <Name>Inventory\gloveSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3239</SheetX>
-      <SheetY>1335</SheetY>
+      <SheetX>836</SheetX>
+      <SheetY>1174</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2553,8 +2553,8 @@
       <Name>Inventory\header_button_left_1</Name>
       <Width>177</Width>
       <Height>51</Height>
-      <SheetX>1579</SheetX>
-      <SheetY>918</SheetY>
+      <SheetX>3551</SheetX>
+      <SheetY>1672</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2562,8 +2562,8 @@
       <Name>Inventory\header_button_left_1_hover</Name>
       <Width>177</Width>
       <Height>51</Height>
-      <SheetX>1286</SheetX>
-      <SheetY>855</SheetY>
+      <SheetX>3736</SheetX>
+      <SheetY>1727</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2571,8 +2571,8 @@
       <Name>Inventory\header_button_left_1_pressed</Name>
       <Width>177</Width>
       <Height>51</Height>
-      <SheetX>572</SheetX>
-      <SheetY>931</SheetY>
+      <SheetX>1475</SheetX>
+      <SheetY>355</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2580,40 +2580,13 @@
       <Name>Inventory\header_button_left_1_selected</Name>
       <Width>177</Width>
       <Height>51</Height>
-      <SheetX>2823</SheetX>
-      <SheetY>1171</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>Inventory\header_button_left_2</Name>
-      <Width>242</Width>
-      <Height>51</Height>
-      <SheetX>1529</SheetX>
-      <SheetY>783</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>Inventory\header_button_left_2_hover</Name>
-      <Width>242</Width>
-      <Height>51</Height>
-      <SheetX>1943</SheetX>
-      <SheetY>922</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>Inventory\header_button_left_2_pressed</Name>
-      <Width>242</Width>
-      <Height>51</Height>
-      <SheetX>3544</SheetX>
-      <SheetY>1715</SheetY>
+      <SheetX>3366</SheetX>
+      <SheetY>1672</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>2</SheetID>
-      <Name>Inventory\header_button_left_2_selected</Name>
+      <Name>Inventory\header_button_left_2</Name>
       <Width>242</Width>
       <Height>51</Height>
       <SheetX>3850</SheetX>
@@ -2622,11 +2595,38 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
+      <Name>Inventory\header_button_left_2_hover</Name>
+      <Width>242</Width>
+      <Height>51</Height>
+      <SheetX>1274</SheetX>
+      <SheetY>850</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>Inventory\header_button_left_2_pressed</Name>
+      <Width>242</Width>
+      <Height>51</Height>
+      <SheetX>1553</SheetX>
+      <SheetY>1245</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>Inventory\header_button_left_2_selected</Name>
+      <Width>242</Width>
+      <Height>51</Height>
+      <SheetX>1303</SheetX>
+      <SheetY>1245</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
       <Name>Inventory\header_button_left_3</Name>
       <Width>58</Width>
       <Height>51</Height>
-      <SheetX>1629</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>3692</SheetX>
+      <SheetY>2046</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2634,8 +2634,8 @@
       <Name>Inventory\header_button_left_3_hover</Name>
       <Width>58</Width>
       <Height>51</Height>
-      <SheetX>1563</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>4032</SheetX>
+      <SheetY>1256</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2643,8 +2643,8 @@
       <Name>Inventory\header_button_left_3_pressed</Name>
       <Width>58</Width>
       <Height>51</Height>
-      <SheetX>1497</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>3560</SheetX>
+      <SheetY>1952</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2652,8 +2652,8 @@
       <Name>Inventory\header_button_left_3_selected</Name>
       <Width>58</Width>
       <Height>51</Height>
-      <SheetX>1431</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>3626</SheetX>
+      <SheetY>1995</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2661,8 +2661,8 @@
       <Name>Inventory\header_button_left_4</Name>
       <Width>106</Width>
       <Height>52</Height>
-      <SheetX>680</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>3954</SheetX>
+      <SheetY>1912</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2670,8 +2670,8 @@
       <Name>Inventory\header_button_left_4_hover</Name>
       <Width>106</Width>
       <Height>52</Height>
-      <SheetX>566</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>3954</SheetX>
+      <SheetY>1972</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2679,8 +2679,8 @@
       <Name>Inventory\header_button_left_4_pressed</Name>
       <Width>106</Width>
       <Height>52</Height>
-      <SheetX>1418</SheetX>
-      <SheetY>1183</SheetY>
+      <SheetX>2442</SheetX>
+      <SheetY>1674</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2688,8 +2688,8 @@
       <Name>Inventory\header_button_left_4_selected</Name>
       <Width>106</Width>
       <Height>52</Height>
-      <SheetX>2407</SheetX>
-      <SheetY>1167</SheetY>
+      <SheetX>2556</SheetX>
+      <SheetY>1674</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2697,8 +2697,8 @@
       <Name>Inventory\header_button_right_1</Name>
       <Width>168</Width>
       <Height>51</Height>
-      <SheetX>3016</SheetX>
-      <SheetY>1723</SheetY>
+      <SheetX>1444</SheetX>
+      <SheetY>1304</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2706,8 +2706,8 @@
       <Name>Inventory\header_button_right_1_hover</Name>
       <Width>168</Width>
       <Height>51</Height>
-      <SheetX>3544</SheetX>
-      <SheetY>1774</SheetY>
+      <SheetX>1044</SheetX>
+      <SheetY>1111</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2715,8 +2715,8 @@
       <Name>Inventory\header_button_right_1_pressed</Name>
       <Width>168</Width>
       <Height>51</Height>
-      <SheetX>3368</SheetX>
-      <SheetY>1804</SheetY>
+      <SheetX>1621</SheetX>
+      <SheetY>1395</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2724,8 +2724,8 @@
       <Name>Inventory\header_button_right_1_selected</Name>
       <Width>168</Width>
       <Height>51</Height>
-      <SheetX>3192</SheetX>
-      <SheetY>1774</SheetY>
+      <SheetX>1621</SheetX>
+      <SheetY>1304</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2733,8 +2733,8 @@
       <Name>Inventory\header_button_right_2</Name>
       <Width>242</Width>
       <Height>51</Height>
-      <SheetX>3294</SheetX>
-      <SheetY>1715</SheetY>
+      <SheetX>2101</SheetX>
+      <SheetY>1341</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2742,8 +2742,8 @@
       <Name>Inventory\header_button_right_2_hover</Name>
       <Width>242</Width>
       <Height>51</Height>
-      <SheetX>1480</SheetX>
-      <SheetY>355</SheetY>
+      <SheetX>1524</SheetX>
+      <SheetY>850</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2751,8 +2751,8 @@
       <Name>Inventory\header_button_right_2_pressed</Name>
       <Width>242</Width>
       <Height>51</Height>
-      <SheetX>1230</SheetX>
-      <SheetY>355</SheetY>
+      <SheetX>2653</SheetX>
+      <SheetY>1440</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2760,8 +2760,8 @@
       <Name>Inventory\header_button_right_2_selected</Name>
       <Width>242</Width>
       <Height>51</Height>
-      <SheetX>1329</SheetX>
-      <SheetY>918</SheetY>
+      <SheetX>2653</SheetX>
+      <SheetY>1499</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2769,8 +2769,8 @@
       <Name>Inventory\header_button_right_3</Name>
       <Width>61</Width>
       <Height>51</Height>
-      <SheetX>4030</SheetX>
-      <SheetY>838</SheetY>
+      <SheetX>3353</SheetX>
+      <SheetY>1912</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2778,8 +2778,8 @@
       <Name>Inventory\header_button_right_3_hover</Name>
       <Width>61</Width>
       <Height>51</Height>
-      <SheetX>1224</SheetX>
-      <SheetY>1288</SheetY>
+      <SheetX>3422</SheetX>
+      <SheetY>1912</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2787,8 +2787,8 @@
       <Name>Inventory\header_button_right_3_pressed</Name>
       <Width>61</Width>
       <Height>51</Height>
-      <SheetX>1293</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>3284</SheetX>
+      <SheetY>1869</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2796,8 +2796,8 @@
       <Name>Inventory\header_button_right_3_selected</Name>
       <Width>61</Width>
       <Height>51</Height>
-      <SheetX>1362</SheetX>
-      <SheetY>1336</SheetY>
+      <SheetX>3491</SheetX>
+      <SheetY>1952</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2805,8 +2805,8 @@
       <Name>Inventory\header_button_right_4</Name>
       <Width>108</Width>
       <Height>51</Height>
-      <SheetX>910</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>2442</SheetX>
+      <SheetY>1610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2814,8 +2814,8 @@
       <Name>Inventory\header_button_right_4_hover</Name>
       <Width>108</Width>
       <Height>51</Height>
-      <SheetX>794</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>2786</SheetX>
+      <SheetY>1752</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2823,8 +2823,8 @@
       <Name>Inventory\header_button_right_4_pressed</Name>
       <Width>108</Width>
       <Height>51</Height>
-      <SheetX>678</SheetX>
-      <SheetY>1189</SheetY>
+      <SheetX>2249</SheetX>
+      <SheetY>1506</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2832,22 +2832,13 @@
       <Name>Inventory\header_button_right_4_selected</Name>
       <Width>108</Width>
       <Height>51</Height>
-      <SheetX>562</SheetX>
-      <SheetY>1189</SheetY>
+      <SheetX>2670</SheetX>
+      <SheetY>1695</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
       <Name>Inventory\header_left</Name>
-      <Width>609</Width>
-      <Height>91</Height>
-      <SheetX>2996</SheetX>
-      <SheetY>315</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>Inventory\header_right</Name>
       <Width>609</Width>
       <Height>91</Height>
       <SheetX>2376</SheetX>
@@ -2856,11 +2847,20 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
+      <Name>Inventory\header_right</Name>
+      <Width>609</Width>
+      <Height>91</Height>
+      <SheetX>2996</SheetX>
+      <SheetY>315</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
       <Name>Inventory\helmetSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3031</SheetX>
-      <SheetY>1171</SheetY>
+      <SheetX>2708</SheetX>
+      <SheetY>1226</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2868,8 +2868,8 @@
       <Name>Inventory\helmetSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3239</SheetX>
-      <SheetY>1227</SheetY>
+      <SheetX>1044</SheetX>
+      <SheetY>920</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2886,8 +2886,8 @@
       <Name>Inventory\icon_gold</Name>
       <Width>45</Width>
       <Height>45</Height>
-      <SheetX>2440</SheetX>
-      <SheetY>709</SheetY>
+      <SheetX>4046</SheetX>
+      <SheetY>1090</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2904,8 +2904,8 @@
       <Name>Inventory\icon_inventory_weight</Name>
       <Width>33</Width>
       <Height>41</Height>
-      <SheetX>3334</SheetX>
-      <SheetY>1171</SheetY>
+      <SheetX>3875</SheetX>
+      <SheetY>265</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2922,8 +2922,8 @@
       <Name>Inventory\inspect</Name>
       <Width>40</Width>
       <Height>38</Height>
-      <SheetX>3368</SheetX>
-      <SheetY>1668</SheetY>
+      <SheetX>3896</SheetX>
+      <SheetY>2046</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2931,8 +2931,8 @@
       <Name>Inventory\modCivillian</Name>
       <Width>140</Width>
       <Height>75</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1433</SheetY>
+      <SheetX>2363</SheetX>
+      <SheetY>1423</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2940,8 +2940,8 @@
       <Name>Inventory\modCivillianDown</Name>
       <Width>140</Width>
       <Height>75</Height>
-      <SheetX>1418</SheetX>
-      <SheetY>1253</SheetY>
+      <SheetX>1044</SheetX>
+      <SheetY>1028</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2949,8 +2949,8 @@
       <Name>Inventory\modCivillianHighlight</Name>
       <Width>140</Width>
       <Height>75</Height>
-      <SheetX>2010</SheetX>
-      <SheetY>1350</SheetY>
+      <SheetX>3372</SheetX>
+      <SheetY>1406</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2958,8 +2958,8 @@
       <Name>Inventory\modWar</Name>
       <Width>140</Width>
       <Height>75</Height>
-      <SheetX>1862</SheetX>
-      <SheetY>1350</SheetY>
+      <SheetX>1919</SheetX>
+      <SheetY>1388</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2967,8 +2967,8 @@
       <Name>Inventory\modWarDown</Name>
       <Width>140</Width>
       <Height>75</Height>
-      <SheetX>1714</SheetX>
-      <SheetY>1326</SheetY>
+      <SheetX>2067</SheetX>
+      <SheetY>1423</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2976,8 +2976,8 @@
       <Name>Inventory\modWarHighlight</Name>
       <Width>140</Width>
       <Height>75</Height>
-      <SheetX>1566</SheetX>
-      <SheetY>1253</SheetY>
+      <SheetX>2215</SheetX>
+      <SheetY>1423</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2985,8 +2985,8 @@
       <Name>Inventory\mountArmorSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3447</SheetX>
-      <SheetY>1247</SheetY>
+      <SheetX>1668</SheetX>
+      <SheetY>1075</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2994,8 +2994,8 @@
       <Name>Inventory\mountArmorSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3655</SheetX>
-      <SheetY>1249</SheetY>
+      <SheetX>1252</SheetX>
+      <SheetY>980</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3003,8 +3003,8 @@
       <Name>Inventory\mountSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3863</SheetX>
-      <SheetY>1249</SheetY>
+      <SheetX>3124</SheetX>
+      <SheetY>1202</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3012,8 +3012,8 @@
       <Name>Inventory\mountSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3031</SheetX>
-      <SheetY>1279</SheetY>
+      <SheetX>420</SheetX>
+      <SheetY>1094</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3057,31 +3057,13 @@
       <Name>Inventory\tuple_left</Name>
       <Width>554</Width>
       <Height>59</Height>
-      <SheetX>4</SheetX>
-      <SheetY>711</SheetY>
+      <SheetX>3521</SheetX>
+      <SheetY>697</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
       <Name>Inventory\tuple_left_pressed</Name>
-      <Width>554</Width>
-      <Height>59</Height>
-      <SheetX>4</SheetX>
-      <SheetY>846</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>Inventory\tuple_right</Name>
-      <Width>554</Width>
-      <Height>59</Height>
-      <SheetX>597</SheetX>
-      <SheetY>243</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>Inventory\tuple_right_pressed</Name>
       <Width>554</Width>
       <Height>59</Height>
       <SheetX>1783</SheetX>
@@ -3090,11 +3072,29 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
+      <Name>Inventory\tuple_right</Name>
+      <Width>554</Width>
+      <Height>59</Height>
+      <SheetX>1274</SheetX>
+      <SheetY>783</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>Inventory\tuple_right_pressed</Name>
+      <Width>554</Width>
+      <Height>59</Height>
+      <SheetX>1836</SheetX>
+      <SheetY>846</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
       <Name>Inventory\tuple_shadow</Name>
       <Width>112</Width>
       <Height>53</Height>
-      <SheetX>3803</SheetX>
-      <SheetY>1079</SheetY>
+      <SheetX>2878</SheetX>
+      <SheetY>1608</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3102,8 +3102,8 @@
       <Name>Inventory\weaponSlot</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>3863</SheetX>
-      <SheetY>1357</SheetY>
+      <SheetX>212</SheetX>
+      <SheetY>1202</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3111,8 +3111,8 @@
       <Name>Inventory\weaponSlotHighlight</Name>
       <Width>200</Width>
       <Height>100</Height>
-      <SheetX>2823</SheetX>
-      <SheetY>1247</SheetY>
+      <SheetX>628</SheetX>
+      <SheetY>1075</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3120,8 +3120,8 @@
       <Name>Inventory\WeightIcon</Name>
       <Width>119</Width>
       <Height>119</Height>
-      <SheetX>3961</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3953</SheetX>
+      <SheetY>1494</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3129,8 +3129,8 @@
       <Name>MapBar\army_button_background</Name>
       <Width>95</Width>
       <Height>70</Height>
-      <SheetX>3848</SheetX>
-      <SheetY>1617</SheetY>
+      <SheetX>2249</SheetX>
+      <SheetY>1608</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3165,8 +3165,8 @@
       <Name>MapBar\bottom_left_button2_character</Name>
       <Width>76</Width>
       <Height>52</Height>
-      <SheetX>829</SheetX>
-      <SheetY>1262</SheetY>
+      <SheetX>1660</SheetX>
+      <SheetY>355</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3174,8 +3174,8 @@
       <Name>MapBar\bottom_left_button3_inventory</Name>
       <Width>76</Width>
       <Height>52</Height>
-      <SheetX>745</SheetX>
-      <SheetY>1289</SheetY>
+      <SheetX>836</SheetX>
+      <SheetY>1095</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3183,8 +3183,8 @@
       <Name>MapBar\bottom_left_button4_party</Name>
       <Width>76</Width>
       <Height>52</Height>
-      <SheetX>913</SheetX>
-      <SheetY>1289</SheetY>
+      <SheetX>2161</SheetX>
+      <SheetY>1506</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3192,8 +3192,8 @@
       <Name>MapBar\bottom_left_button5_quest</Name>
       <Width>76</Width>
       <Height>52</Height>
-      <SheetX>1538</SheetX>
-      <SheetY>1077</SheetY>
+      <SheetX>1960</SheetX>
+      <SheetY>1183</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3201,8 +3201,8 @@
       <Name>MapBar\bottom_left_button6_clan</Name>
       <Width>76</Width>
       <Height>52</Height>
-      <SheetX>661</SheetX>
-      <SheetY>1262</SheetY>
+      <SheetX>1562</SheetX>
+      <SheetY>1088</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3210,8 +3210,8 @@
       <Name>MapBar\bottom_left_button7_kingdom</Name>
       <Width>90</Width>
       <Height>52</Height>
-      <SheetX>2295</SheetX>
-      <SheetY>1275</SheetY>
+      <SheetX>2158</SheetX>
+      <SheetY>709</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3237,8 +3237,8 @@
       <Name>MapBar\mapbar_center_circle_canvas</Name>
       <Width>78</Width>
       <Height>79</Height>
-      <SheetX>933</SheetX>
-      <SheetY>1103</SheetY>
+      <SheetX>2792</SheetX>
+      <SheetY>1558</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3264,8 +3264,8 @@
       <Name>MapBar\mapbar_center_circle_glow_overlay</Name>
       <Width>78</Width>
       <Height>79</Height>
-      <SheetX>847</SheetX>
-      <SheetY>1019</SheetY>
+      <SheetX>2706</SheetX>
+      <SheetY>1608</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3273,8 +3273,8 @@
       <Name>MapBar\mapbar_center_frame</Name>
       <Width>430</Width>
       <Height>59</Height>
-      <SheetX>3646</SheetX>
-      <SheetY>920</SheetY>
+      <SheetX>1274</SheetX>
+      <SheetY>913</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3300,8 +3300,8 @@
       <Name>MapBar\mapbar_icon2</Name>
       <Width>32</Width>
       <Height>42</Height>
-      <SheetX>2511</SheetX>
-      <SheetY>922</SheetY>
+      <SheetX>3916</SheetX>
+      <SheetY>265</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3318,8 +3318,8 @@
       <Name>MapBar\mapbar_icon4</Name>
       <Width>50</Width>
       <Height>45</Height>
-      <SheetX>3394</SheetX>
-      <SheetY>706</SheetY>
+      <SheetX>3530</SheetX>
+      <SheetY>1814</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3327,8 +3327,8 @@
       <Name>MapBar\mapbar_icon5</Name>
       <Width>37</Width>
       <Height>38</Height>
-      <SheetX>3462</SheetX>
-      <SheetY>1668</SheetY>
+      <SheetX>3830</SheetX>
+      <SheetY>265</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3354,8 +3354,8 @@
       <Name>MapBar\mapbar_left_canvas</Name>
       <Width>497</Width>
       <Height>55</Height>
-      <SheetX>3141</SheetX>
-      <SheetY>920</SheetY>
+      <SheetX>2324</SheetX>
+      <SheetY>706</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3363,7 +3363,7 @@
       <Name>MapBar\mapbar_left_frame</Name>
       <Width>554</Width>
       <Height>77</Height>
-      <SheetX>2891</SheetX>
+      <SheetX>2324</SheetX>
       <SheetY>621</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -3372,13 +3372,22 @@
       <Name>MapBar\mapbar_left_frame_silhouette</Name>
       <Width>532</Width>
       <Height>57</Height>
-      <SheetX>2017</SheetX>
-      <SheetY>857</SheetY>
+      <SheetX>3374</SheetX>
+      <SheetY>920</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>MapBar\mapbar_right_frame</Name>
+      <Width>541</Width>
+      <Height>99</Height>
+      <SheetX>2944</SheetX>
+      <SheetY>414</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>1</SheetID>
-      <Name>MapBar\mapbar_right_frame</Name>
+      <Name>MapBar\mapbar_right_frame_silhouette</Name>
       <Width>541</Width>
       <Height>99</Height>
       <SheetX>1689</SheetX>
@@ -3387,20 +3396,11 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>MapBar\mapbar_right_frame_silhouette</Name>
-      <Width>541</Width>
-      <Height>99</Height>
-      <SheetX>2944</SheetX>
-      <SheetY>414</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
       <Name>MapBar\monocular_icon</Name>
       <Width>45</Width>
       <Height>44</Height>
-      <SheetX>1917</SheetX>
-      <SheetY>1433</SheetY>
+      <SheetX>2902</SheetX>
+      <SheetY>1752</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3408,8 +3408,8 @@
       <Name>Order\melee_unit_troop_card_default</Name>
       <Width>106</Width>
       <Height>162</Height>
-      <SheetX>2295</SheetX>
-      <SheetY>1335</SheetY>
+      <SheetX>3372</SheetX>
+      <SheetY>1494</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3417,8 +3417,8 @@
       <Name>Order\melee_unit_troop_card_selected</Name>
       <Width>106</Width>
       <Height>162</Height>
-      <SheetX>2409</SheetX>
-      <SheetY>1387</SheetY>
+      <SheetX>3258</SheetX>
+      <SheetY>1438</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3426,8 +3426,8 @@
       <Name>Order\melee_unit_troop_card_transfer_selected</Name>
       <Width>106</Width>
       <Height>162</Height>
-      <SheetX>2523</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3486</SheetX>
+      <SheetY>1494</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3453,8 +3453,8 @@
       <Name>Order\ranged_unit_troop_card_default</Name>
       <Width>106</Width>
       <Height>162</Height>
-      <SheetX>2637</SheetX>
-      <SheetY>1387</SheetY>
+      <SheetX>2916</SheetX>
+      <SheetY>1310</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3462,8 +3462,8 @@
       <Name>Order\ranged_unit_troop_card_selected</Name>
       <Width>106</Width>
       <Height>162</Height>
-      <SheetX>2865</SheetX>
-      <SheetY>1355</SheetY>
+      <SheetX>3030</SheetX>
+      <SheetY>1438</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3471,8 +3471,8 @@
       <Name>Order\ranged_unit_troop_card_transfer_selected</Name>
       <Width>106</Width>
       <Height>162</Height>
-      <SheetX>2751</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3144</SheetX>
+      <SheetY>1334</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3480,8 +3480,8 @@
       <Name>Order\SiegeItemBackground</Name>
       <Width>146</Width>
       <Height>146</Height>
-      <SheetX>3936</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>3878</SheetX>
+      <SheetY>1190</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3498,8 +3498,8 @@
       <Name>PartyScreen\button_collapser_hover</Name>
       <Width>686</Width>
       <Height>140</Height>
-      <SheetX>4</SheetX>
-      <SheetY>2562</SheetY>
+      <SheetX>524</SheetX>
+      <SheetY>3749</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3507,8 +3507,8 @@
       <Name>PartyScreen\button_collapser_pressed</Name>
       <Width>686</Width>
       <Height>140</Height>
-      <SheetX>524</SheetX>
-      <SheetY>3749</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>2562</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3516,8 +3516,8 @@
       <Name>PartyScreen\button_left</Name>
       <Width>627</Width>
       <Height>66</Height>
-      <SheetX>2502</SheetX>
-      <SheetY>783</SheetY>
+      <SheetX>639</SheetX>
+      <SheetY>846</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3525,40 +3525,13 @@
       <Name>PartyScreen\button_left_hover</Name>
       <Width>627</Width>
       <Height>66</Height>
-      <SheetX>2502</SheetX>
-      <SheetY>709</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>PartyScreen\button_left_pressed</Name>
-      <Width>627</Width>
-      <Height>66</Height>
-      <SheetX>3137</SheetX>
-      <SheetY>846</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>PartyScreen\button_left_selected</Name>
-      <Width>627</Width>
-      <Height>66</Height>
-      <SheetX>3137</SheetX>
+      <SheetX>1867</SheetX>
       <SheetY>772</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>PartyScreen\button_right</Name>
-      <Width>627</Width>
-      <Height>66</Height>
-      <SheetX>1232</SheetX>
-      <SheetY>709</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>PartyScreen\button_right_hover</Name>
+      <Name>PartyScreen\button_left_pressed</Name>
       <Width>627</Width>
       <Height>66</Height>
       <SheetX>597</SheetX>
@@ -3567,11 +3540,38 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
+      <Name>PartyScreen\button_left_selected</Name>
+      <Width>627</Width>
+      <Height>66</Height>
+      <SheetX>2502</SheetX>
+      <SheetY>772</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>PartyScreen\button_right</Name>
+      <Width>627</Width>
+      <Height>66</Height>
+      <SheetX>2886</SheetX>
+      <SheetY>698</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>PartyScreen\button_right_hover</Name>
+      <Width>627</Width>
+      <Height>66</Height>
+      <SheetX>3137</SheetX>
+      <SheetY>772</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
       <Name>PartyScreen\button_right_pressed</Name>
       <Width>627</Width>
       <Height>66</Height>
-      <SheetX>3453</SheetX>
-      <SheetY>698</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>846</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3579,8 +3579,8 @@
       <Name>PartyScreen\button_right_selected</Name>
       <Width>627</Width>
       <Height>66</Height>
-      <SheetX>1867</SheetX>
-      <SheetY>772</SheetY>
+      <SheetX>1232</SheetX>
+      <SheetY>709</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3593,8 +3593,17 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>4</SheetID>
       <Name>PartyScreen\header_left</Name>
+      <Width>653</Width>
+      <Height>104</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>PartyScreen\header_right</Name>
       <Width>653</Width>
       <Height>104</Height>
       <SheetX>4</SheetX>
@@ -3603,20 +3612,11 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>PartyScreen\header_right</Name>
-      <Width>653</Width>
-      <Height>104</Height>
-      <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
       <Name>PartyScreen\portrait</Name>
       <Width>155</Width>
       <Height>81</Height>
-      <SheetX>3549</SheetX>
-      <SheetY>1609</SheetY>
+      <SheetX>2356</SheetX>
+      <SheetY>1334</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3642,8 +3642,8 @@
       <Name>PartyScreen\upgrade_icon</Name>
       <Width>45</Width>
       <Height>37</Height>
-      <SheetX>4040</SheetX>
-      <SheetY>265</SheetY>
+      <SheetX>4046</SheetX>
+      <SheetY>1143</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3678,7 +3678,7 @@
       <Name>Quest\header left</Name>
       <Width>606</Width>
       <Height>69</Height>
-      <SheetX>3453</SheetX>
+      <SheetX>2886</SheetX>
       <SheetY>621</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -3687,8 +3687,8 @@
       <Name>Quest\questlist_header</Name>
       <Width>496</Width>
       <Height>68</Height>
-      <SheetX>4</SheetX>
-      <SheetY>515</SheetY>
+      <SheetX>3521</SheetX>
+      <SheetY>621</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3696,8 +3696,8 @@
       <Name>Quest\quest_collapser_default</Name>
       <Width>585</Width>
       <Height>96</Height>
-      <SheetX>1783</SheetX>
-      <SheetY>216</SheetY>
+      <SheetX>597</SheetX>
+      <SheetY>315</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3714,8 +3714,8 @@
       <Name>SaveLoad\flag_base</Name>
       <Width>45</Width>
       <Height>45</Height>
-      <SheetX>1864</SheetX>
-      <SheetY>1442</SheetY>
+      <SheetX>3355</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3723,8 +3723,8 @@
       <Name>SaveLoad\icon_fiefs</Name>
       <Width>50</Width>
       <Height>50</Height>
-      <SheetX>1932</SheetX>
-      <SheetY>2497</SheetY>
+      <SheetX>1867</SheetX>
+      <SheetY>3110</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3733,7 +3733,7 @@
       <Width>50</Width>
       <Height>50</Height>
       <SheetX>4035</SheetX>
-      <SheetY>3686</SheetY>
+      <SheetY>3628</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3742,7 +3742,7 @@
       <Width>50</Width>
       <Height>50</Height>
       <SheetX>4035</SheetX>
-      <SheetY>3628</SheetY>
+      <SheetY>3686</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3750,8 +3750,8 @@
       <Name>SaveLoad\icon_influence</Name>
       <Width>50</Width>
       <Height>50</Height>
-      <SheetX>4035</SheetX>
-      <SheetY>3570</SheetY>
+      <SheetX>1867</SheetX>
+      <SheetY>3168</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3759,8 +3759,8 @@
       <Name>SaveLoad\icon_level</Name>
       <Width>50</Width>
       <Height>50</Height>
-      <SheetX>1867</SheetX>
-      <SheetY>3168</SheetY>
+      <SheetX>1932</SheetX>
+      <SheetY>2497</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3786,8 +3786,8 @@
       <Name>SaveLoad\load_collapser</Name>
       <Width>585</Width>
       <Height>96</Height>
-      <SheetX>597</SheetX>
-      <SheetY>315</SheetY>
+      <SheetX>1190</SheetX>
+      <SheetY>148</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3795,8 +3795,8 @@
       <Name>SaveLoad\load_tuple</Name>
       <Width>569</Width>
       <Height>95</Height>
-      <SheetX>1767</SheetX>
-      <SheetY>320</SheetY>
+      <SheetX>1190</SheetX>
+      <SheetY>252</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3804,8 +3804,8 @@
       <Name>SaveLoad\load_tuple_selected</Name>
       <Width>569</Width>
       <Height>95</Height>
-      <SheetX>1190</SheetX>
-      <SheetY>252</SheetY>
+      <SheetX>1767</SheetX>
+      <SheetY>320</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3818,71 +3818,8 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\ambush_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1480</SheetX>
-      <SheetY>1409</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\assault_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1288</SheetX>
-      <SheetY>1395</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\besiege_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1800</SheetX>
-      <SheetY>1433</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\craft_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1544</SheetX>
-      <SheetY>1433</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\defend_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1352</SheetX>
-      <SheetY>1395</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\escape_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>3073</SheetX>
-      <SheetY>857</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\hostileaction_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>2383</SheetX>
-      <SheetY>922</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
       <SheetID>3</SheetID>
-      <Name>SPGeneral\GameMenu\keep_icon</Name>
+      <Name>SPGeneral\GameMenu\ambush_icon</Name>
       <Width>56</Width>
       <Height>42</Height>
       <SheetX>1218</SheetX>
@@ -3891,52 +3828,25 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\leave_icon</Name>
+      <Name>SPGeneral\GameMenu\assault_icon</Name>
       <Width>56</Width>
       <Height>42</Height>
-      <SheetX>2447</SheetX>
-      <SheetY>922</SheetY>
+      <SheetX>4024</SheetX>
+      <SheetY>2132</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\raid_icon</Name>
+      <Name>SPGeneral\GameMenu\besiege_icon</Name>
       <Width>56</Width>
       <Height>42</Height>
-      <SheetX>1224</SheetX>
-      <SheetY>1347</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\recruit_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1416</SheetX>
-      <SheetY>1433</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>SPGeneral\GameMenu\retreat_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>1608</SheetX>
-      <SheetY>1442</SheetY>
+      <SheetX>3832</SheetX>
+      <SheetY>2046</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>3</SheetID>
-      <Name>SPGeneral\GameMenu\submenu_icon</Name>
-      <Width>56</Width>
-      <Height>42</Height>
-      <SheetX>4033</SheetX>
-      <SheetY>1781</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>3</SheetID>
-      <Name>SPGeneral\GameMenu\trade_icon</Name>
+      <Name>SPGeneral\GameMenu\craft_icon</Name>
       <Width>56</Width>
       <Height>42</Height>
       <SheetX>1867</SheetX>
@@ -3945,11 +3855,101 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\defend_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>3675</SheetX>
+      <SheetY>265</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\escape_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>3692</SheetX>
+      <SheetY>1995</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>3</SheetID>
+      <Name>SPGeneral\GameMenu\hostileaction_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>4033</SheetX>
+      <SheetY>1781</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\keep_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>4035</SheetX>
+      <SheetY>2032</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\leave_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>4035</SheetX>
+      <SheetY>2082</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\raid_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>3960</SheetX>
+      <SheetY>2095</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\recruit_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>3822</SheetX>
+      <SheetY>2096</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\retreat_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>3758</SheetX>
+      <SheetY>2096</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\submenu_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>3896</SheetX>
+      <SheetY>2095</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>SPGeneral\GameMenu\trade_icon</Name>
+      <Width>56</Width>
+      <Height>42</Height>
+      <SheetX>4014</SheetX>
+      <SheetY>2182</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
       <Name>SPGeneral\GameMenu\wait_icon</Name>
       <Width>56</Width>
       <Height>42</Height>
-      <SheetX>1736</SheetX>
-      <SheetY>1442</SheetY>
+      <SheetX>3950</SheetX>
+      <SheetY>2145</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -3957,8 +3957,8 @@
       <Name>SPGeneral\GameMenu\warehouse_icon</Name>
       <Width>56</Width>
       <Height>42</Height>
-      <SheetX>1672</SheetX>
-      <SheetY>1442</SheetY>
+      <SheetX>3886</SheetX>
+      <SheetY>2145</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4021,7 +4021,7 @@
       <Width>1920</Width>
       <Height>196</Height>
       <SheetX>4</SheetX>
-      <SheetY>2358</SheetY>
+      <SheetY>2906</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4030,7 +4030,7 @@
       <Width>585</Width>
       <Height>87</Height>
       <SheetX>597</SheetX>
-      <SheetY>148</SheetY>
+      <SheetY>515</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4056,8 +4056,8 @@
       <Name>SPKingdom\policy_collapser_default</Name>
       <Width>585</Width>
       <Height>96</Height>
-      <SheetX>1190</SheetX>
-      <SheetY>148</SheetY>
+      <SheetX>1783</SheetX>
+      <SheetY>216</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4065,8 +4065,8 @@
       <Name>SPKingdom\portrait_slot_square</Name>
       <Width>82</Width>
       <Height>81</Height>
-      <SheetX>757</SheetX>
-      <SheetY>931</SheetY>
+      <SheetX>2352</SheetX>
+      <SheetY>1610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4074,8 +4074,8 @@
       <Name>SPKingdom\portrait_slot_wide</Name>
       <Width>112</Width>
       <Height>81</Height>
-      <SheetX>452</SheetX>
-      <SheetY>931</SheetY>
+      <SheetX>3246</SheetX>
+      <SheetY>1608</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4092,8 +4092,8 @@
       <Name>SPKingdom\Armies\header_armies_1</Name>
       <Width>137</Width>
       <Height>98</Height>
-      <SheetX>2865</SheetX>
-      <SheetY>1607</SheetY>
+      <SheetX>3859</SheetX>
+      <SheetY>1621</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4101,8 +4101,8 @@
       <Name>SPKingdom\Armies\header_armies_2</Name>
       <Width>109</Width>
       <Height>98</Height>
-      <SheetX>1185</SheetX>
-      <SheetY>1099</SheetY>
+      <SheetX>2791</SheetX>
+      <SheetY>1334</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4119,8 +4119,8 @@
       <Name>SPKingdom\Armies\header_armies_4</Name>
       <Width>80</Width>
       <Height>98</Height>
-      <SheetX>3888</SheetX>
-      <SheetY>1910</SheetY>
+      <SheetX>1889</SheetX>
+      <SheetY>1471</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4128,8 +4128,8 @@
       <Name>SPKingdom\Armies\header_armies_5</Name>
       <Width>201</Width>
       <Height>98</Height>
-      <SheetX>1538</SheetX>
-      <SheetY>1147</SheetY>
+      <SheetX>3540</SheetX>
+      <SheetY>1226</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4137,8 +4137,8 @@
       <Name>SPKingdom\Clans\header_clans_1</Name>
       <Width>94</Width>
       <Height>98</Height>
-      <SheetX>3998</SheetX>
-      <SheetY>159</SheetY>
+      <SheetX>3144</SheetX>
+      <SheetY>1504</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4155,8 +4155,8 @@
       <Name>SPKingdom\Clans\header_clans_3</Name>
       <Width>135</Width>
       <Height>98</Height>
-      <SheetX>3010</SheetX>
-      <SheetY>1609</SheetY>
+      <SheetX>1817</SheetX>
+      <SheetY>1183</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4164,8 +4164,8 @@
       <Name>SPKingdom\Clans\header_clans_4</Name>
       <Width>108</Width>
       <Height>98</Height>
-      <SheetX>1302</SheetX>
-      <SheetY>1183</SheetY>
+      <SheetX>1803</SheetX>
+      <SheetY>1289</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4173,8 +4173,8 @@
       <Name>SPKingdom\Clans\header_clans_5</Name>
       <Width>110</Width>
       <Height>98</Height>
-      <SheetX>3982</SheetX>
-      <SheetY>1698</SheetY>
+      <SheetX>2903</SheetX>
+      <SheetY>1480</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4182,8 +4182,8 @@
       <Name>SPKingdom\Clans\header_clans_6</Name>
       <Width>85</Width>
       <Height>98</Height>
-      <SheetX>3896</SheetX>
-      <SheetY>1804</SheetY>
+      <SheetX>4004</SheetX>
+      <SheetY>1621</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4191,8 +4191,8 @@
       <Name>SPKingdom\ClanTypes\leader_clan</Name>
       <Width>66</Width>
       <Height>38</Height>
-      <SheetX>3294</SheetX>
-      <SheetY>1668</SheetY>
+      <SheetX>3758</SheetX>
+      <SheetY>2041</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4200,8 +4200,8 @@
       <Name>SPKingdom\ClanTypes\mercenary_clan</Name>
       <Width>66</Width>
       <Height>38</Height>
-      <SheetX>3966</SheetX>
-      <SheetY>265</SheetY>
+      <SheetX>3758</SheetX>
+      <SheetY>1995</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4272,8 +4272,8 @@
       <Name>SPKingdom\Decision\progress_bar_base</Name>
       <Width>266</Width>
       <Height>67</Height>
-      <SheetX>1747</SheetX>
-      <SheetY>1251</SheetY>
+      <SheetX>3749</SheetX>
+      <SheetY>1344</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4290,8 +4290,8 @@
       <Name>SPKingdom\Decision\progress_bar_frame</Name>
       <Width>266</Width>
       <Height>67</Height>
-      <SheetX>2021</SheetX>
-      <SheetY>1275</SheetY>
+      <SheetX>3749</SheetX>
+      <SheetY>1419</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4326,8 +4326,8 @@
       <Name>SPKingdom\Diplomacy\diplomacy_peace_icon</Name>
       <Width>63</Width>
       <Height>63</Height>
-      <SheetX>306</SheetX>
-      <SheetY>1186</SheetY>
+      <SheetX>4023</SheetX>
+      <SheetY>1727</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4335,8 +4335,8 @@
       <Name>SPKingdom\Diplomacy\diplomacy_war_icon</Name>
       <Width>63</Width>
       <Height>63</Height>
-      <SheetX>590</SheetX>
-      <SheetY>1252</SheetY>
+      <SheetX>3448</SheetX>
+      <SheetY>1731</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4380,8 +4380,8 @@
       <Name>SPKingdom\Diplomacy\wars_at_peace_tuple</Name>
       <Width>585</Width>
       <Height>87</Height>
-      <SheetX>2436</SheetX>
-      <SheetY>526</SheetY>
+      <SheetX>1843</SheetX>
+      <SheetY>521</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4389,8 +4389,8 @@
       <Name>SPKingdom\Diplomacy\wars_at_war_tuple</Name>
       <Width>585</Width>
       <Height>87</Height>
-      <SheetX>1843</SheetX>
-      <SheetY>521</SheetY>
+      <SheetX>2436</SheetX>
+      <SheetY>526</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4398,8 +4398,8 @@
       <Name>SPKingdom\Fiefs\header_fiefs_1</Name>
       <Width>84</Width>
       <Height>98</Height>
-      <SheetX>3989</SheetX>
-      <SheetY>1804</SheetY>
+      <SheetX>1797</SheetX>
+      <SheetY>1395</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4407,8 +4407,8 @@
       <Name>SPKingdom\Fiefs\header_fiefs_2</Name>
       <Width>201</Width>
       <Height>98</Height>
-      <SheetX>1329</SheetX>
-      <SheetY>1077</SheetY>
+      <SheetX>3540</SheetX>
+      <SheetY>1332</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4416,8 +4416,8 @@
       <Name>SPKingdom\Fiefs\header_fiefs_3</Name>
       <Width>112</Width>
       <Height>98</Height>
-      <SheetX>3967</SheetX>
-      <SheetY>1141</SheetY>
+      <SheetX>3749</SheetX>
+      <SheetY>1226</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4434,8 +4434,8 @@
       <Name>SPKingdom\Fiefs\header_fiefs_5</Name>
       <Width>126</Width>
       <Height>98</Height>
-      <SheetX>3848</SheetX>
-      <SheetY>1698</SheetY>
+      <SheetX>2519</SheetX>
+      <SheetY>1416</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4453,7 +4453,7 @@
       <Width>30</Width>
       <Height>41</Height>
       <SheetX>2398</SheetX>
-      <SheetY>2821</SheetY>
+      <SheetY>2772</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4462,7 +4462,7 @@
       <Width>30</Width>
       <Height>41</Height>
       <SheetX>2398</SheetX>
-      <SheetY>2772</SheetY>
+      <SheetY>2723</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4480,7 +4480,7 @@
       <Width>30</Width>
       <Height>41</Height>
       <SheetX>2398</SheetX>
-      <SheetY>2723</SheetY>
+      <SheetY>2821</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4506,8 +4506,8 @@
       <Name>StdAssets\banner_flat</Name>
       <Width>136</Width>
       <Height>173</Height>
-      <SheetX>1185</SheetX>
-      <SheetY>918</SheetY>
+      <SheetX>2228</SheetX>
+      <SheetY>913</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4524,8 +4524,8 @@
       <Name>StdAssets\banner_new</Name>
       <Width>103</Width>
       <Height>144</Height>
-      <SheetX>3850</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3962</SheetX>
+      <SheetY>159</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4533,13 +4533,31 @@
       <Name>StdAssets\banner_tuple</Name>
       <Width>136</Width>
       <Height>173</Height>
-      <SheetX>1041</SheetX>
-      <SheetY>922</SheetY>
+      <SheetX>3921</SheetX>
+      <SheetY>764</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>StdAssets\close_button</Name>
+      <Width>84</Width>
+      <Height>84</Height>
+      <SheetX>2069</SheetX>
+      <SheetY>1558</SheetY>
+      <CategoryName>ui_taom</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>4</SheetID>
+      <Name>StdAssets\close_button_hover</Name>
+      <Width>84</Width>
+      <Height>84</Height>
+      <SheetX>1977</SheetX>
+      <SheetY>1522</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
       <SheetID>3</SheetID>
-      <Name>StdAssets\close_button</Name>
+      <Name>StdAssets\close_button_pressed</Name>
       <Width>84</Width>
       <Height>84</Height>
       <SheetX>3497</SheetX>
@@ -4548,29 +4566,11 @@
     </SpritePart>
     <SpritePart>
       <SheetID>4</SheetID>
-      <Name>StdAssets\close_button_hover</Name>
-      <Width>84</Width>
-      <Height>84</Height>
-      <SheetX>3976</SheetX>
-      <SheetY>1910</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>StdAssets\close_button_pressed</Name>
-      <Width>84</Width>
-      <Height>84</Height>
-      <SheetX>3976</SheetX>
-      <SheetY>2002</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
       <Name>StdAssets\delete_button_hovered</Name>
       <Width>251</Width>
       <Height>60</Height>
-      <SheetX>2979</SheetX>
-      <SheetY>1387</SheetY>
+      <SheetX>1303</SheetX>
+      <SheetY>1088</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4587,8 +4587,8 @@
       <Name>StdAssets\main_button_done</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>3099</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>597</SheetX>
+      <SheetY>610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4601,12 +4601,12 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
+      <SheetID>3</SheetID>
       <Name>StdAssets\main_button_done_below_hover</Name>
       <Width>337</Width>
       <Height>75</Height>
-      <SheetX>3704</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>2626</SheetX>
+      <SheetY>4001</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4614,8 +4614,8 @@
       <Name>StdAssets\main_button_done_hover</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>2541</SheetX>
-      <SheetY>983</SheetY>
+      <SheetX>876</SheetX>
+      <SheetY>610</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4623,8 +4623,8 @@
       <Name>StdAssets\main_button_regular</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>2820</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>283</SheetX>
+      <SheetY>116</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4637,12 +4637,12 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>3</SheetID>
+      <SheetID>4</SheetID>
       <Name>StdAssets\main_button_regular_below_hover</Name>
       <Width>337</Width>
       <Height>75</Height>
-      <SheetX>2626</SheetX>
-      <SheetY>4001</SheetY>
+      <SheetX>3704</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4650,8 +4650,8 @@
       <Name>StdAssets\main_button_regular_hover</Name>
       <Width>271</Width>
       <Height>84</Height>
-      <SheetX>2541</SheetX>
-      <SheetY>1079</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>116</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4659,8 +4659,8 @@
       <Name>StdAssets\page_button_center</Name>
       <Width>283</Width>
       <Height>53</Height>
-      <SheetX>3675</SheetX>
-      <SheetY>249</SheetY>
+      <SheetX>1867</SheetX>
+      <SheetY>709</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4704,8 +4704,8 @@
       <Name>StdAssets\standart_popup_button</Name>
       <Width>286</Width>
       <Height>82</Height>
-      <SheetX>1329</SheetX>
-      <SheetY>987</SheetY>
+      <SheetX>2666</SheetX>
+      <SheetY>992</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4713,8 +4713,8 @@
       <Name>StdAssets\standart_popup_button_hover</Name>
       <Width>286</Width>
       <Height>82</Height>
-      <SheetX>3704</SheetX>
-      <SheetY>159</SheetY>
+      <SheetX>2372</SheetX>
+      <SheetY>981</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4759,7 +4759,7 @@
       <Width>1920</Width>
       <Height>196</Height>
       <SheetX>4</SheetX>
-      <SheetY>2906</SheetY>
+      <SheetY>2358</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4785,7 +4785,7 @@
       <Name>StdAssets\wide_rectangle_button_default</Name>
       <Width>269</Width>
       <Height>41</Height>
-      <SheetX>281</SheetX>
+      <SheetX>4</SheetX>
       <SheetY>2092</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -4794,7 +4794,7 @@
       <Name>StdAssets\wide_rectangle_button_hovered</Name>
       <Width>269</Width>
       <Height>41</Height>
-      <SheetX>4</SheetX>
+      <SheetX>281</SheetX>
       <SheetY>2092</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
@@ -4812,8 +4812,8 @@
       <Name>StdAssets\Popup\button_default</Name>
       <Width>251</Width>
       <Height>64</Height>
-      <SheetX>3332</SheetX>
-      <SheetY>1463</SheetY>
+      <SheetX>1044</SheetX>
+      <SheetY>1183</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4821,8 +4821,8 @@
       <Name>StdAssets\Popup\button_default_hover</Name>
       <Width>251</Width>
       <Height>64</Height>
-      <SheetX>3591</SheetX>
-      <SheetY>1465</SheetY>
+      <SheetX>3600</SheetX>
+      <SheetY>1600</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4857,8 +4857,8 @@
       <Name>StdAssets\Popup\done_button</Name>
       <Width>251</Width>
       <Height>64</Height>
-      <SheetX>3332</SheetX>
-      <SheetY>1535</SheetY>
+      <SheetX>3258</SheetX>
+      <SheetY>1334</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4866,8 +4866,8 @@
       <Name>StdAssets\Popup\done_button_hover</Name>
       <Width>251</Width>
       <Height>64</Height>
-      <SheetX>3591</SheetX>
-      <SheetY>1537</SheetY>
+      <SheetX>2084</SheetX>
+      <SheetY>1094</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4894,7 +4894,7 @@
       <Width>1199</Width>
       <Height>1199</Height>
       <SheetX>2856</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>1211</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4947,8 +4947,8 @@
       <Name>TAOM\GameMenu\game_menu_frame_canvas</Name>
       <Width>618</Width>
       <Height>798</Height>
-      <SheetX>2436</SheetX>
-      <SheetY>1012</SheetY>
+      <SheetX>3062</SheetX>
+      <SheetY>1026</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4984,7 +4984,7 @@
       <Width>1199</Width>
       <Height>1199</Height>
       <SheetX>2856</SheetX>
-      <SheetY>1211</SheetY>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -4994,15 +4994,6 @@
       <Height>175</Height>
       <SheetX>524</SheetX>
       <SheetY>3899</SheetY>
-      <CategoryName>ui_taom</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>TAOM\Nameplates\settlement_nameplate_large</Name>
-      <Width>616</Width>
-      <Height>76</Height>
-      <SheetX>1230</SheetX>
-      <SheetY>423</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -9038,10 +9029,6 @@
     <GenericSprite>
       <Name>TAOM\Nameplates\settlement_nameplate_background</Name>
       <SpritePartName>TAOM\Nameplates\settlement_nameplate_background</SpritePartName>
-    </GenericSprite>
-    <GenericSprite>
-      <Name>TAOM\Nameplates\settlement_nameplate_large</Name>
-      <SpritePartName>TAOM\Nameplates\settlement_nameplate_large</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>10000</Name>

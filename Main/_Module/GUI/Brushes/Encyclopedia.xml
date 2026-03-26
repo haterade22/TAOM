@@ -871,7 +871,7 @@
       <Style Name="Link.MouseDown" FontColor="#75493EFF" TextGlowColor="#111111FF" />
     </Styles>
   </Brush>
-  <Brush Name="Encyclopedia.SubPage.Header.Text" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Center">
+  <Brush Name="Encyclopedia.SubPage.Header.Text" Font="ringbearer" TextHorizontalAlignment="Center">
     <Layers>
     </Layers>
     <Styles>
@@ -908,7 +908,7 @@
     </Styles>
   </Brush>
   
-  <Brush Name="Encyclopedia.SubPage.Title.Text" Font="Galahad" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+  <Brush Name="Encyclopedia.SubPage.Title.Text" Font="ringbearer" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
     <Layers>
     </Layers>
     <Styles>
