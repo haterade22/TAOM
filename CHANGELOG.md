@@ -19,12 +19,13 @@
 
 - **New feature:** Elite/supernatural units consume more party capacity, preventing armies of pure elite troops
 - **Weights:** Cave trolls (4x), legendary elf commanders (3x), all elves/warg riders/elite guards (2x), standard troops (1x default)
-- **Mechanism:** Harmony postfixes on `PartyBase.NumberOfAllMembers`, `NumberOfRegularMembers`, `TroopRoster.TotalManCount`, `TotalHealthyCount` + 2 UI patches for recruitment and party screens
+- **Mechanism:** Harmony postfixes on `PartyBase.NumberOfAllMembers`, `NumberOfRegularMembers` + 2 UI patches for recruitment and party screens
 - **Config:** `ModuleData/TroopWeights/troop_weights.xml` — data-driven weight assignments for ~80 troop types across all cultures
 - **MCM toggle:** "Enable Troop Weight" in Troop Weight settings group (enabled by default)
-- **Architecture:** `ITroopWeightService` + `TroopWeightXmlLoader` + 6 hook implementations + 6 Harmony patches (`Patch17_TroopWeight`)
+- **Architecture:** `ITroopWeightService` + `TroopWeightXmlLoader` + 4 hook implementations + 4 Harmony patches (`Patch17_TroopWeight`)
 - **Ported from:** LOTRAOM's TroopWeight feature, adapted to TAOM conventions (static Initialize pattern, IPathService, simplified caching)
-- **Performance fix:** Added version-based caching to `TroopRosterTotalManCountHook`, replaced full cache clears with 25% trim eviction across all cached hooks
+- **Stability fix:** Removed TroopRoster-level patches (fired on every roster in the game, caused IndexOutOfRange spam + freeze during loading). PartyBase-level patches are sufficient.
+- **Fix:** Null-safe MCM guard prevents NRE when MCM is not loaded
 
 ### Feature: Atmosphere Persistence for Forced-Atmosphere Scenes
 

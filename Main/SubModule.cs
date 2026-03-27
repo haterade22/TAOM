@@ -60,8 +60,6 @@ public class SubModule : MBSubModuleBase
         TroopWeightIoC.InitializeHooks(
             IoC.Resolve<IOnPartyBaseNumberOfAllMembers>(),
             IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
-            IoC.Resolve<IOnTroopRosterTotalManCount>(),
-            IoC.Resolve<IOnTroopRosterTotalHealthyCount>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnPartyVMPopulatePartyListLabel>());
 

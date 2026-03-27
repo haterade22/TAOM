@@ -22,9 +22,9 @@ Bannerlord's party size system is deeply integrated — `PartyBase.NumberOfAllMe
 
 ### Solution Approach
 
-Six Harmony postfix/prefix patches intercept the property getters that return party member counts. When the weighted count exceeds the raw count, the patch increases `__result`. This approach modifies the *perceived* party size without changing actual troop storage, so all vanilla systems (recruitment, AI, save/load) work unchanged.
+Four Harmony postfix/prefix patches intercept the property getters that return party member counts. When the weighted count exceeds the raw count, the patch increases `__result`. This approach modifies the *perceived* party size without changing actual troop storage, so all vanilla systems (recruitment, AI, save/load) work unchanged.
 
-Two additional UI patches ensure the recruitment screen and party management screen display the correct weighted counts.
+Patches target `PartyBase`-level getters only (not `TroopRoster` getters) to avoid firing on every roster in the game (prisoner, garrison, temp rosters). Two additional UI patches ensure the recruitment screen and party management screen display the correct weighted counts.
 
 ### Component Diagram
 
@@ -34,13 +34,12 @@ troop_weights.xml
   TroopWeightXmlLoader (IPathService for path resolution)
         |
   TroopWeightService (caches weights by StringId)
-       / | \
-      /  |  \
-     /   |   \
-PartyBase   TroopRoster    UI Hooks
-Hooks (2)   Hooks (2)      (2 - Recruitment + Party VM)
-     \   |   /
-      \  |  /
+       / \
+      /   \
+PartyBase    UI Hooks
+Hooks (2)    (2 - Recruitment + Party VM)
+      \   /
+       \ /
   Harmony Patches (Patch17_TroopWeight)
   [TaomSettings.EnableTroopWeight guard]
 ```
@@ -85,9 +84,9 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 | `Main/Features/TroopWeight/ITroopWeightXmlLoader.cs` | Loader interface |
 | `Main/Features/TroopWeight/TroopWeightXmlLoader.cs` | XML parser using `IPathService`, graceful degradation on missing file |
 | `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` |
-| `Main/Features/TroopWeight/Hooks/IOn*.cs` | 6 hook interfaces |
-| `Main/Features/TroopWeight/Hooks/*Hook.cs` | 6 hook implementations (4 game + 2 UI) |
-| `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 6 Harmony patches (Patch17_TroopWeight) |
+| `Main/Features/TroopWeight/Hooks/IOn*.cs` | 4 hook interfaces (2 PartyBase + 2 UI) |
+| `Main/Features/TroopWeight/Hooks/*Hook.cs` | 4 hook implementations (2 PartyBase + 2 UI) |
+| `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 4 Harmony patches (Patch17_TroopWeight) |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions (~80 entries) |
 | `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
 
@@ -120,11 +119,9 @@ Weight values are continuous floats — any positive value works. Common tiers:
 
 ## Performance
 
-- **Troop weight cache:** `Dictionary<string, float>` in `TroopWeightService` — O(1) lookup after first access per troop type
+- **Troop weight lookup:** `Dictionary<string, float>` eagerly populated at startup — O(1) per troop, no lazy caching or writes on hot path
 - **Party member count cache:** `Dictionary<int, (int Version, float Weight)>` in `PartyBaseNumberOfAllMembersHook` — keyed by party hash, invalidated by `TroopRoster.VersionNo` changes, trims 25% at 2000 entries
-- **Man count cache:** Same version-based pattern in `TroopRosterTotalManCountHook`, trims 25% at 500 entries
-- **Healthy count cache:** Same pattern in `TroopRosterTotalHealthyCountHook`, trims 25% at 500 entries
-- **Cache eviction:** All caches use 25% trim (remove oldest quarter) instead of full clear to avoid thundering-herd recomputation
+- **PartyBase-only patching:** Patches target `PartyBase.NumberOfAllMembers` / `NumberOfRegularMembers` only, NOT `TroopRoster.TotalManCount` / `TotalHealthyCount`. TroopRoster getters fire for every roster in the game (prisoners, garrisons, temp rosters); patching them caused IndexOutOfRange on partially-initialized rosters during game loading.
 - **Single-threaded:** All caches use `Dictionary` (not `ConcurrentDictionary`) because the campaign tick loop is single-threaded
 
 ## GitHub Issue
