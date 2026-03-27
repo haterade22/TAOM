@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Clans - All Cultures -->
-<!-- NOT registered in SubModule.xml - staged for future activation -->
 <Factions>
 
   <!-- ============================================== -->
@@ -16,7 +15,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		banner_key="11.251.166.1528.1528.764.764.1.0.0.10016.303.290.600.600.764.764.0.0.0" />
+		banner_key="11.251.166.1528.1528.764.764.1.0.0.10016.303.290.600.600.764.800.0.0.0" />
 
   <Faction
 		id="clan_empire_west_11"
@@ -27,7 +26,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		banner_key="11.172.166.1528.1528.764.764.1.0.0.10012.332.171.1000.1000.764.733.0.0.0" />
+		banner_key="11.172.166.1528.1528.764.764.1.0.0.10012.332.171.1000.1000.764.770.0.0.0" />
 
   <Faction
 		id="clan_empire_west_12"
@@ -38,7 +37,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		banner_key="11.101.166.1528.1528.764.764.1.0.0.10009.35.171.600.600.764.756.0.0.0" />
+		banner_key="11.101.166.1528.1528.764.764.1.0.0.10009.35.171.500.550.765.730.0.0.0" />
 
   <Faction
 		id="clan_empire_west_13"
@@ -49,7 +48,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		banner_key="11.293.203.1528.1528.764.764.1.0.0.10014.35.171.1000.1000.764.764.0.0.0" />
+		banner_key="11.293.203.1528.1528.764.764.1.0.0.10014.35.171.800.800.764.806.0.0.0" />
 
   <Faction
 		id="clan_empire_west_14"
@@ -60,7 +59,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		banner_key="11.2014.262.1528.1528.764.857.1.0.0.10007.172.171.700.700.755.742.0.0.0" />
+		banner_key="11.2014.262.1528.1528.764.857.1.0.0.10007.172.171.600.600.765.742.0.0.0" />
   <!-- ============================================== -->
   <!-- EXTENDED EMPIRE SOUTH / MORDOR CLANS           -->
   <!-- Additional Mordor orc clans (10-18)            -->
