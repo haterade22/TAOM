@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <StartupResources>
   <!-- Elven cultures -->
-  <Culture id="rivendell"   gold="6000000" influence="2000" />
-  <Culture id="lothlorien"  gold="6000000" influence="2000" />
-  <Culture id="mirkwood"    gold="6000000" influence="250"   />
+  <Culture id="rivendell"   gold="600000" influence="1000" />
+  <Culture id="lothlorien"  gold="600000" influence="1000" />
+  <Culture id="mirkwood"    gold="600000" influence="1000"   />
 
   <!-- Dwarven cultures -->
   <Culture id="erebor"      gold="50000" influence="150"   />
