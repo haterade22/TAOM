@@ -38,9 +38,19 @@ public class TroopRosterTotalHealthyCountHook : IOnTroopRosterTotalHealthyCount
             }
 
             float weightedCount = 0f;
-            for (int i = 0; i < troopRoster.Count; i++)
+            int count = troopRoster.Count;
+            for (int i = 0; i < count; i++)
             {
-                var element = troopRoster.GetElementCopyAtIndex(i);
+                TroopRosterElement element;
+                try
+                {
+                    element = troopRoster.GetElementCopyAtIndex(i);
+                }
+                catch
+                {
+                    break;
+                }
+
                 if (element.Character != null)
                 {
                     var weight = _troopWeightService.GetTroopWeight(element.Character);

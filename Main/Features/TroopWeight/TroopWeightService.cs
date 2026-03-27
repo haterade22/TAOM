@@ -46,21 +46,22 @@ public class TroopWeightService : ITroopWeightService
         if (roster == null)
             return 0f;
 
-        try
+        float totalWeight = 0f;
+        int count = roster.Count;
+        for (int i = 0; i < count; i++)
         {
-            float totalWeight = 0f;
-            for (int i = 0; i < roster.Count; i++)
+            try
             {
                 var element = roster.GetElementCopyAtIndex(i);
                 totalWeight += CalculateWeightedElementCount(element);
             }
-            return totalWeight;
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Skipping roster element {i}/{count}: {ex.Message}");
+                break;
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Error calculating weighted roster count: {ex.Message}");
-            return roster.TotalManCount;
-        }
+        return totalWeight;
     }
 
     public float CalculateWeightedElementCount(TroopRosterElement element)
