@@ -221,6 +221,9 @@
       <feat id="taom_erebor_garrison_wage" />
       <feat id="taom_erebor_production" />
       <feat id="taom_erebor_construction_speed" />
+      <feat id="taom_erebor_loyalty" />
+      <feat id="taom_erebor_morale" />
+      <feat id="taom_erebor_smithing" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -591,6 +594,7 @@
       <feat id="taom_rivendell_hearth_growth" />
       <feat id="taom_rivendell_army_influence_cost" />
       <feat id="taom_rivendell_food_consumption" />
+      <feat id="taom_rivendell_loyalty" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -950,6 +954,7 @@
       <feat id="taom_mirkwood_militia_production" />
       <feat id="taom_mirkwood_hearth_growth" />
       <feat id="taom_mirkwood_food_consumption" />
+      <feat id="taom_mirkwood_morale" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -1309,6 +1314,8 @@
       <feat id="taom_lothlorien_garrison_wage" />
       <feat id="taom_lothlorien_construction_speed" />
       <feat id="taom_lothlorien_food_consumption" />
+      <feat id="taom_lothlorien_loyalty" />
+      <feat id="taom_lothlorien_morale" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -1668,6 +1675,8 @@
       <feat id="taom_isengard_decision_penalty" />
       <feat id="taom_isengard_party_size" />
       <feat id="taom_isengard_construction_speed" />
+      <feat id="taom_isengard_smithing" />
+      <feat id="taom_isengard_raid_damage" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2027,6 +2036,7 @@
       <feat id="taom_gundabad_grain_production" />
       <feat id="taom_gundabad_wage" />
       <feat id="taom_gundabad_party_size" />
+      <feat id="taom_gundabad_raid_damage" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2385,6 +2395,7 @@
       <feat id="taom_umbar_cheaper_caravans" />
       <feat id="taom_umbar_renown" />
       <feat id="taom_umbar_wage" />
+      <feat id="taom_umbar_tariff_income" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3109,6 +3120,8 @@
       <feat id="taom_gondor_army_influence" />
       <feat id="taom_gondor_hearth_growth" />
       <feat id="taom_gondor_party_size" />
+      <feat id="taom_gondor_loyalty" />
+      <feat id="taom_gondor_morale" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3476,6 +3489,7 @@
       <feat id="taom_mordor_grain_production" />
       <feat id="taom_mordor_wage" />
       <feat id="taom_mordor_party_size" />
+      <feat id="taom_mordor_raid_damage" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />

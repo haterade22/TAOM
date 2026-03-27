@@ -92,7 +92,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
 | AdvancedCombat | `Main/Features/AdvancedCombat/` (SpatialGrid, BoneCollision, CustomAttacks) |
-| CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 11 GameModel overrides) |
+| CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 16 GameModel overrides) |
 | CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
@@ -131,6 +131,11 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Mounted recruit cost feats (Isengard, Rohan) |
 | `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | Party size feats (Mordor, Gundabad, DG, Isengard, Gondor) |
 | `TaomFoodConsumptionModel` | `DefaultMobilePartyFoodConsumptionModel` | Food consumption feats (elves, Dol Guldur) |
+| `TaomSettlementLoyaltyModel` | `DefaultSettlementLoyaltyModel` | Settlement loyalty feats (Gondor, Erebor, elves, Rohan) |
+| `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | Party morale feats (Gondor, Rohan, Erebor, elves) |
+| `TaomSmithingModel` | `DefaultSmithingModel` | Smithing energy cost feats (Erebor, Isengard) |
+| `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat (Umbar) |
+| `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats (Mordor, Gundabad, Isengard) |
 
 ## Harmony Patch Categories
 

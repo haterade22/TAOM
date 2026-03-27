@@ -856,6 +856,8 @@
 				<feat id="taom_rohan_mounted_cost" />
 				<feat id="taom_rohan_mounted_wage" />
 				<feat id="taom_rohan_infantry_speed" />
+				<feat id="taom_rohan_loyalty" />
+				<feat id="taom_rohan_morale" />
 			</cultural_feats>
 
 			<!-- Pass through vanilla child elements we don't override -->

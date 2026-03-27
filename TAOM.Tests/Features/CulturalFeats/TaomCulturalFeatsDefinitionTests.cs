@@ -16,15 +16,15 @@ public class TaomCulturalFeatsDefinitionTests
     /// without the game framework, we verify the code structure via reflection.
     /// </summary>
     [TestMethod]
-    public void AllFeatProperties_ReturnFeatObject_CountIs42()
+    public void AllFeatProperties_ReturnFeatObject_CountIs59()
     {
         var properties = typeof(TaomCulturalFeats)
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(43, properties.Count,
-            "Expected 43 culture feat properties (expanded feat set across 11 cultures)");
+        Assert.AreEqual(59, properties.Count,
+            "Expected 59 culture feat properties (expanded feat set across 11 cultures)");
     }
 
     [TestMethod]
@@ -53,30 +53,41 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("EreborGarrisonWageFeat")]
     [DataRow("EreborProductionFeat")]
     [DataRow("EreborConstructionSpeedFeat")]
+    [DataRow("EreborLoyaltyFeat")]
+    [DataRow("EreborMoraleFeat")]
+    [DataRow("EreborSmithingFeat")]
     [DataRow("RivendellArmyInfluenceFeat")]
     [DataRow("RivendellHearthGrowthFeat")]
     [DataRow("RivendellArmyInfluenceCostFeat")]
     [DataRow("RivendellFoodConsumptionFeat")]
+    [DataRow("RivendellLoyaltyFeat")]
     [DataRow("MirkwoodForestSpeedFeat")]
     [DataRow("MirkwoodMilitiaProductionFeat")]
     [DataRow("MirkwoodHearthGrowthFeat")]
     [DataRow("MirkwoodFoodConsumptionFeat")]
+    [DataRow("MirkwoodMoraleFeat")]
     [DataRow("LothlorienForestSpeedFeat")]
     [DataRow("LothlorienGarrisonWageFeat")]
     [DataRow("LothlorienConstructionSpeedFeat")]
     [DataRow("LothlorienFoodConsumptionFeat")]
+    [DataRow("LothlorienLoyaltyFeat")]
+    [DataRow("LothlorienMoraleFeat")]
     [DataRow("IsengardCheaperRecruitsFeat")]
     [DataRow("IsengardGarrisonWageFeat")]
     [DataRow("IsengardDecisionPenaltyFeat")]
     [DataRow("IsengardPartySizeFeat")]
     [DataRow("IsengardConstructionSpeedFeat")]
+    [DataRow("IsengardSmithingFeat")]
+    [DataRow("IsengardRaidDamageFeat")]
     [DataRow("GundabadArmyInfluenceCostFeat")]
     [DataRow("GundabadGrainProductionFeat")]
     [DataRow("GundabadWageFeat")]
     [DataRow("GundabadPartySizeFeat")]
+    [DataRow("GundabadRaidDamageFeat")]
     [DataRow("UmbarCheaperCaravansFeat")]
     [DataRow("UmbarRenownFeat")]
     [DataRow("UmbarWageFeat")]
+    [DataRow("UmbarTariffIncomeFeat")]
     [DataRow("DolGuldurArmyInfluenceCostFeat")]
     [DataRow("DolGuldurMilitiaProductionFeat")]
     [DataRow("DolGuldurConstructionSpeedFeat")]
@@ -86,13 +97,18 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("GondorArmyInfluenceFeat")]
     [DataRow("GondorHearthGrowthFeat")]
     [DataRow("GondorPartySizeFeat")]
+    [DataRow("GondorLoyaltyFeat")]
+    [DataRow("GondorMoraleFeat")]
     [DataRow("MordorArmyInfluenceCostFeat")]
     [DataRow("MordorGrainProductionFeat")]
     [DataRow("MordorWageFeat")]
     [DataRow("MordorPartySizeFeat")]
+    [DataRow("MordorRaidDamageFeat")]
     [DataRow("RohanMountedCostFeat")]
     [DataRow("RohanMountedWageFeat")]
     [DataRow("RohanInfantrySpeedFeat")]
+    [DataRow("RohanLoyaltyFeat")]
+    [DataRow("RohanMoraleFeat")]
     public void FeatProperty_Exists_IsPublicStatic(string propertyName)
     {
         var prop = typeof(TaomCulturalFeats).GetProperty(
@@ -114,17 +130,17 @@ public class TaomCulturalFeatsDefinitionTests
 
         var expectedCounts = new Dictionary<string, int>
         {
-            { "Erebor", 3 },
-            { "Rivendell", 4 },
-            { "Mirkwood", 4 },
-            { "Lothlorien", 4 },
-            { "Isengard", 5 },
-            { "Gundabad", 4 },
-            { "Umbar", 3 },
+            { "Erebor", 6 },
+            { "Rivendell", 5 },
+            { "Mirkwood", 5 },
+            { "Lothlorien", 6 },
+            { "Isengard", 7 },
+            { "Gundabad", 5 },
+            { "Umbar", 4 },
             { "DolGuldur", 5 },
-            { "Gondor", 4 },
-            { "Mordor", 4 },
-            { "Rohan", 3 },
+            { "Gondor", 6 },
+            { "Mordor", 5 },
+            { "Rohan", 5 },
         };
 
         foreach (var kvp in expectedCounts)
@@ -144,7 +160,7 @@ public class TaomCulturalFeatsDefinitionTests
             .Where(f => f.FieldType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(43, fields.Count,
-            "Expected 43 private FeatObject fields (expanded feat set across 11 cultures)");
+        Assert.AreEqual(59, fields.Count,
+            "Expected 59 private FeatObject fields (expanded feat set across 11 cultures)");
     }
 }

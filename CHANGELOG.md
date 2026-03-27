@@ -25,19 +25,24 @@
 
 ### Feature: Custom Culture Feats (Expanded)
 
-- **43 custom feats** across 11 cultures (10 custom + Rohan XSLT), up from initial 30
+- **59 custom feats** across 11 cultures (10 custom + Rohan XSLT), up from initial 30
 - Party size feats: Mordor/Gundabad +30%, Dol Guldur +25%, Isengard +20%, Gondor +10%
 - Food consumption feats: Rivendell/Mirkwood/Lothlorien -15%, Dol Guldur +10%
+- Settlement loyalty feats: Gondor/Erebor +1/day, Lothlorien/Rivendell/Rohan +0.5/day
+- Party morale feats: Gondor/Rohan/Erebor +5, Mirkwood/Lothlorien +3
+- Smithing energy cost feats: Erebor -30%, Isengard -20%
+- Tariff income feat: Umbar +15%
+- Raid damage feats: Mordor/Gundabad +25%, Isengard +20%
 - Rohan custom C# feats (replacing vanilla Vlandia): -15% mounted cost/wage, -10% speed when >50% infantry
 - Erebor production feat changed from +30% animal-only to +10% ALL production
 - Isengard construction speed flipped from -15% penalty to +15% bonus (industrial might)
-- 2 new GameModel overrides: TaomPartySizeModel, TaomFoodConsumptionModel
+- 7 new GameModel overrides: TaomPartySizeModel, TaomFoodConsumptionModel, TaomSettlementLoyaltyModel, TaomPartyMoraleModel, TaomSmithingModel, TaomClanFinanceModel, TaomRaidModel
 - Feats registered via Harmony postfix on `Campaign.InitializeDefaultCampaignObjects()` (Patch18_CulturalFeats)
-- 11 total GameModel overrides consuming feats
+- 16 total GameModel overrides consuming feats
 - Extended TaomPartyWageModel with Rohan mounted wage reduction (scaled by mounted troop fraction)
 - Extended TaomPartySpeedModel with Rohan infantry speed penalty
 - XSLT updated: Dunland uses Battanian feats, Rohan uses custom C# feats
-- 48 tests verifying feat registration structure and property correctness
+- 64 tests verifying feat registration structure and property correctness
 
 ### Enhancement: Diplomacy & Alliance System Logging
 
