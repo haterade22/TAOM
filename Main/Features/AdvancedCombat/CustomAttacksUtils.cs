@@ -8,7 +8,7 @@ using static TaleWorlds.MountAndBlade.Agent;
 
 namespace TAOM.Features.AdvancedCombat;
 
-public delegate void RegisterBlowDelegate(Mission mission, Agent attacker, Agent victim, GameEntity realHitEntity, Blow b, ref AttackCollisionData collisionData, in MissionWeapon attackerWeapon, ref CombatLogData combatLogData);
+public delegate void RegisterBlowDelegate(Mission mission, Agent attacker, Agent victim, WeakGameEntity realHitEntity, Blow b, ref AttackCollisionData collisionData, in MissionWeapon attackerWeapon, ref CombatLogData combatLogData);
 
 public class CustomAttacksUtils
 {
@@ -45,7 +45,7 @@ public class CustomAttacksUtils
             {
                 typeof(Agent),
                 typeof(Agent),
-                typeof(GameEntity),
+                typeof(WeakGameEntity),
                 typeof(Blow),
                 typeof(AttackCollisionData).MakeByRefType(),
                 typeof(MissionWeapon).MakeByRefType(),
@@ -78,7 +78,7 @@ public class CustomAttacksUtils
         }
     }
 
-    public static void RegisterBlow(Agent attacker, Agent victim, GameEntity realHitEntity, Blow b, ref AttackCollisionData collisionData, in MissionWeapon attackerWeapon, ref CombatLogData combatLogData)
+    public static void RegisterBlow(Agent attacker, Agent victim, WeakGameEntity realHitEntity, Blow b, ref AttackCollisionData collisionData, in MissionWeapon attackerWeapon, ref CombatLogData combatLogData)
     {
         if (_initializationFailed || _registerBlow == null)
         {
@@ -142,6 +142,6 @@ public class CustomAttacksUtils
 
         CombatLogData combatLogData = new(false, attacker.IsHuman, attacker.IsMine, attacker.RiderAgent != null, attacker.RiderAgent != null && attacker.RiderAgent.IsMine, attacker.IsMount, victim.IsHuman, victim.IsMine, victim.Health <= 0f, victim.RiderAgent != null, victim.RiderAgent != null && victim.RiderAgent.IsMine, victim.IsMount, null, victim.RiderAgent == victim, knockDown, false, 0f);
         MissionWeapon weapon = MissionWeapon.Invalid;
-        RegisterBlow(attacker, victim, null, blow, ref attackCollisionDataForDebugPurpose, in weapon, ref combatLogData);
+        RegisterBlow(attacker, victim, WeakGameEntity.Invalid, blow, ref attackCollisionDataForDebugPurpose, in weapon, ref combatLogData);
     }
 }

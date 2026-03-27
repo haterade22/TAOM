@@ -2,6 +2,19 @@
 
 ## 2026-03-26
 
+### Feature: Warg Combat System — Autonomous Warg AI (#44)
+
+- **New feature:** Wargs are now autonomous combat agents with their own behavior tree AI, attacking enemies independently and entering rage mode when damaged
+- **Ported from:** LOTRAOM's warg combat system, adapted for Bannerlord 1.3.12 APIs
+- **Rage mode:** 10% chance on >10 damage — warg takes over control for 2-3 attacks, then returns to rider
+- **Architecture:** BehaviorTree framework (pre-compiled DLLs) + SpatialGrid spatial partitioning + bone-based collision detection + reflection-based Mission.RegisterBlow
+- **New adapters:** IAgentAdapter/AgentAdapter, IMissionAdapterFactory (mission-scope agent wrapping)
+- **New services:** IWargAttackService (damage calc), IBoneCollisionService, ISpatialGridDebugService
+- **Dependencies:** Alliance.Wargs (XML data), BehaviorTrees.dll, BehaviorTreeWrapper.dll
+- **1.3.12 fixes:** MBAgentVisuals (renamed), WeakGameEntity (RegisterBlow reflection), OnMainAgentChangedDelegate signature, CombatLogData constructor, AIScriptedFrameFlags qualification
+- **Files:** ~50 new C# files across Adapters/, Features/AdvancedCombat/, Features/Warg/
+- **Cultures affected:** Gundabad, Dol Guldur, Isengard (7 warg-mounted troops)
+
 ### Feature: Troop Weight System — Elite Unit Party Capacity
 
 - **New feature:** Elite/supernatural units consume more party capacity, preventing armies of pure elite troops

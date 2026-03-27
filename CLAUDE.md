@@ -89,6 +89,10 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Core | `Main/Core/` |
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
+| AdvancedCombat | `Main/Features/AdvancedCombat/` (SpatialGrid, BoneCollision, CustomAttacks) |
+| Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
+| BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
+| Alliance.Wargs | External module: Monster id="warg", animations, items |
 | CC narrative data | `Main/_Module/ModuleData/charactercreation/` (JSON) |
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
