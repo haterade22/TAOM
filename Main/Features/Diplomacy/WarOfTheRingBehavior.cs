@@ -16,6 +16,7 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
+        _logger.LogInfo("[WarOfTheRing] WarOfTheRingBehavior registering events");
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
     }
 

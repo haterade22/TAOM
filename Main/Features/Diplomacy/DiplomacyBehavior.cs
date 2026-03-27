@@ -1,3 +1,4 @@
+using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Features.Diplomacy;
@@ -5,14 +6,17 @@ namespace TAOM.Features.Diplomacy;
 public class DiplomacyBehavior : CampaignBehaviorBase
 {
     private readonly IDiplomacyService _service;
+    private readonly IModLogger _logger;
 
-    public DiplomacyBehavior(IDiplomacyService service)
+    public DiplomacyBehavior(IDiplomacyService service, IModLogger logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     public override void RegisterEvents()
     {
+        _logger.LogInfo("[Diplomacy] DiplomacyBehavior registering events");
         CampaignEvents.OnNewGameCreatedPartialFollowUpEvent.AddNonSerializedListener(
             this, OnNewGameCreatedPartialFollowUp);
 
@@ -28,6 +32,7 @@ public class DiplomacyBehavior : CampaignBehaviorBase
     {
         if (index == 0)
         {
+            _logger.LogInfo("[Diplomacy] New game created — establishing initial alliances");
             _service.EstablishInitialAlliances();
         }
     }

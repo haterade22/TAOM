@@ -55,6 +55,9 @@ public class SubModule : MBSubModuleBase
         var allianceHook = IoC.Resolve<IOnAllianceAction>();
         var peaceHook = IoC.Resolve<IOnPeaceAction>();
         DiplomacyIoC.InitializeHooks(allianceHook, peaceHook);
+        AllianceCampaignBehavior_EndAlliance_Patch.Initialize(logger);
+        DeclareWarAction_ApplyInternal_Patch.Initialize(logger);
+        MakePeaceAction_ApplyInternal_Patch.Initialize(logger);
 
         var executionHook = IoC.Resolve<IOnExecutionAction>();
         ExecutionIoC.InitializeHooks(executionHook);
@@ -109,7 +112,8 @@ public class SubModule : MBSubModuleBase
 
             var diplomacyService = IoC.Resolve<IDiplomacyService>();
             var wotrService = IoC.Resolve<IWarOfTheRingService>();
-            campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService));
+            var diplomacyLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger));
             campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
             campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService));
             campaignStarter.AddModel(new TaomDiplomacyModel(wotrService));

@@ -2,7 +2,7 @@
 
 Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-03-27
 
 ---
 
@@ -269,13 +269,24 @@ Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/`
 | Harmony Patches | NOT STARTED | Verify method signatures |
 | GameModels | NOT STARTED | Check overridden methods |
 | CampaignBehaviors | NOT STARTED | Event signature changes |
-| MissionLogics | NOT STARTED | Mission API changes |
+| MissionLogics | PARTIAL | See 1.3.12 API discoveries below |
 
-### Known API Changes
+### Known API Changes (1.2 → 1.3.12)
 - [ ] `Mission` constructor parameters
 - [ ] Campaign event delegates
 - [ ] Party management methods
 - [ ] Settlement query methods
+
+### Discovered API Changes (from Warg Combat Port, #44 / #47)
+
+| Change | 1.2 | 1.3.12 | Impact |
+|--------|-----|--------|--------|
+| `OnBehaviorInitialize` | Called for all behaviors | **NOT called** for behaviors added in `OnMissionBehaviorInitialize` | Use constructor or first-tick init instead |
+| `Mission.RegisterBlow` param 3 | `GameEntity` | `WeakGameEntity` | Reflection lookup returns null if wrong type |
+| `Agent.AgentVisuals` return type | `AgentVisuals` | `MBAgentVisuals` | Different namespace (`View` vs `MountAndBlade`) |
+| `OnMainAgentChangedDelegate` | `(object, PropertyChangedEventArgs)` | `(Agent oldAgent)` | Single parameter, no event pattern |
+| `CombatLogData` ctor param 13 | `bool` | `MissionObject` | Pass `null` instead of `false` |
+| `AIScriptedFrameFlags` | Top-level enum | Nested in `Agent` class | Use `Agent.AIScriptedFrameFlags.None` |
 
 ---
 

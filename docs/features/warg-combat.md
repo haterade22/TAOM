@@ -18,7 +18,7 @@ The `Agent` class is sealed (cannot subclass). Warg AI must run alongside the ex
 
 ### Solution Approach
 
-- **BehaviorTreeAgentComponent** (from BehaviorTreeWrapper.dll) — attached to each warg `Agent` via `AddComponent`, ticked each frame by `BehaviorTreeMissionLogic`
+- **BehaviorTreeAgentComponent** (from BehaviorTreeWrapper.dll) — attached to each warg `Agent` via `AddComponent`, manually ticked by `WargMissionBehavior.OnMissionTick`
 - **AutonomousMovementPlayerController** — `[DefaultView]` MissionView that takes over player movement during rage mode
 - **SpatialGrid** — O(1) cell-based spatial partitioning for enemy proximity queries
 - **CustomAttacksUtils** — reflection-based `Mission.RegisterBlow` access for programmatic damage

@@ -1,3 +1,4 @@
+using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy.Models;
 
 namespace TAOM.Features.Diplomacy.Hooks;
@@ -5,19 +6,31 @@ namespace TAOM.Features.Diplomacy.Hooks;
 public class AllianceActionHook : IOnAllianceAction
 {
     private readonly IDiplomacyService _diplomacyService;
+    private readonly IModLogger _logger;
 
-    public AllianceActionHook(IDiplomacyService diplomacyService)
+    public AllianceActionHook(IDiplomacyService diplomacyService, IModLogger logger)
     {
         _diplomacyService = diplomacyService;
+        _logger = logger;
     }
 
     public bool ShouldPreventAllianceEnd(string kingdomAId, string kingdomBId)
     {
-        return _diplomacyService.GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent;
+        var isPermanent = _diplomacyService.GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent;
+        if (isPermanent)
+            _logger.LogInfo($"[Diplomacy] Alliance end blocked: {kingdomAId} <-> {kingdomBId} (Permanent)");
+        else
+            _logger.LogDebug($"[Diplomacy] Alliance end allowed: {kingdomAId} <-> {kingdomBId}");
+        return isPermanent;
     }
 
     public bool ShouldPreventWarDeclaration(string factionAId, string factionBId)
     {
-        return _diplomacyService.GetRelationshipTier(factionAId, factionBId) == AllianceTier.Permanent;
+        var isPermanent = _diplomacyService.GetRelationshipTier(factionAId, factionBId) == AllianceTier.Permanent;
+        if (isPermanent)
+            _logger.LogInfo($"[Diplomacy] War declaration blocked: {factionAId} <-> {factionBId} (Permanent)");
+        else
+            _logger.LogDebug($"[Diplomacy] War declaration allowed: {factionAId} <-> {factionBId}");
+        return isPermanent;
     }
 }

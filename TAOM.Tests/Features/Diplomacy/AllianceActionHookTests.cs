@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
@@ -10,13 +11,15 @@ namespace TAOM.Tests.Features.Diplomacy;
 public class AllianceActionHookTests
 {
     private IDiplomacyService _diplomacyService;
+    private IModLogger _logger;
     private AllianceActionHook _sut;
 
     [TestInitialize]
     public void Setup()
     {
         _diplomacyService = Substitute.For<IDiplomacyService>();
-        _sut = new AllianceActionHook(_diplomacyService);
+        _logger = Substitute.For<IModLogger>();
+        _sut = new AllianceActionHook(_diplomacyService, _logger);
     }
 
     [TestMethod]

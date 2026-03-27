@@ -2,6 +2,13 @@
 
 ## 2026-03-27
 
+### Enhancement: Diplomacy & Alliance System Logging
+
+- Added diagnostic logging to diplomacy enforcement hooks (`AllianceActionHook`, `PeaceActionHook`)
+- Added initialization logging to `DiplomacyBehavior` and `WarOfTheRingBehavior`
+- Added null-hook warnings to all 3 diplomacy Harmony patches for debugging initialization issues
+- LogInfo for blocked actions (alliance end, war declaration, peace), LogDebug for allowed actions
+
 ### Fix: Warg Combat System — BT Runtime Failures
 
 - **Bug:** Wargs never attacked in combat — 10x `ArgumentException` in `BehaviorTrees.dll`
