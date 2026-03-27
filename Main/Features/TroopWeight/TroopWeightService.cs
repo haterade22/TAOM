@@ -11,13 +11,13 @@ public class TroopWeightService : ITroopWeightService
 {
     private readonly IModLogger _logger;
     private readonly ITroopWeightXmlLoader _xmlLoader;
-    private readonly Dictionary<string, float> _weightCache;
+    private Dictionary<string, float> _weights;
 
     public TroopWeightService(IModLogger logger, ITroopWeightXmlLoader xmlLoader)
     {
         _logger = logger;
         _xmlLoader = xmlLoader;
-        _weightCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+        _weights = xmlLoader.GetTroopWeights();
     }
 
     public float GetTroopWeight(string troopStringId)
@@ -25,18 +25,7 @@ public class TroopWeightService : ITroopWeightService
         if (string.IsNullOrEmpty(troopStringId))
             return 1.0f;
 
-        if (_weightCache.TryGetValue(troopStringId, out var cachedWeight))
-            return cachedWeight;
-
-        var weights = _xmlLoader.GetTroopWeights();
-        if (weights.TryGetValue(troopStringId, out var weight))
-        {
-            _weightCache[troopStringId] = weight;
-            return weight;
-        }
-
-        _weightCache[troopStringId] = 1.0f;
-        return 1.0f;
+        return _weights.TryGetValue(troopStringId, out var weight) ? weight : 1.0f;
     }
 
     public float GetTroopWeight(CharacterObject character)
@@ -85,6 +74,6 @@ public class TroopWeightService : ITroopWeightService
 
     public void ClearCache()
     {
-        _weightCache.Clear();
+        _weights = _xmlLoader.GetTroopWeights();
     }
 }

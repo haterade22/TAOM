@@ -42,6 +42,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Reference Include="BehaviorTrees">
+			<HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="BehaviorTreeWrapper">
+			<HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Remove="_Module\bin\**" />
 		<EmbeddedResource Remove="_Module\bin\**" />
 		<None Remove="_Module\bin\**" />

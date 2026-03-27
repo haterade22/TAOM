@@ -121,11 +121,13 @@ Weight values are continuous floats — any positive value works. Common tiers:
 ## Performance
 
 - **Troop weight cache:** `Dictionary<string, float>` in `TroopWeightService` — O(1) lookup after first access per troop type
-- **Party member count cache:** `Dictionary<int, (int Version, float Weight)>` in `PartyBaseNumberOfAllMembersHook` — keyed by party hash, invalidated by `TroopRoster.VersionNo` changes, cleared at 2000 entries
-- **Healthy count cache:** Same pattern in `TroopRosterTotalHealthyCountHook`, cleared at 500 entries
+- **Party member count cache:** `Dictionary<int, (int Version, float Weight)>` in `PartyBaseNumberOfAllMembersHook` — keyed by party hash, invalidated by `TroopRoster.VersionNo` changes, trims 25% at 2000 entries
+- **Man count cache:** Same version-based pattern in `TroopRosterTotalManCountHook`, trims 25% at 500 entries
+- **Healthy count cache:** Same pattern in `TroopRosterTotalHealthyCountHook`, trims 25% at 500 entries
+- **Cache eviction:** All caches use 25% trim (remove oldest quarter) instead of full clear to avoid thundering-herd recomputation
 - **Single-threaded:** All caches use `Dictionary` (not `ConcurrentDictionary`) because the campaign tick loop is single-threaded
 
 ## GitHub Issue
 
 - **Issue:** #41 — [feat: Troop Weight System — Elite unit party capacity](https://github.com/haterade22/TAOM/issues/41)
-- **Status:** Open
+- **Status:** Closed

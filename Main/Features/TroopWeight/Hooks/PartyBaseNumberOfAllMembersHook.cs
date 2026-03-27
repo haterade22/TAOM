@@ -45,11 +45,26 @@ public class PartyBaseNumberOfAllMembersHook : IOnPartyBaseNumberOfAllMembers
                 __result = (int)Math.Ceiling(weightedCount);
 
             if (_cache.Count > MaxCacheSize)
-                _cache.Clear();
+                TrimCache();
         }
         catch (Exception ex)
         {
             _logger?.LogError($"PartyBase.NumberOfAllMembers hook error: {ex.Message}");
         }
+    }
+
+    private void TrimCache()
+    {
+        var keysToRemove = new List<int>(_cache.Count / 4);
+        int count = 0;
+        foreach (var key in _cache.Keys)
+        {
+            keysToRemove.Add(key);
+            count++;
+            if (count >= _cache.Count / 4)
+                break;
+        }
+        foreach (var key in keysToRemove)
+            _cache.Remove(key);
     }
 }

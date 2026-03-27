@@ -84,10 +84,8 @@ public class TroopWeightXmlLoader : ITroopWeightXmlLoader
                     continue;
                 }
 
-                if (weights.ContainsKey(id))
-                {
+                if (weights.TryGetValue(id, out _))
                     _logger.LogWarning($"Duplicate troop ID '{id}' — using last value");
-                }
 
                 weights[id] = weight;
             }

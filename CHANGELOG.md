@@ -11,6 +11,7 @@
 - **MCM toggle:** "Enable Troop Weight" in Troop Weight settings group (enabled by default)
 - **Architecture:** `ITroopWeightService` + `TroopWeightXmlLoader` + 6 hook implementations + 6 Harmony patches (`Patch17_TroopWeight`)
 - **Ported from:** LOTRAOM's TroopWeight feature, adapted to TAOM conventions (static Initialize pattern, IPathService, simplified caching)
+- **Performance fix:** Added version-based caching to `TroopRosterTotalManCountHook`, replaced full cache clears with 25% trim eviction across all cached hooks
 
 ### Feature: Atmosphere Persistence for Forced-Atmosphere Scenes
 
