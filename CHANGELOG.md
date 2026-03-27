@@ -14,6 +14,13 @@
 - New IObjectManagerAdapter for testable ObjectManager access
 - 29 new tests covering service logic and hook behavior
 
+### Fix: Custom Battle NRE crash on screen init
+
+- Root cause: lord characters and cultures were only registered for Campaign game type, not CustomGame
+- CustomBattleSideVM.OnCharacterSelection crashed with NullReferenceException when Characters list was empty
+- Fix: registered SPCultures (XSLT + custom), lords (XSLT + TAOM) for CustomGame/EditorGame in SubModule.xml
+- Added safety fallback in Characters patch — falls back to vanilla if TAOM commander list is empty
+
 ### Feature: Custom Culture Feats (Expanded)
 
 - **43 custom feats** across 11 cultures (10 custom + Rohan XSLT), up from initial 30

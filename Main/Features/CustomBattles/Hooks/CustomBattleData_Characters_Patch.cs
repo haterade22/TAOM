@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
@@ -31,8 +32,17 @@ public static class CustomBattleData_Characters_Patch
                 return true;
             }
 
-            __result = new List<BasicCharacterObject>();
-            _hook.OnGetCustomBattleCommanders(ref __result);
+            IEnumerable<BasicCharacterObject> commanders = new List<BasicCharacterObject>();
+            _hook.OnGetCustomBattleCommanders(ref commanders);
+
+            var list = commanders as ICollection<BasicCharacterObject> ?? commanders.ToList();
+            if (list.Count == 0)
+            {
+                _logger?.LogWarning("[CustomBattles] Characters patch: no TAOM commanders found, falling back to vanilla");
+                return true;
+            }
+
+            __result = list;
             return false;
         }
         catch (Exception ex)

@@ -96,7 +96,7 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 - **CustomBattle module** — vanilla DLL providing `CustomBattleData`, `CustomBattleHelper`, `CustomBattleScreen`
 - **Harmony** — patch framework for intercepting static property getters and method calls
 - **DryIoc** — IoC container for service/hook registration
-- **SubModule.xml** — already declares `<DependedModule Id="CustomBattle" />` and registers all troop trees for `CustomGame`/`EditorGame`
+- **SubModule.xml** — declares `<DependedModule Id="CustomBattle" />` and registers troop trees, cultures (XSLT + custom), and lord characters for `CustomGame`/`EditorGame`. **Critical:** Lord/culture XMLs MUST be registered for `CustomGame` — without this, ObjectManager has no heroes in Custom Battle mode, causing NRE in `CustomBattleSideVM.OnCharacterSelection`
 
 ## Tests
 
