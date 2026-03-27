@@ -2,6 +2,29 @@
 
 ## 2026-03-27
 
+### Feature: Custom Battles
+
+- TAOM Custom Battle support: all TAOM cultures, commanders, and troops available in Custom Battle mode
+- 5 Harmony patches (Patch19_CustomBattles) replacing vanilla factions/commanders/troops with TAOM content
+- Dynamic faction loading from ObjectManager (cultures with settlements, non-bandit)
+- Dynamic commander loading with filtering (excludes companions, children, tutorial, vanilla commanders)
+- Formation-to-troop mapping using culture militia/elite troop definitions
+- Team-fix MissionBehavior preventing friendly fire in custom battles and custom sieges
+- Custom battle GUI prefabs (already existed) now backed by service layer
+- New IObjectManagerAdapter for testable ObjectManager access
+- 29 new tests covering service logic and hook behavior
+
+### Feature: Custom Culture Feats
+
+- **30 custom feats** (3 per culture) for all 10 TAOM cultures, replacing identical Empire placeholder feats
+- Each culture gets 2 bonuses + 1 penalty following vanilla pattern (e.g., Erebor: -25% garrison wage, +30% animal production, -15% construction speed)
+- Feats registered via Harmony postfix on `Campaign.InitializeDefaultCampaignObjects()` (Patch18_CulturalFeats)
+- 9 new GameModel overrides consuming feats: TaomArmyManagementModel, TaomPartySpeedModel, TaomSettlementProsperityModel, TaomSettlementMilitiaModel, TaomBuildingConstructionModel, TaomVillageProductionModel, TaomCaravanModel, TaomBattleRewardModel, TaomPartyTroopUpgradeModel
+- Extended TaomPartyWageModel with garrison/party wage feat checks for 7 cultures
+- Extended TaomDiplomacyModel with Isengard decision penalty feat
+- XSLT updated: Dunland now uses Battanian feats (forest speed, militia, construction) instead of Empire feats
+- 35 new tests verifying feat registration structure and property correctness
+
 ### Enhancement: Diplomacy & Alliance System Logging
 
 - Added diagnostic logging to diplomacy enforcement hooks (`AllianceActionHook`, `PeaceActionHook`)

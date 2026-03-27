@@ -92,6 +92,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
 | AdvancedCombat | `Main/Features/AdvancedCombat/` (SpatialGrid, BoneCollision, CustomAttacks) |
+| CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 9 GameModel overrides) |
+| CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
@@ -116,8 +118,17 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
 | `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) |
-| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) |
+| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture wage/garrison feats |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) |
+| `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | Culture army influence award/cost feats |
+| `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | Culture forest speed feats |
+| `TaomSettlementProsperityModel` | `DefaultSettlementProsperityModel` | Culture hearth growth feats |
+| `TaomSettlementMilitiaModel` | `DefaultSettlementMilitiaModel` | Culture veteran militia feats |
+| `TaomBuildingConstructionModel` | `DefaultBuildingConstructionModel` | Culture construction speed feats |
+| `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | Culture grain/animal production feats |
+| `TaomCaravanModel` | `DefaultCaravanModel` | Umbar caravan cost feat |
+| `TaomBattleRewardModel` | `DefaultBattleRewardModel` | Umbar renown feat |
+| `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Isengard mounted recruit cost feat |
 
 ## Harmony Patch Categories
 
@@ -140,6 +151,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch15_BannerLayerLimit` | Banner layer limit | Various |
 | `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` |
 | `Patch17_TroopWeight` | Troop weight system | `PartyBase`, `TroopRoster` |
+| `Patch18_CulturalFeats` | Custom culture feat registration | `Campaign.InitializeDefaultCampaignObjects` |
+| `Patch19_CustomBattles` | Custom battle TAOM factions/commanders/troops | `CustomBattleData`, `CustomBattleHelper`, `BannerlordMissions` |
 
 ## Agent Teams
 

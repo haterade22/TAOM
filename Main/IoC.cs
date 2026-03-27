@@ -15,6 +15,7 @@ using TAOM.Features.Execution;
 using TAOM.Features.StartupResources;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CustomBattles;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.Warg;
 
@@ -46,6 +47,7 @@ public static class IoC
         TroopWeightIoC.RegisterTroopWeightFeature(container);
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
+        CustomBattlesIoC.RegisterCustomBattlesFeature(container);
 
         _container = container;
     }
@@ -60,6 +62,7 @@ public static class IoC
         container.Register<IHeroRosterAdapter, HeroRosterAdapter>(Reuse.Singleton);
         container.Register<IVolunteerContextAdapter, VolunteerContextAdapter>(Reuse.Singleton);
         container.Register<IMissionAdapterFactory, MissionAdapterFactory>(Reuse.Singleton);
+        container.Register<IObjectManagerAdapter, ObjectManagerAdapter>(Reuse.Singleton);
     }
 
     private static void RegisterLoggingServices(IContainer container)

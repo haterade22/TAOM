@@ -27,6 +27,9 @@ using TAOM.Features.BannerInjection.Hooks;
 using TAOM.Features.AtmospherePersistence.Hooks;
 using TAOM.Features.TroopProgression.Models;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CulturalFeats.Models;
+using TAOM.Features.CustomBattles;
+using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -44,6 +47,8 @@ public class SubModule : MBSubModuleBase
         IoC.Configure();
 
         _harmony = new Harmony("com.taom.mod");
+        _harmony.PatchCategory("Patch18_CulturalFeats");
+        _harmony.PatchCategory("Patch19_CustomBattles");
         // Battle scenes disabled — custom map not yet ready, will re-enable when TAOM_Map is integrated
         // _harmony.PatchCategory("Patch0_BattleScenes");
         // Remaining patches applied in OnGameInitializationFinished — View assembly must be initialized first
@@ -67,6 +72,12 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnPartyVMPopulatePartyListLabel>());
+
+        CustomBattlesIoC.InitializeHooks(
+            IoC.Resolve<IOnGetCustomBattleCommanders>(),
+            IoC.Resolve<IOnGetCustomBattleFactions>(),
+            IoC.Resolve<IOnGetDefaultTroopOfFormation>(),
+            logger);
 
         Banner_TryGetBannerDataFromCode_Patch.Initialize(logger);
         Mission_Initialize_Patch.Initialize(logger);
@@ -123,6 +134,17 @@ public class SubModule : MBSubModuleBase
 
             var executionAction = IoC.Resolve<IOnExecutionAction>();
             campaignStarter.AddModel(new TaomExecutionRelationModel(executionAction));
+
+            // Cultural feat models
+            campaignStarter.AddModel(new TaomArmyManagementModel());
+            campaignStarter.AddModel(new TaomPartySpeedModel());
+            campaignStarter.AddModel(new TaomSettlementProsperityModel());
+            campaignStarter.AddModel(new TaomSettlementMilitiaModel());
+            campaignStarter.AddModel(new TaomBuildingConstructionModel());
+            campaignStarter.AddModel(new TaomVillageProductionModel());
+            campaignStarter.AddModel(new TaomCaravanModel());
+            campaignStarter.AddModel(new TaomBattleRewardModel());
+            campaignStarter.AddModel(new TaomPartyTroopUpgradeModel());
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
