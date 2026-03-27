@@ -58,7 +58,7 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 
 ### Commander Selection Criteria
 - `IsHero = true`
-- ID does not contain: `companion`, `child`, `tutorial`, `commander_`
+- ID does not contain: `companion`, `child`, `tutorial`, `commander_`, `wanderer`, `notable`
 
 ### Formation-to-Troop Mapping
 | Formation | Troop Source | Fallback |

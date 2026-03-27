@@ -20,6 +20,8 @@
 - CustomBattleSideVM.OnCharacterSelection crashed with NullReferenceException when Characters list was empty
 - Fix: registered SPCultures (XSLT + custom), lords (XSLT + TAOM) for CustomGame/EditorGame in SubModule.xml
 - Added safety fallback in Characters patch — falls back to vanilla if TAOM commander list is empty
+- Fixed commander filtering: added "wanderer" and "notable" to exclusion list (wanderers/notables have is_hero=true but aren't lords)
+- Fixed faction selector UI: replaced broken SelectorVM dropdown with clickable toggle button grid (CustomBattleFactionSelectionVM isn't a SelectorVM)
 
 ### Feature: Custom Culture Feats (Expanded)
 
