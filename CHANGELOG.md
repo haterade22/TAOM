@@ -1,5 +1,17 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-27
+
+### Fix: Warg Combat System — BT Runtime Failures
+
+- **Bug:** Wargs never attacked in combat — 10x `ArgumentException` in `BehaviorTrees.dll`
+- **Root cause 1:** `OnBehaviorInitialize` is never called for behaviors added during `SubModule.OnMissionBehaviorInitialize` in Bannerlord 1.3.12. `BTRegister.RegisterClass("WargTree")` never ran, so every `BehaviorTreeAgentComponent` failed to build its tree.
+- **Fix:** Moved initialization from `OnBehaviorInitialize` to first `OnMissionTick` call via `_initialized` flag
+- **Root cause 2:** `WargBehaviorTree` constructor line 30 (`Rider.GetValue().Formation`) threw NRE when warg had no rider at tree construction time
+- **Fix:** Changed to `agent.RiderAgent?.Formation` (null-safe)
+- **Safety net:** Added manual `comp.OnTickAsAI(dt)` loop in case engine doesn't call `OnTickAsAI` for mount agents
+- **Verified:** 10 Dol Guldur Fell Warg-Riders in combat — all trees build successfully, wargs attack
+
 ## 2026-03-26
 
 ### Feature: Warg Combat System — Autonomous Warg AI (#44)

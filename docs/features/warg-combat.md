@@ -127,6 +127,14 @@ Alliance.Wargs (XML: monster, items, animations)
 6. Register services in IoC, add MissionBehavior in SubModule.cs `OnMissionBehaviorInitialize`
 7. Identify warg/creature via `agent.Monster.StringId == "your_monster_id"`
 
+## Bannerlord 1.3.12 Gotchas
+
+- **`OnBehaviorInitialize` not called**: Behaviors added during `SubModule.OnMissionBehaviorInitialize` do NOT get `OnBehaviorInitialize` called in 1.3.12. Use first-tick initialization via `_initialized` flag instead.
+- **`OnTickAsAI` for mount agents**: May not be called by the engine for mount agents. WargMissionBehavior manually ticks BT components as a safety net.
+- **`WeakGameEntity` not `GameEntity`**: `Mission.RegisterBlow` parameter 3 is `WeakGameEntity` in 1.3.12, not `GameEntity`. Pass `WeakGameEntity.Invalid` (struct, not null).
+- **`MBAgentVisuals` not `AgentVisuals`**: `Agent.AgentVisuals` returns `MBAgentVisuals` in 1.3.12.
+- **`OnMainAgentChangedDelegate(Agent oldAgent)`**: Single parameter in 1.3.12, not `(object sender, PropertyChangedEventArgs e)`.
+
 ## Performance
 
 - **SpatialGrid**: O(1) cell lookup but allocates new `List<Agent>` per query — consider list pooling for high-frequency paths

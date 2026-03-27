@@ -113,4 +113,40 @@ public class CharacterCreationContentServiceTests
         _logger.Received().LogInfo(Arg.Is<string>(s =>
             s.Contains("dwarf") && s.Contains("5")));
     }
+
+    [TestMethod]
+    [DataRow("empire")]
+    [DataRow("vlandia")]
+    [DataRow("sturgia")]
+    [DataRow("aserai")]
+    [DataRow("battania")]
+    [DataRow("khuzait")]
+    public void SetPlayerRace_VanillaCulture_SetsHuman(string cultureId)
+    {
+        var cultureData = new CultureCreationData
+        {
+            CultureId = cultureId,
+            Races = new[] { "human" }
+        };
+        _raceManager.GetRaceIdFromName("human").Returns(0);
+
+        _sut.SetPlayerRace(cultureData, "hero_id");
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_id", 0);
+    }
+
+    [TestMethod]
+    public void SetPlayerRace_NullHeroId_LogsWarningAndSkips()
+    {
+        var cultureData = new CultureCreationData
+        {
+            CultureId = "gondor",
+            Races = new[] { "human" }
+        };
+
+        _sut.SetPlayerRace(cultureData, null);
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("null")));
+    }
 }

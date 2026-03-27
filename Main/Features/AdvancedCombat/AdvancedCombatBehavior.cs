@@ -7,8 +7,8 @@ public class AdvancedCombatBehavior : MissionLogic
 {
     private readonly IBoneCollisionService _boneCollisionService;
     private readonly ISpatialGridDebugService _debugService;
-    private readonly int _noTicksBeforeGridUpdate = 5;
-    private int _currentTick = 0;
+    private const float GridUpdateInterval = 2f;
+    private float _timeSinceLastUpdate = 0f;
 
     public AdvancedCombatBehavior()
     {
@@ -19,8 +19,9 @@ public class AdvancedCombatBehavior : MissionLogic
 
     public override void OnMissionTick(float dt)
     {
-        _currentTick++;
-        if (_currentTick < _noTicksBeforeGridUpdate) return;
+        _timeSinceLastUpdate += dt;
+        if (_timeSinceLastUpdate < GridUpdateInterval) return;
+        _timeSinceLastUpdate = 0f;
 
         if (Mission.Current != null)
         {

@@ -162,6 +162,31 @@ public class CultureCreationDataProviderTests
         Assert.IsNull(result);
     }
 
+    [TestMethod]
+    [DataRow("empire", "town_EN2")]
+    [DataRow("vlandia", "town_V1")]
+    [DataRow("sturgia", "town_S1")]
+    [DataRow("aserai", "town_A1")]
+    [DataRow("battania", "town_K1")]
+    [DataRow("khuzait", "town_RU1")]
+    public void GetCultureData_VanillaCulture_ReturnsCorrectSettlement(string cultureId, string expectedSettlement)
+    {
+        WriteJson(@"[
+            { ""culture_id"": ""gondor"", ""starting_settlement"": ""town_EW1"" },
+            { ""culture_id"": ""empire"", ""starting_settlement"": ""town_EN2"" },
+            { ""culture_id"": ""vlandia"", ""starting_settlement"": ""town_V1"" },
+            { ""culture_id"": ""sturgia"", ""starting_settlement"": ""town_S1"" },
+            { ""culture_id"": ""aserai"", ""starting_settlement"": ""town_A1"" },
+            { ""culture_id"": ""battania"", ""starting_settlement"": ""town_K1"" },
+            { ""culture_id"": ""khuzait"", ""starting_settlement"": ""town_RU1"" }
+        ]");
+
+        var result = _sut.GetCultureData(cultureId);
+
+        Assert.IsNotNull(result, $"Culture '{cultureId}' should be found in cultures.json");
+        Assert.AreEqual(expectedSettlement, result.StartingSettlement);
+    }
+
     private void WriteJson(string json)
     {
         File.WriteAllText(

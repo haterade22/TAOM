@@ -98,5 +98,65 @@
     "default_build": 0.5231,
     "focus_to_add": 1,
     "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "empire",
+    "races": ["human"],
+    "starting_settlement": "town_EN2",
+    "default_age": 20.0,
+    "default_weight": 0.0,
+    "default_build": 0.7222,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "vlandia",
+    "races": ["human"],
+    "starting_settlement": "town_V1",
+    "default_age": 20.0,
+    "default_weight": 0.0,
+    "default_build": 0.7222,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "sturgia",
+    "races": ["human"],
+    "starting_settlement": "town_S1",
+    "default_age": 20.0,
+    "default_weight": 0.0,
+    "default_build": 0.7222,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "aserai",
+    "races": ["human"],
+    "starting_settlement": "town_A1",
+    "default_age": 20.0,
+    "default_weight": 0.0,
+    "default_build": 0.7222,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "battania",
+    "races": ["human"],
+    "starting_settlement": "town_K1",
+    "default_age": 20.0,
+    "default_weight": 0.0,
+    "default_build": 0.7222,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "khuzait",
+    "races": ["human"],
+    "starting_settlement": "town_RU1",
+    "default_age": 20.0,
+    "default_weight": 0.0,
+    "default_build": 0.7222,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
   }
 ]
