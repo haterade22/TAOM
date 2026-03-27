@@ -17,7 +17,9 @@ public class WargMissionBehavior : MissionLogic
     private readonly IBoneCollisionService _boneCollisionService;
     private readonly IModLogger _logger;
     private readonly HashSet<string> _loggedErrors = new();
+    private readonly List<(Agent agent, BehaviorTreeAgentComponent comp)> _wargComponents = new();
     private float _timeSinceStart = 0f;
+    private bool _initialized = false;
     private bool _treesAdded = false;
     private bool _managesCombatInfrastructure = false;
     private int _gridUpdateTick = 0;
@@ -30,14 +32,33 @@ public class WargMissionBehavior : MissionLogic
         _logger = IoC.Resolve<IModLogger>();
     }
 
-    public override void OnBehaviorInitialize()
+    private void Initialize()
     {
-        base.OnBehaviorInitialize();
+        _initialized = true;
         _logger.LogInfo("[Warg] WargMissionBehavior initializing");
-        BTRegister.RegisterClass("WargTree", (object[] objects) => WargBehaviorTree.BuildTree(objects));
+
+        try
+        {
+            BTRegister.RegisterClass("WargTree", (object[] objects) => WargBehaviorTree.BuildTree(objects));
+            _logger.LogInfo("[Warg] WargTree registered with BTRegister");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[Warg] Failed to register WargTree: {ex.GetType().Name}: {ex.Message}");
+        }
+
         BTRegister.AddLogger(new TaomBTLogger());
-        AutonomousMovementPlayerController autonomousMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
-        autonomousMovementController.Disable();
+
+        var autonomousMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
+        if (autonomousMovementController != null)
+        {
+            autonomousMovementController.Disable();
+            _logger.LogInfo("[Warg] AutonomousMovementPlayerController disabled");
+        }
+        else
+        {
+            _logger.LogError("[Warg] AutonomousMovementPlayerController NOT FOUND in mission behaviors");
+        }
 
         if (Mission.Current.GetMissionBehavior<AdvancedCombatBehavior>() == null)
         {
@@ -45,6 +66,8 @@ public class WargMissionBehavior : MissionLogic
             SpatialGrid.Instance ??= new SpatialGrid();
             _logger.LogInfo("[Warg] Managing combat infrastructure (no AdvancedCombatBehavior present)");
         }
+
+        _logger.LogInfo("[Warg] WargMissionBehavior initialization completed");
     }
 
     public override void OnAgentDismount(Agent agent)
@@ -59,6 +82,9 @@ public class WargMissionBehavior : MissionLogic
     {
         try
         {
+            if (!_initialized)
+                Initialize();
+
             _timeSinceStart += dt;
             if (_timeSinceStart < 1f) return;
 
@@ -80,18 +106,53 @@ public class WargMissionBehavior : MissionLogic
             {
                 _treesAdded = true;
                 int wargCount = 0;
+                int failCount = 0;
+
                 foreach (Agent agent in Mission.Current.AllAgents)
                 {
                     if (_adapterFactory.GetAgentAdapter(agent).IsWarg())
                     {
-                        agent.AddComponent(new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>()));
+                        try
+                        {
+                            var testTree = WargBehaviorTree.BuildTree(new object[] { agent });
+                            if (testTree == null)
+                            {
+                                _logger.LogError($"[Warg] BuildTree returned null for {agent.Name} (IsMount={agent.IsMount}, Rider={agent.RiderAgent?.Name ?? "null"})");
+                                failCount++;
+                                continue;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError($"[Warg] BuildTree FAILED for {agent.Name}: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                            failCount++;
+                            continue;
+                        }
+
+                        var comp = new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>());
+                        agent.AddComponent(comp);
+                        _wargComponents.Add((agent, comp));
+
+                        _logger.LogInfo($"[Warg] BT added: {agent.Name} (IsMount={agent.IsMount}, Rider={agent.RiderAgent?.Name ?? "null"}, Tree={((comp.Tree != null) ? "OK" : "NULL")})");
                         wargCount++;
                     }
                 }
-                _logger.LogInfo($"[Warg] Added behavior trees to {wargCount} wargs");
+                _logger.LogInfo($"[Warg] Added behavior trees to {wargCount} wargs ({failCount} failed)");
             }
 
             WargRiderHandManager.Tick();
+
+            for (int i = _wargComponents.Count - 1; i >= 0; i--)
+            {
+                var (warg, comp) = _wargComponents[i];
+                if (!warg.IsActive())
+                {
+                    _wargComponents.RemoveAt(i);
+                    continue;
+                }
+                if (comp.Tree != null)
+                    comp.OnTickAsAI(dt);
+            }
         }
         catch (Exception ex)
         {
@@ -103,6 +164,7 @@ public class WargMissionBehavior : MissionLogic
 
     public override void OnRemoveBehavior()
     {
+        _wargComponents.Clear();
         if (_managesCombatInfrastructure)
         {
             _boneCollisionService.Clear();

@@ -27,7 +27,7 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
         AgentHitBy = new BTBlackboardValue<Agent>(null);
         FirstAttack = new BTBlackboardValue<bool>(false);
         Rider = new BTBlackboardValue<Agent>(agent.RiderAgent);
-        AgentsFormation = new BTBlackboardValue<Formation>(Rider.GetValue().Formation);
+        AgentsFormation = new BTBlackboardValue<Formation>(agent.RiderAgent?.Formation);
     }
 
     public static new BehaviorTree BuildTree(object[] objects)
