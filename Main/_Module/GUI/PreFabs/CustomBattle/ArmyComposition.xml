@@ -44,19 +44,17 @@
 
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="12" Sprite="StdAssets\subpage_divider" MarginTop="400"/>
 
-        <!--_____Faction Selection - Clickable Grid_______-->
+        <!--_____Faction Selection - Arrow Navigation_______-->
         <RichTextWidget DataSource="{FactionSelectionGroup}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="415" Brush="CustomBattle.Character.Title.Text" Text="@SelectedFactionName" />
 
-        <Widget DataSource="{FactionSelectionGroup}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="540" SuggestedHeight="55" HorizontalAlignment="Center" MarginTop="450" ClipContents="true">
+        <NavigationScopeTargeter ScopeID="ArmyCompositionFactionSelectionScope" ScopeParent="..\FactionSelectionControls" ScopeMovements="Horizontal" />
+        <ListPanel Id="FactionSelectionControls" DataSource="{FactionSelectionGroup}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="450" LayoutImp.LayoutMethod="HorizontalLeftToRight">
           <Children>
-            <NavigationScopeTargeter ScopeID="ArmyCompositionFactionSelectionScope" ScopeParent="..\FactionList" ScopeMovements="Horizontal" />
-            <NavigatableListPanel Id="FactionList" DataSource="{Factions}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" LayoutImp.LayoutMethod="HorizontalLeftToRight">
-              <ItemTemplate>
-                <ButtonWidget ButtonType="Toggle" IsSelected="@IsSelected" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" MarginLeft="2" MarginRight="2" Brush="Clan.ClanResource.Button" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" UpdateChildrenStates="true" />
-              </ItemTemplate>
-            </NavigatableListPanel>
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" VerticalAlignment="Center" Brush="Navigation.Arrow.Left" Command.Click="ExecuteSelectPreviousFaction" GamepadNavigationIndex="0" />
+            <RichTextWidget WidthSizePolicy="Fixed" SuggestedWidth="220" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="10" MarginRight="10" Brush="CustomBattle.Value.Text" Brush.TextHorizontalAlignment="Center" Text="@SelectedFactionName" />
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" VerticalAlignment="Center" Brush="Navigation.Arrow.Right" Command.Click="ExecuteSelectNextFaction" GamepadNavigationIndex="1" />
           </Children>
-        </Widget>
+        </ListPanel>
 
         <!--_____Army Composition_______-->
         <ListPanel DataSource="{CompositionGroup}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="560" LayoutImp.LayoutMethod="VerticalBottomToTop">

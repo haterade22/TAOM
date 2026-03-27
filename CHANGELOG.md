@@ -21,7 +21,7 @@
 - Fix: registered SPCultures (XSLT + custom), lords (XSLT + TAOM) for CustomGame/EditorGame in SubModule.xml
 - Added safety fallback in Characters patch — falls back to vanilla if TAOM commander list is empty
 - Fixed commander filtering: added "wanderer" and "notable" to exclusion list (wanderers/notables have is_hero=true but aren't lords)
-- Fixed faction selector UI: replaced broken SelectorVM dropdown with clickable toggle button grid (CustomBattleFactionSelectionVM isn't a SelectorVM)
+- Fixed faction selector UI: `CustomBattleFactionSelectionVM` isn't a `SelectorVM`, so the dropdown couldn't work. Created `TaomFactionSelectionVM` subclass with `ExecuteSelectNextFaction`/`ExecuteSelectPreviousFaction` commands, injected via Harmony postfix on `CustomBattleSideVM` constructor. UI now uses arrow buttons matching the character selector pattern.
 
 ### Feature: Custom Culture Feats (Expanded)
 

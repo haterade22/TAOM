@@ -22,6 +22,7 @@ public static class CustomBattlesIoC
         CustomBattleData_Characters_Patch.Initialize(commandersHook, logger);
         CustomBattleData_Factions_Patch.Initialize(factionsHook, logger);
         CustomBattleHelper_Troop_Patch.Initialize(troopHook, logger);
+        CustomBattleSideVM_Constructor_Patch.Initialize(logger);
         BannerlordMissions_CustomBattle_Patch.Initialize(logger);
         BannerlordMissions_Siege_Patch.Initialize(logger);
     }
