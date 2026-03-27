@@ -8,7 +8,7 @@ namespace TAOM.Features.CustomBattles;
 
 public class CustomBattleService : ICustomBattleService
 {
-    private static readonly string[] ExcludedPrefixes = { "companion", "child", "tutorial", "commander_", "wanderer", "notable" };
+
 
     private readonly IObjectManagerAdapter _objectManager;
     private readonly IModLogger _logger;
@@ -127,13 +127,6 @@ public class CustomBattleService : ICustomBattleService
         if (!c.IsHero || string.IsNullOrEmpty(c.Id))
             return false;
 
-        var idLower = c.Id.ToLowerInvariant();
-        foreach (var prefix in ExcludedPrefixes)
-        {
-            if (idLower.Contains(prefix))
-                return false;
-        }
-
-        return true;
+        return c.Id.StartsWith("lord_", StringComparison.OrdinalIgnoreCase);
     }
 }

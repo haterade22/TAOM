@@ -71,7 +71,7 @@ public class CustomBattleServiceTests
     }
 
     [TestMethod]
-    public void GetCommanderIds_ReturnsHeroCharacters()
+    public void GetCommanderIds_ReturnsLordCharacters()
     {
         // Arrange
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
@@ -89,92 +89,36 @@ public class CustomBattleServiceTests
     }
 
     [TestMethod]
-    public void GetCommanderIds_ExcludesCompanions()
+    public void GetCommanderIds_OnlyIncludesLordPrefix()
     {
-        // Arrange
+        // Arrange — various non-lord heroes that should be excluded
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
         {
-            new() { Id = "companion_wanderer_1", IsHero = true, CultureId = "gondor" }
+            new() { Id = "lord_1_1", IsHero = true, CultureId = "gondor" },
+            new() { Id = "companion_wanderer_1", IsHero = true, CultureId = "gondor" },
+            new() { Id = "spc_wanderer_gondor_1", IsHero = true, CultureId = "gondor" },
+            new() { Id = "spc_notable_gondor_0", IsHero = true, CultureId = "gondor" },
+            new() { Id = "commander_1", IsHero = true, CultureId = "empire" },
+            new() { Id = "tutorial_npc_1", IsHero = true, CultureId = "gondor" },
+            new() { Id = "battania_townsman", IsHero = true, CultureId = "battania" },
+            new() { Id = "gondor_infantry", IsHero = false, CultureId = "gondor" }
         });
 
         // Act
         var result = _sut.GetCommanderIds();
 
-        // Assert
-        Assert.AreEqual(0, result.Count);
+        // Assert — only the lord_ prefixed hero passes
+        Assert.AreEqual(1, result.Count);
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_1_1");
     }
 
     [TestMethod]
-    public void GetCommanderIds_ExcludesChildren()
+    public void GetCommanderIds_ExcludesNonHeroLords()
     {
-        // Arrange
+        // Arrange — lord_ prefix but not a hero
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
         {
-            new() { Id = "child_gondor_1", IsHero = true, CultureId = "gondor" }
-        });
-
-        // Act
-        var result = _sut.GetCommanderIds();
-
-        // Assert
-        Assert.AreEqual(0, result.Count);
-    }
-
-    [TestMethod]
-    public void GetCommanderIds_ExcludesTutorial()
-    {
-        // Arrange
-        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
-        {
-            new() { Id = "tutorial_npc_1", IsHero = true, CultureId = "gondor" }
-        });
-
-        // Act
-        var result = _sut.GetCommanderIds();
-
-        // Assert
-        Assert.AreEqual(0, result.Count);
-    }
-
-    [TestMethod]
-    public void GetCommanderIds_ExcludesVanillaCommanders()
-    {
-        // Arrange
-        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
-        {
-            new() { Id = "commander_1", IsHero = true, CultureId = "empire" }
-        });
-
-        // Act
-        var result = _sut.GetCommanderIds();
-
-        // Assert
-        Assert.AreEqual(0, result.Count);
-    }
-
-    [TestMethod]
-    public void GetCommanderIds_ExcludesWanderers()
-    {
-        // Arrange
-        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
-        {
-            new() { Id = "spc_wanderer_gondor_1", IsHero = true, CultureId = "gondor" }
-        });
-
-        // Act
-        var result = _sut.GetCommanderIds();
-
-        // Assert
-        Assert.AreEqual(0, result.Count);
-    }
-
-    [TestMethod]
-    public void GetCommanderIds_ExcludesNotables()
-    {
-        // Arrange
-        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
-        {
-            new() { Id = "spc_notable_gondor_0", IsHero = true, CultureId = "gondor" }
+            new() { Id = "lord_template_1", IsHero = false, CultureId = "gondor" }
         });
 
         // Act

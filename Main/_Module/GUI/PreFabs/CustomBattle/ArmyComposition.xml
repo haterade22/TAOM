@@ -50,9 +50,21 @@
         <NavigationScopeTargeter ScopeID="ArmyCompositionFactionSelectionScope" ScopeParent="..\FactionSelectionControls" ScopeMovements="Horizontal" />
         <ListPanel Id="FactionSelectionControls" DataSource="{FactionSelectionGroup}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="450" LayoutImp.LayoutMethod="HorizontalLeftToRight">
           <Children>
-            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" VerticalAlignment="Center" Brush="Navigation.Arrow.Left" Command.Click="ExecuteSelectPreviousFaction" GamepadNavigationIndex="0" />
-            <RichTextWidget WidthSizePolicy="Fixed" SuggestedWidth="220" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="10" MarginRight="10" Brush="CustomBattle.Value.Text" Brush.TextHorizontalAlignment="Center" Text="@SelectedFactionName" />
-            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" VerticalAlignment="Center" Brush="Navigation.Arrow.Right" Command.Click="ExecuteSelectNextFaction" GamepadNavigationIndex="1" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="43" VerticalAlignment="Center" DoNotAcceptEvents="true">
+              <Children>
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="70" VerticalAlignment="Center" HorizontalAlignment="Center" Brush="SPOptions.Dropdown.Left.Button" Command.Click="ExecuteSelectPreviousFaction" GamepadNavigationIndex="0" />
+              </Children>
+            </Widget>
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="200" SuggestedHeight="43" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="SPOptions.Dropdown.Center">
+              <Children>
+                <ScrollingRichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="7" MarginRight="7" Brush="SPOptions.Dropdown.Center.Text" Text="@SelectedFactionName" IsAutoScrolling="false" />
+              </Children>
+            </ButtonWidget>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="43" VerticalAlignment="Center" DoNotAcceptEvents="true">
+              <Children>
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="70" VerticalAlignment="Center" HorizontalAlignment="Center" Brush="SPOptions.Dropdown.Right.Button" Command.Click="ExecuteSelectNextFaction" GamepadNavigationIndex="1" />
+              </Children>
+            </Widget>
           </Children>
         </ListPanel>
 
