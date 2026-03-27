@@ -1,4 +1,5 @@
 using System;
+using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -8,10 +9,12 @@ namespace TAOM.Features.TroopWeight.Hooks;
 public class PartyVMPopulatePartyListLabelHook : IOnPartyVMPopulatePartyListLabel
 {
     private readonly ITroopWeightService _troopWeightService;
+    private readonly IModLogger _logger;
 
-    public PartyVMPopulatePartyListLabelHook(ITroopWeightService troopWeightService)
+    public PartyVMPopulatePartyListLabelHook(ITroopWeightService troopWeightService, IModLogger logger)
     {
         _troopWeightService = troopWeightService;
+        _logger = logger;
     }
 
     public bool OnPartyVMPopulatePartyListLabel(
@@ -73,8 +76,9 @@ public class PartyVMPopulatePartyListLabelHook : IOnPartyVMPopulatePartyListLabe
             }
             return false;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogWarning($"[TroopWeight] PartyVM label hook error: {ex.GetType().Name}: {ex.Message}");
             return true;
         }
     }

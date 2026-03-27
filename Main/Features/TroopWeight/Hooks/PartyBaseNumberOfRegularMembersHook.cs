@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem.Party;
 
@@ -8,6 +9,7 @@ public class PartyBaseNumberOfRegularMembersHook : IOnPartyBaseNumberOfRegularMe
 {
     private readonly ITroopWeightService _troopWeightService;
     private readonly IModLogger _logger;
+    private readonly HashSet<string> _loggedErrors = new();
 
     public PartyBaseNumberOfRegularMembersHook(ITroopWeightService troopWeightService, IModLogger logger)
     {
@@ -35,7 +37,12 @@ public class PartyBaseNumberOfRegularMembersHook : IOnPartyBaseNumberOfRegularMe
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"PartyBase.NumberOfRegularMembers hook error: {ex.Message}");
+            var errorKey = $"{ex.GetType().Name}:{ex.Message}";
+            if (_loggedErrors.Add(errorKey))
+            {
+                var partyName = partyBase?.Name?.ToString() ?? "unknown";
+                _logger.LogWarning($"[TroopWeight] RegularMembers hook error for party '{partyName}': {ex.GetType().Name}: {ex.Message}");
+            }
         }
     }
 }

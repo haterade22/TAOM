@@ -18,6 +18,7 @@ public class TroopWeightService : ITroopWeightService
         _logger = logger;
         _xmlLoader = xmlLoader;
         _weights = xmlLoader.GetTroopWeights();
+        _logger.LogInfo($"[TroopWeight] Service initialized with {_weights.Count} weighted troop definitions");
     }
 
     public float GetTroopWeight(string troopStringId)
@@ -43,25 +44,25 @@ public class TroopWeightService : ITroopWeightService
 
     public float CalculateWeightedRosterCount(TroopRoster roster)
     {
-        if (roster == null)
+        if (roster == null || roster.Count <= 0)
             return 0f;
 
-        float totalWeight = 0f;
-        int count = roster.Count;
-        for (int i = 0; i < count; i++)
+        try
         {
-            try
+            float totalWeight = 0f;
+            int count = roster.Count;
+            for (int i = 0; i < count; i++)
             {
                 var element = roster.GetElementCopyAtIndex(i);
                 totalWeight += CalculateWeightedElementCount(element);
             }
-            catch (Exception ex)
-            {
-                _logger.LogWarning($"Skipping roster element {i}/{count}: {ex.Message}");
-                break;
-            }
+            return totalWeight;
         }
-        return totalWeight;
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[TroopWeight] Roster iteration failed (count={roster?.Count}): {ex.GetType().Name}: {ex.Message}");
+            return 0f;
+        }
     }
 
     public float CalculateWeightedElementCount(TroopRosterElement element)

@@ -23,6 +23,8 @@ using TAOM.Features.StartupResources;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.TroopWeight.Hooks;
+using TAOM.Features.BannerInjection.Hooks;
+using TAOM.Features.AtmospherePersistence.Hooks;
 using TAOM.Features.TroopProgression.Models;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.Warg;
@@ -62,6 +64,9 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnPartyVMPopulatePartyListLabel>());
+
+        Banner_TryGetBannerDataFromCode_Patch.Initialize(logger);
+        Mission_Initialize_Patch.Initialize(logger);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -117,7 +122,8 @@ public class SubModule : MBSubModuleBase
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
-            campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService));
+            var startupLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
         }
     }
 

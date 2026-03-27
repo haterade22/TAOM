@@ -72,7 +72,7 @@ public class WargAttackService : IWargAttackService
         }
         catch (Exception e)
         {
-            _logger.LogError($"Error in WargAttackService:HandleWargTargetHit: {e.Message}");
+            _logger.LogError($"[Warg] HandleWargTargetHit error: {e.GetType().Name}: {e.Message}\n{e.StackTrace}");
         }
     }
 

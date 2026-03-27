@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
+using TAOM.Core.Logging;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -11,8 +12,12 @@ namespace TAOM.Features.AtmospherePersistence.Hooks;
 [HarmonyPatchCategory("Patch16_AtmospherePersistence")]
 public static class Mission_Initialize_Patch
 {
+    private static IModLogger? _logger;
+
     private static readonly PropertyInfo InitializerRecordProperty =
         AccessTools.Property(typeof(Mission), "InitializerRecord");
+
+    public static void Initialize(IModLogger logger) => _logger = logger;
 
     [HarmonyPrefix]
     public static void Prefix(Mission __instance)
@@ -23,16 +28,21 @@ public static class Mission_Initialize_Patch
                 return;
 
             if (InitializerRecordProperty == null)
+            {
+                _logger?.LogWarning("[Atmosphere] InitializerRecord property not found on Mission — cannot override atmosphere");
                 return;
+            }
 
             var rec = (MissionInitializerRecord)InitializerRecordProperty.GetValue(__instance);
             rec.PlayingInCampaignMode = false;
             rec.AtmosphereOnCampaign = AtmosphereInfo.GetInvalidAtmosphereInfo();
             InitializerRecordProperty.SetValue(__instance, rec);
+
+            _logger?.LogInfo($"[Atmosphere] Overrode atmosphere for forced-atmo scene '{__instance.SceneName}'");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Silently fail — atmosphere override is non-critical
+            _logger?.LogWarning($"[Atmosphere] Mission.Initialize patch error for scene '{__instance?.SceneName}': {ex.GetType().Name}: {ex.Message}");
         }
     }
 }

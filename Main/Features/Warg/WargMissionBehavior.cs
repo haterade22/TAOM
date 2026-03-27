@@ -1,9 +1,11 @@
 using BehaviorTrees;
 using BehaviorTreeWrapper;
 using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.Services;
 using System;
+using System.Collections.Generic;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 
@@ -13,6 +15,8 @@ public class WargMissionBehavior : MissionLogic
 {
     private readonly IMissionAdapterFactory _adapterFactory;
     private readonly IBoneCollisionService _boneCollisionService;
+    private readonly IModLogger _logger;
+    private readonly HashSet<string> _loggedErrors = new();
     private float _timeSinceStart = 0f;
     private bool _treesAdded = false;
     private bool _managesCombatInfrastructure = false;
@@ -23,11 +27,13 @@ public class WargMissionBehavior : MissionLogic
     {
         _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
         _boneCollisionService = IoC.Resolve<IBoneCollisionService>();
+        _logger = IoC.Resolve<IModLogger>();
     }
 
     public override void OnBehaviorInitialize()
     {
         base.OnBehaviorInitialize();
+        _logger.LogInfo("[Warg] WargMissionBehavior initializing");
         BTRegister.RegisterClass("WargTree", (object[] objects) => WargBehaviorTree.BuildTree(objects));
         BTRegister.AddLogger(new TaomBTLogger());
         AutonomousMovementPlayerController autonomousMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
@@ -37,6 +43,7 @@ public class WargMissionBehavior : MissionLogic
         {
             _managesCombatInfrastructure = true;
             SpatialGrid.Instance ??= new SpatialGrid();
+            _logger.LogInfo("[Warg] Managing combat infrastructure (no AdvancedCombatBehavior present)");
         }
     }
 
@@ -50,36 +57,48 @@ public class WargMissionBehavior : MissionLogic
 
     public override void OnMissionTick(float dt)
     {
-        _timeSinceStart += dt;
-        if (_timeSinceStart < 1f) return;
-
-        if (_managesCombatInfrastructure)
+        try
         {
-            _gridUpdateTick++;
-            if (_gridUpdateTick >= GridUpdateInterval)
-            {
-                _gridUpdateTick = 0;
-                if (Mission.Current != null)
-                {
-                    SpatialGrid.Instance.UpdateGrid(Mission.Current.AllAgents);
-                }
-                _boneCollisionService.TickBoneChecks(dt);
-            }
-        }
+            _timeSinceStart += dt;
+            if (_timeSinceStart < 1f) return;
 
-        if (!_treesAdded)
-        {
-            _treesAdded = true;
-            foreach (Agent agent in Mission.Current.AllAgents)
+            if (_managesCombatInfrastructure)
             {
-                if (_adapterFactory.GetAgentAdapter(agent).IsWarg())
+                _gridUpdateTick++;
+                if (_gridUpdateTick >= GridUpdateInterval)
                 {
-                    agent.AddComponent(new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>()));
+                    _gridUpdateTick = 0;
+                    if (Mission.Current != null)
+                    {
+                        SpatialGrid.Instance.UpdateGrid(Mission.Current.AllAgents);
+                    }
+                    _boneCollisionService.TickBoneChecks(dt);
                 }
             }
-        }
 
-        WargRiderHandManager.Tick();
+            if (!_treesAdded)
+            {
+                _treesAdded = true;
+                int wargCount = 0;
+                foreach (Agent agent in Mission.Current.AllAgents)
+                {
+                    if (_adapterFactory.GetAgentAdapter(agent).IsWarg())
+                    {
+                        agent.AddComponent(new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>()));
+                        wargCount++;
+                    }
+                }
+                _logger.LogInfo($"[Warg] Added behavior trees to {wargCount} wargs");
+            }
+
+            WargRiderHandManager.Tick();
+        }
+        catch (Exception ex)
+        {
+            var errorKey = $"{ex.GetType().Name}:{ex.TargetSite?.Name}";
+            if (_loggedErrors.Add(errorKey))
+                _logger.LogError($"[Warg] OnMissionTick error: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+        }
     }
 
     public override void OnRemoveBehavior()

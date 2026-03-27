@@ -10,6 +10,7 @@ public class PartyBaseNumberOfAllMembersHook : IOnPartyBaseNumberOfAllMembers
     private readonly ITroopWeightService _troopWeightService;
     private readonly IModLogger _logger;
     private readonly Dictionary<int, (int Version, float WeightedCount)> _cache;
+    private readonly HashSet<string> _loggedErrors = new();
     private const int MaxCacheSize = 2000;
 
     public PartyBaseNumberOfAllMembersHook(ITroopWeightService troopWeightService, IModLogger logger)
@@ -45,26 +46,24 @@ public class PartyBaseNumberOfAllMembersHook : IOnPartyBaseNumberOfAllMembers
                 __result = (int)Math.Ceiling(weightedCount);
 
             if (_cache.Count > MaxCacheSize)
+            {
+                _logger.LogDebug($"[TroopWeight] AllMembers cache trimmed (was {_cache.Count} entries)");
                 TrimCache();
+            }
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"PartyBase.NumberOfAllMembers hook error: {ex.Message}");
+            var errorKey = $"{ex.GetType().Name}:{ex.Message}";
+            if (_loggedErrors.Add(errorKey))
+            {
+                var partyName = partyBase?.Name?.ToString() ?? "unknown";
+                _logger.LogWarning($"[TroopWeight] AllMembers hook error for party '{partyName}': {ex.GetType().Name}: {ex.Message}");
+            }
         }
     }
 
     private void TrimCache()
     {
-        var keysToRemove = new List<int>(_cache.Count / 4);
-        int count = 0;
-        foreach (var key in _cache.Keys)
-        {
-            keysToRemove.Add(key);
-            count++;
-            if (count >= _cache.Count / 4)
-                break;
-        }
-        foreach (var key in keysToRemove)
-            _cache.Remove(key);
+        _cache.Clear();
     }
 }

@@ -46,7 +46,7 @@ public class RecruitmentVMRefreshPartyPropertiesHook : IOnRecruitmentVMRefreshPa
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"RecruitmentVM.RefreshPartyProperties hook error: {ex.Message}");
+            _logger?.LogError($"[TroopWeight] RecruitmentVM hook error: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
         }
     }
 }
