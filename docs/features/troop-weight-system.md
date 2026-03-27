@@ -124,7 +124,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 - **PartyBase-only patching:** Patches target `PartyBase.NumberOfAllMembers` / `NumberOfRegularMembers` only, NOT `TroopRoster.TotalManCount` / `TotalHealthyCount`. TroopRoster getters fire for every roster in the game (prisoners, garrisons, temp rosters); patching them caused IndexOutOfRange on partially-initialized rosters during game loading.
 - **Single-threaded:** All caches use `Dictionary` (not `ConcurrentDictionary`) because the campaign tick loop is single-threaded
 
-## GitHub Issue
+## GitHub Issues
 
-- **Issue:** #41 — [feat: Troop Weight System — Elite unit party capacity](https://github.com/haterade22/TAOM/issues/41)
-- **Status:** Closed
+- **Feature:** #41 — [feat: Troop Weight System — Elite unit party capacity](https://github.com/haterade22/TAOM/issues/41) — Closed
+- **Bug fix:** #45 — [fix: TroopWeight crashes and freezes from TroopRoster-level patches](https://github.com/haterade22/TAOM/issues/45) — Closed
