@@ -44,18 +44,19 @@
 
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="12" Sprite="StdAssets\subpage_divider" MarginTop="400"/>
 
-        <!--_____Faction Selection - REPLACED WITH DROPDOWN_______-->
-        <RichTextWidget DataSource="{FactionSelectionGroup}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="420" Brush="CustomBattle.Character.Title.Text" Text="@SelectedFactionName" />
+        <!--_____Faction Selection - Clickable Grid_______-->
+        <RichTextWidget DataSource="{FactionSelectionGroup}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="415" Brush="CustomBattle.Character.Title.Text" Text="@SelectedFactionName" />
 
-        <NavigationScopeTargeter ScopeID="ArmyCompositionFactionSelectionScope" ScopeParent="..\FactionSelectionDropdown" />
-        <Standard.DropdownWithHorizontalControl Id="FactionSelectionDropdown" HorizontalAlignment="Center" Parameter.SelectorDataSource="{FactionSelectionGroup}" MarginTop="480" GamepadNavigationIndex="1"/>
-
-        <!--<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="420">
+        <Widget DataSource="{FactionSelectionGroup}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="540" SuggestedHeight="55" HorizontalAlignment="Center" MarginTop="450" ClipContents="true">
           <Children>
-            <SimpleDropdown DataSource="{FactionSelectionGroup}" WidthSizePolicy="Fixed" SuggestedWidth="250" HorizontalAlignment="Center" VerticalAlignment="Top" />
-            <ButtonWidget DataSource="{FactionSelectionGroup}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="RandomButtonBrush" Command.Click="ExecuteRandomize" />
+            <NavigationScopeTargeter ScopeID="ArmyCompositionFactionSelectionScope" ScopeParent="..\FactionList" ScopeMovements="Horizontal" />
+            <NavigatableListPanel Id="FactionList" DataSource="{Factions}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" LayoutImp.LayoutMethod="HorizontalLeftToRight">
+              <ItemTemplate>
+                <ButtonWidget ButtonType="Toggle" IsSelected="@IsSelected" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" MarginLeft="2" MarginRight="2" Brush="Clan.ClanResource.Button" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" UpdateChildrenStates="true" />
+              </ItemTemplate>
+            </NavigatableListPanel>
           </Children>
-        </ListPanel>-->
+        </Widget>
 
         <!--_____Army Composition_______-->
         <ListPanel DataSource="{CompositionGroup}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="560" LayoutImp.LayoutMethod="VerticalBottomToTop">

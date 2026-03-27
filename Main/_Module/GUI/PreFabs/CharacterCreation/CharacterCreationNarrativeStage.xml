@@ -1,0 +1,136 @@
+<Prefab>
+  <Constants>
+    <Constant Name="NextButton.Width" BrushLayer="Default" BrushName="ButtonBrush1" BrushValueType="Width" />
+    <Constant Name="NextButton.Height" BrushLayer="Default" BrushName="ButtonBrush1" BrushValueType="Height" />
+
+    <Constant Name="PreviousButton.Width" BrushLayer="Default" BrushName="ButtonBrush2" BrushValueType="Width" />
+    <Constant Name="PreviousButton.Height" BrushLayer="Default" BrushName="ButtonBrush2" BrushValueType="Height" />
+
+  </Constants>
+  <Window>
+    <CharacterCreationNarrativeStageScreenWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" PreviousButton="RightPanel\NextPrevParent\PrevButton" NextButton="RightPanel\NextPrevParent\NextButton" ItemList="RightPanel\InnerPanel\ScrollablePanel\ClipRect\List\ItemList">
+      <Children>
+
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="650" MarginTop="50" Brush="Stage.Title.Text" IsHidden="@AnyItemSelected" Text="@SelectionText" DoNotAcceptEvents="true"/>
+
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="382" VerticalAlignment="Bottom" Sprite="General\CharacterCreation\character_creation_background_gradient" DoNotAcceptEvents="true"/>
+
+
+        <Widget DataSource="{SelectedOption}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Bottom" MarginRight="650" MarginBottom="50" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true">
+          <Children>
+
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="100" StackLayout.LayoutMethod="VerticalBottomToTop">
+              <Children>
+                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="650" HorizontalAlignment="Center" MarginBottom="10" Brush="Stage.Selection.Description.Text" Text="@DescriptionText" />
+                <RichTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="650" HorizontalAlignment="Center" MarginBottom="10" Brush="Stage.PositiveEffect.Text" Text="@PositiveEffectText" />
+                <RichTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="650" HorizontalAlignment="Center" Brush="Stage.NegativeEffect.Text" Text="@NegativeEffectText" />
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+        <CharacterCreationGainedProperties DataSource="{GainedPropertiesController}" />
+
+        <!-- Traits -->
+        <ListPanel DataSource="{GainedPropertiesController\GainedTraits}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginRight="670" StackLayout.LayoutMethod="HorizontalRightToLeft" DoNotUseCustomScaleAndChildren="true">
+          <ItemTemplate>
+            <EncyclopediaHeroTraitVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="74" SuggestedHeight="75" TraitId="@TraitId" TraitValue="@Value">
+              <Children>
+                <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              </Children>
+            </EncyclopediaHeroTraitVisualWidget>
+          </ItemTemplate>
+        </ListPanel>
+      
+
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="694" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="General\CharacterCreation\character_creation_panel" VerticalAlinment="Center" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <!--Title-->
+            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="670" SuggestedHeight="55" HorizontalAlignment="Right" Brush="Stage.Title.Text" Text="@Title" />
+
+
+            <Widget Id="InnerPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="573" SuggestedHeight="750"  MarginTop="70" MarginLeft="50" HorizontalAlignment="Center" VerticalAlignment="Center" >
+              <Children>
+
+                <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" VerticalAlignment="Bottom"  ClipRect="ClipRect" InnerPanel="ClipRect\List" VerticalScrollbar="..\VerticalScrollbar" >
+                  <Children>
+
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" >
+                      <Children>
+
+                        <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalBottomToTop" >
+                          <Children>
+
+                            <!--Description-->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="25" MarginLeft="20" MarginRight="20" HorizontalAlignment="Center" VerticalAlignment="Top" Brush="Stage.Description.Text" Text="@Description" ClipContents="false" />
+
+                            <NavigationScopeTargeter ScopeID="ItemsScope" ScopeParent="..\ItemList" ScopeMovements="Vertical" HasCircularMovement="true" IsDefaultNavigationScope="true" />
+                            <NavigatableListPanel Id="ItemList" DataSource="{SelectionList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" MarginBottom="30" VerticalAlignment="Bottom" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="0" MaxIndex="1000" ParentPanel="..\..\..\..\ScrollablePanel" AutoScrollTopOffset="70" AutoScrollBottomOffset="70">
+                              <ItemTemplate>
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="52" MarginBottom="8" Brush="TAOM.CharacterCreation.MenuOption.Button" Command.Click="ExecuteSelect" IsSelected="@IsSelected" MinHeight="10" UpdateChildrenStates="true">
+                                  <Children>
+                                    <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="523" SuggestedHeight="52" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.CharacterCreation.MenuOption.Mask" />
+                                    <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="523" SuggestedHeight="52" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.CharacterCreation.MenuOption.GoldOverlay" />
+                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="523" SuggestedHeight="52" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\CharacterScreen\menuoptions_border" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="52" MarginLeft="10" MarginRight="10" VerticalAlignment="Center" Brush="TAOM.CharacterCreation.MenuOption.Text" Brush.TextVerticalAlignment="Center" Text="@ActionText" />
+                                  </Children>
+                                </ButtonWidget>
+
+                              </ItemTemplate>
+                            </NavigatableListPanel>
+
+                          </Children>
+                        </ListPanel>
+
+                      </Children>
+                    </Widget>
+
+                    <!--Scroll Gradient-->
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="576" SuggestedHeight="57" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Sprite="General\CharacterCreation\character_creation_scroll_gradient" />
+
+                  </Children>
+                </ScrollablePanel>
+
+                <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="15" MarginBottom="15" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#5a4033FF" />
+                    <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="10" HorizontalAlignment="Center" Brush="FaceGen.Scrollbar.Handle" />
+                  </Children>
+                </ScrollbarWidget>
+
+              </Children>
+            </Widget>
+
+            <!--Previous and Next Buttons-->
+            <ListPanel Id="NextPrevParent" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginBottom="50" MarginRight="40">
+              <Children>
+
+                <ButtonWidget Id="PrevButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="125" SuggestedHeight="64" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="20" Brush="Standard.BackButton" Command.Click="OnPreviousStage" UpdateChildrenStates="true" GamepadNavigationIndex="1001">
+                  <Children>
+                    <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="45" SuggestedHeight="45" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-30" KeyID="@KeyID" IsVisible="@IsVisible"/>
+                  </Children>
+                </ButtonWidget>
+
+                <ButtonWidget Id="NextButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="64" HorizontalAlignment="Right" VerticalAlignment="Center" MarginLeft="20" Brush="Popup.Done.Button.NineGrid" Command.Click="OnNextStage" IsEnabled="@CanAdvance" UpdateChildrenStates="true" GamepadNavigationIndex="1002">
+                  <Children>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Popup.Button.Text" Text="@NextStageText" />
+                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-30" IsVisible="@CanAdvance">
+                      <Children>
+                        <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="45" SuggestedHeight="45" KeyID="@KeyID" IsVisible="@IsVisible"/>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ButtonWidget>
+
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+      </Children>
+    </CharacterCreationNarrativeStageScreenWidget>
+  </Window>
+</Prefab>
