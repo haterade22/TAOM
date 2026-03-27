@@ -145,6 +145,8 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomCaravanModel());
             campaignStarter.AddModel(new TaomBattleRewardModel());
             campaignStarter.AddModel(new TaomPartyTroopUpgradeModel());
+            campaignStarter.AddModel(new TaomPartySizeModel());
+            campaignStarter.AddModel(new TaomFoodConsumptionModel());
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();

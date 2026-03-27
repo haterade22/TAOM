@@ -14,16 +14,21 @@
 - New IObjectManagerAdapter for testable ObjectManager access
 - 29 new tests covering service logic and hook behavior
 
-### Feature: Custom Culture Feats
+### Feature: Custom Culture Feats (Expanded)
 
-- **30 custom feats** (3 per culture) for all 10 TAOM cultures, replacing identical Empire placeholder feats
-- Each culture gets 2 bonuses + 1 penalty following vanilla pattern (e.g., Erebor: -25% garrison wage, +30% animal production, -15% construction speed)
+- **43 custom feats** across 11 cultures (10 custom + Rohan XSLT), up from initial 30
+- Party size feats: Mordor/Gundabad +30%, Dol Guldur +25%, Isengard +20%, Gondor +10%
+- Food consumption feats: Rivendell/Mirkwood/Lothlorien -15%, Dol Guldur +10%
+- Rohan custom C# feats (replacing vanilla Vlandia): -15% mounted cost/wage, -10% speed when >50% infantry
+- Erebor production feat changed from +30% animal-only to +10% ALL production
+- Isengard construction speed flipped from -15% penalty to +15% bonus (industrial might)
+- 2 new GameModel overrides: TaomPartySizeModel, TaomFoodConsumptionModel
 - Feats registered via Harmony postfix on `Campaign.InitializeDefaultCampaignObjects()` (Patch18_CulturalFeats)
-- 9 new GameModel overrides consuming feats: TaomArmyManagementModel, TaomPartySpeedModel, TaomSettlementProsperityModel, TaomSettlementMilitiaModel, TaomBuildingConstructionModel, TaomVillageProductionModel, TaomCaravanModel, TaomBattleRewardModel, TaomPartyTroopUpgradeModel
-- Extended TaomPartyWageModel with garrison/party wage feat checks for 7 cultures
-- Extended TaomDiplomacyModel with Isengard decision penalty feat
-- XSLT updated: Dunland now uses Battanian feats (forest speed, militia, construction) instead of Empire feats
-- 35 new tests verifying feat registration structure and property correctness
+- 11 total GameModel overrides consuming feats
+- Extended TaomPartyWageModel with Rohan mounted wage reduction (scaled by mounted troop fraction)
+- Extended TaomPartySpeedModel with Rohan infantry speed penalty
+- XSLT updated: Dunland uses Battanian feats, Rohan uses custom C# feats
+- 48 tests verifying feat registration structure and property correctness
 
 ### Enhancement: Diplomacy & Alliance System Logging
 

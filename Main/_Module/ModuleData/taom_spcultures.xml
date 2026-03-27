@@ -218,9 +218,9 @@
       <name name="{=aom_erebor_clan_15}Greybeard" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_erebor_garrison_wage" />
+      <feat id="taom_erebor_production" />
+      <feat id="taom_erebor_construction_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -587,9 +587,10 @@
       <name name="{=aom_rivendell_clan_15}House of Cirdan" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_rivendell_army_influence" />
+      <feat id="taom_rivendell_hearth_growth" />
+      <feat id="taom_rivendell_army_influence_cost" />
+      <feat id="taom_rivendell_food_consumption" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -945,9 +946,10 @@
       <name name="{=aom_mirkwood_clan_15}Greenleaf Clan" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_mirkwood_forest_speed" />
+      <feat id="taom_mirkwood_militia_production" />
+      <feat id="taom_mirkwood_hearth_growth" />
+      <feat id="taom_mirkwood_food_consumption" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -1303,9 +1305,10 @@
       <name name="{=aom_lothlorien_clan_15}Lothlann Guard" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_lothlorien_forest_speed" />
+      <feat id="taom_lothlorien_garrison_wage" />
+      <feat id="taom_lothlorien_construction_speed" />
+      <feat id="taom_lothlorien_food_consumption" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -1660,9 +1663,11 @@
       <name name="{=aom_isengard_clan_15}Black Iron Clan" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_isengard_cheaper_recruits" />
+      <feat id="taom_isengard_garrison_wage" />
+      <feat id="taom_isengard_decision_penalty" />
+      <feat id="taom_isengard_party_size" />
+      <feat id="taom_isengard_construction_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2018,9 +2023,10 @@
       <name name="{=aom_gundabad_clan_15}Iron Hills Scourge" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_gundabad_army_influence_cost" />
+      <feat id="taom_gundabad_grain_production" />
+      <feat id="taom_gundabad_wage" />
+      <feat id="taom_gundabad_party_size" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2376,9 +2382,9 @@
       <name name="{=aom_umbar_clan_15}Windlord Clan" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_umbar_cheaper_caravans" />
+      <feat id="taom_umbar_renown" />
+      <feat id="taom_umbar_wage" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2734,9 +2740,11 @@
       <name name="{=aom_dolguldur_clan_15}Twilight Reavers" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_dolguldur_army_influence_cost" />
+      <feat id="taom_dolguldur_militia_production" />
+      <feat id="taom_dolguldur_construction_speed" />
+      <feat id="taom_dolguldur_party_size" />
+      <feat id="taom_dolguldur_food_consumption" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3097,9 +3105,10 @@
       <name name="{=aom_gondor_clan_15}House of Tarnost" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_gondor_garrison_wage" />
+      <feat id="taom_gondor_army_influence" />
+      <feat id="taom_gondor_hearth_growth" />
+      <feat id="taom_gondor_party_size" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3463,9 +3472,10 @@
       <name name="{=aom_mordor_clan_15}Durthang Garrison" />
     </clan_names>
     <cultural_feats>
-      <feat id="empire_decreased_garrison_wage" />
-      <feat id="empire_army_influence" />
-      <feat id="empire_slower_hearth_production" />
+      <feat id="taom_mordor_army_influence_cost" />
+      <feat id="taom_mordor_grain_production" />
+      <feat id="taom_mordor_wage" />
+      <feat id="taom_mordor_party_size" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />

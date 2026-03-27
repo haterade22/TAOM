@@ -285,8 +285,15 @@
 				<template name="NPCCharacter.spc_dunland_headman_3" />
 			</notable_templates>
 
+			<!-- Override cultural feats: Dunland uses Battanian-style feats (hill tribe / forest guerrillas) -->
+			<cultural_feats>
+				<feat id="battanian_forest_speed" />
+				<feat id="battanian_militia_production" />
+				<feat id="battanian_slower_construction" />
+			</cultural_feats>
+
 			<!-- Pass through vanilla child elements we don't override -->
-			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates)]"/>
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates or self::cultural_feats)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -844,8 +851,15 @@
 				<template name="NPCCharacter.spc_rohan_headman_3" />
 			</notable_templates>
 
+			<!-- Override cultural feats: Rohan uses custom Horse-lord feats -->
+			<cultural_feats>
+				<feat id="taom_rohan_mounted_cost" />
+				<feat id="taom_rohan_mounted_wage" />
+				<feat id="taom_rohan_infantry_speed" />
+			</cultural_feats>
+
 			<!-- Pass through vanilla child elements we don't override -->
-			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates)]"/>
+			<xsl:apply-templates select="*[not(self::vassal_reward_items or self::banner_bearer_replacement_weapons or self::default_policies or self::male_names or self::female_names or self::clan_names or self::notable_templates or self::cultural_feats)]"/>
 		</xsl:copy>
 	</xsl:template>
 

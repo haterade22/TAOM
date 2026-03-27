@@ -92,7 +92,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
 | AdvancedCombat | `Main/Features/AdvancedCombat/` (SpatialGrid, BoneCollision, CustomAttacks) |
-| CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 9 GameModel overrides) |
+| CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 11 GameModel overrides) |
 | CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
@@ -118,17 +118,19 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
 | `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) |
-| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture wage/garrison feats |
+| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture wage/garrison/Rohan mounted feats |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) |
 | `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | Culture army influence award/cost feats |
-| `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | Culture forest speed feats |
+| `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | Culture forest speed + Rohan infantry speed feats |
 | `TaomSettlementProsperityModel` | `DefaultSettlementProsperityModel` | Culture hearth growth feats |
 | `TaomSettlementMilitiaModel` | `DefaultSettlementMilitiaModel` | Culture veteran militia feats |
 | `TaomBuildingConstructionModel` | `DefaultBuildingConstructionModel` | Culture construction speed feats |
-| `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | Culture grain/animal production feats |
+| `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | Culture production feats |
 | `TaomCaravanModel` | `DefaultCaravanModel` | Umbar caravan cost feat |
 | `TaomBattleRewardModel` | `DefaultBattleRewardModel` | Umbar renown feat |
-| `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Isengard mounted recruit cost feat |
+| `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Mounted recruit cost feats (Isengard, Rohan) |
+| `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | Party size feats (Mordor, Gundabad, DG, Isengard, Gondor) |
+| `TaomFoodConsumptionModel` | `DefaultMobilePartyFoodConsumptionModel` | Food consumption feats (elves, Dol Guldur) |
 
 ## Harmony Patch Categories
 
