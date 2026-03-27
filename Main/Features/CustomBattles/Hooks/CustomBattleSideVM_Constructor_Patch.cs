@@ -3,11 +3,14 @@ using System.Reflection;
 using HarmonyLib;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade.CustomBattle;
+using TaleWorlds.MountAndBlade.CustomBattle.CustomBattle;
 
 namespace TAOM.Features.CustomBattles.Hooks;
 
-[HarmonyPatch(typeof(CustomBattleSideVM), MethodType.Constructor)]
+[HarmonyPatch(typeof(CustomBattleSideVM), MethodType.Constructor,
+    new[] { typeof(TextObject), typeof(bool), typeof(TroopTypeSelectionPopUpVM), typeof(Action) })]
 [HarmonyPatchCategory("Patch19_CustomBattles")]
 public static class CustomBattleSideVM_Constructor_Patch
 {
