@@ -153,6 +153,38 @@ public class CustomBattleServiceTests
     }
 
     [TestMethod]
+    public void GetCommanderIds_ExcludesWanderers()
+    {
+        // Arrange
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "spc_wanderer_gondor_1", IsHero = true, CultureId = "gondor" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIds();
+
+        // Assert
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetCommanderIds_ExcludesNotables()
+    {
+        // Arrange
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "spc_notable_gondor_0", IsHero = true, CultureId = "gondor" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIds();
+
+        // Assert
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
     public void GetCommanderIdsForFaction_FiltersByCulture()
     {
         // Arrange

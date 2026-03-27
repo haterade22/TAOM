@@ -8,7 +8,7 @@ namespace TAOM.Features.CustomBattles;
 
 public class CustomBattleService : ICustomBattleService
 {
-    private static readonly string[] ExcludedPrefixes = { "companion", "child", "tutorial", "commander_" };
+    private static readonly string[] ExcludedPrefixes = { "companion", "child", "tutorial", "commander_", "wanderer", "notable" };
 
     private readonly IObjectManagerAdapter _objectManager;
     private readonly IModLogger _logger;
