@@ -63,6 +63,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
 | Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |
 
+> **Haiku 3 deprecation:** April 19, 2026. The `haiku` alias already maps to `claude-haiku-4-5` — no action needed.
+
 ## Doc Lookup
 
 | Need to... | Read |
@@ -287,6 +289,25 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 - Target: Bannerlord v1.3.12
 - Migration from v1.2 requires API changes - see `docs/migration/`
 - No git actions unless explicitly asked
+- **Claude Code v2.1.63** — update to v2.1.80+ for: effort frontmatter on skills, PowerShell tool, background agent fixes, 64k/128k output tokens
+
+## PowerShell Tool (Windows)
+
+Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing through Git Bash.
+
+**Enable:** Add to `settings.json` env block:
+```json
+"CLAUDE_CODE_USE_POWERSHELL_TOOL": "1"
+```
+
+**Additional settings:**
+| Setting | Location | Effect |
+|---------|----------|--------|
+| `"defaultShell": "powershell"` | `settings.json` | Routes `!` commands through PowerShell |
+| `"shell": "powershell"` | Hook definition | Runs that hook in PowerShell |
+| `shell: powershell` | Skill frontmatter | Runs code blocks in PowerShell |
+
+**Limitations:** No auto mode, no profile loading, no sandboxing, Windows-only (not WSL), Git Bash still required to start Claude Code.
 
 ## Equipment & Armory
 
