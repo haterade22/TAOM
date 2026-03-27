@@ -18,7 +18,7 @@ public static class PartyVM_PopulatePartyListLabel_Patch
         MBBindingList<PartyCharacterVM> partyList,
         int limit)
     {
-        if (!TaomSettings.Instance.EnableTroopWeight) return true;
+        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return true;
         if (_hook == null) return true;
 
         return _hook.OnPartyVMPopulatePartyListLabel(ref __result, partyList, limit);

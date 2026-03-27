@@ -14,7 +14,7 @@ public static class TroopRoster_TotalManCount_Patch
     [HarmonyPostfix]
     public static void Postfix(TroopRoster __instance, ref int __result)
     {
-        if (!TaomSettings.Instance.EnableTroopWeight) return;
+        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnTroopRosterTotalManCount(__instance, ref __result);
     }
 }

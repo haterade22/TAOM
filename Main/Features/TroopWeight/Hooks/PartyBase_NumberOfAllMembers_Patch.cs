@@ -14,7 +14,7 @@ public static class PartyBase_NumberOfAllMembers_Patch
     [HarmonyPostfix]
     public static void Postfix(PartyBase __instance, ref int __result)
     {
-        if (!TaomSettings.Instance.EnableTroopWeight) return;
+        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnPartyBaseNumberOfAllMembers(__instance, ref __result);
     }
 }
