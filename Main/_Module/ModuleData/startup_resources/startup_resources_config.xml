@@ -3,25 +3,25 @@
   <!-- Elven cultures -->
   <Culture id="rivendell"   gold="6000000" influence="2000" />
   <Culture id="lothlorien"  gold="6000000" influence="2000" />
-  <Culture id="mirkwood"    gold="6000000" influence="50"   />
+  <Culture id="mirkwood"    gold="6000000" influence="250"   />
 
   <!-- Dwarven cultures -->
-  <Culture id="erebor"      gold="1000000" influence="50"   />
+  <Culture id="erebor"      gold="50000" influence="150"   />
 
   <!-- Human Good cultures -->
-  <Culture id="gondor"      gold="500000"  influence="100"  />
-  <Culture id="vlandia"     gold="500000"  influence="50"   />
-  <Culture id="sturgia"     gold="500000"  influence="50"   />
+  <Culture id="gondor"      gold="50000"  influence="500"  />
+  <Culture id="vlandia"     gold="50000"  influence="50"   />
+  <Culture id="sturgia"     gold="50000"  influence="50"   />
 
   <!-- Human Evil / Eastern cultures -->
-  <Culture id="battania"    gold="500000"  influence="100"  />
-  <Culture id="aserai"      gold="500000"  influence="100"  />
-  <Culture id="khuzait"     gold="500000"  influence="1000" />
+  <Culture id="battania"    gold="50000"  influence="100"  />
+  <Culture id="aserai"      gold="50000"  influence="100"  />
+  <Culture id="khuzait"     gold="50000"  influence="1000" />
 
   <!-- Orcish / Dark cultures -->
-  <Culture id="mordor"      gold="500000"  influence="100"  />
-  <Culture id="isengard"    gold="2000000" influence="2000" />
-  <Culture id="gundabad"    gold="2000000" influence="2000" />
-  <Culture id="dolguldur"   gold="2000000" influence="2000" />
-  <Culture id="umbar"       gold="2000000" influence="100"  />
+  <Culture id="mordor"      gold="50000"  influence="500"  />
+  <Culture id="isengard"    gold="200000" influence="2000" />
+  <Culture id="gundabad"    gold="200000" influence="2000" />
+  <Culture id="dolguldur"   gold="200000" influence="2000" />
+  <Culture id="umbar"       gold="200000" influence="500"  />
 </StartupResources>
