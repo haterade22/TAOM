@@ -6,6 +6,10 @@ tools:
   - Read
   - Grep
   - Glob
+disallowedTools:
+  - Write
+  - Edit
+  - NotebookEdit
 ---
 
 # TaleWorlds Researcher Agent
@@ -69,6 +73,20 @@ When researching a class, use progressive refinement (max 3 cycles):
 3. **Cycle 3 (Targeted):** If gaps remain, search for specific patterns (e.g., where a method is called, how an event is fired).
 
 Stop when you have enough context to answer the research question. Don't decompile everything — 3 high-relevance classes beats 10 shallow reads.
+
+## Decompilation Fallback Chain
+
+When decompilation fails, escalate through this chain before giving up:
+
+1. **ILSpy MCP** (preferred) — `mcp__ilspy__decompile_type(dll_path, type_name)`
+2. **ILSpy CLI** — `ilspycmd "<dll>" -t "<Type>"` via Bash
+3. **Grep the DLL** — `strings "<dll>" | grep -i "<pattern>"` for method names and signatures
+4. **Escalate** — After 3 failed attempts across all fallbacks, report what was found and what remains unknown. Do not guess.
+
+**Circuit breaker:** If 3 consecutive decompilation attempts all fail (regardless of method), stop and report:
+- What was successfully found
+- What is still unknown
+- A specific recommendation for the calling agent (e.g., "inspect this in ILSpy GUI", "check migration docs")
 
 ## Output Format
 Provide a structured summary with code snippets of key signatures, followed by recommendations for adapter design or patch implementation.

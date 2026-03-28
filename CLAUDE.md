@@ -21,6 +21,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
 | **Research First** | Never guess TaleWorlds behavior - use `/research` skill or read decompiled source |
+| **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.3 incompatibilities, missing tests |
 
 ## Skills (Slash Commands)
 
@@ -33,6 +34,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/scope-check [change]` | Assess whether a proposed change fits current work context |
 | `/build-fix [error]` | Incrementally fix dotnet build errors, one at a time, minimal diffs |
 | `/verify [quick\|full]` | Run build + test + git status and produce pass/fail report |
+| `/deslop [path]` | Regression-safe C# AI-slop cleanup: deletion-first, tests-first |
 | `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
 
 ## Scoped Rules (auto-loaded by file path)
@@ -248,6 +250,16 @@ Before closing out any feature or fix, run this sequence:
 ## Commits
 
 50/72 rule. No AI attribution. Example: `feat: add garrison patrol calculation`
+
+**Optional trailers** (add when relevant — each on its own line after the blank line):
+
+| Trailer | When to use | Example |
+|---------|------------|---------|
+| `Constraint:` | TaleWorlds limitation blocked the ideal solution | `Constraint: Hero is sealed, can't subclass` |
+| `Rejected:` | Alternative approach considered and dropped | `Rejected: Prefix patch — fires too early before state init` |
+| `Not-tested:` | Parts that can't be unit tested | `Not-tested: Harmony patch invocation (requires live game)` |
+| `Research:` | What was decompiled to inform this change | `Research: DefaultPartyWageModel.GetCharacterWage` |
+| `Save-compat:` | Save file impact | `Save-compat: New field — safe, defaults to 0 on load` |
 
 ## MCP Servers
 

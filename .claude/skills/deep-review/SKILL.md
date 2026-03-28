@@ -1,7 +1,7 @@
 ---
 name: deep-review
 description: Launch parallel deep-dive agents to review completed work for quality, standards, compatibility, and completeness
-argument-hint: [feature-name]
+argument-hint: "[feature-name]"
 ---
 
 # Deep Review
@@ -148,6 +148,44 @@ OUTPUT FORMAT:
 - ✅/❌ IoC: [registered / MISSING registrations]
 
 Overall: COMPLETE / INCOMPLETE — [list what's missing]
+```
+
+## Step 2b: Adversarial Escalation (conditional)
+
+**Only launch this step if Agent 1 (Standards) reports ANY violation rated CRITICAL.**
+
+A CRITICAL violation is any of:
+- Direct TaleWorlds sealed type usage in a service class (ADR-007 breach)
+- Harmony patch that directly accesses game state without an adapter
+- Entry point over 150 lines that does business logic itself
+
+If triggered, launch a 5th agent targeting ONLY the offending files:
+
+```
+subagent_type: Explore
+model: sonnet
+```
+
+**Prompt:**
+```
+ADVERSARIAL REVIEW — assume this code has a critical architecture violation. Prove it.
+
+FILES WITH REPORTED VIOLATIONS: [list only the files Agent 1 flagged as CRITICAL]
+
+For each file:
+1. Read the ENTIRE file — not just the flagged lines
+2. Map every dependency: what does this class hold references to? What does it return?
+3. Find the blast radius: if this adapter pattern violation is kept, which other classes are contaminated?
+4. Identify the minimum surgical fix: what is the smallest change that restores compliance without a rewrite?
+5. Check if there is a corresponding test that would CATCH this violation (an integration test that passes a real TaleWorlds type). If not, that's a second finding.
+
+OUTPUT FORMAT:
+CONFIRMED / DISPUTED for each violation:
+- CONFIRMED: [file:line] [exact violation] — blast radius: [N classes affected] — minimum fix: [description]
+- DISPUTED: [file:line] [why Agent 1 was wrong]
+
+Minimum fix plan (in order of least disruption):
+1. ...
 ```
 
 ## Step 3: Compile Report

@@ -1,5 +1,17 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-28
+
+### oh-my-claudecode Cherry-Pick: Researcher Safety, Deslop, Deep-Review Adversarial Mode, Commit Trailers
+
+Reviewed the oh-my-claudecode repository (19 agents, 32 skills, MCP bridge). Most components require the OMC MCP bridge and were skipped. Cherry-picked 5 zero-infrastructure patterns adapted for TAOM's C#/.NET stack.
+
+- **Updated agent:** `taleworlds-researcher.md` — added `disallowedTools: [Write, Edit, NotebookEdit]` so the researcher can never accidentally modify code; added decompilation fallback chain (ILSpy MCP → ilspycmd CLI → grep) with 3-failure circuit breaker
+- **New skill:** `/deslop [path]` — regression-safe C# AI-slop cleanup: requires green tests first, deletion-first ordering (dead code → comments → null guards → inline single-use methods → extract duplicates), TAOM-specific slop patterns table
+- **Updated skill:** `/deep-review` — added Step 2b adversarial escalation: when Agent 1 finds a CRITICAL adapter-pattern violation, a 5th agent launches in adversarial mode to confirm the violation, map blast radius, and produce minimum surgical fix plan
+- **Updated CLAUDE.md:** `/deep-review` added to Critical Rules table (mandatory before every C# commit); commit trailers convention added (`Constraint:`, `Rejected:`, `Not-tested:`, `Research:`, `Save-compat:`)
+- **Fixed:** `deep-review/SKILL.md` frontmatter `argument-hint` YAML quoting
+
 ## 2026-03-27
 
 ### Feature: Custom Battles
