@@ -3,6 +3,7 @@ namespace TAOM.Features.Warg;
 public static class WargConfig
 {
     internal static float WargAttackRange = 1f;
+    internal static float TargetDetectionRange = 3.5f;
     internal static int SleepAfterAttack = 3;
     public const float SpeedForMaxDamage = 20f;
     public const int MaxSpeedDamage = 20;

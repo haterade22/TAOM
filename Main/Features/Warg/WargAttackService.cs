@@ -79,7 +79,7 @@ public class WargAttackService : IWargAttackService
     public void WargAttack(Agent warg)
     {
         List<sbyte> boneIds;
-        float targetDetectionRange = 20f;
+        float targetDetectionRange = WargConfig.TargetDetectionRange;
         float boneCollisionRadius = 0.3f;
         float actionProgressMax;
         float actionProgressMin;
