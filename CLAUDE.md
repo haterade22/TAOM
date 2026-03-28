@@ -35,6 +35,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/build-fix [error]` | Incrementally fix dotnet build errors, one at a time, minimal diffs |
 | `/verify [quick\|full]` | Run build + test + git status and produce pass/fail report |
 | `/deslop [path]` | Regression-safe C# AI-slop cleanup: deletion-first, tests-first |
+| `/new-adr [name]` | Scaffold an auto-numbered ADR with context pre-filled from git log + CHANGELOG |
+| `/commit-split` | Group changed files by concern and commit each group atomically |
 | `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
 
 ## Scoped Rules (auto-loaded by file path)

@@ -2,6 +2,14 @@
 
 ## 2026-03-28
 
+### awesome-claude-skills Cherry-Pick: ADR Scaffolding & Atomic Commit Workflow
+
+Reviewed 13,152 skills from the awesome-claude-skills marketplace. 45 of 47 filtered candidates were skipped (wrong language, wrong domain, or already covered). Two genuine gaps filled:
+
+- **New skill:** `/new-adr [name]` — auto-numbers from existing `docs/adrs/`, reads `000-template.md` for exact format, pre-fills Context from `git log --oneline -10` + CHANGELOG, writes `docs/adrs/NNN-name.md`, reminds to fill Decision/Consequences/Examples and update README.md
+- **New skill:** `/commit-split` — inspects staged + unstaged + untracked files, groups by TAOM-specific heuristics (feat/test/data/docs/chore), confirms grouping with user, then executes each atomic commit with 50/72-rule messages, optional trailers, and staged diff review per commit
+- **Updated CLAUDE.md:** Skills table updated with both new skills
+
 ### oh-my-claudecode Cherry-Pick: Researcher Safety, Deslop, Deep-Review Adversarial Mode, Commit Trailers
 
 Reviewed the oh-my-claudecode repository (19 agents, 32 skills, MCP bridge). Most components require the OMC MCP bridge and were skipped. Cherry-picked 5 zero-infrastructure patterns adapted for TAOM's C#/.NET stack.
