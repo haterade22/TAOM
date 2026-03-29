@@ -1,0 +1,31 @@
+{
+  "TroopPower": {
+    "OverrideVanillaTiers": false,
+    "TierPower": {
+      "T0": 0.40,
+      "T1": 0.66,
+      "T2": 0.96,
+      "T3": 1.30,
+      "T4": 1.68,
+      "T5": 2.10,
+      "T6": 2.56,
+      "T7": 2.91,
+      "T8": 3.26,
+      "T9": 3.61,
+      "T10": 3.96
+    }
+  },
+  "CasualtyRatios": {
+    "EnableCulturalSurvivalBonuses": true,
+    "CulturalSurvivalBonuses": {
+      "gondor": 0.3,
+      "rohan": 0.2,
+      "lothlorien": 0.5,
+      "erebor": 0.3,
+      "rivendell": 0.4,
+      "mordor": -0.2,
+      "gundabad": -0.1,
+      "dol_guldur": -0.1
+    }
+  }
+}

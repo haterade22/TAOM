@@ -18,6 +18,7 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.Warg;
+using TAOM.Features.BattleBalance;
 
 namespace TAOM;
 
@@ -48,6 +49,7 @@ public static class IoC
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
+        BattleBalanceIoC.RegisterBattleBalanceFeature(container);
 
         _container = container;
     }
