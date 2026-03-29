@@ -9,7 +9,6 @@ public class BattleBalanceConfig
 
     public class TroopPowerSection
     {
-        public bool OverrideVanillaTiers { get; set; } = false;
         public Dictionary<string, float> TierPower { get; set; } = new()
         {
             ["T0"] = 0.40f, ["T1"] = 0.66f, ["T2"] = 0.96f, ["T3"] = 1.30f,

@@ -142,4 +142,20 @@ public class TaomMilitaryPowerModelTests
         // Assert
         Assert.AreEqual(expected, result, 0.001f);
     }
+
+    [TestMethod]
+    [DataRow(0, 0.40f)]
+    [DataRow(1, 0.66f)]
+    [DataRow(2, 0.96f)]
+    [DataRow(3, 1.30f)]
+    [DataRow(4, 1.68f)]
+    [DataRow(5, 2.10f)]
+    public void CalculateTierPower_LowTierOverrideEnabled_UsesConfigValue(int tier, float expected)
+    {
+        // Act
+        float result = TaomMilitaryPowerModel.CalculateTierPower(tier, true, 2.91f, 3.26f, 3.61f, 3.96f, _defaultConfig);
+
+        // Assert
+        Assert.AreEqual(expected, result, 0.001f);
+    }
 }

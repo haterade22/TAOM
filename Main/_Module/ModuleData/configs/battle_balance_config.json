@@ -1,6 +1,5 @@
 {
   "TroopPower": {
-    "OverrideVanillaTiers": false,
     "TierPower": {
       "T0": 0.40,
       "T1": 0.66,
