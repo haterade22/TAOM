@@ -809,7 +809,8 @@
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.mirkwood_body" />
 				<equipment slot="Leg" id="Item.mirkwood_boots" />
 			</EquipmentRoster>
@@ -820,7 +821,8 @@
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
 				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
 			</EquipmentRoster>
@@ -831,7 +833,8 @@
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
 				<equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>

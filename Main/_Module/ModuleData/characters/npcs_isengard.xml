@@ -1102,11 +1102,13 @@
 	<NPCCharacter id="weapon_practice_stage_1_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
@@ -1116,12 +1118,14 @@
 	<NPCCharacter id="weapon_practice_stage_2_isengard" race="uruk_hai" default_group="Infantry" level="25" name="{=aom_ig_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
@@ -1132,13 +1136,15 @@
 	<NPCCharacter id="weapon_practice_stage_3_isengard" race="uruk_hai" default_group="Infantry" level="35" name="{=aom_ig_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
 				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />

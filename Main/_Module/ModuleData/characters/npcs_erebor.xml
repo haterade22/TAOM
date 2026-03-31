@@ -731,7 +731,8 @@
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
@@ -742,7 +743,8 @@
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
@@ -753,7 +755,8 @@
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
 				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />

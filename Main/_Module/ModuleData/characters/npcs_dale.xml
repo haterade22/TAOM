@@ -578,7 +578,8 @@
 	<NPCCharacter id="weapon_practice_stage_1_dale" default_group="Infantry" level="15" is_hero="false" name="{=aom_dl_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.sturgia">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sturgia_civil_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
@@ -588,7 +589,8 @@
 	<NPCCharacter id="weapon_practice_stage_2_dale" default_group="Infantry" level="25" is_hero="false" name="{=aom_dl_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.sturgia">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
@@ -598,7 +600,8 @@
 	<NPCCharacter id="weapon_practice_stage_3_dale" default_group="Infantry" level="35" is_hero="false" name="{=aom_dl_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.sturgia">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Body" id="Item.thick_padded_leather" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />

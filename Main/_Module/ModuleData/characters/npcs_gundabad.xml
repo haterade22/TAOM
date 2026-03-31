@@ -935,7 +935,8 @@
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
 				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
 			</EquipmentRoster>
@@ -946,7 +947,8 @@
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
 				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
 			</EquipmentRoster>
@@ -957,7 +959,8 @@
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
 				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
 			</EquipmentRoster>

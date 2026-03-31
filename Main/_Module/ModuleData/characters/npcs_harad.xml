@@ -858,7 +858,8 @@
 	<NPCCharacter id="weapon_practice_stage_1_harad" default_group="Infantry" level="15" is_hero="false" name="{=aom_hd_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.aserai">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.aserai_civil_c" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
@@ -868,7 +869,8 @@
 	<NPCCharacter id="weapon_practice_stage_2_harad" default_group="Infantry" level="25" is_hero="false" name="{=aom_hd_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.aserai">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.haradrim_torso" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>
@@ -878,7 +880,8 @@
 	<NPCCharacter id="weapon_practice_stage_3_harad" default_group="Infantry" level="35" is_hero="false" name="{=aom_hd_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.aserai">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Body" id="Item.haradrim_torso" />
 				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />

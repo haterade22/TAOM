@@ -856,7 +856,8 @@
 	<NPCCharacter id="weapon_practice_stage_1_gondor" default_group="Infantry" level="15" is_hero="false" name="{=aom_gd_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.gondor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
@@ -866,7 +867,8 @@
 	<NPCCharacter id="weapon_practice_stage_2_gondor" default_group="Infantry" level="25" is_hero="false" name="{=aom_gd_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.gondor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
@@ -876,7 +878,8 @@
 	<NPCCharacter id="weapon_practice_stage_3_gondor" default_group="Infantry" level="35" is_hero="false" name="{=aom_gd_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.gondor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />

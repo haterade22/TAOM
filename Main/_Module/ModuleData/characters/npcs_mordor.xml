@@ -989,11 +989,13 @@
 	<NPCCharacter id="weapon_practice_stage_1_mordor" race="uruk" default_group="Infantry" level="15" name="{=aom_mr_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.mordor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -1003,12 +1005,14 @@
 	<NPCCharacter id="weapon_practice_stage_2_mordor" race="uruk" default_group="Infantry" level="25" name="{=aom_mr_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.mordor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
@@ -1019,14 +1023,16 @@
 	<NPCCharacter id="weapon_practice_stage_3_mordor" race="uruk" default_group="Infantry" level="35" name="{=aom_mr_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.mordor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_a1" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
 				<equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b1" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
