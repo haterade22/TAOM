@@ -167,6 +167,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch17_TroopWeight` | Troop weight system | `PartyBase`, `TroopRoster` |
 | `Patch18_CulturalFeats` | Custom culture feat registration | `Campaign.InitializeDefaultCampaignObjects` |
 | `Patch19_CustomBattles` | Custom battle TAOM factions/commanders/troops | `CustomBattleData`, `CustomBattleHelper`, `BannerlordMissions` |
+| `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes for no-mount cultures | `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView` |
 
 ## Agent Teams
 
