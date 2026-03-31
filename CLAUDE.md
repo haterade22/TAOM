@@ -144,7 +144,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power (MCM + JSON) |
 | `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio per battle type (MCM) |
 | `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses (JSON per-faction death chance multiplier) |
-| `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor — prevents cross-skeleton equipment glitches in tournaments |
+| `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + culture-specific prize pools (Tierf-based) for regular and elite rewards |
 
 ## Harmony Patch Categories
 

@@ -33,9 +33,9 @@ public class TaomTournamentModel : DefaultTournamentModel
 
     private static MBList<ItemObject> BuildPrizePool(string cultureId, float minTier, float maxTier)
     {
-        var result = new MBList<ItemObject>();
         if (string.IsNullOrEmpty(cultureId))
-            return result;
+            return new MBList<ItemObject>();
+        var result = new MBList<ItemObject>();
         foreach (var item in Items.All)
         {
             if (item.Culture?.StringId != cultureId) continue;
