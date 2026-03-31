@@ -124,6 +124,62 @@ public static class CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch
 }
 
 /// <summary>
+/// Guards against NullReferenceException in GetAgeSelectionMenuNarrativeMenuCharacterArgs when
+/// a culture's character creation roster has no horse in its battle equipment set.
+/// Same root cause as the youth and adult stage patches.
+/// </summary>
+[HarmonyPatch]
+[HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
+public static class CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Patch
+{
+    static MethodBase TargetMethod() =>
+        AccessTools.DeclaredMethod(
+            typeof(CharacterCreationCampaignBehavior),
+            "GetAgeSelectionMenuNarrativeMenuCharacterArgs");
+
+    [HarmonyPrefix]
+    static bool Prefix(
+        CultureObject culture,
+        string occupationType,
+        CharacterCreationManager characterCreationManager,
+        ref List<NarrativeMenuCharacterArgs> __result)
+    {
+        if (Game.Current == null)
+            return true;
+
+        string selectedTitleType = characterCreationManager.CharacterCreationContent.SelectedTitleType;
+        if (string.IsNullOrEmpty(selectedTitleType))
+            selectedTitleType = occupationType;
+
+        bool isFemale = Hero.MainHero?.IsFemale ?? false;
+        string playerEquipmentId =
+            $"player_char_creation_{culture.StringId}_{selectedTitleType}_{(isFemale ? "f" : "m")}";
+
+        var roster = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+        if (roster == null)
+            return true; // Roster not found — let vanilla run
+
+        if (roster.DefaultEquipment[EquipmentIndex.Horse].Item != null)
+            return true; // Horse present — let vanilla run normally
+
+        // No horse in roster: return only the player character entry, skip the mount actor.
+        int startingAge = characterCreationManager.CharacterCreationContent.StartingAge;
+        __result = new List<NarrativeMenuCharacterArgs>
+        {
+            new NarrativeMenuCharacterArgs(
+                characterId: "player_age_selection_character",
+                age: startingAge,
+                equipmentId: playerEquipmentId,
+                animationId: "act_childhood_schooled",
+                spawnPointEntityId: "spawnpoint_player_1",
+                isHuman: true,
+                isFemale: isFemale)
+        };
+        return false;
+    }
+}
+
+/// <summary>
 /// Guards against ArgumentNullException in SpawnNonHumanNarrativeMenuCharacter when
 /// the youth narrative scene horse character has a null item ID. This happens when a
 /// culture's CC roster omits horse slots — ModifyMenuCharacters skips the horse entry,
