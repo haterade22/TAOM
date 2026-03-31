@@ -2,6 +2,14 @@
 
 ## 2026-03-31
 
+### Feat: TaomTournamentModel — Culture-Specific Tournament Prize Items (#52)
+
+- `DefaultTournamentModel.GetEliteRewardItems` returned a hardcoded list of 31 vanilla items — none exist in TAOM; elite prizes were silently empty
+- `GetRegularRewardItems` filtered by gold value range, missing most LOTRLOME_Armory items
+- Both methods now dynamically scan `Items.All` filtered by settlement culture + `item.Tierf` threshold (regular: 2–4, elite: 4+)
+- Cultures without armory entries (lothlorien, dale, khand) fall back to `base` gracefully
+- Called once per tournament win — not a hot path; no performance impact
+
 ### Feat: TaomTournamentModel — Per-Participant Culture Armor (#52)
 
 - `DefaultTournamentModel.GetParticipantArmor` used settlement culture for ALL participants (heroes, lords, filler troops) — human lords in Erebor tournaments received dwarf chainmail on human skeletons

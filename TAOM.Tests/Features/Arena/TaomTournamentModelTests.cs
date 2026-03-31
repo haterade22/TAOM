@@ -45,4 +45,22 @@ public class TaomTournamentModelTests
 
         Assert.AreEqual("gear_practice_dummy_empire", result);
     }
+
+    [TestMethod]
+    public void TierConstants_RegularAndElite_NoGapOrOverlap()
+    {
+        Assert.AreEqual(TaomTournamentModel.RegularMaxTier, TaomTournamentModel.EliteMinTier);
+    }
+
+    [TestMethod]
+    public void TierConstants_RegularMin_ExcludesJunkTier()
+    {
+        Assert.IsTrue(TaomTournamentModel.RegularMinTier > 0f);
+    }
+
+    [TestMethod]
+    public void TierConstants_EliteMin_IsAboveRegularMin()
+    {
+        Assert.IsTrue(TaomTournamentModel.EliteMinTier > TaomTournamentModel.RegularMinTier);
+    }
 }

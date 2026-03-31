@@ -1,8 +1,8 @@
-# Tournament Armor Assignment (TaomTournamentModel)
+# Tournament Model (TaomTournamentModel)
 
 ## Overview
 
-`TaomTournamentModel` overrides `DefaultTournamentModel.GetParticipantArmor` so that each tournament participant is dressed in their **own culture's** practice dummy armor rather than the hosting settlement's culture. A human Gondor lord visiting an Erebor tournament now receives human-scale armor instead of dwarf chainmail.
+`TaomTournamentModel` overrides three `DefaultTournamentModel` methods: participant armor assignment, regular prize selection, and elite prize selection. Participants wear their own culture's skeleton-appropriate gear, and prizes are drawn from LOTRLOME_Armory items matching the hosting settlement's culture and tier.
 
 ## Why This Exists
 
@@ -60,12 +60,23 @@ All 13 TAOM cultures have entries (fixed in session 2026-03-31):
 | khand | `npcs_khand.xml` | `dunland_caerdh_chainmail_light_a` |
 | lothlorien | `npcs_lothlorien.xml` | `rivendell_torso_light_light_tier1` |
 
+## Prize Item Selection
+
+`GetRegularRewardItems` and `GetEliteRewardItems` both scan `Items.All` filtered by settlement culture and `item.Tierf` (TaleWorlds' computed quality float derived from damage/armor stats):
+
+| Method | Tierf range | Approximate item quality |
+|--------|-------------|--------------------------|
+| `GetRegularRewardItems` | `>= 2f && < 4f` | Leather/chainmail, basic weapons |
+| `GetEliteRewardItems` | `>= 4f` | Plate, named lore weapons |
+
+Falls back to `base` (vanilla) when no culture-specific items are found (e.g., lothlorien, dale, khand have no dedicated armory entries). Called once per tournament win — not a performance concern.
+
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/Arena/Models/TaomTournamentModel.cs` | GameModel override — participant culture armor lookup |
-| `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | 5 unit tests on `ResolveDummyId` |
+| `Main/Features/Arena/Models/TaomTournamentModel.cs` | 3 overrides: participant armor, regular prizes, elite prizes |
+| `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | 8 unit tests (ResolveDummyId + tier constants) |
 | `Main/SubModule.cs` | Registration: `campaignStarter.AddModel(new TaomTournamentModel())` |
 | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | `gear_practice_dummy_*` entries per culture |
 
