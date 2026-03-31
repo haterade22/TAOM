@@ -19,6 +19,13 @@
   - Finalizer on `SpawnNonHumanNarrativeMenuCharacter`: suppresses `ArgumentNullException("key")` from null horse item ID
 - Pattern is data-driven — any future no-mount culture works automatically by omitting horse slots from CC equipment
 
+### Fix: Dwarf Character Creation — Adult Stage NRE (#50 continued)
+
+- **Crash:** `GetAdultMenuNarrativeMenuCharacterArgs` line 2819 — same `NullReferenceException` as the youth stage, triggered when progressing past the youth options
+- Root cause: the adult method also unconditionally dereferences `DefaultEquipment[Horse].Item.StringId`; `Patch20_NarrativeHorseGuard` only covered the youth method
+- Fix: added third patch class `CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch` (Prefix) to the same file and category — skips horse args, returns `"player_adulthood_character"` (age 20) only
+- The existing `SpawnNonHumanNarrativeMenuCharacter` Finalizer already covers the second crash point for both stages
+
 ## 2026-03-28
 
 ### awesome-claude-skills Cherry-Pick: ADR Scaffolding & Atomic Commit Workflow

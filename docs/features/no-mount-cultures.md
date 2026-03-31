@@ -20,11 +20,13 @@ Certain TAOM cultures (currently Erebor/dwarves) intentionally omit horses from 
 
 ### Solution Approach
 
-Two thin Harmony patches in `Patch20_NarrativeHorseGuard`:
+Three thin Harmony patches in `Patch20_NarrativeHorseGuard`:
 
-1. **Prefix on `GetYouthMenuNarrativeMenuCharacterArgs`** (private method, `CharacterCreationCampaignBehavior`): Looks up the culture's CC equipment roster. If `DefaultEquipment[Horse].Item == null`, returns a `__result` containing only the player character entry — skipping the horse NarrativeMenuCharacterArgs entirely. Vanilla runs for horse-enabled cultures (returns `true`).
+1. **Prefix on `GetYouthMenuNarrativeMenuCharacterArgs`** (private method, `CharacterCreationCampaignBehavior`): Looks up the culture's CC equipment roster. If `DefaultEquipment[Horse].Item == null`, returns a `__result` containing only the player character entry (`characterId: "player_youth_character"`, age 17) — skipping the horse NarrativeMenuCharacterArgs entirely. Vanilla runs for horse-enabled cultures (returns `true`).
 
-2. **Finalizer on `SpawnNonHumanNarrativeMenuCharacter`** (`SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`): Suppresses `ArgumentNullException("key")` that occurs when the horse scene character's item ID was never set (because the horse entry was skipped in step 1). The horse actor is simply not spawned.
+2. **Prefix on `GetAdultMenuNarrativeMenuCharacterArgs`** (private method, `CharacterCreationCampaignBehavior`): Identical logic as the youth prefix — same null check, same early return. Returns only the player character entry (`characterId: "player_adulthood_character"`, age 20) when no horse is present.
+
+3. **Finalizer on `SpawnNonHumanNarrativeMenuCharacter`** (`SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`): Suppresses `ArgumentNullException("key")` that occurs when the horse scene character's item ID was never set (because the horse entry was skipped in steps 1 or 2). The horse actor is simply not spawned.
 
 ### Component Diagram
 
@@ -35,6 +37,12 @@ taom_char_creation_equipment.xml
 Patch20_NarrativeHorseGuard
   ├── CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch [Prefix]
   │     Checks DefaultEquipment[Horse] → null → skip horse NarrativeMenuCharacterArgs
+  │     → returns "player_youth_character" entry only (age 17)
+  │     → vanilla handles horse-enabled cultures unchanged
+  │
+  ├── CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch [Prefix]
+  │     Same null check as youth patch
+  │     → returns "player_adulthood_character" entry only (age 20)
   │     → vanilla handles horse-enabled cultures unchanged
   │
   └── CharacterCreationNarrativeStageView_SpawnNonHuman_Patch [Finalizer]
@@ -44,11 +52,14 @@ Patch20_NarrativeHorseGuard
 
 ### Crash Flow (Without Patches)
 
+Both narrative stages (youth + adult) share the same crash flow:
+
 ```
 OnNextStage
   → TrySwitchToNextMenu
       → ModifyMenuCharacters
-          → GetYouthMenuNarrativeMenuCharacterArgs   ← Crash 1: NRE (null horse item)
+          → GetYouthMenuNarrativeMenuCharacterArgs   ← Crash 1a: NRE (null horse item)
+          → GetAdultMenuNarrativeMenuCharacterArgs   ← Crash 1b: NRE (null horse item)
   → RefreshMenu
       → OnMenuChanged
           → RefreshAgentVisuals
@@ -82,7 +93,7 @@ The patches detect horse absence at runtime — no code change needed to make a 
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` | Both patch classes (Prefix + Finalizer) |
+| `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` | All three patch classes (two Prefixes + Finalizer) |
 | `Main/SubModule.cs` | `PatchCategory("Patch20_NarrativeHorseGuard")` registration |
 | `Main/_Module/ModuleData/equipmentsets/taom_char_creation_equipment.xml` | CC equipment rosters — Erebor has no Horse slots |
 
