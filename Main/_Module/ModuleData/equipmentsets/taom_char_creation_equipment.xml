@@ -2822,12 +2822,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -2864,12 +2858,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -2906,12 +2894,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -2948,12 +2930,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -2993,12 +2969,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3038,12 +3008,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3080,12 +3044,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3122,12 +3080,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3161,12 +3113,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3200,12 +3146,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3242,12 +3182,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3284,12 +3218,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3326,12 +3254,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3368,12 +3290,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3407,12 +3323,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
@@ -3446,12 +3356,6 @@
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
-			<Equipment
-				slot="Horse"
-				id="Item.sumpter_horse" />
-			<Equipment
-				slot="HorseHarness"
-				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
 			civilian="true">
