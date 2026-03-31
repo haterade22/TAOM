@@ -2,31 +2,33 @@
 
 ## Overview
 
-Certain TAOM cultures (currently Erebor/dwarves) intentionally omit horses from character creation equipment. This requires two Harmony patches to prevent vanilla's CC narrative stage from crashing when no horse is present in a culture's battle equipment roster.
+Certain TAOM cultures (currently Erebor/dwarves) intentionally omit horses from character creation equipment. This requires four Harmony patches to prevent vanilla's CC narrative stage from crashing when no horse is present in a culture's battle equipment roster.
 
 ## Why This Exists
 
-- **Vanilla behavior:** `GetYouthMenuNarrativeMenuCharacterArgs` unconditionally reads `DefaultEquipment[Horse].Item.StringId` and spawns a horse actor in the narrative scene. All vanilla culture CC rosters include horse + harness slots.
+- **Vanilla behavior:** Six `Get*NarrativeMenuCharacterArgs` private methods in `CharacterCreationCampaignBehavior` drive each CC stage. Three of them (youth, adult, age selection) unconditionally read `DefaultEquipment[Horse].Item.StringId` and spawn a horse actor. All vanilla culture CC rosters include horse + harness slots.
 - **TAOM requirement:** Dwarves don't ride horses (lore). Their CC equipment rosters have no horse slots.
-- **Without this fix:** Two cascading crashes:
-  1. `NullReferenceException` in `GetYouthMenuNarrativeMenuCharacterArgs` — `DefaultEquipment[Horse].Item` is null.
+- **Without this fix:** Two cascading crashes per horse-reading CC stage:
+  1. `NullReferenceException` in `Get{Youth|Adult|AgeSelection}MenuNarrativeMenuCharacterArgs` — `DefaultEquipment[Horse].Item` is null.
   2. `ArgumentNullException("key")` in `SpawnNonHumanNarrativeMenuCharacter` — horse scene character has uninitialized (null) item ID because `ModifyMenuCharacters` never set it.
 
 ## Architecture
 
 ### Design Challenge
 
-`MBEquipmentRoster.DefaultEquipment` returns the first Battle-type EquipmentSet after `OrderEquipments()` sorts Battle sets to the front. Adding horse to only civilian sets doesn't help — `DefaultEquipment` always returns a Battle set. The vanilla narrative scene machinery has two separate crash points: the `GetYouthMenuNarrativeMenuCharacterArgs` method (sets the horse NarrativeMenuCharacterArgs) and `SpawnNonHumanNarrativeMenuCharacter` (spawns the horse 3D actor), which runs after `ModifyMenuCharacters`.
+`MBEquipmentRoster.DefaultEquipment` returns the first Battle-type EquipmentSet after `OrderEquipments()` sorts Battle sets to the front. Adding horse to only civilian sets doesn't help — `DefaultEquipment` always returns a Battle set. The vanilla narrative scene machinery has two separate crash points per horse-reading stage: the `Get*NarrativeMenuCharacterArgs` method (sets the horse `NarrativeMenuCharacterArgs`) and `SpawnNonHumanNarrativeMenuCharacter` (spawns the horse 3D actor), which runs after `ModifyMenuCharacters`. There are exactly 3 horse-reading methods and 1 shared spawn method — 4 patches total.
 
 ### Solution Approach
 
-Three thin Harmony patches in `Patch20_NarrativeHorseGuard`:
+Four thin Harmony patches in `Patch20_NarrativeHorseGuard`:
 
-1. **Prefix on `GetYouthMenuNarrativeMenuCharacterArgs`** (private method, `CharacterCreationCampaignBehavior`): Looks up the culture's CC equipment roster. If `DefaultEquipment[Horse].Item == null`, returns a `__result` containing only the player character entry (`characterId: "player_youth_character"`, age 17) — skipping the horse NarrativeMenuCharacterArgs entirely. Vanilla runs for horse-enabled cultures (returns `true`).
+1. **Prefix on `GetYouthMenuNarrativeMenuCharacterArgs`**: Looks up the culture's CC equipment roster. If `DefaultEquipment[Horse].Item == null`, returns a `__result` containing only the player character entry (`characterId: "player_youth_character"`, age 17) — skipping the horse `NarrativeMenuCharacterArgs` entirely. Vanilla runs for horse-enabled cultures (returns `true`).
 
-2. **Prefix on `GetAdultMenuNarrativeMenuCharacterArgs`** (private method, `CharacterCreationCampaignBehavior`): Identical logic as the youth prefix — same null check, same early return. Returns only the player character entry (`characterId: "player_adulthood_character"`, age 20) when no horse is present.
+2. **Prefix on `GetAdultMenuNarrativeMenuCharacterArgs`**: Identical logic. Returns only the player character entry (`characterId: "player_adulthood_character"`, age 20) when no horse is present.
 
-3. **Finalizer on `SpawnNonHumanNarrativeMenuCharacter`** (`SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`): Suppresses `ArgumentNullException("key")` that occurs when the horse scene character's item ID was never set (because the horse entry was skipped in steps 1 or 2). The horse actor is simply not spawned.
+3. **Prefix on `GetAgeSelectionMenuNarrativeMenuCharacterArgs`**: Identical logic. Returns only the player character entry (`characterId: "player_age_selection_character"`, age = `StartingAge`) when no horse is present.
+
+4. **Finalizer on `SpawnNonHumanNarrativeMenuCharacter`** (`SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`): Suppresses `ArgumentNullException("key")` that occurs when the horse scene character's item ID was never set (because the horse entry was skipped by any of the three Prefixes). The horse actor is simply not spawned.
 
 ### Component Diagram
 
@@ -41,31 +43,35 @@ Patch20_NarrativeHorseGuard
   │     → vanilla handles horse-enabled cultures unchanged
   │
   ├── CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch [Prefix]
-  │     Same null check as youth patch
-  │     → returns "player_adulthood_character" entry only (age 20)
-  │     → vanilla handles horse-enabled cultures unchanged
+  │     Same null check → returns "player_adulthood_character" only (age 20)
+  │
+  ├── CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Patch [Prefix]
+  │     Same null check → returns "player_age_selection_character" only (age = StartingAge)
   │
   └── CharacterCreationNarrativeStageView_SpawnNonHuman_Patch [Finalizer]
         Catches ArgumentNullException("key") from null horse item ID
-        → horse actor simply not spawned
+        → horse actor simply not spawned (covers all three prefix paths)
 ```
 
 ### Crash Flow (Without Patches)
 
-Both narrative stages (youth + adult) share the same crash flow:
+Each horse-reading CC stage shares the same crash flow:
 
 ```
 OnNextStage
   → TrySwitchToNextMenu
       → ModifyMenuCharacters
-          → GetYouthMenuNarrativeMenuCharacterArgs   ← Crash 1a: NRE (null horse item)
-          → GetAdultMenuNarrativeMenuCharacterArgs   ← Crash 1b: NRE (null horse item)
+          → GetYouthMenuNarrativeMenuCharacterArgs        ← Crash 1a: NRE (null horse item)
+          → GetAdultMenuNarrativeMenuCharacterArgs        ← Crash 1b: NRE (null horse item)
+          → GetAgeSelectionMenuNarrativeMenuCharacterArgs ← Crash 1c: NRE (null horse item)
   → RefreshMenu
       → OnMenuChanged
           → RefreshAgentVisuals
-              → SpawnNonHumanNarrativeMenuCharacter   ← Crash 2: ArgumentNullException("key")
+              → SpawnNonHumanNarrativeMenuCharacter       ← Crash 2: ArgumentNullException("key")
                   → MBObjectManager.GetObject<T>(null)
 ```
+
+The three non-horse methods (`GetParentMenu`, `GetChildhoodMenu`, `GetEducationMenu`) are safe — they don't include a horse entry.
 
 ## Configuration
 
@@ -93,7 +99,7 @@ The patches detect horse absence at runtime — no code change needed to make a 
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` | All three patch classes (two Prefixes + Finalizer) |
+| `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` | All four patch classes (three Prefixes + Finalizer) |
 | `Main/SubModule.cs` | `PatchCategory("Patch20_NarrativeHorseGuard")` registration |
 | `Main/_Module/ModuleData/equipmentsets/taom_char_creation_equipment.xml` | CC equipment rosters — Erebor has no Horse slots |
 
@@ -105,7 +111,7 @@ The patches detect horse absence at runtime — no code change needed to make a 
 
 ## Tests
 
-No unit tests — both patches are thin Harmony entry points with no extractable service logic. The entire logic is a null check (`DefaultEquipment[Horse].Item != null`) and an exception type/parameter check (`ArgumentNullException { ParamName == "key" }`).
+No unit tests — all patches are thin Harmony entry points with no extractable service logic. The entire logic is a null check (`DefaultEquipment[Horse].Item != null`) and an exception type/parameter check (`ArgumentNullException { ParamName == "key" }`).
 
 **Trailer:** `Not-tested: Harmony patch invocation (requires live game)`
 
