@@ -720,7 +720,7 @@
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>

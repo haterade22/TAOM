@@ -846,7 +846,7 @@
 	<NPCCharacter id="gear_practice_dummy_gondor" default_group="Infantry" level="15" is_hero="false" name="{=aom_gd_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.gondor">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>

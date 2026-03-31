@@ -720,8 +720,8 @@
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>

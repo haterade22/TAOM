@@ -299,4 +299,15 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_lothlorien" default_group="Infantry" level="15" is_hero="false" name="{=aom_lt_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.lothlorien">
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
 </NPCCharacters>

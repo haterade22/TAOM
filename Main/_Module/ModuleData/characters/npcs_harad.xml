@@ -848,7 +848,7 @@
 	<NPCCharacter id="gear_practice_dummy_harad" default_group="Infantry" level="15" is_hero="false" name="{=aom_hd_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.aserai">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
 				<equipment slot="Leg" id="Item.haradrim_boots" />
 			</EquipmentRoster>

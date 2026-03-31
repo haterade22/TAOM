@@ -882,9 +882,9 @@
 	<NPCCharacter id="gear_practice_dummy_dunland" default_group="Infantry" level="15" is_hero="false" name="{=aom_dn_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.empire">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sleeveless_padded_coat" />
-				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

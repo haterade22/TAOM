@@ -924,7 +924,7 @@
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
 				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
 			</EquipmentRoster>

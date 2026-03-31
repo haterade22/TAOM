@@ -853,9 +853,9 @@
 	<NPCCharacter id="gear_practice_dummy_rhun" default_group="Infantry" level="15" is_hero="false" name="{=aom_rh_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.khuzait">
 		<skills></skills>
 		<Equipments>
-			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
