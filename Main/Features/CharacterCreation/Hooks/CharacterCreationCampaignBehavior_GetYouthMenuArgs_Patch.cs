@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
@@ -63,5 +64,34 @@ public static class CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch
                 isFemale: isFemale)
         };
         return false;
+    }
+}
+
+/// <summary>
+/// Guards against ArgumentNullException in SpawnNonHumanNarrativeMenuCharacter when
+/// the youth narrative scene horse character has a null item ID. This happens when a
+/// culture's CC roster omits horse slots — ModifyMenuCharacters skips the horse entry,
+/// leaving the scene horse character with uninitialized IDs.
+/// The Finalizer suppresses the null-key crash so the horse is simply not spawned.
+/// </summary>
+[HarmonyPatch]
+[HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
+public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
+{
+    static MethodBase TargetMethod()
+    {
+        var type = AccessTools.TypeByName(
+            "SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView");
+        return type == null ? null : AccessTools.DeclaredMethod(type, "SpawnNonHumanNarrativeMenuCharacter");
+    }
+
+    [HarmonyFinalizer]
+    static Exception Finalizer(Exception __exception)
+    {
+        // Suppress the null-key crash from MBObjectManager.GetObject when horse item ID
+        // is null (no horse in the culture's CC equipment roster).
+        if (__exception is ArgumentNullException ane && ane.ParamName == "key")
+            return null;
+        return __exception;
     }
 }
