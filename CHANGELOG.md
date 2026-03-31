@@ -1,5 +1,24 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-03-31
+
+### Fix: Arena Practice Crash — All 13 TAOM Cultures (#49)
+
+- `ArenaPracticeFightMissionController.AddRandomWeapons` crashed with `ArgumentOutOfRangeException` for all TAOM custom culture arenas
+- Root cause: all 39 `weapon_practice_stage_{1-3}_{culture}` EquipmentRosters were tagged `civilian="true"` → `BattleEquipments` returned empty list → `RandomInt(0)` crashed
+- Fix: removed `civilian="true"` from all 39 rosters, added tier-appropriate weapons (Stage 1: T2, Stage 2: T3, Stage 3: T4 swords) to `Item0` slot
+- Affected files: `npcs_{erebor,gondor,mordor,rivendell,mirkwood,lothlorien,isengard,gundabad,dolguldur,umbar,rohan,harad,rhun}.xml`
+
+### Fix: Dwarf Character Creation — 3 Cascading Crashes (#50)
+
+- **Crash 1 (NRE):** `GetYouthMenuNarrativeMenuCharacterArgs` unconditionally reads `DefaultEquipment[Horse].Item.StringId` — crashed when Erebor CC rosters had no horse
+- **Crash 2 (ArgumentNullException):** `SpawnNonHumanNarrativeMenuCharacter` called `MBObjectManager.GetObject<T>(null)` — horse scene character had uninitialized IDs when horse NarrativeMenuCharacterArgs was skipped
+- **Lore fix:** Removed `Horse`/`HorseHarness` slots from all 16 `player_char_creation_erebor_*` non-civilian EquipmentSets
+- **Patch20_NarrativeHorseGuard:** Two new Harmony patches in `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`
+  - Prefix on `GetYouthMenuNarrativeMenuCharacterArgs`: skips horse entry when `DefaultEquipment[Horse].Item == null`
+  - Finalizer on `SpawnNonHumanNarrativeMenuCharacter`: suppresses `ArgumentNullException("key")` from null horse item ID
+- Pattern is data-driven — any future no-mount culture works automatically by omitting horse slots from CC equipment
+
 ## 2026-03-28
 
 ### awesome-claude-skills Cherry-Pick: ADR Scaffolding & Atomic Commit Workflow
