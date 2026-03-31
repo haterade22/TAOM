@@ -19,6 +19,21 @@
   - Finalizer on `SpawnNonHumanNarrativeMenuCharacter`: suppresses `ArgumentNullException("key")` from null horse item ID
 - Pattern is data-driven — any future no-mount culture works automatically by omitting horse slots from CC equipment
 
+### Fix: Arena Practice Clothes Crash + Culture-Specific Clothing (#51)
+
+- `ArenaPracticeFightMissionController.AddRandomClothes` crashed (NRE) for all TAOM custom culture arenas
+- Root cause: all 13 `gear_practice_dummy_{culture}` characters had only `civilian="true"` EquipmentRosters → `RandomBattleEquipment` returned null → null dereference
+- Fix: removed `civilian="true"` from all 13 characters, updated item IDs to be culture-appropriate (dwarves use tunic not dress, mirkwood/lothlorien use rivendell items, dale uses sturgia, khand uses dunland armory, dunland/rhun updated from vanilla to TAOM armory items)
+- Added missing `gear_practice_dummy_lothlorien` entry (was absent — fell back to empire clothes)
+- Affected files: `npcs_{erebor,gondor,isengard,mordor,rivendell,dolguldur,mirkwood,gundabad,harad,dunland,rhun,dale,khand,lothlorien}.xml`
+
+### Fix: TaomPartyHealingModel NRE in Arena Practice (#52)
+
+- `GetSurvivalChance` crashed (NRE at line 34) when an agent died during arena practice
+- Root cause: `party` parameter is null in arena practice context (no campaign party exists); line `party.Owner?.Culture ?? party.Culture` dereferences null `party`
+- Fix: added `if (party == null) return vanillaSurvival;` guard before config/culture access in `TaomPartyHealingModel.cs`
+- Vanilla base model handles null `party` gracefully; cultural survival bonuses simply don't apply in arena context
+
 ### Fix: Dwarf Character Creation — Remaining Stage NREs (#50 continued)
 
 - **Root cause (full picture):** `CharacterCreationCampaignBehavior` has 6 `Get*NarrativeMenuCharacterArgs` methods; 3 of them unconditionally dereference `DefaultEquipment[Horse].Item.StringId`. Each fires on a separate CC screen click, producing a new NRE each time.

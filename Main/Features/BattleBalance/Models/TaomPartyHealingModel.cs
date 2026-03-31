@@ -27,6 +27,9 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
         if (!_settings.EnableCulturalSurvivalBonuses)
             return vanillaSurvival;
 
+        if (party == null)
+            return vanillaSurvival;
+
         var config = _configProvider.GetConfig();
         if (!config.CasualtyRatios.EnableCulturalSurvivalBonuses)
             return vanillaSurvival;
