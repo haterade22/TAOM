@@ -33,6 +33,7 @@ using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
+using TAOM.Features.Arena.Models;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -146,6 +147,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomVillageProductionModel());
             campaignStarter.AddModel(new TaomCaravanModel());
             campaignStarter.AddModel(new TaomBattleRewardModel());
+            campaignStarter.AddModel(new TaomTournamentModel());
             campaignStarter.AddModel(new TaomPartyTroopUpgradeModel());
             campaignStarter.AddModel(new TaomPartySizeModel());
             campaignStarter.AddModel(new TaomFoodConsumptionModel());

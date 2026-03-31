@@ -2,6 +2,14 @@
 
 ## 2026-03-31
 
+### Feat: TaomTournamentModel — Per-Participant Culture Armor (#52)
+
+- `DefaultTournamentModel.GetParticipantArmor` used settlement culture for ALL participants (heroes, lords, filler troops) — human lords in Erebor tournaments received dwarf chainmail on human skeletons
+- Root cause (confirmed via decompilation): vanilla ignores the `participant` parameter entirely; no race/culture check exists anywhere in the tournament pipeline
+- New `TaomTournamentModel : DefaultTournamentModel` overrides `GetParticipantArmor` to try participant's own culture first, then falls back to vanilla (settlement culture → empire)
+- Data-driven: each culture's `gear_practice_dummy_*` already has skeleton-appropriate gear; no explicit race mapping needed
+- New files: `Main/Features/Arena/Models/TaomTournamentModel.cs`, `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs`
+
 ### Fix: Arena Practice Crash — All 13 TAOM Cultures (#49)
 
 - `ArenaPracticeFightMissionController.AddRandomWeapons` crashed with `ArgumentOutOfRangeException` for all TAOM custom culture arenas
