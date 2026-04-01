@@ -1,7 +1,5 @@
 using System;
 using System.Reflection;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TAOM.Core.Logging;
 
@@ -35,19 +33,6 @@ public sealed class CultureStageProgressionService : ICultureStageProgressionSer
             {
                 _logger.LogError("InvokeNextStage: _characterCreationManager not found on view");
                 return;
-            }
-
-            var contentProp = charCreationMgr.GetType().GetProperty("CharacterCreationContent", AnyInstance);
-            var content = contentProp?.GetValue(charCreationMgr);
-            if (content != null && Game.Current != null)
-            {
-                var setNameMethod = content.GetType().GetMethod("SetMainCharacterName",
-                    AnyInstance, null, new[] { typeof(string) }, null);
-                var culture = Game.Current.ObjectManager?.GetObject<CultureObject>(cultureId);
-                var generatedName = NameGenerator.Current
-                    .GenerateFirstNameForPlayer(culture, isFemale)
-                    ?.ToString() ?? string.Empty;
-                setNameMethod?.Invoke(content, new object[] { generatedName });
             }
 
             var affirmativeField = viewInstance.GetType().GetField("_affirmativeAction", AnyInstance);
