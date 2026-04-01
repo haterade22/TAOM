@@ -5,7 +5,11 @@ Removes <Item> blocks by ID using regex to preserve whitespace/formatting exactl
 import re
 import sys
 
-ARMORY_BASE = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\gondor"
+import os
+ARMORY_BASE = os.environ.get(
+    'TAOM_ARMORY_BASE',
+    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\gondor"
+)
 
 DELETIONS = {
     "head_armors.xml": [

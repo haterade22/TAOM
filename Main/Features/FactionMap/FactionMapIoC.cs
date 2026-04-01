@@ -17,6 +17,7 @@ public static class FactionMapIoC
         container.Register<IFactionSelectionService, FactionSelectionService>(Reuse.Singleton);
         container.Register<IFactionHoverService, FactionHoverService>(Reuse.Singleton);
         container.Register<ICultureSettingService, CultureSettingService>(Reuse.Singleton);
+        container.Register<ICultureStageProgressionService, CultureStageProgressionService>(Reuse.Singleton);
 
         container.Register<IOnCultureStageViewCreated, CultureStageViewCreatedHook>(Reuse.Singleton);
         container.Register<IOnCultureStageViewTick, CultureStageViewTickHook>(Reuse.Singleton);

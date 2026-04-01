@@ -12,5 +12,6 @@ public static class CharacterCreationIoC
         container.Register<IEquipmentRosterProvider, EquipmentRosterProvider>(Reuse.Singleton);
         container.Register<ICharacterCreationContentService, CharacterCreationContentService>(Reuse.Singleton);
         container.Register<IOnGetRaceNames, GetRaceNamesHook>(Reuse.Singleton);
+        container.Register<INarrativeHorseGuardService, NarrativeHorseGuardService>(Reuse.Singleton);
     }
 }

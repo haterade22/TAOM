@@ -14,12 +14,14 @@ public class AgentAdapter : IAgentAdapter
     private readonly Agent _agent;
     private readonly IMissionAdapterFactory _factory;
     private readonly IModLogger _logger;
+    private readonly Func<IBoneCollisionService> _boneCollisionServiceFactory;
 
-    public AgentAdapter(Agent agent, IMissionAdapterFactory factory, IModLogger logger)
+    public AgentAdapter(Agent agent, IMissionAdapterFactory factory, IModLogger logger, Func<IBoneCollisionService> boneCollisionServiceFactory)
     {
         _agent = agent ?? throw new ArgumentNullException(nameof(agent));
         _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _boneCollisionServiceFactory = boneCollisionServiceFactory ?? throw new ArgumentNullException(nameof(boneCollisionServiceFactory));
     }
 
     public int Index => _agent.Index;
@@ -144,7 +146,7 @@ public class AgentAdapter : IAgentAdapter
 
         if (targets.Count == 0) return;
 
-        var boneCollisionService = IoC.Resolve<IBoneCollisionService>();
+        var boneCollisionService = _boneCollisionServiceFactory();
         boneCollisionService.AddBoneCheckComponent(new BoneCheckDuringAnimation(
             action,
             this,

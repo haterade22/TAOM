@@ -12,9 +12,9 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-FULL_MAP_PATH = r"C:\Users\mikew\Downloads\Vista_dot-settlements-with-borders.png"
-REGIONS_DIR = r"E:\LOTRAOMAssets\Culture Selection"
-OUTPUT_DIR = r"C:\Users\mikew\source\repos\TAOM\tools\factionmap_output"
+FULL_MAP_PATH = os.environ.get("TAOM_MAP_IMAGE", r"C:\Users\mikew\Downloads\Vista_dot-settlements-with-borders.png")
+REGIONS_DIR = os.environ.get("TAOM_REGIONS_DIR", r"E:\LOTRAOMAssets\Culture Selection")
+OUTPUT_DIR = os.environ.get("TAOM_FACTION_MAP_OUTPUT", str(Path(__file__).parent / "factionmap_output"))
 BORDER_THRESHOLD = 25  # pixels darker than this are "border"
 
 # Import region mappings from assemble script

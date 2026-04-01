@@ -189,4 +189,8 @@ See [Architecture Decision Records](docs/adrs/) for the full set of design const
 
 ## License
 
-[TBD]
+**Code** (C# mod source): [MIT License](https://opensource.org/licenses/MIT)
+
+**Content** (art, lore, data, XML assets derived from Tolkien's works): [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — non-commercial, attribution required, share-alike.
+
+This mod is a fan project and is not affiliated with or endorsed by the Tolkien Estate, New Line Cinema, or TaleWorlds Entertainment.

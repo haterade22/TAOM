@@ -1,63 +1,61 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
+using System.Threading;
 
 namespace TAOM.Core.Logging;
 
 public class FileLogger : IModLogger
 {
-    private StreamWriter? _logFile;
-    private readonly object _writeLock = new();
+    private readonly ConcurrentQueue<string> _queue = new();
+    private readonly Thread _writerThread;
+    private volatile bool _stopping;
+    private StreamWriter _logFile;
     private const string LogDirectory = "Logs";
 
     public FileLogger()
     {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         var logPath = Path.Combine(LogDirectory, $"taom_debug_{timestamp}.log");
         Directory.CreateDirectory(LogDirectory);
-        _logFile = new StreamWriter(logPath, true) { AutoFlush = true };
+        _logFile = new StreamWriter(logPath, true);
+
+        _writerThread = new Thread(ProcessQueue) { IsBackground = true, Name = "TAOM.FileLogger" };
+        _writerThread.Start();
     }
 
-    public void LogInfo(string message)
+    public void LogInfo(string message) => Enqueue("INFO", message);
+    public void LogDebug(string message) => Enqueue("DEBUG", message);
+    public void LogWarning(string message) => Enqueue("WARNING", message);
+    public void LogError(string message) => Enqueue("ERROR", message);
+
+    private void Enqueue(string level, string message)
     {
-        WriteLog("INFO", message);
+        var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        _queue.Enqueue($"[{timestamp}] [{level}] {message}");
     }
 
-    public void LogDebug(string message)
+    private void ProcessQueue()
     {
-        WriteLog("DEBUG", message);
-    }
-
-    public void LogWarning(string message)
-    {
-        WriteLog("WARNING", message);
-    }
-
-    public void LogError(string message)
-    {
-        WriteLog("ERROR", message);
-    }
-
-    private void WriteLog(string level, string message)
-    {
-        lock (_writeLock)
+        while (!_stopping || !_queue.IsEmpty)
         {
-            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var logMessage = $"[{timestamp}] [{level}] {message}";
-            _logFile?.WriteLine(logMessage);
+            if (_queue.TryDequeue(out var line))
+            {
+                _logFile?.WriteLine(line);
+                _logFile?.Flush();
+            }
+            else
+            {
+                Thread.Sleep(50);
+            }
         }
     }
 
     public void Dispose()
     {
-        lock (_writeLock)
-        {
-            _logFile?.Dispose();
-            _logFile = null;
-        }
+        _stopping = true;
+        _writerThread.Join(TimeSpan.FromSeconds(2));
+        _logFile?.Dispose();
+        _logFile = null;
     }
 }

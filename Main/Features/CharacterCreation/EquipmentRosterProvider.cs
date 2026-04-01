@@ -8,4 +8,12 @@ public sealed class EquipmentRosterProvider : IEquipmentRosterProvider
     {
         return Game.Current?.ObjectManager?.GetObject<MBEquipmentRoster>(rosterId);
     }
+
+    public bool? HasHorse(string rosterId)
+    {
+        var roster = GetRoster(rosterId);
+        if (roster == null)
+            return null;
+        return roster.DefaultEquipment[EquipmentIndex.Horse].Item != null;
+    }
 }

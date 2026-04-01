@@ -6,7 +6,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
-using TaleWorlds.ObjectSystem;
 
 namespace TAOM.Features.CharacterCreation.Hooks;
 
@@ -14,7 +13,6 @@ namespace TAOM.Features.CharacterCreation.Hooks;
 /// Guards against NullReferenceException in GetYouthMenuNarrativeMenuCharacterArgs when
 /// a culture's character creation roster has no horse in its battle equipment set.
 /// Cultures like Erebor (dwarves) intentionally omit mounts from CC equipment.
-/// When no horse is present, the narrative scene shows only the player character (no mount actor).
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
@@ -35,34 +33,17 @@ public static class CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch
         if (Game.Current == null)
             return true;
 
-        string selectedTitleType = characterCreationManager.CharacterCreationContent.SelectedTitleType;
-        if (string.IsNullOrEmpty(selectedTitleType))
-            selectedTitleType = occupationType;
-
+        var service = IoC.Resolve<INarrativeHorseGuardService>();
+        var titleType = NarrativeHorseGuardPatchHelper.ResolveTitle(characterCreationManager, occupationType);
         bool isFemale = Hero.MainHero?.IsFemale ?? false;
-        string playerEquipmentId =
-            $"player_char_creation_{culture.StringId}_{selectedTitleType}_{(isFemale ? "f" : "m")}";
 
-        var roster = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-        if (roster == null)
-            return true; // Roster not found — let vanilla run
+        var args = service.TryBuildNoHorseArgs(culture.StringId, titleType, isFemale,
+            characterId: "player_youth_character", age: 17);
 
-        if (roster.DefaultEquipment[EquipmentIndex.Horse].Item != null)
-            return true; // Horse present — let vanilla run normally
+        if (args == null)
+            return true;
 
-        // No horse in roster: return only the player character entry, skip the mount actor.
-        // ModifyMenuCharacters handles an empty or horse-absent list safely.
-        __result = new List<NarrativeMenuCharacterArgs>
-        {
-            new NarrativeMenuCharacterArgs(
-                characterId: "player_youth_character",
-                age: 17,
-                equipmentId: playerEquipmentId,
-                animationId: "act_childhood_schooled",
-                spawnPointEntityId: "spawnpoint_player_1",
-                isHuman: true,
-                isFemale: isFemale)
-        };
+        __result = NarrativeMenuCharacterArgsList.FromGuardArgs(args);
         return false;
     }
 }
@@ -70,8 +51,6 @@ public static class CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch
 /// <summary>
 /// Guards against NullReferenceException in GetAdultMenuNarrativeMenuCharacterArgs when
 /// a culture's character creation roster has no horse in its battle equipment set.
-/// Same root cause as the youth stage patch — both methods unconditionally read
-/// DefaultEquipment[Horse].Item.StringId to build the horse NarrativeMenuCharacterArgs.
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
@@ -92,33 +71,17 @@ public static class CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch
         if (Game.Current == null)
             return true;
 
-        string selectedTitleType = characterCreationManager.CharacterCreationContent.SelectedTitleType;
-        if (string.IsNullOrEmpty(selectedTitleType))
-            selectedTitleType = occupationType;
-
+        var service = IoC.Resolve<INarrativeHorseGuardService>();
+        var titleType = NarrativeHorseGuardPatchHelper.ResolveTitle(characterCreationManager, occupationType);
         bool isFemale = Hero.MainHero?.IsFemale ?? false;
-        string playerEquipmentId =
-            $"player_char_creation_{culture.StringId}_{selectedTitleType}_{(isFemale ? "f" : "m")}";
 
-        var roster = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-        if (roster == null)
-            return true; // Roster not found — let vanilla run
+        var args = service.TryBuildNoHorseArgs(culture.StringId, titleType, isFemale,
+            characterId: "player_adulthood_character", age: 20);
 
-        if (roster.DefaultEquipment[EquipmentIndex.Horse].Item != null)
-            return true; // Horse present — let vanilla run normally
+        if (args == null)
+            return true;
 
-        // No horse in roster: return only the player character entry, skip the mount actor.
-        __result = new List<NarrativeMenuCharacterArgs>
-        {
-            new NarrativeMenuCharacterArgs(
-                characterId: "player_adulthood_character",
-                age: 20,
-                equipmentId: playerEquipmentId,
-                animationId: "act_childhood_schooled",
-                spawnPointEntityId: "spawnpoint_player_1",
-                isHuman: true,
-                isFemale: isFemale)
-        };
+        __result = NarrativeMenuCharacterArgsList.FromGuardArgs(args);
         return false;
     }
 }
@@ -126,7 +89,6 @@ public static class CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch
 /// <summary>
 /// Guards against NullReferenceException in GetAgeSelectionMenuNarrativeMenuCharacterArgs when
 /// a culture's character creation roster has no horse in its battle equipment set.
-/// Same root cause as the youth and adult stage patches.
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
@@ -147,34 +109,18 @@ public static class CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Pa
         if (Game.Current == null)
             return true;
 
-        string selectedTitleType = characterCreationManager.CharacterCreationContent.SelectedTitleType;
-        if (string.IsNullOrEmpty(selectedTitleType))
-            selectedTitleType = occupationType;
-
+        var service = IoC.Resolve<INarrativeHorseGuardService>();
+        var titleType = NarrativeHorseGuardPatchHelper.ResolveTitle(characterCreationManager, occupationType);
         bool isFemale = Hero.MainHero?.IsFemale ?? false;
-        string playerEquipmentId =
-            $"player_char_creation_{culture.StringId}_{selectedTitleType}_{(isFemale ? "f" : "m")}";
-
-        var roster = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-        if (roster == null)
-            return true; // Roster not found — let vanilla run
-
-        if (roster.DefaultEquipment[EquipmentIndex.Horse].Item != null)
-            return true; // Horse present — let vanilla run normally
-
-        // No horse in roster: return only the player character entry, skip the mount actor.
         int startingAge = characterCreationManager.CharacterCreationContent.StartingAge;
-        __result = new List<NarrativeMenuCharacterArgs>
-        {
-            new NarrativeMenuCharacterArgs(
-                characterId: "player_age_selection_character",
-                age: startingAge,
-                equipmentId: playerEquipmentId,
-                animationId: "act_childhood_schooled",
-                spawnPointEntityId: "spawnpoint_player_1",
-                isHuman: true,
-                isFemale: isFemale)
-        };
+
+        var args = service.TryBuildNoHorseArgs(culture.StringId, titleType, isFemale,
+            characterId: "player_age_selection_character", age: startingAge);
+
+        if (args == null)
+            return true;
+
+        __result = NarrativeMenuCharacterArgsList.FromGuardArgs(args);
         return false;
     }
 }
@@ -200,10 +146,33 @@ public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
     [HarmonyFinalizer]
     static Exception Finalizer(Exception __exception)
     {
-        // Suppress the null-key crash from MBObjectManager.GetObject when horse item ID
-        // is null (no horse in the culture's CC equipment roster).
         if (__exception is ArgumentNullException ane && ane.ParamName == "key")
             return null;
         return __exception;
+    }
+}
+
+internal static class NarrativeMenuCharacterArgsList
+{
+    internal static List<NarrativeMenuCharacterArgs> FromGuardArgs(Models.NarrativeHorseGuardArgs args) =>
+        new List<NarrativeMenuCharacterArgs>
+        {
+            new NarrativeMenuCharacterArgs(
+                characterId: args.CharacterId,
+                age: args.Age,
+                equipmentId: args.EquipmentId,
+                animationId: args.AnimationId,
+                spawnPointEntityId: args.SpawnPointEntityId,
+                isHuman: args.IsHuman,
+                isFemale: args.IsFemale)
+        };
+}
+
+internal static class NarrativeHorseGuardPatchHelper
+{
+    internal static string ResolveTitle(CharacterCreationManager manager, string occupationType)
+    {
+        var selected = manager.CharacterCreationContent.SelectedTitleType;
+        return string.IsNullOrEmpty(selected) ? occupationType : selected;
     }
 }

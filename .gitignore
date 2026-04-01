@@ -2,6 +2,8 @@
 bin/
 obj/
 _Module/bin/
+TestResults/
+out/
 
 # Visual Studio
 .vs/
@@ -25,3 +27,6 @@ Thumbs.db
 
 # Windows NUL device artifact (created when running Windows commands in bash)
 nul
+
+# Local MCP configuration (contains machine-specific paths)
+.vscode/mcp.json

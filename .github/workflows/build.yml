@@ -11,6 +11,18 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
+  check-build-config:
+    name: Check Build Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warn if BANNERLORD_GAME_DIR unset
+        env:
+          BANNERLORD_GAME_DIR: ${{ vars.BANNERLORD_GAME_DIR }}
+        run: |
+          if [ -z "$BANNERLORD_GAME_DIR" ]; then
+            echo "::warning::BANNERLORD_GAME_DIR is not set — the Build & Test job will be skipped. Set this variable in repository settings to enable full CI."
+          fi
+
   validate-xml:
     name: Validate XML & XSLT
     runs-on: ubuntu-latest

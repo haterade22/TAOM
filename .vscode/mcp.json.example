@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\path\\to\\TAOM",
+        "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules",
+        "E:\\path\\to\\LOTRAOM\\Modules\\LOTRAOM\\ModuleData"
+      ]
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git"]
+    },
+    "ilspy": {
+      "command": "python",
+      "args": ["-m", "ilspy_mcp_server"],
+      "env": {
+        "ILSPY_PATH": "ilspycmd"
+      }
+    }
+  }
+}

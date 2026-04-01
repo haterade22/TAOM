@@ -24,7 +24,10 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.join(SCRIPT_DIR, '..')
 
 REPO_FILE = os.path.join(REPO_ROOT, 'Main', '_Module', 'ModuleData', 'settlements.xml')
-MAP_FILE = r'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\ModuleData\settlements.xml'
+MAP_FILE = os.environ.get(
+    'TAOM_MAP_FILE',
+    r'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\ModuleData\settlements.xml'
+)
 
 
 def load_repo_data(repo_path):

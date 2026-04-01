@@ -4,7 +4,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.GauntletUI.Data;
-using TaleWorlds.TwoDimension;
 using TAOM.Core.Logging;
 using TAOM.Features.FactionMap.ViewModels;
 using TAOM.Features.FactionMap.Widgets;
@@ -20,6 +19,7 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
     private readonly ICultureResolverService _cultureResolver;
     private readonly ILandmarkService _landmarkService;
     private readonly ICultureSettingService _cultureSettingService;
+    private readonly ICultureStageProgressionService _progressionService;
     private readonly IModLogger _logger;
 
     private static FactionSelectionVM? _factionVM;
@@ -33,6 +33,7 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
         ICultureResolverService cultureResolver,
         ILandmarkService landmarkService,
         ICultureSettingService cultureSettingService,
+        ICultureStageProgressionService progressionService,
         IModLogger logger)
     {
         _configProvider = configProvider;
@@ -42,6 +43,7 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
         _cultureResolver = cultureResolver;
         _landmarkService = landmarkService;
         _cultureSettingService = cultureSettingService;
+        _progressionService = progressionService;
         _logger = logger;
     }
 
@@ -88,37 +90,7 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
                     return;
                 }
                 _cultureSettingService.SetCultureOnCharacterCreation(culture, viewInstance, _originalDataSource);
-
-                // Replicate vanilla NextStage() logic directly because the vanilla method
-                // accesses _dataSource.CurrentSelectedCulture.Culture which is null since
-                // we replaced the vanilla VM with FactionSelectionVM.
-                try
-                {
-                    var charCreationMgrField = AccessTools.Field(viewInstance.GetType(), "_characterCreationManager");
-                    var charCreationMgr = charCreationMgrField?.GetValue(viewInstance);
-                    if (charCreationMgr != null)
-                    {
-                        var contentProp = AccessTools.Property(charCreationMgr.GetType(), "CharacterCreationContent");
-                        var content = contentProp?.GetValue(charCreationMgr);
-                        if (content != null)
-                        {
-                            var setNameMethod = AccessTools.Method(content.GetType(), "SetMainCharacterName",
-                                new[] { typeof(string) });
-                            var generatedName = NameGenerator.Current
-                                .GenerateFirstNameForPlayer(culture, Hero.MainHero.IsFemale)
-                                .ToString();
-                            setNameMethod?.Invoke(content, new object[] { generatedName });
-                        }
-                    }
-
-                    var affirmativeField = AccessTools.Field(viewInstance.GetType(), "_affirmativeAction");
-                    var affirmativeAction = affirmativeField?.GetValue(viewInstance) as Delegate;
-                    affirmativeAction?.DynamicInvoke();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"NextStage error: {ex.Message}\n{ex.StackTrace}");
-                }
+                _progressionService.InvokeNextStage(viewInstance, culture.StringId, Hero.MainHero?.IsFemale ?? false);
             };
 
             Action onPreviousStage = () =>
@@ -142,20 +114,7 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
                     _factionVM.Title = titleProp.GetValue(_originalDataSource) as string ?? "Choose your Realm";
             }
 
-            try { UIResourceManager.BrushFactory.LoadBrushFile("FactionMap"); }
-            catch (Exception brushEx) { _logger.LogError($"Could not load FactionMap brushes: {brushEx.Message}"); }
-
-            try
-            {
-                var spriteData = UIResourceManager.SpriteData;
-                if (spriteData != null && spriteData.SpriteCategories.ContainsKey("ui_group1"))
-                {
-                    var cat = spriteData.SpriteCategories["ui_group1"];
-                    if (!cat.IsLoaded)
-                        cat.Load(UIResourceManager.ResourceContext, UIResourceManager.ResourceDepot);
-                }
-            }
-            catch (Exception spriteEx) { _logger.LogError($"Could not load sprite category: {spriteEx.Message}"); }
+            _progressionService.LoadFactionMapResources();
 
             var newMovie = gauntletLayer.LoadMovie("CharacterCreationCultureStage", _factionVM);
             movieField?.SetValue(viewInstance, newMovie);
