@@ -174673,20 +174673,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes>
 				<beard_mesh>
@@ -176456,19 +176443,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-				name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes>
 				<beard_mesh />
@@ -178334,19 +178309,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes>
 				<beard_mesh>
@@ -180013,19 +179976,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-				name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -181814,19 +181765,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
+					name="" />
 			</eyebrow_meshes>
 			<default_beard_meshes
 				cover_type1="beards_c_a"
@@ -183505,19 +183444,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-				name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -185299,7 +185226,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_01" />
+					name="" />
 			</eyebrow_meshes>
 			<default_beard_meshes
 				cover_type1="beards_c_a"
@@ -186982,19 +186909,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -188389,7 +188304,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_01" />
+					name="" />
 			</eyebrow_meshes>
 			<default_beard_meshes
 				cover_type1="beards_c_a"
@@ -189757,19 +189672,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-				name="sk_elf_basemesh_a1_eyebrow_01" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_02" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_03" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_04" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_05" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_07" />
-				<eyebrow_mesh
-					name="sk_elf_basemesh_a1_eyebrow_06" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
