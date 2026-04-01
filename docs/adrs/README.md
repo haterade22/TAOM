@@ -11,6 +11,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 | [003](./003-no-regions.md) | No Code Regions | No `#region` directives, use class decomposition | Accepted | Standard |
 | [004](./004-no-obsolete.md) | No Obsolete Markers | Migrate all usage sites immediately, no deprecation | Accepted | Standard |
 | [005](./005-no-preprocessor-directives.md) | No #if DEBUG in App Code | Use DI for environment-specific code (except IoC.cs) | Accepted | Standard |
+| 006 | _(Revoked — never filed)_ | Number reserved; no ADR was written for this slot | Revoked | — |
 | [007](./007-adapter-pattern.md) | Adapter Pattern for Sealed Classes | Services use adapters, NOT sealed TaleWorlds types | Accepted | **Mandatory** |
 | [008](./008-testability-requirements.md) | Testability Requirements | Business logic must be 100% unit testable | Accepted | **Mandatory** |
 | [009](./009-self-documenting-code.md) | Self-Documenting Code Standards | No inline comments, ELI5 summaries, code reads like English | Accepted | Standard |
