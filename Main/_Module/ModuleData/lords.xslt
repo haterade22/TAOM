@@ -473,7 +473,7 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="imrahil_bat_equipment" />
                 <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
@@ -2623,7 +2623,7 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="forlong_bat_equipment" />
                 <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
@@ -2671,7 +2671,7 @@
             <xsl:attribute name="name">{=aom_lord_1_52_name}Hirluin, Lord of Pinnath Gelin</xsl:attribute>
             <xsl:attribute name="age">36</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
@@ -2708,7 +2708,7 @@
                 <Trait id="Valor" value="2"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="hirluin_bat_equipment" />
                 <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
@@ -2762,7 +2762,7 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="angbor_bat_equipment" />
                 <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
@@ -2816,7 +2816,7 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="golasgil_bat_equipment" />
                 <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
@@ -3103,6 +3103,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>

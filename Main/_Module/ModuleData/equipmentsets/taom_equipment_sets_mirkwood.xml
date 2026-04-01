@@ -139,16 +139,15 @@
 
 	<!-- ==================== LEGOLAS ==================== -->
 
-	<EquipmentRoster id="legolas_bat_equipment" culture="Culture.mirkwood">
+		<EquipmentRoster id="legolas_bat_equipment" culture="Culture.mirkwood">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_legolas_sword" />
-			<Equipment slot="Item1" id="Item.wm_mirkwood_bow_a01" />
+			<Equipment slot="Item1" id="Item.wm_mirkwood_bow_a04" />
+			<Equipment slot="Item2" id="Item.wm_mirkwood_arrow_a03" />
 			<Equipment slot="Body" id="Item.legolas_body" />
 			<Equipment slot="Gloves" id="Item.legolas_gloves" />
 			<Equipment slot="Leg" id="Item.legolas_boots" />
 			<Equipment slot="Cape" id="Item.legolas_shoulder" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

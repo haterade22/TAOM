@@ -9946,8 +9946,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_1" name="{=aom_lord_EW_1_name}Vorondil" age="78" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
-            <!--Placeholder face-->
-            <BodyProperties version="4" age="78.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10332,8 +10331,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_9" name="{=aom_lord_EW_9_name}Thingol" age="133" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
-            <!--Placeholder face-->
-            <BodyProperties version="4" age="133.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="50.08" weight="0.0486" build="0.3611" key="00025C04001403030B82005700C07504944685853CB98070BB79530E7ECBFEA200B516030B3BB5731F6410605020004000000000000017670000000043647003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10571,8 +10569,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_14" name="{=aom_lord_EW_14_name}Northiligand" age="77" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
-            <!--Placeholder face-->
-            <BodyProperties version="4" age="77.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" weight="0.1" build="0.98" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10856,8 +10853,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_20" name="{=aom_lord_EW_20_name}Balatar" age="66" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
-            <!--Placeholder face-->
-            <BodyProperties version="4" age="66.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -11000,8 +10996,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_23" name="{=aom_lord_EW_23_name}Anaratan" age="63" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
-            <!--Placeholder face-->
-            <BodyProperties version="4" age="63.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" weight="0" build="0.5671" key="0000000400000182107973B1A81103B300A189083A697600991871193FB17D5300990603093A2B0532430001330223550000000000001977000000004D246002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>

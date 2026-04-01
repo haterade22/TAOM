@@ -113,4 +113,18 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+
+	<!-- ==================== GLORFINDEL ==================== -->
+
+	<EquipmentRoster id="glorfindel_bat_equipment" culture="Culture.rivendell">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01_silver" />
+			<Equipment slot="Head" id="Item.glorfindel_helmet" />
+			<Equipment slot="Body" id="Item.glorfindel_body" />
+			<Equipment slot="Cape" id="Item.glorfindel_pauldrons" />
+			<Equipment slot="Gloves" id="Item.glorfindel_gauntlets" />
+			<Equipment slot="Leg" id="Item.glorfindel_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

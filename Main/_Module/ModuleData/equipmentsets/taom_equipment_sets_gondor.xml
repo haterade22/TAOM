@@ -115,6 +115,7 @@
 			<Equipment slot="Item1" id="Item.wm_boromir_shield" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
 			<Equipment slot="Body" id="Item.boromir_armor" />
+			<Equipment slot="Cape" id="Item.boromir_cloak" />
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
@@ -148,6 +149,86 @@
 			<Equipment slot="Body" id="Item.faramir_armor_slim" />
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== IMRAHIL ==================== -->
+
+	<EquipmentRoster id="imrahil_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
+			<Equipment slot="Item1" id="Item.wm_swan_knight_swordb" />
+			<Equipment slot="Item2" id="Item.gond_shield_two_swan" />
+			<Equipment slot="Head" id="Item.imrahil_helmet" />
+			<Equipment slot="Body" id="Item.imrahil_body" />
+			<Equipment slot="Cape" id="Item.imrahil_shoulder" />
+			<Equipment slot="Gloves" id="Item.imrahil_gloves" />
+			<Equipment slot="Leg" id="Item.imrahil_boot" />
+			<Equipment slot="HorseHarness" id="Item.gondor_swan_horse_armor_2" />
+			<Equipment slot="Horse" id="Item.noble_horse_southern" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== FORLONG ==================== -->
+
+	<EquipmentRoster id="forlong_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
+			<Equipment slot="Item1" id="Item.gond_shield_four_mustard" />
+			<Equipment slot="Item2" id="Item.wm_gondor_sword_a05" />
+			<Equipment slot="Head" id="Item.forlong_helmet" />
+			<Equipment slot="Body" id="Item.forlong_body" />
+			<Equipment slot="Cape" id="Item.forlong_shoulder" />
+			<Equipment slot="Gloves" id="Item.forlong_gloves" />
+			<Equipment slot="Leg" id="Item.forlong_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== HIRLUIN ==================== -->
+
+	<EquipmentRoster id="hirluin_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
+			<Equipment slot="Item1" id="Item.wm_gondor_boromir_sword" />
+			<Equipment slot="Item2" id="Item.gond_shield_three_green" />
+			<Equipment slot="Head" id="Item.hirluin_helmet" />
+			<Equipment slot="Body" id="Item.hirluin_body" />
+			<Equipment slot="Cape" id="Item.hirluin_shoulder" />
+			<Equipment slot="Gloves" id="Item.hirluin_gloves" />
+			<Equipment slot="Leg" id="Item.hirluin_boots" />
+			<Equipment slot="HorseHarness" id="Item.gondor_horse_armor_1_pg" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== ANGBOR ==================== -->
+
+	<EquipmentRoster id="angbor_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
+			<Equipment slot="Item1" id="Item.wm_gondor_lamedon_2h_sword_a" />
+			<Equipment slot="Item2" id="Item.gond_shield_one_greyscale" />
+			<Equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
+			<Equipment slot="Head" id="Item.angbor_helmet" />
+			<Equipment slot="Body" id="Item.angbor_body" />
+			<Equipment slot="Cape" id="Item.angbor_shoulder" />
+			<Equipment slot="Gloves" id="Item.angbor_gloves" />
+			<Equipment slot="Leg" id="Item.angbor_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== GOLASGIL ==================== -->
+
+	<EquipmentRoster id="golasgil_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
+			<Equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+			<Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Head" id="Item.golasgil_helment" />
+			<Equipment slot="Body" id="Item.golasgil_body" />
+			<Equipment slot="Cape" id="Item.golasgil_shoulder" />
+			<Equipment slot="Gloves" id="Item.golasgil_gloves" />
+			<Equipment slot="Leg" id="Item.golasgil_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
