@@ -11,6 +11,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public override string FolderName => "TAOM";
     public override string FormatType => "json2";
 
+    // --- Encyclopedia ---
+
+    [SettingPropertyGroup("Encyclopedia")]
+    [SettingPropertyBool("Show All Characters", Order = 0,
+        HintText = "Reveals all characters in the encyclopedia, including those not yet encountered. Equivalent to the 'campaign.toggle_information_restrictions' cheat.")]
+    public bool ShowAllEncyclopediaCharacters { get; set; } = false;
+
     // --- Troop Weight ---
 
     [SettingPropertyGroup("Troop Weight")]

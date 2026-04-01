@@ -34,6 +34,7 @@ using TAOM.Features.Warg;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
+using TAOM.Features.Encyclopedia.Models;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -163,6 +164,8 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
             campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
             campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig));
+
+            campaignStarter.AddModel(new TaomInformationRestrictionModel());
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
