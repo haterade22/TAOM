@@ -168,7 +168,7 @@
 	<string id="str_faction_official.mordor_f" text="{=taom_str_faction_official.mordor_f}a servant of the Dark Lord" />
 	<string id="str_faction_ruler.mordor" text="{=taom_str_faction_ruler.mordor}the Dark Lord" />
 	<string id="str_faction_ruler.mordor_f" text="{=taom_str_faction_ruler.mordor_f}the Dark Lady" />
-	<string id="str_faction_ruler_term_in_speech.mordor" text="{=taom_str_faction_ruler_term_in_speech.mordor}the {RULER.NAME}, {RULER.TITLE}" />
+	<string id="str_faction_ruler_term_in_speech.mordor" text="{=taom_str_faction_ruler_term_in_speech.mordor}{?RULER.GENDER}the Dark Lady{?}the Dark Lord{\?}, {RULER.NAME}" />
 	<string id="str_faction_ruler_name_with_title.mordor" text="{=taom_str_faction_ruler_name_with_title.mordor}{?RULER.GENDER}Dark Lady{?}Dark Lord{\?} {RULER.NAME}" />
 	<string id="str_faction_noble_name_with_title.mordor" text="{=taom_str_faction_noble_name_with_title.mordor}{?RULER.GENDER}Warden{?}Overseer{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.mordor" text="{=taom_str_adjective_for_faction.mordor}Mordor" />
@@ -182,7 +182,7 @@
 	<string id="str_faction_official.mirkwood_f" text="{=taom_str_faction_official.mirkwood_f}a forest warden" />
 	<string id="str_faction_ruler.mirkwood" text="{=taom_str_faction_ruler.mirkwood}King" />
 	<string id="str_faction_ruler.mirkwood_f" text="{=taom_str_faction_ruler.mirkwood_f}Queen" />
-	<string id="str_faction_ruler_term_in_speech.mirkwood" text="{=taom_str_faction_ruler_term_in_speech.mirkwood}the {RULER.TITLE}, {RULER.NAME}" />
+	<string id="str_faction_ruler_term_in_speech.mirkwood" text="{=taom_str_faction_ruler_term_in_speech.mirkwood}the {?RULER.GENDER}Queen{?}King{\?}, {RULER.NAME}" />
 	<string id="str_faction_ruler_name_with_title.mirkwood" text="{=taom_str_faction_ruler_name_with_title.mirkwood}{?RULER.GENDER}Queen{?}King{\?} {RULER.NAME}" />
 	<string id="str_faction_noble_name_with_title.mirkwood" text="{=taom_str_faction_noble_name_with_title.mirkwood}{?RULER.GENDER}Warden{?}Guardian{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.mirkwood" text="{=taom_str_adjective_for_faction.mirkwood}Wood-Elven" />
@@ -396,8 +396,8 @@
 	<string id="str_faction_official.erebor_f" text="{=taom_str_faction_official.erebor_f}a lady dwarf" />
 	<string id="str_faction_ruler.erebor" text="{=taom_str_faction_ruler.erebor}King Under the Mountain" />
 	<string id="str_faction_ruler.erebor_f" text="{=taom_str_faction_ruler.erebor_f}Queen Under the Mountain" />
-	<string id="str_faction_ruler_term_in_speech.erebor" text="{=taom_str_faction_ruler_term_in_speech.erebor}the {RULER.TITLE}, {RULER.NAME}" />
-	<string id="str_faction_ruler_name_with_title.erebor" text="{=taom_str_faction_ruler_name_with_title.erebor}{RULER.TITLE} {RULER.NAME}" />
+	<string id="str_faction_ruler_term_in_speech.erebor" text="{=taom_str_faction_ruler_term_in_speech.erebor}the {?RULER.GENDER}Queen Under the Mountain{?}King Under the Mountain{\?}, {RULER.NAME}" />
+	<string id="str_faction_ruler_name_with_title.erebor" text="{=taom_str_faction_ruler_name_with_title.erebor}{?RULER.GENDER}Queen Under the Mountain{?}King Under the Mountain{\?} {RULER.NAME}" />
 	<string id="str_faction_noble_name_with_title.erebor" text="{=taom_str_faction_noble_name_with_title.erebor}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
 	<string id="str_adjective_for_faction.erebor" text="{=taom_str_adjective_for_faction.erebor}Ereborian" />
 	<string id="str_short_term_for_faction.erebor" text="{=taom_str_short_term_for_faction.erebor}Dwarf" />

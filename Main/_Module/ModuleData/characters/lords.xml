@@ -6553,7 +6553,7 @@
     <!-- Culture.erebor -->
     <NPCCharacter id="lord_E1_1" race="dwarf" name="{=aom_lord_E1_1_name}Dáin II Ironfoot" age="38" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.0254" build="0.0231" key="000040078000314278800E5DEFFE8FEFEE8078778FF7766F8888788888283F4600A006030AFFF0AE0000000000000000000000000000000000000000054C0142" />
+            <BodyProperties version="4" age="25.22" weight="0.4699" build="1"  key="00000007800021C88F8870F099200F450000857877777878FFFFEFFF7000000200BF76030BFFEFFF00000000000000000000000000000000000000000F6C0140" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
