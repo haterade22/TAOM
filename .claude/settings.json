@@ -58,6 +58,15 @@
             "command": ".claude/hooks/notify-csharp-edit.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/notify-test-results.sh"
+          }
+        ]
       }
     ],
     "PostToolUseFailure": [

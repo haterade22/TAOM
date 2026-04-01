@@ -29,6 +29,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 |---------|---------|
 | `/research [Class]` | Decompile and analyze TaleWorlds classes |
 | `/new-feature [Name]` | Scaffold a new feature module with IoC, services, tests |
+| `/issue [bug\|feature\|crash] [desc]` | Create a GitHub issue with all required TAOM sections |
 | `/xslt-check [file]` | Validate XSLT against SandBoxCore vanilla XML |
 | `/migration-status` | Check v1.2 -> v1.3 migration progress |
 | `/scope-check [change]` | Assess whether a proposed change fits current work context |
@@ -49,6 +50,9 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `xml-data.md` | `ModuleData/**/*.xml` | NPC naming, region codes, formatting |
 | `troops.md` | `troops/**`, `taom_partyTemplates.xml`, `TroopProgression/**` | Troop checklist, races, party templates, save compat |
 | `harmony-patches.md` | `Main/**/Hooks/**` | Patch types, thin entry points, thread-local state |
+| `gamemodels.md` | `Main/Features/**/*Model.cs` | GameModel override pattern, base class rules, registration |
+| `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
+| `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules |
 
 ## Custom Agents
 
@@ -83,6 +87,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Ensure code quality | [code-quality.md](./docs/ai-includes/code-quality.md) |
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 | Use agent teams | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
+| Plan future GameModel overrides | [roadmap.md](./docs/roadmap.md) |
 
 ## Key Paths
 
@@ -329,7 +334,6 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 - Target: Bannerlord v1.3.12
 - Migration from v1.2 requires API changes - see `docs/migration/`
 - No git actions unless explicitly asked
-- **Claude Code v2.1.63** — update to v2.1.80+ for: effort frontmatter on skills, PowerShell tool, background agent fixes, 64k/128k output tokens
 
 ## PowerShell Tool (Windows)
 
