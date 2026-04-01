@@ -1177,22 +1177,148 @@
 		faction="Faction.clan_empire_west_11" />
 	<Hero
 		id="lord_EW_1"
+		spouse="Hero.lord_EW_1_1"
 		faction="Faction.clan_empire_west_13" />
 	<Hero
 		id="lord_EW_6"
+		spouse="Hero.lord_EW_6_1"
 		faction="Faction.clan_empire_west_14" />
 	<Hero
 		id="lord_EW_9"
 		faction="Faction.clan_empire_west_10" />
 	<Hero
 		id="lord_EW_14"
-		faction="Faction.clan_empire_west_11" />
+		spouse="Hero.lord_EW_14_1"
+		faction="Faction.clan_empire_west_12" />
 	<Hero
 		id="lord_EW_23"
 		faction="Faction.clan_empire_west_12" />
 	<Hero
 		id="lord_EW_20"
 		faction="Faction.clan_empire_west_13" />
+	<!-- Clan 2 - Imrazôrionath -->
+	<Hero
+		id="lord_1_9_6"
+		father="Hero.lord_1_9"
+		mother="Hero.lord_1_9_5"
+		faction="Faction.clan_empire_west_2" />
+	<!-- Clan 3 - Eärnurionath -->
+	<Hero
+		id="lord_1_11_1"
+		faction="Faction.clan_empire_west_3" />
+	<Hero
+		id="lord_1_11_2"
+		spouse="Hero.lord_1_11_1"
+		faction="Faction.clan_empire_west_3" />
+	<!-- Clan 4 - Barahirionath -->
+	<Hero
+		id="lord_1_40_2"
+		father="Hero.lord_1_46"
+		mother="Hero.lord_1_46_1"
+		faction="Faction.clan_empire_west_4" />
+	<!-- Clan 7 - Malandilionath -->
+	<Hero
+		id="lord_1_53_1"
+		spouse="Hero.lord_1_73"
+		faction="Faction.clan_empire_west_7" />
+	<Hero
+		id="lord_1_53_2"
+		father="Hero.lord_1_53"
+		mother="Hero.lord_1_73_1"
+		faction="Faction.clan_empire_west_7" />
+	<!-- Clan 8 - Olindurionath -->
+	<Hero
+		id="lord_WE8_1"
+		spouse="Hero.lord_WE8_u"
+		faction="Faction.clan_empire_west_8" />
+	<Hero
+		id="lord_WE8_2"
+		spouse="Hero.lord_WE8_c"
+		faction="Faction.clan_empire_west_8" />
+	<Hero
+		id="lord_WE8_3"
+		faction="Faction.clan_empire_west_8" />
+	<Hero
+		id="lord_WE8_4"
+		spouse="Hero.lord_WE8_3"
+		faction="Faction.clan_empire_west_8" />
+	<!-- Clan 9 - Danuhirionath -->
+	<Hero
+		id="lord_WE9_3"
+		father="Hero.lord_WE9_l"
+		mother="Hero.lord_WE9_u2"
+		faction="Faction.clan_empire_west_9" />
+	<!-- Clan 10 - Hýarthulionath -->
+	<Hero
+		id="lord_1_59_2"
+		faction="Faction.clan_empire_west_10" />
+	<Hero
+		id="lord_1_59_3"
+		spouse="Hero.lord_1_59_2"
+		faction="Faction.clan_empire_west_10" />
+	<Hero
+		id="lord_1_59_4"
+		father="Hero.lord_1_59"
+		mother="Hero.lord_1_59_1"
+		faction="Faction.clan_empire_west_10" />
+	<!-- Clan 11 - Caladionath -->
+	<Hero
+		id="lord_1_60_2"
+		father="Hero.lord_1_60"
+		mother="Hero.lord_1_60_1"
+		faction="Faction.clan_empire_west_11" />
+	<Hero
+		id="lord_1_60_3"
+		spouse="Hero.lord_1_60_2"
+		faction="Faction.clan_empire_west_11" />
+	<!-- Clan 12 - Hirilionath -->
+	<Hero
+		id="lord_EW_1_1"
+		spouse="Hero.lord_EW_1"
+		faction="Faction.clan_empire_west_13" />
+	<Hero
+		id="lord_EW_1_2"
+		father="Hero.lord_EW_1"
+		mother="Hero.lord_EW_1_1"
+		faction="Faction.clan_empire_west_13" />
+	<Hero
+		id="lord_EW_1_3"
+		spouse="Hero.lord_EW_1_2"
+		faction="Faction.clan_empire_west_13" />
+	<Hero
+		id="lord_EW_1_4"
+		father="Hero.lord_EW_1_2"
+		mother="Hero.lord_EW_1_3"
+		faction="Faction.clan_empire_west_13" />
+	<!-- Clan 13 - Baranionath -->
+	<Hero
+		id="lord_EW_6_1"
+		spouse="Hero.lord_EW_6"
+		faction="Faction.clan_empire_west_14" />
+	<Hero
+		id="lord_EW_6_2"
+		father="Hero.lord_EW_6"
+		mother="Hero.lord_EW_6_1"
+		faction="Faction.clan_empire_west_14" />
+	<Hero
+		id="lord_EW_6_3"
+		father="Hero.lord_EW_6"
+		mother="Hero.lord_EW_6_1"
+		faction="Faction.clan_empire_west_14" />
+	<!-- Clan 14 - Garvirionath -->
+	<Hero
+		id="lord_EW_14_1"
+		spouse="Hero.lord_EW_14"
+		faction="Faction.clan_empire_west_12" />
+	<Hero
+		id="lord_EW_14_2"
+		father="Hero.lord_EW_14"
+		mother="Hero.lord_EW_14_1"
+		faction="Faction.clan_empire_west_12" />
+	<Hero
+		id="lord_EW_14_3"
+		spouse="Hero.lord_EW_14_2"
+		faction="Faction.clan_empire_west_12" />
 
 	<!-- ========== ROHAN (VLANDIA) - Additional Heroes ========== -->
 	<Hero

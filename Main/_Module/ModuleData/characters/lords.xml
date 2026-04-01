@@ -24629,6 +24629,398 @@
         </Equipments>
     </NPCCharacter>
 
+    <!-- Clan 10 - Hýarthulionath family -->
+    <NPCCharacter id="lord_1_59_4" name="{=aom_lord_1_59_4_name}Galdirion" age="14" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="14.00" weight="0.2" build="0.5" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="21" />
+            <skill id="TwoHanded" value="15" />
+            <skill id="Polearm" value="7" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="19" />
+            <skill id="Riding" value="5" />
+            <skill id="Athletics" value="27" />
+            <skill id="Crafting" value="20" />
+            <skill id="Scouting" value="26" />
+            <skill id="Tactics" value="18" />
+            <skill id="Roguery" value="18" />
+            <skill id="Charm" value="24" />
+            <skill id="Leadership" value="18" />
+            <skill id="Trade" value="20" />
+            <skill id="Steward" value="27" />
+            <skill id="Medicine" value="22" />
+            <skill id="Engineering" value="17" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Clan 11 - Caladionath family -->
+    <NPCCharacter id="lord_1_60_3" name="{=aom_lord_1_60_3_name}Orlendir" age="22" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="22.00" weight="0.4" build="0.5" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="99" />
+            <skill id="TwoHanded" value="61" />
+            <skill id="Polearm" value="88" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="11" />
+            <skill id="Throwing" value="35" />
+            <skill id="Riding" value="121" />
+            <skill id="Athletics" value="71" />
+            <skill id="Crafting" value="22" />
+            <skill id="Scouting" value="66" />
+            <skill id="Tactics" value="80" />
+            <skill id="Roguery" value="17" />
+            <skill id="Charm" value="72" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="32" />
+            <skill id="Steward" value="49" />
+            <skill id="Medicine" value="35" />
+            <skill id="Engineering" value="17" />
+        </skills>
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="4" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Clan 2 - Imrazôrionath: daughter of Imrahil -->
+    <NPCCharacter id="lord_1_9_6" name="{=aom_lord_1_9_6_name}Lothíriel" age="33" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="57" />
+            <skill id="TwoHanded" value="13" />
+            <skill id="Polearm" value="28" />
+            <skill id="Bow" value="38" />
+            <skill id="Crossbow" value="23" />
+            <skill id="Throwing" value="18" />
+            <skill id="Riding" value="66" />
+            <skill id="Athletics" value="51" />
+            <skill id="Crafting" value="89" />
+            <skill id="Scouting" value="70" />
+            <skill id="Tactics" value="80" />
+            <skill id="Roguery" value="37" />
+            <skill id="Charm" value="113" />
+            <skill id="Leadership" value="99" />
+            <skill id="Trade" value="104" />
+            <skill id="Steward" value="117" />
+            <skill id="Medicine" value="94" />
+            <skill id="Engineering" value="75" />
+        </skills>
+        <Traits>
+            <Trait id="Manager" value="4" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Clan 4 - Barahirionath: daughter of Malrior -->
+    <NPCCharacter id="lord_1_40_2" name="{=aom_lord_1_40_2_name}Eleniel" age="14" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="14.00" weight="0.3" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="21" />
+            <skill id="TwoHanded" value="15" />
+            <skill id="Polearm" value="7" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="19" />
+            <skill id="Riding" value="5" />
+            <skill id="Athletics" value="27" />
+            <skill id="Crafting" value="20" />
+            <skill id="Scouting" value="26" />
+            <skill id="Tactics" value="18" />
+            <skill id="Roguery" value="18" />
+            <skill id="Charm" value="24" />
+            <skill id="Leadership" value="18" />
+            <skill id="Trade" value="20" />
+            <skill id="Steward" value="27" />
+            <skill id="Medicine" value="22" />
+            <skill id="Engineering" value="17" />
+        </skills>
+        <Traits>
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Clan 8 - Olindurionath family -->
+    <NPCCharacter id="lord_WE8_1" name="{=aom_lord_WE8_1_name}Dorwen" age="33" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="57" />
+            <skill id="TwoHanded" value="13" />
+            <skill id="Polearm" value="28" />
+            <skill id="Bow" value="38" />
+            <skill id="Crossbow" value="23" />
+            <skill id="Throwing" value="18" />
+            <skill id="Riding" value="66" />
+            <skill id="Athletics" value="51" />
+            <skill id="Crafting" value="89" />
+            <skill id="Scouting" value="70" />
+            <skill id="Tactics" value="80" />
+            <skill id="Roguery" value="37" />
+            <skill id="Charm" value="113" />
+            <skill id="Leadership" value="99" />
+            <skill id="Trade" value="104" />
+            <skill id="Steward" value="117" />
+            <skill id="Medicine" value="94" />
+            <skill id="Engineering" value="75" />
+        </skills>
+        <Traits>
+            <Trait id="Manager" value="4" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_WE8_2" name="{=aom_lord_WE8_2_name}Eleneth" age="30" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="30.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="57" />
+            <skill id="TwoHanded" value="13" />
+            <skill id="Polearm" value="28" />
+            <skill id="Bow" value="38" />
+            <skill id="Crossbow" value="23" />
+            <skill id="Throwing" value="18" />
+            <skill id="Riding" value="66" />
+            <skill id="Athletics" value="51" />
+            <skill id="Crafting" value="89" />
+            <skill id="Scouting" value="70" />
+            <skill id="Tactics" value="80" />
+            <skill id="Roguery" value="37" />
+            <skill id="Charm" value="113" />
+            <skill id="Leadership" value="99" />
+            <skill id="Trade" value="104" />
+            <skill id="Steward" value="117" />
+            <skill id="Medicine" value="94" />
+            <skill id="Engineering" value="75" />
+        </skills>
+        <Traits>
+            <Trait id="Manager" value="4" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_WE8_3" name="{=aom_lord_WE8_3_name}Hirilwen" age="48" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+        <face>
+            <BodyProperties version="4" age="48.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="70" />
+            <skill id="Bow" value="45" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="125" />
+            <skill id="Crafting" value="190" />
+            <skill id="Scouting" value="160" />
+            <skill id="Tactics" value="170" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="220" />
+            <skill id="Leadership" value="205" />
+            <skill id="Trade" value="190" />
+            <skill id="Steward" value="250" />
+            <skill id="Medicine" value="200" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_WE8_4" name="{=aom_lord_WE8_4_name}Talborin" age="50" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+        <face>
+            <BodyProperties version="4" age="50.00" weight="0.4" build="0.5" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="200" />
+            <skill id="TwoHanded" value="220" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="55" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="175" />
+            <skill id="Riding" value="90" />
+            <skill id="Athletics" value="245" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="140" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="105" />
+            <skill id="Trade" value="30" />
+            <skill id="Steward" value="60" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="40" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Clan 9 - Danuhirionath: son of Duinhir -->
+    <NPCCharacter id="lord_WE9_3" name="{=aom_lord_WE9_3_name}Derufin" age="33" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+        <face>
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="99" />
+            <skill id="TwoHanded" value="61" />
+            <skill id="Polearm" value="88" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="11" />
+            <skill id="Throwing" value="35" />
+            <skill id="Riding" value="121" />
+            <skill id="Athletics" value="71" />
+            <skill id="Crafting" value="22" />
+            <skill id="Scouting" value="66" />
+            <skill id="Tactics" value="80" />
+            <skill id="Roguery" value="17" />
+            <skill id="Charm" value="72" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="32" />
+            <skill id="Steward" value="49" />
+            <skill id="Medicine" value="35" />
+            <skill id="Engineering" value="17" />
+        </skills>
+        <Traits>
+            <Trait id="BalancedFightingSkills" value="3" />
+            <Trait id="Commander" value="4" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Honor" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
     <!-- ========== ROHAN (VLANDIA) - New Clan Leaders ========== -->
     <NPCCharacter id="lord_4_29" name="{=aom_lord_4_29_name}Eadfrith Ælfwiging" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
         <face>

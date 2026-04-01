@@ -33,7 +33,7 @@
 		name="{=aom_clan_empire_west_12_name}House of Garvirionath"
 		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
-		owner="Hero.lord_1_34"
+		owner="Hero.lord_EW_14"
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
