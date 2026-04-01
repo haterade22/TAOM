@@ -1,4 +1,6 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TaleWorlds.CampaignSystem;
 using TAOM.Features.Encyclopedia.Models;
 
 namespace TAOM.Tests.Features.Encyclopedia;
@@ -12,7 +14,7 @@ public class TaomInformationRestrictionModelTests
         var model = new TaomInformationRestrictionModel(() => true);
 
         // Passes null hero — safe because we short-circuit before base is invoked
-        Assert.IsTrue(model.DoesPlayerKnowDetailsOf(null!));
+        Assert.IsTrue(model.DoesPlayerKnowDetailsOf((Hero)null!));
     }
 
     [TestMethod]
@@ -23,6 +25,6 @@ public class TaomInformationRestrictionModelTests
         // Base requires campaign state — NullReferenceException proves base was called
         // (our code did not short-circuit)
         Assert.ThrowsException<NullReferenceException>(
-            () => model.DoesPlayerKnowDetailsOf(null!));
+            () => model.DoesPlayerKnowDetailsOf((Hero)null!));
     }
 }
