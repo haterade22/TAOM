@@ -548,15 +548,15 @@
 	<xsl:template match="Hero[@id='lord_1_7']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_7}Denethor II, Steward of Gondor, rules from the White Tower of Minas Tirith. Once a man of great wisdom, grief over his wife's death and the loss of his son Boromir have darkened his mind. He resists the return of the king, believing only he can save Gondor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_7}Denethor II, Steward of Gondor, rules from the White Tower of Minas Tirith. Once a man of great wisdom, he has grown proud and unyielding. He resists the return of the king, believing only he can save Gondor from the shadow of Mordor.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_75']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_75}Boromir was the eldest son of Denethor, Captain-General of Gondor. He fell defending the halflings at Amon Hen, redeeming himself after briefly succumbing to the Ring's temptation.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_75}Boromir, eldest son of Denethor, is Captain-General of Gondor. A great warrior of renown, he seeks any weapon to defend his people against the darkness.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_7</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -565,7 +565,7 @@
 	<xsl:template match="Hero[@id='lord_1_8']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_8}Vendelia was the beloved wife of Denethor, whose death broke his heart and began his descent into despair.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_8}Húrioneth serves the House of Húrinionath, a steadfast keeper of the lore of Gondor's stewards.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -573,17 +573,19 @@
 	<xsl:template match="Hero[@id='lord_1_34']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'faction']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_34}Faramir is the younger son of Denethor, Captain of Ithilien. Though his father favors his brother, Faramir is beloved by his men for his wisdom and mercy.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_34}Faramir, younger son of Denethor, is Captain of the Rangers of Ithilien. Though overlooked by his father, he is beloved by his men for his wisdom, mercy, and quiet strength.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_7</xsl:attribute>
-			<xsl:attribute name="faction">Faction.clan_empire_west_12</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_empire_west_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_24']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_24}Tadeos serves as a lieutenant in the armies of Gondor.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_24}Amrothos, youngest son of Imrahil, is still young but already shows his family's martial spirit and noble character.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_9</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_1_9_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -600,40 +602,56 @@
 	<xsl:template match="Hero[@id='lord_1_9']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_9}Imrahil, Prince of Dol Amroth, is the greatest knight of Gondor. His line carries Elvish blood, and he is said to be the fairest lord in all the realm. His swan knights are legendary.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_9}Imrahil II, Prince of Dol Amroth, is the greatest knight of Gondor. His line carries Elvish blood, and he is said to be the fairest lord in all the realm. His Swan Knights are legendary throughout Middle-earth.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_9_5</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Hero[@id='lord_1_9_5']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'faction']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_9_5}Lothwen, Princess of Dol Amroth, has stood beside Imrahil through decades of service to Gondor. She is known for her grace and quiet wisdom.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_9</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_empire_west_2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_10']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_10}Melkea is the Princess of Dol Amroth, known for her grace and beauty.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_10}Aranel, wife of Elphir, is a noble lady of Gondor known for her dignity and keen mind.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_25</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_35']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_35}Amenon is a knight of Dol Amroth, trained in the arts of the swan knights.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_35}Erchirion, second son of Imrahil, serves as a knight of Dol Amroth. Bold in battle and loyal to his house, he rides with his father's Swan Knights.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_9</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_1_9_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_25']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_25}Eronyx is heir to Prince Imrahil, already showing his father's martial prowess.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_25}Elphir, eldest son of Imrahil, is heir to Dol Amroth. He commands the Swan Knights with martial precision and carries his father's noble bearing.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_9</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_1_9_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_23']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_23}Jastion serves in the retinue of Prince Imrahil.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_23}Caladwen, wife of Erchirion, joined the house of Imrazôrionath through their union. She is a woman of quiet courage.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_35</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -641,32 +659,37 @@
 	<!-- Empire West 3 -->
 	<xsl:template match="Hero[@id='lord_1_11']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_11}Ciryandur commands the northern defenses of Gondor, a grizzled veteran of many orc raids.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_11}Ciryandur commands the northern defenses of Gondor, a seasoned veteran of many orc raids. He is methodical and relentless in defending the borders of the realm.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_12</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_111']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_111}Casinon serves alongside his father in the northern marches.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_111}Elarwen, wife of Hirgon, is a woman of the borders known for her resilience and practical wisdom.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_26</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_12']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_12}Lysica is a noble lady of Gondor who has learned to ride and fight alongside her husband.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_12}Findariel, wife of Ciryandur, manages the affairs of their household with care and intelligence.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_11</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_36']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_36}Phaea is a warrior woman of the border lords, trained to fight since childhood.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_36}Ivriniel, daughter of Ciryandur, has grown up in the northern marches of Gondor and shows both her father's resilience and her mother's wisdom.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_11</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_1_12</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -674,7 +697,7 @@
 	<xsl:template match="Hero[@id='lord_1_26']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_26}Meritor serves as a captain of rangers in the borderlands.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_26}Hirgon, brother of Ciryandur, serves as an errand-rider of Gondor. Swift and reliable, he carries messages between the lords of the realm.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -683,7 +706,7 @@
 	<xsl:template match="Hero[@id='lord_1_40']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_40}Dervorin is Lord of Ringlo Vale, leading his men to the defense of Minas Tirith.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_40}Borhador, Lord of Barahirionath, is one of the eldest lords of Gondor. His long years have given him wisdom, though his body weakens with age. His counsel is respected by all.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_40_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -692,7 +715,7 @@
 	<xsl:template match="Hero[@id='lord_1_40_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_40_1}Catella is the Lady of Ringlo Vale, managing the lands while her husband rides to war.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_40_1}Lindariel, wife of Borhador, has been the strength of their house through many long years. She is a gracious and enduring presence in Gondor's nobility.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_40</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -700,17 +723,19 @@
 
 	<xsl:template match="Hero[@id='lord_1_46']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_46}Milos serves as a knight in the service of Ringlo Vale.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_46}Malrior, son of Borhador, carries on his father's duties as the old lord ages. He is steady and dependable, respected by his clan.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_40</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_1_40_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_46_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_46_1}Seorgys is a young knight eager to prove himself in battle.</xsl:attribute>
-			<xsl:attribute name="father">Hero.lord_1_46</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_46_1}Thorwen, wife of Malrior, is a capable woman who manages her household with quiet determination.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_46</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -719,7 +744,7 @@
 	<xsl:template match="Hero[@id='lord_1_45']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_45}Forlong the Fat, Lord of Lossarnach, leads the largest contingent from the fiefs. Despite his girth, he is a fierce warrior.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_45}Forlong the Fat, Lord of Lossarnach, leads the largest contingent from the fiefs to the defense of Minas Tirith. Despite his girth, he is a fierce and experienced warrior.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_45_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -728,7 +753,7 @@
 	<xsl:template match="Hero[@id='lord_1_45_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_45_1}Vanyalos is the Lady of Lossarnach, known for her generosity to the common folk.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_45_1}Berethiel, wife of Forlong, is the Lady of Lossarnach. She oversees the fertile valleys while her husband rides to war.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_45</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -737,7 +762,7 @@
 	<xsl:template match="Hero[@id='lord_1_45_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_45_2}Brandir is the heir of Lossarnach, trained in both sword and diplomacy.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_45_2}Caldamir, young son of Forlong, has recently come of age and rides to war eager to prove himself.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_45</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_45_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -746,10 +771,8 @@
 
 	<xsl:template match="Hero[@id='lord_1_45_3']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_45_3}Borlong carries on his father's martial traditions.</xsl:attribute>
-			<xsl:attribute name="father">Hero.lord_1_45</xsl:attribute>
-			<xsl:attribute name="mother">Hero.lord_1_45_1</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_45_3}Rúmil, elder brother of Forlong, is a steady presence in the House of Ausirionath. His long years of service have earned him the respect of his kin.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -766,8 +789,8 @@
 	<xsl:template match="Hero[@id='lord_1_57_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_57_1}Sophalia is a noblewoman of Lossarnach.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_1_57</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_57_1}Calathiel, wife of Caldamir, is a young noblewoman of Lossarnach.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_45_2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -786,8 +809,17 @@
 	<xsl:template match="Hero[@id='lord_1_52']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_52}Hirluin the Fair, Lord of Pinnath Gelin, leads his green-clad warriors from the hills.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_52}Hirluin the Fair, Lord of Pinnath Gelin, leads his green-clad warriors from the hills of Gondor. He is known for his valor and loyalty to the Steward.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_52_4</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Hero[@id='lord_1_52_4']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_52_4}Nauriel, wife of Hirluin, is the Lady of Pinnath Gelin, known for her steadfastness and care for the people of the green hills.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_52</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -795,7 +827,7 @@
 	<xsl:template match="Hero[@id='lord_1_52_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_52_1}Arador is a knight of Pinnath Gelin, sworn to Lord Hirluin.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_52_1}Anariel, daughter of Hirluin, has grown up among the warriors of Pinnath Gelin and can hold her own in battle.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_52</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_52_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -805,7 +837,7 @@
 	<xsl:template match="Hero[@id='lord_1_52_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_52_2}Arvedui serves in the retinue of the Lord of Pinnath Gelin.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_52_2}Barandor, son of Hirluin, trains to one day lead the warriors of Pinnath Gelin. He rides with his father's green-clad company.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_52</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_52_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -814,16 +846,18 @@
 
 	<xsl:template match="Hero[@id='lord_1_62']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_62}Sejaron commands a company of hill soldiers.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_62}Oromar, husband of Anariel, joined the house of Halboronionath through their union. He serves the Lord of Pinnath Gelin faithfully.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_52_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_62_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_62_1}Arytha is a noblewoman of the Green Hills.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_62_1}Isfin, wife of Barandor, is a woman of the Green Hills known for her grace.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_52_2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -831,8 +865,9 @@
 	<!-- Empire West 7 -->
 	<xsl:template match="Hero[@id='lord_1_53']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_53}Angbor the Fearless, Lord of Lamedon, rallied his men when the Corsairs attacked.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_53}Angbor the Fearless, Lord of Lamedon, rallied his men even when the Dead marched through his lands. He is bold and quick to act.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_73_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -840,15 +875,16 @@
 	<xsl:template match="Hero[@id='lord_1_73']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_73}Ovagos is a captain in the service of Lord Angbor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_73}Narmir, younger brother of Angbor, serves in the defense of Lamedon. He shares his brother's courage if not yet his experience.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_1_73_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_73_1}Popilia is a noblewoman of Lamedon.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_73_1}Belwen, wife of Angbor, stands steadfastly by her husband in the defense of Lamedon.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_53</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -857,16 +893,27 @@
 	<xsl:template match="Hero[@id='lord_1_71']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_71}Golasgil, Lord of Anfalas, commands the long coastline against Corsair raids.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_71}Golasgil, Lord of Anfalas, commands the long coastline against Corsair raids. He is a weathered sea-lord who has defended Gondor's shores for decades.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_71_1</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Hero[@id='lord_1_71_1']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_71_1}Laswen, wife of Golasgil, oversees the coastal settlements of Anfalas while her husband guards the sea lanes.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_71</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_WE8_c']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_WE8_c}Child of Lord Golasgil, learning to defend the coast.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_WE8_c}Pelendur, son of Golasgil, is being trained to one day defend the coast of Anfalas as his father has done.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_71</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_1_71_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -874,7 +921,7 @@
 	<xsl:template match="Hero[@id='lord_WE8_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_WE8_u}A seasoned captain who advises the Lord of Anfalas.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_WE8_u}Barandil, brother of Golasgil, serves as a captain of the coastal watch of Anfalas.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -882,24 +929,28 @@
 	<!-- Empire West 9 -->
 	<xsl:template match="Hero[@id='lord_WE9_l']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_WE9_l}A lord of the western fiefs, steadfast in his loyalty to Gondor.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_WE9_l}Duinhir, Lord of Morthond, leads his archers from the Black Root Vale to the defense of Gondor. He is a stern and capable commander.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_WE9_u2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_WE9_u']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_WE9_u}A nobleman known for political cunning and wise counsel.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_WE9_u}Duilin, elder son of Duinhir, leads his own company of archers and fights alongside his father in defense of Gondor.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_WE9_l</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_WE9_u2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_WE9_u2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_WE9_u2}Spouse of a western lord, managing the household.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_WE9_u2}Rosfin, wife of Duinhir, manages the affairs of the Black Root Vale in her husband's absence.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_WE9_l</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>

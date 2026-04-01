@@ -345,7 +345,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_7</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_7_name}Denethor II, Steward of Gondor</xsl:attribute>
-            <xsl:attribute name="age">43</xsl:attribute>
+            <xsl:attribute name="age">72</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -398,8 +398,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_8']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_8</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_8_name}Vendelia</xsl:attribute>
-            <xsl:attribute name="age">47</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_8_name}Húrioneth</xsl:attribute>
+            <xsl:attribute name="age">45</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -431,7 +431,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_9</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_9_name}Imrahil, Prince of Dol Amroth</xsl:attribute>
-            <xsl:attribute name="age">57</xsl:attribute>
+            <xsl:attribute name="age">72</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -484,8 +484,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_10']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_10</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_10_name}Melkea</xsl:attribute>
-            <xsl:attribute name="age">45</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_10_name}Aranel</xsl:attribute>
+            <xsl:attribute name="age">43</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -517,8 +517,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_25']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_25</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_25_name}Eronyx</xsl:attribute>
-            <xsl:attribute name="age">22</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_25_name}Elphir</xsl:attribute>
+            <xsl:attribute name="age">43</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -552,8 +552,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_35']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_35</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_35_name}Amenon</xsl:attribute>
-            <xsl:attribute name="age">38</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_35_name}Erchirion</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -586,7 +586,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_11</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_11_name}Ciryandur</xsl:attribute>
-            <xsl:attribute name="age">51</xsl:attribute>
+            <xsl:attribute name="age">42</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -624,11 +624,12 @@
     <xsl:template match="NPCCharacter[@id='lord_1_111']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_111</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_111_name}Casinon</xsl:attribute>
-            <xsl:attribute name="age">19</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_111_name}Elarwen</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
+            <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -656,8 +657,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_12']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_12</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_12_name}Lysica</xsl:attribute>
-            <xsl:attribute name="age">40</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_12_name}Findariel</xsl:attribute>
+            <xsl:attribute name="age">43</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -1119,11 +1120,12 @@
     <xsl:template match="NPCCharacter[@id='lord_1_23']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_23</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_23_name}Jastion</xsl:attribute>
-            <xsl:attribute name="age">26</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_23_name}Caladwen</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
+            <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -1152,8 +1154,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_24']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_24</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_24_name}Tadeos</xsl:attribute>
-            <xsl:attribute name="age">21</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_24_name}Amrothos</xsl:attribute>
+            <xsl:attribute name="age">14</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -1186,7 +1188,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_75</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_75_name}Boromir</xsl:attribute>
-            <xsl:attribute name="age">20</xsl:attribute>
+            <xsl:attribute name="age">41</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -1224,8 +1226,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_26']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_26</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_26_name}Meritor</xsl:attribute>
-            <xsl:attribute name="age">20</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_26_name}Hirgon</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -1599,7 +1601,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_34</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_34_name}Faramir</xsl:attribute>
-            <xsl:attribute name="age">24</xsl:attribute>
+            <xsl:attribute name="age">36</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -1637,8 +1639,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_36']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_36</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_36_name}Phaea</xsl:attribute>
-            <xsl:attribute name="age">20</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_36_name}Ivriniel</xsl:attribute>
+            <xsl:attribute name="age">23</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2507,8 +2509,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_40']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_40</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_40_name}Dervorin</xsl:attribute>
-            <xsl:attribute name="age">35</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_40_name}Borhador</xsl:attribute>
+            <xsl:attribute name="age">82</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2546,8 +2548,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_46']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_46</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_46_name}Milos</xsl:attribute>
-            <xsl:attribute name="age">38</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_46_name}Malrior</xsl:attribute>
+            <xsl:attribute name="age">53</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2581,7 +2583,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_45_name}Forlong, Lord of Lossarnach</xsl:attribute>
-            <xsl:attribute name="age">38</xsl:attribute>
+            <xsl:attribute name="age">63</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2669,7 +2671,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_52</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_52_name}Hirluin, Lord of Pinnath Gelin</xsl:attribute>
-            <xsl:attribute name="age">36</xsl:attribute>
+            <xsl:attribute name="age">66</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2720,7 +2722,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_53</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_53_name}Angbor, Lord of Lamedon</xsl:attribute>
-            <xsl:attribute name="age">25</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2774,7 +2776,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_71</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_71_name}Golasgil, Lord of Anfalas</xsl:attribute>
-            <xsl:attribute name="age">32</xsl:attribute>
+            <xsl:attribute name="age">53</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2827,8 +2829,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_73']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_73</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_73_name}Ovagos</xsl:attribute>
-            <xsl:attribute name="age">32</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_73_name}Narmir</xsl:attribute>
+            <xsl:attribute name="age">28</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -2861,8 +2863,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_62']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_62</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_62_name}Sejaron</xsl:attribute>
-            <xsl:attribute name="age">35</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_62_name}Oromar</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4556,7 +4558,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_45_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_45_1_name}Vanyalos</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_45_1_name}Berethiel</xsl:attribute>
             <xsl:attribute name="age">38</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -4588,8 +4590,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_45_2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45_2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_45_2_name}Brandir</xsl:attribute>
-            <xsl:attribute name="age">19</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_45_2_name}Caldamir</xsl:attribute>
+            <xsl:attribute name="age">27</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4622,8 +4624,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_45_3']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45_3</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_45_3_name}Borlong</xsl:attribute>
-            <xsl:attribute name="age">18</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_45_3_name}Rúmil</xsl:attribute>
+            <xsl:attribute name="age">53</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4656,8 +4658,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_57_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_57_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_57_1_name}Sophalia</xsl:attribute>
-            <xsl:attribute name="age">24</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_57_1_name}Calathiel</xsl:attribute>
+            <xsl:attribute name="age">25</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4715,12 +4717,12 @@
     <xsl:template match="NPCCharacter[@id='lord_1_52_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_52_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_52_1_name}Arador</xsl:attribute>
-            <xsl:attribute name="age">35</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_52_1_name}Anariel</xsl:attribute>
+            <xsl:attribute name="age">43</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">false</xsl:attribute>
+            <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -4755,8 +4757,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_52_2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_52_2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_52_2_name}Arvedui</xsl:attribute>
-            <xsl:attribute name="age">16</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_52_2_name}Barandor</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4795,7 +4797,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_73_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_73_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_73_1_name}Popilia</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_73_1_name}Belwen</xsl:attribute>
             <xsl:attribute name="age">31</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -14726,8 +14728,8 @@
     <xsl:template match="NPCCharacter[@id='lord_WE8_c']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE8_c</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE8_c_name}Icratia</xsl:attribute>
-            <xsl:attribute name="age">29</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE8_c_name}Pelendur</xsl:attribute>
+            <xsl:attribute name="age">23</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14760,8 +14762,8 @@
     <xsl:template match="NPCCharacter[@id='lord_WE8_u']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE8_u</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE8_u_name}Varmyros</xsl:attribute>
-            <xsl:attribute name="age">35</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE8_u_name}Barandil</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14794,8 +14796,8 @@
     <xsl:template match="NPCCharacter[@id='lord_WE9_l']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_l</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir, Lord of Morthond</xsl:attribute>
-            <xsl:attribute name="age">24</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir</xsl:attribute>
+            <xsl:attribute name="age">63</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14846,8 +14848,8 @@
     <xsl:template match="NPCCharacter[@id='lord_WE9_u']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_u</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE9_u_name}Euresa</xsl:attribute>
-            <xsl:attribute name="age">26</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE9_u_name}Duilin</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14898,12 +14900,12 @@
     <xsl:template match="NPCCharacter[@id='lord_WE9_u2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_u2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE9_u2_name}Torvasis</xsl:attribute>
-            <xsl:attribute name="age">37</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE9_u2_name}Rosfin</xsl:attribute>
+            <xsl:attribute name="age">53</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">false</xsl:attribute>
+            <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>

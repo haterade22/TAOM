@@ -76,7 +76,7 @@ public class CustomBattleServiceTests
         // Arrange
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
         {
-            new() { Id = "lord_gondor_1", IsHero = true, CultureId = "gondor" },
+            new() { Id = "lord_1_1", IsHero = true, CultureId = "gondor" },
             new() { Id = "gondor_infantry", IsHero = false, CultureId = "gondor" }
         });
 
@@ -85,11 +85,11 @@ public class CustomBattleServiceTests
 
         // Assert
         Assert.AreEqual(1, result.Count);
-        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_gondor_1");
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_1_1");
     }
 
     [TestMethod]
-    public void GetCommanderIds_OnlyIncludesLordPrefix()
+    public void GetCommanderIds_OnlyIncludesKingdomLords()
     {
         // Arrange — various non-lord heroes that should be excluded
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
@@ -108,6 +108,25 @@ public class CustomBattleServiceTests
         var result = _sut.GetCommanderIds();
 
         // Assert — only the lord_ prefixed hero passes
+        Assert.AreEqual(1, result.Count);
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_1_1");
+    }
+
+    [TestMethod]
+    public void GetCommanderIds_ExcludesSubLords()
+    {
+        // Arrange — 3-segment IDs are sub-lords (clan members), not kingdom lords
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_1_1",   IsHero = true, CultureId = "gondor" },  // kingdom lord
+            new() { Id = "lord_1_1_1", IsHero = true, CultureId = "gondor" },  // sub-lord
+            new() { Id = "lord_1_1_2", IsHero = true, CultureId = "gondor" },  // sub-lord
+        });
+
+        // Act
+        var result = _sut.GetCommanderIds();
+
+        // Assert
         Assert.AreEqual(1, result.Count);
         CollectionAssert.Contains((System.Collections.ICollection)result, "lord_1_1");
     }
@@ -134,8 +153,8 @@ public class CustomBattleServiceTests
         // Arrange
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
         {
-            new() { Id = "lord_gondor_1", IsHero = true, CultureId = "gondor" },
-            new() { Id = "lord_mordor_1", IsHero = true, CultureId = "mordor" }
+            new() { Id = "lord_1_1", IsHero = true, CultureId = "gondor" },
+            new() { Id = "lord_2_1", IsHero = true, CultureId = "mordor" }
         });
 
         // Act
@@ -143,7 +162,7 @@ public class CustomBattleServiceTests
 
         // Assert
         Assert.AreEqual(1, result.Count);
-        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_gondor_1");
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_1_1");
     }
 
     [TestMethod]
@@ -162,7 +181,7 @@ public class CustomBattleServiceTests
         // Arrange
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
         {
-            new() { Id = "lord_gondor_1", IsHero = true, CultureId = "Gondor" }
+            new() { Id = "lord_1_1", IsHero = true, CultureId = "Gondor" }
         });
 
         // Act

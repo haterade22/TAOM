@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 
@@ -122,11 +123,14 @@ public class CustomBattleService : ICustomBattleService
         return _characterCache;
     }
 
+    private static readonly Regex _kingdomLordId =
+        new Regex(@"^lord_\d+_\d+$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
     private static bool IsValidCommander(CharacterInfo c)
     {
         if (!c.IsHero || string.IsNullOrEmpty(c.Id))
             return false;
 
-        return c.Id.StartsWith("lord_", StringComparison.OrdinalIgnoreCase);
+        return _kingdomLordId.IsMatch(c.Id);
     }
 }
