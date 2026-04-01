@@ -5,7 +5,7 @@
 ### Feat: TaomTournamentModel — Increased Tournament Frequency (#52)
 
 - Vanilla bucketed each town into 1 of 3 week-slots per season, suppressing tournaments to ~1 per 1–3 seasons
-- `GetTournamentStartChance`: removed week-gate, raised multiplier from 0.1 to 0.2 — tournaments can now spawn any week when lords are present
+- `GetTournamentStartChance`: removed week-gate, replaced linear formula with diminishing-returns step curve tuned for LOTR campaigns where lords are rarely at peace (1 lord=45%, 2=75%, 3=90%, 4+=100%)
 - `GetTournamentEndChance`: extended grace period from 10 → 20 days, slowed ramp from 0.05 → 0.033/day — tournaments stay active longer
 - All tuning values extracted as `internal const` for testability and future MCM exposure
 
