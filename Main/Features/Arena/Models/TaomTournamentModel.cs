@@ -1,7 +1,9 @@
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -12,6 +14,24 @@ public class TaomTournamentModel : DefaultTournamentModel
     internal const float RegularMinTier = 2f;
     internal const float RegularMaxTier = 4f;
     internal const float EliteMinTier = 4f;
+    internal const float TournamentStartChanceMultiplier = 0.2f;
+    internal const float TournamentEndChanceGraceDays = 20f;
+    internal const float TournamentEndChanceRamp = 0.033f;
+
+    public override float GetTournamentStartChance(Town town)
+    {
+        if (town.Settlement.SiegeEvent != null) return 0f;
+        int lordParties = town.Settlement.Parties.Count(x => x.IsLordParty);
+        int suitableHeroes = town.Settlement.HeroesWithoutParty.Count(x =>
+            x.IsActive && x.Age >= Campaign.Current.Models.AgeModel.HeroComesOfAge);
+        return TournamentStartChanceMultiplier * (lordParties + suitableHeroes);
+    }
+
+    public override float GetTournamentEndChance(TournamentGame tournament)
+    {
+        float elapsed = tournament.CreationTime.ElapsedDaysUntilNow;
+        return MathF.Max(0f, (elapsed - TournamentEndChanceGraceDays) * TournamentEndChanceRamp);
+    }
 
     public override MBList<ItemObject> GetRegularRewardItems(
         Town town, int regularRewardMinValue, int regularRewardMaxValue)

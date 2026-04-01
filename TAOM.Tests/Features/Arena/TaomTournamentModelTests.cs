@@ -63,4 +63,25 @@ public class TaomTournamentModelTests
     {
         Assert.IsTrue(TaomTournamentModel.EliteMinTier > TaomTournamentModel.RegularMinTier);
     }
+
+    [TestMethod]
+    public void TournamentStartChanceMultiplier_IsAboveVanilla()
+    {
+        // Vanilla uses 0.1f — we use a higher value to increase frequency
+        Assert.IsTrue(TaomTournamentModel.TournamentStartChanceMultiplier > 0.1f);
+    }
+
+    [TestMethod]
+    public void TournamentEndChanceGraceDays_IsAboveVanilla()
+    {
+        // Vanilla grace period is 10 days — we extend to keep tournaments alive longer
+        Assert.IsTrue(TaomTournamentModel.TournamentEndChanceGraceDays > 10f);
+    }
+
+    [TestMethod]
+    public void TournamentEndChanceRamp_IsSlowerThanVanilla()
+    {
+        // Vanilla ramp is 0.05f per day — we use a slower ramp
+        Assert.IsTrue(TaomTournamentModel.TournamentEndChanceRamp < 0.05f);
+    }
 }

@@ -2,6 +2,13 @@
 
 ## 2026-03-31
 
+### Feat: TaomTournamentModel — Increased Tournament Frequency (#52)
+
+- Vanilla bucketed each town into 1 of 3 week-slots per season, suppressing tournaments to ~1 per 1–3 seasons
+- `GetTournamentStartChance`: removed week-gate, raised multiplier from 0.1 to 0.2 — tournaments can now spawn any week when lords are present
+- `GetTournamentEndChance`: extended grace period from 10 → 20 days, slowed ramp from 0.05 → 0.033/day — tournaments stay active longer
+- All tuning values extracted as `internal const` for testability and future MCM exposure
+
 ### Feat: TaomTournamentModel — Culture-Specific Tournament Prize Items (#52)
 
 - `DefaultTournamentModel.GetEliteRewardItems` returned a hardcoded list of 31 vanilla items — none exist in TAOM; elite prizes were silently empty
