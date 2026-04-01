@@ -14,17 +14,26 @@ public class TaomTournamentModel : DefaultTournamentModel
     internal const float RegularMinTier = 2f;
     internal const float RegularMaxTier = 4f;
     internal const float EliteMinTier = 4f;
-    internal const float TournamentStartChanceMultiplier = 0.2f;
+    internal const float TournamentStartChance1Lord = 0.45f;
+    internal const float TournamentStartChance2Lords = 0.75f;
+    internal const float TournamentStartChance3Lords = 0.90f;
     internal const float TournamentEndChanceGraceDays = 20f;
     internal const float TournamentEndChanceRamp = 0.033f;
 
     public override float GetTournamentStartChance(Town town)
     {
         if (town.Settlement.SiegeEvent != null) return 0f;
-        int lordParties = town.Settlement.Parties.Count(x => x.IsLordParty);
-        int suitableHeroes = town.Settlement.HeroesWithoutParty.Count(x =>
-            x.IsActive && x.Age >= Campaign.Current.Models.AgeModel.HeroComesOfAge);
-        return TournamentStartChanceMultiplier * (lordParties + suitableHeroes);
+        int count = town.Settlement.Parties.Count(x => x.IsLordParty)
+                  + town.Settlement.HeroesWithoutParty.Count(x =>
+                        x.IsActive && x.Age >= Campaign.Current.Models.AgeModel.HeroComesOfAge);
+        return count switch
+        {
+            0 => 0f,
+            1 => TournamentStartChance1Lord,
+            2 => TournamentStartChance2Lords,
+            3 => TournamentStartChance3Lords,
+            _ => 1.00f
+        };
     }
 
     public override float GetTournamentEndChance(TournamentGame tournament)

@@ -65,10 +65,22 @@ public class TaomTournamentModelTests
     }
 
     [TestMethod]
-    public void TournamentStartChanceMultiplier_IsAboveVanilla()
+    public void TournamentStartChance_DiminishingReturns_EachStepLowerThanPrevious()
     {
-        // Vanilla uses 0.1f — we use a higher value to increase frequency
-        Assert.IsTrue(TaomTournamentModel.TournamentStartChanceMultiplier > 0.1f);
+        float gain1 = TaomTournamentModel.TournamentStartChance1Lord;
+        float gain2 = TaomTournamentModel.TournamentStartChance2Lords - TaomTournamentModel.TournamentStartChance1Lord;
+        float gain3 = TaomTournamentModel.TournamentStartChance3Lords - TaomTournamentModel.TournamentStartChance2Lords;
+
+        Assert.IsTrue(gain2 < gain1);
+        Assert.IsTrue(gain3 < gain2);
+    }
+
+    [TestMethod]
+    public void TournamentStartChance_AllValues_AreInValidRange()
+    {
+        Assert.IsTrue(TaomTournamentModel.TournamentStartChance1Lord is > 0f and <= 1f);
+        Assert.IsTrue(TaomTournamentModel.TournamentStartChance2Lords is > 0f and <= 1f);
+        Assert.IsTrue(TaomTournamentModel.TournamentStartChance3Lords is > 0f and <= 1f);
     }
 
     [TestMethod]
