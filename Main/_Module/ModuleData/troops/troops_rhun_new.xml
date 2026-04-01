@@ -248,7 +248,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -586,7 +586,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -623,7 +623,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_d" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -861,7 +861,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_d" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -938,7 +938,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -976,7 +976,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -1165,7 +1165,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -1204,7 +1204,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Item1" id="Item.eastern_javelin_3_t4" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -1242,7 +1242,7 @@
                 <equipment slot="Item0" id="Item.crossbow_c" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.bolt_c" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -1275,7 +1275,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -1312,7 +1312,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Item1" id="Item.eastern_javelin_3_t4" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -1348,7 +1348,7 @@
                 <equipment slot="Item0" id="Item.crossbow_d" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.bolt_d" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2094,7 +2094,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_d" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2131,7 +2131,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -2170,7 +2170,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.mirkwood_spear_a01" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Head" id="Item.easterling_helmet_v4" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2208,7 +2208,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2243,7 +2243,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2278,7 +2278,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -2315,7 +2315,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.mirkwood_spear_a01" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2351,7 +2351,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2426,7 +2426,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -2466,7 +2466,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2503,7 +2503,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2541,7 +2541,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -2581,7 +2581,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2618,7 +2618,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2655,7 +2655,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -2694,7 +2694,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.mirkwood_spear_a01" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2732,7 +2732,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2767,7 +2767,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2802,7 +2802,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.easterling_head" />
@@ -2839,7 +2839,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.mirkwood_spear_a01" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2875,7 +2875,7 @@
                 <equipment slot="Item0" id="Item.steppe_war_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Item3" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2921,7 +2921,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_polearm_a" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_a" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2958,7 +2958,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_polearm_a" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_a" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -2994,7 +2994,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_polearm_b" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_b" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -3031,7 +3031,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_lance_a" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_a" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -3069,7 +3069,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_polearm_c" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_b" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -3107,7 +3107,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_lance_b" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_b" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -3144,7 +3144,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_polearm_c" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_c" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -3179,7 +3179,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_lance_c" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_c" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
                 <equipment slot="Gloves" id="Item.easterling_glove" />
@@ -3218,7 +3218,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_lance_c" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_c" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Item3" id="Item.throwing_spear" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />
@@ -3256,7 +3256,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.rhun_lance_c" />
                 <equipment slot="Item1" id="Item.rhun_round_shield_c" />
-                <equipment slot="Item2" id="Item.rhun_1h_sword_b" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Item3" id="Item.throwing_spear" />
                 <equipment slot="Head" id="Item.easterling_head" />
                 <equipment slot="Body" id="Item.easterling_torso" />

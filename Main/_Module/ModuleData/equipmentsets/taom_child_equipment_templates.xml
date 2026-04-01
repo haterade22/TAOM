@@ -8,14 +8,14 @@
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
-			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="true" IsNoncombatantTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_noble_female" culture="Culture.gondor">
 		<EquipmentSet civilian="true">
-			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
@@ -30,14 +30,14 @@
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
-			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsNobleTemplate="false" IsCivilianTemplate="true" IsNoncombatantTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_townsman_female" culture="Culture.gondor">
 		<EquipmentSet civilian="true">
-			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
@@ -48,7 +48,7 @@
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_villager_male" culture="Culture.gondor">
 		<EquipmentSet civilian="true">
-			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
@@ -59,7 +59,7 @@
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_villager_female" culture="Culture.gondor">
 		<EquipmentSet civilian="true">
-			<Equipment slot="Body" id="Item.cts_gondor_armor3" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">

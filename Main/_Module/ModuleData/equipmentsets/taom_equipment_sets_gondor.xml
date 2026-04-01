@@ -116,8 +116,6 @@
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
 			<Equipment slot="Body" id="Item.boromir_armor" />
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
-			<Equipment slot="Leg" id="Item.boromir_boots" />
-			<Equipment slot="Cape" id="Item.boromir_pauldrons" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -126,7 +124,6 @@
 	<EquipmentRoster id="boromir_civ_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Body" id="Item.boromir_jerkin" />
-			<Equipment slot="Leg" id="Item.boromir_boots" />
 			<Equipment slot="Cape" id="Item.boromir_cloak" />
 		</EquipmentSet>
 	</EquipmentRoster>

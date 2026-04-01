@@ -1144,7 +1144,7 @@
 			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
 			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
@@ -1152,7 +1152,7 @@
 			<Equipment slot="Leg" id="Item.easterling_boots" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment slot="Item2" id="Item.composite_bow" />
 			<Equipment slot="Head" id="Item.easterling_head" />
 			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
@@ -1179,7 +1179,7 @@
 			<Equipment slot="Leg" id="Item.easterling_boots" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
 			<Equipment slot="Body" id="Item.easterling_torso" />
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
@@ -1231,12 +1231,12 @@
 			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
-			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 			<Equipment slot="Leg" id="Item.khuzait_leather_boots" />
 		</EquipmentSet>
 		<EquipmentSet civilian="true">
-			<Equipment slot="Item0" id="Item.rhun_1h_sword_b" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment slot="Body" id="Item.khuzait_civil_coat_a" />
 			<Equipment slot="Leg" id="Item.khuzait_civil_boots" />
 		</EquipmentSet>

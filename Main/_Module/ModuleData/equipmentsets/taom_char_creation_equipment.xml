@@ -9769,7 +9769,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9793,7 +9793,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9811,7 +9811,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9835,7 +9835,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9853,7 +9853,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9877,7 +9877,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9895,7 +9895,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9919,7 +9919,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9940,7 +9940,7 @@
 				id="Item.easterling_shield" />
 			<Equipment
 				slot="Item1"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -9964,7 +9964,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9985,7 +9985,7 @@
 				id="Item.easterling_shield" />
 			<Equipment
 				slot="Item1"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10009,7 +10009,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10027,7 +10027,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10051,7 +10051,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10069,7 +10069,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10093,7 +10093,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10111,7 +10111,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.easterling_spear" />
@@ -10132,7 +10132,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10150,7 +10150,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.easterling_spear" />
@@ -10171,7 +10171,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10189,7 +10189,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10213,7 +10213,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10231,7 +10231,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10255,7 +10255,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10297,7 +10297,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10339,7 +10339,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10378,7 +10378,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10417,7 +10417,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10448,7 +10448,7 @@
 			civilian="true">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
