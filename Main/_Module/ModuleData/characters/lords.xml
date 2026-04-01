@@ -24206,7 +24206,7 @@
             <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_60" name="{=aom_lord_1_60_name}Tirnelion" age="40" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_1_60" name="{=aom_lord_1_60_name}Tirnelion" age="40" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" weight="0.1" build="0.98" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
             <hair_tags>
@@ -24251,8 +24251,8 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="dunland_bat_template_medium_b" />
-            <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
+            <EquipmentSet id="tirnelion_bat_equipment" />
+            <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
 
