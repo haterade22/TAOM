@@ -5664,7 +5664,7 @@
             <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE8_c" name="{=aom_lord_WE8_c_name}Icratia" age="29" voice="softspoken" is_female="true" default_group="HorseArcher" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_WE8_c" name="{=aom_lord_WE8_c_name}Icratia" age="29" voice="softspoken" is_female="true" default_group="HorseArcher" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <!--face_key
 			value="0005592b0000400da55b8899724689763869956b7b86578578658a96886733790000000007b8789800001105000030a30000001f000000000000000000000000"
@@ -5710,7 +5710,7 @@
             <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE8_u" name="{=aom_lord_WE8_u_name}Varmyros" age="35" voice="earnest" is_female="false" default_group="HorseArcher" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_mounted_archery_skills">
+    <NPCCharacter id="lord_WE8_u" name="{=aom_lord_WE8_u_name}Varmyros" age="35" voice="earnest" is_female="false" default_group="HorseArcher" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_mounted_archery_skills">
         <face>
             <!-- Placeholder face-->
             <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
@@ -6458,7 +6458,7 @@
             <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_u" name="{=aom_lord_WE9_u_name}Euresa" age="26" voice="earnest" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_WE9_u" name="{=aom_lord_WE9_u_name}Euresa" age="26" voice="earnest" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003" />
             <hair_tags>
@@ -6501,7 +6501,7 @@
             <EquipmentSet id="dunland_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_u2" name="{=aom_lord_WE9_u2_name}Torvasis" age="37" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+    <NPCCharacter id="lord_WE9_u2" name="{=aom_lord_WE9_u2_name}Torvasis" age="37" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
         <face>
             <!-- Placeholder face key -->
             <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003" />

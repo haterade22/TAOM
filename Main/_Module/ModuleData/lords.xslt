@@ -522,7 +522,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -541,8 +541,8 @@
                 <Trait id="Generosity" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -557,7 +557,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <face>
@@ -574,8 +574,8 @@
                 <Trait id="Calculating" value="-1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1124,7 +1124,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1141,8 +1141,8 @@
                 <Trait id="Calculating" value="-1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1157,7 +1157,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1174,8 +1174,8 @@
                 <Trait id="Calculating" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1229,7 +1229,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1247,8 +1247,8 @@
                 <Trait id="Calculating" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1643,7 +1643,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1659,8 +1659,8 @@
                 <Trait id="Honor" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2016,7 +2016,7 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2033,8 +2033,8 @@
                 <Trait id="Honor" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2512,7 +2512,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2535,8 +2535,8 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2551,7 +2551,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2569,8 +2569,8 @@
                 <Trait id="Calculating" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2585,7 +2585,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2623,8 +2623,8 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2639,7 +2639,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2657,8 +2657,8 @@
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_e" />
+                <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2673,7 +2673,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2708,8 +2708,8 @@
                 <Trait id="Valor" value="2"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2724,7 +2724,7 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2762,8 +2762,8 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2778,7 +2778,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2816,8 +2816,8 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2832,7 +2832,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2850,8 +2850,8 @@
                 <Trait id="Calculating" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2866,7 +2866,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2885,8 +2885,8 @@
                 <Trait id="Honor" value="-1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_e" />
+                <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4492,7 +4492,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4507,8 +4507,8 @@
                 <Trait id="Calculating" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4524,7 +4524,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4544,8 +4544,8 @@
                 <Trait id="Egalitarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_e" />
+                <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4561,7 +4561,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4576,8 +4576,8 @@
                 <Trait id="Generosity" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4593,7 +4593,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4610,8 +4610,8 @@
                 <Trait id="Generosity" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4627,7 +4627,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4644,8 +4644,8 @@
                 <Trait id="Generosity" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4661,7 +4661,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4675,8 +4675,8 @@
                 <Trait id="Mercy" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4692,7 +4692,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4703,8 +4703,8 @@
             <Traits>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_e" />
+                <EquipmentSet id="gondor_civ_template_default_e" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4720,7 +4720,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4743,8 +4743,8 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_a" />
+                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4760,7 +4760,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4783,8 +4783,8 @@
                 <Trait id="Authoritarian" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_b" />
+                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4800,7 +4800,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4813,8 +4813,8 @@
                 <Trait id="Generosity" value="1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_c" />
+                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4830,7 +4830,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -4845,8 +4845,8 @@
                 <Trait id="Honor" value="-1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="gondor_bat_template_medium_d" />
+                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
