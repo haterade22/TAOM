@@ -133,6 +133,7 @@
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wainrider_veteran_archer" />
+            <upgrade_target id="NPCCharacter.balcoth_horse_archer" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -147,6 +148,84 @@
                 <equipment slot="Leg" id="Item.easterling02_v1_boots" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="balcoth_horse_archer"
+        default_group="HorseArcher"
+        level="26"
+        name="{=aom_balcoth_horse_archer_name}[Rhûn] Balcoth Horse Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="110" />
+            <skill id="Riding" value="178" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="70" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.balcoth_farshot_horse_archer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
+                <equipment slot="Head" id="Item.easterling_head" />
+                <equipment slot="Body" id="Item.easterling_torso" />
+                <equipment slot="Cape" id="Item.easterling_cape" />
+                <equipment slot="Gloves" id="Item.easterling_glove" />
+                <equipment slot="Leg" id="Item.easterling_boots" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="balcoth_farshot_horse_archer"
+        default_group="HorseArcher"
+        level="31"
+        name="{=aom_balcoth_farshot_horse_archer_name}[Rhûn] Balcoth Farshot Horse Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="218" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="195" />
+            <skill id="Crossbow" value="25" />
+            <skill id="Throwing" value="55" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
+                <equipment slot="Head" id="Item.easterling_head" />
+                <equipment slot="Body" id="Item.easterling_torso" />
+                <equipment slot="Cape" id="Item.easterling_cape" />
+                <equipment slot="Gloves" id="Item.easterling_glove" />
+                <equipment slot="Leg" id="Item.easterling_boots" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -355,7 +434,6 @@
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_cavalry" />
-            <upgrade_target id="NPCCharacter.far_rhun_horse_master" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
