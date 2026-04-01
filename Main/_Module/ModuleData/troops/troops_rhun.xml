@@ -4295,4 +4295,123 @@
         </Equipments>
     </NPCCharacter>
 
+    <NPCCharacter
+        id="far_rhun_horse_master"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_far_rhun_horse_master_name}[Rhûn] Far-Rhun Horse Master"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="138" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.studded_adarga" />
+                <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
+                <equipment slot="Item3" id="Item.aserai_sword_5_t4" />
+                <equipment slot="Head" id="Item.easterlingwarriors01_helmet" />
+                <equipment slot="Body" id="Item.easterlingwarriors01_torso" />
+                <equipment slot="Cape" id="Item.easterlingwarriors01_cape" />
+                <equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
+                <equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="wainrider_swift_chariot"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_wainrider_swift_chariot_name}[Rhûn] Wainrider Swift-Chariot"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="175" />
+            <skill id="Riding" value="338" />
+            <skill id="OneHanded" value="310" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="355" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="25" />
+            <skill id="Throwing" value="65" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.wainrider_warlord_chariot" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.rhun_lance_c" />
+                <equipment slot="Item1" id="Item.rhun_round_shield_c" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
+                <equipment slot="Item3" id="Item.throwing_spear" />
+                <equipment slot="Head" id="Item.easterling_head" />
+                <equipment slot="Body" id="Item.easterling_torso" />
+                <equipment slot="Gloves" id="Item.easterling_glove" />
+                <equipment slot="Leg" id="Item.easterling_boots" />
+                <equipment slot="Cape" id="Item.rivendell_pauldron_tier1_robe" />
+                <equipment slot="Horse" id="Item.khuzait_charger" />
+                <equipment slot="HorseHarness" id="Item.half_scale_barding" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="wainrider_warlord_chariot"
+        default_group="Cavalry"
+        level="46"
+        name="{=aom_wainrider_warlord_chariot_name}[Rhûn] Wainrider Warlord Chariot"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="190" />
+            <skill id="Riding" value="378" />
+            <skill id="OneHanded" value="340" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="385" />
+            <skill id="Bow" value="45" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="65" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.rhun_lance_c" />
+                <equipment slot="Item1" id="Item.rhun_round_shield_c" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+                <equipment slot="Item3" id="Item.throwing_spear" />
+                <equipment slot="Head" id="Item.easterling_head" />
+                <equipment slot="Body" id="Item.easterling_torso" />
+                <equipment slot="Gloves" id="Item.easterling_glove" />
+                <equipment slot="Leg" id="Item.easterling_boots" />
+                <equipment slot="Cape" id="Item.rivendell_pauldron_tier1_robe" />
+                <equipment slot="Horse" id="Item.khuzait_charger" />
+                <equipment slot="HorseHarness" id="Item.full_scale_barding" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

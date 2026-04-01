@@ -134,6 +134,8 @@
 	<EquipmentRoster id="faramir_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_faramir_sword" />
+			<Equipment slot="Item2" id="Item.wm_ithilien_bow_c" />
+			<Equipment slot="Item3" id="Item.wm_elven_arrow_v4_a" />
 			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
 			<Equipment slot="Body" id="Item.faramir_armor" />
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />

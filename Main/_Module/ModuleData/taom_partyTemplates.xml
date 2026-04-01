@@ -1160,6 +1160,8 @@
 			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.easterling_archer_new" />
 			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.easterling_cavalry_new" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.easterling_veteran_swordsman_new" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.black_sun_trainee" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.darkhun_recruit" />
 		</stacks>
 	</MBPartyTemplate>
 

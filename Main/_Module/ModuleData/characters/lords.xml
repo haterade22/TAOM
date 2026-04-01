@@ -20593,7 +20593,7 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="rivendell_bat_template_medium_b" />
+            <EquipmentSet id="glorfindel_bat_equipment" />
             <EquipmentSet id="rivendell_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
@@ -24157,7 +24157,7 @@
     </NPCCharacter>
 
     <!-- ========== GONDOR (EMPIRE WEST) - New Clan Leaders ========== -->
-    <NPCCharacter id="lord_1_59" name="{=aom_lord_1_59_name}Borhador the Old" age="35" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_1_59" name="{=aom_lord_1_59_name}Borhador the Old" age="35" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="50.08" weight="0.0486" build="0.3611" key="00025C04001403030B82005700C07504944685853CB98070BB79530E7ECBFEA200B516030B3BB5731F6410605020004000000000000017670000000043647003" />
             <hair_tags>
@@ -24202,8 +24202,8 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="dunland_bat_template_medium_a" />
-            <EquipmentSet id="dunland_civ_template_default_b" civilian="true" />
+            <EquipmentSet id="gondor_bat_template_medium_a" />
+            <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_1_60" name="{=aom_lord_1_60_name}Tirnelion" age="40" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">

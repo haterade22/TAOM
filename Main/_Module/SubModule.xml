@@ -388,7 +388,7 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
-			<XmlName id="NPCCharacters" path="troops/troops_rhun"/>
+			<XmlName id="NPCCharacters" path="troops/troops_rhun_new"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
 				<GameType value ="CampaignStoryMode"/>

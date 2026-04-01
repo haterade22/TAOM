@@ -3430,4 +3430,867 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
         </Equipments>
     </NPCCharacter>
+
+    <!-- ============================================================ -->
+    <!-- BLACK SUN REGIONAL UNITS (T2-T7) -->
+    <!-- ============================================================ -->
+    <NPCCharacter
+        id="black_sun_trainee"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_black_sun_trainee_name}[Rhûn] Black Sun Trainee"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="53" />
+            <skill id="Riding" value="28" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="55" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_footman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_footman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_black_sun_footman_name}[Rhûn] Black Sun Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="85" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_raider" />
+            <upgrade_target id="NPCCharacter.black_sun_scout" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_lam_light_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_raider"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_black_sun_raider_name}[Rhûn] Black Sun Raider"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="125" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="145" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_reaver" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_med_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_lam_light_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_scout"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_black_sun_scout_name}[Rhûn] Black Sun Scout"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="120" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_archer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_med_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_c" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_light_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_reaver"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_black_sun_reaver_name}[Rhûn] Black Sun Reaver"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="38" />
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="170" />
+            <skill id="Polearm" value="185" />
+            <skill id="Bow" value="10" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="65" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_executioner" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_med_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_lam_med_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_med_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_archer"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_black_sun_archer_name}[Rhûn] Black Sun Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="110" />
+            <skill id="Riding" value="38" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="85" />
+            <skill id="Polearm" value="105" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="25" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_longbowman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_med_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_d" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_executioner"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_black_sun_executioner_name}[Rhûn] Black Sun Executioner"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="125" />
+            <skill id="Riding" value="43" />
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="250" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="75" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_scourge" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_2h_axe_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_lam_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_longbowman"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_black_sun_longbowman_name}[Rhûn] Black Sun Longbowman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="43" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="195" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="55" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_marksman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_med_c" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_scourge"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_black_sun_scourge_name}[Rhûn] Black Sun Scourge"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="145" />
+            <skill id="Riding" value="48" />
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="250" />
+            <skill id="Polearm" value="290" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="85" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_2h_axe_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_elite_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_elite_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_cape_scale_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_marksman"
+        default_group="Ranged"
+        level="36"
+        name="{=aom_black_sun_marksman_name}[Rhûn] Black Sun Marksman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="48" />
+            <skill id="OneHanded" value="195" />
+            <skill id="TwoHanded" value="120" />
+            <skill id="Polearm" value="135" />
+            <skill id="Bow" value="235" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="65" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.black_sun_chosen_marksman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_heavy_c" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_cape_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_b" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="black_sun_chosen_marksman"
+        default_group="Ranged"
+        level="41"
+        name="{=aom_black_sun_chosen_marksman_name}[Rhûn] Black Sun Chosen Marksman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="155" />
+            <skill id="Riding" value="53" />
+            <skill id="OneHanded" value="220" />
+            <skill id="TwoHanded" value="140" />
+            <skill id="Polearm" value="155" />
+            <skill id="Bow" value="270" />
+            <skill id="Crossbow" value="45" />
+            <skill id="Throwing" value="75" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_c" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_heavy_d" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_cape_heavy_b" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_c" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ============================================================ -->
+    <!-- DARKHÛN MERCENARIES (T2-T8) -->
+    <!-- ============================================================ -->
+    <NPCCharacter
+        id="darkhun_recruit"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_darkhun_recruit_name}[Rhûn] Darkhûn Recruit"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="53" />
+            <skill id="Riding" value="28" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="55" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_footman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_footman"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_darkhun_footman_name}[Rhûn] Darkhûn Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="85" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_infantry" />
+            <upgrade_target id="NPCCharacter.darkhun_horseman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_axe_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_infantry"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_darkhun_infantry_name}[Rhûn] Darkhûn Infantry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="125" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="145" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_veteran_infantry" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_med_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_med_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_hplate_light_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_hplate_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_horseman"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_darkhun_horseman_name}[Rhûn] Darkhûn Horseman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="138" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_cavalry" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_med_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_med_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_veteran_infantry"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_darkhun_veteran_infantry_name}[Rhûn] Darkhûn Veteran Infantry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="38" />
+            <skill id="OneHanded" value="175" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="185" />
+            <skill id="Bow" value="10" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="65" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_guard" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_med_b" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_med_b" />
+                <equipment slot="Body" id="Item.sk_dg_khml_hplate_med_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_hplate_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_cavalry"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_darkhun_cavalry_name}[Rhûn] Darkhûn Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="178" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="210" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_veteran_cavalry" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_med_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_med_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_lam_light_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_guard"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_darkhun_guard_name}[Rhûn] Darkhûn Guard"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="125" />
+            <skill id="Riding" value="43" />
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="250" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="75" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_ironbound" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_tower_med_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_heavy_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_hplate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_hplate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_med_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_veteran_cavalry"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_darkhun_veteran_cavalry_name}[Rhûn] Darkhûn Veteran Cavalry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="228" />
+            <skill id="OneHanded" value="220" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="265" />
+            <skill id="Bow" value="25" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_knight" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_med_b" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_lam_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_med_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_ironbound"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_darkhun_ironbound_name}[Rhûn] Darkhûn Ironbound"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="145" />
+            <skill id="Riding" value="48" />
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="250" />
+            <skill id="Polearm" value="290" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="85" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_axe_a" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_tower_heavy_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_elite_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_hplate_elite_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_cape_hplate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_knight"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_darkhun_knight_name}[Rhûn] Darkhûn Knight"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="155" />
+            <skill id="Riding" value="288" />
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="315" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="55" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.darkhun_cultist_knight" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_heavy_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_b" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_elite_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_lam_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="darkhun_cultist_knight"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_darkhun_cultist_knight_name}[Rhûn] Darkhûn Cultist Knight"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="175" />
+            <skill id="Riding" value="338" />
+            <skill id="OneHanded" value="310" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="355" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="25" />
+            <skill id="Throwing" value="65" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_heavy_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_elite_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_cape_scale_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="kharaghul_horse_master"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_kharaghul_horse_master_name}[Rhûn] Kharaghûl Horse Master"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_khuzait" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="178" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="210" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.kharaghul_nokor" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.aserai_sword_5_t4" />
+                <equipment slot="Item2" id="Item.easterling_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_c" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>
