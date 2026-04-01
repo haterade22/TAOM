@@ -25,16 +25,28 @@ public class TaomAgeModel : DefaultAgeModel
         base.GetAgeLimitForLocation(character, out minimumAge, out maximumAge, additionalTags);
 
         var race = character.Race;
-        var raceMax = _raceAgeService.GetMaxAge(race);
-        if (maximumAge > raceMax)
-        {
-            maximumAge = raceMax;
-        }
+        ApplyRaceAgeLimits(
+            ref minimumAge,
+            ref maximumAge,
+            _raceAgeService.GetComesOfAge(race),
+            _raceAgeService.GetMaxAge(race),
+            additionalTags);
+    }
 
-        var raceComesOfAge = _raceAgeService.GetComesOfAge(race);
+    internal static void ApplyRaceAgeLimits(
+        ref int minimumAge,
+        ref int maximumAge,
+        int raceComesOfAge,
+        int raceMax,
+        string additionalTags)
+    {
+        if (maximumAge > raceMax)
+            maximumAge = raceMax;
+
         if (minimumAge < raceComesOfAge && additionalTags != "Child")
-        {
             minimumAge = raceComesOfAge;
-        }
+
+        if (minimumAge > maximumAge)
+            minimumAge = maximumAge;
     }
 }
