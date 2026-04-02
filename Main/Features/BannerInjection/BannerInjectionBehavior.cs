@@ -13,7 +13,9 @@ public class BannerInjectionBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
-        CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(
+        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(
+            this, _ => _service.InjectBanners());
+        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(
             this, _ => _service.InjectBanners());
     }
 
