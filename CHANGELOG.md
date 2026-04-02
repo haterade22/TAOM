@@ -2,6 +2,13 @@
 
 ## 2026-04-02
 
+### Compat: BannerlordTogether Passive Compatibility Pass
+
+- Added `[HarmonyPriority(Priority.High)]` to `DeclareWarAction_ApplyInternal_Patch` and `MakePeaceAction_ApplyInternal_Patch` so TAOM's racial enmity and War of the Ring constraints validate before BT syncs the action to clients
+- Confirmed TAOM runs on Bannerlord 1.3.15 (BT's minimum requirement) with no observed failures
+- Added `docs/features/bannerlord-together-compat.md` — setup guide, known limitations, conflict analysis, testing checklist
+- Updated `docs/migration/TRACKING.md` with 1.3.15 compatibility status note
+
 ### Fix: ShaderPrecompilation — Stuck-Shader Auto-Abort + Countdown UI (#57)
 
 - A shader stuck at "1 remaining" could block indefinitely with no way to exit

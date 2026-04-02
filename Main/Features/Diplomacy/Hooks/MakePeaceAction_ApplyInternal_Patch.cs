@@ -27,6 +27,7 @@ public static class MakePeaceAction_ApplyInternal_Patch
         return AccessTools.Method(typeof(MakePeaceAction), "ApplyInternal");
     }
 
+    [HarmonyPriority(Priority.High)]
     [HarmonyPrefix]
     public static bool Prefix(IFaction faction1, IFaction faction2)
     {

@@ -2,7 +2,7 @@
 
 Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
 
-**Last Updated:** 2026-03-27
+**Last Updated:** 2026-04-02
 
 ---
 
@@ -308,6 +308,22 @@ Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/`
 - [ ] Troop upgrades work
 - [ ] Economy systems function
 - [ ] AI behaves correctly
+
+---
+
+## Bannerlord 1.3.15 (BannerlordTogether Requirement)
+
+BannerlordTogether v0.2.2 requires `DependentVersion="v1.3.15.110062"`. TAOM's SubModule.xml declares `v1.3.12` but the mod is **confirmed running on 1.3.15 in singleplayer** as of 2026-04-02 with no observed runtime failures.
+
+| Area | Status | Notes |
+|------|--------|-------|
+| Singleplayer runtime | CONFIRMED OK | User running 1.3.15 with no issues |
+| Harmony patch signatures | ASSUMED OK | All patches functional in game |
+| GameModel overrides | ASSUMED OK | No reported failures |
+| SubModule.xml version declaration | LOW PRIORITY | Can update to `v1.3.15` when ready |
+| API delta 1.3.12 → 1.3.15 | NOT AUDITED | No formal diff done; no issues reported |
+
+**Recommendation:** Update `SubModule.xml` `DependentVersion` from `v1.3.12` to `v1.3.15` in a future housekeeping PR to reflect actual runtime target.
 
 ---
 
