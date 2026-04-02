@@ -2,6 +2,20 @@
 
 ## 2026-04-02
 
+### Feat: All-Culture Lords Civilian Equipment Pass — Lords Always in Battle Gear (#59)
+
+- Systematically replaced all `*_civ_template_*` lord civilian templates across 13 cultures with exact mirrors of their `*_bat_template_medium_*` battle loadouts
+- Cultures updated: Umbar, Dunland, Rohan, Lothlorien, Dale, Harad, Isengard, Dol Guldur, Gundabad, Mordor, Rhun, Mirkwood, Rivendell
+- Lords now appear in full armor (weapons, helm, body, cape, gloves, greaves, horse/mount) in both battle and town/settlement scenes
+- Named hero civilian outfits preserved: Theoden, Thranduil, Legolas
+- Erebor and Gondor were completed in prior sessions (#56, #58)
+
+### Fix: BannerInjection — Fire Once Per Game Start/Load Instead of Every Session Launch
+
+- `BannerInjectionBehavior` was subscribed to `OnSessionLaunchedEvent`, which fires on every return from a battle or mission to the campaign map — causing the full kingdom/clan loop to run (and log) after every fight
+- Swapped to `OnNewGameCreatedEvent` + `OnGameLoadedEvent` so injection fires exactly once: on new game creation and on save load
+- No behavioral change for players — banners are campaign-level data that persist across sessions; re-injection after battles was unnecessary
+
 ### Feat: ShaderPrecompilation — Pre-compile Shaders at Main Menu (#57)
 
 - Mid-game stutter when encountering new armor/mesh combinations (first-time shader compilation) eliminated by pre-warming the cache before campaign start

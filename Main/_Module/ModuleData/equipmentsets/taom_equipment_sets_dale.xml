@@ -78,46 +78,72 @@
 
 	<EquipmentRoster id="dale_civ_template_default_a" culture="Culture.sturgia">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.light_tunic" />
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
 			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Leg" id="Item.leather_cavalier_boots" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_b" culture="Culture.sturgia">
 		<EquipmentSet>
-			<Equipment slot="Head" id="Item.nordic_fur_cap" />
-			<Equipment slot="Body" id="Item.decorated_short_tunic" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Leg" id="Item.leather_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_2_t5" />
+			<Equipment slot="Item1" id="Item.sturgia_lance_2_t5" />
+			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+			<Equipment slot="Body" id="Item.sturgian_lamellar_base" />
+			<Equipment slot="Gloves" id="Item.reinforced_leather_vambraces" />
+			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_c" culture="Culture.sturgia">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.nordic_padded_cloth" />
+			<Equipment slot="Item0" id="Item.sturgia_axe_5_t5" />
+			<Equipment slot="Item1" id="Item.ironrim_riders_kite_shield" />
+			<Equipment slot="Head" id="Item.sturgian_helmet_b_open" />
+			<Equipment slot="Body" id="Item.sturgian_chainmale_shortsleeve" />
 			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Leg" id="Item.leather_cavalier_boots" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_d" culture="Culture.sturgia">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.sturgia_light_tunic" />
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+			<Equipment slot="Item1" id="Item.sturgia_2haxe_2_t5" />
+			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+			<Equipment slot="Body" id="Item.sturgian_lamellar_base" />
 			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Leg" id="Item.leather_cavalier_boots" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Gloves" id="Item.reinforced_leather_vambraces" />
+			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_e" culture="Culture.sturgia">
 		<EquipmentSet>
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.decorated_short_tunic" />
-			<Equipment slot="Leg" id="Item.leather_cavalier_boots" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_4_t5" />
+			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+			<Equipment slot="Item2" id="Item.noble_bow" />
+			<Equipment slot="Item3" id="Item.default_arrows" />
+			<Equipment slot="Head" id="Item.sturgian_helmet_b_open" />
+			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

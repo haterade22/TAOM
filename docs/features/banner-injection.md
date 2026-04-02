@@ -21,11 +21,12 @@ Two distinct problems must be solved together:
 - `BannerExclusionService` maintains a `HashSet<string>` of player-modified entity IDs. It is serialised into save data via `IDataStore.SyncData` under the key `_taom_playerModifiedBanners`.
 - `GauntletBannerEditorScreen_OnDone_Patch` (Harmony Postfix on `GauntletBannerEditorScreen.OnDone`) detects when the player saves a banner edit and records `Clan.PlayerClan.StringId` into `BannerExclusionService`.
 - `Banner_TryGetBannerDataFromCode_Patch` (Harmony Postfix on `Banner.TryGetBannerDataFromCode`) intercepts the parsed layer list. If the raw banner code contains more layers than the 32 returned by the engine, it re-parses all layers using `BannerLayerExpander` and replaces the list.
-- `BannerInjectionBehavior` (`CampaignBehaviorBase`) calls `InjectBanners()` on `CampaignEvents.OnSessionLaunchedEvent` and delegates `SyncData` to the service.
+- `BannerInjectionBehavior` (`CampaignBehaviorBase`) calls `InjectBanners()` on `CampaignEvents.OnNewGameCreatedEvent` and `CampaignEvents.OnGameLoadedEvent` (fires exactly once per game start or save load), and delegates `SyncData` to the service.
 
 ### Component Diagram
 ```
-CampaignEvents.OnSessionLaunchedEvent
+CampaignEvents.OnNewGameCreatedEvent  ─┐
+CampaignEvents.OnGameLoadedEvent      ─┘
   `-- BannerInjectionBehavior.RegisterEvents()
         `-- IBannerInjectionService.InjectBanners()
               |-- IBannerConfigProvider.GetKingdomBannerKeys()  [parses XML + XSLT]

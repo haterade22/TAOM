@@ -77,38 +77,71 @@
 
 	<EquipmentRoster id="harad_civ_template_a" culture="Culture.aserai">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.aserai_civil_c" />
-			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim_head" />
+			<Equipment slot="Body" id="Item.haradrim_torso" />
+			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="harad_civ_template_b" culture="Culture.aserai">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.aserai_civil_d" />
-			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02_head" />
+			<Equipment slot="Body" id="Item.haradrim02_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="harad_civ_template_c" culture="Culture.aserai">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.aserai_civil_e" />
-			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02a_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="harad_civ_template_d" culture="Culture.aserai">
 		<EquipmentSet>
-			<Equipment slot="Head" id="Item.aserai_civil_d_hscarf" />
-			<Equipment slot="Body" id="Item.aserai_civil_f" />
-			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+			<Equipment slot="Item1" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item2" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim02c_head" />
+			<Equipment slot="Body" id="Item.haradrim02c_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="harad_civ_template_e" culture="Culture.aserai">
 		<EquipmentSet>
-			<Equipment slot="Head" id="Item.aserai_civil_hscarf_b" />
-			<Equipment slot="Body" id="Item.aserai_civil_c" />
-			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.haradrim_head" />
+			<Equipment slot="Body" id="Item.haradrim02a_toso" />
+			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
