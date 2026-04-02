@@ -338,7 +338,7 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
@@ -616,7 +616,7 @@
         id="far_rhun_cataphract"
         default_group="Cavalry"
         level="26"
-        name="{=aom_far_rhun_cataphract_name}[Rhûn] Far-Rhun Cataphract"
+        name="{=aom_far_rhun_cataphract_name}[Rhûn] Far-Rhun Kataphract"
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
@@ -640,7 +640,7 @@
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.khuzait_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
@@ -677,7 +677,7 @@
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
@@ -690,7 +690,7 @@
         id="far_rhun_iron_cataphract"
         default_group="Cavalry"
         level="31"
-        name="{=aom_far_rhun_iron_cataphract_name}[Rhûn] Far-Rhun Iron Cataphract"
+        name="{=aom_far_rhun_iron_cataphract_name}[Rhûn] Far-Rhun Iron Kataphract"
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
@@ -712,7 +712,7 @@
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_c" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_c" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
@@ -989,7 +989,7 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_polearm_1_t4" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
@@ -1026,7 +1026,7 @@
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.easterling_shield" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
@@ -1064,7 +1064,7 @@
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
-                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_c" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_b" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
@@ -2308,7 +2308,7 @@
         id="loke_rim_cataphract"
         default_group="Cavalry"
         level="31"
-        name="{=aom_loke_rim_cataphract_name}[Rhûn] Loke-Rim Cataphract"
+        name="{=aom_loke_rim_cataphract_name}[Rhûn] Loke-Rim Kataphract"
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
@@ -2535,7 +2535,7 @@
         id="loke_rim_gilded_cataphract"
         default_group="Cavalry"
         level="36"
-        name="{=aom_loke_rim_gilded_cataphract_name}[Rhûn] Loke-Rim Gilded Cataphract"
+        name="{=aom_loke_rim_gilded_cataphract_name}[Rhûn] Loke-Rim Gilded Kataphract"
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>

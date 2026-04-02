@@ -180,6 +180,16 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<EquipmentRoster id="eomer_civ_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+			<Equipment slot="Body" id="Item.theoden_torso" />
+			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+			<Equipment slot="Gloves" id="Item.theoden_glove" />
+			<Equipment slot="Leg" id="Item.theoden_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<!-- ==================== EOWYN ==================== -->
 
 	<EquipmentRoster id="eowyn_bat_equipment" culture="Culture.vlandia">
@@ -192,6 +202,16 @@
 			<Equipment slot="Cape" id="Item.theoden_shoulder" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="eowyn_civ_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.cts_rohan_helmet4a" />
+			<Equipment slot="Body" id="Item.theoden_torso" />
+			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+			<Equipment slot="Gloves" id="Item.theoden_glove" />
+			<Equipment slot="Leg" id="Item.theoden_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

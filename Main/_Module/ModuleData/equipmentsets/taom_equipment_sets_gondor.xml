@@ -207,6 +207,16 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<EquipmentRoster id="imrahil_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.imrahil_helmet" />
+			<Equipment slot="Body" id="Item.imrahil_body" />
+			<Equipment slot="Cape" id="Item.imrahil_shoulder" />
+			<Equipment slot="Gloves" id="Item.imrahil_gloves" />
+			<Equipment slot="Leg" id="Item.imrahil_boot" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<!-- ==================== FORLONG ==================== -->
 
 	<EquipmentRoster id="forlong_bat_equipment" culture="Culture.gondor">
@@ -214,6 +224,16 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
 			<Equipment slot="Item1" id="Item.gond_shield_four_mustard" />
 			<Equipment slot="Item2" id="Item.wm_gondor_sword_a05" />
+			<Equipment slot="Head" id="Item.forlong_helmet" />
+			<Equipment slot="Body" id="Item.forlong_body" />
+			<Equipment slot="Cape" id="Item.forlong_shoulder" />
+			<Equipment slot="Gloves" id="Item.forlong_gloves" />
+			<Equipment slot="Leg" id="Item.forlong_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="forlong_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
 			<Equipment slot="Head" id="Item.forlong_helmet" />
 			<Equipment slot="Body" id="Item.forlong_body" />
 			<Equipment slot="Cape" id="Item.forlong_shoulder" />
@@ -239,6 +259,16 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<EquipmentRoster id="hirluin_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.hirluin_helmet" />
+			<Equipment slot="Body" id="Item.hirluin_body" />
+			<Equipment slot="Cape" id="Item.hirluin_shoulder" />
+			<Equipment slot="Gloves" id="Item.hirluin_gloves" />
+			<Equipment slot="Leg" id="Item.hirluin_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<!-- ==================== ANGBOR ==================== -->
 
 	<EquipmentRoster id="angbor_bat_equipment" culture="Culture.gondor">
@@ -247,6 +277,16 @@
 			<Equipment slot="Item1" id="Item.wm_gondor_lamedon_2h_sword_a" />
 			<Equipment slot="Item2" id="Item.gond_shield_one_greyscale" />
 			<Equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
+			<Equipment slot="Head" id="Item.angbor_helmet" />
+			<Equipment slot="Body" id="Item.angbor_body" />
+			<Equipment slot="Cape" id="Item.angbor_shoulder" />
+			<Equipment slot="Gloves" id="Item.angbor_gloves" />
+			<Equipment slot="Leg" id="Item.angbor_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="angbor_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
 			<Equipment slot="Head" id="Item.angbor_helmet" />
 			<Equipment slot="Body" id="Item.angbor_body" />
 			<Equipment slot="Cape" id="Item.angbor_shoulder" />
@@ -270,12 +310,32 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<EquipmentRoster id="golasgil_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Head" id="Item.golasgil_helment" />
+			<Equipment slot="Body" id="Item.golasgil_body" />
+			<Equipment slot="Cape" id="Item.golasgil_shoulder" />
+			<Equipment slot="Gloves" id="Item.golasgil_gloves" />
+			<Equipment slot="Leg" id="Item.golasgil_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<!-- ==================== TIRNELION ==================== -->
 
 	<EquipmentRoster id="tirnelion_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_cair_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_cair_inf_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="tirnelion_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet>
 			<Equipment slot="Head" id="Item.sk_gd_cair_noble_helmet_heavy_a" />
 			<Equipment slot="Body" id="Item.sk_gd_cair_inf_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />

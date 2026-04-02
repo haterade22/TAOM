@@ -474,7 +474,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="imrahil_bat_equipment" />
-                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="imrahil_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2626,7 +2626,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="forlong_bat_equipment" />
-                <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="forlong_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2711,7 +2711,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="hirluin_bat_equipment" />
-                <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="hirluin_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2765,7 +2765,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="angbor_bat_equipment" />
-                <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="angbor_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2819,7 +2819,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="golasgil_bat_equipment" />
-                <EquipmentSet id="gondor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="golasgil_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
