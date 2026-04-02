@@ -1,0 +1,8 @@
+{
+  "WatchedFactionIds": ["gondor", "rohan", "erebor", "rivendell", "lothlorien", "mirkwood"],
+  "WatchedSettlementIds": [],
+  "RelationshipThreshold": -20,
+  "ResponseWindowDays": 3,
+  "RewardRelation": 5,
+  "RewardInfluence": 10
+}

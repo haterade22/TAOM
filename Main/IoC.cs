@@ -21,6 +21,7 @@ using TAOM.Features.Warg;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
+using TAOM.Features.Siege;
 
 namespace TAOM;
 
@@ -54,6 +55,7 @@ public static class IoC
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);
         ShaderPrecompilationIoC.RegisterShaderPrecompilationFeature(container);
+        SiegeDefenseIoC.RegisterSiegeDefenseFeature(container);
 
         _container = container;
     }

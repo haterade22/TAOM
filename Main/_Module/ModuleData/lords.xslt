@@ -774,7 +774,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="witchking_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="witchking_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -828,7 +828,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="nazgul_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -883,7 +883,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_v1_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="nazgul_v1_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -937,7 +937,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="sauron_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="sauron_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1358,7 +1358,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_v1_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
+                <EquipmentSet id="nazgul_v1_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1753,7 +1753,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="nazgul_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2996,7 +2996,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="khamul_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
+                <EquipmentSet id="khamul_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4991,7 +4991,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
+                <EquipmentSet id="nazgul_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5046,7 +5046,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_v1_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
+                <EquipmentSet id="nazgul_v1_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5101,7 +5101,7 @@
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_bat_equipment" />
-                <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
+                <EquipmentSet id="nazgul_civ_equipment" civilian="true" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>

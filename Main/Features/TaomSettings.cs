@@ -110,4 +110,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Enable Cultural Survival Bonuses", Order = 3,
         HintText = "Applies per-culture survival modifiers from battle_balance_config.json. Gondor +30%, Lothlorien +50%, Mordor -20%.")]
     public bool EnableCulturalSurvivalBonuses { get; set; } = true;
+
+    // --- Siege Defense ---
+
+    [SettingPropertyGroup("Siege Defense")]
+    [SettingPropertyBool("Enable Siege Defense Events", Order = 0,
+        HintText = "When enabled, you receive an event when a watched faction's settlement is besieged, with a timed window to help defend.")]
+    public bool EnableSiegeDefenseEvents { get; set; } = true;
+
+    [SettingPropertyGroup("Siege Defense")]
+    [SettingPropertyInteger("Response Window (Days)", 1, 14, Order = 1,
+        HintText = "Number of in-game days to travel to a besieged settlement before the event expires.")]
+    public int SiegeDefenseResponseDays { get; set; } = 3;
 }

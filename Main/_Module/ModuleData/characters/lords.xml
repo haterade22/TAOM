@@ -20967,7 +20967,7 @@
         </Traits>
         <Equipments>
             <EquipmentSet id="glorfindel_bat_equipment" />
-            <EquipmentSet id="rivendell_civ_template_default_b" civilian="true" />
+            <EquipmentSet id="glorfindel_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_R2_11" name="{=aom_lord_R2_11_name}Istilmo" age="12" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">

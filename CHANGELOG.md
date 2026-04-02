@@ -2,6 +2,13 @@
 
 ## 2026-04-02
 
+### Feat: Named Hero Civilian Equipment — Sauron, Witch-King, Nazgul, Khamul, Nazgul V1, Glorfindel (#61)
+
+- Added dedicated `*_civ_equipment` roster entries for all named Mordor and Rivendell heroes so they appear in their unique armor in civilian/settlement scenes
+- `sauron_civ_equipment`, `witchking_civ_equipment`, `nazgul_civ_equipment`, `khamul_civ_equipment`, `nazgul_v1_civ_equipment` added to `taom_equipment_sets_mordor.xml`
+- `glorfindel_civ_equipment` added to `taom_equipment_sets_rivendell.xml`
+- Updated `lords.xslt` (10 entries) and `lords.xml` (Glorfindel) to reference the new civ roster IDs instead of generic `mordor_civ_template_default_*`/`rivendell_civ_template_default_*`
+
 ### Feat: All-Culture Lords Civilian Equipment Pass — Lords Always in Battle Gear (#59)
 
 - Systematically replaced all `*_civ_template_*` lord civilian templates across 13 cultures with exact mirrors of their `*_bat_template_medium_*` battle loadouts

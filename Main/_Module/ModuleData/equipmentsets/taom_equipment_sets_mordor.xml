@@ -143,6 +143,19 @@
 
 	<!-- ==================== SAURON ==================== -->
 
+	<EquipmentRoster id="sauron_civ_equipment">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_sauron_mace" />
+			<Equipment slot="Head" id="Item.sauron_helmet_player" />
+			<Equipment slot="Body" id="Item.sauron_torso" />
+			<Equipment slot="Gloves" id="Item.sauron_vambraces" />
+			<Equipment slot="Leg" id="Item.sauron_greaves" />
+			<Equipment slot="Cape" id="Item.sauron_pauldrons" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<EquipmentRoster id="sauron_bat_equipment">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_sauron_mace" />
@@ -157,6 +170,19 @@
 	</EquipmentRoster>
 
 	<!-- ==================== WITCH-KING OF ANGMAR ==================== -->
+
+	<EquipmentRoster id="witchking_civ_equipment">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.witchking_sword" />
+			<Equipment slot="Head" id="Item.witch_king_helmet" />
+			<Equipment slot="Body" id="Item.witch_king" />
+			<Equipment slot="Gloves" id="Item.witch_king_gloves" />
+			<Equipment slot="Leg" id="Item.witch_king_boots" />
+			<Equipment slot="Cape" id="Item.witch_king_pauldrons" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
 
 	<EquipmentRoster id="witchking_bat_equipment">
 		<EquipmentSet>
@@ -173,6 +199,19 @@
 
 	<!-- ==================== NAZGUL (CLASSIC) ==================== -->
 
+	<EquipmentRoster id="nazgul_civ_equipment">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.nazgul_sword" />
+			<Equipment slot="Head" id="Item.nazgul_helmet" />
+			<Equipment slot="Body" id="Item.nazgul_armor" />
+			<Equipment slot="Gloves" id="Item.nazgul_gloves" />
+			<Equipment slot="Leg" id="Item.nazgul_boots" />
+			<Equipment slot="Cape" id="Item.nazgul_pauldrons" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<EquipmentRoster id="nazgul_bat_equipment">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.nazgul_sword" />
@@ -188,6 +227,18 @@
 
 	<!-- ==================== KHAMUL, THE EASTERLING ==================== -->
 
+	<EquipmentRoster id="khamul_civ_equipment">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.nazgul_sword" />
+			<Equipment slot="Head" id="Item.khamul_helmet" />
+			<Equipment slot="Body" id="Item.khamul_body" />
+			<Equipment slot="Gloves" id="Item.khamul_gloves" />
+			<Equipment slot="Leg" id="Item.khamul_boots" />
+			<Equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 	<EquipmentRoster id="khamul_bat_equipment">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.nazgul_sword" />
@@ -201,6 +252,19 @@
 	</EquipmentRoster>
 
 	<!-- ==================== NAZGUL (VARIANT) ==================== -->
+
+	<EquipmentRoster id="nazgul_v1_civ_equipment">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.nazgul_sword" />
+			<Equipment slot="Head" id="Item.nazgul_v1_helmet" />
+			<Equipment slot="Body" id="Item.nazgul_v1_armor" />
+			<Equipment slot="Gloves" id="Item.nazgul_v1_gloves" />
+			<Equipment slot="Leg" id="Item.nazgul_boots" />
+			<Equipment slot="Cape" id="Item.nazgul_v1_pauldrons" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
 
 	<EquipmentRoster id="nazgul_v1_bat_equipment">
 		<EquipmentSet>

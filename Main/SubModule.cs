@@ -38,6 +38,7 @@ using TAOM.Features.Arena.Models;
 using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
+using TAOM.Features.Siege;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -158,6 +159,10 @@ public class SubModule : MBSubModuleBase
 
             var wotrLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
+
+            var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
+            var siegeDefenseLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger));
 
             var executionAction = IoC.Resolve<IOnExecutionAction>();
             campaignStarter.AddModel(new TaomExecutionRelationModel(executionAction));
