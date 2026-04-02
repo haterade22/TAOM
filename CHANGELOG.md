@@ -2,7 +2,17 @@
 
 ## 2026-04-02
 
-### Feat: MainMenuCustomizer — Hide Campaign, Rename Sandbox (#53)
+### Feat: Erebor Equipment Pass — Lords in Battle Gear + Full Dress/Tunic Variety (#56)
+
+- Dwarf lords now wear full battle armor in civilian scenes (town/settlement) — `erebor_civ_template_default_a/b/c/d/e` updated to mirror their `erebor_bat_template_medium_*` counterparts (weapons, helm, chest, cape, bracers, greaves)
+- Male-coded civilian NPCs (townsman, blacksmith, weaponsmith, barber, beggar and family variants) switched from dresses to `tunic_normal_a/b`
+- Female-coded NPCs (townswoman, village_woman, female_beggar, female_dancer, tavern_wench and family variants) spread across dresses `e–i`
+- Neutral NPCs (villager, teenagers, musician, tavernkeeper, merchant) given two civilian roster entries each (dress + tunic) for random variety
+- Notable preachers (`_5/_6/_7`) and gang leaders (`_12/_13`) updated to dresses `e–i`
+- Rural notables (`_21/_22`) and headmen (`_2/_3`) upgraded to `tunic_noble_a/b/c` to reflect their status
+- All 9 dresses (a–i) and both tunics (a–b) now in use; noble tunics (a–c) introduced for notable NPCs
+
+### Feat: MainMenuCustomizer — Hide Campaign, Rename Sandbox (#55)
 
 - Bannerlord main screen exposed "Campaign" (vanilla story mode) alongside "Sandbox" — misleading for a total conversion mod
 - `OnBeforeInitialModuleScreenSetAsRoot` override calls `Module.CurrentModule.OverrideInitialStateOption` twice: sets `isHidden: () => true` on `campaign_single_player`, renames `sandbox_single_player` to "Enter The Age Of Men"

@@ -2,6 +2,7 @@ using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
@@ -36,6 +37,7 @@ using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
 using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
+using TAOM.Features.ShaderPrecompilation;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -84,6 +86,9 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnGetDefaultTroopOfFormation>(),
             logger);
 
+        _harmony.PatchCategory("Patch21_ShaderPrecompilation");
+        ShaderPrecompilationIoC.InitializeHooks(logger);
+
         Banner_TryGetBannerDataFromCode_Patch.Initialize(logger);
         Mission_Initialize_Patch.Initialize(logger);
 
@@ -94,6 +99,17 @@ public class SubModule : MBSubModuleBase
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
+
+        var shaderService = IoC.Resolve<IShaderPrecompilationService>();
+        var shaderLogger = IoC.Resolve<IModLogger>();
+        Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
+            id:                  "TaomPrecompileShaders",
+            name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
+            orderIndex:          100,
+            action:              () => MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger)),
+            isDisabledAndReason: () => (false, new TextObject("")),
+            enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM."),
+            isHidden:            null));
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

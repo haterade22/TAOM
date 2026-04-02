@@ -20,6 +20,7 @@ using TAOM.Features.TroopWeight;
 using TAOM.Features.Warg;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
+using TAOM.Features.ShaderPrecompilation;
 
 namespace TAOM;
 
@@ -52,6 +53,7 @@ public static class IoC
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);
+        ShaderPrecompilationIoC.RegisterShaderPrecompilationFeature(container);
 
         _container = container;
     }

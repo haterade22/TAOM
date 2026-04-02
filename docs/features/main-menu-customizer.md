@@ -87,5 +87,5 @@ Known option IDs: `campaign_single_player`, `sandbox_single_player`, `multiplaye
 
 ## GitHub Issue
 
-- **Issue:** #53 — Main menu: hide Campaign, rename Sandbox to "Enter The Age Of Men"
+- **Issue:** #55 — Main menu: hide Campaign, rename Sandbox to "Enter The Age Of Men"
 - **Status:** Closed
