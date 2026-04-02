@@ -16,6 +16,7 @@ namespace TAOM.Features.ShaderPrecompilation.Hooks;
 public static class LoadingScreen_ShaderProgress_Patch
 {
     private static IModLogger _logger;
+    private static int _lastShaderCount = -1;
 
     public static void Initialize(IModLogger logger)
     {
@@ -33,6 +34,9 @@ public static class LoadingScreen_ShaderProgress_Patch
             if (!__instance.Enabled) return;
 
             int remaining = Utilities.GetNumberOfShaderCompilationsInProgress();
+            if (remaining == _lastShaderCount) return;
+
+            _lastShaderCount = remaining;
             if (remaining > 0)
             {
                 __instance.DescriptionText = $"Compiling shaders... {remaining} remaining";

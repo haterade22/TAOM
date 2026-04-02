@@ -50,11 +50,18 @@ public class ShaderPrecompilationService : IShaderPrecompilationService
         }
     }
 
+    private HashSet<string> _validCultureIdsCache;
+
     private HashSet<string> GetValidCultureIds()
     {
-        return _objectManager.GetAllCultureInfos()
+        if (_validCultureIdsCache != null)
+            return _validCultureIdsCache;
+
+        _validCultureIdsCache = _objectManager.GetAllCultureInfos()
             .Where(c => !string.IsNullOrEmpty(c.Id) && !c.IsBandit)
             .Select(c => c.Id)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return _validCultureIdsCache;
     }
 }

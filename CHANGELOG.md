@@ -2,6 +2,24 @@
 
 ## 2026-04-02
 
+### Feat: ShaderPrecompilation — Pre-compile Shaders at Main Menu (#57)
+
+- Mid-game stutter when encountering new armor/mesh combinations (first-time shader compilation) eliminated by pre-warming the cache before campaign start
+- New **"Pre-compile Shaders"** button on the main menu (order index 100) launches a hidden custom battle containing all TAOM characters from all 13 non-bandit cultures
+- Bannerlord's renderer compiles all unique material shaders as it renders each character; loading screen shows "Compiling shaders... N remaining" with live countdown
+- Progress text updated only when count changes — avoids per-frame string allocation in `LoadingWindowViewModel.Update()` postfix
+- `Patch21_ShaderPrecompilation` / `TaomShaderGameManager` / `ShaderPrecompilationService`; all 14 v1.3.12 APIs verified via decompilation
+
+### Feat: Gondor Equipment Pass — Lords in Battle Gear + Noble Coat/Jerkin Variety (#58)
+
+- Gondor lords now wear full battle armor in civilian scenes — `gondor_civ_template_default_a/b/c/d/e` updated to mirror their `gondor_bat_template_medium_*` counterparts (weapons, helm, chest, cape, gloves, greaves, horse)
+- Boromir (`boromir_civ_equipment`) and Faramir (`faramir_civ_equipment`) civilian outfits unchanged (intentional character-specific looks)
+- 8 new civilian items added to LOTRLOME_Armory (`gondor_noble_coat_a/b`, `gondor_noble_coat_a/b_slim`, `gondor_noble_jerkin_a/b`, `gondor_noble_jerkin_a/b_slim`) — light cloth stats, `Civilian="true"` flag
+- All Gondor civilian NPCs (craftsmen, tavern, services, beggars, dancers, merchants, notables, headmen) switched from `ithilien_jerkin_*` / `boromir_jerkin` to new noble coats/jerkins and `lossarnach_coat`
+- Female-coded NPCs (`tavern_wench`, `female_beggar`, `female_dancer`, `townswoman_*`, `village_woman_*`) use slim variants
+- Armorer and ransom broker retain chainmail second roster (appropriate for role); gang bodyguard chainmail kept
+- All 26 notables spread across the full item range for visual variety
+
 ### Feat: Erebor Equipment Pass — Lords in Battle Gear + Full Dress/Tunic Variety (#56)
 
 - Dwarf lords now wear full battle armor in civilian scenes (town/settlement) — `erebor_civ_template_default_a/b/c/d/e` updated to mirror their `erebor_bat_template_medium_*` counterparts (weapons, helm, chest, cape, bracers, greaves)
