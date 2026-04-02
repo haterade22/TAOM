@@ -2,8 +2,8 @@
     {
         "string_id": "taom_parent_gondor_1",
         "culture_id": "gondor",
-        "text": "Noble Houses of Gondor",
-        "description": "Your family belonged to one of Gondor's noble houses, sworn to defend the White Tree. Your father was a knight who fought bravely in service to the Steward, while your mother managed the family's lands and affairs.",
+        "text": "Drilled with the sons of noble houses.",
+        "description": "You grew up training alongside the children of Gondor's noble families in the yards of Minas Tirith. You learned to fight with sword and lance under knights sworn to the Steward, and spent long hours practicing horsemanship on the Pelennor.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -17,8 +17,8 @@
     {
         "string_id": "taom_parent_gondor_2",
         "culture_id": "gondor",
-        "text": "Merchants of the White City",
-        "description": "Your family were prosperous traders within Minas Tirith, dealing in fine goods and wares. Their influence within the city's merchant guilds brought wealth and respect to your household.",
+        "text": "Apprenticed in the markets of Minas Tirith.",
+        "description": "You spent your adolescence running errands and learning accounts in the tiered market halls of the White City. You quickly learned the art of the deal, flattering merchants and counting coin in the shadow of the White Tower.",
         "skills": [
             "Trade",
             "Charm"
@@ -32,8 +32,8 @@
     {
         "string_id": "taom_parent_gondor_3",
         "culture_id": "gondor",
-        "text": "Farmers of the Pelennor",
-        "description": "Your family tilled the rich soil of the Pelennor Fields, providing sustenance for Minas Tirith. They also served as levy soldiers, standing in defense of the city during times of war.",
+        "text": "Labored in the fields of the Pelennor.",
+        "description": "You toiled from dawn to dusk in the rich farmland outside the city walls, hauling sheaves and driving oxen across the Pelennor. When the levy was called you were handed a spear and drilled in formation by a gruff veteran of the border wars.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -47,8 +47,8 @@
     {
         "string_id": "taom_parent_gondor_4",
         "culture_id": "gondor",
-        "text": "Artisans of Minas Tirith",
-        "description": "Your family were skilled craftsmen in Minas Tirith, creating fine armor, weapons, and tapestries that adorned the halls of the White City. Their artistry was renowned across Gondor.",
+        "text": "Apprenticed to an armourer of the White City.",
+        "description": "You learned your craft in the smithing quarter of Minas Tirith, blowing bellows and grinding edges under a master armorer's stern eye. By the time you were grown your hands were calloused from hammer work and you could judge a blade's temper by its ring.",
         "skills": [
             "Crafting",
             "OneHanded"
@@ -62,8 +62,8 @@
     {
         "string_id": "taom_parent_gondor_5",
         "culture_id": "gondor",
-        "text": "Rangers of Ithilien",
-        "description": "Your family were members of the Rangers of Ithilien, skilled in the arts of stealth and archery. They patrolled the wilds, protecting Gondor's borders from the forces of Mordor.",
+        "text": "Ranged the wilds of Ithilien.",
+        "description": "You shadowed the Rangers of Ithilien as a youngster, learning to move without sound through the overgrown gardens east of the Anduin. You strung your first bow before you were tall enough to draw it properly and learned to read boot-prints in the mud.",
         "skills": [
             "Scouting",
             "Bow"
@@ -77,8 +77,8 @@
     {
         "string_id": "taom_parent_gondor_6",
         "culture_id": "gondor",
-        "text": "Street Urchins of Osgiliath",
-        "description": "Your family lived among the ruins of Osgiliath, surviving through cunning and resourcefulness. They scavenged what they could and occasionally served under Gondor's banners as irregular troops.",
+        "text": "Scrounged among the ruins of Osgiliath.",
+        "description": "You grew up picking through the shattered stones of Osgiliath, selling salvage to soldiers and running messages between outposts for coin. The ruined city taught you quickness and cunning — a thrown rock could drive off a man twice your size.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -92,8 +92,8 @@
     {
         "string_id": "taom_parent_mordor_1",
         "culture_id": "mordor",
-        "text": "Servants of the Dark Tower",
-        "description": "Your family served directly under the command of the Dark Tower. Your father was a brutal enforcer, while your mother worked to instill the will of Sauron among the lesser folk.",
+        "text": "Fought in the training pits of Barad-dur.",
+        "description": "You were thrown into the pit-fighting yards of the Dark Tower as soon as you could hold a weapon. The older warriors showed no mercy, and you learned quickly that hesitation meant pain. Pain taught you to strike first and strike hard.",
         "skills": [
             "Polearm",
             "TwoHanded"
@@ -107,8 +107,8 @@
     {
         "string_id": "taom_parent_mordor_2",
         "culture_id": "mordor",
-        "text": "Merchants of the Black Road",
-        "description": "Your family managed trade and supplies within Mordor, ensuring the armies of Sauron were equipped for war. Their dealings were shadowed by intrigue and violence.",
+        "text": "Hauled supply trains along the Black Road.",
+        "description": "You moved goods along the shadowed roads of Mordor, learning to barter and bluff your way past toll-keepers and corrupt overseers. The danger sharpened your wits, and you discovered that information was worth more than iron in the Dark Land.",
         "skills": [
             "Trade",
             "Roguery"
@@ -122,8 +122,8 @@
     {
         "string_id": "taom_parent_mordor_3",
         "culture_id": "mordor",
-        "text": "Slaves of Barad-dur",
-        "description": "Your family were enslaved laborers, toiling in the forges and quarries of Mordor to fuel the war machine of the Dark Lord. Their resilience became a testament to their will to survive.",
+        "text": "Labored in the forges of the Dark Land.",
+        "description": "You hauled stone and worked bellows in the smoking forges that ringed Barad-dur, enduring heat and ash from before first light until long after dark. The work broke weaker youths, but you found a grim endurance that no taskmaster could extinguish.",
         "skills": [
             "Athletics",
             "OneHanded"
@@ -137,8 +137,8 @@
     {
         "string_id": "taom_parent_mordor_4",
         "culture_id": "mordor",
-        "text": "Orc Taskmasters",
-        "description": "Your family were tasked with overseeing the labor of Orcs and Men alike, ensuring that Sauron's orders were carried out with ruthless efficiency.",
+        "text": "Kept order among the Orc work gangs.",
+        "description": "You were given a club and a corner of the yard and told to keep the work gangs in line. You learned fast how to read a crowd and where to hit to get compliance without killing. Strategy and brutality became second nature.",
         "skills": [
             "Tactics",
             "TwoHanded"
@@ -152,8 +152,8 @@
     {
         "string_id": "taom_parent_mordor_5",
         "culture_id": "mordor",
-        "text": "Hunters of Gorgoroth",
-        "description": "Your family roamed the volcanic plains of Gorgoroth, hunting and tracking prey to sustain the armies of Mordor. Their skill in the wilderness was unmatched.",
+        "text": "Hunted across the plains of Gorgoroth.",
+        "description": "You tracked prey across the blasted volcanic flats of Gorgoroth, learning to read ash-trails and navigate by the glow of distant fires. There was little to hunt, and what little there was fought back. You came home lean and sharp-eyed.",
         "skills": [
             "Scouting",
             "Bow"
@@ -167,8 +167,8 @@
     {
         "string_id": "taom_parent_mordor_6",
         "culture_id": "mordor",
-        "text": "Uruk Overseers",
-        "description": "Your family served as overseers for the Uruk-hai legions, enforcing discipline and maintaining order within Sauron's ranks.",
+        "text": "Ran with the outcasts beyond the Black Gate.",
+        "description": "You survived on the margins of the Dark Lord's realm, running with the quick-fingered bands who slipped past patrols and lived by theft and misdirection. You learned every shadow and every bribe-price in the shadow of the Morannon.",
         "skills": [
             "Roguery",
             "Polearm"
@@ -182,8 +182,8 @@
     {
         "string_id": "taom_parent_erebor_1",
         "culture_id": "erebor",
-        "text": "Noble of the Lonely Mountain",
-        "description": "Your family was of Erebor's noble line, kin to King Dain, wielding mighty axes and inspiring warriors to defend the Lonely Mountain's honor.",
+        "text": "Trained in the great hall with the King's axe-brothers.",
+        "description": "You practiced combat alongside the young warriors of Dain's household, learning to swing the two-handed axe in the echoing training halls deep beneath the Lonely Mountain. Every scar was a lesson; every lesson was a point of pride.",
         "skills": [
             "TwoHanded",
             "Leadership"
@@ -197,8 +197,8 @@
     {
         "string_id": "taom_parent_erebor_2",
         "culture_id": "erebor",
-        "text": "Master Smith",
-        "description": "Your family forged legendary arms in Erebor's blazing halls, crafting blades and armor coveted across Middle-earth, and traded them for wealth.",
+        "text": "Apprenticed at the forges of Erebor.",
+        "description": "You spent your youth at the smith's bench, learning to work metal in the blazing heart of the Lonely Mountain. You mastered the values of craft and trade, carrying finished blades to the markets of Dale when the light faded on the forge.",
         "skills": [
             "Crafting",
             "Trade"
@@ -212,8 +212,8 @@
     {
         "string_id": "taom_parent_erebor_3",
         "culture_id": "erebor",
-        "text": "Delve Miner",
-        "description": "Your family toiled in Erebor's deepest mines, unearthing mithril and gems, and learned to fortify the mountain against invaders.",
+        "text": "Worked the deep mines of the Lonely Mountain.",
+        "description": "You swung a pick in the lowest galleries of Erebor before you were old enough to shave, learning the mountain's hidden passages and the engineering of tunnels and supports. The deep stone became as familiar to you as open sky.",
         "skills": [
             "Engineering",
             "Trade"
@@ -227,8 +227,8 @@
     {
         "string_id": "taom_parent_erebor_4",
         "culture_id": "erebor",
-        "text": "Ironfoot Warrior",
-        "description": "Your family fought with Dain Ironfoot's warriors, mastering axe and shield and wielding crossbows to hold Erebor's gates.",
+        "text": "Drilled with the Ironfoot shieldwall.",
+        "description": "You trained in the disciplined close-quarters style of Dain Ironfoot's warriors, learning to brace a shield and swing an axe in tight tunnel formations. Your short stride was an advantage in the corridors where taller folk stumbled.",
         "skills": [
             "OneHanded",
             "Athletics"
@@ -242,8 +242,8 @@
     {
         "string_id": "taom_parent_erebor_5",
         "culture_id": "erebor",
-        "text": "Vault Keeper",
-        "description": "Your family guarded Erebor's vast treasuries, managing its riches and planning defenses to protect the mountain's wealth from foes.",
+        "text": "Counted coin in the treasury vaults.",
+        "description": "You assisted in tallying Erebor's vast wealth from an early age, learning to manage ledgers and understand the logistics of supplying a mountain kingdom. The work made you methodical and gave you a strategist's eye for resources.",
         "skills": [
             "Steward",
             "Tactics"
@@ -257,8 +257,8 @@
     {
         "string_id": "taom_parent_erebor_6",
         "culture_id": "erebor",
-        "text": "Mountain Scout",
-        "description": "Your family patrolled the wilds around Erebor, tracking Orcs and firing bows to safeguard the Lonely Mountain's borders.",
+        "text": "Patrolled the foothills and forest trails.",
+        "description": "You ranged the slopes around Erebor as part of the outer watch, learning to track Orc raiding parties and shoot from concealment in the pine forest. The mountain air sharpened your senses and distance became your ally.",
         "skills": [
             "Scouting",
             "Bow"
@@ -272,8 +272,8 @@
     {
         "string_id": "taom_parent_rivendell_1",
         "culture_id": "rivendell",
-        "text": "Nobles of Imladris",
-        "description": "Your family were esteemed Elves of Imladris, sworn to serve Elrond. They carried the wisdom of ages and the strength to defend Rivendell in its time of need.",
+        "text": "Trained in the riding courts of Imladris.",
+        "description": "You practiced the mounted arts in the quiet training grounds of Rivendell, learning to ride and fight with the fluid grace that Elven tradition demanded. The great library was never far, and your education in blade and lore went hand in hand.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -287,8 +287,8 @@
     {
         "string_id": "taom_parent_rivendell_2",
         "culture_id": "rivendell",
-        "text": "Artisans of Rivendell",
-        "description": "Your family were skilled craftsmen and loremasters, creating wonders of Elven craftsmanship and preserving the ancient knowledge of Middle-earth.",
+        "text": "Studied craft and lore in Elrond's halls.",
+        "description": "You spent your formative years learning the craft-arts and histories preserved in Rivendell, working alongside master artisans and loremasters. Long evenings of talk sharpened your tongue and your understanding of the world's deep past.",
         "skills": [
             "Crafting",
             "Charm"
@@ -302,8 +302,8 @@
     {
         "string_id": "taom_parent_rivendell_3",
         "culture_id": "rivendell",
-        "text": "Farmers of the Hidden Valley",
-        "description": "Your family tended the fertile fields of Rivendell, ensuring its people and guests were well-fed and sustained in their peaceful haven.",
+        "text": "Tended the gardens and orchards of the Hidden Valley.",
+        "description": "You worked the terraced gardens of Imladris, learning patience and diligence from Elves who had tended those same beds for an age. Between rows you practiced swordplay, finding that tending living things gave you an instinct for measured force.",
         "skills": [
             "Athletics",
             "OneHanded"
@@ -317,8 +317,8 @@
     {
         "string_id": "taom_parent_rivendell_4",
         "culture_id": "rivendell",
-        "text": "Wardens of the Valley",
-        "description": "Your family served as scouts and guardians, patrolling the borders of Imladris and ensuring the valley remained a sanctuary free from evil.",
+        "text": "Walked the border watches of Imladris.",
+        "description": "You accompanied the Elven wardens on their long circuits around the valley's hidden paths, learning to read the forest and loose an arrow before your quarry heard you coming. The valley's peace was hard-won and you helped keep it.",
         "skills": [
             "Scouting",
             "Bow"
@@ -332,8 +332,8 @@
     {
         "string_id": "taom_parent_rivendell_5",
         "culture_id": "rivendell",
-        "text": "Elven Scholars",
-        "description": "Your family were scholars of lore, healing, and magic, preserving the ancient knowledge of the Elves and aiding the free peoples of Middle-earth.",
+        "text": "Learned healing arts in the halls of Elrond.",
+        "description": "You served in the healing rooms of Rivendell, learning herb-lore and the arts of mending under the guidance of Elrond's healers. Tending to weary travellers and wounded Elves gave you both knowledge and the empathy that comes with it.",
         "skills": [
             "Medicine",
             "Charm"
@@ -347,8 +347,8 @@
     {
         "string_id": "taom_parent_rivendell_6",
         "culture_id": "rivendell",
-        "text": "Wanderers of the Wild",
-        "description": "Your family were known to venture beyond Rivendell, aiding those in need and learning of the changing world beyond the valley.",
+        "text": "Wandered the wild roads beyond the valley.",
+        "description": "You slipped beyond Rivendell's borders as often as you could, exploring the Trollshaws and the valleys of the Misty Mountains. You developed a taste for risk and discovered that you could survive on cunning where a sword would only bring trouble.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -362,8 +362,8 @@
     {
         "string_id": "taom_parent_mirkwood_1",
         "culture_id": "mirkwood",
-        "text": "Descendants of Woodland Nobility",
-        "description": "Your family descended from the noble houses of the Woodland Realm, serving as close advisors and protectors of King Thranduil's court.",
+        "text": "Drilled with the household guard of Thranduil's court.",
+        "description": "You trained with the young warriors of the Woodland King's household, learning to move and fight among the great beeches beneath the mountain halls. The court was demanding, and you were expected to be as sharp with words as with your blade.",
         "skills": [
             "OneHanded",
             "Polearm"
@@ -377,8 +377,8 @@
     {
         "string_id": "taom_parent_mirkwood_2",
         "culture_id": "mirkwood",
-        "text": "Merchants of the Forest Path",
-        "description": "Your family were merchants who traveled the treacherous paths of Mirkwood, bringing goods and trade to the Elvenking's halls.",
+        "text": "Carried goods along the Forest Road.",
+        "description": "You escorted trade goods through the shadows of Mirkwood, learning to read the forest and haggle at the far end of a dangerous journey. The path was never safe, and the merchants who survived were charming, quick, and watchful.",
         "skills": [
             "Trade",
             "Charm"
@@ -392,8 +392,8 @@
     {
         "string_id": "taom_parent_mirkwood_3",
         "culture_id": "mirkwood",
-        "text": "Woodland Farmers",
-        "description": "Your family lived on the fringes of the Woodland Realm, cultivating the land and gathering what little the shadowed forest provided.",
+        "text": "Gathered and farmed on the forest margins.",
+        "description": "You grew up tending the clearings and cultivated patches at the edges of the Woodland Realm, harvesting what the shadowed forest would yield. It was hard and dangerous work, and you learned to move fast when the dark things came near.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -407,8 +407,8 @@
     {
         "string_id": "taom_parent_mirkwood_4",
         "culture_id": "mirkwood",
-        "text": "Artisans of the Woodland Halls",
-        "description": "Your family were artisans of the Woodland Realm, crafting exquisite weapons and tools from the resources of the forest.",
+        "text": "Crafted bows and woodwork in the Elvenking's halls.",
+        "description": "You learned your craft from the Elven bowyers of Mirkwood, shaping staves and stringing the famous Woodland bows. The work required equal measures of patience and precision, and you left with hands that could shape a weapon as readily as use one.",
         "skills": [
             "Crafting",
             "Bow"
@@ -422,8 +422,8 @@
     {
         "string_id": "taom_parent_mirkwood_5",
         "culture_id": "mirkwood",
-        "text": "Hunters of the Deep Woods",
-        "description": "Your family were skilled hunters who braved the shadowy depths of Mirkwood to provide food and fend off the creatures that lurk within.",
+        "text": "Hunted deep in the shadowed wood.",
+        "description": "You followed the Woodland hunters into the darkest parts of Mirkwood, tracking deer and boar through the corrupted undergrowth. Every hunt risked an encounter with the forest's creatures, and you learned to shoot before you heard a sound clearly.",
         "skills": [
             "Scouting",
             "Bow"
@@ -437,8 +437,8 @@
     {
         "string_id": "taom_parent_mirkwood_6",
         "culture_id": "mirkwood",
-        "text": "Rangers of the Woodland Realm",
-        "description": "Your family served as rangers, protecting the borders of the Woodland Realm and guarding the forest paths from intruders and threats alike.",
+        "text": "Ran with the forest border watch.",
+        "description": "You kept irregular company with the patrols that roamed outside Thranduil's formal borders, learning to set traps and ambushes for the spider-kin and Orc scouts that tested the Woodland Realm's edges. Cunning kept you alive where courage alone would not.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -452,8 +452,8 @@
     {
         "string_id": "taom_parent_lothlorien_1",
         "culture_id": "lothlorien",
-        "text": "Nobles of Caras Galadhon",
-        "description": "Your family served directly under the guidance of Lady Galadriel and Lord Celeborn, defending the heart of Lothlorien with unwavering dedication.",
+        "text": "Trained with the wardens of Caras Galadhon.",
+        "description": "You practiced the warrior arts in the silver courts of Caras Galadhon, learning the sweeping sword-style of the Galadhrim under the light of the Lady's power. Every morning began with drills and every evening with starlight and long memory.",
         "skills": [
             "TwoHanded",
             "Bow"
@@ -467,8 +467,8 @@
     {
         "string_id": "taom_parent_lothlorien_2",
         "culture_id": "lothlorien",
-        "text": "Artisans of the Golden Wood",
-        "description": "Your family were master artisans, weaving the beauty of the Golden Wood into their creations, from armor to musical instruments.",
+        "text": "Wove and crafted in the mallorn-city.",
+        "description": "You learned the textile and craft arts of Lothlórien, working with the famous Elven weavers who produced cloth of silver and gold. The work required uncommon precision, and you found that beauty and persuasion were inseparable in the Golden Wood.",
         "skills": [
             "Crafting",
             "Charm"
@@ -482,8 +482,8 @@
     {
         "string_id": "taom_parent_lothlorien_3",
         "culture_id": "lothlorien",
-        "text": "Guardians of the Mallorn Trees",
-        "description": "Your family protected the sacred Mallorn trees, ensuring the splendor of Lothlorien endured against any threat.",
+        "text": "Kept watch from the flets of the mallorn trees.",
+        "description": "You stood the long quiet vigils on the high platforms among the mallorn branches, learning to read the forest below and loose silver-tipped arrows with deadly calm. The endless patience of those watches shaped your eye and stilled your hand.",
         "skills": [
             "Scouting",
             "Bow"
@@ -497,8 +497,8 @@
     {
         "string_id": "taom_parent_lothlorien_4",
         "culture_id": "lothlorien",
-        "text": "Rangers of the Dimrill Dale",
-        "description": "Your family patrolled the borders of Lothlorien, guarding the passes and defending against Orcs and other intruders.",
+        "text": "Patrolled the silver borders of the Golden Wood.",
+        "description": "You walked the outer marches of Lothlórien, learning to spot the signs of Orc incursion at the Dimrill Dale passes. Long days of silent observation followed by sudden action shaped you into a hunter as patient as the wood and as quick as the arrow.",
         "skills": [
             "Bow",
             "Scouting"
@@ -512,8 +512,8 @@
     {
         "string_id": "taom_parent_lothlorien_5",
         "culture_id": "lothlorien",
-        "text": "Healers of the Golden Wood",
-        "description": "Your family tended to the wounded and preserved the ancient wisdom of healing within the Golden Wood.",
+        "text": "Studied the healing arts of the Golden Wood.",
+        "description": "You apprenticed among the healers of Lothlórien, gathering athelas and learning the lore of herb and wound under the instruction of those who had practiced the art for centuries. The Lady's grace touched all healing within those borders.",
         "skills": [
             "Medicine",
             "Charm"
@@ -527,8 +527,8 @@
     {
         "string_id": "taom_parent_lothlorien_6",
         "culture_id": "lothlorien",
-        "text": "Wanderers of the Galadhrim",
-        "description": "Your family roamed the lands beyond Lothlorien, aiding allies and spreading word of the Golden Wood's splendor.",
+        "text": "Wandered beyond the wood on private errands.",
+        "description": "You often slipped beyond the veiled borders of Lothlórien alone, exploring the Anduin's banks and the brown lands beyond out of restless curiosity. You learned to pass unseen and to use misdirection when straightforward paths were barred to you.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -542,8 +542,8 @@
     {
         "string_id": "taom_parent_isengard_1",
         "culture_id": "isengard",
-        "text": "Servants of Saruman",
-        "description": "Your family worked under the orders of Saruman the White, managing his domain and assisting in his schemes of conquest.",
+        "text": "Trained in the war-yard of Orthanc.",
+        "description": "You were run through brutal drills in the packed-earth yards of Isengard, learning to wield halberd and two-hander under the eyes of Uruk-hai sergeants. Saruman's forces trained without mercy, and softness was driven out of you fast.",
         "skills": [
             "TwoHanded",
             "Polearm"
@@ -557,8 +557,8 @@
     {
         "string_id": "taom_parent_isengard_2",
         "culture_id": "isengard",
-        "text": "Craftsmen of Orthanc",
-        "description": "Your family crafted tools and weapons within the shadow of Orthanc, forging instruments of Saruman's will.",
+        "text": "Apprenticed in the machine-shops beneath Orthanc.",
+        "description": "You learned to work metal and manage materials in the smoky workshops that fed Saruman's war machine, picking up the arts of crafting and supply under pressure. The work was constant and inventive, and Saruman rewarded ingenuity.",
         "skills": [
             "Crafting",
             "Trade"
@@ -572,8 +572,8 @@
     {
         "string_id": "taom_parent_isengard_3",
         "culture_id": "isengard",
-        "text": "Laborers of the Deeping Caves",
-        "description": "Your family toiled in the deep pits of Isengard, extracting stone and ore to fuel Saruman's ambitions.",
+        "text": "Dug and hauled in the pits of Isengard.",
+        "description": "You were put to work in the pits as soon as you were strong enough, breaking rock and hauling spoil to feed Saruman's endless construction. The work built your endurance past what most men's bodies could bear.",
         "skills": [
             "Engineering",
             "Athletics"
@@ -587,8 +587,8 @@
     {
         "string_id": "taom_parent_isengard_4",
         "culture_id": "isengard",
-        "text": "Uruk-Hai Warriors",
-        "description": "Your family were among the first Uruk-Hai bred by Saruman, warriors forged for war and domination.",
+        "text": "Trained alongside the Uruk-hai infantry.",
+        "description": "You ran drills alongside the bred warriors of Isengard, learning to brace and hold with spear and to cut with sword in tight formation. Being neither Uruk nor pure Man you had to be twice as relentless to be accepted.",
         "skills": [
             "OneHanded",
             "Polearm"
@@ -602,8 +602,8 @@
     {
         "string_id": "taom_parent_isengard_5",
         "culture_id": "isengard",
-        "text": "Scouts of the Wold",
-        "description": "Your family were scouts and trackers, ensuring Saruman's forces moved unseen across the plains of Rohan.",
+        "text": "Scouted the plains of Rohan for Saruman's eyes.",
+        "description": "You ranged the Wold and the approaches to Helm's Deep as a scout for Isengard, learning to travel fast and unseen across open country. Reading the land and avoiding the Rohirrim patrols sharpened your instincts to a fine edge.",
         "skills": [
             "Scouting",
             "Bow"
@@ -617,8 +617,8 @@
     {
         "string_id": "taom_parent_isengard_6",
         "culture_id": "isengard",
-        "text": "Rogues of Isengard",
-        "description": "Your family operated in the shadows, gathering intelligence and undermining the enemies of Saruman.",
+        "text": "Ran information through Isengard's shadows.",
+        "description": "You were quick-fingered and clever enough to be used as a courier and informant in the grey world of Saruman's spy networks. You learned how much a secret was worth and how much pain it cost to keep one.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -632,8 +632,8 @@
     {
         "string_id": "taom_parent_gundabad_1",
         "culture_id": "gundabad",
-        "text": "Nobles of Gundabad",
-        "description": "Your family were among the noble elite of Gundabad, dedicated to reclaiming their ancestral home and defending it from invaders.",
+        "text": "Trained in the war-halls of Mount Gundabad.",
+        "description": "You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -647,8 +647,8 @@
     {
         "string_id": "taom_parent_gundabad_2",
         "culture_id": "gundabad",
-        "text": "Smiths of Gundabad",
-        "description": "Your family were skilled smiths, crafting tools and weapons to equip the defenders of Gundabad.",
+        "text": "Apprenticed in the weapon-smiths of Gundabad.",
+        "description": "You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing.",
         "skills": [
             "Crafting",
             "Trade"
@@ -662,8 +662,8 @@
     {
         "string_id": "taom_parent_gundabad_3",
         "culture_id": "gundabad",
-        "text": "Miners of Gundabad",
-        "description": "Your family worked tirelessly in the mines of Gundabad, uncovering its hidden riches.",
+        "text": "Dug in the mines beneath the mountain.",
+        "description": "You swung a pick in the lightless shafts of Gundabad, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to.",
         "skills": [
             "Engineering",
             "Athletics"
@@ -677,8 +677,8 @@
     {
         "string_id": "taom_parent_gundabad_4",
         "culture_id": "gundabad",
-        "text": "Warriors of the Grey Mountains",
-        "description": "Your family fought against Orcs and other threats in the Grey Mountains, upholding the honor of their kin.",
+        "text": "Fought in the passes of the Grey Mountains.",
+        "description": "You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival.",
         "skills": [
             "OneHanded",
             "Polearm"
@@ -692,8 +692,8 @@
     {
         "string_id": "taom_parent_gundabad_5",
         "culture_id": "gundabad",
-        "text": "Rangers of Gundabad",
-        "description": "Your family served as rangers, patrolling the wilds around Gundabad and safeguarding its borders from harm.",
+        "text": "Ranged the wild lands around Gundabad.",
+        "description": "You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target.",
         "skills": [
             "Scouting",
             "Bow"
@@ -707,8 +707,8 @@
     {
         "string_id": "taom_parent_gundabad_6",
         "culture_id": "gundabad",
-        "text": "Outcasts of the Mountains",
-        "description": "Your family lived on the fringes of Gundabad's society, surviving through cunning and ruthlessness in the unforgiving mountain passes.",
+        "text": "Survived alone in the mountain passes.",
+        "description": "Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -722,8 +722,8 @@
     {
         "string_id": "taom_parent_dolguldur_1",
         "culture_id": "dolguldur",
-        "text": "Servants of the Necromancer",
-        "description": "Your family served directly under the Necromancer, performing his dark bidding and enforcing his will across the region.",
+        "text": "Drilled in the shadow-yards of Dol Guldur.",
+        "description": "You trained in the lightless courtyards of the Necromancer's fortress, learning to fight with halberd and great blade under the eye of hooded overseers. The shadow that lay across the place seeped into your bones and sharpened your instincts for violence.",
         "skills": [
             "TwoHanded",
             "Polearm"
@@ -737,8 +737,8 @@
     {
         "string_id": "taom_parent_dolguldur_2",
         "culture_id": "dolguldur",
-        "text": "Crafters of Shadowed Steel",
-        "description": "Your family forged weapons and armor imbued with the dark magic of Dol Guldur, equipping its armies for conquest.",
+        "text": "Forged shadow-steel in the dark workshops.",
+        "description": "You worked the black-iron forges of Dol Guldur, learning to shape weapons under conditions that would break a lesser youth. The materials were dark and the methods darker, and you left with knowledge that few would admit to having.",
         "skills": [
             "Crafting",
             "Trade"
@@ -752,8 +752,8 @@
     {
         "string_id": "taom_parent_dolguldur_3",
         "culture_id": "dolguldur",
-        "text": "Miners of the Shadowed Halls",
-        "description": "Your family labored deep within the caverns of Dol Guldur, extracting resources to feed its war machine.",
+        "text": "Hauled stone in the caverns of the fortress.",
+        "description": "You labored in the underground excavations of Dol Guldur, dragging blocks and shoring tunnels in the permanent darkness beneath the corrupted hill. The work was relentless, and endurance was the only currency that bought any relief.",
         "skills": [
             "Engineering",
             "Athletics"
@@ -767,8 +767,8 @@
     {
         "string_id": "taom_parent_dolguldur_4",
         "culture_id": "dolguldur",
-        "text": "Warriors of the Enchanted Wood",
-        "description": "Your family were fierce warriors who fought to extend the shadow of Dol Guldur over the surrounding lands.",
+        "text": "Fought in the shadow-patrols of the Enchanted Wood.",
+        "description": "You ran with the dark patrols that pushed the corruption of Dol Guldur further into southern Mirkwood, cutting down resistance with axe and spear. Each foray took you deeper into the twisted forest and left less of your former self behind.",
         "skills": [
             "OneHanded",
             "Polearm"
@@ -782,8 +782,8 @@
     {
         "string_id": "taom_parent_dolguldur_5",
         "culture_id": "dolguldur",
-        "text": "Hunters of the Dark Forest",
-        "description": "Your family hunted the twisted creatures of the forest and tracked those who dared trespass into the Necromancer's domain.",
+        "text": "Hunted the dark forest's edges.",
+        "description": "You tracked through the corrupted undergrowth of southern Mirkwood, killing any creature that came too close to the fortress and learning to move without making a sound in a forest that twisted every trail. Your eyes adjusted to a world without sunlight.",
         "skills": [
             "Scouting",
             "Bow"
@@ -797,8 +797,8 @@
     {
         "string_id": "taom_parent_dolguldur_6",
         "culture_id": "dolguldur",
-        "text": "Rogues of Dol Guldur",
-        "description": "Your family were spies and saboteurs, spreading the influence of Dol Guldur through deception and fear.",
+        "text": "Moved through shadows as a spy of the Necromancer.",
+        "description": "You were used as a courier and agent in the Necromancer's network, carrying messages through the dark wood and delivering them to contacts who never showed their faces. You learned that shadows were your armor and silence your best weapon.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -812,8 +812,8 @@
     {
         "string_id": "taom_parent_umbar_1",
         "culture_id": "umbar",
-        "text": "Corsair Captains",
-        "description": "Your family were leaders among the Corsairs of Umbar, commanding ships and raiding the coasts of Gondor.",
+        "text": "Learned seamanship and swordsmanship aboard the Black ships.",
+        "description": "You were taken to sea young, learning to hand a sail and fight with the cutlass and boarding axe of the Corsair tradition. The deck of a warship was your training ground, and the Anduin Delta was your proving ground.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -827,8 +827,8 @@
     {
         "string_id": "taom_parent_umbar_2",
         "culture_id": "umbar",
-        "text": "Merchants of the Black Tide",
-        "description": "Your family conducted trade across the seas, often smuggling goods to fund the Corsairs' endeavors.",
+        "text": "Ran the quays and counting-houses of the harbor.",
+        "description": "You grew up quick-tongued and quick-fingered in the busy dockyards of Umbar, learning to charm buyers, spot inflated bills, and move goods past customs without asking awkward questions. The harbor was a school in commerce and deception alike.",
         "skills": [
             "Trade",
             "Charm"
@@ -842,8 +842,8 @@
     {
         "string_id": "taom_parent_umbar_3",
         "culture_id": "umbar",
-        "text": "Shipwrights of Umbar",
-        "description": "Your family constructed the vessels that carried the Corsairs to war, crafting ships of speed and stealth.",
+        "text": "Worked the shipyards of Umbar.",
+        "description": "You learned to shape timber and caulk planking in the great ship-sheds of Umbar, studying the engineering of vessels that carried war across the sea. When you were not building ships you were thinking about how they might be broken.",
         "skills": [
             "Crafting",
             "Engineering"
@@ -857,8 +857,8 @@
     {
         "string_id": "taom_parent_umbar_4",
         "culture_id": "umbar",
-        "text": "Pirates of the Coasts",
-        "description": "Your family were Corsairs who raided the shores of Gondor and beyond, striking fear into the hearts of their enemies.",
+        "text": "Raided Gondor's coastal villages with the Corsairs.",
+        "description": "You made your first raids on the coasts of Gondor as little more than a youth, fighting at the front of a boarding party with sword and throwing knife. The raids were brutal and swift, and they taught you exactly what violence was worth.",
         "skills": [
             "OneHanded",
             "Throwing"
@@ -872,8 +872,8 @@
     {
         "string_id": "taom_parent_umbar_5",
         "culture_id": "umbar",
-        "text": "Navigators of the High Seas",
-        "description": "Your family were skilled navigators, charting the dangerous seas and leading the Corsairs to victory.",
+        "text": "Navigated the Corsair lanes from the crow's nest.",
+        "description": "You served as lookout and scout-sailor, learning to read the sea and chart a course through the dangerous waters of the Bay of Belfalas. What you spotted from the masthead determined whether a raid succeeded or became a catastrophe.",
         "skills": [
             "Scouting",
             "Tactics"
@@ -887,8 +887,8 @@
     {
         "string_id": "taom_parent_umbar_6",
         "culture_id": "umbar",
-        "text": "Smugglers of Umbar",
-        "description": "Your family moved in the shadows, smuggling goods and information vital to the survival of the Corsairs.",
+        "text": "Moved contraband through Umbar's back alleys.",
+        "description": "You ran in the shadow economy of the harbor city, carrying goods that could not be declared and messages that could not be written down. The work paid in secrets and small coins, and you learned every fence, bribe, and bolt-hole in Umbar.",
         "skills": [
             "Roguery",
             "Trade"
@@ -902,8 +902,8 @@
     {
         "string_id": "taom_parent_empire_1",
         "culture_id": "empire",
-        "text": "Descendants of Old Chieftains",
-        "description": "Your family held sway as chieftains among the Dunlending clans, commanding respect through lineage and strength. Your father rallied warriors in times of conflict, while your mother managed the clan's affairs.",
+        "text": "Trained with the young warriors of the clan chief.",
+        "description": "You drilled with the chieftain's sons in the muddy practice-grounds of the hill stronghold, learning to ride hard and swing a two-hander in the rough Dunlending style. Every bruise was a lesson and every lesson carried the old grudge against the horse-lords.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -917,8 +917,8 @@
     {
         "string_id": "taom_parent_empire_2",
         "culture_id": "empire",
-        "text": "Clan Merchants",
-        "description": "Your family traded goods between the Dunlending clans and the outside world. Their knowledge of the land and its people brought prosperity to your household.",
+        "text": "Traded between the hill clans and the lowland markets.",
+        "description": "You carried goods and news between the hill settlements and the river markets, learning to bargain hard and smile at buyers you did not trust. The roads between Dunland and the wider world were rough, and charm was often cheaper than a sword.",
         "skills": [
             "Trade",
             "Charm"
@@ -932,8 +932,8 @@
     {
         "string_id": "taom_parent_empire_3",
         "culture_id": "empire",
-        "text": "Free Clansfolk",
-        "description": "Your family were free folk of Dunland, tilling the soil and herding sheep among the hills. They answered the call of the chieftains when war came.",
+        "text": "Herded sheep and sharpened spears on the Dunland hills.",
+        "description": "You spent your youth minding the flocks across the wind-scoured hillsides of Dunland, and when the call came you were handed a spear and shoved into the levy. The hills made you tough and the levy made you dangerous.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -947,8 +947,8 @@
     {
         "string_id": "taom_parent_empire_4",
         "culture_id": "empire",
-        "text": "Skilled Artisans",
-        "description": "Your family were craftsmen of the Dunlending clans, fashioning weapons, tools, and ornaments from the resources of the hills.",
+        "text": "Worked the forge and the woodcarving bench.",
+        "description": "You learned to shape metal and wood in the practical crafts of the Dunlending settlements, making tools, weapons, and fittings for the clans. The work gave you clever hands and an eye for how things were put together and how they could be taken apart.",
         "skills": [
             "Crafting",
             "OneHanded"
@@ -962,8 +962,8 @@
     {
         "string_id": "taom_parent_empire_5",
         "culture_id": "empire",
-        "text": "Woodland Foragers",
-        "description": "Your family lived off the wild lands of Dunland, hunting game and gathering herbs in the dense forests that bordered the Misty Mountains.",
+        "text": "Hunted and foraged in the forests of Dunland.",
+        "description": "You learned the wooded ridges bordering the Misty Mountains as a young hunter, tracking deer and picking up the bow before most children could properly grip it. The forest kept its secrets, and you learned most of them.",
         "skills": [
             "Scouting",
             "Bow"
@@ -977,8 +977,8 @@
     {
         "string_id": "taom_parent_empire_6",
         "culture_id": "empire",
-        "text": "Wanderers and Outcasts",
-        "description": "Your family were drifters, cast out from the clans or choosing to live beyond their reach. They survived by their wits and occasionally by less honest means.",
+        "text": "Drifted between the clans as an outcast.",
+        "description": "You were cast out or wandered off, spending your formative years on the margins of Dunlending society, picking up work and trouble in equal measure. You learned that a well-aimed throw or a convincing lie could open doors that no clan-badge would.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -992,8 +992,8 @@
     {
         "string_id": "taom_parent_vlandia_1",
         "culture_id": "vlandia",
-        "text": "Retainers of the Marshal",
-        "description": "Your family served the marshals of the Riddermark, riding with them in defense of Rohan's borders. Your father was a skilled horseman and warrior.",
+        "text": "Rode in training with the Marshal's household.",
+        "description": "You spent your youth learning the art of mounted war in service to one of the marshals of the Riddermark, drilling with lance and sword in the wide grasslands of Rohan. Horsemanship was not taught in the Riddermark — it was breathed.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -1007,8 +1007,8 @@
     {
         "string_id": "taom_parent_vlandia_2",
         "culture_id": "vlandia",
-        "text": "Merchants of Edoras",
-        "description": "Your family were traders in the great hall-city of Edoras, bringing goods from across the Riddermark and beyond to the people of Rohan.",
+        "text": "Traded goods through the Riddermark markets.",
+        "description": "You carried wares and prices between the holds of Edoras and the smaller towns of Rohan, learning to read people and close a deal before the day's light faded. The plains were long and empty and the conversation at market stalls made the world go round.",
         "skills": [
             "Trade",
             "Charm"
@@ -1022,8 +1022,8 @@
     {
         "string_id": "taom_parent_vlandia_3",
         "culture_id": "vlandia",
-        "text": "Freeholders of the Westfold",
-        "description": "Your family were free farmers of the Westfold, raising horses and crops on the fertile plains. They served as mounted levy when the king called.",
+        "text": "Raised horses and stood levy in the Westfold.",
+        "description": "You worked your family's pastures in the Westfold, learning to handle horses almost before you could walk, and were pressed into levy service as soon as you were tall enough for the spear. The rolling plains of western Rohan were your school.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -1037,8 +1037,8 @@
     {
         "string_id": "taom_parent_vlandia_4",
         "culture_id": "vlandia",
-        "text": "Smiths of Aldburg",
-        "description": "Your family were renowned smiths in Aldburg, forging the blades and armor that equipped the Rohirrim for battle.",
+        "text": "Apprenticed to the smiths of Aldburg.",
+        "description": "You learned to shape the bright steel of Rohan in the forge-houses of Aldburg, making blades and fittings for the Rohirrim. You went home each night with arms aching and a pride in craft that no battlefield could diminish.",
         "skills": [
             "Crafting",
             "OneHanded"
@@ -1052,8 +1052,8 @@
     {
         "string_id": "taom_parent_vlandia_5",
         "culture_id": "vlandia",
-        "text": "Hunters of the Eastfold",
-        "description": "Your family were hunters and trackers in the Eastfold, skilled with the bow and knowledgeable in the ways of the wild.",
+        "text": "Hunted in the Eastfold and watched the horizon.",
+        "description": "You ranged widely across the Eastfold with your bow, hunting game and keeping a sharp eye on the eastern horizon for signs of Orc movement. The wide plains taught you to see far and move quietly, and both skills served you well.",
         "skills": [
             "Scouting",
             "Bow"
@@ -1067,8 +1067,8 @@
     {
         "string_id": "taom_parent_vlandia_6",
         "culture_id": "vlandia",
-        "text": "Wanderers of the Wold",
-        "description": "Your family drifted across the Wold, the wild grasslands between Rohan and the Brown Lands. They survived by their wits and occasional service as scouts.",
+        "text": "Drifted across the Wold with no fixed allegiance.",
+        "description": "You wandered the wild grasslands of the Wold without clan or hold to call your own, learning to survive on what the plains offered and occasionally on what other people had not hidden well enough. Cunning kept you fed when luck would not.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -1082,8 +1082,8 @@
     {
         "string_id": "taom_parent_sturgia_1",
         "culture_id": "sturgia",
-        "text": "Servants of King of Dale",
-        "description": "Your family served directly under the court of the King of Dale, managing the affairs of the kingdom and defending its people.",
+        "text": "Trained in the royal hall of King Brand.",
+        "description": "You were schooled in the martial arts of Dale, learning to ride and wield heavy weapons under the instruction of Brand's household guard. The rebuilt city was prosperous and proud, and its soldiers were expected to match its reputation.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -1097,8 +1097,8 @@
     {
         "string_id": "taom_parent_sturgia_2",
         "culture_id": "sturgia",
-        "text": "Urban Traders",
-        "description": "Your family were merchants of Dale, trading in the fine wares and toys that made the city famous across the North.",
+        "text": "Clerked in the trading houses of Dale.",
+        "description": "You learned to keep accounts and charm buyers in the merchant halls of Dale, where goods from the East and South met goods from Erebor and the North. The city's famous trade made it the ideal classroom for anyone wanting to understand wealth.",
         "skills": [
             "Trade",
             "Charm"
@@ -1112,8 +1112,8 @@
     {
         "string_id": "taom_parent_sturgia_3",
         "culture_id": "sturgia",
-        "text": "Free Farmers",
-        "description": "Your family were farmers in the lands around Dale and Esgaroth, working the fields and fishing the Long Lake.",
+        "text": "Fished the Long Lake and worked the surrounding fields.",
+        "description": "You grew up hauling nets on the Long Lake and tending the farmland around Esgaroth, building the stamina that lake life demands. When the militia was called you took up your spear alongside the other freemen and marched to keep your home safe.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -1127,8 +1127,8 @@
     {
         "string_id": "taom_parent_sturgia_4",
         "culture_id": "sturgia",
-        "text": "Urban Artisans",
-        "description": "Your family were craftsmen in Dale, famous for their toy-making and metalwork that drew traders from distant lands.",
+        "text": "Learned craft in the workshops of Dale.",
+        "description": "You apprenticed in the workshops of Dale, famous for metalwork and the fine articles that traders carried far south. A craftsman's hands and a craftsman's pride became yours, along with a blade sharp enough to keep them.",
         "skills": [
             "Crafting",
             "OneHanded"
@@ -1142,8 +1142,8 @@
     {
         "string_id": "taom_parent_sturgia_5",
         "culture_id": "sturgia",
-        "text": "Forest Hunters",
-        "description": "Your family were hunters and woodsmen in the forests around Dale, providing furs and game for the city's markets.",
+        "text": "Hunted in the Mirkwood borders and forest trails.",
+        "description": "You ranged the dark forest edge south of the Long Lake, learning to track game and avoid the attention of worse things. Your bow was your most reliable companion and your knowledge of the forest trails kept you alive more than once.",
         "skills": [
             "Scouting",
             "Bow"
@@ -1157,8 +1157,8 @@
     {
         "string_id": "taom_parent_sturgia_6",
         "culture_id": "sturgia",
-        "text": "Vagabonds",
-        "description": "Your family lived on the margins of society in Dale, surviving through odd jobs and sometimes less reputable means.",
+        "text": "Scraped by on the margins of the Lake-town docks.",
+        "description": "You grew up among the dockworkers and minor thieves of Esgaroth, learning to supplement honest wages with dishonest ones and to vanish before the watch arrived. The lake town's busy quays were a fine education in how the world actually worked.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -1172,8 +1172,8 @@
     {
         "string_id": "taom_parent_aserai_1",
         "culture_id": "aserai",
-        "text": "Allies of Black Serpent",
-        "description": "Your family were loyal to the Black Serpent, leading warbands into the northern lands at the behest of the Dark Lord.",
+        "text": "Rode with the war-host of the Black Serpent.",
+        "description": "You trained among the banner-warriors of the Black Serpent's household, learning to fight from horseback and wield the heavy blade in the heat of the southern sun. Every drill ended with the promise of the north, and the glory that awaited Harad's warriors there.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -1187,8 +1187,8 @@
     {
         "string_id": "taom_parent_aserai_2",
         "culture_id": "aserai",
-        "text": "Desert Warriors",
-        "description": "Your family were fierce warriors of the Haradrim, trained from youth to fight in the scorching deserts of the South.",
+        "text": "Drilled with the desert spearmen of Harad.",
+        "description": "You trained in the punishing heat of the southern deserts, learning to hold formation with axe and spear in the relentless fashion of the Haradrim footmen. Endurance under the sun was prized above all other qualities.",
         "skills": [
             "OneHanded",
             "Polearm"
@@ -1202,8 +1202,8 @@
     {
         "string_id": "taom_parent_aserai_3",
         "culture_id": "aserai",
-        "text": "Traders of the South",
-        "description": "Your family conducted trade along the southern roads, bringing exotic goods and spices to the markets of Harad.",
+        "text": "Carried trade goods along the southern desert roads.",
+        "description": "You traveled the blazing caravan routes of Harad, bartering exotic goods at the desert market towns and learning the art of persuasion from hard-bitten merchants who had crossed the Sunlands many times. The road taught you more than any hall could.",
         "skills": [
             "Trade",
             "Charm"
@@ -1217,8 +1217,8 @@
     {
         "string_id": "taom_parent_aserai_4",
         "culture_id": "aserai",
-        "text": "Desert Farmers",
-        "description": "Your family worked the oases and irrigated lands of Harad, coaxing life from the arid soil with skill and patience.",
+        "text": "Worked the oasis fields in the heart of Harad.",
+        "description": "You labored in the irrigated fields around the desert oases, learning to coax growth from arid earth and to endure the physical demands of farm work under a merciless sun. When the war-levy came you were lean, strong, and ready.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -1232,8 +1232,8 @@
     {
         "string_id": "taom_parent_aserai_5",
         "culture_id": "aserai",
-        "text": "Nomadic Tribespeople",
-        "description": "Your family roamed the vast deserts, following ancient paths between water sources and trading with settled peoples.",
+        "text": "Rode with the nomadic tribes across the Sunlands.",
+        "description": "You traveled with the wandering tribes, learning to navigate by stars and read the subtle signs of the desert. Your bow was your most reliable tool, and the vast open Sunlands taught you to sight a target long before it sighted you.",
         "skills": [
             "Scouting",
             "Bow"
@@ -1247,8 +1247,8 @@
     {
         "string_id": "taom_parent_aserai_6",
         "culture_id": "aserai",
-        "text": "Desert Outlaws",
-        "description": "Your family survived on the fringes of Haradrim society, raiding caravans and living by their cunning in the endless sands.",
+        "text": "Ran with the sand-raider bands beyond the oases.",
+        "description": "You fell in with the raider bands that preyed on caravans in the deep desert, learning to move fast across the sands and hurl a javelin from horseback before the caravan guards had time to form up. The desert outlaws' life was brutal but educational.",
         "skills": [
             "Roguery",
             "Throwing"
@@ -1262,8 +1262,8 @@
     {
         "string_id": "taom_parent_battania_1",
         "culture_id": "battania",
-        "text": "Horse-Lords of Khand",
-        "description": "Your family were lords of the Variag horse clans, commanding fierce mounted warriors across the steppes of Khand.",
+        "text": "Ranged the northern wilds with the Dunedain.",
+        "description": "You were taken in hand by the Rangers of the North while still young, learning to move through the wild lands of Eriador in silence and track enemies across ruined Arnor. The Rangers asked little and demanded everything, and you learned to give it.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -1277,8 +1277,8 @@
     {
         "string_id": "taom_parent_battania_2",
         "culture_id": "battania",
-        "text": "Nomadic Healers",
-        "description": "Your family were healers and wise folk of the Variag clans, tending to the sick and preserving ancient remedies.",
+        "text": "Studied healing and herb-lore under a Ranger healer.",
+        "description": "You were apprenticed to one of the Dunedain healers who kept the knowledge of Westernesse alive in the north, learning to identify plants and treat wounds with the resources the wild lands offered. Wisdom and practical knowledge were equally revered.",
         "skills": [
             "Medicine",
             "Charm"
@@ -1292,8 +1292,8 @@
     {
         "string_id": "taom_parent_battania_3",
         "culture_id": "battania",
-        "text": "Clan Warriors",
-        "description": "Your family were warriors of the Variag clans, skilled in mounted combat and fiercely loyal to their chieftain.",
+        "text": "Fought with the Ranger patrols against Orc and wolf.",
+        "description": "You ran patrols through the ruins of Arnor with the Dunedain, learning to fight with sword and spear against the Orc warbands that tested the northern marches. The Rangers kept no fortresses, only vigilance, and you learned what that cost.",
         "skills": [
             "OneHanded",
             "Polearm"
@@ -1307,8 +1307,8 @@
     {
         "string_id": "taom_parent_battania_4",
         "culture_id": "battania",
-        "text": "Smiths of the Steppes",
-        "description": "Your family were smiths of the Variag people, crafting weapons and horse gear from the metals of the eastern mountains.",
+        "text": "Worked the forge in a Ranger settlement.",
+        "description": "You made blades and repaired equipment in the small hidden settlements where the Dunedain wintered, learning to craft with economy — materials were scarce and every piece had to be made to last. You developed a craftsman's precision and a warrior's instinct for what a weapon needed to do.",
         "skills": [
             "Crafting",
             "OneHanded"
@@ -1322,8 +1322,8 @@
     {
         "string_id": "taom_parent_battania_5",
         "culture_id": "battania",
-        "text": "Steppe Hunters",
-        "description": "Your family hunted across the vast steppes of Khand, tracking game and guarding the herds from predators.",
+        "text": "Tracked game and enemies through Eriador's wilds.",
+        "description": "You learned to read the signs of passage left by men and beasts in the old forests and moorlands of Eriador, hunting game for the table and Orc scouts for the safety of the settlements. The bow was your first language and the wilderness your second home.",
         "skills": [
             "Scouting",
             "Bow"
@@ -1337,8 +1337,8 @@
     {
         "string_id": "taom_parent_battania_6",
         "culture_id": "battania",
-        "text": "Bards of Khand",
-        "description": "Your family were traveling bards and storytellers, keeping alive the oral traditions of the Variag people through song and tale.",
+        "text": "Moved between villages as an unnamed wanderer.",
+        "description": "You lived by your wits on the roads of the North, trading small work for food and board, and occasionally lifting what was not offered. The Dunedain passed through the same settlements but spoke to no one, which taught you that invisibility was its own kind of power.",
         "skills": [
             "Roguery",
             "Charm"
@@ -1352,8 +1352,8 @@
     {
         "string_id": "taom_parent_khuzait_1",
         "culture_id": "khuzait",
-        "text": "Kinsfolk of Chieftain",
-        "description": "Your family were close kin to the Easterling chieftain, holding positions of power and commanding respect among the warrior clans.",
+        "text": "Rode and drilled with the Easterling war-riders.",
+        "description": "You trained as a war-rider of Rhun, learning mounted combat in the wide steppe tradition from elders whose fathers had ridden against Gondor under the red dawn banner. The great eastern plains were your practice ground and the horse your most trusted weapon.",
         "skills": [
             "TwoHanded",
             "Riding"
@@ -1367,8 +1367,8 @@
     {
         "string_id": "taom_parent_khuzait_2",
         "culture_id": "khuzait",
-        "text": "Merchants of East",
-        "description": "Your family traded along the eastern routes, bringing goods from distant lands to the markets of Rhun.",
+        "text": "Bartered along the trade roads of the East.",
+        "description": "You traveled the commerce routes between the Sea of Rhun and the western lands, learning to deal with merchants of many peoples and to charm your way through disputes. The eastern roads were dangerous and your tongue had to be sharper than any sword.",
         "skills": [
             "Trade",
             "Charm"
@@ -1382,8 +1382,8 @@
     {
         "string_id": "taom_parent_khuzait_3",
         "culture_id": "khuzait",
-        "text": "Nomadic Tribesfolk",
-        "description": "Your family were nomads of the eastern plains, moving with the seasons and living off the land.",
+        "text": "Moved with the nomadic clans across the eastern steppes.",
+        "description": "You followed the seasonal migrations of the steppe clans, learning to strike camp and cover great distances on foot and horseback through all weathers. The nomadic life built a hard endurance and an easy relationship with the spear.",
         "skills": [
             "Athletics",
             "Polearm"
@@ -1397,8 +1397,8 @@
     {
         "string_id": "taom_parent_khuzait_4",
         "culture_id": "khuzait",
-        "text": "Steppe Farmers",
-        "description": "Your family worked the fertile valleys near the inland sea of Rhun, growing grain and raising livestock.",
+        "text": "Worked the valley farms near the Sea of Rhun.",
+        "description": "You farmed the fertile valleys around the inland sea, learning to craft tools and make the most of limited materials in the Easterling way. When training with the blade came you took to it with the methodical discipline the farm had given you.",
         "skills": [
             "Crafting",
             "OneHanded"
@@ -1412,8 +1412,8 @@
     {
         "string_id": "taom_parent_khuzait_5",
         "culture_id": "khuzait",
-        "text": "Spirit Callers",
-        "description": "Your family were shamans and spirit-speakers of the Easterling clans, communing with the spirits of the land and sky.",
+        "text": "Learned spirit-lore and healing with the clan elders.",
+        "description": "You sat with the shamans and healers of the Easterling clans, learning the ritual knowledge and practical medicine that kept the nomadic people alive on the open plains. Words and understanding were your tools long before any weapon.",
         "skills": [
             "Medicine",
             "Charm"
@@ -1427,8 +1427,8 @@
     {
         "string_id": "taom_parent_khuzait_6",
         "culture_id": "khuzait",
-        "text": "Outland Scouts",
-        "description": "Your family served as scouts and outriders for the Easterling host, ranging far ahead of the main force to gather intelligence.",
+        "text": "Scouted far ahead of the eastern war-host.",
+        "description": "You rode as a forward scout for the Easterling cavalry columns, ranging days ahead of the main force and reporting back what you found. The work demanded you stay unseen, shoot straight from horseback, and judge when to run rather than fight.",
         "skills": [
             "Scouting",
             "Bow"
