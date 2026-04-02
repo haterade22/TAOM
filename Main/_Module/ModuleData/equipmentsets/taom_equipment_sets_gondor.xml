@@ -146,7 +146,7 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_boromir_sword" />
 			<Equipment slot="Item1" id="Item.wm_boromir_shield" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gd_osd_inf_chest_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.boromir_cloak" />
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -158,7 +158,7 @@
 	<EquipmentRoster id="boromir_civ_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gd_osd_inf_chest_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.boromir_cloak" />
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
