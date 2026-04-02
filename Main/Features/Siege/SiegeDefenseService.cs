@@ -91,6 +91,7 @@ public class SiegeDefenseService : ISiegeDefenseService
                 affirmativeAction: () =>
                 {
                     evt.PlayerAccepted = true;
+                    TrackSettlement(evt.SettlementId);
                     InformationManager.DisplayMessage(new InformationMessage(
                         $"You have pledged to defend {settlementName}. Ride now!"));
                     _logger.LogInfo($"[SiegeDefense] Player accepted defense of {evt.SettlementId}");
@@ -113,6 +114,8 @@ public class SiegeDefenseService : ISiegeDefenseService
         foreach (var key in expiredKeys)
         {
             _logger.LogInfo($"[SiegeDefense] Event for {key} expired");
+            if (_activeEvents[key].PlayerAccepted)
+                UntrackSettlement(key);
             _activeEvents.Remove(key);
         }
 
@@ -137,16 +140,47 @@ public class SiegeDefenseService : ISiegeDefenseService
 
     public void OnSiegeEnded(string settlementId)
     {
-        if (_activeEvents.ContainsKey(settlementId))
+        if (_activeEvents.TryGetValue(settlementId, out var evt))
         {
             _logger.LogInfo($"[SiegeDefense] Siege ended for {settlementId}, removing event");
+            if (evt.PlayerAccepted)
+                UntrackSettlement(settlementId);
             _activeEvents.Remove(settlementId);
+        }
+    }
+
+    private void TrackSettlement(string settlementId)
+    {
+        try
+        {
+            var settlement = Settlement.Find(settlementId);
+            if (settlement != null)
+                Campaign.Current.VisualTrackerManager.RegisterObject(settlement);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[SiegeDefense] TrackSettlement failed for {settlementId}: {ex.Message}");
+        }
+    }
+
+    private void UntrackSettlement(string settlementId)
+    {
+        try
+        {
+            var settlement = Settlement.Find(settlementId);
+            if (settlement != null)
+                Campaign.Current.VisualTrackerManager.RemoveTrackedObject(settlement, forceRemove: true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[SiegeDefense] UntrackSettlement failed for {settlementId}: {ex.Message}");
         }
     }
 
     private void GrantReward(ActiveSiegeDefenseEvent evt)
     {
         evt.RewardClaimed = true;
+        UntrackSettlement(evt.SettlementId);
 
         Hero.MainHero.Clan.Influence += _config.RewardInfluence;
 
