@@ -1,7 +1,7 @@
 # TAOM - Tales From the Age of Men
 
 ## Purpose
-Total conversion mod for Mount & Blade II: Bannerlord v1.3.12, transforming the game into a Lord of the Rings setting.
+Total conversion mod for Mount & Blade II: Bannerlord v1.3.15, transforming the game into a Lord of the Rings setting.
 
 ## Tech Stack
 - **Language**: C# (.NET Framework 4.7.2)

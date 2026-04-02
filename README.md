@@ -99,7 +99,7 @@ Children inherit their race and physical appearance from their same-sex parent. 
 
 ### Requirements
 
-- Mount & Blade II: Bannerlord **v1.3.12+**
+- Mount & Blade II: Bannerlord **v1.3.15+**
 - [Bannerlord.Harmony](https://www.nexusmods.com/mountandblade2bannerlord/mods/2006)
 - [Mod Configuration Menu (MCM)](https://www.nexusmods.com/mountandblade2bannerlord/mods/612)
 - Alliance.Wargs module (bundled)
