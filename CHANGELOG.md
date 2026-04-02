@@ -1,5 +1,14 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-02
+
+### Feat: MainMenuCustomizer — Hide Campaign, Rename Sandbox (#53)
+
+- Bannerlord main screen exposed "Campaign" (vanilla story mode) alongside "Sandbox" — misleading for a total conversion mod
+- `OnBeforeInitialModuleScreenSetAsRoot` override calls `Module.CurrentModule.OverrideInitialStateOption` twice: sets `isHidden: () => true` on `campaign_single_player`, renames `sandbox_single_player` to "Enter The Age Of Men"
+- Original action, disabled-state delegates, and order index preserved on both overrides
+- `IModuleMenuAdapter` / `ModuleMenuAdapter` wraps `Module.CurrentModule` static API; `MainMenuCustomizerService` holds no TaleWorlds references
+
 ## 2026-03-31
 
 ### Feat: TaomTournamentModel — Increased Tournament Frequency (#52)

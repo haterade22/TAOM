@@ -35,6 +35,7 @@ using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
 using TAOM.Features.Encyclopedia.Models;
+using TAOM.Features.MainMenuCustomizer;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -87,6 +88,12 @@ public class SubModule : MBSubModuleBase
         Mission_Initialize_Patch.Initialize(logger);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
+    }
+
+    protected override void OnBeforeInitialModuleScreenSetAsRoot()
+    {
+        base.OnBeforeInitialModuleScreenSetAsRoot();
+        IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

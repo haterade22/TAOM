@@ -30,11 +30,11 @@
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_e" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -123,7 +123,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -134,7 +134,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_e" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -155,8 +155,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_h" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -167,7 +171,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_f" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -188,8 +192,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_g" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -203,6 +211,10 @@
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -212,7 +224,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
 				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
@@ -225,7 +237,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
@@ -261,8 +273,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_f" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -283,7 +299,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_h" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -294,8 +310,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_i" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -317,7 +337,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -391,7 +411,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -402,7 +422,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_g" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -413,7 +433,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_i" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -542,7 +562,7 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_e" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -552,7 +572,7 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_f" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -562,7 +582,7 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_g" />
 				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
@@ -643,7 +663,7 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_h" />
 				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
@@ -654,7 +674,7 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_i" />
 				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
@@ -667,7 +687,7 @@
 		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_noble_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -677,7 +697,7 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_noble_b" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -699,7 +719,7 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_noble_c" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -709,7 +729,7 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_noble_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -781,7 +801,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -791,7 +811,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -802,7 +822,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -813,7 +833,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_e" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -823,7 +843,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_c" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_f" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -834,7 +854,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_g" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -845,7 +865,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_i" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -855,7 +875,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
+				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_h" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -878,6 +898,10 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_d" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

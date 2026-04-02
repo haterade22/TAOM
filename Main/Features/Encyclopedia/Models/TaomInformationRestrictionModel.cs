@@ -9,7 +9,7 @@ public class TaomInformationRestrictionModel : DefaultInformationRestrictionMode
     private readonly Func<bool> _showAll;
 
     public TaomInformationRestrictionModel()
-        : this(() => TaomSettings.Instance?.ShowAllEncyclopediaCharacters ?? false) { }
+        : this(() => TaomSettings.Instance?.ShowAllEncyclopediaCharacters ?? true) { }
 
     internal TaomInformationRestrictionModel(Func<bool> showAll) => _showAll = showAll;
 
