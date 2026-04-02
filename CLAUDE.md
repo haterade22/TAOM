@@ -104,6 +104,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 16 GameModel overrides) |
 | CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Arena | `Main/Features/Arena/` (TaomTournamentModel — per-participant culture armor) |
+| MainMenuCustomizer | `Main/Features/MainMenuCustomizer/` (hide Campaign, rename Sandbox → "Enter The Age Of Men") |
+| ShaderPrecompilation | `Main/Features/ShaderPrecompilation/` (pre-compile shaders menu option, eliminates in-game stutter) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
