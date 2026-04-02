@@ -22,6 +22,10 @@ public class TaomShaderGameManager : CustomGameManager
     private const int MaxTroopsPerSide = 500;
     private const string BattleScene = CustomBattleData.CoreContentDefaultSceneName;
 
+    // Set when the shader battle begins loading; used by LoadingScreen_ShaderProgress_Patch
+    // to enable stuck detection and auto-abort only during TAOM shader precompilation.
+    public static bool IsShaderBattleActive { get; private set; }
+
     private readonly IShaderPrecompilationService _service;
     private readonly IModLogger _logger;
 
@@ -38,11 +42,13 @@ public class TaomShaderGameManager : CustomGameManager
         try
         {
             _logger.LogInfo("[ShaderPrecompilation] Starting shader pre-compilation battle");
+            IsShaderBattleActive = true;
             var data = BuildBattleData();
             CustomBattleHelper.StartGame(data);
         }
         catch (Exception ex)
         {
+            IsShaderBattleActive = false;
             _logger.LogError($"[ShaderPrecompilation] Failed to start shader battle: {ex.Message}");
         }
     }

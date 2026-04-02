@@ -2,6 +2,14 @@
 
 ## 2026-04-02
 
+### Fix: ShaderPrecompilation — Stuck-Shader Auto-Abort + Countdown UI (#57)
+
+- A shader stuck at "1 remaining" could block indefinitely with no way to exit
+- After 30s stuck at the same count: shows "stuck Xs (aborting in Ys)" countdown in the loading screen text
+- After 120s stuck: calls `MBGameManager.EndGame()` to abort and return to the main menu automatically
+- `TaomShaderGameManager.IsShaderBattleActive` flag scopes the timeout to TAOM shader battles only
+- Note: TaleWorlds exposes no API for which shader is stuck — only the count is available
+
 ### Feat: Named Hero Civilian Equipment — Sauron, Witch-King, Nazgul, Khamul, Nazgul V1, Glorfindel (#61)
 
 - Added dedicated `*_civ_equipment` roster entries for all named Mordor and Rivendell heroes so they appear in their unique armor in civilian/settlement scenes
