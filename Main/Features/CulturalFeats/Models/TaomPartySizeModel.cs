@@ -8,7 +8,8 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartySizeModel : DefaultPartySizeLimitModel
 {
-    private static TextObject CultureText => GameTexts.FindText("str_culture");
+    private static TextObject? _cultureText;
+    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     public override ExplainedNumber GetPartyMemberSizeLimit(
         PartyBase party, bool includeDescriptions = false)

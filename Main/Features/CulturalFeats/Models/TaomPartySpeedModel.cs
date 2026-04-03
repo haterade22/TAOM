@@ -9,7 +9,8 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
 {
-    private static TextObject CultureText => GameTexts.FindText("str_culture");
+    private static TextObject? _cultureText;
+    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateFinalSpeed(MobileParty mobileParty, ExplainedNumber finalSpeed)
     {

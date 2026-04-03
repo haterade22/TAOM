@@ -8,7 +8,8 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomBattleRewardModel : DefaultBattleRewardModel
 {
-    private static TextObject CultureText => GameTexts.FindText("str_culture");
+    private static TextObject? _cultureText;
+    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateRenownGain(
         PartyBase party, float renownValueOfBattle, float contributionShare)

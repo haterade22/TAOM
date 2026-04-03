@@ -9,7 +9,8 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomBuildingConstructionModel : DefaultBuildingConstructionModel
 {
-    private static TextObject CultureText => GameTexts.FindText("str_culture");
+    private static TextObject? _cultureText;
+    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateDailyConstructionPower(Town town, bool includeDescriptions = false)
     {

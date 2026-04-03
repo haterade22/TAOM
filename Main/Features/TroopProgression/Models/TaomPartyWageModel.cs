@@ -11,7 +11,8 @@ namespace TAOM.Features.TroopProgression.Models;
 
 public class TaomPartyWageModel : DefaultPartyWageModel
 {
-    private static readonly TextObject CultureText = GameTexts.FindText("str_culture");
+    private static TextObject? _cultureText;
+    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     private readonly ITroopCostService _costService;
 

@@ -8,7 +8,8 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomVillageProductionModel : DefaultVillageProductionCalculatorModel
 {
-    private static TextObject CultureText => GameTexts.FindText("str_culture");
+    private static TextObject? _cultureText;
+    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateDailyProductionAmount(Village village, ItemObject item)
     {
