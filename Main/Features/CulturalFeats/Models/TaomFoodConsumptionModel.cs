@@ -8,7 +8,7 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomFoodConsumptionModel : DefaultMobilePartyFoodConsumptionModel
 {
-    private static readonly TextObject CultureText = GameTexts.FindText("str_culture");
+    private static TextObject CultureText => GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateDailyFoodConsumptionf(
         MobileParty party, ExplainedNumber baseConsumption)

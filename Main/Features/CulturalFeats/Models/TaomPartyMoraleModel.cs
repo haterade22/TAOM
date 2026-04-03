@@ -8,7 +8,7 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartyMoraleModel : DefaultPartyMoraleModel
 {
-    private static readonly TextObject CultureText = GameTexts.FindText("str_culture");
+    private static TextObject CultureText => GameTexts.FindText("str_culture");
 
     public override ExplainedNumber GetEffectivePartyMorale(
         MobileParty party, bool includeDescription = false)

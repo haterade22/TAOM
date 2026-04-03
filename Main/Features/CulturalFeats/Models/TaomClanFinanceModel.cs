@@ -8,7 +8,7 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomClanFinanceModel : DefaultClanFinanceModel
 {
-    private static readonly TextObject CultureText = GameTexts.FindText("str_culture");
+    private static TextObject CultureText => GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateTownIncomeFromTariffs(
         Clan clan, Town town, bool applyWithdrawals = false)

@@ -8,7 +8,7 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
 {
-    private static readonly TextObject CultureText = GameTexts.FindText("str_culture");
+    private static TextObject CultureText => GameTexts.FindText("str_culture");
 
     public override ExplainedNumber GetGoldCostForUpgrade(
         PartyBase party, CharacterObject characterObject, CharacterObject upgradeTarget)
