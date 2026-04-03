@@ -1418,5 +1418,60 @@
 		faction="Faction.clan_khuzait_19"
 		text="{=rurazaur_description}Rurazaur Bozorganith, a beast-master of Rhûn, commands fearsome creatures in battle during the Third Age for Sauron. His bond with wild beasts sows chaos among foes. Rurazaur's monstrous allies amplify the terror of the Easterling assaults." />
 
+	<!-- ========== SHAGHANA LORDS ========== -->
+	<Hero
+		id="lord_SH1_1"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH2_1"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH3_1"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH4_1"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH5_1"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH6_1"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH7_1"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH8_1"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH9_1"
+		faction="Faction.clan_shaghana_9" />
+
+	<!-- ========== ABANISSA LORDS ========== -->
+	<Hero
+		id="lord_AB1_1"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB2_1"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB3_1"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB4_1"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB5_1"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB6_1"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB7_1"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB8_1"
+		faction="Faction.clan_abanissa_8" />
+
 </Heroes>
 
