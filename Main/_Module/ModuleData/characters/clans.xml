@@ -1073,7 +1073,7 @@
 		banner_key="11.166.166.1528.1528.764.764.1.0.0.504.142.171.550.550.764.761.0.0.0" />
   <Faction
 		id="clan_shaghana_9"
-		initial_home_settlement="Settlement.castle_U5"
+		initial_home_settlement="Settlement.castle_A19"
 		name="{=aom_clan_shaghana_9_name}Acammes"
 		tier="4"
 		owner="Hero.lord_SH9_1"

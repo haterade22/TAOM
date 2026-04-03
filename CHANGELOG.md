@@ -2,6 +2,27 @@
 
 ## 2026-04-03
 
+### WIP: Split Harad into Three Kingdoms — Harwan, Shaghâna, Âbanissa (#63)
+
+Splitting the single Harad faction (all on vanilla `aserai`) into three independent kingdoms following the Umbar pattern.
+
+**Completed this session:**
+- Verified `spclans.xslt` already carries only Harwan's 9 clans — no trimming needed
+- Added `Kingdom.shaghana` and `Kingdom.abanissa` entries to `TAOM_spkingdoms.xml` with titles, diplomacy, and owner lords
+- Added `Culture.shaghana` and `Culture.abanissa` entries to `taom_spcultures.xml` with NPC references, names, harad troop inheritance
+- Added 17 new clan entries to `characters/clans.xml` (9 Shaghâna clans Ezarkia–Acammes; 8 Âbanissa "House of" clans)
+- Added 17 new lord hero entries to `characters/lords.xml` (lord_SH1_1–SH9_1, lord_AB1_1–AB8_1)
+- Created `characters/npcs_shaghana.xml` — 26 notable NPCs (merchants, preachers, artisans, gang leaders, rural notables, headmen)
+- Created `characters/npcs_abanissa.xml` — 26 notable NPCs with Far Harad/dynastic house flavor
+- Registered both NPC files in `SubModule.xml`
+- Extended `VolunteerRecruitmentService` with shaghana/abanissa culture fallback pools and all 17 clan mappings (harad_levy/harad_noble weights 7/3)
+- Added 21 new tests covering culture fallback (low/high roll) and all 17 new clan IDs — 727 tests passing
+
+**Remaining:**
+- `settlements.xml` — reassign towns A6–A14, FH castles, and their villages to new culture/clan owners
+- `taom_module_strings.xml` — lord names, NPC names, kingdom/culture strings
+- `charactercreation/cultures.json` — shaghana and abanissa entries
+
 ### Fix: CulturalFeats + TroopProgression Models — Remove Static TextObject Field Initializers (#62)
 
 - All 13 GameModel overrides used `private static readonly TextObject CultureText = GameTexts.FindText("str_culture")`, which compiles to an implicit `.cctor()` (static constructor). Replaced with `private static TextObject? _cultureText; private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");` — no `.cctor()` generated, cached after first call, no per-tick overhead
