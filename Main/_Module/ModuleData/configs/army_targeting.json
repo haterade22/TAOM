@@ -2,7 +2,12 @@
   "FactionPriorityTargets": {
     "mordor":    ["town_EW3", "town_EW2", "town_EW1", "town_EW4"],
     "isengard":  ["town_V2", "town_V1"],
-    "gundabad":  ["town_R1", "town_E1", "town_S1"],
-    "dol_guldur": ["town_M1", "town_M2", "town_R1"]
+    "gundabad":  ["town_M1", "town_M2", "town_S1", "town_S5", "town_S4", "town_S3", "town_S2", "town_E1", "town_E2", "town_E3", "town_E4", "town_R1"],
+    "dolguldur": ["town_L1", "town_S1", "town_S5", "town_S4", "town_S3", "town_S2", "town_M1", "town_M2", "town_E1", "town_E2", "town_E3", "town_E4", "town_R1"],
+    "khuzait":   ["town_E4", "town_E3", "town_E2", "town_E1", "town_S5", "town_S4", "town_S3", "town_S1", "town_S2"],
+    "gondor":    ["town_ES2", "town_A1", "town_ES3", "town_A2", "town_ES1", "town_A3", "town_ES4", "town_A4", "town_ES5", "town_A5", "town_ES6", "town_A6"],
+    "empire":    ["town_V7", "town_V2", "town_V5", "town_V4", "town_V1", "town_V3", "town_V6", "town_EW3", "town_EW2", "town_EW1", "town_EW4"],
+    "sturgia":   ["town_RU7", "town_RU2", "town_RU1", "town_RU4", "town_RU3", "town_RU5", "town_RU6", "town_RU8", "town_DG1"],
+    "erebor":    ["town_RU7", "town_RU2", "town_RU1", "town_RU4", "town_RU3", "town_RU5", "town_RU6", "town_RU8"]
   }
 }

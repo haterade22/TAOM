@@ -77,10 +77,24 @@ Faction culture IDs mapped to ordered lists of target settlement IDs. Earlier en
 
 | Faction | Culture ID | Priority Sequence |
 |---------|------------|------------------|
-| Mordor | `mordor` | town_EW3 (East Osgiliath) → town_EW2 (West Osgiliath) → town_EW1 (Minas Tirith) → town_EW4 (Pelargir) |
-| Isengard | `isengard` | town_V2 (Helm's Deep) → town_V1 (Edoras) |
-| Gundabad | `gundabad` | town_R1 (Rivendell) → town_E1 (Erebor) → town_S1 (Dale) |
-| Dol Guldur | `dol_guldur` | town_M1 (Felegoth) → town_M2 (Caras Laerolin) → town_R1 (Rivendell) |
+| Mordor | `mordor` | EW3 (E.Osgiliath) → EW2 (W.Osgiliath) → EW1 (Minas Tirith) → EW4 (Pelargir) |
+| Isengard | `isengard` | V2 (Helm's Deep) → V1 (Edoras) |
+| Gundabad | `gundabad` | M1/M2 (Mirkwood) → S1/S5/S4/S3/S2 (Dale region) → E1/E2/E3/E4 (Erebor) → R1 (Rivendell) |
+| Dol Guldur | `dolguldur` | L1 (Lothlorien) → S1/S5/S4/S3/S2 (Dale) → M1/M2 (Mirkwood) → E1-E4 (Erebor) → R1 (Rivendell) |
+| Rhun/Easterlings | `khuzait` | E4/E3/E2/E1 (Erebor, nearest first) → S5/S4/S3/S1/S2 (Dale) |
+| Gondor | `gondor` | Interleaved ES (Mordor) + A (Harad): ES2→A1→ES3→A2→ES1→A3→ES4→A4→ES5→A5→ES6→A6 |
+| Dunland | `empire` | V7/V2/V5/V4/V1/V3/V6 (Rohan) → EW3/EW2/EW1/EW4 (Gondor) |
+| Dale/Barding | `sturgia` | RU7/RU2/RU1/RU4/RU3/RU5/RU6/RU8 (Rhun, nearest first) → DG1 (Dol Guldur) |
+| Erebor | `erebor` | RU7/RU2/RU1/RU4/RU3/RU5/RU6/RU8 (Rhun, nearest first) |
+
+**No priority list (vanilla logic):** Rohan (`vlandia`), Harad/Shaghana/Abanissa (`aserai`), Khand (`battania`), Umbar (`umbar`), Mirkwood (`mirkwood`), Lothlorien (`lothlorien`), Rivendell (`rivendell`) — these factions either defend or have neutral standing.
+
+**Culture ID notes:**
+- `empire` = Dunland/Dunlendings (vanilla Northern Empire renamed via XSLT; EN-region towns)
+- `khuzait` = Rhun/Easterlings (vanilla Khuzait; RU-region towns)
+- `sturgia` = Dale/Barding (vanilla Sturgia; S-region towns)
+- `battania` = Khand (vanilla Battania; K-region towns — intentionally no list, neutral faction)
+- `dolguldur` = Dol Guldur (custom culture, no underscore)
 
 ## Key Files
 
