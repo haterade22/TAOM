@@ -21,6 +21,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeEreborSettlements();
         InitializeEreborClans();
         InitializeEreborCulture();
+        InitializeShaghanaClans();
+        InitializeShaghânaCulture();
+        InitializeAbanissaClans();
+        InitializeAbanissaCulture();
     }
 
     public VolunteerRecruitmentService(IRandomProvider random)
@@ -209,6 +213,57 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("erebor_reg_miner", 5),
             new VolunteerChance("erebor_noble", 3),
             new VolunteerChance("iron_hills_reg_recruit", 2)
+        };
+    }
+
+    // --- Shaghâna Clan Mappings ---
+
+    private static void InitializeShaghanaClans()
+    {
+        AddClan("clan_shaghana_1", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_2", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_3", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_4", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_5", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_6", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_7", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_8", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_shaghana_9", "harad_levy", 7, "harad_noble", 3);
+    }
+
+    // --- Shaghâna Culture Fallback ---
+
+    private static void InitializeShaghânaCulture()
+    {
+        CultureMap["shaghana"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("harad_levy", 7),
+            new VolunteerChance("harad_noble", 3)
+        };
+    }
+
+    // --- Âbanissa Clan Mappings ---
+
+    private static void InitializeAbanissaClans()
+    {
+        AddClan("clan_abanissa_1", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_2", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_3", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_4", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_5", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_6", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_7", "harad_levy", 7, "harad_noble", 3);
+        AddClan("clan_abanissa_8", "harad_levy", 7, "harad_noble", 3);
+    }
+
+    // --- Âbanissa Culture Fallback ---
+
+    private static void InitializeAbanissaCulture()
+    {
+        CultureMap["abanissa"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("harad_levy", 7),
+            new VolunteerChance("harad_noble", 3)
         };
     }
 

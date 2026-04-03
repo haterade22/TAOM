@@ -986,6 +986,190 @@
 		banner_key="11.240.166.1528.1528.764.764.1.0.0.12003.172.171.700.711.754.767.0.0.0" />
 
   <!-- ============================================== -->
+  <!-- SHAGHANA CLANS (shaghana culture)              -->
+  <!-- Eastern Harad tribal clans                     -->
+  <!-- ============================================== -->
+
+  <!-- Ezarkia - Ruling clan of Shaghâna -->
+  <Faction
+		id="clan_shaghana_1"
+		initial_home_settlement="Settlement.town_A6"
+		name="{=aom_clan_shaghana_1_name}Ezarkia"
+		tier="6"
+		owner="Hero.lord_SH1_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.504.3.171.700.700.764.764.0.0.0.13000.88.116.300.300.755.803.0.0.0" />
+  <Faction
+		id="clan_shaghana_2"
+		initial_home_settlement="Settlement.town_A7"
+		name="{=aom_clan_shaghana_2_name}Kûmaraknis"
+		tier="5"
+		owner="Hero.lord_SH2_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.12004.2014.171.600.600.764.761.0.0.0" />
+  <Faction
+		id="clan_shaghana_3"
+		initial_home_settlement="Settlement.town_A8"
+		name="{=aom_clan_shaghana_3_name}Taiymâkä"
+		tier="5"
+		owner="Hero.lord_SH3_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.12006.203.171.600.600.764.761.0.0.0" />
+  <Faction
+		id="clan_shaghana_4"
+		initial_home_settlement="Settlement.town_A10"
+		name="{=aom_clan_shaghana_4_name}Zayaknûri"
+		tier="4"
+		owner="Hero.lord_SH4_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.12001.172.171.700.700.754.700.0.0.0" />
+  <Faction
+		id="clan_shaghana_5"
+		initial_home_settlement="Settlement.town_A11"
+		name="{=aom_clan_shaghana_5_name}Selarkes"
+		tier="4"
+		owner="Hero.lord_SH5_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.12002.2000.171.700.700.754.746.0.0.0" />
+  <Faction
+		id="clan_shaghana_6"
+		initial_home_settlement="Settlement.castle_A13"
+		name="{=aom_clan_shaghana_6_name}Uzharês"
+		tier="3"
+		owner="Hero.lord_SH6_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.12003.172.171.700.711.754.767.0.0.0" />
+  <Faction
+		id="clan_shaghana_7"
+		initial_home_settlement="Settlement.castle_A15"
+		name="{=aom_clan_shaghana_7_name}Alâranin"
+		tier="3"
+		owner="Hero.lord_SH7_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.504.116.171.600.600.764.761.0.0.0" />
+  <Faction
+		id="clan_shaghana_8"
+		initial_home_settlement="Settlement.castle_A17"
+		name="{=aom_clan_shaghana_8_name}Banûgand"
+		tier="3"
+		owner="Hero.lord_SH8_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.504.142.171.550.550.764.761.0.0.0" />
+  <Faction
+		id="clan_shaghana_9"
+		initial_home_settlement="Settlement.castle_U5"
+		name="{=aom_clan_shaghana_9_name}Acammes"
+		tier="4"
+		owner="Hero.lord_SH9_1"
+		culture="Culture.shaghana"
+		super_faction="Kingdom.shaghana"
+		is_noble="true"
+		banner_key="11.166.166.1528.1528.764.764.1.0.0.504.3.171.550.550.764.761.0.0.0" />
+
+  <!-- ============================================== -->
+  <!-- ABANISSA CLANS (abanissa culture)              -->
+  <!-- Far Harad dynastic houses                      -->
+  <!-- ============================================== -->
+
+  <!-- House of Phaxsharân - Ruling house of Âbanissa -->
+  <Faction
+		id="clan_abanissa_1"
+		initial_home_settlement="Settlement.town_A14"
+		name="{=aom_clan_abanissa_1_name}House of Phaxsharân"
+		tier="6"
+		owner="Hero.lord_AB1_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.504.3.171.700.700.764.764.0.0.0.13000.88.116.300.300.755.803.0.0.0" />
+  <Faction
+		id="clan_abanissa_2"
+		initial_home_settlement="Settlement.town_A12"
+		name="{=aom_clan_abanissa_2_name}House of Hoshêdharma"
+		tier="5"
+		owner="Hero.lord_AB2_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.12004.2014.171.600.600.764.761.0.0.0" />
+  <Faction
+		id="clan_abanissa_3"
+		initial_home_settlement="Settlement.town_A13"
+		name="{=aom_clan_abanissa_3_name}House of Vasnârad"
+		tier="4"
+		owner="Hero.lord_AB3_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.12006.203.171.600.600.764.761.0.0.0" />
+  <Faction
+		id="clan_abanissa_4"
+		initial_home_settlement="Settlement.castle_FH1"
+		name="{=aom_clan_abanissa_4_name}House of Gorazehan"
+		tier="4"
+		owner="Hero.lord_AB4_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.12001.172.171.700.700.754.700.0.0.0" />
+  <Faction
+		id="clan_abanissa_5"
+		initial_home_settlement="Settlement.castle_FH3"
+		name="{=aom_clan_abanissa_5_name}House of Azadafrozan"
+		tier="3"
+		owner="Hero.lord_AB5_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.12002.2000.171.700.700.754.746.0.0.0" />
+  <Faction
+		id="clan_abanissa_6"
+		initial_home_settlement="Settlement.castle_FH5"
+		name="{=aom_clan_abanissa_6_name}House of Artaxshâsan"
+		tier="3"
+		owner="Hero.lord_AB6_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.12003.172.171.700.711.754.767.0.0.0" />
+  <Faction
+		id="clan_abanissa_7"
+		initial_home_settlement="Settlement.castle_FH7"
+		name="{=aom_clan_abanissa_7_name}House of Ardâcheran"
+		tier="3"
+		owner="Hero.lord_AB7_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.504.116.171.600.600.764.761.0.0.0" />
+  <Faction
+		id="clan_abanissa_8"
+		initial_home_settlement="Settlement.castle_FH9"
+		name="{=aom_clan_abanissa_8_name}House of Tîrdahanâ"
+		tier="3"
+		owner="Hero.lord_AB8_1"
+		culture="Culture.abanissa"
+		super_faction="Kingdom.abanissa"
+		is_noble="true"
+		banner_key="11.225.166.1528.1528.764.764.1.0.0.504.142.171.550.550.764.761.0.0.0" />
+
+  <!-- ============================================== -->
   <!-- DOL GULDUR CLANS (dolguldur culture)           -->
   <!-- Dark forces of the Necromancer                 -->
   <!-- ============================================== -->

@@ -712,4 +712,198 @@
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
+    <!--Shaghâna - Second Harad Kingdom-->
+    <Kingdom
+        id="shaghana"
+        owner="Hero.lord_SH1_1"
+        initial_home_settlement="Settlement.town_A6"
+        banner_key="11.166.166.1528.1528.764.764.1.0.0.504.142.171.600.600.764.764.0.0.0.505.142.171.400.400.764.764.0.0.44"
+        primary_banner_color="0xffB5611E"
+        secondary_banner_color="0xff4E2D13"
+        color="0xffA05020"
+        color2="0xff5A3018"
+        culture="Culture.shaghana"
+        settlement_banner_mesh="encounter_flag_c"
+        flag_mesh="info_screen_flags_a"
+        name="{=taom_shaghana_name}Shaghâna"
+        short_name="{=taom_shaghana_short_name}Shaghâna"
+        title="{=taom_shaghana_title}Taskralan of Shaghâna"
+        ruler_title="{=taom_shaghana_ruler_title}Taskral"
+        text="{=taom_shaghana_desc}Shaghâna is the eastern reach of Harad, a land of sun-scorched steppes and ancient fortresses. Its nine tribal clans are fierce warriors, bound together by oath and blood, striking fear into those who dare oppose them.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="-1"
+                isAtWar="true" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+    <!--Âbanissa - Far Harad Kingdom-->
+    <Kingdom
+        id="abanissa"
+        owner="Hero.lord_AB1_1"
+        initial_home_settlement="Settlement.town_A14"
+        banner_key="11.225.166.1528.1528.764.764.1.0.0.504.142.171.600.600.764.764.0.0.0.505.116.171.350.350.764.764.0.0.44"
+        primary_banner_color="0xff1E3A6E"
+        secondary_banner_color="0xffB59E44"
+        color="0xff1A3560"
+        color2="0xffAA9240"
+        culture="Culture.abanissa"
+        settlement_banner_mesh="encounter_flag_c"
+        flag_mesh="info_screen_flags_a"
+        name="{=taom_abanissa_name}Âbanissa"
+        short_name="{=taom_abanissa_short_name}Âbanissa"
+        title="{=taom_abanissa_title}Châjaphân of Âbanissa"
+        ruler_title="{=taom_abanissa_ruler_title}Châjaphân"
+        text="{=taom_abanissa_desc}Âbanissa lies in the deep south of Harad, a realm of humid jungles and ancient stone dynasties. The great Houses of Âbanissa command fearsome war-beasts and armies of disciplined warriors, their power answerable to none but Sauron himself.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="-1"
+                isAtWar="true" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.shaghana"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
 </Kingdoms>

@@ -26191,4 +26191,639 @@
         </Equipments>
     </NPCCharacter>
 
+    <!-- =========================================== -->
+    <!-- SHAGHANA LORDS (shaghana culture)           -->
+    <!-- =========================================== -->
+    <NPCCharacter id="lord_SH1_1" name="{=aom_lord_SH1_1_name}Zarkan" age="55" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="220" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="120" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="100" />
+            <skill id="Riding" value="200" />
+            <skill id="Athletics" value="140" />
+            <skill id="Crafting" value="70" />
+            <skill id="Scouting" value="160" />
+            <skill id="Tactics" value="200" />
+            <skill id="Roguery" value="120" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="220" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="140" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="80" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="3" />
+            <Trait id="Honor" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_a" />
+            <EquipmentSet id="harad_civ_template_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH2_1" name="{=aom_lord_SH2_1_name}Rakhim" age="42" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="140" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="140" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="180" />
+            <skill id="Athletics" value="130" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="150" />
+            <skill id="Tactics" value="170" />
+            <skill id="Roguery" value="100" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="180" />
+            <skill id="Trade" value="80" />
+            <skill id="Steward" value="120" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="70" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="0" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Generosity" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_b" />
+            <EquipmentSet id="harad_civ_template_b" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH3_1" name="{=aom_lord_SH3_1_name}Tadeen" age="38" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="150" />
+            <skill id="Crossbow" value="90" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="170" />
+            <skill id="Athletics" value="140" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="120" />
+            <skill id="Leadership" value="170" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="110" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="70" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_c" />
+            <EquipmentSet id="harad_civ_template_c" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH4_1" name="{=aom_lord_SH4_1_name}Nakhel" age="35" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="150" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="100" />
+            <skill id="Riding" value="160" />
+            <skill id="Athletics" value="130" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="130" />
+            <skill id="Tactics" value="150" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="110" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="80" />
+            <skill id="Steward" value="100" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="60" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Generosity" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_d" />
+            <EquipmentSet id="harad_civ_template_d" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH5_1" name="{=aom_lord_SH5_1_name}Yazur" age="31" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="120" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="140" />
+            <skill id="Crossbow" value="100" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="150" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="130" />
+            <skill id="Tactics" value="140" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="100" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="70" />
+            <skill id="Steward" value="100" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="60" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="0" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_e" />
+            <EquipmentSet id="harad_civ_template_e" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH6_1" name="{=aom_lord_SH6_1_name}Kazan" age="29" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="120" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="100" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="130" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="100" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="70" />
+            <skill id="Steward" value="90" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="-1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_a" />
+            <EquipmentSet id="harad_civ_template_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH7_1" name="{=aom_lord_SH7_1_name}Haluz" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="110" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="130" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="100" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="70" />
+            <skill id="Steward" value="90" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_b" />
+            <EquipmentSet id="harad_civ_template_b" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH8_1" name="{=aom_lord_SH8_1_name}Farun" age="27" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="100" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="40" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="120" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="90" />
+            <skill id="Leadership" value="130" />
+            <skill id="Trade" value="60" />
+            <skill id="Steward" value="80" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="50" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="0" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_c" />
+            <EquipmentSet id="harad_civ_template_c" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_SH9_1" name="{=aom_lord_SH9_1_name}Saluz" age="45" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.shaghana" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="150" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="120" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="100" />
+            <skill id="Riding" value="160" />
+            <skill id="Athletics" value="130" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="150" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="120" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="80" />
+            <skill id="Steward" value="110" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="60" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="0" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_d" />
+            <EquipmentSet id="harad_civ_template_d" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- =========================================== -->
+    <!-- ABANISSA LORDS (abanissa culture)           -->
+    <!-- =========================================== -->
+    <NPCCharacter id="lord_AB1_1" name="{=aom_lord_AB1_1_name}Phaxar" age="52" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="200" />
+            <skill id="TwoHanded" value="190" />
+            <skill id="Polearm" value="180" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="160" />
+            <skill id="Crafting" value="80" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="190" />
+            <skill id="Roguery" value="100" />
+            <skill id="Charm" value="170" />
+            <skill id="Leadership" value="210" />
+            <skill id="Trade" value="110" />
+            <skill id="Steward" value="150" />
+            <skill id="Medicine" value="70" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="3" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="3" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_a" />
+            <EquipmentSet id="harad_civ_template_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB2_1" name="{=aom_lord_AB2_1_name}Hoshed" age="45" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="150" />
+            <skill id="Crafting" value="70" />
+            <skill id="Scouting" value="130" />
+            <skill id="Tactics" value="170" />
+            <skill id="Roguery" value="100" />
+            <skill id="Charm" value="150" />
+            <skill id="Leadership" value="180" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="140" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="90" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_b" />
+            <EquipmentSet id="harad_civ_template_b" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB3_1" name="{=aom_lord_AB3_1_name}Vasnar" age="38" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="150" />
+            <skill id="TwoHanded" value="140" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="140" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="150" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="80" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_c" />
+            <EquipmentSet id="harad_civ_template_c" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB4_1" name="{=aom_lord_AB4_1_name}Goraze" age="40" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="140" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="140" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="120" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="120" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="70" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="0" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-1" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_d" />
+            <EquipmentSet id="harad_civ_template_d" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB5_1" name="{=aom_lord_AB5_1_name}Azadan" age="32" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="120" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="90" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="80" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="130" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="130" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="110" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="80" />
+            <skill id="Steward" value="110" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="60" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_e" />
+            <EquipmentSet id="harad_civ_template_e" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB6_1" name="{=aom_lord_AB6_1_name}Artash" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="120" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="90" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="80" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="130" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="130" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="110" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="80" />
+            <skill id="Steward" value="110" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="60" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="1" />
+            <Trait id="Honor" value="2" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Generosity" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_a" />
+            <EquipmentSet id="harad_civ_template_a" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB7_1" name="{=aom_lord_AB7_1_name}Ardach" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="90" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="80" />
+            <skill id="Riding" value="90" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="50" />
+            <skill id="Scouting" value="100" />
+            <skill id="Tactics" value="120" />
+            <skill id="Roguery" value="70" />
+            <skill id="Charm" value="100" />
+            <skill id="Leadership" value="130" />
+            <skill id="Trade" value="70" />
+            <skill id="Steward" value="100" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="60" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="0" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="-1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_b" />
+            <EquipmentSet id="harad_civ_template_b" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter id="lord_AB8_1" name="{=aom_lord_AB8_1_name}Tirdah" age="47" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.abanissa" occupation="Lord" face_mesh_cache="true">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="140" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="140" />
+            <skill id="Roguery" value="90" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="120" />
+            <skill id="Medicine" value="50" />
+            <skill id="Engineering" value="70" />
+        </skills>
+        <Traits>
+            <Trait id="Valor" value="2" />
+            <Trait id="Honor" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="0" />
+            <Trait id="Generosity" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="harad_bat_template_medium_c" />
+            <EquipmentSet id="harad_civ_template_c" civilian="true" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

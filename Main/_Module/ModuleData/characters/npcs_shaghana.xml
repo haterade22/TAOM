@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+  <!-- ==================== SHAGHANA NOTABLE NPCs ==================== -->
+  <!-- Shaghâna uses harad face templates and aserai civilian equipment -->
+
+  <!-- Notables: Merchants (10) -->
+  <NPCCharacter id="spc_notable_shaghana_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_0}Shrewd Shaghâna trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_0b}Shaghâna spice dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_1}Shaghâna caravan owner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Calculating" value="2" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_c" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_1b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_1b}Eastern steppes merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_2}Shaghâna silk trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="-1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_2b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_2b}Harad steppe trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_c" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_3}Shaghâna money-changer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Mercy" value="-1" /><Trait id="Calculating" value="2" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_3b}Eastern goods broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_4}Shaghâna bazaar master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_4b}Devious Shaghâna merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Notables: Preachers (3) -->
+  <NPCCharacter id="spc_notable_shaghana_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.shaghana" name="{=aom_sh_notable_5}Shaghâna sun-priest" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_c" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_6}Shaghâna tribal elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_7}Keeper of Shaghâna traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Gloves" id="Item.haradrim_gloves" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Notables: Artisans (2) -->
+  <NPCCharacter id="spc_notable_shaghana_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_8}Shaghâna metalworker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_9}Shaghâna weapon-crafter" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="0" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Notables: Gang Leaders (6) -->
+  <NPCCharacter id="spc_notable_shaghana_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_gl1}Shaghâna enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="2" /><Trait id="Mercy" value="-2" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.haradrim_head" />
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Gloves" id="Item.haradrim_gloves" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_10" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_10}Shaghâna crime lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-2" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.haradrim_head" />
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_11" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_11}Shaghâna raiders' boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="2" /><Trait id="Calculating" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_gl4}Shaghâna gang chieftain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="3" /><Trait id="Mercy" value="-1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.haradrim_head" />
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Gloves" id="Item.haradrim_gloves" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_12}Shaghâna street boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_13}Shaghâna black-market dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Calculating" value="2" /><Trait id="Mercy" value="-1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Notables: Rural Notables (2) -->
+  <NPCCharacter id="spc_notable_shaghana_21" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_21}Shaghâna landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Generosity" value="1" /><Trait id="Mercy" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_notable_shaghana_22" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_22}Shaghâna herd master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="0" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_b" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Headmen (3) -->
+  <NPCCharacter id="spc_shaghana_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_headman_1}Shaghâna village headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_a" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_shaghana_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_headman_2}Shaghâna elder headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="2" /><Trait id="Mercy" value="1" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.haradrim_torso" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="spc_shaghana_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.shaghana" name="{=aom_sh_headman_3}Shaghâna village elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+    <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
+    <skills></skills>
+    <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="2" /></Traits>
+    <Equipments>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.aserai_civil_c" />
+        <equipment slot="Leg" id="Item.haradrim_boots" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+</NPCCharacters>

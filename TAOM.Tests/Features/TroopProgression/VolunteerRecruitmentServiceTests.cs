@@ -514,4 +514,117 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual("erebor_reg_miner", result);
     }
+
+    // --- Shaghâna culture fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ShaghânaCulture_ReturnsHaradLevy()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "shaghana");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_levy", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ShaghânaCulture_HighRoll_ReturnsHaradNoble()
+    {
+        // Culture pool: harad_levy(7) + harad_noble(3) = total 10
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "shaghana");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_noble", result);
+    }
+
+    [TestMethod]
+    [DataRow("clan_shaghana_1", "harad_levy")]
+    [DataRow("clan_shaghana_2", "harad_levy")]
+    [DataRow("clan_shaghana_3", "harad_levy")]
+    [DataRow("clan_shaghana_4", "harad_levy")]
+    [DataRow("clan_shaghana_5", "harad_levy")]
+    [DataRow("clan_shaghana_6", "harad_levy")]
+    [DataRow("clan_shaghana_7", "harad_levy")]
+    [DataRow("clan_shaghana_8", "harad_levy")]
+    [DataRow("clan_shaghana_9", "harad_levy")]
+    public void GetVolunteerTroopId_ShaghânaClans_ReturnHaradLevy(string clanId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: clanId,
+            cultureId: "shaghana");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    // --- Âbanissa culture fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AbanissaCulture_ReturnsHaradLevy()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "abanissa");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_levy", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AbanissaCulture_HighRoll_ReturnsHaradNoble()
+    {
+        // Culture pool: harad_levy(7) + harad_noble(3) = total 10
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "abanissa");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_noble", result);
+    }
+
+    [TestMethod]
+    [DataRow("clan_abanissa_1", "harad_levy")]
+    [DataRow("clan_abanissa_2", "harad_levy")]
+    [DataRow("clan_abanissa_3", "harad_levy")]
+    [DataRow("clan_abanissa_4", "harad_levy")]
+    [DataRow("clan_abanissa_5", "harad_levy")]
+    [DataRow("clan_abanissa_6", "harad_levy")]
+    [DataRow("clan_abanissa_7", "harad_levy")]
+    [DataRow("clan_abanissa_8", "harad_levy")]
+    public void GetVolunteerTroopId_AbanissaClans_ReturnHaradLevy(string clanId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: clanId,
+            cultureId: "abanissa");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
 }

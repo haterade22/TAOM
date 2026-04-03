@@ -3632,4 +3632,529 @@
     </basic_mercenary_troops>
   </Culture>
 
+  <!-- ============================================== -->
+  <!-- SHAGHANA - Second Harad Kingdom                -->
+  <!-- ============================================== -->
+  <Culture
+    id="shaghana"
+    name="{=aom_shaghana_name}Shaghâna"
+    is_main_culture="true"
+    color="0xFFA05020"
+    color2="0xFF5A3018"
+    elite_basic_troop="NPCCharacter.harad_noble"
+    basic_troop="NPCCharacter.harad_levy"
+    melee_militia_troop="NPCCharacter.harad_militia_spearman"
+    ranged_militia_troop="NPCCharacter.harad_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.harad_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.harad_militia_veteran_archer"
+    can_have_settlement="true"
+    villager_party_template="PartyTemplate.villager_aserai_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_harad_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
+    militia_party_template="PartyTemplate.militia_aserai_template"
+    rebels_party_template="PartyTemplate.rebels_aserai_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_aserai"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_aserai"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    text="{=aom_shaghana_desc}The Shaghâna are a fierce tribal people of the eastern Harad steppes, renowned as relentless raiders and skilled horsemen. Bound by oath and clan, they answer to their Taskral and serve the dark designs of Sauron from their sun-scorched fortresses."
+    tournament_master="NPCCharacter.tournament_master_harad"
+    villager="NPCCharacter.villager_harad"
+    caravan_master="NPCCharacter.caravan_master_harad"
+    caravan_guard="NPCCharacter.caravan_guard_harad"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_harad"
+    prison_guard="NPCCharacter.prison_guard_harad"
+    guard="NPCCharacter.guard_harad"
+    blacksmith="NPCCharacter.blacksmith_harad"
+    weaponsmith="NPCCharacter.weaponsmith_harad"
+    townswoman="NPCCharacter.townswoman_harad"
+    townswoman_infant="NPCCharacter.townswoman_infant_harad"
+    townswoman_child="NPCCharacter.townswoman_child_harad"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_harad"
+    townsman="NPCCharacter.townsman_harad"
+    townsman_infant="NPCCharacter.townsman_infant_harad"
+    townsman_child="NPCCharacter.townsman_child_harad"
+    townsman_teenager="NPCCharacter.townsman_teenager_harad"
+    village_woman="NPCCharacter.village_woman_harad"
+    villager_male_child="NPCCharacter.villager_child_aserai"
+    villager_male_teenager="NPCCharacter.villager_teenager_aserai"
+    villager_female_child="NPCCharacter.village_woman_child_aserai"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_aserai"
+    ransom_broker="NPCCharacter.ransom_broker_harad"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_harad"
+    merchant_notary="NPCCharacter.spc_notable_shaghana_0"
+    artisan_notary="NPCCharacter.spc_notable_shaghana_8"
+    preacher_notary="NPCCharacter.spc_notable_shaghana_5"
+    rural_notable_notary="NPCCharacter.spc_notable_shaghana_21"
+    shop_worker="NPCCharacter.shop_worker_harad"
+    tavernkeeper="NPCCharacter.tavernkeeper_harad"
+    taverngamehost="NPCCharacter.taverngamehost_harad"
+    musician="NPCCharacter.musician_harad"
+    tavern_wench="NPCCharacter.tavern_wench_harad"
+    armorer="NPCCharacter.armorer_harad"
+    horseMerchant="NPCCharacter.horseMerchant_harad"
+    barber="NPCCharacter.barber_harad"
+    merchant="NPCCharacter.merchant_harad"
+    beggar="NPCCharacter.beggar_harad"
+    female_beggar="NPCCharacter.female_beggar_harad"
+    female_dancer="NPCCharacter.female_dancer_harad"
+    default_battle_equipment_roster="EquipmentRoster.harad_bat_template_medium_a"
+    default_civilian_equipment_roster="EquipmentRoster.harad_civ_template_a"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
+    duel_preset_equipment_roster="EquipmentRoster.ase_duel_preset_template"
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Seega"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="630.0"
+    start_point_position_y="295.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_aserai" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_harad" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
+    <vassal_reward_items>
+      <item id="Item.noble_horse_khamseen" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.aserai_sword_1_t2" />
+      <item id="Item.aserai_sword_3_t3" />
+      <item id="Item.aserai_sword_4_t4" />
+      <item id="Item.aserai_sword_5_t4" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_state_monopolies" />
+      <policy id="policy_crown_duty" />
+      <policy id="policy_feudal_inheritance" />
+    </default_policies>
+    <male_names>
+      <name name="{=aom_shaghana_male_name_1}Zarkan" />
+      <name name="{=aom_shaghana_male_name_2}Rakhim" />
+      <name name="{=aom_shaghana_male_name_3}Tadeen" />
+      <name name="{=aom_shaghana_male_name_4}Marzuk" />
+      <name name="{=aom_shaghana_male_name_5}Nakhel" />
+      <name name="{=aom_shaghana_male_name_6}Jalim" />
+      <name name="{=aom_shaghana_male_name_7}Azrak" />
+      <name name="{=aom_shaghana_male_name_8}Samir" />
+      <name name="{=aom_shaghana_male_name_9}Kazan" />
+      <name name="{=aom_shaghana_male_name_10}Haluz" />
+      <name name="{=aom_shaghana_male_name_11}Farun" />
+      <name name="{=aom_shaghana_male_name_12}Yazur" />
+      <name name="{=aom_shaghana_male_name_13}Tashim" />
+      <name name="{=aom_shaghana_male_name_14}Bakrim" />
+      <name name="{=aom_shaghana_male_name_15}Zulkhan" />
+      <name name="{=aom_shaghana_male_name_16}Namir" />
+      <name name="{=aom_shaghana_male_name_17}Rashun" />
+      <name name="{=aom_shaghana_male_name_18}Kareem" />
+      <name name="{=aom_shaghana_male_name_19}Mazhar" />
+      <name name="{=aom_shaghana_male_name_20}Tarek" />
+      <name name="{=aom_shaghana_male_name_21}Saluz" />
+      <name name="{=aom_shaghana_male_name_22}Yusuf" />
+      <name name="{=aom_shaghana_male_name_23}Zafar" />
+      <name name="{=aom_shaghana_male_name_24}Hakeen" />
+      <name name="{=aom_shaghana_male_name_25}Murak" />
+      <name name="{=aom_shaghana_male_name_26}Tarzan" />
+      <name name="{=aom_shaghana_male_name_27}Jadim" />
+      <name name="{=aom_shaghana_male_name_28}Karmaz" />
+      <name name="{=aom_shaghana_male_name_29}Shalun" />
+      <name name="{=aom_shaghana_male_name_30}Rahim" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_shaghana_female_name_1}Zarkha" />
+      <name name="{=aom_shaghana_female_name_2}Tasira" />
+      <name name="{=aom_shaghana_female_name_3}Nakima" />
+      <name name="{=aom_shaghana_female_name_4}Salima" />
+      <name name="{=aom_shaghana_female_name_5}Yazira" />
+      <name name="{=aom_shaghana_female_name_6}Marza" />
+      <name name="{=aom_shaghana_female_name_7}Jalila" />
+      <name name="{=aom_shaghana_female_name_8}Rashima" />
+      <name name="{=aom_shaghana_female_name_9}Khadra" />
+      <name name="{=aom_shaghana_female_name_10}Zarima" />
+      <name name="{=aom_shaghana_female_name_11}Halima" />
+      <name name="{=aom_shaghana_female_name_12}Fadila" />
+      <name name="{=aom_shaghana_female_name_13}Nazeera" />
+      <name name="{=aom_shaghana_female_name_14}Samira" />
+      <name name="{=aom_shaghana_female_name_15}Rakhima" />
+      <name name="{=aom_shaghana_female_name_16}Tanira" />
+      <name name="{=aom_shaghana_female_name_17}Marzuka" />
+      <name name="{=aom_shaghana_female_name_18}Zulfa" />
+      <name name="{=aom_shaghana_female_name_19}Yusra" />
+      <name name="{=aom_shaghana_female_name_20}Khalida" />
+      <name name="{=aom_shaghana_female_name_21}Tashima" />
+      <name name="{=aom_shaghana_female_name_22}Bakira" />
+      <name name="{=aom_shaghana_female_name_23}Nazima" />
+      <name name="{=aom_shaghana_female_name_24}Samiha" />
+      <name name="{=aom_shaghana_female_name_25}Jaleela" />
+      <name name="{=aom_shaghana_female_name_26}Razina" />
+      <name name="{=aom_shaghana_female_name_27}Karima" />
+      <name name="{=aom_shaghana_female_name_28}Shalhun" />
+      <name name="{=aom_shaghana_female_name_29}Yasmira" />
+      <name name="{=aom_shaghana_female_name_30}Zafira" />
+    </female_names>
+    <clan_names>
+      <name name="{=aom_shaghana_clan_1}Ezarkia" />
+      <name name="{=aom_shaghana_clan_2}Kûmaraknis" />
+      <name name="{=aom_shaghana_clan_3}Taiymâkä" />
+      <name name="{=aom_shaghana_clan_4}Zayaknûri" />
+      <name name="{=aom_shaghana_clan_5}Selarkes" />
+      <name name="{=aom_shaghana_clan_6}Uzharês" />
+      <name name="{=aom_shaghana_clan_7}Alâranin" />
+      <name name="{=aom_shaghana_clan_8}Banûgand" />
+      <name name="{=aom_shaghana_clan_9}Acammes" />
+    </clan_names>
+    <cultural_feats>
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_wanderer_harad_0" />
+      <template name="NPCCharacter.spc_wanderer_harad_1" />
+      <template name="NPCCharacter.spc_wanderer_harad_2" />
+      <template name="NPCCharacter.spc_wanderer_harad_3" />
+      <template name="NPCCharacter.spc_wanderer_harad_4" />
+      <template name="NPCCharacter.spc_notable_shaghana_0" />
+      <template name="NPCCharacter.spc_notable_shaghana_0b" />
+      <template name="NPCCharacter.spc_notable_shaghana_1" />
+      <template name="NPCCharacter.spc_notable_shaghana_1b" />
+      <template name="NPCCharacter.spc_notable_shaghana_2" />
+      <template name="NPCCharacter.spc_notable_shaghana_2b" />
+      <template name="NPCCharacter.spc_notable_shaghana_3" />
+      <template name="NPCCharacter.spc_notable_shaghana_3b" />
+      <template name="NPCCharacter.spc_notable_shaghana_4" />
+      <template name="NPCCharacter.spc_notable_shaghana_4b" />
+      <template name="NPCCharacter.spc_notable_shaghana_5" />
+      <template name="NPCCharacter.spc_notable_shaghana_6" />
+      <template name="NPCCharacter.spc_notable_shaghana_7" />
+      <template name="NPCCharacter.spc_notable_shaghana_8" />
+      <template name="NPCCharacter.spc_notable_shaghana_9" />
+      <template name="NPCCharacter.spc_notable_shaghana_gl1" />
+      <template name="NPCCharacter.spc_notable_shaghana_10" />
+      <template name="NPCCharacter.spc_notable_shaghana_11" />
+      <template name="NPCCharacter.spc_notable_shaghana_gl4" />
+      <template name="NPCCharacter.spc_notable_shaghana_12" />
+      <template name="NPCCharacter.spc_notable_shaghana_13" />
+      <template name="NPCCharacter.spc_notable_shaghana_21" />
+      <template name="NPCCharacter.spc_notable_shaghana_22" />
+      <template name="NPCCharacter.spc_shaghana_headman_1" />
+      <template name="NPCCharacter.spc_shaghana_headman_2" />
+      <template name="NPCCharacter.spc_shaghana_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_aserai_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+    </basic_mercenary_troops>
+  </Culture>
+
+  <!-- ============================================== -->
+  <!-- ABANISSA - Far Harad Kingdom                   -->
+  <!-- ============================================== -->
+  <Culture
+    id="abanissa"
+    name="{=aom_abanissa_name}Âbanissa"
+    is_main_culture="true"
+    color="0xFF1A3560"
+    color2="0xFFAA9240"
+    elite_basic_troop="NPCCharacter.harad_noble"
+    basic_troop="NPCCharacter.harad_levy"
+    melee_militia_troop="NPCCharacter.harad_militia_spearman"
+    ranged_militia_troop="NPCCharacter.harad_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.harad_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.harad_militia_veteran_archer"
+    can_have_settlement="true"
+    villager_party_template="PartyTemplate.villager_aserai_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_harad_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
+    militia_party_template="PartyTemplate.militia_aserai_template"
+    rebels_party_template="PartyTemplate.rebels_aserai_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_aserai"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_aserai"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    text="{=aom_abanissa_desc}The great Houses of Âbanissa rule the deep south of Harad, a land of humid jungles, ancient stone palaces and towering war-beasts. Their armies march beneath banners of dynasty, commanding respect and terror across the southern lands."
+    tournament_master="NPCCharacter.tournament_master_harad"
+    villager="NPCCharacter.villager_harad"
+    caravan_master="NPCCharacter.caravan_master_harad"
+    caravan_guard="NPCCharacter.caravan_guard_harad"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_harad"
+    prison_guard="NPCCharacter.prison_guard_harad"
+    guard="NPCCharacter.guard_harad"
+    blacksmith="NPCCharacter.blacksmith_harad"
+    weaponsmith="NPCCharacter.weaponsmith_harad"
+    townswoman="NPCCharacter.townswoman_harad"
+    townswoman_infant="NPCCharacter.townswoman_infant_harad"
+    townswoman_child="NPCCharacter.townswoman_child_harad"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_harad"
+    townsman="NPCCharacter.townsman_harad"
+    townsman_infant="NPCCharacter.townsman_infant_harad"
+    townsman_child="NPCCharacter.townsman_child_harad"
+    townsman_teenager="NPCCharacter.townsman_teenager_harad"
+    village_woman="NPCCharacter.village_woman_harad"
+    villager_male_child="NPCCharacter.villager_child_aserai"
+    villager_male_teenager="NPCCharacter.villager_teenager_aserai"
+    villager_female_child="NPCCharacter.village_woman_child_aserai"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_aserai"
+    ransom_broker="NPCCharacter.ransom_broker_harad"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_harad"
+    merchant_notary="NPCCharacter.spc_notable_abanissa_0"
+    artisan_notary="NPCCharacter.spc_notable_abanissa_8"
+    preacher_notary="NPCCharacter.spc_notable_abanissa_5"
+    rural_notable_notary="NPCCharacter.spc_notable_abanissa_21"
+    shop_worker="NPCCharacter.shop_worker_harad"
+    tavernkeeper="NPCCharacter.tavernkeeper_harad"
+    taverngamehost="NPCCharacter.taverngamehost_harad"
+    musician="NPCCharacter.musician_harad"
+    tavern_wench="NPCCharacter.tavern_wench_harad"
+    armorer="NPCCharacter.armorer_harad"
+    horseMerchant="NPCCharacter.horseMerchant_harad"
+    barber="NPCCharacter.barber_harad"
+    merchant="NPCCharacter.merchant_harad"
+    beggar="NPCCharacter.beggar_harad"
+    female_beggar="NPCCharacter.female_beggar_harad"
+    female_dancer="NPCCharacter.female_dancer_harad"
+    default_battle_equipment_roster="EquipmentRoster.harad_bat_template_medium_a"
+    default_civilian_equipment_roster="EquipmentRoster.harad_civ_template_a"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
+    duel_preset_equipment_roster="EquipmentRoster.ase_duel_preset_template"
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Seega"
+    default_character_creation_body_property="BodyProperty.default_character_creation_body_property_empire"
+    start_point_position_x="660.0"
+    start_point_position_y="260.0">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_aserai" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_harad" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
+    <vassal_reward_items>
+      <item id="Item.noble_horse_khamseen" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.aserai_sword_1_t2" />
+      <item id="Item.aserai_sword_3_t3" />
+      <item id="Item.aserai_sword_4_t4" />
+      <item id="Item.aserai_sword_5_t4" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_state_monopolies" />
+      <policy id="policy_crown_duty" />
+      <policy id="policy_feudal_inheritance" />
+    </default_policies>
+    <male_names>
+      <name name="{=aom_abanissa_male_name_1}Phaxar" />
+      <name name="{=aom_abanissa_male_name_2}Hoshed" />
+      <name name="{=aom_abanissa_male_name_3}Vasnar" />
+      <name name="{=aom_abanissa_male_name_4}Goraze" />
+      <name name="{=aom_abanissa_male_name_5}Azadan" />
+      <name name="{=aom_abanissa_male_name_6}Artash" />
+      <name name="{=aom_abanissa_male_name_7}Ardach" />
+      <name name="{=aom_abanissa_male_name_8}Tirdah" />
+      <name name="{=aom_abanissa_male_name_9}Sharun" />
+      <name name="{=aom_abanissa_male_name_10}Khorman" />
+      <name name="{=aom_abanissa_male_name_11}Farzan" />
+      <name name="{=aom_abanissa_male_name_12}Mazdan" />
+      <name name="{=aom_abanissa_male_name_13}Rushan" />
+      <name name="{=aom_abanissa_male_name_14}Babak" />
+      <name name="{=aom_abanissa_male_name_15}Darius" />
+      <name name="{=aom_abanissa_male_name_16}Cyran" />
+      <name name="{=aom_abanissa_male_name_17}Arshan" />
+      <name name="{=aom_abanissa_male_name_18}Kavan" />
+      <name name="{=aom_abanissa_male_name_19}Jamshid" />
+      <name name="{=aom_abanissa_male_name_20}Parviz" />
+      <name name="{=aom_abanissa_male_name_21}Bahram" />
+      <name name="{=aom_abanissa_male_name_22}Sohrab" />
+      <name name="{=aom_abanissa_male_name_23}Khusrow" />
+      <name name="{=aom_abanissa_male_name_24}Ardavan" />
+      <name name="{=aom_abanissa_male_name_25}Roshdan" />
+      <name name="{=aom_abanissa_male_name_26}Manuch" />
+      <name name="{=aom_abanissa_male_name_27}Zobaid" />
+      <name name="{=aom_abanissa_male_name_28}Farhad" />
+      <name name="{=aom_abanissa_male_name_29}Nariman" />
+      <name name="{=aom_abanissa_male_name_30}Tahmur" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_abanissa_female_name_1}Phaxara" />
+      <name name="{=aom_abanissa_female_name_2}Hosheda" />
+      <name name="{=aom_abanissa_female_name_3}Vasnara" />
+      <name name="{=aom_abanissa_female_name_4}Gorazha" />
+      <name name="{=aom_abanissa_female_name_5}Azadeh" />
+      <name name="{=aom_abanissa_female_name_6}Artashna" />
+      <name name="{=aom_abanissa_female_name_7}Ardacheh" />
+      <name name="{=aom_abanissa_female_name_8}Tirdana" />
+      <name name="{=aom_abanissa_female_name_9}Sharana" />
+      <name name="{=aom_abanissa_female_name_10}Khorba" />
+      <name name="{=aom_abanissa_female_name_11}Farzana" />
+      <name name="{=aom_abanissa_female_name_12}Mazdana" />
+      <name name="{=aom_abanissa_female_name_13}Rushana" />
+      <name name="{=aom_abanissa_female_name_14}Bakura" />
+      <name name="{=aom_abanissa_female_name_15}Dariya" />
+      <name name="{=aom_abanissa_female_name_16}Cyrana" />
+      <name name="{=aom_abanissa_female_name_17}Arshana" />
+      <name name="{=aom_abanissa_female_name_18}Kavana" />
+      <name name="{=aom_abanissa_female_name_19}Jamshi" />
+      <name name="{=aom_abanissa_female_name_20}Parvana" />
+      <name name="{=aom_abanissa_female_name_21}Bahrama" />
+      <name name="{=aom_abanissa_female_name_22}Sohraba" />
+      <name name="{=aom_abanissa_female_name_23}Khusrova" />
+      <name name="{=aom_abanissa_female_name_24}Ardavana" />
+      <name name="{=aom_abanissa_female_name_25}Roshdana" />
+      <name name="{=aom_abanissa_female_name_26}Manucheh" />
+      <name name="{=aom_abanissa_female_name_27}Zobayda" />
+      <name name="{=aom_abanissa_female_name_28}Farhada" />
+      <name name="{=aom_abanissa_female_name_29}Narima" />
+      <name name="{=aom_abanissa_female_name_30}Tahmura" />
+    </female_names>
+    <clan_names>
+      <name name="{=aom_abanissa_clan_1}House of Phaxsharân" />
+      <name name="{=aom_abanissa_clan_2}House of Hoshêdharma" />
+      <name name="{=aom_abanissa_clan_3}House of Vasnârad" />
+      <name name="{=aom_abanissa_clan_4}House of Gorazehan" />
+      <name name="{=aom_abanissa_clan_5}House of Azadafrozan" />
+      <name name="{=aom_abanissa_clan_6}House of Artaxshâsan" />
+      <name name="{=aom_abanissa_clan_7}House of Ardâcheran" />
+      <name name="{=aom_abanissa_clan_8}House of Tîrdahanâ" />
+    </clan_names>
+    <cultural_feats>
+    </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_wanderer_harad_5" />
+      <template name="NPCCharacter.spc_wanderer_harad_6" />
+      <template name="NPCCharacter.spc_wanderer_harad_7" />
+      <template name="NPCCharacter.spc_wanderer_harad_8" />
+      <template name="NPCCharacter.spc_wanderer_harad_9" />
+      <template name="NPCCharacter.spc_notable_abanissa_0" />
+      <template name="NPCCharacter.spc_notable_abanissa_0b" />
+      <template name="NPCCharacter.spc_notable_abanissa_1" />
+      <template name="NPCCharacter.spc_notable_abanissa_1b" />
+      <template name="NPCCharacter.spc_notable_abanissa_2" />
+      <template name="NPCCharacter.spc_notable_abanissa_2b" />
+      <template name="NPCCharacter.spc_notable_abanissa_3" />
+      <template name="NPCCharacter.spc_notable_abanissa_3b" />
+      <template name="NPCCharacter.spc_notable_abanissa_4" />
+      <template name="NPCCharacter.spc_notable_abanissa_4b" />
+      <template name="NPCCharacter.spc_notable_abanissa_5" />
+      <template name="NPCCharacter.spc_notable_abanissa_6" />
+      <template name="NPCCharacter.spc_notable_abanissa_7" />
+      <template name="NPCCharacter.spc_notable_abanissa_8" />
+      <template name="NPCCharacter.spc_notable_abanissa_9" />
+      <template name="NPCCharacter.spc_notable_abanissa_gl1" />
+      <template name="NPCCharacter.spc_notable_abanissa_10" />
+      <template name="NPCCharacter.spc_notable_abanissa_11" />
+      <template name="NPCCharacter.spc_notable_abanissa_gl4" />
+      <template name="NPCCharacter.spc_notable_abanissa_12" />
+      <template name="NPCCharacter.spc_notable_abanissa_13" />
+      <template name="NPCCharacter.spc_notable_abanissa_21" />
+      <template name="NPCCharacter.spc_notable_abanissa_22" />
+      <template name="NPCCharacter.spc_abanissa_headman_1" />
+      <template name="NPCCharacter.spc_abanissa_headman_2" />
+      <template name="NPCCharacter.spc_abanissa_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
+      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
+      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
+      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_aserai_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.eastern_mercenary" />
+      <template name="NPCCharacter.western_mercenary" />
+    </basic_mercenary_troops>
+  </Culture>
+
 </SPCultures>

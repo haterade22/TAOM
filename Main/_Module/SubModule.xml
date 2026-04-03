@@ -532,6 +532,24 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
+			<XmlName id="NPCCharacters" path="characters/npcs_shaghana"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="characters/npcs_abanissa"/>
+			<IncludedGameTypes>
+				<GameType value ="Campaign"/>
+				<GameType value ="CampaignStoryMode"/>
+				<GameType value = "CustomGame"/>
+				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
 			<XmlName id="NPCCharacters" path="characters/npcs_umbar"/>
 			<IncludedGameTypes>
 				<GameType value ="Campaign"/>
