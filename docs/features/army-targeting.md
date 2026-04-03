@@ -75,7 +75,7 @@ Faction culture IDs mapped to ordered lists of target settlement IDs. Earlier en
 
 ### Current Priority Lists
 
-| Faction | Culture ID | Priority Sequence |
+| Faction | Faction ID (JSON key) | Priority Sequence |
 |---------|------------|------------------|
 | Mordor | `mordor` | EW3 (E.Osgiliath) → EW2 (W.Osgiliath) → EW1 (Minas Tirith) → EW4 (Pelargir) |
 | Isengard | `isengard` | V2 (Helm's Deep) → V1 (Edoras) |
@@ -89,12 +89,14 @@ Faction culture IDs mapped to ordered lists of target settlement IDs. Earlier en
 
 **No priority list (vanilla logic):** Rohan (`vlandia`), Harad/Shaghana/Abanissa (`aserai`), Khand (`battania`), Umbar (`umbar`), Mirkwood (`mirkwood`), Lothlorien (`lothlorien`), Rivendell (`rivendell`) — these factions either defend or have neutral standing.
 
-**Culture ID notes:**
-- `empire` = Dunland/Dunlendings (vanilla Northern Empire renamed via XSLT; EN-region towns)
-- `khuzait` = Rhun/Easterlings (vanilla Khuzait; RU-region towns)
-- `sturgia` = Dale/Barding (vanilla Sturgia; S-region towns)
-- `battania` = Khand (vanilla Battania; K-region towns — intentionally no list, neutral faction)
-- `dolguldur` = Dol Guldur (custom culture, no underscore)
+**Faction ID notes (keys are faction StringIds, not culture StringIds):**
+- `empire_s` = Mordor (Southern Empire, `Culture.empire` — distinct from Gondor/Dunland by faction ID)
+- `empire_w` = Gondor (Western Empire, `Culture.empire`)
+- `empire` = Dunland/Dunlendings (Northern Empire, `Culture.empire`)
+- `khuzait` = Rhun/Easterlings (faction and culture IDs match)
+- `sturgia` = Dale/Barding (faction and culture IDs match)
+- `battania` = Khand (intentionally no list — neutral faction)
+- `dolguldur` = Dol Guldur (no underscore in both faction and culture ID)
 
 ## Key Files
 
@@ -120,13 +122,15 @@ Faction culture IDs mapped to ordered lists of target settlement IDs. Earlier en
 
 No TaleWorlds adapter interfaces are required — the service works exclusively with string IDs and floats.
 
+**Important:** The config keys are **faction StringIds** (e.g. `empire_s`, `empire_w`), NOT culture StringIds. Three factions share `Culture.empire` (Mordor=empire_s, Gondor=empire_w, Dunland=empire), so using culture IDs would cause Mordor armies to receive Dunland's priority list.
+
 ## Tests
 
 - `TAOM.Tests/Features/ArmyTargeting/ArmyTargetingServiceTests.cs` — 12 tests covering: feature disabled (no-op), commitment stickiness, non-committed target, null committed target, first/middle/last priority entry, combined commitment+priority, null culture, unknown culture, empty list, single-entry list.
 
 ## How to Add a New Faction Priority List
 
-1. Determine the faction's culture ID — check `taom_spcultures.xml` for the `id=` attribute, or look at `battle_balance_config.json` (same IDs used there).
+1. Determine the faction's **faction StringId** — for custom TAOM kingdoms check `TAOM_spkingdoms.xml` for `id=`; for vanilla kingdoms (empire_s, empire_w, empire, khuzait, sturgia, vlandia, battania, aserai) use the vanilla kingdom id. **Do NOT use culture StringId** — Mordor, Gondor, and Dunland all share `Culture.empire` so culture IDs are ambiguous.
 2. Find the target settlement IDs — grep `settlements.xml` for `id="town_` filtered by the target region.
 3. Add an entry to `army_targeting.json`:
    ```json

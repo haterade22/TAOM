@@ -13,7 +13,7 @@ public class ArmyTargetingService : IArmyTargetingService
         _priorityIndex = BuildPriorityIndex(configProvider.GetConfig());
     }
 
-    public float GetTargetMultiplier(string candidateId, string committedTargetId, string cultureId)
+    public float GetTargetMultiplier(string candidateId, string committedTargetId, string factionId)
     {
         if (!_settings.EnableArmyStrategicIntelligence)
             return 1.0f;
@@ -23,7 +23,7 @@ public class ArmyTargetingService : IArmyTargetingService
         if (committedTargetId != null && candidateId == committedTargetId)
             multiplier *= _settings.CommitmentMultiplier;
 
-        if (cultureId != null && _priorityIndex.TryGetValue(cultureId, out var cultureIndex))
+        if (factionId != null && _priorityIndex.TryGetValue(factionId, out var cultureIndex))
         {
             if (cultureIndex.TryGetValue(candidateId, out int idx))
             {

@@ -25,10 +25,12 @@ public class TaomTargetScoreModel : DefaultTargetScoreCalculatingModel
             return baseScore;
 
         // Extract primitives at boundary — no sealed types cross into service
+        // Use faction StringId (empire_s/empire_w/empire) not culture StringId — Mordor, Gondor,
+        // and Dunland all share Culture.empire so culture cannot distinguish them.
         string committedTargetId = (mobileParty.Army?.AiBehaviorObject as Settlement)?.StringId;
-        string cultureId = mobileParty.MapFaction?.Culture?.StringId;
+        string factionId = mobileParty.MapFaction?.StringId;
 
         return baseScore * _service.GetTargetMultiplier(
-            targetSettlement.StringId, committedTargetId, cultureId);
+            targetSettlement.StringId, committedTargetId, factionId);
     }
 }

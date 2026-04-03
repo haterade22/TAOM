@@ -11,6 +11,7 @@ Adds `TaomTargetScoreModel` (`DefaultTargetScoreCalculatingModel` override) that
 - Only applies to `Army.ArmyTypes.Besieger`; Raider and Defender armies remain fully reactive
 - O(1) priority lookup via pre-built `Dictionary<string, Dictionary<string, int>>` at service construction (no hot-path `List.IndexOf`)
 - MCM group "AI Strategic Intelligence": enable/disable toggle + Commitment Multiplier (1–10) + Priority List Boost (1–5)
+- Targeting key uses **faction StringId** (`empire_s`, `empire_w`, `empire`) not culture StringId — Mordor/Gondor/Dunland all share `Culture.empire` so culture was ambiguous
 - 12 new tests, 740 total passing
 
 
