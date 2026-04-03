@@ -42,7 +42,7 @@ Split the single Harad faction (all on vanilla `aserai`) into three independent 
 - Registered both NPC files in `SubModule.xml`
 - Extended `VolunteerRecruitmentService` with shaghana/abanissa culture fallback pools and all 17 clan mappings (harad_levy/harad_noble, 7/3 weights)
 - Added 21 new tests for culture fallback and all 17 clan IDs — 727 tests passing
-- **Settlements pending**: `settlements.xml` has not yet been updated — A6–A14 towns/castles still show `Culture.aserai` and are owned by `clan_aserai_10-26`. Both new kingdoms spawn and function but do not yet own any settlements at game start
+- Reassigned settlements across A6–A14 region and FH1–FH9 to new culture/clan owners in `TAOM_Map/ModuleData/settlements.xml` (castle_U5 Zamarzîr intentionally left as `clan_aserai_14`/`Culture.umbar` — Umbar border holding)
 - Added all module strings: 17 lord names, 17 clan names, 52 NPC display names, kingdom/culture descriptors to `taom_module_strings.xml`
 - Added `shaghana` and `abanissa` entries to `charactercreation/cultures.json` (starting settlements: town_A6 Zajâna / town_A14 Damudûr)
 

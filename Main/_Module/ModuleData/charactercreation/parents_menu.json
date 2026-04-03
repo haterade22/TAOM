@@ -8,7 +8,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_gondor_2",
@@ -19,7 +20,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_gondor_3",
@@ -30,7 +32,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_gondor_4",
@@ -41,7 +44,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_gondor_5",
@@ -52,7 +56,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_gondor_6",
@@ -63,7 +68,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -75,7 +81,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_mordor_2",
@@ -86,7 +93,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_mordor_3",
@@ -97,7 +105,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_mordor_4",
@@ -108,7 +117,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_mordor_5",
@@ -119,7 +129,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_mordor_6",
@@ -130,7 +141,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -142,7 +154,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_erebor_2",
@@ -153,7 +166,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_erebor_3",
@@ -164,7 +178,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_erebor_4",
@@ -175,7 +190,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_erebor_5",
@@ -186,7 +202,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_erebor_6",
@@ -197,7 +214,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -209,7 +227,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_rivendell_2",
@@ -220,7 +239,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_rivendell_3",
@@ -231,7 +251,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_rivendell_4",
@@ -242,7 +263,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_rivendell_5",
@@ -253,7 +275,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_rivendell_6",
@@ -264,7 +287,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -276,7 +300,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_mirkwood_2",
@@ -287,7 +312,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_mirkwood_3",
@@ -298,7 +324,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_mirkwood_4",
@@ -309,7 +336,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_mirkwood_5",
@@ -320,7 +348,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_mirkwood_6",
@@ -331,7 +360,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -343,7 +373,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_lothlorien_2",
@@ -354,7 +385,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_lothlorien_3",
@@ -365,7 +397,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_lothlorien_4",
@@ -376,7 +409,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_lothlorien_5",
@@ -387,7 +421,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_lothlorien_6",
@@ -398,7 +433,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -410,7 +446,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_isengard_2",
@@ -421,7 +458,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_isengard_3",
@@ -432,7 +470,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_isengard_4",
@@ -443,7 +482,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_isengard_5",
@@ -454,7 +494,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_isengard_6",
@@ -465,7 +506,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -477,7 +519,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_gundabad_2",
@@ -488,7 +531,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_gundabad_3",
@@ -499,7 +543,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_gundabad_4",
@@ -510,7 +555,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_gundabad_5",
@@ -521,7 +567,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_gundabad_6",
@@ -532,7 +579,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -544,7 +592,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_dolguldur_2",
@@ -555,7 +604,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_dolguldur_3",
@@ -566,7 +616,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_dolguldur_4",
@@ -577,7 +628,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_dolguldur_5",
@@ -588,7 +640,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_dolguldur_6",
@@ -599,7 +652,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -611,7 +665,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_umbar_2",
@@ -622,7 +677,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_umbar_3",
@@ -633,7 +689,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_umbar_4",
@@ -644,7 +701,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_umbar_5",
@@ -655,7 +713,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_umbar_6",
@@ -666,7 +725,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -678,7 +738,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_empire_2",
@@ -689,7 +750,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_empire_3",
@@ -700,7 +762,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_empire_4",
@@ -711,7 +774,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_empire_5",
@@ -722,7 +786,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_empire_6",
@@ -733,7 +798,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -745,7 +811,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_vlandia_2",
@@ -756,7 +823,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_vlandia_3",
@@ -767,7 +835,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_vlandia_4",
@@ -778,7 +847,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_vlandia_5",
@@ -789,7 +859,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_vlandia_6",
@@ -800,7 +871,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -812,7 +884,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_sturgia_2",
@@ -823,7 +896,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_sturgia_3",
@@ -834,7 +908,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_sturgia_4",
@@ -845,7 +920,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_sturgia_5",
@@ -856,7 +932,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_sturgia_6",
@@ -867,7 +944,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -879,7 +957,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_aserai_2",
@@ -890,7 +969,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_aserai_3",
@@ -901,7 +981,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_aserai_4",
@@ -912,7 +993,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_aserai_5",
@@ -923,7 +1005,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_aserai_6",
@@ -934,7 +1017,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -946,7 +1030,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_battania_2",
@@ -957,7 +1042,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_battania_3",
@@ -968,7 +1054,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_battania_4",
@@ -979,7 +1066,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_battania_5",
@@ -990,7 +1078,8 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_battania_6",
@@ -1001,7 +1090,8 @@
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     },
 
     {
@@ -1013,7 +1103,8 @@
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
     },
     {
         "string_id": "taom_parent_khuzait_2",
@@ -1024,7 +1115,8 @@
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
     },
     {
         "string_id": "taom_parent_khuzait_3",
@@ -1035,7 +1127,8 @@
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
     },
     {
         "string_id": "taom_parent_khuzait_4",
@@ -1046,7 +1139,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
     },
     {
         "string_id": "taom_parent_khuzait_5",
@@ -1057,7 +1151,8 @@
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
     },
     {
         "string_id": "taom_parent_khuzait_6",
@@ -1068,6 +1163,7 @@
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     }
 ]
