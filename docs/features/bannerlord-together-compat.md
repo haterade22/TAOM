@@ -60,6 +60,41 @@ Without this ordering, BT could broadcast a war declaration to clients that TAOM
 | [SiegeDefenseBehavior.cs](../../Main/Features/Siege/) | Host-only; expected not to fire on BT clients |
 | [RacePersistenceBehavior.cs](../../Main/Features/HeroRace/) | Race data lives in the campaign save; syncs via BT's host-save mechanism |
 
+## Known Incompatibility: DefaultClanFinanceModel Startup Crash
+
+**Status: Unfixable from TAOM's side. Requires a fix in BannerlordTogether.**
+
+When launching with both TAOM and BannerlordTogether, the game crashes on load with:
+
+```
+NullReferenceException at TaleWorlds.CampaignSystem.GameComponents.DefaultClanFinanceModel..cctor()
+```
+
+**Root cause (confirmed via decompilation):**
+
+`DefaultClanFinanceModel` (vanilla TaleWorlds) has 16 static field initializers that call `Game.Current.GameTextManager.FindText(...)`. `Game.Current` is null during `OnSubModuleLoad`.
+
+BannerlordTogether's `Harmony.PatchAll()` runs during `OnSubModuleLoad` and patches `DefaultClanFinanceModel` methods directly. MonoMod calls `RuntimeHelpers.PrepareMethod` on those methods, which triggers the class static constructor (`.cctor()`), which crashes on the null `Game.Current`.
+
+**TAOM's defensive fix (applied, but not sufficient):**
+
+All 13 TAOM GameModel override classes were changed from:
+```csharp
+private static readonly TextObject CultureText = GameTexts.FindText("str_culture");
+```
+to:
+```csharp
+private static TextObject? _cultureText;
+private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+```
+This removes TAOM's own `.cctor()` entries (good defensive practice) but does not prevent BT from triggering the crash in the vanilla `DefaultClanFinanceModel..cctor()`.
+
+**Required fix (in BannerlordTogether):**
+
+BT must defer `PatchAll()` — or at minimum the `DefaultClanFinanceModel` patches — to a hook where `Game.Current` is non-null (e.g., `OnGameStart` or `OnBeforeInitialModuleScreenSetAsRoot`), not `OnSubModuleLoad`.
+
+**Workaround:** None available. Do not use TAOM + BannerlordTogether until BT ships a fix.
+
 ## Testing Checklist
 
 - [ ] Both players load with TAOM + BT, no startup crash

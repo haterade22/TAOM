@@ -1,5 +1,13 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-03
+
+### Fix: CulturalFeats + TroopProgression Models — Remove Static TextObject Field Initializers (#62)
+
+- All 13 GameModel overrides used `private static readonly TextObject CultureText = GameTexts.FindText("str_culture")`, which compiles to an implicit `.cctor()` (static constructor). Replaced with `private static TextObject? _cultureText; private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");` — no `.cctor()` generated, cached after first call, no per-tick overhead
+- Affected: `TaomBattleRewardModel`, `TaomBuildingConstructionModel`, `TaomClanFinanceModel`, `TaomFoodConsumptionModel`, `TaomPartyMoraleModel`, `TaomPartySizeModel`, `TaomPartySpeedModel`, `TaomPartyTroopUpgradeModel`, `TaomRaidModel`, `TaomSettlementLoyaltyModel`, `TaomSettlementProsperityModel`, `TaomVillageProductionModel`, `TaomPartyWageModel`
+- **Note:** This does NOT fix the BannerlordTogether startup crash. Root cause analysis confirmed the crash is in vanilla `DefaultClanFinanceModel..cctor()` (16 `Game.Current.GameTextManager.FindText(...)` static initializers), triggered by BT's `Harmony.PatchAll()` calling `RuntimeHelpers.PrepareMethod` during `OnSubModuleLoad` when `Game.Current` is still null. Fix requires BT to defer patching to a later hook. See `docs/features/bannerlord-together-compat.md`.
+
 ## 2026-04-02
 
 ### Compat: BannerlordTogether Passive Compatibility Pass
