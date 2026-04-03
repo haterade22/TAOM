@@ -122,4 +122,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("Response Window (Days)", 1, 14, Order = 1,
         HintText = "Number of in-game days to travel to a besieged settlement before the event expires.")]
     public int SiegeDefenseResponseDays { get; set; } = 3;
+
+    // --- AI Strategic Intelligence ---
+
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    [SettingPropertyBool("Enable AI Strategic Intelligence", Order = 0,
+        HintText = "When enabled, AI armies stick to their current target rather than re-optimising every 3 hours. Reduces army thrashing and improves siege follow-through.")]
+    public bool EnableArmyStrategicIntelligence { get; set; } = true;
+
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    [SettingPropertyFloatingInteger("Commitment Multiplier", 1.0f, 10.0f, "#0.0", Order = 1,
+        HintText = "How strongly an army commits to its current target. 4.0 = the alternative must score 4x better before the army will divert. Vanilla implicit = 1.3.")]
+    public float ArmyCommitmentMultiplier { get; set; } = 4.0f;
+
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    [SettingPropertyFloatingInteger("Priority List Boost", 1.0f, 5.0f, "#0.0", Order = 2,
+        HintText = "Score multiplier applied to the first settlement in a faction's priority list. Decays linearly to 1.0 at the last entry. Affects Mordor, Isengard etc.")]
+    public float ArmyPriorityBoost { get; set; } = 3.0f;
 }

@@ -1,0 +1,8 @@
+{
+  "FactionPriorityTargets": {
+    "mordor":    ["town_EW3", "town_EW2", "town_EW1", "town_EW4"],
+    "isengard":  ["town_V2", "town_V1"],
+    "gundabad":  ["town_R1", "town_E1", "town_S1"],
+    "dol_guldur": ["town_M1", "town_M2", "town_R1"]
+  }
+}

@@ -2,6 +2,19 @@
 
 ## 2026-04-03
 
+### AI Strategic Intelligence — Army Commitment + Faction Priority Lists
+
+Adds `TaomTargetScoreModel` (`DefaultTargetScoreCalculatingModel` override) that prevents Besieger army AI from thrashing targets every 3 hours.
+
+- **Commitment stickiness**: current target receives a configurable score multiplier (default 4×) so an alternative must be 4× better before the army diverts
+- **Faction priority lists**: JSON config maps faction culture → ordered settlement list; earlier entries receive `MaxPriorityBoost` (default 3×) decaying linearly to 1× at the end; Mordor → EW3→EW2→EW1→EW4, Isengard → V2→V1, Gundabad → R1→E1→S1, Dol Guldur → M1→M2→R1
+- Only applies to `Army.ArmyTypes.Besieger`; Raider and Defender armies remain fully reactive
+- O(1) priority lookup via pre-built `Dictionary<string, Dictionary<string, int>>` at service construction (no hot-path `List.IndexOf`)
+- MCM group "AI Strategic Intelligence": enable/disable toggle + Commitment Multiplier (1–10) + Priority List Boost (1–5)
+- 12 new tests, 740 total passing
+
+
+
 ### Split Harad into Three Kingdoms — Harwan, Shaghâna, Âbanissa (#63)
 
 Split the single Harad faction (all on vanilla `aserai`) into three independent kingdoms following the Umbar pattern. Harwan stays on `Culture.aserai`/`Kingdom.aserai` with its 9 original clans; Shaghâna and Âbanissa are fully independent kingdoms.

@@ -39,6 +39,8 @@ using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
+using TAOM.Features.ArmyTargeting;
+using TAOM.Features.ArmyTargeting.Models;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -194,6 +196,9 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig));
 
             campaignStarter.AddModel(new TaomInformationRestrictionModel());
+
+            var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
+            campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService));
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();

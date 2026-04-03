@@ -161,6 +161,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | Custom diplomacy logic for LOTR faction relationships |
 | `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific relation penalties for executions |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions per settings |
+| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Besieger army commitment stickiness (4× incumbent boost) + faction priority target lists (Mordor/Isengard/Gundabad/DG) |
 
 ## Harmony Patch Categories
 

@@ -22,6 +22,7 @@ using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
+using TAOM.Features.ArmyTargeting;
 
 namespace TAOM;
 
@@ -56,6 +57,7 @@ public static class IoC
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);
         ShaderPrecompilationIoC.RegisterShaderPrecompilationFeature(container);
         SiegeDefenseIoC.RegisterSiegeDefenseFeature(container);
+        ArmyTargetingIoC.RegisterArmyTargetingFeature(container);
 
         _container = container;
     }
