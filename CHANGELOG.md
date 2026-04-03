@@ -42,7 +42,7 @@ Split the single Harad faction (all on vanilla `aserai`) into three independent 
 - Registered both NPC files in `SubModule.xml`
 - Extended `VolunteerRecruitmentService` with shaghana/abanissa culture fallback pools and all 17 clan mappings (harad_levy/harad_noble, 7/3 weights)
 - Added 21 new tests for culture fallback and all 17 clan IDs — 727 tests passing
-- Reassigned 25 towns/castles + 70 villages across A6–A14 region and FH1–FH9 to new culture/clan owners in `TAOM_Map/ModuleData/settlements.xml` (castle_U5 Zamarzîr skipped — umbar culture, not harad)
+- **Settlements pending**: `settlements.xml` has not yet been updated — A6–A14 towns/castles still show `Culture.aserai` and are owned by `clan_aserai_10-26`. Both new kingdoms spawn and function but do not yet own any settlements at game start
 - Added all module strings: 17 lord names, 17 clan names, 52 NPC display names, kingdom/culture descriptors to `taom_module_strings.xml`
 - Added `shaghana` and `abanissa` entries to `charactercreation/cultures.json` (starting settlements: town_A6 Zajâna / town_A14 Damudûr)
 
@@ -51,6 +51,14 @@ Split the single Harad faction (all on vanilla `aserai`) into three independent 
 - All 13 GameModel overrides used `private static readonly TextObject CultureText = GameTexts.FindText("str_culture")`, which compiles to an implicit `.cctor()` (static constructor). Replaced with `private static TextObject? _cultureText; private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");` — no `.cctor()` generated, cached after first call, no per-tick overhead
 - Affected: `TaomBattleRewardModel`, `TaomBuildingConstructionModel`, `TaomClanFinanceModel`, `TaomFoodConsumptionModel`, `TaomPartyMoraleModel`, `TaomPartySizeModel`, `TaomPartySpeedModel`, `TaomPartyTroopUpgradeModel`, `TaomRaidModel`, `TaomSettlementLoyaltyModel`, `TaomSettlementProsperityModel`, `TaomVillageProductionModel`, `TaomPartyWageModel`
 - **Note:** This does NOT fix the BannerlordTogether startup crash. Root cause analysis confirmed the crash is in vanilla `DefaultClanFinanceModel..cctor()` (16 `Game.Current.GameTextManager.FindText(...)` static initializers), triggered by BT's `Harmony.PatchAll()` calling `RuntimeHelpers.PrepareMethod` during `OnSubModuleLoad` when `Game.Current` is still null. Fix requires BT to defer patching to a later hook. See `docs/features/bannerlord-together-compat.md`.
+
+### Fix: Harad Split — Restore Original Clan Banner Keys + Add Missing Files
+
+Follow-up fixes to the Shaghâna/Âbanissa split:
+
+- **Banner keys**: All 17 new clan entries (clan_shaghana_1–9, clan_abanissa_1–8) had placeholder banner keys. Restored original keys copied from their source clans (clan_aserai_10–26) which held the real designed banners
+- **Education templates**: Added 6 `child_education_templates_stage_2_page_0_branch_{0-5}_{culture}` entries each for `Culture.shaghana` and `Culture.abanissa` to `taom_education_character_templates.xml` — without these the character creation education stage crashes for players starting as these cultures
+- **Added `docs/features/kingdom-creation.md`**: Authoritative guide covering all 13 required files, naming conventions, filing order, inheritance table, SubModule.xml registration, and 3 known crash scenarios (including the heroes.xml omission and banner key placeholder pitfall)
 
 ## 2026-04-02
 

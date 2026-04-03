@@ -1,0 +1,1346 @@
+[
+    {
+        "string_id": "taom_adulthood_gondor_1",
+        "culture_id": "gondor",
+        "text": "You distinguished yourself at the defence of Osgiliath.",
+        "description": "When Mordor pressed hard across the river, you held your section of the bridge until the order to fall back was given. The captain commended your name to the Steward's herald, and the men of your company remembered what you did that day.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gondor_2",
+        "culture_id": "gondor",
+        "text": "You negotiated a vital grain supply contract for Minas Tirith.",
+        "description": "When drought threatened the outer farms, you arranged terms with merchant houses from as far as Pelargir to keep the city's granaries full through a hard winter. The Steward's chamberlain noted your name for future service.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gondor_3",
+        "culture_id": "gondor",
+        "text": "You organized the Pelennor harvest under threat of Orc raids.",
+        "description": "When raiding parties came out of the Ephel Duath, you coordinated the local levies to protect the harvesters and brought in the crop before the season broke. The village heads still talk about the year someone actually got it done.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gondor_4",
+        "culture_id": "gondor",
+        "text": "You forged a blade that was presented to a Tower Guard captain.",
+        "description": "The captain had heard of your work and commissioned a sword for the ceremony of his promotion. When he drew it before the assembled guard and it rang true, you knew the craft had repaid every sore morning in the smithing quarter.",
+        "skills": [
+            "Crafting",
+            "OneHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gondor_5",
+        "culture_id": "gondor",
+        "text": "You guided a Ranger company through an Orc encirclement in Ithilien.",
+        "description": "When the patrol was cut off east of the Anduin, you led them through a track no Orc scout had mapped, losing not a single man. Faramir's lieutenant clasped your arm when you came in and said nothing more needed to be said.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gondor_6",
+        "culture_id": "gondor",
+        "text": "You uncovered a smuggling ring operating out of the lower city.",
+        "description": "For months contraband had moved through Osgiliath's ruins into Minas Tirith without anyone knowing how. You mapped the routes, identified the ringleader, and handed the whole operation to the city watch. The reward paid for your first real sword.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mordor_1",
+        "culture_id": "mordor",
+        "text": "You survived the trial of the Black Pits and were named to the Eye's legion.",
+        "description": "Few who entered the pits were named worthy. You did not merely survive — you broke three challengers in succession before the overseers called it done. The legionary brand was pressed into your arm before the crowd dispersed.",
+        "skills": [
+            "Polearm",
+            "TwoHanded"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mordor_2",
+        "culture_id": "mordor",
+        "text": "You turned a losing supply route into the most profitable road in the Dark Land.",
+        "description": "The previous courier had been bleeding supply convoys for months through bad routing and worse deals. You cut the dead weight, renegotiated the toll agreements, and doubled throughput inside a season. The overseers rewarded you with a better cut and a worse conscience.",
+        "skills": [
+            "Trade",
+            "Roguery"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mordor_3",
+        "culture_id": "mordor",
+        "text": "You completed the construction of a forge-tower ahead of schedule.",
+        "description": "The overseer had promised punishment if the forge-tower was not ready before the Dark Lord's inspection. You drove the work gangs harder than anyone thought possible and the tower stood complete with two days to spare. The overseer took the credit; you took the survival.",
+        "skills": [
+            "Athletics",
+            "OneHanded"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mordor_4",
+        "culture_id": "mordor",
+        "text": "You quelled a work-gang revolt without losing the day's output.",
+        "description": "When the exhausted laborers put down their tools and refused to move, you stepped in alone, identified the three instigators, and handled the situation before the overseers noticed the delay. The gang went back to work. The instigators did not cause further trouble.",
+        "skills": [
+            "Tactics",
+            "TwoHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mordor_5",
+        "culture_id": "mordor",
+        "text": "You tracked and killed a deserter that three patrols had failed to find.",
+        "description": "The deserter had killed two overseers and vanished into Gorgoroth's wastes. You went alone, followed the trail for four days across the ash flats, and came back with proof of what you found. No one asked for details.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mordor_6",
+        "culture_id": "mordor",
+        "text": "You exposed a corrupt gatekeeper and took his post.",
+        "description": "The gatekeeper at the Morannon had been taxing every band that passed and pocketing half the take. You documented the scheme, presented it to his superior at exactly the right moment, and watched the post change hands. You made sure it changed to yours.",
+        "skills": [
+            "Roguery",
+            "Polearm"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_erebor_1",
+        "culture_id": "erebor",
+        "text": "You fought off an Orc raiding party in the foothills alone.",
+        "description": "Returning from an outer patrol, you came upon an Orc band that had bypassed the watch. There was no time to get help. You held the narrow path with your axe until the alarm reached the gate. Three Orcs did not reach it.",
+        "skills": [
+            "TwoHanded",
+            "Leadership"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_erebor_2",
+        "culture_id": "erebor",
+        "text": "You struck the best trade agreement with Dale in a generation.",
+        "description": "The terms on Erebor's iron exports had not been renegotiated since the Mountain's reclamation. You identified the imbalance, assembled the facts, and presented the case to King Dain's steward with such clarity that the agreement was revised within the month.",
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_erebor_3",
+        "culture_id": "erebor",
+        "text": "You discovered a lost gallery and opened a new vein of mithril.",
+        "description": "The old maps showed a collapse, but you followed the sound of water in the deep stone and found the gallery intact behind the rubble. The mithril seam within was modest, but the engineers who mapped it added your name to the survey record.",
+        "skills": [
+            "Engineering",
+            "Trade"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_erebor_4",
+        "culture_id": "erebor",
+        "text": "You held the shieldwall at the Battle under the Mountain.",
+        "description": "When the Orc host pushed into the lower gates, you anchored your section of the shieldwall while others buckled, buying the counterattack time to form. Dain's captain noted your name in the battle record, which is the closest a Dwarf gets to poetry.",
+        "skills": [
+            "OneHanded",
+            "Athletics"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_erebor_5",
+        "culture_id": "erebor",
+        "text": "You balanced the treasury accounts after years of discrepancy.",
+        "description": "The ledgers had been misaligned since the reclamation, with losses no one could explain. You spent three months cross-referencing records and identified the error — a simple conversion mistake compounded across twenty years of entries. The King's treasurer shook your hand.",
+        "skills": [
+            "Steward",
+            "Tactics"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_erebor_6",
+        "culture_id": "erebor",
+        "text": "You tracked an Orc raiding band back to its lair and marked it for the guard.",
+        "description": "The band had struck three times from the same direction and slipped away before anyone could follow. You went alone into the pines, found the camp, counted them, sketched the approach, and brought the report back in time for the garrison to act on it.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_rivendell_1",
+        "culture_id": "rivendell",
+        "text": "You rode out alone to escort a wounded messenger back to Imladris.",
+        "description": "The messenger had been ambushed east of the Ford and could not ride unaided. You found him, fought off the Orc stragglers still searching the road, and brought him in. Elrond himself spoke to you briefly before turning to the message.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_rivendell_2",
+        "culture_id": "rivendell",
+        "text": "You completed a work of craft that Elrond's loremasters chose to preserve.",
+        "description": "The piece — a detailed relief map of Eriador's ancient road network, reconstructed from fragmentary sources — was considered accurate enough to be copied into the library's archives. Three loremasters disagreed about two valleys; you were right about both.",
+        "skills": [
+            "Crafting",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_rivendell_3",
+        "culture_id": "rivendell",
+        "text": "You tended the valley's terraces through a blight season without losing a harvest.",
+        "description": "A fungal blight spread through the upper orchards and threatened the lower terraces. You identified the affected trees early, imposed a quarantine the Elves considered excessive, and kept the blight from spreading. The harvest that year was smaller but whole.",
+        "skills": [
+            "Athletics",
+            "OneHanded"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_rivendell_4",
+        "culture_id": "rivendell",
+        "text": "You warned Imladris of a Troll encampment before it threatened the Ford.",
+        "description": "Three Stone Trolls had settled in the Trollshaws closer to the Ford than any before. You spotted their camp, mapped its position, estimated their range, and brought the report to the wardens before they had moved. The wardens handled the rest.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_rivendell_5",
+        "culture_id": "rivendell",
+        "text": "You saved the life of a traveller that Elrond's healers had given up on.",
+        "description": "The traveller had taken a Morgul-tainted wound and the senior healers were already preparing their regrets. You had read a different account of the toxin's behavior in the library's older texts. You applied what you had read and the traveller recovered.",
+        "skills": [
+            "Medicine",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_rivendell_6",
+        "culture_id": "rivendell",
+        "text": "You retrieved a stolen document from a Ranger camp without being seen.",
+        "description": "A private letter from Elrond's household had gone missing in circumstances that pointed to a guest's pack. You recovered it before anyone knew it was gone, replaced what had been disturbed, and returned the letter without a word spoken about any of it.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mirkwood_1",
+        "culture_id": "mirkwood",
+        "text": "You captured a spider-queen that had been terrorising the southern paths.",
+        "description": "The creature had driven three scouting parties back and killed two. You studied its web-patterns, identified the anchoring tree it returned to, and took it at dawn with a long Elven blade while it was feeding. Thranduil's captains hung the trophy at the path's entrance.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mirkwood_2",
+        "culture_id": "mirkwood",
+        "text": "You reopened the Forest Road trade route after years of closure.",
+        "description": "The road had been effectively closed for two seasons by spider and Orc harassment. You mapped the safest remaining corridors, negotiated guard arrangements with Thranduil's captain, and led the first merchant convoy through to success. Trade resumed within the month.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mirkwood_3",
+        "culture_id": "mirkwood",
+        "text": "You cleared a corrupted clearing and planted it back to health.",
+        "description": "The darkness from Dol Guldur had seeped into a clearing near the realm's edge, blackening the soil and killing what grew there. Over two seasons you worked to remove the taint and replant, and the saplings took. Thranduil's foresters came to see it for themselves.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mirkwood_4",
+        "culture_id": "mirkwood",
+        "text": "You crafted a bow that the Elvenking's champion chose to carry.",
+        "description": "The champion had broken his previous bow in the defence of the eastern passes and needed a replacement before the season's tournament. You worked three days without rest on the stave. When the champion drew it the first time he nodded once and walked away without speaking. That was enough.",
+        "skills": [
+            "Crafting",
+            "Bow"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mirkwood_5",
+        "culture_id": "mirkwood",
+        "text": "You mapped the web-tunnel network in the southern forest.",
+        "description": "No one had been able to chart the extent of the spiders' underground passages without being caught in them. You went in small, moved carefully, and came out with a map that the Elvenking's scouts have used ever since. You declined to describe exactly how you got out.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mirkwood_6",
+        "culture_id": "mirkwood",
+        "text": "You freed three Elven captives from a spider web-hold by yourself.",
+        "description": "The scouts had been taken deep in the corrupted southern wood where the patrols would not go. You went alone at night, cut them free, and led them out through three spider-guarded paths. Two of them asked how you knew the way. You told them it was instinct.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lothlorien_1",
+        "culture_id": "lothlorien",
+        "text": "You stood the watch at Dimrill Dale alone when your partner fell ill.",
+        "description": "The post covered both approaches and could not be left unmanned. You kept the full vigil yourself through a cold night and a half a day's shift without rest, reporting three incidents that the relief watch found exactly as you described them.",
+        "skills": [
+            "TwoHanded",
+            "Bow"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lothlorien_2",
+        "culture_id": "lothlorien",
+        "text": "You wove a ceremonial cloak that the Lady of the Wood presented as a gift.",
+        "description": "Galadriel had need of a cloak worthy of a diplomatic gift to a visiting lord. You were given the commission and the materials and one week. The cloak that left Caras Galadhon made three Elven weavers ask who had made it. Galadriel smiled and did not say.",
+        "skills": [
+            "Crafting",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lothlorien_3",
+        "culture_id": "lothlorien",
+        "text": "You shot three Orcs from a flet at night during a border incursion.",
+        "description": "The Orc scouts had slipped the outer markers and were moving toward the heart of the wood. You picked them out of the darkness from sixty yards — three shots, three falls, no alarm given. The patrol found them in the morning and could not tell from which direction the arrows had come.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lothlorien_4",
+        "culture_id": "lothlorien",
+        "text": "You detected a Nazgul's approach before it reached the wood's borders.",
+        "description": "The unnatural cold and the stillness of the birds were the first signs. You reported what you felt to the Galadhrim command before anyone else had noticed. The Lady's power moved to reinforce the borders. Afterward, Celeborn said your instincts were unusually sharp.",
+        "skills": [
+            "Bow",
+            "Scouting"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lothlorien_5",
+        "culture_id": "lothlorien",
+        "text": "You healed a severe Orc-wound that others said would not close.",
+        "description": "The wound had been treated by two healers who agreed recovery was unlikely. You recognized a different preparation of kingsfoil from an older text and applied it over their objections. The Elf recovered. The two healers subsequently asked you about the preparation.",
+        "skills": [
+            "Medicine",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lothlorien_6",
+        "culture_id": "lothlorien",
+        "text": "You slipped through Dol Guldur's outer pickets and returned with a prisoner count.",
+        "description": "The Galadhrim needed to know how many were garrisoned at the southern fortress before any action was planned. You volunteered to go and look. You were gone six days. What you brought back gave Galadriel the information she needed to make her decision.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_isengard_1",
+        "culture_id": "isengard",
+        "text": "You led the assault column at Helm's Deep and breached the outer wall.",
+        "description": "Saruman's plan called for a breach before dawn. Your column hit the gate first and you were the one who placed the blasting-fire charge at its base. The explosion lit the sky. The assault followed. What happened inside the Deep is your business.",
+        "skills": [
+            "TwoHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_isengard_2",
+        "culture_id": "isengard",
+        "text": "You designed a new alloy process that doubled Isengard's weapon output.",
+        "description": "The existing process wasted a third of the steel through brittle failures at the quench. You identified the temperature as the problem, proposed a fix, tested it against Saruman's overseer's skepticism, and proved it in a single shift. Production doubled within the month.",
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_isengard_3",
+        "culture_id": "isengard",
+        "text": "You completed Isengard's new eastern culvert system ahead of Saruman's deadline.",
+        "description": "The culvert was needed to keep the pit floors dry through the flood season. Saruman had given thirty days. You reorganized the labour gangs, simplified the routing, and finished in twenty-two. Saruman examined the work without comment, which meant it was acceptable.",
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_isengard_4",
+        "culture_id": "isengard",
+        "text": "You trained a company of raw recruits into a disciplined infantry unit.",
+        "description": "The recruits were the worst draft Isengard had seen — underfed, undisciplined, and convinced of their own worthlessness. After twelve weeks under your instruction they held the line in a training exercise that the Uruk-hai observers called adequate. Coming from them, that was high praise.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_isengard_5",
+        "culture_id": "isengard",
+        "text": "You mapped the Rohirrim patrol patterns and handed Saruman a strategic advantage.",
+        "description": "For three months you observed, recorded, and cross-referenced Rohirrim movements along the Isen. When you presented the pattern map to Saruman's strategists they rearranged the entire eastern scouting rotation on its basis. Saruman acknowledged you by name in the briefing.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_isengard_6",
+        "culture_id": "isengard",
+        "text": "You turned a Rohirrim spy into a double agent working for Isengard.",
+        "description": "You identified the spy through behavioral inconsistency, confronted him privately, and gave him a choice that made the decision simple. He fed false information back to Edoras for two seasons before anyone in Rohan suspected. You received nothing in writing for the achievement.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gundabad_1",
+        "culture_id": "gundabad",
+        "text": "You won the Great Mountain Tournament and were named a warchief's retainer.",
+        "description": "The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gundabad_2",
+        "culture_id": "gundabad",
+        "text": "You established a profitable arms trade with a southern Orc clan.",
+        "description": "The southern clan had iron but no smiths. Gundabad had smiths but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage.",
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gundabad_3",
+        "culture_id": "gundabad",
+        "text": "You shored up the lower mine galleries after a partial collapse.",
+        "description": "The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep.",
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gundabad_4",
+        "culture_id": "gundabad",
+        "text": "You led the raid that broke the Dwarven outpost on the Grey Mountains.",
+        "description": "The Dwarves had fortified a pass that Gundabad used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gundabad_5",
+        "culture_id": "gundabad",
+        "text": "You tracked a Dwarven scouting party for four days and brought back their maps.",
+        "description": "The Dwarves were mapping something in the Grey Mountains and Gundabad needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_gundabad_6",
+        "culture_id": "gundabad",
+        "text": "You framed a rival warleader for theft and took his position.",
+        "description": "The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_dolguldur_1",
+        "culture_id": "dolguldur",
+        "text": "You commanded the patrol that first broke through Mirkwood's northern defences.",
+        "description": "The Elven border wardens had held the approach for two seasons. You identified the gap in their rotation, timed your crossing to the minute, and brought your patrol through and back without a casualty. The shadow-masters noted your report and gave you a permanent command.",
+        "skills": [
+            "TwoHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_dolguldur_2",
+        "culture_id": "dolguldur",
+        "text": "You forged shadow-steel weapons that passed Sauron's quality inspection.",
+        "description": "The Necromancer's inspectors had rejected two previous batches from the fortress's smiths. You reworked the smelting process, accepted no compromise on the quench, and delivered a batch that the inspector examined in silence before marking as approved. It was the first such approval in three years.",
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_dolguldur_3",
+        "culture_id": "dolguldur",
+        "text": "You completed the expansion of the fortress's lowest dungeon level.",
+        "description": "The work had stalled for a season due to seeping groundwater and failing supports. You redesigned the drainage, replaced the compromised timbers, and completed the level on the revised schedule. The Necromancer's overseers moved prisoners in the same week.",
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_dolguldur_4",
+        "culture_id": "dolguldur",
+        "text": "You broke through the Elven outer watch and took a prisoner for questioning.",
+        "description": "The intelligence taken from the Elven warden described the full rotation of Thranduil's eastern border patrol. It was the most useful strategic information Dol Guldur had received in a year. No one asked how you got the prisoner out. You did not explain.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_dolguldur_5",
+        "culture_id": "dolguldur",
+        "text": "You mapped the Elven patrol routes in southern Mirkwood over six months.",
+        "description": "Working alone and over multiple seasons, you built a complete picture of Thranduil's southern border dispositions. The map that resulted gave Dol Guldur's planners something they had never had before: certainty. The Necromancer's agents used it for two years.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_dolguldur_6",
+        "culture_id": "dolguldur",
+        "text": "You infiltrated the Elvenking's court as a trader and reported what you heard.",
+        "description": "Three months in Thranduil's halls under a false identity gave you access to conversations that no agent of Dol Guldur had ever overheard. You came back with names, plans, and relationships that the shadow-masters used to shape the next season's strategy. You found the experience unexpectedly informative about Elves.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_umbar_1",
+        "culture_id": "umbar",
+        "text": "You captained the fastest raid up the Anduin in a decade.",
+        "description": "Your ship made it past the Gondorian river chain, struck the supply depot at Pelargir, and was back at sea before the garrison's signal fires had burned down. The Corsair fleet captains raised a cup in your name when you came in, which was the only kind of ceremony they knew.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_umbar_2",
+        "culture_id": "umbar",
+        "text": "You established a new trade route through the Bay that doubled harbor revenue.",
+        "description": "The existing routes had been taxed to the point where merchants were looking for alternatives. You identified an underused passage through the bay islands, arranged the fees, and brought three new merchant houses into the harbor within a season. The harbormasters were irritated but richer.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_umbar_3",
+        "culture_id": "umbar",
+        "text": "You designed the new drydock that solved Umbar's fleet maintenance bottleneck.",
+        "description": "The old drydock could only handle one hull at a time and the fleet was backing up. Your redesign allowed parallel work on two vessels simultaneously. The ship-masters were skeptical until the first simultaneous completion came in ahead of schedule. They were not skeptical after that.",
+        "skills": [
+            "Crafting",
+            "Engineering"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_umbar_4",
+        "culture_id": "umbar",
+        "text": "You led the boarding party that took the Gondorian warship off Belfalas.",
+        "description": "The warship was twice the size of your vessel and her crew outnumbered yours. You closed in a fog, went over the side first, took the helm, and had the crew disarmed before they fully understood what was happening. The ship was in Umbar's harbor within two days.",
+        "skills": [
+            "OneHanded",
+            "Throwing"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_umbar_5",
+        "culture_id": "umbar",
+        "text": "You spotted a Gondorian naval trap before your fleet sailed into it.",
+        "description": "The supply fleet was three hours out when you noticed the way the coastal birds were behaving around a particular headland. You called for a halt, went ahead in a small craft, and found a Gondorian squadron waiting in the calm water behind it. The fleet turned back. The admiral gave you the next command.",
+        "skills": [
+            "Scouting",
+            "Tactics"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_umbar_6",
+        "culture_id": "umbar",
+        "text": "You ran the most successful black market in Umbar's lower harbor for two years.",
+        "description": "The operation moved goods that could not be declared through channels that did not officially exist, to buyers who paid in coin that was never counted. You ran it cleanly enough that no watch captain was ever able to make a case. When you closed it, you did so because you chose to.",
+        "skills": [
+            "Roguery",
+            "Trade"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_empire_1",
+        "culture_id": "empire",
+        "text": "You united three feuding clans against a Rohirrim punitive expedition.",
+        "description": "The three chiefs had not spoken in a generation, and the Rohirrim were counting on their division. You rode between camps for a week, said the right things to the right people in the right order, and on the day of the expedition's arrival, three clans stood together on the ridge. The Rohirrim turned back.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_empire_2",
+        "culture_id": "empire",
+        "text": "You opened a trading relationship with Isengard that kept your clan fed through winter.",
+        "description": "The harvest had failed and the winter stores were low. You went to Isengard alone, spoke to the right man, and came back with grain in exchange for iron ore the clan had been sitting on for years. The chief was astonished; the clan ate.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_empire_3",
+        "culture_id": "empire",
+        "text": "You drove off a Rohirrim cattle raid and recovered the stolen herd.",
+        "description": "The riders had taken the clan's breeding stock before anyone raised the alarm. You assembled six men, tracked the party through the night, caught them at the Isen ford, and brought the cattle back before morning. The chief added your name to the stronghold's stone.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_empire_4",
+        "culture_id": "empire",
+        "text": "You built the clan hall that replaced the one burned by Rohirrim.",
+        "description": "The old hall had stood for three generations before the riders put a torch to it. You designed the new one, organized the timber cutting, and led the build yourself. The hall that stands now is stronger and larger than the one that burned. That was the point.",
+        "skills": [
+            "Crafting",
+            "OneHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_empire_5",
+        "culture_id": "empire",
+        "text": "You guided a Dunlending warband through Fangorn's edge without losing a man.",
+        "description": "The warband needed to reach the southern approaches without crossing the open country where the Rohirrim patrols could see them. The only path ran along Fangorn's border. You led them through in two nights, keeping the party quiet and the Ents undisturbed. Both groups arrived safely, which was not guaranteed.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_empire_6",
+        "culture_id": "empire",
+        "text": "You obtained Rohirrim military plans through a contact in Edoras.",
+        "description": "The contact was a disgruntled stable-hand who wanted money more than loyalty to the Mark. You cultivated the relationship carefully and received two seasons of patrol schedules in exchange for a sum the chief considered modest. The clan raided without incident for the year that followed.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_vlandia_1",
+        "culture_id": "vlandia",
+        "text": "You rode in the charge at the Fords of Isen and held the line.",
+        "description": "When Saruman's forces pushed across the Isen, the Rohirrim line buckled at the center. You were among those who held the ford long enough for the retreat to become a withdrawal rather than a rout. The Marshal mentioned you in his account of the battle.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_vlandia_2",
+        "culture_id": "vlandia",
+        "text": "You negotiated the best horse-fair prices Edoras had seen in five years.",
+        "description": "The buyers from the south had come expecting to set the price as they always did. You organized the Rohirrim sellers before the fair, agreed on a floor, and held it. The buyers paid what the horses were worth. The sellers remembered who had made it happen.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_vlandia_3",
+        "culture_id": "vlandia",
+        "text": "You broke a Dunlending raid that struck the Westfold in early autumn.",
+        "description": "The raiders had timed their strike for the harvest period when the farmsteads were exposed. You had anticipated the possibility, organized the local levies in advance, and met them at the valley entrance. The raid broke on the spear-line before it reached a single farmstead.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_vlandia_4",
+        "culture_id": "vlandia",
+        "text": "You forged a sword that the King of the Mark chose for his personal guard.",
+        "description": "The commission came from the stables — a request for a blade that could be carried on horseback without awkwardness. You studied the problem, adjusted the balance, and presented the result. Theoden's captain tested it in the yard and had it sent to the king's armory the same afternoon.",
+        "skills": [
+            "Crafting",
+            "OneHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_vlandia_5",
+        "culture_id": "vlandia",
+        "text": "You tracked the Isengard scouts that were mapping Helm's Deep approaches.",
+        "description": "You noticed the signs of careful observation — broken grass pressed back upright, stones replaced — and realized someone had been reading the approaches to the Deep for weeks. You tracked back along their routes, identified the camp, and reported it to the garrison captain. Helm's Deep prepared accordingly.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_vlandia_6",
+        "culture_id": "vlandia",
+        "text": "You exposed a Dunlending spy operating inside Edoras.",
+        "description": "The spy had been in the city for two years, passing information to the clans about Rohirrim garrison strengths. You noticed the pattern in what went wrong on raids where only a few people had been told the details. Three conversations later you had the name and the method of transfer.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_sturgia_1",
+        "culture_id": "sturgia",
+        "text": "You stood with King Brand at the Battle of Dale.",
+        "description": "When Easterling forces swept down from the north and pressed into the city streets, you were among the guard that held the central square while Brand directed the defence. You were the last one standing beside the king before the relief came through the eastern gate.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_sturgia_2",
+        "culture_id": "sturgia",
+        "text": "You opened the first permanent trading house between Dale and the Easterling border settlements.",
+        "description": "The border was tense and no one wanted to go first. You went, established contact, made the first exchange, and survived long enough to make a second. Within a year, two other merchants had followed. The trading house you founded became the model for the rest.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_sturgia_3",
+        "culture_id": "sturgia",
+        "text": "You rebuilt the Long Lake fish-weirs after the Easterling war damaged them.",
+        "description": "The weirs had been destroyed in the raids and the lake catch had fallen to a fraction of its normal yield. You organized the reconstruction, solved the structural problem that had plagued the old design, and had the new weirs producing within a month. The fishermen named one of the weirs after you.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_sturgia_4",
+        "culture_id": "sturgia",
+        "text": "You produced a set of works that Dale's craft guild displayed in its hall.",
+        "description": "The guild displayed twelve pieces per year from craftsmen across the region. You submitted three — a blade, a lock mechanism, and a decorative fitting — and all three were accepted. The guild master told you it was the first time a single craftsman had placed three pieces in the same year.",
+        "skills": [
+            "Crafting",
+            "OneHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_sturgia_5",
+        "culture_id": "sturgia",
+        "text": "You guided refugees out of Mirkwood's southern edge during the shadow's expansion.",
+        "description": "When Dol Guldur's corruption crept into the southern forest and drove the settlers out, you volunteered to lead them north along the forest's edge. The route was not obvious and the pursuit came twice. All forty-three people you started with arrived at Esgaroth.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_sturgia_6",
+        "culture_id": "sturgia",
+        "text": "You recovered stolen cargo from a corrupt dock official and kept his accounts.",
+        "description": "The official had been diverting cargo for three years and everyone knew it, but no one had the documentation. You got the documentation, recovered the cargo on behalf of the merchants, and presented the accounts to the town council along with a list of recipients. The official left Dale quietly.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_aserai_1",
+        "culture_id": "aserai",
+        "text": "You rode in the vanguard of the Black Serpent's march north.",
+        "description": "The Haradrim host moved toward Gondor and you rode at the front of the war-column, fighting the skirmishes that cleared the way. When the great battle came you were among those whose name the Black Serpent knew when it was over — for those who survived to tell him.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_aserai_2",
+        "culture_id": "aserai",
+        "text": "You guided a Mumak caravan safely through the hostile desert interior.",
+        "description": "The caravan carried tribute and was attacked twice by rival tribes. You fought at the front both times and held the column's order. The Mumak arrived, the tribute was delivered, and the merchants paid your fee without argument, which was the strongest praise they gave.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_aserai_3",
+        "culture_id": "aserai",
+        "text": "You negotiated a peace between two feuding desert tribes.",
+        "description": "The blood feud had been running for three years and was costing both tribes more than either would admit. You asked to speak at the gathering, laid out the numbers without sentiment, and proposed terms that neither side loved but both could accept. They accepted.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_aserai_4",
+        "culture_id": "aserai",
+        "text": "You expanded the oasis irrigation network and doubled its yield.",
+        "description": "The existing channels had not been extended in a generation. You surveyed the terrain, proposed a new branch, organized the labor, and finished the construction before the spring floods. The oasis produced twice as much as the previous year. Three other settlements sent messengers to learn how.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_aserai_5",
+        "culture_id": "aserai",
+        "text": "You navigated the deep desert alone and found a lost oasis mentioned in old texts.",
+        "description": "The oasis had been considered legend. You read the old accounts, identified the geographic clues, and went into the deep desert with ten days of water. On the ninth day you found it. The return took longer than expected but the route you marked brought caravans there within the season.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_aserai_6",
+        "culture_id": "aserai",
+        "text": "You robbed a rival tribe's treasury caravan and redistributed it to your own.",
+        "description": "The rival tribe had prospered for years through unfavorable toll agreements imposed on your trade routes. You studied their caravan schedules for a season, chose the right moment in the deep desert, and took back what had been taken. Your tribe considered it justice; the rival tribe called it something else.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_battania_1",
+        "culture_id": "battania",
+        "text": "You tracked and destroyed an Orc warband that had been preying on the North Downs settlements.",
+        "description": "The warband had struck four settlements without the Rangers catching them. You read the pattern, anticipated their next target, and moved to intercept rather than chase. Three of the Rangers with you said afterward that they had not expected you to be right. You were.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_battania_2",
+        "culture_id": "battania",
+        "text": "You kept an injured party alive through a Misty Mountain winter.",
+        "description": "The Ranger patrol was three days from help when a rock fall crippled two members. You set the worst injuries, built shelter from what the mountain offered, and kept the party alive for eleven days until the rescue party found you. Everyone came home.",
+        "skills": [
+            "Medicine",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_battania_3",
+        "culture_id": "battania",
+        "text": "You held a mountain pass alone against an Orc patrol to buy the company time to retreat.",
+        "description": "The pass was narrow enough for one to hold, and someone had to stay. You volunteered, held the Orcs for long enough, and then retreated the way you had agreed. The company made it out. So did you, though you chose not to discuss how.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_battania_4",
+        "culture_id": "battania",
+        "text": "You forged equipment from salvaged Dunedain materials that outlasted anything new.",
+        "description": "The settlement's supply line had been cut and the tools were failing. You assessed what could be recovered, salvaged the best material from broken pieces, and reforged it into working equipment. Three Rangers asked for your work over new supply when the line reopened.",
+        "skills": [
+            "Crafting",
+            "OneHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_battania_5",
+        "culture_id": "battania",
+        "text": "You found the hidden Orc encampment that had been raiding the Weather Hills for a year.",
+        "description": "Seven patrols had looked and found nothing. You took a different approach — you tracked not the Orcs but the things that avoided them, reading the silence in the bird calls and the gaps in the wolf tracks. The camp was where the absences converged. The Rangers cleaned it out.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_battania_6",
+        "culture_id": "battania",
+        "text": "You passed through the Shire twice without any Hobbit knowing you had been there.",
+        "description": "The Dunedain watched the Shire from beyond its borders, but sometimes information required closer observation. You entered, spent three days moving through the farmland, gathered what was needed, and left without disturbing a single garden gate. The Hobbits never knew. That was the point.",
+        "skills": [
+            "Roguery",
+            "Charm"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_khuzait_1",
+        "culture_id": "khuzait",
+        "text": "You led the flanking charge that broke the Gondorian infantry square.",
+        "description": "The Gondorian square had held through three direct assaults and the battle-lord was considering withdrawal. You identified the timing of their shield rotation, requested the flanking cavalry, and committed the charge at exactly the right moment. The square broke. The battle was won.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_khuzait_2",
+        "culture_id": "khuzait",
+        "text": "You opened trade with western merchants that gave the clans access to steel tools.",
+        "description": "The clans had always traded east, but the best steel came from the west. You made the first contact, found a merchant willing to make the journey to the Sea of Rhun, and negotiated terms that made the exchange worthwhile for both parties. The tools that came back transformed three winters of work.",
+        "skills": [
+            "Trade",
+            "Charm"
+        ],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_khuzait_3",
+        "culture_id": "khuzait",
+        "text": "You led the clan migration to new grazing lands without losing the herd.",
+        "description": "The old grounds had been grazed out and the elder council was divided on where to go next. You proposed a route, argued the case with numbers and precedent, and led the migration yourself. Three hundred animals and eighty-two people made it to the new grounds intact.",
+        "skills": [
+            "Athletics",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_khuzait_4",
+        "culture_id": "khuzait",
+        "text": "You adapted western farming methods to the valley settlement and tripled its yield.",
+        "description": "The valley settlement had been subsistence farming on old methods for a generation. You had seen better approaches on the trade routes and applied them carefully, crop by crop, year by year. By the third season the settlement was producing surplus for the first time anyone could remember.",
+        "skills": [
+            "Crafting",
+            "OneHanded"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_khuzait_5",
+        "culture_id": "khuzait",
+        "text": "You talked a dying chieftain back from the edge with knowledge from the clan elders.",
+        "description": "The poison was fast-acting and the shaman said there was nothing to be done. You remembered a different teaching — a preparation from the cold steppe plants that worked against this type of wound. You prepared it, applied it, and sat through the night. The chieftain recovered. He gave you a place at his council.",
+        "skills": [
+            "Medicine",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_khuzait_6",
+        "culture_id": "khuzait",
+        "text": "You scouted the Gondorian fortress at Cair Andros and mapped its weaknesses.",
+        "description": "The battle-lord needed to know whether the fortress could be bypassed or had to be reduced. You went forward alone, spent four days observing from the river's eastern bank, and returned with a detailed assessment of its garrison strength, supply schedule, and the approach that gave the best odds. The battle-lord called it the most useful report he had received in a campaign.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    }
+]

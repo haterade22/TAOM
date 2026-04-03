@@ -17,7 +17,9 @@ public class CharacterCreationContentService : ICharacterCreationContentService
 {
     private const string ParentMenuId = "narrative_parent_menu";
     private const string ChildhoodMenuId = "narrative_childhood_menu";
+    private const string EducationMenuId = "narrative_education_menu";
     private const string YouthMenuId = "narrative_youth_menu";
+    private const string AdulthoodMenuId = "narrative_adulthood_menu";
 
     private readonly ICultureCreationDataProvider _dataProvider;
     private readonly INarrativeDataProvider _narrativeDataProvider;
@@ -86,9 +88,11 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     {
         var builder = new NarrativeMenuBuilder(_logger, _equipmentRosterProvider);
 
-        ReplaceMenuOptions(manager, builder, ParentMenuId, "parents");
+        ReplaceMenuOptions(manager, builder, ParentMenuId,    "parents");
         ReplaceMenuOptions(manager, builder, ChildhoodMenuId, "childhood");
-        ReplaceMenuOptions(manager, builder, YouthMenuId, "youth");
+        ReplaceMenuOptions(manager, builder, EducationMenuId, "education");
+        ReplaceMenuOptions(manager, builder, YouthMenuId,     "youth");
+        ReplaceMenuOptions(manager, builder, AdulthoodMenuId, "adulthood");
     }
 
     private void ReplaceMenuOptions(

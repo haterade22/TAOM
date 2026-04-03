@@ -482,6 +482,16 @@ Umbar, Shaghana, and Abanissa all inherit aserai-base resources this way.
 
 **Fix:** Add a `<Hero>` entry for each listed ID. The minimal entry is `<Hero id="lord_X_1" faction="Faction.clan_{id}_{N}" />`.
 
+### Placeholder Banner Keys (Clans Show Wrong/Generic Banners In-Game)
+
+**Symptom:** Clan banners in-game look like plain solid blocks or generic shapes instead of the designed clan banner. Every clan in the new kingdom looks the same.
+
+**Root cause:** When splitting an existing kingdom (moving clans from one culture to another), the new clan entries were created fresh with placeholder `banner_key` values rather than copying the original clan's key. Banner keys are long serialized strings that encode the full banner design — a short key like `11.166.166.1528.1528.764.764.1.0.0.504.3.171.700...` is always a placeholder.
+
+**Diagnosis:** Compare the `banner_key` length of a new clan against an established clan like `clan_umbar_1`. Established clans have keys hundreds of characters long. Placeholder keys are under 100 characters.
+
+**Fix:** Find the source clan in `clans.xml` (the clan the new one was derived from) and copy its `banner_key` exactly. For the Harad split, `clan_shaghana_1` (Ezarkia) copies from `clan_aserai_10` (the original Ezarkia definition). The kingdom's own `banner_key` in `TAOM_spkingdoms.xml` should match its ruling clan (clan tier 6).
+
 ### Wanderers Not Appearing
 
 **Symptom:** No wanderers show up in settlements belonging to the new kingdom.
@@ -515,7 +525,7 @@ When in doubt, use Umbar as the reference implementation — it is the most comp
 - **Encoding:** UTF-8, CRLF line endings
 - **Indentation:** Tabs (not spaces) in XML; 2-space indentation in JSON
 - **String key format:** `{=string_id}Display Text` — the string ID before the closing `}` must exactly match a `<string id="...">` entry in `taom_module_strings.xml`
-- **Banner keys:** Long serialized strings. Copy from an existing kingdom of similar visual style and modify colors. The Bannerlord banner editor in-game can also generate a new key.
+- **Banner keys:** Long serialized strings (typically 200–2000+ characters). When splitting an existing kingdom, copy the key exactly from the original source clan — do not generate a placeholder. The ruling clan's key should also be used as the kingdom's `banner_key` in `TAOM_spkingdoms.xml`. A short key (under ~100 chars) is always a placeholder and will show a plain generic banner in-game. The Bannerlord banner editor in-game can generate a new key if designing from scratch.
 - **BodyProperties keys:** 64-char hex strings encoding facial feature morph weights. Copy from a culturally similar lord and adjust `age`, `weight`, and `build` to differentiate individuals.
 - **Color format:** `0xffRRGGBB` — always prefix with `ff` for the alpha channel. Colors without the `ff` prefix render as transparent.
 
