@@ -21,11 +21,27 @@ public class MainMenuCustomizerServiceTests
     }
 
     [TestMethod]
-    public void CustomizeMenu_HidesCampaignOption()
+    public void CustomizeMenu_HidesSavedGamesOption()
     {
         _sut.CustomizeMenu();
 
-        _moduleMenuAdapter.Received(1).HideOption("campaign_single_player");
+        _moduleMenuAdapter.Received(1).HideOption("CampaignResumeGame");
+    }
+
+    [TestMethod]
+    public void CustomizeMenu_HidesContinueCampaignOption()
+    {
+        _sut.CustomizeMenu();
+
+        _moduleMenuAdapter.Received(1).HideOption("ContinueCampaign");
+    }
+
+    [TestMethod]
+    public void CustomizeMenu_HidesNewCampaignOption()
+    {
+        _sut.CustomizeMenu();
+
+        _moduleMenuAdapter.Received(1).HideOption("StoryModeNewGame");
     }
 
     [TestMethod]
@@ -33,7 +49,7 @@ public class MainMenuCustomizerServiceTests
     {
         _sut.CustomizeMenu();
 
-        _moduleMenuAdapter.Received(1).RenameOption("sandbox_single_player", "Enter The Age Of Men");
+        _moduleMenuAdapter.Received(1).RenameOption("SandBoxNewGame", "Enter The Age Of Men");
     }
 
     [TestMethod]

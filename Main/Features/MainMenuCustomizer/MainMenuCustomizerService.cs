@@ -15,8 +15,10 @@ public class MainMenuCustomizerService : IMainMenuCustomizerService
 
     public void CustomizeMenu()
     {
-        _moduleMenuAdapter.HideOption("campaign_single_player");
-        _moduleMenuAdapter.RenameOption("sandbox_single_player", "Enter The Age Of Men");
+        _moduleMenuAdapter.HideOption("CampaignResumeGame");
+        _moduleMenuAdapter.HideOption("ContinueCampaign");
+        _moduleMenuAdapter.HideOption("StoryModeNewGame");
+        _moduleMenuAdapter.RenameOption("SandBoxNewGame", "Enter The Age Of Men");
         _logger.LogInfo("MainMenuCustomizer: menu customization applied");
     }
 }
