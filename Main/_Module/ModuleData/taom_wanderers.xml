@@ -3592,4 +3592,468 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- ==================== SHAGHANA WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_shaghana_0"
+		name="{=aom_spc_wanderer_sh_0_name}{FIRSTNAME} al-Ezarki"
+		voice="earnest"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_1"
+		name="{=aom_spc_wanderer_sh_1_name}{FIRSTNAME} ibn-Kûmarak"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_2"
+		name="{=aom_spc_wanderer_sh_2_name}{FIRSTNAME} al-Taiym"
+		voice="ironic"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_3"
+		name="{=aom_spc_wanderer_sh_3_name}{FIRSTNAME} ibn-Zayak"
+		voice="softspoken"
+		age="42"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_4"
+		name="{=aom_spc_wanderer_sh_4_name}{FIRSTNAME} al-Selar"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_5"
+		name="{=aom_spc_wanderer_sh_5_name}{FIRSTNAME} ibn-Uzhar"
+		voice="curt"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_6"
+		name="{=aom_spc_wanderer_sh_6_name}{FIRSTNAME} al-Âran"
+		voice="ironic"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_7"
+		name="{=aom_spc_wanderer_sh_7_name}{FIRSTNAME} ibn-Banûg"
+		voice="softspoken"
+		age="45"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_8"
+		name="{=aom_spc_wanderer_sh_8_name}{FIRSTNAME} al-Acam"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_shaghana_9"
+		name="{=aom_spc_wanderer_sh_9_name}{FIRSTNAME} ibn-Shakar"
+		voice="curt"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.shaghana"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_shaghana_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== ABANISSA WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_abanissa_0"
+		name="{=aom_spc_wanderer_ab_0_name}{FIRSTNAME} Phaxar-dal"
+		voice="earnest"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_1"
+		name="{=aom_spc_wanderer_ab_1_name}{FIRSTNAME} Hoshed-van"
+		voice="softspoken"
+		age="42"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_2"
+		name="{=aom_spc_wanderer_ab_2_name}{FIRSTNAME} Vasnar-tal"
+		voice="curt"
+		age="48"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_3"
+		name="{=aom_spc_wanderer_ab_3_name}{FIRSTNAME} Goraze-shan"
+		voice="ironic"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_4"
+		name="{=aom_spc_wanderer_ab_4_name}{FIRSTNAME} Azadaf-ren"
+		voice="softspoken"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_5"
+		name="{=aom_spc_wanderer_ab_5_name}{FIRSTNAME} Artash-mir"
+		voice="earnest"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_6"
+		name="{=aom_spc_wanderer_ab_6_name}{FIRSTNAME} Ardach-ven"
+		voice="curt"
+		age="45"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_7"
+		name="{=aom_spc_wanderer_ab_7_name}{FIRSTNAME} Tirdah-lan"
+		voice="ironic"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_8"
+		name="{=aom_spc_wanderer_ab_8_name}{FIRSTNAME} Phaxim-dur"
+		voice="softspoken"
+		age="36"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_abanissa_9"
+		name="{=aom_spc_wanderer_ab_9_name}{FIRSTNAME} Vashan-kir"
+		voice="earnest"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.abanissa"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_abanissa_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" />
+		</Equipments>
+	</NPCCharacter>
+
 </NPCCharacters>

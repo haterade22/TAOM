@@ -3031,4 +3031,428 @@
 		<skill id="Engineering" value="41" />
 	</SkillSet>
 
+	<!-- ==================== SHAGHANA WANDERER SKILL SETS ==================== -->
+	<!-- 0: Engineer/Steward — steppe logistics master -->
+	<SkillSet id="spc_wanderer_shaghana_0_skills">
+		<skill id="OneHanded" value="82" />
+		<skill id="TwoHanded" value="55" />
+		<skill id="Polearm" value="78" />
+		<skill id="Bow" value="88" />
+		<skill id="Crossbow" value="30" />
+		<skill id="Throwing" value="65" />
+		<skill id="Riding" value="120" />
+		<skill id="Athletics" value="75" />
+		<skill id="Roguery" value="45" />
+		<skill id="Crafting" value="130" />
+		<skill id="Scouting" value="110" />
+		<skill id="Tactics" value="95" />
+		<skill id="Charm" value="100" />
+		<skill id="Leadership" value="115" />
+		<skill id="Trade" value="155" />
+		<skill id="Steward" value="175" />
+		<skill id="Medicine" value="90" />
+		<skill id="Engineering" value="205" />
+	</SkillSet>
+	<!-- 1: Warrior — steppe front-line fighter -->
+	<SkillSet id="spc_wanderer_shaghana_1_skills">
+		<skill id="OneHanded" value="235" />
+		<skill id="TwoHanded" value="185" />
+		<skill id="Polearm" value="182" />
+		<skill id="Bow" value="100" />
+		<skill id="Crossbow" value="45" />
+		<skill id="Throwing" value="130" />
+		<skill id="Riding" value="155" />
+		<skill id="Athletics" value="205" />
+		<skill id="Roguery" value="48" />
+		<skill id="Crafting" value="55" />
+		<skill id="Scouting" value="75" />
+		<skill id="Tactics" value="110" />
+		<skill id="Charm" value="42" />
+		<skill id="Leadership" value="85" />
+		<skill id="Trade" value="30" />
+		<skill id="Steward" value="50" />
+		<skill id="Medicine" value="40" />
+		<skill id="Engineering" value="22" />
+	</SkillSet>
+	<!-- 2: Scout/Archer — steppe outrider -->
+	<SkillSet id="spc_wanderer_shaghana_2_skills">
+		<skill id="OneHanded" value="132" />
+		<skill id="TwoHanded" value="60" />
+		<skill id="Polearm" value="75" />
+		<skill id="Bow" value="215" />
+		<skill id="Crossbow" value="55" />
+		<skill id="Throwing" value="145" />
+		<skill id="Riding" value="170" />
+		<skill id="Athletics" value="110" />
+		<skill id="Roguery" value="88" />
+		<skill id="Crafting" value="50" />
+		<skill id="Scouting" value="195" />
+		<skill id="Tactics" value="100" />
+		<skill id="Charm" value="52" />
+		<skill id="Leadership" value="70" />
+		<skill id="Trade" value="38" />
+		<skill id="Steward" value="45" />
+		<skill id="Medicine" value="55" />
+		<skill id="Engineering" value="28" />
+	</SkillSet>
+	<!-- 3: Healer — steppe shaman -->
+	<SkillSet id="spc_wanderer_shaghana_3_skills">
+		<skill id="OneHanded" value="72" />
+		<skill id="TwoHanded" value="48" />
+		<skill id="Polearm" value="65" />
+		<skill id="Bow" value="80" />
+		<skill id="Crossbow" value="25" />
+		<skill id="Throwing" value="55" />
+		<skill id="Riding" value="105" />
+		<skill id="Athletics" value="85" />
+		<skill id="Roguery" value="60" />
+		<skill id="Crafting" value="95" />
+		<skill id="Scouting" value="90" />
+		<skill id="Tactics" value="78" />
+		<skill id="Charm" value="142" />
+		<skill id="Leadership" value="110" />
+		<skill id="Trade" value="88" />
+		<skill id="Steward" value="162" />
+		<skill id="Medicine" value="225" />
+		<skill id="Engineering" value="55" />
+	</SkillSet>
+	<!-- 4: Tactician — steppe war chief -->
+	<SkillSet id="spc_wanderer_shaghana_4_skills">
+		<skill id="OneHanded" value="105" />
+		<skill id="TwoHanded" value="78" />
+		<skill id="Polearm" value="95" />
+		<skill id="Bow" value="118" />
+		<skill id="Crossbow" value="40" />
+		<skill id="Throwing" value="92" />
+		<skill id="Riding" value="138" />
+		<skill id="Athletics" value="100" />
+		<skill id="Roguery" value="55" />
+		<skill id="Crafting" value="48" />
+		<skill id="Scouting" value="155" />
+		<skill id="Tactics" value="225" />
+		<skill id="Charm" value="120" />
+		<skill id="Leadership" value="192" />
+		<skill id="Trade" value="45" />
+		<skill id="Steward" value="90" />
+		<skill id="Medicine" value="60" />
+		<skill id="Engineering" value="70" />
+	</SkillSet>
+	<!-- 5: Rogue — steppe outrider and raider -->
+	<SkillSet id="spc_wanderer_shaghana_5_skills">
+		<skill id="OneHanded" value="115" />
+		<skill id="TwoHanded" value="70" />
+		<skill id="Polearm" value="85" />
+		<skill id="Bow" value="135" />
+		<skill id="Crossbow" value="48" />
+		<skill id="Throwing" value="125" />
+		<skill id="Riding" value="150" />
+		<skill id="Athletics" value="108" />
+		<skill id="Roguery" value="215" />
+		<skill id="Crafting" value="55" />
+		<skill id="Scouting" value="182" />
+		<skill id="Tactics" value="88" />
+		<skill id="Charm" value="162" />
+		<skill id="Leadership" value="70" />
+		<skill id="Trade" value="75" />
+		<skill id="Steward" value="48" />
+		<skill id="Medicine" value="42" />
+		<skill id="Engineering" value="30" />
+	</SkillSet>
+	<!-- 6: Trader — steppe caravan master -->
+	<SkillSet id="spc_wanderer_shaghana_6_skills">
+		<skill id="OneHanded" value="82" />
+		<skill id="TwoHanded" value="50" />
+		<skill id="Polearm" value="68" />
+		<skill id="Bow" value="90" />
+		<skill id="Crossbow" value="28" />
+		<skill id="Throwing" value="72" />
+		<skill id="Riding" value="135" />
+		<skill id="Athletics" value="78" />
+		<skill id="Roguery" value="88" />
+		<skill id="Crafting" value="70" />
+		<skill id="Scouting" value="100" />
+		<skill id="Tactics" value="65" />
+		<skill id="Charm" value="192" />
+		<skill id="Leadership" value="105" />
+		<skill id="Trade" value="222" />
+		<skill id="Steward" value="172" />
+		<skill id="Medicine" value="60" />
+		<skill id="Engineering" value="40" />
+	</SkillSet>
+	<!-- 7: Cavalry — steppe horse lord -->
+	<SkillSet id="spc_wanderer_shaghana_7_skills">
+		<skill id="OneHanded" value="182" />
+		<skill id="TwoHanded" value="105" />
+		<skill id="Polearm" value="155" />
+		<skill id="Bow" value="160" />
+		<skill id="Crossbow" value="42" />
+		<skill id="Throwing" value="148" />
+		<skill id="Riding" value="235" />
+		<skill id="Athletics" value="122" />
+		<skill id="Roguery" value="55" />
+		<skill id="Crafting" value="48" />
+		<skill id="Scouting" value="130" />
+		<skill id="Tactics" value="95" />
+		<skill id="Charm" value="58" />
+		<skill id="Leadership" value="88" />
+		<skill id="Trade" value="35" />
+		<skill id="Steward" value="50" />
+		<skill id="Medicine" value="38" />
+		<skill id="Engineering" value="25" />
+	</SkillSet>
+	<!-- 8: Smith/Crafter — steppe weaponsmith -->
+	<SkillSet id="spc_wanderer_shaghana_8_skills">
+		<skill id="OneHanded" value="92" />
+		<skill id="TwoHanded" value="68" />
+		<skill id="Polearm" value="80" />
+		<skill id="Bow" value="75" />
+		<skill id="Crossbow" value="32" />
+		<skill id="Throwing" value="78" />
+		<skill id="Riding" value="110" />
+		<skill id="Athletics" value="125" />
+		<skill id="Roguery" value="45" />
+		<skill id="Crafting" value="225" />
+		<skill id="Scouting" value="80" />
+		<skill id="Tactics" value="65" />
+		<skill id="Charm" value="52" />
+		<skill id="Leadership" value="60" />
+		<skill id="Trade" value="88" />
+		<skill id="Steward" value="78" />
+		<skill id="Medicine" value="55" />
+		<skill id="Engineering" value="182" />
+	</SkillSet>
+	<!-- 9: Leader — steppe khan -->
+	<SkillSet id="spc_wanderer_shaghana_9_skills">
+		<skill id="OneHanded" value="122" />
+		<skill id="TwoHanded" value="85" />
+		<skill id="Polearm" value="100" />
+		<skill id="Bow" value="118" />
+		<skill id="Crossbow" value="42" />
+		<skill id="Throwing" value="105" />
+		<skill id="Riding" value="148" />
+		<skill id="Athletics" value="110" />
+		<skill id="Roguery" value="65" />
+		<skill id="Crafting" value="58" />
+		<skill id="Scouting" value="120" />
+		<skill id="Tactics" value="172" />
+		<skill id="Charm" value="192" />
+		<skill id="Leadership" value="225" />
+		<skill id="Trade" value="88" />
+		<skill id="Steward" value="110" />
+		<skill id="Medicine" value="65" />
+		<skill id="Engineering" value="50" />
+	</SkillSet>
+
+	<!-- ==================== ABANISSA WANDERER SKILL SETS ==================== -->
+	<!-- 0: Engineer/Steward — dynastic administrator -->
+	<SkillSet id="spc_wanderer_abanissa_0_skills">
+		<skill id="OneHanded" value="80" />
+		<skill id="TwoHanded" value="52" />
+		<skill id="Polearm" value="75" />
+		<skill id="Bow" value="70" />
+		<skill id="Crossbow" value="35" />
+		<skill id="Throwing" value="42" />
+		<skill id="Riding" value="88" />
+		<skill id="Athletics" value="72" />
+		<skill id="Roguery" value="48" />
+		<skill id="Crafting" value="128" />
+		<skill id="Scouting" value="95" />
+		<skill id="Tactics" value="98" />
+		<skill id="Charm" value="110" />
+		<skill id="Leadership" value="120" />
+		<skill id="Trade" value="168" />
+		<skill id="Steward" value="182" />
+		<skill id="Medicine" value="105" />
+		<skill id="Engineering" value="202" />
+	</SkillSet>
+	<!-- 1: Warrior — dynastic champion -->
+	<SkillSet id="spc_wanderer_abanissa_1_skills">
+		<skill id="OneHanded" value="232" />
+		<skill id="TwoHanded" value="182" />
+		<skill id="Polearm" value="185" />
+		<skill id="Bow" value="95" />
+		<skill id="Crossbow" value="50" />
+		<skill id="Throwing" value="100" />
+		<skill id="Riding" value="128" />
+		<skill id="Athletics" value="202" />
+		<skill id="Roguery" value="45" />
+		<skill id="Crafting" value="58" />
+		<skill id="Scouting" value="72" />
+		<skill id="Tactics" value="112" />
+		<skill id="Charm" value="45" />
+		<skill id="Leadership" value="88" />
+		<skill id="Trade" value="38" />
+		<skill id="Steward" value="55" />
+		<skill id="Medicine" value="50" />
+		<skill id="Engineering" value="22" />
+	</SkillSet>
+	<!-- 2: Scout/Archer — dynastic ranger -->
+	<SkillSet id="spc_wanderer_abanissa_2_skills">
+		<skill id="OneHanded" value="130" />
+		<skill id="TwoHanded" value="58" />
+		<skill id="Polearm" value="72" />
+		<skill id="Bow" value="212" />
+		<skill id="Crossbow" value="62" />
+		<skill id="Throwing" value="112" />
+		<skill id="Riding" value="145" />
+		<skill id="Athletics" value="115" />
+		<skill id="Roguery" value="85" />
+		<skill id="Crafting" value="52" />
+		<skill id="Scouting" value="192" />
+		<skill id="Tactics" value="102" />
+		<skill id="Charm" value="55" />
+		<skill id="Leadership" value="72" />
+		<skill id="Trade" value="48" />
+		<skill id="Steward" value="48" />
+		<skill id="Medicine" value="65" />
+		<skill id="Engineering" value="30" />
+	</SkillSet>
+	<!-- 3: Healer — dynastic court physician -->
+	<SkillSet id="spc_wanderer_abanissa_3_skills">
+		<skill id="OneHanded" value="70" />
+		<skill id="TwoHanded" value="45" />
+		<skill id="Polearm" value="62" />
+		<skill id="Bow" value="75" />
+		<skill id="Crossbow" value="28" />
+		<skill id="Throwing" value="38" />
+		<skill id="Riding" value="85" />
+		<skill id="Athletics" value="80" />
+		<skill id="Roguery" value="58" />
+		<skill id="Crafting" value="90" />
+		<skill id="Scouting" value="82" />
+		<skill id="Tactics" value="75" />
+		<skill id="Charm" value="148" />
+		<skill id="Leadership" value="115" />
+		<skill id="Trade" value="102" />
+		<skill id="Steward" value="165" />
+		<skill id="Medicine" value="228" />
+		<skill id="Engineering" value="52" />
+	</SkillSet>
+	<!-- 4: Tactician — dynastic general -->
+	<SkillSet id="spc_wanderer_abanissa_4_skills">
+		<skill id="OneHanded" value="102" />
+		<skill id="TwoHanded" value="75" />
+		<skill id="Polearm" value="92" />
+		<skill id="Bow" value="108" />
+		<skill id="Crossbow" value="45" />
+		<skill id="Throwing" value="68" />
+		<skill id="Riding" value="115" />
+		<skill id="Athletics" value="98" />
+		<skill id="Roguery" value="52" />
+		<skill id="Crafting" value="50" />
+		<skill id="Scouting" value="152" />
+		<skill id="Tactics" value="222" />
+		<skill id="Charm" value="125" />
+		<skill id="Leadership" value="195" />
+		<skill id="Trade" value="55" />
+		<skill id="Steward" value="95" />
+		<skill id="Medicine" value="68" />
+		<skill id="Engineering" value="72" />
+	</SkillSet>
+	<!-- 5: Rogue — dynastic spy -->
+	<SkillSet id="spc_wanderer_abanissa_5_skills">
+		<skill id="OneHanded" value="112" />
+		<skill id="TwoHanded" value="68" />
+		<skill id="Polearm" value="82" />
+		<skill id="Bow" value="118" />
+		<skill id="Crossbow" value="55" />
+		<skill id="Throwing" value="98" />
+		<skill id="Riding" value="118" />
+		<skill id="Athletics" value="112" />
+		<skill id="Roguery" value="212" />
+		<skill id="Crafting" value="58" />
+		<skill id="Scouting" value="178" />
+		<skill id="Tactics" value="85" />
+		<skill id="Charm" value="168" />
+		<skill id="Leadership" value="72" />
+		<skill id="Trade" value="88" />
+		<skill id="Steward" value="52" />
+		<skill id="Medicine" value="50" />
+		<skill id="Engineering" value="32" />
+	</SkillSet>
+	<!-- 6: Trader — dynastic merchant prince -->
+	<SkillSet id="spc_wanderer_abanissa_6_skills">
+		<skill id="OneHanded" value="80" />
+		<skill id="TwoHanded" value="48" />
+		<skill id="Polearm" value="65" />
+		<skill id="Bow" value="82" />
+		<skill id="Crossbow" value="32" />
+		<skill id="Throwing" value="48" />
+		<skill id="Riding" value="105" />
+		<skill id="Athletics" value="75" />
+		<skill id="Roguery" value="92" />
+		<skill id="Crafting" value="72" />
+		<skill id="Scouting" value="95" />
+		<skill id="Tactics" value="68" />
+		<skill id="Charm" value="195" />
+		<skill id="Leadership" value="108" />
+		<skill id="Trade" value="228" />
+		<skill id="Steward" value="175" />
+		<skill id="Medicine" value="72" />
+		<skill id="Engineering" value="42" />
+	</SkillSet>
+	<!-- 7: Cavalry — dynastic mounted noble -->
+	<SkillSet id="spc_wanderer_abanissa_7_skills">
+		<skill id="OneHanded" value="180" />
+		<skill id="TwoHanded" value="102" />
+		<skill id="Polearm" value="152" />
+		<skill id="Bow" value="138" />
+		<skill id="Crossbow" value="48" />
+		<skill id="Throwing" value="118" />
+		<skill id="Riding" value="232" />
+		<skill id="Athletics" value="120" />
+		<skill id="Roguery" value="52" />
+		<skill id="Crafting" value="50" />
+		<skill id="Scouting" value="118" />
+		<skill id="Tactics" value="98" />
+		<skill id="Charm" value="62" />
+		<skill id="Leadership" value="92" />
+		<skill id="Trade" value="48" />
+		<skill id="Steward" value="55" />
+		<skill id="Medicine" value="45" />
+		<skill id="Engineering" value="28" />
+	</SkillSet>
+	<!-- 8: Smith/Crafter — dynastic master artisan -->
+	<SkillSet id="spc_wanderer_abanissa_8_skills">
+		<skill id="OneHanded" value="90" />
+		<skill id="TwoHanded" value="65" />
+		<skill id="Polearm" value="78" />
+		<skill id="Bow" value="72" />
+		<skill id="Crossbow" value="35" />
+		<skill id="Throwing" value="52" />
+		<skill id="Riding" value="88" />
+		<skill id="Athletics" value="122" />
+		<skill id="Roguery" value="48" />
+		<skill id="Crafting" value="222" />
+		<skill id="Scouting" value="78" />
+		<skill id="Tactics" value="68" />
+		<skill id="Charm" value="58" />
+		<skill id="Leadership" value="62" />
+		<skill id="Trade" value="98" />
+		<skill id="Steward" value="82" />
+		<skill id="Medicine" value="68" />
+		<skill id="Engineering" value="185" />
+	</SkillSet>
+	<!-- 9: Leader — dynastic sovereign -->
+	<SkillSet id="spc_wanderer_abanissa_9_skills">
+		<skill id="OneHanded" value="120" />
+		<skill id="TwoHanded" value="82" />
+		<skill id="Polearm" value="98" />
+		<skill id="Bow" value="105" />
+		<skill id="Crossbow" value="45" />
+		<skill id="Throwing" value="78" />
+		<skill id="Riding" value="125" />
+		<skill id="Athletics" value="108" />
+		<skill id="Roguery" value="68" />
+		<skill id="Crafting" value="60" />
+		<skill id="Scouting" value="115" />
+		<skill id="Tactics" value="175" />
+		<skill id="Charm" value="195" />
+		<skill id="Leadership" value="228" />
+		<skill id="Trade" value="102" />
+		<skill id="Steward" value="115" />
+		<skill id="Medicine" value="78" />
+		<skill id="Engineering" value="52" />
+	</SkillSet>
+
 </SkillSets>
