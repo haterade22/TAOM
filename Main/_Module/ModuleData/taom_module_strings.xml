@@ -589,4 +589,133 @@
 	<string id="taom_the_fix_zd9sawl9" text="{=zd9sawl9}You are already allied with {KINGDOM_NAME}." />
 	<string id="taom_the_fix_zXuo0Wbj" text="{=zXuo0Wbj}Signing a trade agreement with {KINGDOM}" />
 	<string id="taom_the_fix_ZZ1oLfEq" text="{=ZZ1oLfEq}{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+
+	<!-- ============================================== -->
+	<!-- Shaghâna — Kingdom, Culture, Lords, Clans, NPCs -->
+	<!-- ============================================== -->
+
+	<!-- Kingdom strings (TAOM_spkingdoms.xml) -->
+	<string id="taom_shaghana_name" text="{=taom_shaghana_name}Shaghâna" />
+	<string id="taom_shaghana_short_name" text="{=taom_shaghana_short_name}Shaghâna" />
+	<string id="taom_shaghana_title" text="{=taom_shaghana_title}Taskralan of Shaghâna" />
+	<string id="taom_shaghana_ruler_title" text="{=taom_shaghana_ruler_title}Taskral" />
+	<string id="taom_shaghana_desc" text="{=taom_shaghana_desc}Shaghâna is the eastern reach of Harad, a land of sun-scorched steppes and ancient fortresses. Its nine tribal clans are fierce warriors, bound together by oath and blood, striking fear into those who dare oppose them." />
+
+	<!-- Culture strings (taom_spcultures.xml) -->
+	<string id="aom_shaghana_name" text="{=aom_shaghana_name}Shaghâna" />
+	<string id="aom_shaghana_desc" text="{=aom_shaghana_desc}The Shaghâna are a fierce tribal people of the eastern Harad steppes, renowned as relentless raiders and skilled horsemen. Bound by oath and clan, they answer to their Taskral and serve the dark designs of Sauron from their sun-scorched fortresses." />
+
+	<!-- Lord names (lords.xml) -->
+	<string id="aom_lord_SH1_1_name" text="{=aom_lord_SH1_1_name}Zarkan" />
+	<string id="aom_lord_SH2_1_name" text="{=aom_lord_SH2_1_name}Rakhim" />
+	<string id="aom_lord_SH3_1_name" text="{=aom_lord_SH3_1_name}Tadeen" />
+	<string id="aom_lord_SH4_1_name" text="{=aom_lord_SH4_1_name}Nakhel" />
+	<string id="aom_lord_SH5_1_name" text="{=aom_lord_SH5_1_name}Yazur" />
+	<string id="aom_lord_SH6_1_name" text="{=aom_lord_SH6_1_name}Kazan" />
+	<string id="aom_lord_SH7_1_name" text="{=aom_lord_SH7_1_name}Haluz" />
+	<string id="aom_lord_SH8_1_name" text="{=aom_lord_SH8_1_name}Farun" />
+	<string id="aom_lord_SH9_1_name" text="{=aom_lord_SH9_1_name}Saluz" />
+
+	<!-- Clan names (clans.xml) -->
+	<string id="aom_clan_shaghana_1_name" text="{=aom_clan_shaghana_1_name}Ezarkia" />
+	<string id="aom_clan_shaghana_2_name" text="{=aom_clan_shaghana_2_name}Kûmaraknis" />
+	<string id="aom_clan_shaghana_3_name" text="{=aom_clan_shaghana_3_name}Taiymâkä" />
+	<string id="aom_clan_shaghana_4_name" text="{=aom_clan_shaghana_4_name}Zayaknûri" />
+	<string id="aom_clan_shaghana_5_name" text="{=aom_clan_shaghana_5_name}Selarkes" />
+	<string id="aom_clan_shaghana_6_name" text="{=aom_clan_shaghana_6_name}Uzharês" />
+	<string id="aom_clan_shaghana_7_name" text="{=aom_clan_shaghana_7_name}Alâranin" />
+	<string id="aom_clan_shaghana_8_name" text="{=aom_clan_shaghana_8_name}Banûgand" />
+	<string id="aom_clan_shaghana_9_name" text="{=aom_clan_shaghana_9_name}Acammes" />
+
+	<!-- NPC notable names (npcs_shaghana.xml) -->
+	<string id="aom_sh_notable_0" text="{=aom_sh_notable_0}Shrewd Shaghâna trader" />
+	<string id="aom_sh_notable_0b" text="{=aom_sh_notable_0b}Shaghâna spice dealer" />
+	<string id="aom_sh_notable_1" text="{=aom_sh_notable_1}Shaghâna caravan owner" />
+	<string id="aom_sh_notable_1b" text="{=aom_sh_notable_1b}Eastern steppes merchant" />
+	<string id="aom_sh_notable_2" text="{=aom_sh_notable_2}Shaghâna silk trader" />
+	<string id="aom_sh_notable_2b" text="{=aom_sh_notable_2b}Harad steppe trader" />
+	<string id="aom_sh_notable_3" text="{=aom_sh_notable_3}Shaghâna money-changer" />
+	<string id="aom_sh_notable_3b" text="{=aom_sh_notable_3b}Eastern goods broker" />
+	<string id="aom_sh_notable_4" text="{=aom_sh_notable_4}Shaghâna bazaar master" />
+	<string id="aom_sh_notable_4b" text="{=aom_sh_notable_4b}Devious Shaghâna merchant" />
+	<string id="aom_sh_notable_5" text="{=aom_sh_notable_5}Shaghâna sun-priest" />
+	<string id="aom_sh_notable_6" text="{=aom_sh_notable_6}Shaghâna tribal elder" />
+	<string id="aom_sh_notable_7" text="{=aom_sh_notable_7}Keeper of Shaghâna traditions" />
+	<string id="aom_sh_notable_8" text="{=aom_sh_notable_8}Shaghâna metalworker" />
+	<string id="aom_sh_notable_9" text="{=aom_sh_notable_9}Shaghâna weapon-crafter" />
+	<string id="aom_sh_notable_gl1" text="{=aom_sh_notable_gl1}Shaghâna enforcer" />
+	<string id="aom_sh_notable_10" text="{=aom_sh_notable_10}Shaghâna crime lord" />
+	<string id="aom_sh_notable_11" text="{=aom_sh_notable_11}Shaghâna raiders&apos; boss" />
+	<string id="aom_sh_notable_gl4" text="{=aom_sh_notable_gl4}Shaghâna gang chieftain" />
+	<string id="aom_sh_notable_12" text="{=aom_sh_notable_12}Shaghâna street boss" />
+	<string id="aom_sh_notable_13" text="{=aom_sh_notable_13}Shaghâna black-market dealer" />
+	<string id="aom_sh_notable_21" text="{=aom_sh_notable_21}Shaghâna landowner" />
+	<string id="aom_sh_notable_22" text="{=aom_sh_notable_22}Shaghâna herd master" />
+	<string id="aom_sh_headman_1" text="{=aom_sh_headman_1}Shaghâna village headman" />
+	<string id="aom_sh_headman_2" text="{=aom_sh_headman_2}Shaghâna elder headman" />
+	<string id="aom_sh_headman_3" text="{=aom_sh_headman_3}Shaghâna village elder" />
+
+	<!-- ============================================== -->
+	<!-- Âbanissa — Kingdom, Culture, Lords, Clans, NPCs -->
+	<!-- ============================================== -->
+
+	<!-- Kingdom strings (TAOM_spkingdoms.xml) -->
+	<string id="taom_abanissa_name" text="{=taom_abanissa_name}Âbanissa" />
+	<string id="taom_abanissa_short_name" text="{=taom_abanissa_short_name}Âbanissa" />
+	<string id="taom_abanissa_title" text="{=taom_abanissa_title}Châjaphân of Âbanissa" />
+	<string id="taom_abanissa_ruler_title" text="{=taom_abanissa_ruler_title}Châjaphân" />
+	<string id="taom_abanissa_desc" text="{=taom_abanissa_desc}Âbanissa lies in the deep south of Harad, a realm of humid jungles and ancient stone dynasties. The great Houses of Âbanissa command fearsome war-beasts and armies of disciplined warriors, their power answerable to none but Sauron himself." />
+
+	<!-- Culture strings (taom_spcultures.xml) -->
+	<string id="aom_abanissa_name" text="{=aom_abanissa_name}Âbanissa" />
+	<string id="aom_abanissa_desc" text="{=aom_abanissa_desc}The great Houses of Âbanissa rule the deep south of Harad, a land of humid jungles, ancient stone palaces and towering war-beasts. Their armies march beneath banners of dynasty, commanding respect and terror across the southern lands." />
+
+	<!-- Lord names (lords.xml) -->
+	<string id="aom_lord_AB1_1_name" text="{=aom_lord_AB1_1_name}Phaxar" />
+	<string id="aom_lord_AB2_1_name" text="{=aom_lord_AB2_1_name}Hoshed" />
+	<string id="aom_lord_AB3_1_name" text="{=aom_lord_AB3_1_name}Vasnar" />
+	<string id="aom_lord_AB4_1_name" text="{=aom_lord_AB4_1_name}Goraze" />
+	<string id="aom_lord_AB5_1_name" text="{=aom_lord_AB5_1_name}Azadan" />
+	<string id="aom_lord_AB6_1_name" text="{=aom_lord_AB6_1_name}Artash" />
+	<string id="aom_lord_AB7_1_name" text="{=aom_lord_AB7_1_name}Ardach" />
+	<string id="aom_lord_AB8_1_name" text="{=aom_lord_AB8_1_name}Tirdah" />
+
+	<!-- Clan names (clans.xml) -->
+	<string id="aom_clan_abanissa_1_name" text="{=aom_clan_abanissa_1_name}House of Phaxsharân" />
+	<string id="aom_clan_abanissa_2_name" text="{=aom_clan_abanissa_2_name}House of Hoshêdharma" />
+	<string id="aom_clan_abanissa_3_name" text="{=aom_clan_abanissa_3_name}House of Vasnârad" />
+	<string id="aom_clan_abanissa_4_name" text="{=aom_clan_abanissa_4_name}House of Gorazehan" />
+	<string id="aom_clan_abanissa_5_name" text="{=aom_clan_abanissa_5_name}House of Azadafrozan" />
+	<string id="aom_clan_abanissa_6_name" text="{=aom_clan_abanissa_6_name}House of Artaxshâsan" />
+	<string id="aom_clan_abanissa_7_name" text="{=aom_clan_abanissa_7_name}House of Ardâcheran" />
+	<string id="aom_clan_abanissa_8_name" text="{=aom_clan_abanissa_8_name}House of Tîrdahanâ" />
+
+	<!-- NPC notable names (npcs_abanissa.xml) -->
+	<string id="aom_ab_notable_0" text="{=aom_ab_notable_0}Far Harad dynasty broker" />
+	<string id="aom_ab_notable_0b" text="{=aom_ab_notable_0b}Âbanissa ivory trader" />
+	<string id="aom_ab_notable_1" text="{=aom_ab_notable_1}Âbanissa caravan lord" />
+	<string id="aom_ab_notable_1b" text="{=aom_ab_notable_1b}Far Harad spice merchant" />
+	<string id="aom_ab_notable_2" text="{=aom_ab_notable_2}Âbanissa gold trader" />
+	<string id="aom_ab_notable_2b" text="{=aom_ab_notable_2b}House steward-merchant" />
+	<string id="aom_ab_notable_3" text="{=aom_ab_notable_3}Âbanissa gem-cutter broker" />
+	<string id="aom_ab_notable_3b" text="{=aom_ab_notable_3b}Far Harad silk dealer" />
+	<string id="aom_ab_notable_4" text="{=aom_ab_notable_4}Âbanissa market overseer" />
+	<string id="aom_ab_notable_4b" text="{=aom_ab_notable_4b}Cunning Âbanissa factor" />
+	<string id="aom_ab_notable_5" text="{=aom_ab_notable_5}Âbanissa high priest" />
+	<string id="aom_ab_notable_6" text="{=aom_ab_notable_6}Âbanissa temple keeper" />
+	<string id="aom_ab_notable_7" text="{=aom_ab_notable_7}Far Harad rites-master" />
+	<string id="aom_ab_notable_8" text="{=aom_ab_notable_8}Âbanissa master craftsman" />
+	<string id="aom_ab_notable_9" text="{=aom_ab_notable_9}Far Harad armorer" />
+	<string id="aom_ab_notable_gl1" text="{=aom_ab_notable_gl1}Âbanissa house enforcer" />
+	<string id="aom_ab_notable_10" text="{=aom_ab_notable_10}Âbanissa shadow lord" />
+	<string id="aom_ab_notable_11" text="{=aom_ab_notable_11}Far Harad warband leader" />
+	<string id="aom_ab_notable_gl4" text="{=aom_ab_notable_gl4}Âbanissa gang patriarch" />
+	<string id="aom_ab_notable_12" text="{=aom_ab_notable_12}Âbanissa district boss" />
+	<string id="aom_ab_notable_13" text="{=aom_ab_notable_13}Far Harad contraband king" />
+	<string id="aom_ab_notable_21" text="{=aom_ab_notable_21}Âbanissa estate lord" />
+	<string id="aom_ab_notable_22" text="{=aom_ab_notable_22}Âbanissa plantation master" />
+	<string id="aom_ab_headman_1" text="{=aom_ab_headman_1}Âbanissa village headman" />
+	<string id="aom_ab_headman_2" text="{=aom_ab_headman_2}Âbanissa elder headman" />
+	<string id="aom_ab_headman_3" text="{=aom_ab_headman_3}Âbanissa village elder" />
+
 </strings>

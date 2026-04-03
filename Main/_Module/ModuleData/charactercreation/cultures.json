@@ -140,6 +140,26 @@
     "skill_level_to_add": 10
   },
   {
+    "culture_id": "shaghana",
+    "races": ["human"],
+    "starting_settlement": "town_A6",
+    "default_age": 20.0,
+    "default_weight": 0.5417,
+    "default_build": 0.5231,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
+    "culture_id": "abanissa",
+    "races": ["human"],
+    "starting_settlement": "town_A14",
+    "default_age": 20.0,
+    "default_weight": 0.5417,
+    "default_build": 0.5231,
+    "focus_to_add": 1,
+    "skill_level_to_add": 10
+  },
+  {
     "culture_id": "battania",
     "races": ["human"],
     "starting_settlement": "town_K1",

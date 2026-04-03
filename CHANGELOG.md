@@ -2,26 +2,23 @@
 
 ## 2026-04-03
 
-### WIP: Split Harad into Three Kingdoms — Harwan, Shaghâna, Âbanissa (#63)
+### Split Harad into Three Kingdoms — Harwan, Shaghâna, Âbanissa (#63)
 
-Splitting the single Harad faction (all on vanilla `aserai`) into three independent kingdoms following the Umbar pattern.
+Split the single Harad faction (all on vanilla `aserai`) into three independent kingdoms following the Umbar pattern. Harwan stays on `Culture.aserai`/`Kingdom.aserai` with its 9 original clans; Shaghâna and Âbanissa are fully independent kingdoms.
 
-**Completed this session:**
 - Verified `spclans.xslt` already carries only Harwan's 9 clans — no trimming needed
-- Added `Kingdom.shaghana` and `Kingdom.abanissa` entries to `TAOM_spkingdoms.xml` with titles, diplomacy, and owner lords
-- Added `Culture.shaghana` and `Culture.abanissa` entries to `taom_spcultures.xml` with NPC references, names, harad troop inheritance
-- Added 17 new clan entries to `characters/clans.xml` (9 Shaghâna clans Ezarkia–Acammes; 8 Âbanissa "House of" clans)
-- Added 17 new lord hero entries to `characters/lords.xml` (lord_SH1_1–SH9_1, lord_AB1_1–AB8_1)
+- Added `Kingdom.shaghana` and `Kingdom.abanissa` to `TAOM_spkingdoms.xml` with titles (Taskralan/Châjaphân), diplomacy, and owner lords
+- Added `Culture.shaghana` and `Culture.abanissa` to `taom_spcultures.xml` with NPC notary references and harad troop inheritance
+- Added 17 clan entries to `characters/clans.xml` (9 Shaghâna: Ezarkia–Acammes; 8 Âbanissa: "House of" dynasties)
+- Added 17 lord hero entries to `characters/lords.xml` (lord_SH1_1–SH9_1, lord_AB1_1–AB8_1)
 - Created `characters/npcs_shaghana.xml` — 26 notable NPCs (merchants, preachers, artisans, gang leaders, rural notables, headmen)
 - Created `characters/npcs_abanissa.xml` — 26 notable NPCs with Far Harad/dynastic house flavor
 - Registered both NPC files in `SubModule.xml`
-- Extended `VolunteerRecruitmentService` with shaghana/abanissa culture fallback pools and all 17 clan mappings (harad_levy/harad_noble weights 7/3)
-- Added 21 new tests covering culture fallback (low/high roll) and all 17 new clan IDs — 727 tests passing
-
-**Remaining:**
-- `settlements.xml` — reassign towns A6–A14, FH castles, and their villages to new culture/clan owners
-- `taom_module_strings.xml` — lord names, NPC names, kingdom/culture strings
-- `charactercreation/cultures.json` — shaghana and abanissa entries
+- Extended `VolunteerRecruitmentService` with shaghana/abanissa culture fallback pools and all 17 clan mappings (harad_levy/harad_noble, 7/3 weights)
+- Added 21 new tests for culture fallback and all 17 clan IDs — 727 tests passing
+- Reassigned 25 towns/castles + 70 villages across A6–A14 region and FH1–FH9 to new culture/clan owners in `TAOM_Map/ModuleData/settlements.xml` (castle_U5 Zamarzîr skipped — umbar culture, not harad)
+- Added all module strings: 17 lord names, 17 clan names, 52 NPC display names, kingdom/culture descriptors to `taom_module_strings.xml`
+- Added `shaghana` and `abanissa` entries to `charactercreation/cultures.json` (starting settlements: town_A6 Zajâna / town_A14 Damudûr)
 
 ### Fix: CulturalFeats + TroopProgression Models — Remove Static TextObject Field Initializers (#62)
 
