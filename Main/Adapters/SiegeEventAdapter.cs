@@ -16,4 +16,5 @@ public class SiegeEventAdapter : ISiegeEventAdapter
     public string DefenderFactionId => _siege.BesiegedSettlement?.MapFaction?.StringId ?? "";
     public string AttackerFactionId => _siege.BesiegerCamp?.LeaderParty?.MapFaction?.StringId ?? "";
     public string AttackerName => _siege.BesiegerCamp?.LeaderParty?.Name?.ToString() ?? "";
+    public bool IsTown => _siege.BesiegedSettlement?.IsTown ?? false;
 }

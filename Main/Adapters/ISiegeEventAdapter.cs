@@ -7,4 +7,5 @@ public interface ISiegeEventAdapter
     string DefenderFactionId { get; }
     string AttackerFactionId { get; }
     string AttackerName { get; }
+    bool IsTown { get; }
 }

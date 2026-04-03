@@ -36,6 +36,9 @@ public class SiegeDefenseService : ISiegeDefenseService
         if (!_settings.EnableSiegeDefenseEvents)
             return false;
 
+        if (!siege.IsTown)
+            return false;
+
         if (_activeEvents.ContainsKey(siege.SettlementId))
             return false;
 

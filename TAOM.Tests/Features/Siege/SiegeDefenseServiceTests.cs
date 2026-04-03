@@ -48,6 +48,7 @@ public class SiegeDefenseServiceTests
         var siege = Substitute.For<ISiegeEventAdapter>();
         siege.DefenderFactionId.Returns("gondor");
         siege.SettlementId.Returns("town_gondor_1");
+        siege.IsTown.Returns(true);
 
         // Act
         var result = _sut.IsWatchedSiege(siege);
@@ -63,6 +64,7 @@ public class SiegeDefenseServiceTests
         var siege = Substitute.For<ISiegeEventAdapter>();
         siege.DefenderFactionId.Returns("someother_faction");
         siege.SettlementId.Returns("town_special");
+        siege.IsTown.Returns(true);
 
         // Act
         var result = _sut.IsWatchedSiege(siege);
@@ -78,6 +80,23 @@ public class SiegeDefenseServiceTests
         var siege = Substitute.For<ISiegeEventAdapter>();
         siege.DefenderFactionId.Returns("mordor");
         siege.SettlementId.Returns("town_mordor_1");
+        siege.IsTown.Returns(true);
+
+        // Act
+        var result = _sut.IsWatchedSiege(siege);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsWatchedSiege_NotATown_ReturnsFalse()
+    {
+        // Arrange
+        var siege = Substitute.For<ISiegeEventAdapter>();
+        siege.DefenderFactionId.Returns("gondor");
+        siege.SettlementId.Returns("castle_gondor_1");
+        siege.IsTown.Returns(false);
 
         // Act
         var result = _sut.IsWatchedSiege(siege);
@@ -94,6 +113,7 @@ public class SiegeDefenseServiceTests
         var siege = Substitute.For<ISiegeEventAdapter>();
         siege.DefenderFactionId.Returns("gondor");
         siege.SettlementId.Returns("town_gondor_1");
+        siege.IsTown.Returns(true);
 
         // Act
         var result = _sut.IsWatchedSiege(siege);
@@ -111,6 +131,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_gondor_1");
         siege.SettlementName.Returns("Minas Tirith");
         siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
 
         // Act — first call adds to active events
         _sut.OnSiegeStarted(siege);
@@ -131,6 +152,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_gondor_1");
         siege.SettlementName.Returns("Minas Tirith");
         siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
@@ -148,6 +170,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_mordor_1");
         siege.SettlementName.Returns("Barad-dur");
         siege.AttackerName.Returns("Gondor");
+        siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
@@ -165,6 +188,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_gondor_1");
         siege.SettlementName.Returns("Minas Tirith");
         siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
@@ -185,6 +209,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_gondor_1");
         siege.SettlementName.Returns("Minas Tirith");
         siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
         _sut.OnSiegeStarted(siege);
 
         // Act
@@ -221,6 +246,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_rohan_1");
         siege.SettlementName.Returns("Edoras");
         siege.AttackerName.Returns("Isengard");
+        siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
@@ -238,6 +264,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_gondor_1");
         siege.SettlementName.Returns("Minas Tirith");
         siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
@@ -255,6 +282,7 @@ public class SiegeDefenseServiceTests
         siege.SettlementId.Returns("town_gondor_1");
         siege.SettlementName.Returns("Minas Tirith");
         siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
