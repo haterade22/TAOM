@@ -2,6 +2,18 @@
 
 ## 2026-04-03
 
+### Localization Infrastructure — Community Translation Support (#65)
+
+Adds `Languages/` directory structure so non-English players can contribute TAOM translations without any code changes.
+
+- **37 new XML files**: English anchor (`language_data.xml`), 12 per-language manifests (`FR/DE/RU/SP/PL/IT/TR/BR/JP/KO/CNs/CNt`), 24 stub translation files (2 per language)
+- **1,773 strings are translatable**: 596 faction/culture/UI strings (`taom_str_*` keys in `taom_module_strings.xml`) + 1,177 wanderer backstory entries (`aom_*` keys in `taom_wanderer_strings.xml`)
+- **Auto-discovered by engine**: no `SubModule.xml` or C# registration needed — Bannerlord scans `ModuleData/Languages/` at startup
+- **English fallback**: non-English players with empty stubs see clean English text, no `???` strings
+- **15 structural tests** in `LanguageDataXmlTests.cs` guard against malformed translator contributions
+- Language IDs verified against `Native/ModuleData/Languages/` vanilla files
+- See `docs/features/localization.md` for the full translator workflow
+
 ### AI Strategic Intelligence — Army Commitment + Faction Priority Lists
 
 Adds `TaomTargetScoreModel` (`DefaultTargetScoreCalculatingModel` override) that prevents Besieger army AI from thrashing targets every 3 hours.
