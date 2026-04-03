@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData id="简体中文">
+  <LanguageFile xml_path="CNs/std_taom_module_strings_zho-CN.xml" />
+  <LanguageFile xml_path="CNs/std_taom_wanderer_strings_zho-CN.xml" />
+</LanguageData>

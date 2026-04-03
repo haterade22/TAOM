@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData id="Italiano">
+  <LanguageFile xml_path="IT/std_taom_module_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_wanderer_strings_ita-IT.xml" />
+</LanguageData>

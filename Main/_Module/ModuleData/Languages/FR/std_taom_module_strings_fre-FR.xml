@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Français" />
+  </tags>
+  <strings>
+    <!-- Translate entries from taom_module_strings.xml here.
+         Format: <string id="LOCALIZATION_KEY" text="translated text" />
+         The key is the value inside {=...} in the source file's text attribute.
+         Example source: text="{=taom_str_faction_official.empire}a clansman of Dunland"
+         Translate as:   <string id="taom_str_faction_official.empire" text="un homme de clan de Dunland" />
+         Variables like {RULER.NAME} and conditionals like {?RULER.GENDER}..{?}..{\?}
+         must be preserved verbatim. -->
+  </strings>
+</base>

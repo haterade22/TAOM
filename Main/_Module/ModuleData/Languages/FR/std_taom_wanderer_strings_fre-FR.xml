@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Français" />
+  </tags>
+  <strings>
+    <!-- Translate entries from taom_wanderer_strings.xml here.
+         Format: <string id="LOCALIZATION_KEY" text="translated text" />
+         The key is the value inside {=...} in the source file's text attribute.
+         Example source: text="{=aom_prebackstory.spc_wanderer_gondor_0_text}The archives..."
+         Translate as:   <string id="aom_prebackstory.spc_wanderer_gondor_0_text" text="Les archives..." /> -->
+  </strings>
+</base>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData id="Português (BR)">
+  <LanguageFile xml_path="BR/std_taom_module_strings_por-BR.xml" />
+  <LanguageFile xml_path="BR/std_taom_wanderer_strings_por-BR.xml" />
+</LanguageData>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Português (BR)" />
+  </tags>
+  <strings>
+    <!-- Translate entries from taom_module_strings.xml here.
+         Format: <string id="LOCALIZATION_KEY" text="translated text" />
+         Variables like {RULER.NAME} and conditionals like {?RULER.GENDER}..{?}..{\?}
+         must be preserved verbatim. -->
+  </strings>
+</base>

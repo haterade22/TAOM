@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData id="Español (LA)">
+  <LanguageFile xml_path="SP/std_taom_module_strings_spa-LA.xml" />
+  <LanguageFile xml_path="SP/std_taom_wanderer_strings_spa-LA.xml" />
+</LanguageData>
