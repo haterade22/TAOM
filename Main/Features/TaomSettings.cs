@@ -139,4 +139,14 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyFloatingInteger("Priority List Boost", 1.0f, 5.0f, "#0.0", Order = 2,
         HintText = "Score multiplier applied to the first settlement in a faction's priority list. Decays linearly to 1.0 at the last entry. Affects Mordor, Isengard etc.")]
     public float ArmyPriorityBoost { get; set; } = 3.0f;
+
+    [SettingPropertyFloatingInteger("Evil Faction Aggression Scale", 0.5f, 3.0f, "#0.0", Order = 3,
+        HintText = "Global multiplier applied to all per-faction strength inflation values from army_targeting.json. 1.0 = use JSON defaults. Raise to make evil factions siege even when outnumbered.")]
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    public float EvilFactionAggressionScale { get; set; } = 1.0f;
+
+    [SettingPropertyFloatingInteger("Long-Range Priority Boost Scale", 1.0f, 5.0f, "#0.0", Order = 4,
+        HintText = "Global multiplier applied to per-faction distance compensation values from army_targeting.json. 1.0 = use JSON defaults. Raise if priority-list targets are still being ignored due to map distance.")]
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    public float LongRangePriorityBoostScale { get; set; } = 1.0f;
 }

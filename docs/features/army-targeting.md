@@ -21,7 +21,9 @@ The AI target-selection system runs deep inside `AiMilitaryBehavior.AiHourlyTick
 `TaomTargetScoreModel` overrides `GetTargetScoreForFaction`. For `Besieger` armies only, it multiplies the vanilla base score by a factor from `IArmyTargetingService`:
 
 1. **Commitment stickiness:** If the candidate settlement is the army's current `AiBehaviorObject`, apply `CommitmentMultiplier` (MCM, default 4×). The alternative must score 4× better before the AI diverts.
-2. **Priority list boost:** If the army's faction culture has a priority list in `army_targeting.json`, earlier entries receive up to `MaxPriorityBoost` (MCM, default 3×) decaying linearly to 1× at the last entry.
+2. **Priority list boost:** If the army's faction has a priority list in `army_targeting.json`, earlier entries receive up to `MaxPriorityBoost` (MCM, default 3×) decaying linearly to 1× at the last entry.
+3. **Strength gate bypass:** Inflates `ourStrength` **before** calling base, bypassing the vanilla `2× defender strength` hard gate that causes evil factions to sit idle. A per-faction `FactionAggressionMultipliers` value of 2.0 lets a faction siege at 1:1 parity.
+4. **Distance compensation:** Post-multiplier applied to base score for priority-list targets, countering vanilla's `num21` distance curve that makes targets >5× average-town-distance score ~11× lower. Configured via `FactionDistanceRangeMultipliers` in the JSON — only applies to settlements already in the faction's priority list.
 
 Priority list advancement is stateless — captured settlements disappear from the enemy settlement pool, so the next unconquered entry naturally becomes the highest-boosted target with no tracking required.
 
@@ -35,18 +37,24 @@ army_targeting.json
 ArmyTargetingConfigProvider (loads + caches)
         |
 ArmyTargetingService
-  - _priorityIndex: Dict<cultureId, Dict<settlementId, index>>  (built once at startup)
-  - GetTargetMultiplier(candidateId, committedTargetId?, cultureId?) -> float
+  - _priorityIndex:      Dict<factionId, Dict<settlementId, index>>  (built once at startup)
+  - _aggressionIndex:    Dict<factionId, float>                       (built once at startup)
+  - _distanceRangeIndex: Dict<factionId, float>                       (built once at startup)
+  - GetTargetMultiplier(candidateId, committedTargetId?, factionId?) -> float
+  - GetStrengthMultiplier(factionId?) -> float     (inflates ourStrength pre-gate)
+  - GetDistanceCompensation(factionId?, targetId?) -> float   (post-multiplier for distant priority targets)
         |
 TaomTargetScoreModel : DefaultTargetScoreCalculatingModel
   - GetTargetScoreForFaction(Settlement, ArmyTypes, MobileParty, float)
-  - extracts StringId primitives at the boundary
-  - calls base first, then multiplies by service result
+  - extracts factionId/StringId primitives at boundary
+  - inflates ourStrength → calls base → multiplies by targetMultiplier × distanceCompensation
 
 MCM (TaomSettings)
   - EnableArmyStrategicIntelligence
   - ArmyCommitmentMultiplier
   - ArmyPriorityBoost
+  - EvilFactionAggressionScale
+  - LongRangePriorityBoostScale
         |
 ArmyTargetingSettingsProvider (reads TaomSettings.Instance with defaults)
 ```
@@ -57,21 +65,33 @@ ArmyTargetingSettingsProvider (reads TaomSettings.Instance with defaults)
 
 | Setting | Default | Range | Description |
 |---------|---------|-------|-------------|
-| Enable AI Strategic Intelligence | true | bool | Master toggle. When off, service returns 1.0 immediately (no-op). |
+| Enable AI Strategic Intelligence | true | bool | Master toggle. When off, all service methods return 1.0 immediately (no-op). |
 | Commitment Multiplier | 4.0 | 1.0–10.0 | How strongly an army commits to its current target. Vanilla implicit = 1.3. |
 | Priority List Boost | 3.0 | 1.0–5.0 | Score multiplier for the first entry in a faction's priority list. Decays to 1.0 at last entry. |
+| Evil Faction Aggression Scale | 1.0 | 0.5–3.0 | Global multiplier applied on top of per-faction `FactionAggressionMultipliers` values. Raise to make evil factions siege even when outnumbered; set to 0.5 for vanilla-like caution. |
+| Long-Range Priority Boost Scale | 1.0 | 1.0–5.0 | Global multiplier applied on top of per-faction `FactionDistanceRangeMultipliers` values. Raise if priority-list targets are ignored due to distance penalty. |
 
 ### Config File: `Main/_Module/ModuleData/configs/army_targeting.json`
 
-Faction culture IDs mapped to ordered lists of target settlement IDs. Earlier entries receive higher score boosts. When all entries are captured the list exhausts naturally (no boost applied).
+Three sections. All optional — missing entries default to vanilla behaviour.
 
 ```json
 {
   "FactionPriorityTargets": {
-    "<culture_id>": ["<settlement_id>", ...]
+    "<faction_id>": ["<settlement_id>", ...]
+  },
+  "FactionAggressionMultipliers": {
+    "<faction_id>": 2.0
+  },
+  "FactionDistanceRangeMultipliers": {
+    "<faction_id>": 1.5
   }
 }
 ```
+
+- **`FactionPriorityTargets`:** Ordered target lists. Earlier entries score higher (decaying from `MaxPriorityBoost` to 1.0).
+- **`FactionAggressionMultipliers`:** How much to inflate `ourStrength` before the vanilla `2× defender` strength gate check. At 2.0, the faction can siege at 1:1 parity instead of requiring 2:1.
+- **`FactionDistanceRangeMultipliers`:** Post-score multiplier for priority-list targets suffering the vanilla distance penalty (`num21`). Only applies to settlements already in `FactionPriorityTargets` for that faction.
 
 ### Current Priority Lists
 
@@ -126,7 +146,10 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 
 ## Tests
 
-- `TAOM.Tests/Features/ArmyTargeting/ArmyTargetingServiceTests.cs` — 12 tests covering: feature disabled (no-op), commitment stickiness, non-committed target, null committed target, first/middle/last priority entry, combined commitment+priority, null culture, unknown culture, empty list, single-entry list.
+- `TAOM.Tests/Features/ArmyTargeting/ArmyTargetingServiceTests.cs` — 20 tests:
+  - `GetTargetMultiplier` (12): feature disabled, commitment stickiness, non-committed, null committed, first/middle/last priority entry, combined commitment+priority, null faction, unknown faction, empty list, single-entry list
+  - `GetStrengthMultiplier` (5): feature disabled, null faction, configured value, unknown faction, scale applied
+  - `GetDistanceCompensation` (3): faction not in priority list, target not in priority list, target in list with scale
 
 ## How to Add a New Faction Priority List
 
@@ -140,12 +163,22 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 
 ## Performance
 
-`GetTargetScoreForFaction` is called O(armies × settlements) per 3h AI tick (~4000 calls per cycle at TAOM scale). The service hot path (`GetTargetMultiplier`) is allocation-free:
+`GetTargetScoreForFaction` is called O(armies × settlements) per 3h AI tick (~500–2000 calls per cycle at TAOM scale). All three service methods are allocation-free:
 
-- Feature disabled: immediate `return 1.0f` (single bool check)
-- `_priorityIndex` is a `Dictionary<string, Dictionary<string, int>>` built once at service construction — zero rebuilding at runtime
-- All lookups use `TryGetValue` (single hash lookup)
+| Method | Cost | Notes |
+|--------|------|-------|
+| `GetStrengthMultiplier` | O(1) — 1 dict lookup | Called before base — must be minimal |
+| `GetTargetMultiplier` | O(1) — 2 dict lookups | Commitment + priority index |
+| `GetDistanceCompensation` | O(1) — 3 dict lookups | Priority check + distance scale |
+
+- Feature disabled: immediate `return 1.0f` (single bool check) in all three methods
+- All three indexes (`_priorityIndex`, `_aggressionIndex`, `_distanceRangeIndex`) built once at service construction — zero rebuilding at runtime
+- All lookups use `TryGetValue` — no `ContainsKey` + indexer double-lookup
 - No LINQ, no string allocation, no collection creation per call
+
+### Phase 2 — Harmony Patch (Future)
+
+If evil factions still completely ignore priority targets despite high aggression values, the cause is `AiMilitaryBehavior.CalculateDistanceScoreForBesieging` — a private method that runs **before** our override and returns `0` if the target has no topological fortification neighbors from the attacking faction. Our override is never called when this returns 0. Fix: Harmony Postfix on `CalculateDistanceScoreForBesieging` to substitute a minimum floor score (e.g. 0.15) for priority-list targets, gated on a `MinBorderProximityFloor` config value.
 
 ## GitHub Issue
 

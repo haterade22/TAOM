@@ -9,5 +9,19 @@
     "empire":    ["town_V7", "town_V2", "town_V5", "town_V4", "town_V1", "town_V3", "town_V6", "town_EW3", "town_EW2", "town_EW1", "town_EW4"],
     "sturgia":   ["town_RU7", "town_RU2", "town_RU1", "town_RU4", "town_RU3", "town_RU5", "town_RU6", "town_RU8", "town_DG1"],
     "erebor":    ["town_RU7", "town_RU2", "town_RU1", "town_RU4", "town_RU3", "town_RU5", "town_RU6", "town_RU8"]
+  },
+  "FactionAggressionMultipliers": {
+    "empire_s":  2.0,
+    "isengard":  2.0,
+    "gundabad":  1.75,
+    "dolguldur": 1.75,
+    "khuzait":   1.5
+  },
+  "FactionDistanceRangeMultipliers": {
+    "empire_s":  1.5,
+    "isengard":  1.5,
+    "gundabad":  1.3,
+    "dolguldur": 1.3,
+    "khuzait":   1.3
   }
 }

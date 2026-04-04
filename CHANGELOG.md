@@ -8,6 +8,18 @@
 - `OnBeforeInitialModuleScreenSetAsRoot` fires on every main menu visit (including returning from a game); `AddInitialStateOption("TaomPrecompileShaders")` was unguarded, causing duplicate "Pre-compile Shaders" entries — wrapped in `GetInitialStateOptionWithId` null-check
 - Updated 5 tests to assert correct hide/keep/rename behaviour per option ID
 
+### AI Strategic Intelligence — Evil Faction Aggression + Large Map Distance Compensation
+
+Extends `TaomTargetScoreModel` with two new levers to fix evil faction passivity on the large TAOM map.
+
+- **Strength gate bypass** (`FactionAggressionMultipliers`): inflates `ourStrength` before the vanilla `2× defender` hard gate fires — a multiplier of 2.0 lets a faction besiege at 1:1 parity. Mordor/Isengard = 2.0×, Gundabad/Dol Guldur = 1.75×, Rhun = 1.5×
+- **Distance compensation** (`FactionDistanceRangeMultipliers`): post-multiplier for priority-list targets that vanilla would suppress via the `num21` distance curve (distant targets otherwise score ~11× lower than adjacent ones). Only applies to settlements already in the faction's priority list
+- **MCM**: "Evil Faction Aggression Scale" (0.5–3.0) and "Long-Range Priority Boost Scale" (1.0–5.0) sliders allow global tuning at runtime
+- Both features disabled via the existing "Enable AI Strategic Intelligence" toggle
+- All config in `army_targeting.json` — hot-reloadable, no code change needed to tune
+- O(1) hot path: all lookups pre-built at service construction, zero allocations per call
+- 8 new tests; 763 total passing
+
 ## 2026-04-03
 
 ### Localization Infrastructure — Community Translation Support (#65)
