@@ -21,27 +21,27 @@ public class MainMenuCustomizerServiceTests
     }
 
     [TestMethod]
-    public void CustomizeMenu_HidesSavedGamesOption()
-    {
-        _sut.CustomizeMenu();
-
-        _moduleMenuAdapter.Received(1).HideOption("CampaignResumeGame");
-    }
-
-    [TestMethod]
-    public void CustomizeMenu_HidesContinueCampaignOption()
-    {
-        _sut.CustomizeMenu();
-
-        _moduleMenuAdapter.Received(1).HideOption("ContinueCampaign");
-    }
-
-    [TestMethod]
     public void CustomizeMenu_HidesNewCampaignOption()
     {
         _sut.CustomizeMenu();
 
         _moduleMenuAdapter.Received(1).HideOption("StoryModeNewGame");
+    }
+
+    [TestMethod]
+    public void CustomizeMenu_DoesNotHideSavedGames()
+    {
+        _sut.CustomizeMenu();
+
+        _moduleMenuAdapter.DidNotReceive().HideOption("CampaignResumeGame");
+    }
+
+    [TestMethod]
+    public void CustomizeMenu_DoesNotHideContinueCampaign()
+    {
+        _sut.CustomizeMenu();
+
+        _moduleMenuAdapter.DidNotReceive().HideOption("ContinueCampaign");
     }
 
     [TestMethod]

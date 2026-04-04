@@ -103,16 +103,19 @@ public class SubModule : MBSubModuleBase
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
 
-        var shaderService = IoC.Resolve<IShaderPrecompilationService>();
-        var shaderLogger = IoC.Resolve<IModLogger>();
-        Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
-            id:                  "TaomPrecompileShaders",
-            name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
-            orderIndex:          100,
-            action:              () => MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger)),
-            isDisabledAndReason: () => (false, new TextObject("")),
-            enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM."),
-            isHidden:            null));
+        if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
+        {
+            var shaderService = IoC.Resolve<IShaderPrecompilationService>();
+            var shaderLogger = IoC.Resolve<IModLogger>();
+            Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
+                id:                  "TaomPrecompileShaders",
+                name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
+                orderIndex:          100,
+                action:              () => MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger)),
+                isDisabledAndReason: () => (false, new TextObject("")),
+                enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM."),
+                isHidden:            null));
+        }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

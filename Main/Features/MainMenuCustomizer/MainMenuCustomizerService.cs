@@ -15,8 +15,6 @@ public class MainMenuCustomizerService : IMainMenuCustomizerService
 
     public void CustomizeMenu()
     {
-        _moduleMenuAdapter.HideOption("CampaignResumeGame");
-        _moduleMenuAdapter.HideOption("ContinueCampaign");
         _moduleMenuAdapter.HideOption("StoryModeNewGame");
         _moduleMenuAdapter.RenameOption("SandBoxNewGame", "Enter The Age Of Men");
         _logger.LogInfo("MainMenuCustomizer: menu customization applied");
