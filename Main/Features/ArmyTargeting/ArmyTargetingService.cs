@@ -61,6 +61,12 @@ public class ArmyTargetingService : IArmyTargetingService
         return scale * _settings.LongRangePriorityBoostScale;
     }
 
+    public bool IsInPriorityList(string factionId, string settlementId)
+    {
+        if (factionId == null || settlementId == null) return false;
+        return _priorityIndex.TryGetValue(factionId, out var targets) && targets.ContainsKey(settlementId);
+    }
+
     private static Dictionary<string, float> BuildFloatIndex(Dictionary<string, float> source)
     {
         var index = new Dictionary<string, float>();

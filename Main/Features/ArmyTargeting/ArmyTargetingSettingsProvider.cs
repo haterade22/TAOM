@@ -7,4 +7,5 @@ public class ArmyTargetingSettingsProvider : IArmyTargetingSettingsProvider
     public float MaxPriorityBoost               => TaomSettings.Instance?.ArmyPriorityBoost               ?? 3.0f;
     public float EvilAggressionScale            => TaomSettings.Instance?.EvilFactionAggressionScale      ?? 1.0f;
     public float LongRangePriorityBoostScale    => TaomSettings.Instance?.LongRangePriorityBoostScale     ?? 1.0f;
+    public float BorderProximityFloor           => TaomSettings.Instance?.ArmyBorderProximityFloor        ?? 0.15f;
 }

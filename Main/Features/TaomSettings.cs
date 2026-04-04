@@ -149,4 +149,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Global multiplier applied to per-faction distance compensation values from army_targeting.json. 1.0 = use JSON defaults. Raise if priority-list targets are still being ignored due to map distance.")]
     [SettingPropertyGroup("AI Strategic Intelligence")]
     public float LongRangePriorityBoostScale { get; set; } = 1.0f;
+
+    [SettingPropertyFloatingInteger("Border Proximity Floor", 0.0f, 1.0f, "#0.00", Order = 5,
+        HintText = "Minimum border-proximity score substituted for priority-list targets that vanilla rejects as out-of-range. 0 = vanilla (may ignore distant priority targets entirely). 0.15 = allow long-range priority targets to be scored.")]
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    public float ArmyBorderProximityFloor { get; set; } = 0.15f;
 }

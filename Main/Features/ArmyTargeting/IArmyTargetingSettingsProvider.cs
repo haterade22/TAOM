@@ -7,4 +7,5 @@ public interface IArmyTargetingSettingsProvider
     float MaxPriorityBoost { get; }
     float EvilAggressionScale { get; }
     float LongRangePriorityBoostScale { get; }
+    float BorderProximityFloor { get; }
 }

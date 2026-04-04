@@ -161,7 +161,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | Custom diplomacy logic for LOTR faction relationships |
 | `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific relation penalties for executions |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions per settings |
-| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Besieger army commitment stickiness (4× incumbent boost) + faction priority target lists (Mordor/Isengard/Gundabad/DG) |
+| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Besieger army: commitment stickiness (4×), faction priority lists, strength gate bypass per faction, distance compensation; `Patch22_ArmyTargeting` border proximity floor |
 
 ## Harmony Patch Categories
 
@@ -188,6 +188,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch19_CustomBattles` | Custom battle TAOM factions/commanders/troops | `CustomBattleData`, `CustomBattleHelper`, `BannerlordMissions` |
 | `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes for no-mount cultures | `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView` |
 | `Patch21_ShaderPrecompilation` | Loading screen shader progress text | `LoadingWindowViewModel` |
+| `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` |
 
 ## Agent Teams
 

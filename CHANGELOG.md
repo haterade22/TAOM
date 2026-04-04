@@ -8,6 +8,16 @@
 - `OnBeforeInitialModuleScreenSetAsRoot` fires on every main menu visit (including returning from a game); `AddInitialStateOption("TaomPrecompileShaders")` was unguarded, causing duplicate "Pre-compile Shaders" entries — wrapped in `GetInitialStateOptionWithId` null-check
 - Updated 5 tests to assert correct hide/keep/rename behaviour per option ID
 
+### AI Strategic Intelligence — Phase 2: Border Proximity Harmony Patch
+
+Adds `Patch22_ArmyTargeting` — Harmony Postfix on `AiMilitaryBehavior.CalculateDistanceScoreForBesieging` to fix the final blocker: if a target settlement has no topological fortification neighbors from the attacking faction, vanilla returns `bestDistanceScore = 0` before our `TaomTargetScoreModel` is ever called (score × 0 = 0).
+
+- Postfix substitutes a configurable floor score (default 0.15) when `bestDistanceScore == 0` and the target is in the faction's priority list
+- New MCM setting: "Border Proximity Floor" (0.0–1.0, default 0.15) — set to 0.0 to disable
+- New `IArmyTargetingService.IsInPriorityList(factionId, settlementId)` method used by the patch
+- Patch degrades gracefully if IoC not initialized (try/catch, returns without modifying score)
+- 3 new tests; 766 total passing
+
 ### AI Strategic Intelligence — Evil Faction Aggression + Large Map Distance Compensation
 
 Extends `TaomTargetScoreModel` with two new levers to fix evil faction passivity on the large TAOM map.

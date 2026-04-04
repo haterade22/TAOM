@@ -92,6 +92,8 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch21_ShaderPrecompilation");
         ShaderPrecompilationIoC.InitializeHooks(logger);
 
+        _harmony.PatchCategory("Patch22_ArmyTargeting");
+
         Banner_TryGetBannerDataFromCode_Patch.Initialize(logger);
         Mission_Initialize_Patch.Initialize(logger);
 

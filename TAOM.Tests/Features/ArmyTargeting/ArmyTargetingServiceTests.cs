@@ -23,6 +23,7 @@ public class ArmyTargetingServiceTests
         _settings.MaxPriorityBoost.Returns(3.0f);
         _settings.EvilAggressionScale.Returns(1.0f);
         _settings.LongRangePriorityBoostScale.Returns(1.0f);
+        _settings.BorderProximityFloor.Returns(0.15f);
 
         _config = new ArmyTargetingConfig
         {
@@ -291,5 +292,47 @@ public class ArmyTargetingServiceTests
 
         // Act & Assert
         Assert.AreEqual(1.5f, sut.GetDistanceCompensation("empire_s", "town_EW3"), 0.001f);
+    }
+
+    [TestMethod]
+    public void IsInPriorityList_FactionNotInIndex_ReturnsFalse()
+    {
+        // Arrange
+        _config.FactionPriorityTargets["mordor"] = new List<string> { "minas_tirith" };
+        var sut = CreateSut();
+
+        // Act
+        bool result = sut.IsInPriorityList("gondor", "minas_tirith");
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsInPriorityList_SettlementNotInFactionList_ReturnsFalse()
+    {
+        // Arrange
+        _config.FactionPriorityTargets["mordor"] = new List<string> { "minas_tirith" };
+        var sut = CreateSut();
+
+        // Act
+        bool result = sut.IsInPriorityList("mordor", "osgiliath");
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsInPriorityList_SettlementInFactionList_ReturnsTrue()
+    {
+        // Arrange
+        _config.FactionPriorityTargets["mordor"] = new List<string> { "minas_tirith", "osgiliath" };
+        var sut = CreateSut();
+
+        // Act
+        bool result = sut.IsInPriorityList("mordor", "minas_tirith");
+
+        // Assert
+        Assert.IsTrue(result);
     }
 }

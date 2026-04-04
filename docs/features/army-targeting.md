@@ -68,8 +68,9 @@ ArmyTargetingSettingsProvider (reads TaomSettings.Instance with defaults)
 | Enable AI Strategic Intelligence | true | bool | Master toggle. When off, all service methods return 1.0 immediately (no-op). |
 | Commitment Multiplier | 4.0 | 1.0–10.0 | How strongly an army commits to its current target. Vanilla implicit = 1.3. |
 | Priority List Boost | 3.0 | 1.0–5.0 | Score multiplier for the first entry in a faction's priority list. Decays to 1.0 at last entry. |
-| Evil Faction Aggression Scale | 1.0 | 0.5–3.0 | Global multiplier applied on top of per-faction `FactionAggressionMultipliers` values. Raise to make evil factions siege even when outnumbered; set to 0.5 for vanilla-like caution. |
-| Long-Range Priority Boost Scale | 1.0 | 1.0–5.0 | Global multiplier applied on top of per-faction `FactionDistanceRangeMultipliers` values. Raise if priority-list targets are ignored due to distance penalty. |
+| Evil Faction Aggression Scale | 1.0 | 0.5–3.0 | Global multiplier on top of per-faction `FactionAggressionMultipliers`. Raise to make evil factions siege when outnumbered. |
+| Long-Range Priority Boost Scale | 1.0 | 1.0–5.0 | Global multiplier on top of per-faction `FactionDistanceRangeMultipliers`. Raise if priority targets are ignored due to distance. |
+| Border Proximity Floor | 0.15 | 0.0–1.0 | Minimum border-proximity score substituted for priority-list targets that vanilla rejects as out-of-range (no neighboring friendly forts). 0.0 = vanilla behaviour. |
 
 ### Config File: `Main/_Module/ModuleData/configs/army_targeting.json`
 
@@ -130,6 +131,7 @@ Three sections. All optional — missing entries default to vanilla behaviour.
 | `Main/Features/ArmyTargeting/IArmyTargetingSettingsProvider.cs` | Settings interface |
 | `Main/Features/ArmyTargeting/ArmyTargetingSettingsProvider.cs` | Reads MCM `TaomSettings.Instance` with fallback defaults |
 | `Main/Features/ArmyTargeting/ArmyTargetingIoC.cs` | DryIoc Singleton registration |
+| `Main/Features/ArmyTargeting/Hooks/AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch.cs` | Harmony Postfix — substitutes border proximity floor for priority-list targets |
 | `Main/Features/TaomSettings.cs` | MCM property declarations |
 | `Main/_Module/ModuleData/configs/army_targeting.json` | Faction priority lists |
 
@@ -176,9 +178,11 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 - All lookups use `TryGetValue` — no `ContainsKey` + indexer double-lookup
 - No LINQ, no string allocation, no collection creation per call
 
-### Phase 2 — Harmony Patch (Future)
+### Phase 2 — Border Proximity Harmony Patch
 
-If evil factions still completely ignore priority targets despite high aggression values, the cause is `AiMilitaryBehavior.CalculateDistanceScoreForBesieging` — a private method that runs **before** our override and returns `0` if the target has no topological fortification neighbors from the attacking faction. Our override is never called when this returns 0. Fix: Harmony Postfix on `CalculateDistanceScoreForBesieging` to substitute a minimum floor score (e.g. 0.15) for priority-list targets, gated on a `MinBorderProximityFloor` config value.
+`AiMilitaryBehavior.CalculateDistanceScoreForBesieging` runs **before** our `GetTargetScoreForFaction` override. It checks how many of a target settlement's topological fortification neighbors belong to the attacker. If the answer is 0 (typical for distant priority targets on the large TAOM map), it returns `bestDistanceScore = 0` — causing `finalScore = 0 × base = 0` regardless of what our model returns.
+
+**Implemented:** `Patch22_ArmyTargeting` — Harmony Postfix on `CalculateDistanceScoreForBesieging`. When `bestDistanceScore == 0` and the target is in the faction's priority list, substitutes `BorderProximityFloor` (MCM, default 0.15). This ensures `GetTargetScoreForFaction` is at least called for priority targets.
 
 ## GitHub Issue
 
