@@ -1,5 +1,13 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-04
+
+### Fix: MainMenuCustomizer — Restore save buttons, fix duplicate Pre-compile Shaders (#55)
+
+- "Saved Games" and "Continue Campaign" were incorrectly hidden — restored; only "New Campaign" (StoryModeNewGame) is now hidden
+- `OnBeforeInitialModuleScreenSetAsRoot` fires on every main menu visit (including returning from a game); `AddInitialStateOption("TaomPrecompileShaders")` was unguarded, causing duplicate "Pre-compile Shaders" entries — wrapped in `GetInitialStateOptionWithId` null-check
+- Updated 5 tests to assert correct hide/keep/rename behaviour per option ID
+
 ## 2026-04-03
 
 ### Localization Infrastructure — Community Translation Support (#65)
