@@ -19,7 +19,7 @@ How to write effective prompts, what to verify, and what we've learned.
 
 ---
 
-## Prompt Template
+## Prompt Template (v4)
 
 ```
 /codex:adversarial-review --background
@@ -31,13 +31,6 @@ Adversarial review of {FeatureName}.
 READ FIRST (required context):
 - docs/features/{feature-name}.md
 - {any config files: JSON, XML}
-
-VANILLA REFERENCE (read from E:\Decompiled_Bannerlord\):
-- Find {VanillaClass}.cs in {Modules|Campaign|Core}/ — read {MethodName}()
-  to understand {what TAOM overrides/patches and how base calls work}
-- Find {VanillaClass2}.cs — read {MethodName2}()
-  {explain what to look for}
-Include the relevant vanilla code in your output as evidence.
 
 FILES (service — business logic):
 {list service files}
@@ -53,38 +46,62 @@ FILES (tests):
 
 === REQUIRED SECTIONS (missing section = incomplete review) ===
 
-SECTION 1: VANILLA BEHAVIOR
-Read the decompiled {methods} from E:\Decompiled_Bannerlord\. Show the
-relevant decompiled C# code and explain:
-  a) {specific question about vanilla behavior}
-  b) {specific question about vanilla behavior}
-Include decompiled C# — not just descriptions.
+SECTION 1: VANILLA CODE
+Read these files from E:\Decompiled_Bannerlord\ and paste the relevant
+methods into your output as ``` code blocks:
+  - Find {VanillaClass}.cs in {Modules|Campaign|Core}/ — paste {MethodName}()
+  - Find {VanillaClass2}.cs — paste {MethodName2}()
 
-SECTION 2: {FEATURE-SPECIFIC DEEP ANALYSIS}
+This section MUST contain ``` code blocks with decompiled C#. Prose
+descriptions of vanilla behavior are NOT sufficient — prior reviews
+described vanilla behavior without reading the code and produced false
+positives. If you cannot find the file, say so explicitly.
+
+SECTION 2: VANILLA ANALYSIS
+Using the code from Section 1, answer:
+  a) {specific question about vanilla behavior}
+  b) {specific question about how TAOM interacts with vanilla}
+Reference specific line numbers from the code you pasted.
+
+SECTION 3: {FEATURE-SPECIFIC DEEP ANALYSIS}
 {Concrete scenarios with expected outputs, math walkthroughs, or
  IL verification — whatever is the highest-risk area for this feature}
-  a) {specific scenario with numbers}
+  a) {specific scenario with numbers — show the formula step by step}
   b) {specific scenario with numbers}
   c) {edge case}
 
-SECTION 3: {SECOND ANALYSIS AREA}
-{Config validation, convention consistency, null handling — whatever
- is the second-highest risk}
-  a) {specific check}
+SECTION 4: {SECOND ANALYSIS AREA — e.g., CONFIG VALIDATION}
+{Config validation, convention consistency, etc.}
+  a) {specific check with cross-reference file path}
   b) {specific check}
+Cross-reference config values against {specific file path, e.g.,
+Main/_Module/ModuleData/settlements.xml} — do not claim validity
+without checking.
 
-SECTION 4: FINDINGS
-Each finding MUST include:
+SECTION 5: FINDINGS OR OBSERVATIONS
+If bugs found — each finding MUST include:
   - TAOM code (file:line)
-  - Vanilla behavior (quote decompiled code from Section 1)
+  - Vanilla code (quote from Section 1)
   - Evidence of divergence
   - Severity: CRITICAL / HIGH / MEDIUM / LOW
 
+If approve verdict — you MUST still provide an OBSERVATIONS subsection
+listing things worth noting even if not bugs (e.g., high multiplier
+magnitudes, silent filtering, exception swallowing, design tradeoffs).
+An approve with zero observations suggests shallow analysis.
+
+=== QUALITY GATES ===
+
+Your review is INCOMPLETE if:
+  - Section 1 contains no ``` code blocks with decompiled C#
+  - Section 4 claims validity without showing cross-reference evidence
+  - All findings are the same severity (vary your calibration)
+  - Section 5 has no observations on an approve verdict
+
 Lessons from prior reviews — do NOT repeat these mistakes:
-{paste 2-3 concrete examples from Codex Failure Patterns below}
+{paste 2-3 concrete examples from Codex Failure Patterns section}
 
 DO NOT flag architecture/pattern compliance {if feature is well-architected}.
-{Or: "Focus on X over Y" if there's a specific trap to avoid.}
 
 Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 ```
@@ -105,6 +122,9 @@ Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 | **Say what's already good** | Prevents Codex from filling the review with easy pattern violations | "100% test coverage, proper service/adapter separation" |
 | **Include prior failure examples** | Concrete failures are stronger than abstract "DO NOT" rules | "Codex called X a bug but vanilla uses the same pattern" |
 | **Vary severity explicitly** | Codex defaults to everything-is-HIGH | "If everything is HIGH, your calibration is off" |
+| **Require verification artifacts** | Codex describes instead of showing; prose is unfalsifiable | "Your output MUST contain ``` code blocks with decompiled C#" |
+| **Separate "show" from "analyze"** | Codex skips showing code if it can jump to conclusions | "Step A: paste the code. Step B: answer questions about it." |
+| **Require observations on approve** | Clean verdicts need evidence of depth, not just absence of findings | "OBSERVATIONS section required even for approve verdicts" |
 
 ### What wastes Codex's time
 
@@ -115,6 +135,8 @@ Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 | Generic focus areas ("null handling", "thread safety") | Gets generic answers; Codex checks superficially |
 | No feature documentation reference | Codex can't distinguish design intent from bugs |
 | Same severity guidance as AGENTS.md defaults | AGENTS.md rates ADR violations as CRITICAL; prompt needs to override for mature features |
+| "Include decompiled code" without structural enforcement | Codex ignored this instruction in 3/3 reviews — words alone don't work |
+| No config cross-reference file path | "Validate config" without "against settlements.xml" lets Codex claim validity without checking |
 
 ---
 
@@ -146,6 +168,11 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **Review:** Both reviews (2026-04-05)
 **What happened:** CulturalFeats: 1 CRITICAL + 2 HIGH + 1 MEDIUM. BannerColorPersistence: 3 HIGH. No LOW findings in either. Real bugs ranged from LOW (null guard) to HIGH (unconditional forest speed).
 **Prevention:** Explicit instruction: "If everything is HIGH, your calibration is off. Vary severity."
+
+### FP-6: Approve without evidence
+**Review:** ArmyTargeting (2026-04-05)
+**What happened:** Codex issued a correct "approve" verdict but produced no decompiled vanilla code (despite explicit instruction), claimed config IDs were valid without cross-referencing settlements.xml, and described vanilla behavior in prose instead of showing code. The verdict was right but indistinguishable from a rubber stamp.
+**Prevention:** Require "VERIFICATION ARTIFACTS" — specific code blocks that must appear in the output. For approve verdicts, require an "OBSERVATIONS" section (things worth noting even if not bugs). An approve with zero decompiled code is incomplete regardless of verdict.
 
 ---
 

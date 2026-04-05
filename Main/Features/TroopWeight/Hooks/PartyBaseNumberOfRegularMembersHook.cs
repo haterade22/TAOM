@@ -32,17 +32,19 @@ public class PartyBaseNumberOfRegularMembersHook : IOnPartyBaseNumberOfRegularMe
                 return;
             }
 
-            var originalTotal = partyBase.MemberRoster.TotalManCount;
-            var originalWounded = partyBase.MemberRoster.TotalWounded;
-            var weightedTotal = _troopWeightService.CalculateWeightedMemberCount(partyBase);
-
-            int weightedResult = __result;
-            if (weightedTotal > originalTotal)
+            // Compute exact weighted healthy count per troop type instead of
+            // approximating via wounded ratio (which breaks for asymmetric weights)
+            float weightedHealthy = 0f;
+            int rosterCount = partyBase.MemberRoster.Count;
+            for (int i = 0; i < rosterCount; i++)
             {
-                var woundedRatio = originalTotal > 0 ? (float)originalWounded / originalTotal : 0;
-                var weightedWounded = (int)(weightedTotal * woundedRatio);
-                weightedResult = (int)Math.Ceiling(weightedTotal) - weightedWounded;
+                var element = partyBase.MemberRoster.GetElementCopyAtIndex(i);
+                int healthy = element.Number - element.WoundedNumber;
+                if (healthy > 0)
+                    weightedHealthy += healthy * _troopWeightService.GetTroopWeight(element.Character);
             }
+
+            int weightedResult = (int)Math.Ceiling(weightedHealthy);
 
             _cache[cacheKey] = (currentVersion, weightedResult);
 

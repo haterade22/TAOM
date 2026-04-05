@@ -36,8 +36,9 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     {
         var result = base.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
 
-        // Garrison wage feats — apply when party is garrisoned
-        if (mobileParty.CurrentSettlement?.Owner?.Culture is { } garrisonCulture)
+        // Garrison wage feats — only apply to actual garrison parties (matches vanilla IsGarrison gate)
+        if (mobileParty.IsGarrison && mobileParty.CurrentSettlement?.Town != null
+            && mobileParty.CurrentSettlement.Owner?.Culture is { } garrisonCulture)
         {
             ApplyGarrisonWageFeat(ref result, garrisonCulture, TaomCulturalFeats.EreborGarrisonWageFeat);
             ApplyGarrisonWageFeat(ref result, garrisonCulture, TaomCulturalFeats.LothlorienGarrisonWageFeat);
@@ -58,20 +59,20 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             if (partyCulture.HasFeat(TaomCulturalFeats.MordorWageFeat))
                 result.AddFactor(TaomCulturalFeats.MordorWageFeat.EffectBonus, CultureText);
 
-            // Rohan mounted wage reduction — scale by mounted troop fraction
+            // Rohan mounted wage reduction — scale by mounted wage share (matches vanilla pattern)
             if (partyCulture.HasFeat(TaomCulturalFeats.RohanMountedWageFeat) && troopRoster != null)
             {
-                int totalCount = troopRoster.TotalManCount;
-                if (totalCount > 0)
+                float baseWageTotal = result.BaseNumber;
+                if (baseWageTotal > 0f)
                 {
-                    int mountedCount = 0;
+                    float mountedWageTotal = 0f;
                     foreach (var element in troopRoster.GetTroopRoster())
                     {
                         if (element.Character?.IsMounted == true)
-                            mountedCount += element.Number;
+                            mountedWageTotal += GetCharacterWage(element.Character) * element.Number;
                     }
-                    float mountedFraction = (float)mountedCount / totalCount;
-                    result.AddFactor(TaomCulturalFeats.RohanMountedWageFeat.EffectBonus * mountedFraction, CultureText);
+                    float mountedWageShare = mountedWageTotal / baseWageTotal;
+                    result.AddFactor(TaomCulturalFeats.RohanMountedWageFeat.EffectBonus * mountedWageShare, CultureText);
                 }
             }
         }

@@ -8,12 +8,15 @@ Running scorecard of all reviews. Updated after each review cycle.
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
 | 1 | 2026-04-05 | CulturalFeats | no-ship | partial-agree | 1 confirmed | 1 | 2 | v1 (basic) |
 | 2 | 2026-04-05 | BannerColorPersistence | no-ship | partial-agree | 1 (understated) | 2 | 4 | v2 (improved) |
+| 3 | 2026-04-05 | ArmyTargeting | approve | agree (shallow) | 0 | 0 | 0 | v3 (required sections) |
+| 4 | 2026-04-05 | TroopProgression | no-ship | agree | 2 confirmed + 1 valid divergence | 0 | 0 | v4 (verification artifacts) |
 
 ## Metrics
 
-**Codex accuracy rate:** 2 real bugs found / 6 findings total = 33%
-**Codex miss rate:** 6 missed bugs / 8 total real bugs = 75%
-**False positive rate:** 3 false positives / 6 findings total = 50%
+**Codex accuracy rate:** 4 real bugs found / 9 findings total = 44% (↑ from 33%)
+**Codex miss rate:** 6 missed bugs / 10 total real bugs = 60% (↓ from 75%)
+**False positive rate:** 3 false positives / 9 findings total = 33% (↓ from 50%)
+**Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 Target: accuracy >60%, miss rate <30%, false positives <20%
 
@@ -79,13 +82,78 @@ Target: accuracy >60%, miss rate <30%, false positives <20%
 
 ---
 
+## Review #3: ArmyTargeting
+
+**Date:** 2026-04-05
+**Prompt version:** v3 (required sections, `E:\Decompiled_Bannerlord\` paths, concrete math scenarios)
+**Report:** [codex-adversarial-army-targeting-2026-04-05.md](codex-adversarial-army-targeting-2026-04-05.md)
+
+### Codex Findings (0)
+
+Verdict: **approve** — "No blocking no-ship case."
+
+### Claude Verification
+
+| Check | Codex Claim | Claude Verified? |
+|-------|-------------|-----------------|
+| Math scenario (a): committed + priority pos 0 | 12.0× | Yes — traced formula, correct |
+| Math scenario (b): priority pos 2/4 | 1.667× | Yes — interpolation correct |
+| Math scenario (c): non-priority fallthrough | 1.0× | Yes — falls through to vanilla |
+| Math scenario (d): CommitmentMultiplier=0 | MCM range prevents | Yes — range is 1.0-10.0 |
+| Config settlement IDs valid | "All follow valid naming" | Yes — all 67 IDs verified against settlements.xml |
+| Decompiled vanilla code shown | Described in prose | **No — third consecutive failure.** Prose descriptions only, no C# code blocks. |
+
+### Observations Codex missed (not bugs, but a thorough review would note)
+
+| Observation | Location | Impact |
+|-------------|----------|--------|
+| `BuildFloatIndex` silently drops multipliers ≤1.0 | ArmyTargetingService.cs:87 | Config values ≤1.0 are silently ignored — no feedback |
+| Combined multiplier can reach 18× | GameModel line 40 | 4.0 × 3.0 × 1.5 = 18× on committed top-priority targets |
+| Harmony patch swallows all exceptions | Patch.cs:42-44 | `catch (Exception) {}` hides service bugs during dev |
+| Strength inflation bypasses vanilla strength gate | TaomTargetScoreModel.cs:27 | `ourStrength * 2.0` lets evil factions besiege what vanilla would reject |
+
+### Prompt Lessons
+- v3's required sections and concrete math scenarios produced the first correct verdict
+- Decompiled code STILL not shown despite explicit instruction — Codex consistently avoids this
+- "Approve" verdicts need evidence of depth — an approve with no analysis is indistinguishable from a skip
+- Config validation was claimed but not evidenced — Codex didn't cross-reference against settlements.xml
+
+---
+
+## Review #4: TroopProgression + TroopWeight
+
+**Date:** 2026-04-05
+**Prompt version:** v4 (verification artifacts, split show/analyze, quality gates)
+**Report:** [codex-adversarial-troop-progression-2026-04-05.md](codex-adversarial-troop-progression-2026-04-05.md)
+
+### Codex Findings (3)
+
+| # | Severity | Finding | Claude Assessment |
+|---|----------|---------|-------------------|
+| 1 | HIGH | Garrison wage feats apply to any party in settlement, not just garrisons | **Confirmed bug** — vanilla gates behind `mobileParty.IsGarrison`. Decompilation verified. |
+| 2 | HIGH | NumberOfRegularMembers uses wounded-ratio approximation | **Valid but overstated** — math error is real for asymmetric weights. Downgrade to MEDIUM (uncommon scenario). |
+| 3 | MEDIUM | Rohan mounted wage uses headcount ratio, vanilla uses wage share | **Valid divergence** — confirmed by decompilation. Design choice with lower practical impact. |
+
+### Bugs Codex Missed (0)
+
+Claude found no additional bugs. First review where Codex found everything.
+
+### Prompt Lessons (v4 improvements that worked)
+- Decompiled code finally shown (partial — "truncated by format" but present)
+- Evidence per finding produced zero false positives for the first time
+- Quality gates and required sections prevented shallow analysis
+- Observations section populated with useful notes
+
+---
+
 ## Prompt Evolution
 
 | Version | Used In | Key Changes | Impact |
 |---------|---------|-------------|--------|
 | v1 | CulturalFeats | ADR focus, generic focus areas, no decompilation guidance | 33% accuracy, 1 false positive |
 | v2 | BannerColorPersistence | Feature-specific focus, DO NOT section, decompilation requested | Still 33% accuracy — Codex skipped hard analysis |
-| v3 | ArmyTargeting (planned) | Required sections, `E:\Decompiled_Bannerlord\` paths, concrete scenarios, READ FIRST docs, prior failure examples | Target: >60% accuracy |
+| v3 | ArmyTargeting | Required sections, `E:\Decompiled_Bannerlord\` paths, concrete scenarios, READ FIRST docs, prior failure examples | Correct verdict but shallow — no decompiled code shown, config not cross-referenced |
+| v4 | TroopProgression | Verification artifacts, split "show code" from "answer questions", config cross-reference with file path, approve-verdict evidence requirement | 67% accuracy, 0 false positives, first decompiled code in output |
 
 ### v1 → v2 changes
 - Added feature-specific risk areas (transpilers, drift guard, scoping)
@@ -101,3 +169,10 @@ Target: accuracy >60%, miss rate <30%, false positives <20%
 - Added concrete math scenarios with expected outputs (forces deep analysis)
 - Added config validation section (new attack vector)
 - Added "If everything is HIGH, your calibration is off"
+
+### v3 → v4 changes
+- Added "VERIFICATION ARTIFACTS" — Codex must produce code blocks, not prose descriptions
+- Split vanilla analysis into "SHOW the code" + "ANSWER questions about it" (two separate steps)
+- Config validation now requires cross-referencing against a specific file path
+- Added approve-verdict evidence requirement: "An approve with no decompiled code is incomplete"
+- Added "OBSERVATIONS" section requirement for approve verdicts (things worth noting even if not bugs)
