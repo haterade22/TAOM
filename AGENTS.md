@@ -440,37 +440,56 @@ Example: `feat: add garrison patrol calculation`
 
 ---
 
-## ILSpy Usage for API Verification
+## TaleWorlds Research — Lookup Order
 
-You have access to the `ilspy` MCP server for decompiling TaleWorlds DLLs. **Always cross-reference TaleWorlds API usage by decompiling the actual DLL** — never assume a method exists or has a particular signature.
+**ALWAYS check the pre-decompiled source first.** Only fall back to ILSpy MCP for types not found in the decompiled tree.
 
-### DLL Location
+| Step | Action | When |
+|------|--------|------|
+| 1. **Read decompiled source** | Read or search files in `E:\Decompiled_Bannerlord\` | Always try first — instant, no tool overhead |
+| 2. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
 
-All Bannerlord DLLs are at:
+### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
+
+The entire Bannerlord v1.3.15 codebase is pre-decompiled and organized by category:
+
+| Folder | Contents |
+|--------|----------|
+| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
+| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
+| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views, all `Default*Model` classes (1,362 files) |
+| `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
+| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
+| `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
+| `Network/` | Diamond, Network, PlayerServices (147 files) |
+| `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |
+| `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
+| `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
+
+### Quick Lookup Examples
+
+```bash
+# Find a class
+find "E:/Decompiled_Bannerlord/" -name "DefaultPartyWageModel.cs"
+
+# Search for a method across all decompiled source
+grep -r "GetCharacterWage" "E:/Decompiled_Bannerlord/Campaign/"
+
+# Browse a namespace
+ls "E:/Decompiled_Bannerlord/Campaign/TaleWorlds.CampaignSystem/TaleWorlds/CampaignSystem/GameComponents/"
 ```
-E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\
-```
 
-### Key DLLs and What They Contain
+### When to Look Up TaleWorlds Source
 
-| DLL | Contains |
-|-----|----------|
-| `TaleWorlds.CampaignSystem.dll` | Campaign, Hero, Clan, Kingdom, Settlement, MobileParty, PartyBase, TroopRoster, CampaignBehaviorBase, all campaign logic |
-| `TaleWorlds.Core.dll` | BasicCharacterObject, ItemObject, Banner, FeatObject, CharacterSkills, GameModel base classes |
-| `TaleWorlds.MountAndBlade.dll` | Agent, Mission, MissionBehavior, FormationClass, BattleSideEnum |
-| `SandBox.dll` | All `Default*Model` classes (DefaultPartyWageModel, DefaultPartySizeLimitModel, etc.), SandboxAgentApplyDamageModel |
-| `SandBox.View.dll` | MobilePartyVisual, MapScreen, view-layer classes |
-| `StoryMode.dll` | StoryMode campaign behaviors |
+1. **Harmony patches** — Verify the target method exists with the exact signature (name, params, return type, access modifier)
+2. **GameModel overrides** — Verify the base class method you're overriding exists and has the expected signature
+3. **Adapter interfaces** — Verify the TaleWorlds properties/methods being wrapped actually exist
+4. **Any API call you're uncertain about** — v1.2 to v1.3 renamed/removed several APIs
 
-### How to Decompile
+### ILSpy MCP Fallback
 
-Use the `ilspy` MCP tool:
-```
-mcp__ilspy__decompile_type — Decompile a specific class from a DLL
-mcp__ilspy__list_types     — List all types in an assembly
-```
+If a type is not in the decompiled source, use the `ilspy` MCP tool:
 
-Example: To verify `DefaultPartyWageModel.GetCharacterWage` exists:
 ```
 mcp__ilspy__decompile_type(
   assembly: "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\SandBox.dll",
@@ -478,18 +497,15 @@ mcp__ilspy__decompile_type(
 )
 ```
 
-### When to Decompile
+**DLL path:** `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
 
-1. **Harmony patches** — Verify the target method exists with the exact signature (name, params, return type, access modifier)
-2. **GameModel overrides** — Verify the base class method you're overriding exists and has the expected signature
-3. **Adapter interfaces** — Verify the TaleWorlds properties/methods being wrapped actually exist
-4. **Any API call you're uncertain about** — v1.2 to v1.3 renamed/removed several APIs
+| DLL | Contains |
+|-----|----------|
+| `TaleWorlds.CampaignSystem.dll` | Campaign, Hero, Clan, Kingdom, Settlement, MobileParty |
+| `TaleWorlds.Core.dll` | BasicCharacterObject, ItemObject, Banner, FeatObject, GameModel base classes |
+| `TaleWorlds.MountAndBlade.dll` | Agent, Mission, MissionBehavior, FormationClass |
+| `SandBox.dll` | All `Default*Model` classes, SandboxAgentApplyDamageModel |
+| `SandBox.View.dll` | MobilePartyVisual, MapScreen, view-layer classes |
+| `StoryMode.dll` | StoryMode campaign behaviors |
 
-### Fallback
-
-If the ILSpy MCP is unavailable, use `ilspycmd` directly:
-```bash
-ilspycmd "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\SandBox.dll" -t SandBox.GameComponents.DefaultPartyWageModel
-```
-
-If neither works, mark API usages as `UNVERIFIED` rather than guessing.
+If neither source is available, mark API usages as `UNVERIFIED` rather than guessing.

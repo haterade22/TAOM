@@ -16,7 +16,8 @@ args = [
   "@modelcontextprotocol/server-filesystem",
   "C:\\Users\\mikew\\source\\repos\\TAOM",
   "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
-  "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData"
+  "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",
+  "E:\\Decompiled_Bannerlord"
 ]
 
 [mcp_servers.git]

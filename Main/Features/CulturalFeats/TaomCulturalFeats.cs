@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
@@ -7,6 +8,10 @@ namespace TAOM.Features.CulturalFeats;
 public class TaomCulturalFeats
 {
     private static TaomCulturalFeats _instance;
+
+    private static TaomCulturalFeats Instance => _instance
+        ?? throw new InvalidOperationException(
+            "TaomCulturalFeats not initialized. Ensure Patch18_CulturalFeats is registered.");
 
     // Erebor
     private FeatObject _ereborGarrisonWage;
@@ -90,85 +95,85 @@ public class TaomCulturalFeats
     private FeatObject _rohanMorale;
 
     // Erebor
-    public static FeatObject EreborGarrisonWageFeat => _instance._ereborGarrisonWage;
-    public static FeatObject EreborProductionFeat => _instance._ereborProduction;
-    public static FeatObject EreborConstructionSpeedFeat => _instance._ereborConstructionSpeed;
-    public static FeatObject EreborLoyaltyFeat => _instance._ereborLoyalty;
-    public static FeatObject EreborMoraleFeat => _instance._ereborMorale;
-    public static FeatObject EreborSmithingFeat => _instance._ereborSmithing;
+    public static FeatObject EreborGarrisonWageFeat => Instance._ereborGarrisonWage;
+    public static FeatObject EreborProductionFeat => Instance._ereborProduction;
+    public static FeatObject EreborConstructionSpeedFeat => Instance._ereborConstructionSpeed;
+    public static FeatObject EreborLoyaltyFeat => Instance._ereborLoyalty;
+    public static FeatObject EreborMoraleFeat => Instance._ereborMorale;
+    public static FeatObject EreborSmithingFeat => Instance._ereborSmithing;
 
     // Rivendell
-    public static FeatObject RivendellArmyInfluenceFeat => _instance._rivendellArmyInfluence;
-    public static FeatObject RivendellHearthGrowthFeat => _instance._rivendellHearthGrowth;
-    public static FeatObject RivendellArmyInfluenceCostFeat => _instance._rivendellArmyInfluenceCost;
-    public static FeatObject RivendellFoodConsumptionFeat => _instance._rivendellFoodConsumption;
-    public static FeatObject RivendellLoyaltyFeat => _instance._rivendellLoyalty;
+    public static FeatObject RivendellArmyInfluenceFeat => Instance._rivendellArmyInfluence;
+    public static FeatObject RivendellHearthGrowthFeat => Instance._rivendellHearthGrowth;
+    public static FeatObject RivendellArmyInfluenceCostFeat => Instance._rivendellArmyInfluenceCost;
+    public static FeatObject RivendellFoodConsumptionFeat => Instance._rivendellFoodConsumption;
+    public static FeatObject RivendellLoyaltyFeat => Instance._rivendellLoyalty;
 
     // Mirkwood
-    public static FeatObject MirkwoodForestSpeedFeat => _instance._mirkwoodForestSpeed;
-    public static FeatObject MirkwoodMilitiaProductionFeat => _instance._mirkwoodMilitiaProduction;
-    public static FeatObject MirkwoodHearthGrowthFeat => _instance._mirkwoodHearthGrowth;
-    public static FeatObject MirkwoodFoodConsumptionFeat => _instance._mirkwoodFoodConsumption;
-    public static FeatObject MirkwoodMoraleFeat => _instance._mirkwoodMorale;
+    public static FeatObject MirkwoodForestSpeedFeat => Instance._mirkwoodForestSpeed;
+    public static FeatObject MirkwoodMilitiaProductionFeat => Instance._mirkwoodMilitiaProduction;
+    public static FeatObject MirkwoodHearthGrowthFeat => Instance._mirkwoodHearthGrowth;
+    public static FeatObject MirkwoodFoodConsumptionFeat => Instance._mirkwoodFoodConsumption;
+    public static FeatObject MirkwoodMoraleFeat => Instance._mirkwoodMorale;
 
     // Lothlorien
-    public static FeatObject LothlorienForestSpeedFeat => _instance._lothlorienForestSpeed;
-    public static FeatObject LothlorienGarrisonWageFeat => _instance._lothlorienGarrisonWage;
-    public static FeatObject LothlorienConstructionSpeedFeat => _instance._lothlorienConstructionSpeed;
-    public static FeatObject LothlorienFoodConsumptionFeat => _instance._lothlorienFoodConsumption;
-    public static FeatObject LothlorienLoyaltyFeat => _instance._lothlorienLoyalty;
-    public static FeatObject LothlorienMoraleFeat => _instance._lothlorienMorale;
+    public static FeatObject LothlorienForestSpeedFeat => Instance._lothlorienForestSpeed;
+    public static FeatObject LothlorienGarrisonWageFeat => Instance._lothlorienGarrisonWage;
+    public static FeatObject LothlorienConstructionSpeedFeat => Instance._lothlorienConstructionSpeed;
+    public static FeatObject LothlorienFoodConsumptionFeat => Instance._lothlorienFoodConsumption;
+    public static FeatObject LothlorienLoyaltyFeat => Instance._lothlorienLoyalty;
+    public static FeatObject LothlorienMoraleFeat => Instance._lothlorienMorale;
 
     // Isengard
-    public static FeatObject IsengardCheaperRecruitsFeat => _instance._isengardCheaperRecruits;
-    public static FeatObject IsengardGarrisonWageFeat => _instance._isengardGarrisonWage;
-    public static FeatObject IsengardDecisionPenaltyFeat => _instance._isengardDecisionPenalty;
-    public static FeatObject IsengardPartySizeFeat => _instance._isengardPartySize;
-    public static FeatObject IsengardConstructionSpeedFeat => _instance._isengardConstructionSpeed;
-    public static FeatObject IsengardSmithingFeat => _instance._isengardSmithing;
-    public static FeatObject IsengardRaidDamageFeat => _instance._isengardRaidDamage;
+    public static FeatObject IsengardCheaperRecruitsFeat => Instance._isengardCheaperRecruits;
+    public static FeatObject IsengardGarrisonWageFeat => Instance._isengardGarrisonWage;
+    public static FeatObject IsengardDecisionPenaltyFeat => Instance._isengardDecisionPenalty;
+    public static FeatObject IsengardPartySizeFeat => Instance._isengardPartySize;
+    public static FeatObject IsengardConstructionSpeedFeat => Instance._isengardConstructionSpeed;
+    public static FeatObject IsengardSmithingFeat => Instance._isengardSmithing;
+    public static FeatObject IsengardRaidDamageFeat => Instance._isengardRaidDamage;
 
     // Gundabad
-    public static FeatObject GundabadArmyInfluenceCostFeat => _instance._gundabadArmyInfluenceCost;
-    public static FeatObject GundabadGrainProductionFeat => _instance._gundabadGrainProduction;
-    public static FeatObject GundabadWageFeat => _instance._gundabadWage;
-    public static FeatObject GundabadPartySizeFeat => _instance._gundabadPartySize;
-    public static FeatObject GundabadRaidDamageFeat => _instance._gundabadRaidDamage;
+    public static FeatObject GundabadArmyInfluenceCostFeat => Instance._gundabadArmyInfluenceCost;
+    public static FeatObject GundabadGrainProductionFeat => Instance._gundabadGrainProduction;
+    public static FeatObject GundabadWageFeat => Instance._gundabadWage;
+    public static FeatObject GundabadPartySizeFeat => Instance._gundabadPartySize;
+    public static FeatObject GundabadRaidDamageFeat => Instance._gundabadRaidDamage;
 
     // Umbar
-    public static FeatObject UmbarCheaperCaravansFeat => _instance._umbarCheaperCaravans;
-    public static FeatObject UmbarRenownFeat => _instance._umbarRenown;
-    public static FeatObject UmbarWageFeat => _instance._umbarWage;
-    public static FeatObject UmbarTariffIncomeFeat => _instance._umbarTariffIncome;
+    public static FeatObject UmbarCheaperCaravansFeat => Instance._umbarCheaperCaravans;
+    public static FeatObject UmbarRenownFeat => Instance._umbarRenown;
+    public static FeatObject UmbarWageFeat => Instance._umbarWage;
+    public static FeatObject UmbarTariffIncomeFeat => Instance._umbarTariffIncome;
 
     // Dol Guldur
-    public static FeatObject DolGuldurArmyInfluenceCostFeat => _instance._dolguldurArmyInfluenceCost;
-    public static FeatObject DolGuldurMilitiaProductionFeat => _instance._dolguldurMilitiaProduction;
-    public static FeatObject DolGuldurConstructionSpeedFeat => _instance._dolguldurConstructionSpeed;
-    public static FeatObject DolGuldurPartySizeFeat => _instance._dolguldurPartySize;
-    public static FeatObject DolGuldurFoodConsumptionFeat => _instance._dolguldurFoodConsumption;
+    public static FeatObject DolGuldurArmyInfluenceCostFeat => Instance._dolguldurArmyInfluenceCost;
+    public static FeatObject DolGuldurMilitiaProductionFeat => Instance._dolguldurMilitiaProduction;
+    public static FeatObject DolGuldurConstructionSpeedFeat => Instance._dolguldurConstructionSpeed;
+    public static FeatObject DolGuldurPartySizeFeat => Instance._dolguldurPartySize;
+    public static FeatObject DolGuldurFoodConsumptionFeat => Instance._dolguldurFoodConsumption;
 
     // Gondor
-    public static FeatObject GondorGarrisonWageFeat => _instance._gondorGarrisonWage;
-    public static FeatObject GondorArmyInfluenceFeat => _instance._gondorArmyInfluence;
-    public static FeatObject GondorHearthGrowthFeat => _instance._gondorHearthGrowth;
-    public static FeatObject GondorPartySizeFeat => _instance._gondorPartySize;
-    public static FeatObject GondorLoyaltyFeat => _instance._gondorLoyalty;
-    public static FeatObject GondorMoraleFeat => _instance._gondorMorale;
+    public static FeatObject GondorGarrisonWageFeat => Instance._gondorGarrisonWage;
+    public static FeatObject GondorArmyInfluenceFeat => Instance._gondorArmyInfluence;
+    public static FeatObject GondorHearthGrowthFeat => Instance._gondorHearthGrowth;
+    public static FeatObject GondorPartySizeFeat => Instance._gondorPartySize;
+    public static FeatObject GondorLoyaltyFeat => Instance._gondorLoyalty;
+    public static FeatObject GondorMoraleFeat => Instance._gondorMorale;
 
     // Mordor
-    public static FeatObject MordorArmyInfluenceCostFeat => _instance._mordorArmyInfluenceCost;
-    public static FeatObject MordorGrainProductionFeat => _instance._mordorGrainProduction;
-    public static FeatObject MordorWageFeat => _instance._mordorWage;
-    public static FeatObject MordorPartySizeFeat => _instance._mordorPartySize;
-    public static FeatObject MordorRaidDamageFeat => _instance._mordorRaidDamage;
+    public static FeatObject MordorArmyInfluenceCostFeat => Instance._mordorArmyInfluenceCost;
+    public static FeatObject MordorGrainProductionFeat => Instance._mordorGrainProduction;
+    public static FeatObject MordorWageFeat => Instance._mordorWage;
+    public static FeatObject MordorPartySizeFeat => Instance._mordorPartySize;
+    public static FeatObject MordorRaidDamageFeat => Instance._mordorRaidDamage;
 
     // Rohan
-    public static FeatObject RohanMountedCostFeat => _instance._rohanMountedCost;
-    public static FeatObject RohanMountedWageFeat => _instance._rohanMountedWage;
-    public static FeatObject RohanInfantrySpeedFeat => _instance._rohanInfantrySpeed;
-    public static FeatObject RohanLoyaltyFeat => _instance._rohanLoyalty;
-    public static FeatObject RohanMoraleFeat => _instance._rohanMorale;
+    public static FeatObject RohanMountedCostFeat => Instance._rohanMountedCost;
+    public static FeatObject RohanMountedWageFeat => Instance._rohanMountedWage;
+    public static FeatObject RohanInfantrySpeedFeat => Instance._rohanInfantrySpeed;
+    public static FeatObject RohanLoyaltyFeat => Instance._rohanLoyalty;
+    public static FeatObject RohanMoraleFeat => Instance._rohanMorale;
 
     public static void CreateAndRegister()
     {
@@ -409,7 +414,7 @@ public class TaomCulturalFeats
         _umbarCheaperCaravans.Initialize(
             "{=taom_feat_umb_cc}Corsair Trade",
             "{=taom_feat_umb_cc_desc}Caravan formation cost reduced by 25%.",
-            0.75f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            -0.25f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _umbarRenown.Initialize(
             "{=taom_feat_umb_r}Corsair Glory",
             "{=taom_feat_umb_r_desc}Renown from battles increased by 8%.",

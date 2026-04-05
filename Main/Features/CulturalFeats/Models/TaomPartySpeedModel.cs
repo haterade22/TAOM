@@ -9,6 +9,11 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
 {
+    /// <summary>
+    /// Vanilla forest movement penalty magnitude (DefaultPartySpeedCalculatingModel.MovingAtForestEffect).
+    /// </summary>
+    private const float ForestPenaltyMagnitude = 0.3f;
+
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
@@ -20,16 +25,20 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
         if (culture == null)
             return result;
 
-        if (culture.HasFeat(TaomCulturalFeats.MirkwoodForestSpeedFeat))
+        var terrain = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(mobileParty.CurrentNavigationFace);
+        if (terrain == TerrainType.Forest)
         {
-            float bonus = TaomCulturalFeats.MirkwoodForestSpeedFeat.EffectBonus * 0.3f;
-            result.AddFactor(bonus, CultureText);
-        }
+            if (culture.HasFeat(TaomCulturalFeats.MirkwoodForestSpeedFeat))
+            {
+                float bonus = TaomCulturalFeats.MirkwoodForestSpeedFeat.EffectBonus * ForestPenaltyMagnitude;
+                result.AddFactor(bonus, CultureText);
+            }
 
-        if (culture.HasFeat(TaomCulturalFeats.LothlorienForestSpeedFeat))
-        {
-            float bonus = TaomCulturalFeats.LothlorienForestSpeedFeat.EffectBonus * 0.3f;
-            result.AddFactor(bonus, CultureText);
+            if (culture.HasFeat(TaomCulturalFeats.LothlorienForestSpeedFeat))
+            {
+                float bonus = TaomCulturalFeats.LothlorienForestSpeedFeat.EffectBonus * ForestPenaltyMagnitude;
+                result.AddFactor(bonus, CultureText);
+            }
         }
 
         // Rohan infantry speed penalty — applies when >50% of party is infantry

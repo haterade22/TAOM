@@ -11,7 +11,7 @@ public class TaomCaravanModel : DefaultCaravanModel
         int baseCost = base.GetCaravanFormingCost(largerCaravan, navalCaravan);
 
         if (CharacterObject.PlayerCharacter?.Culture?.HasFeat(TaomCulturalFeats.UmbarCheaperCaravansFeat) == true)
-            return MathF.Round(baseCost * TaomCulturalFeats.UmbarCheaperCaravansFeat.EffectBonus);
+            return MathF.Round(baseCost * (1f + TaomCulturalFeats.UmbarCheaperCaravansFeat.EffectBonus));
 
         return baseCost;
     }
