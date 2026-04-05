@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.TroopProgression;
 
 public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 {
     private readonly IRandomProvider _random;
+    private readonly IModLogger _logger;
 
     private static readonly Dictionary<string, List<VolunteerChance>> SettlementMap = new();
     private static readonly Dictionary<string, List<VolunteerChance>> ClanMap = new();
@@ -27,9 +29,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeAbanissaCulture();
     }
 
-    public VolunteerRecruitmentService(IRandomProvider random)
+    public VolunteerRecruitmentService(IRandomProvider random, IModLogger logger)
     {
         _random = random;
+        _logger = logger;
     }
 
     public string GetVolunteerTroopId(VolunteerContext context)
@@ -42,7 +45,9 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         if (pool == null || pool.Count == 0)
             return null;
 
-        return PickWeighted(pool);
+        var troop = PickWeighted(pool);
+        _logger.LogDebug($"Volunteer: settlement={context.SettlementId} clan={context.OwnerClanId} culture={context.CultureId} → {troop}");
+        return troop;
     }
 
     private static List<VolunteerChance> ResolvePool(string key, Dictionary<string, List<VolunteerChance>> map)

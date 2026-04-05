@@ -1,21 +1,25 @@
 using System.Collections.Generic;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.ArmyTargeting;
 
 public class ArmyTargetingService : IArmyTargetingService
 {
     private readonly IArmyTargetingSettingsProvider _settings;
+    private readonly IModLogger _logger;
     private readonly Dictionary<string, Dictionary<string, int>> _priorityIndex;
     private readonly Dictionary<string, float> _aggressionIndex;
     private readonly Dictionary<string, float> _distanceRangeIndex;
 
-    public ArmyTargetingService(IArmyTargetingSettingsProvider settings, IArmyTargetingConfigProvider configProvider)
+    public ArmyTargetingService(IArmyTargetingSettingsProvider settings, IArmyTargetingConfigProvider configProvider, IModLogger logger)
     {
         _settings = settings;
+        _logger = logger;
         var config = configProvider.GetConfig();
         _priorityIndex = BuildPriorityIndex(config);
         _aggressionIndex = BuildFloatIndex(config.FactionAggressionMultipliers);
         _distanceRangeIndex = BuildFloatIndex(config.FactionDistanceRangeMultipliers);
+        _logger.LogInfo($"ArmyTargeting: loaded {_priorityIndex.Count} priority factions, {_aggressionIndex.Count} aggression entries, {_distanceRangeIndex.Count} distance entries");
     }
 
     public float GetTargetMultiplier(string candidateId, string committedTargetId, string factionId)
@@ -39,6 +43,9 @@ public class ArmyTargetingService : IArmyTargetingService
             }
         }
 
+        if (multiplier != 1.0f)
+            _logger.LogDebug($"ArmyTargeting: {factionId}→{candidateId} target ×{multiplier:F2} (committed={committedTargetId})");
+
         return multiplier;
     }
 
@@ -47,7 +54,11 @@ public class ArmyTargetingService : IArmyTargetingService
         if (!_settings.EnableArmyStrategicIntelligence) return 1.0f;
         if (factionId == null) return 1.0f;
         if (_aggressionIndex.TryGetValue(factionId, out float m))
-            return m * _settings.EvilAggressionScale;
+        {
+            float result = m * _settings.EvilAggressionScale;
+            _logger.LogDebug($"ArmyTargeting: {factionId} strength ×{result:F2}");
+            return result;
+        }
         return 1.0f;
     }
 
@@ -58,7 +69,9 @@ public class ArmyTargetingService : IArmyTargetingService
         if (!_priorityIndex.TryGetValue(factionId, out var targets)) return 1.0f;
         if (!targets.TryGetValue(targetId, out _)) return 1.0f;
         if (!_distanceRangeIndex.TryGetValue(factionId, out float scale)) return 1.0f;
-        return scale * _settings.LongRangePriorityBoostScale;
+        float compensation = scale * _settings.LongRangePriorityBoostScale;
+        _logger.LogDebug($"ArmyTargeting: distance compensation ×{compensation:F2} for {factionId}→{targetId}");
+        return compensation;
     }
 
     public bool IsInPriorityList(string factionId, string settlementId)

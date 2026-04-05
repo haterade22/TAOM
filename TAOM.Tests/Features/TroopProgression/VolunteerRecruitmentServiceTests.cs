@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM.Tests.Features.TroopProgression;
@@ -9,13 +10,15 @@ public class VolunteerRecruitmentServiceTests
 {
     private VolunteerRecruitmentService _sut;
     private IRandomProvider _random;
+    private IModLogger _logger;
 
     [TestInitialize]
     public void Setup()
     {
         _random = Substitute.For<IRandomProvider>();
         _random.Next(Arg.Any<int>()).Returns(0);
-        _sut = new VolunteerRecruitmentService(_random);
+        _logger = Substitute.For<IModLogger>();
+        _sut = new VolunteerRecruitmentService(_random, _logger);
     }
 
     // --- Culture fallback ---

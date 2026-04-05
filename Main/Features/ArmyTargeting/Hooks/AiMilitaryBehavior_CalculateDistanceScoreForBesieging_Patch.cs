@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -32,7 +33,10 @@ public class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
             string settlementId = targetSettlement?.StringId;
 
             if (service.IsInPriorityList(factionId, settlementId))
+            {
                 bestDistanceScore = floor;
+                IoC.Resolve<IModLogger>().LogDebug($"ArmyTargeting: border proximity floor {floor:F2} applied for {factionId}→{settlementId}");
+            }
         }
         catch (Exception)
         {

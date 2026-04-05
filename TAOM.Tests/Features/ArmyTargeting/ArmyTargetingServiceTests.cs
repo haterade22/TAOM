@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.ArmyTargeting;
 
 namespace TAOM.Tests.Features.ArmyTargeting;
@@ -10,6 +11,7 @@ public class ArmyTargetingServiceTests
 {
     private IArmyTargetingSettingsProvider _settings;
     private IArmyTargetingConfigProvider _configProvider;
+    private IModLogger _logger;
     private ArmyTargetingConfig _config;
 
     [TestInitialize]
@@ -17,6 +19,7 @@ public class ArmyTargetingServiceTests
     {
         _settings = Substitute.For<IArmyTargetingSettingsProvider>();
         _configProvider = Substitute.For<IArmyTargetingConfigProvider>();
+        _logger = Substitute.For<IModLogger>();
 
         _settings.EnableArmyStrategicIntelligence.Returns(true);
         _settings.CommitmentMultiplier.Returns(4.0f);
@@ -34,7 +37,7 @@ public class ArmyTargetingServiceTests
         _configProvider.GetConfig().Returns(_config);
     }
 
-    private ArmyTargetingService CreateSut() => new ArmyTargetingService(_settings, _configProvider);
+    private ArmyTargetingService CreateSut() => new ArmyTargetingService(_settings, _configProvider, _logger);
 
     [TestMethod]
     public void GetTargetMultiplier_FeatureDisabled_ReturnsOne()
