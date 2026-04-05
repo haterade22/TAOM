@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace TAOM.Features.BannerInjection;
@@ -5,15 +6,21 @@ namespace TAOM.Features.BannerInjection;
 public static class BannerLayerExpander
 {
     private const int FieldsPerLayer = 10;
+    private static readonly ConcurrentDictionary<string, List<int[]>> _cache = new();
 
     public static List<int[]> ParseAllLayers(string bannerCode)
     {
-        var result = new List<int[]>();
-
         if (string.IsNullOrEmpty(bannerCode))
-            return result;
+            return new List<int[]>();
 
+        return _cache.GetOrAdd(bannerCode, ParseAllLayersUncached);
+    }
+
+    private static List<int[]> ParseAllLayersUncached(string bannerCode)
+    {
+        var result = new List<int[]>();
         var parts = bannerCode.Split('.');
+
         for (var i = 0; i + FieldsPerLayer <= parts.Length; i += FieldsPerLayer)
         {
             var layer = new int[FieldsPerLayer];
@@ -29,10 +36,7 @@ public static class BannerLayerExpander
             }
 
             if (!valid)
-            {
-                result.Clear();
-                return result;
-            }
+                return new List<int[]>();
 
             result.Add(layer);
         }
