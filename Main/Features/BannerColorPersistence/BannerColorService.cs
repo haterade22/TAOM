@@ -44,4 +44,8 @@ public class BannerColorService : IBannerColorService
     public bool IsUniqueSecondaryColorEnabled() => _configProvider.GetConfig().EnableUniqueSecondaryColor;
 
     public bool IsLayerLimitTranspilerEnabled() => _configProvider.GetConfig().EnableLayerLimitTranspiler;
+
+    public bool IsAgentVisualColorsEnabled() => _configProvider.GetConfig().EnableAgentVisualColors;
+
+    public bool IsConversationTableauColorsEnabled() => _configProvider.GetConfig().EnableConversationTableauColors;
 }

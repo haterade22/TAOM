@@ -12,4 +12,6 @@ public interface IBannerColorService
     bool IsBannerPasteEnabled();
     bool IsUniqueSecondaryColorEnabled();
     bool IsLayerLimitTranspilerEnabled();
+    bool IsAgentVisualColorsEnabled();
+    bool IsConversationTableauColorsEnabled();
 }

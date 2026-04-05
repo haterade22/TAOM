@@ -7,4 +7,6 @@ public class BannerColorConfig
     public bool EnableBannerPaste { get; set; } = true;
     public bool EnableUniqueSecondaryColor { get; set; } = true;
     public bool EnableLayerLimitTranspiler { get; set; } = true;
+    public bool EnableAgentVisualColors { get; set; } = true;
+    public bool EnableConversationTableauColors { get; set; } = true;
 }

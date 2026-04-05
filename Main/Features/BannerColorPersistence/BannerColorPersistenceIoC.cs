@@ -10,5 +10,6 @@ public static class BannerColorPersistenceIoC
         container.Register<IBannerColorConfigProvider, BannerColorConfigProvider>(Reuse.Singleton);
         container.Register<IBannerColorService, BannerColorService>(Reuse.Singleton);
         container.Register<IBannerHeroAdapter, BannerHeroAdapter>(Reuse.Singleton);
+        container.Register<IAgentColorStore, AgentColorStore>(Reuse.Singleton);
     }
 }

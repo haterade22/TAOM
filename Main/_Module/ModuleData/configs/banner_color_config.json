@@ -3,5 +3,7 @@
   "EnableDriftGuard": true,
   "EnableBannerPaste": true,
   "EnableUniqueSecondaryColor": true,
-  "EnableLayerLimitTranspiler": true
+  "EnableLayerLimitTranspiler": true,
+  "EnableAgentVisualColors": true,
+  "EnableConversationTableauColors": true
 }

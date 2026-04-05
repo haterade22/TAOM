@@ -122,7 +122,10 @@ public class SubModule : MBSubModuleBase
         PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
-        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        var agentColorStore = IoC.Resolve<IAgentColorStore>();
+        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
+        Agent_EquipItemsFromSpawnEquipment_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
+        AgentVisuals_Create_Patch.Initialize(bannerColorService);
 
         Mission_Initialize_Patch.Initialize(logger);
 
@@ -276,6 +279,13 @@ public class SubModule : MBSubModuleBase
                 nameof(MobilePartyVisual_AddCharacterToPartyIcon_Patch.Postfix)));
         else
             IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MobilePartyVisual.AddCharacterToPartyIcon not found — party icon colors will not persist");
+
+        // Manual patch for AgentVisuals.Create (TaleWorlds.MountAndBlade.View.dll)
+        var agentVisualsCreateTarget = AgentVisuals_Create_Patch.TargetMethod();
+        if (agentVisualsCreateTarget != null)
+            _harmony.Patch(agentVisualsCreateTarget, prefix: new HarmonyMethod(
+                typeof(AgentVisuals_Create_Patch),
+                nameof(AgentVisuals_Create_Patch.Prefix)));
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)

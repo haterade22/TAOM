@@ -11,11 +11,13 @@ public static class Mission_SpawnAgent_Patch
 {
     private static IBannerColorService? _service;
     private static IBannerHeroAdapter? _heroAdapter;
+    private static IAgentColorStore? _colorStore;
 
-    public static void Initialize(IBannerColorService service, IBannerHeroAdapter heroAdapter)
+    public static void Initialize(IBannerColorService service, IBannerHeroAdapter heroAdapter, IAgentColorStore colorStore)
     {
         _service = service;
         _heroAdapter = heroAdapter;
+        _colorStore = colorStore;
     }
 
     [HarmonyPrefix]
@@ -44,5 +46,32 @@ public static class Mission_SpawnAgent_Patch
 
         agentBuildData.ClothingColor1(info.Value.Color1).ClothingColor2(info.Value.Color2);
         return true;
+    }
+
+    [HarmonyPostfix]
+    public static void Postfix(Agent __result, AgentBuildData agentBuildData)
+    {
+        if (__result == null) return;
+        if (!(_service?.IsAgentVisualColorsEnabled() ?? false)) return;
+
+        var origin = agentBuildData.AgentOrigin;
+        if (origin == null) return;
+
+        TaleWorlds.CampaignSystem.Hero? leaderHero = null;
+
+        if (origin is PartyAgentOrigin partyOrigin)
+            leaderHero = partyOrigin.Party?.LeaderHero;
+        else if (origin is PartyGroupAgentOrigin partyGroupOrigin)
+            leaderHero = partyGroupOrigin.Party?.LeaderHero;
+        else if (origin is SimpleAgentOrigin simpleOrigin)
+            leaderHero = simpleOrigin.Party?.LeaderHero;
+
+        if (leaderHero == null) return;
+
+        var info = _heroAdapter?.GetClanColorInfoFromHero(leaderHero);
+        if (info == null) return;
+        if (!(_service?.ShouldUseClanColor(info.Value) ?? false)) return;
+
+        _colorStore?.Register(__result.Index, info.Value);
     }
 }

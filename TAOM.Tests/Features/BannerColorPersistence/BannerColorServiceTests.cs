@@ -198,4 +198,26 @@ public class BannerColorServiceTests
         // Act & Assert
         Assert.IsFalse(sut.IsLayerLimitTranspilerEnabled());
     }
+
+    [TestMethod]
+    public void IsAgentVisualColorsEnabled_ReflectsConfig()
+    {
+        // Arrange
+        _config.EnableAgentVisualColors = false;
+        var sut = CreateSut();
+
+        // Act & Assert
+        Assert.IsFalse(sut.IsAgentVisualColorsEnabled());
+    }
+
+    [TestMethod]
+    public void IsConversationTableauColorsEnabled_ReflectsConfig()
+    {
+        // Arrange
+        _config.EnableConversationTableauColors = false;
+        var sut = CreateSut();
+
+        // Act & Assert
+        Assert.IsFalse(sut.IsConversationTableauColorsEnabled());
+    }
 }
