@@ -21,6 +21,9 @@ You operate independently from Claude Code. You share no session context or memo
 - **MEDIUM**: Performance issue in hot path, missing IoC registration, interface not segregated
 - **LOW**: Style violation, missing comment explaining non-obvious behavior
 
+### Evidence Calibration Rule
+If you cannot quote decompiled vanilla code supporting your claim, **downgrade severity by one level**. "I believe vanilla does X" is not evidence — read the decompiled source at `E:\Decompiled_Bannerlord\` and include the relevant code in your finding. Prior reviews produced false positives when vanilla behavior was assumed rather than verified (e.g., `characterObject.IsMounted` was flagged as a bug but matches vanilla `KhuzaitRecruitUpgradeFeat` exactly).
+
 ### Output Format
 
 ```
