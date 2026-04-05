@@ -1,0 +1,7 @@
+{
+  "EnableColorPersistence": true,
+  "EnableDriftGuard": true,
+  "EnableBannerPaste": true,
+  "EnableUniqueSecondaryColor": true,
+  "EnableLayerLimitTranspiler": true
+}

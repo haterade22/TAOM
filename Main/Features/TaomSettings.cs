@@ -154,4 +154,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Minimum border-proximity score substituted for priority-list targets that vanilla rejects as out-of-range. 0 = vanilla (may ignore distant priority targets entirely). 0.15 = allow long-range priority targets to be scored.")]
     [SettingPropertyGroup("AI Strategic Intelligence")]
     public float ArmyBorderProximityFloor { get; set; } = 0.15f;
+
+    // --- Time Acceleration ---
+
+    [SettingPropertyGroup("Time Acceleration", GroupOrder = 10)]
+    [SettingPropertyInteger("Fast Forward Multiplier", 1, 128, Order = 0,
+        HintText = "Speed multiplier applied when pressing the fast-forward button (Space). Default: 4.")]
+    public int FastForwardMultiplier { get; set; } = 4;
+
+    [SettingPropertyGroup("Time Acceleration")]
+    [SettingPropertyInteger("Extra Fast Forward Multiplier", 1, 128, Order = 1,
+        HintText = "Speed multiplier applied with the extra fast-forward button (E). Default: 8.")]
+    public int ExtraFastForwardMultiplier { get; set; } = 8;
+
+    [SettingPropertyGroup("Time Acceleration")]
+    [SettingPropertyInteger("Turbo Multiplier (Ctrl+Space)", 1, 128, Order = 2,
+        HintText = "Speed multiplier while holding Ctrl+Space. Releases back to prior speed on key-up. Default: 16.")]
+    public int CtrlSpaceMultiplier { get; set; } = 16;
 }

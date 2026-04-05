@@ -39,6 +39,10 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="$(GameFolder)\Modules\Bannerlord.UIExtenderEx\bin\$(GameBinariesFolder)\Bannerlord.UIExtenderEx.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

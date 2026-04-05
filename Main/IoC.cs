@@ -4,6 +4,7 @@ using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Features.BannerColorPersistence;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 using TAOM.Features.CharacterCreation;
@@ -23,6 +24,7 @@ using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
 using TAOM.Features.ArmyTargeting;
+using TAOM.Features.TimeAcceleration;
 
 namespace TAOM;
 
@@ -41,6 +43,7 @@ public static class IoC
 
         HeroRaceIoC.RegisterHeroRaceFeature(container);
         BannerInjectionIoC.RegisterBannerInjectionFeature(container);
+        BannerColorPersistenceIoC.RegisterBannerColorPersistenceFeature(container);
         TroopProgressionIoC.RegisterTroopProgressionFeature(container);
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
@@ -58,6 +61,7 @@ public static class IoC
         ShaderPrecompilationIoC.RegisterShaderPrecompilationFeature(container);
         SiegeDefenseIoC.RegisterSiegeDefenseFeature(container);
         ArmyTargetingIoC.RegisterArmyTargetingFeature(container);
+        TimeAccelerationIoC.RegisterTimeAccelerationFeature(container);
 
         _container = container;
     }

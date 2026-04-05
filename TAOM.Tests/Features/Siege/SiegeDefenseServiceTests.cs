@@ -13,6 +13,7 @@ public class SiegeDefenseServiceTests
 {
     private ISiegeDefenseConfigProvider _configProvider;
     private ISiegeDefenseSettingsProvider _settings;
+    private IPlayerContextAdapter _playerContext;
     private IModLogger _logger;
     private SiegeDefenseService _sut;
 
@@ -21,14 +22,16 @@ public class SiegeDefenseServiceTests
     {
         _configProvider = Substitute.For<ISiegeDefenseConfigProvider>();
         _settings = Substitute.For<ISiegeDefenseSettingsProvider>();
+        _playerContext = Substitute.For<IPlayerContextAdapter>();
         _logger = Substitute.For<IModLogger>();
 
         _settings.EnableSiegeDefenseEvents.Returns(true);
         _settings.SiegeDefenseResponseDays.Returns(3);
+        _playerContext.GetPlayerKingdomId().Returns("gondor");
+        _playerContext.IsUnderMercenaryService().Returns(false);
 
         var config = new SiegeDefenseConfig
         {
-            WatchedFactionIds = new List<string> { "gondor", "rohan" },
             WatchedSettlementIds = new List<string> { "town_special" },
             ResponseWindowDays = 3,
             RewardRelation = 5,
@@ -36,13 +39,13 @@ public class SiegeDefenseServiceTests
         };
         _configProvider.LoadConfig().Returns(config);
 
-        _sut = new SiegeDefenseService(_configProvider, _settings, _logger);
+        _sut = new SiegeDefenseService(_configProvider, _settings, _playerContext, _logger);
     }
 
-    // --- IsWatchedSiege ---
+    // --- IsWatchedSiege: player kingdom ---
 
     [TestMethod]
-    public void IsWatchedSiege_WatchedFaction_ReturnsTrue()
+    public void IsWatchedSiege_PlayerKingdomUnderSiege_ReturnsTrue()
     {
         // Arrange
         var siege = Substitute.For<ISiegeEventAdapter>();
@@ -58,12 +61,47 @@ public class SiegeDefenseServiceTests
     }
 
     [TestMethod]
-    public void IsWatchedSiege_WatchedSettlement_ReturnsTrue()
+    public void IsWatchedSiege_DifferentKingdomUnderSiege_ReturnsFalse()
     {
         // Arrange
         var siege = Substitute.For<ISiegeEventAdapter>();
-        siege.DefenderFactionId.Returns("someother_faction");
-        siege.SettlementId.Returns("town_special");
+        siege.DefenderFactionId.Returns("rohan");
+        siege.SettlementId.Returns("town_rohan_1");
+        siege.IsTown.Returns(true);
+
+        // Act
+        var result = _sut.IsWatchedSiege(siege);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsWatchedSiege_PlayerHasNoKingdom_ReturnsFalse()
+    {
+        // Arrange
+        _playerContext.GetPlayerKingdomId().Returns("");
+        var siege = Substitute.For<ISiegeEventAdapter>();
+        siege.DefenderFactionId.Returns("gondor");
+        siege.SettlementId.Returns("town_gondor_1");
+        siege.IsTown.Returns(true);
+
+        // Act
+        var result = _sut.IsWatchedSiege(siege);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsWatchedSiege_MercenaryKingdomUnderSiege_ReturnsTrue()
+    {
+        // Arrange — mercenary serving gondor; Clan.Kingdom is set to gondor in both cases
+        _playerContext.GetPlayerKingdomId().Returns("gondor");
+        _playerContext.IsUnderMercenaryService().Returns(true);
+        var siege = Substitute.For<ISiegeEventAdapter>();
+        siege.DefenderFactionId.Returns("gondor");
+        siege.SettlementId.Returns("town_gondor_1");
         siege.IsTown.Returns(true);
 
         // Act
@@ -74,20 +112,23 @@ public class SiegeDefenseServiceTests
     }
 
     [TestMethod]
-    public void IsWatchedSiege_UnwatchedFactionAndSettlement_ReturnsFalse()
+    public void IsWatchedSiege_WatchedSettlementOverride_ReturnsTrue()
     {
-        // Arrange
+        // Arrange — player is in a different kingdom, but settlement is explicitly watched
+        _playerContext.GetPlayerKingdomId().Returns("rohan");
         var siege = Substitute.For<ISiegeEventAdapter>();
-        siege.DefenderFactionId.Returns("mordor");
-        siege.SettlementId.Returns("town_mordor_1");
+        siege.DefenderFactionId.Returns("gondor");
+        siege.SettlementId.Returns("town_special");
         siege.IsTown.Returns(true);
 
         // Act
         var result = _sut.IsWatchedSiege(siege);
 
         // Assert
-        Assert.IsFalse(result);
+        Assert.IsTrue(result);
     }
+
+    // --- IsWatchedSiege: guards ---
 
     [TestMethod]
     public void IsWatchedSiege_NotATown_ReturnsFalse()
@@ -144,7 +185,7 @@ public class SiegeDefenseServiceTests
     // --- OnSiegeStarted ---
 
     [TestMethod]
-    public void OnSiegeStarted_WatchedFaction_AddsToActiveEvents()
+    public void OnSiegeStarted_PlayerKingdomUnderSiege_AddsToActiveEvents()
     {
         // Arrange
         var siege = Substitute.For<ISiegeEventAdapter>();
@@ -166,17 +207,17 @@ public class SiegeDefenseServiceTests
     {
         // Arrange
         var siege = Substitute.For<ISiegeEventAdapter>();
-        siege.DefenderFactionId.Returns("mordor");
-        siege.SettlementId.Returns("town_mordor_1");
-        siege.SettlementName.Returns("Barad-dur");
-        siege.AttackerName.Returns("Gondor");
+        siege.DefenderFactionId.Returns("rohan");
+        siege.SettlementId.Returns("town_rohan_1");
+        siege.SettlementName.Returns("Edoras");
+        siege.AttackerName.Returns("Isengard");
         siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
 
         // Assert
-        Assert.IsFalse(_sut.ActiveEvents.ContainsKey("town_mordor_1"));
+        Assert.IsFalse(_sut.ActiveEvents.ContainsKey("town_rohan_1"));
     }
 
     [TestMethod]
@@ -242,17 +283,17 @@ public class SiegeDefenseServiceTests
     {
         // Arrange
         var siege = Substitute.For<ISiegeEventAdapter>();
-        siege.DefenderFactionId.Returns("rohan");
-        siege.SettlementId.Returns("town_rohan_1");
-        siege.SettlementName.Returns("Edoras");
-        siege.AttackerName.Returns("Isengard");
+        siege.DefenderFactionId.Returns("gondor");
+        siege.SettlementId.Returns("town_gondor_1");
+        siege.SettlementName.Returns("Minas Tirith");
+        siege.AttackerName.Returns("Mordor");
         siege.IsTown.Returns(true);
 
         // Act
         _sut.OnSiegeStarted(siege);
 
         // Assert
-        Assert.AreEqual("rohan", _sut.ActiveEvents["town_rohan_1"].DefenderFactionId);
+        Assert.AreEqual("gondor", _sut.ActiveEvents["town_gondor_1"].DefenderFactionId);
     }
 
     [TestMethod]

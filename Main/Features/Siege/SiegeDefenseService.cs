@@ -15,6 +15,7 @@ namespace TAOM.Features.Siege;
 public class SiegeDefenseService : ISiegeDefenseService
 {
     private readonly ISiegeDefenseSettingsProvider _settings;
+    private readonly IPlayerContextAdapter _playerContext;
     private readonly IModLogger _logger;
     private readonly SiegeDefenseConfig _config;
     private readonly Dictionary<string, ActiveSiegeDefenseEvent> _activeEvents = new Dictionary<string, ActiveSiegeDefenseEvent>();
@@ -24,9 +25,11 @@ public class SiegeDefenseService : ISiegeDefenseService
     public SiegeDefenseService(
         ISiegeDefenseConfigProvider configProvider,
         ISiegeDefenseSettingsProvider settings,
+        IPlayerContextAdapter playerContext,
         IModLogger logger)
     {
         _settings = settings;
+        _playerContext = playerContext;
         _logger = logger;
         _config = configProvider.LoadConfig();
     }
@@ -42,7 +45,8 @@ public class SiegeDefenseService : ISiegeDefenseService
         if (_activeEvents.ContainsKey(siege.SettlementId))
             return false;
 
-        if (_config.WatchedFactionIds.Contains(siege.DefenderFactionId))
+        var playerKingdomId = _playerContext.GetPlayerKingdomId();
+        if (!string.IsNullOrEmpty(playerKingdomId) && siege.DefenderFactionId == playerKingdomId)
             return true;
 
         if (_config.WatchedSettlementIds.Contains(siege.SettlementId))

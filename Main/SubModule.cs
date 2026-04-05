@@ -1,3 +1,4 @@
+using Bannerlord.UIExtenderEx;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -24,7 +25,6 @@ using TAOM.Features.StartupResources;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.TroopWeight.Hooks;
-using TAOM.Features.BannerInjection.Hooks;
 using TAOM.Features.AtmospherePersistence.Hooks;
 using TAOM.Features.TroopProgression.Models;
 using TAOM.Features.AdvancedCombat;
@@ -41,6 +41,9 @@ using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
 using TAOM.Features.ArmyTargeting;
 using TAOM.Features.ArmyTargeting.Models;
+using TAOM.Features.TimeAcceleration;
+using TAOM.Features.BannerColorPersistence;
+using TAOM.Features.BannerColorPersistence.Hooks;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -49,12 +52,20 @@ namespace TAOM;
 public class SubModule : MBSubModuleBase
 {
     private Harmony _harmony;
+    private UIExtender? _uiExtender;
+    private ITimeAccelerationService? _timeAccelerationService;
 
     protected override void OnSubModuleLoad()
     {
         base.OnSubModuleLoad();
 
         IoC.Configure();
+
+        _uiExtender = UIExtender.Create("TAOM");
+        _uiExtender.Register(typeof(SubModule).Assembly);
+        _uiExtender.Enable();
+
+        _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
         _harmony = new Harmony("com.taom.mod");
         _harmony.PatchCategory("Patch18_CulturalFeats");
@@ -94,7 +105,25 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
 
-        Banner_TryGetBannerDataFromCode_Patch.Initialize(logger);
+        var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
+        var bannerColorService = IoC.Resolve<IBannerColorService>();
+        var bannerHeroAdapter = IoC.Resolve<IBannerHeroAdapter>();
+
+        Banner_TryGetBannerDataFromCode_Transpiler.Initialize(bannerColorConfig, logger);
+        Clan_UpdateBannerColorsAccordingToKingdom_Patch.Initialize(bannerColorService);
+        Clan_UpdateBannerColor_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        Banner_GetFirstIconColor_Patch.Initialize(bannerColorService);
+        BannerEditorView_OnTick_Patch.Initialize(bannerColorService, logger);
+        CampaignUIHelper_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        SandBoxUIHelper_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        SPInventoryVM_UpdateCurrentCharacterIfPossible_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        PartyVM_RefreshCurrentCharacterInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        HeroViewModel_FillFrom_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
+        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+
         Mission_Initialize_Patch.Initialize(logger);
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
@@ -236,6 +265,17 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch15_BannerLayerLimit");
         _harmony.PatchCategory("Patch16_AtmospherePersistence");
         _harmony.PatchCategory("Patch17_TroopWeight");
+        _harmony.PatchCategory("Patch23_BannerColorPersistence");
+        _harmony.PatchCategory("Patch24_BannerDriftGuard");
+
+        // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
+        var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();
+        if (mobilePartyTarget != null)
+            _harmony.Patch(mobilePartyTarget, postfix: new HarmonyMethod(
+                typeof(MobilePartyVisual_AddCharacterToPartyIcon_Patch),
+                nameof(MobilePartyVisual_AddCharacterToPartyIcon_Patch.Postfix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MobilePartyVisual.AddCharacterToPartyIcon not found — party icon colors will not persist");
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)
@@ -245,6 +285,11 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
+    }
+
+    protected override void OnApplicationTick(float dt)
+    {
+        _timeAccelerationService?.OnTick();
     }
 
     protected override void OnSubModuleUnloaded()

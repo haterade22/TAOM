@@ -12,6 +12,7 @@
 		<DependedModule Id="SandBoxCore" />
 		<DependedModule Id="Sandbox" />
 		<DependedModule Id="CustomBattle" />
+		<DependedModule Id="Bannerlord.UIExtenderEx" />
 	</DependedModules>
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
@@ -19,6 +20,7 @@
 		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
 	<SubModules>
 		<SubModule>

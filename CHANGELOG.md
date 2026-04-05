@@ -1,5 +1,31 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-05
+
+### Feature: BannerColorPersistence — UI color persistence, drift guard, BannerPaste
+
+Comprehensive integration of banner color persistence into TAOM. Replaces the old postfix `Banner_TryGetBannerDataFromCode_Patch` with a superior transpiler that skips the `RemoveRange` call entirely, adds drift guard patches to prevent vanilla from overwriting lore-accurate banners mid-campaign, and ensures the player's custom clan colors persist across all UI screens (inventory, party, character sheet, encyclopedia, battle, etc.).
+
+- **Patch15_BannerLayerLimit** — replaced postfix with IL transpiler on `Banner.TryGetBannerDataFromCode`; skips `RemoveRange` rather than re-parsing strings post-removal; configurable via `EnableLayerLimitTranspiler`
+- **Patch24_BannerDriftGuard** — Prefix on private `Clan.UpdateBannerColorsAccordingToKingdom` returns false when enabled; Postfix on `Clan.UpdateBannerColor` syncs kingdom colors when the ruling clan updates (prevents WotR from resetting injected banners)
+- **Patch23_BannerColorPersistence** — 11 postfix/transpiler patches ensuring `CharacterCode.Color1/2` reflect the player's clan colors across: `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission.SpawnAgent`, `CampaignSceneNotificationHelper`, `Banner.GetFirstIconColor`; BannerPaste (Ctrl+C/V in banner editor)
+- **MobilePartyVisual** patch applied manually via reflection (private method in SandBox.View.dll)
+- `BannerColorConfig` + `banner_color_config.json` — all 5 feature flags defaulting to `true`; `BannerColorService` is pure logic, no TW types; `IBannerHeroAdapter` wraps `CharacterObject`/`Hero`/`Clan` at the boundary
+- Deleted `BannerLayerExpander.cs` and its Postfix patch (replaced by transpiler)
+- 16 unit tests; 795 total passing
+
+### Feature: SiegeDefense — Timed Settlement Defense Events
+
+When a town belonging to the player's kingdom (or a kingdom the player is serving as mercenary) is besieged, a popup fires asking whether to help defend. Accepting starts a 3-day CampaignTime window; if the player arrives at the settlement while the siege is still active, they receive a relation boost and influence reward. The tracked settlement shows the native visual tracking circle on the campaign map.
+
+- `CampaignEvents.OnSiegeEventStartedEvent` drives detection — no Harmony patches
+- `IPlayerContextAdapter` wraps `Clan.PlayerClan` (sealed) to check kingdom membership and mercenary service dynamically; eliminates the previous static `WatchedFactionIds` config list
+- `VisualTrackerManager.RegisterObject(settlement)` adds the native tracking circle on accept; `RemoveTrackedObject` cleans up on siege end, expiry, or reward grant
+- Filter: towns only (not castles or villages), player must have a kingdom, duplicate-suppressed per settlement
+- Config: `ModuleData/siege/siege_defense_config.json` — response window days, reward amounts, explicit `WatchedSettlementIds` override
+- MCM: "Siege Defense" group — enable/disable toggle, response window (1–14 days)
+- 17 unit tests; all existing 766 tests pass
+
 ## 2026-04-04
 
 ### Fix: MainMenuCustomizer — Restore save buttons, fix duplicate Pre-compile Shaders (#55)
