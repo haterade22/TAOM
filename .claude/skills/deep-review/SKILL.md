@@ -10,6 +10,31 @@ Launch 4 parallel review agents to audit the current session's work. Run this AF
 
 The feature or area to review: `$ARGUMENTS` (if empty, review all uncommitted changes).
 
+## Step 0 (Optional): Codex Independent Pre-Review
+
+**Trigger when:** `$ARGUMENTS` contains `--codex` (strip `--codex` from the feature name before proceeding).
+
+If triggered:
+1. Identify changed files (same logic as Step 1 below)
+2. Dispatch Codex via the plugin:
+   ```
+   /codex:review --background
+   ```
+3. Continue to Step 1 immediately — do NOT wait for Codex here
+4. After all 4 Claude agents complete (Step 2), retrieve Codex results:
+   ```
+   /codex:result
+   ```
+5. Include Codex findings in the Step 3 compiled report as a fifth section:
+   ```
+   CODEX REVIEW:  [PASS/ISSUES — N findings]
+   [Codex findings grouped by severity]
+   ```
+
+If Codex and any Claude agent disagree on a finding, flag the disagreement explicitly — it is valuable signal.
+
+If `--codex` is not present, skip this step entirely.
+
 ## Step 1: Identify Scope
 
 Determine what to review:

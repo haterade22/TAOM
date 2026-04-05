@@ -39,6 +39,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/new-adr [name]` | Scaffold an auto-numbered ADR with context pre-filled from git log + CHANGELOG |
 | `/commit-split` | Group changed files by concern and commit each group atomically |
 | `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
+| `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
+| `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -121,6 +123,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Skills | `.claude/skills/` |
 | Rules | `.claude/rules/` |
 | Agents | `.claude/agents/` |
+| Codex config | `.codex/config.toml` |
+| Codex instructions | `AGENTS.md` (project root) |
 
 ## Architecture (One-liner)
 
@@ -191,6 +195,24 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` |
 | `Patch23_BannerColorPersistence` | UI color persistence — player clan colors across all screens | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView` |
 | `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` |
+
+## Codex Integration
+
+Codex operates as an independent verifier via the `codex-plugin-cc` Claude Code plugin. It shares no session context with Claude — providing a genuine second opinion.
+
+| Command | Purpose |
+|---------|---------|
+| `/codex-verify [feature]` | Background Codex verification while Claude builds |
+| `/deep-review [feature] --codex` | Full review: Codex + 4 Claude agents |
+| `/codex:adversarial-review` | Challenge specific decisions |
+| `/codex:rescue [task]` | Delegate investigation to Codex |
+| `/codex:status` | Check background job progress |
+| `/codex:result` | Retrieve completed results |
+
+**Config:** `.codex/config.toml` | **Instructions:** `AGENTS.md` (project root)
+
+**Enhanced completion workflow:**
+1. `/verify` -> 2. `/codex-verify` (background) -> 3. Continue building -> 4. `/codex:result` -> 5. Fix CRITICAL/HIGH -> 6. `/deep-review` -> 7. Issue + docs + CHANGELOG
 
 ## Agent Teams
 
