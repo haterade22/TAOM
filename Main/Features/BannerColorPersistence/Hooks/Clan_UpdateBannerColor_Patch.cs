@@ -20,7 +20,7 @@ public static class Clan_UpdateBannerColor_Patch
     [HarmonyPostfix]
     public static void Postfix(Clan? __instance)
     {
-        if (!(_service?.IsDriftGuardEnabled() ?? true)) return;
+        if (!(_service?.IsDriftGuardEnabled() ?? false)) return;
         if (__instance == null) return;
         if (__instance.Kingdom?.RulingClan != __instance) return;
         _heroAdapter?.SyncKingdomColors(__instance);

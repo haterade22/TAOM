@@ -29,10 +29,12 @@ public class BannerColorService : IBannerColorService
 
     public uint GetUniqueIconColor(uint backgroundColor, uint primaryIconColor)
     {
-        if (primaryIconColor == backgroundColor)
-            return uint.MaxValue;
+        if (primaryIconColor != backgroundColor)
+            return primaryIconColor;
 
-        return primaryIconColor;
+        uint alpha = backgroundColor & 0xFF000000;
+        uint invertedRgb = ~backgroundColor & 0x00FFFFFF;
+        return alpha | invertedRgb;
     }
 
     public bool IsDriftGuardEnabled() => _configProvider.GetConfig().EnableDriftGuard;

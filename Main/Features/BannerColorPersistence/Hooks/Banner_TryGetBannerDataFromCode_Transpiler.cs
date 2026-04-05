@@ -81,5 +81,5 @@ public static class Banner_TryGetBannerDataFromCode_Transpiler
     }
 
     public static bool ShouldSkipLayerLimit() =>
-        _configProvider?.GetConfig().EnableLayerLimitTranspiler ?? true;
+        _configProvider?.GetConfig().EnableLayerLimitTranspiler ?? false;
 }

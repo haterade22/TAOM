@@ -44,15 +44,15 @@ public class Clan_UpdateBannerColorsAccordingToKingdom_PatchTests
     }
 
     [TestMethod]
-    public void Prefix_ServiceIsNull_ReturnsFalseSkippingOriginal()
+    public void Prefix_ServiceIsNull_ReturnsTrueAllowingVanilla()
     {
-        // Arrange — null service simulates uninitialized state; ?? true means skip original
+        // Arrange — null service simulates uninitialized state; ?? false means allow vanilla
         Clan_UpdateBannerColorsAccordingToKingdom_Patch.Initialize(null);
 
         // Act
         bool result = Clan_UpdateBannerColorsAccordingToKingdom_Patch.Prefix();
 
         // Assert
-        Assert.IsFalse(result);
+        Assert.IsTrue(result);
     }
 }

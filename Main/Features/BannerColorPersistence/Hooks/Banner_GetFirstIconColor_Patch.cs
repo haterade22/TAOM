@@ -19,10 +19,7 @@ public static class Banner_GetFirstIconColor_Patch
 
         uint iconColor = BannerManager.GetColor(__instance.BannerDataList[1].ColorId);
         uint primaryColor = __instance.GetPrimaryColor();
-        uint unique = _service.GetUniqueIconColor(primaryColor, iconColor);
-        if (unique == uint.MaxValue) return true;
-
-        __result = unique;
+        __result = _service.GetUniqueIconColor(primaryColor, iconColor);
         return false;
     }
 }

@@ -112,7 +112,7 @@ public class BannerColorServiceTests
     }
 
     [TestMethod]
-    public void GetUniqueIconColor_SameAsBackground_ReturnsMaxValue()
+    public void GetUniqueIconColor_SameAsBackground_ReturnsInvertedRgb()
     {
         // Arrange
         var sut = CreateSut();
@@ -121,8 +121,23 @@ public class BannerColorServiceTests
         // Act
         uint result = sut.GetUniqueIconColor(color, color);
 
-        // Assert
-        Assert.AreEqual(uint.MaxValue, result);
+        // Assert — RGB inverted, alpha preserved
+        Assert.AreEqual(0xFFEEDDCCu, result);
+        Assert.AreNotEqual(color, result);
+    }
+
+    [TestMethod]
+    public void GetUniqueIconColor_SameAsBackground_PreservesAlphaChannel()
+    {
+        // Arrange
+        var sut = CreateSut();
+        uint color = 0x80AABBCC;
+
+        // Act
+        uint result = sut.GetUniqueIconColor(color, color);
+
+        // Assert — alpha 0x80 preserved, RGB inverted
+        Assert.AreEqual(0x80554433u, result);
     }
 
     [TestMethod]

@@ -15,5 +15,5 @@ public static class Clan_UpdateBannerColorsAccordingToKingdom_Patch
         AccessTools.Method(typeof(Clan), "UpdateBannerColorsAccordingToKingdom");
 
     [HarmonyPrefix]
-    public static bool Prefix() => !(_service?.IsDriftGuardEnabled() ?? true);
+    public static bool Prefix() => !(_service?.IsDriftGuardEnabled() ?? false);
 }
