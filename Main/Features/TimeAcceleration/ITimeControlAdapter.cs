@@ -1,5 +1,3 @@
-using TaleWorlds.CampaignSystem;
-
 namespace TAOM.Features.TimeAcceleration;
 
 public interface ITimeControlAdapter
@@ -8,6 +6,6 @@ public interface ITimeControlAdapter
     bool IsMenuOpen { get; }
     bool IsTimeControlLocked { get; }
     float SpeedUpMultiplier { get; set; }
-    CampaignTimeControlMode TimeControlMode { get; set; }
+    int TimeControlMode { get; set; }
     void SetTimeSpeed(int mode);
 }

@@ -16,10 +16,10 @@ public class TimeControlAdapter : ITimeControlAdapter
         set { if (Campaign.Current != null) Campaign.Current.SpeedUpMultiplier = value; }
     }
 
-    public CampaignTimeControlMode TimeControlMode
+    public int TimeControlMode
     {
-        get => Campaign.Current?.TimeControlMode ?? CampaignTimeControlMode.Stop;
-        set { if (Campaign.Current != null) Campaign.Current.TimeControlMode = value; }
+        get => (int)(Campaign.Current?.TimeControlMode ?? CampaignTimeControlMode.Stop);
+        set { if (Campaign.Current != null) Campaign.Current.TimeControlMode = (CampaignTimeControlMode)value; }
     }
 
     public void SetTimeSpeed(int mode)

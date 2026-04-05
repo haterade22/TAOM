@@ -23,5 +23,9 @@
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",
       "E:\\LOTRAOMAssets\\LOTRAOM_Jan_1_Patreon\\Modules\\LOTRAOM\\ModuleData"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "serena",
+    "github"
+  ]
 }

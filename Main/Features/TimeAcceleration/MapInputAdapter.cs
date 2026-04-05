@@ -7,12 +7,15 @@ public class MapInputAdapter : IMapInputAdapter
 {
     public bool IsMapActive => MapScreen.Instance != null;
 
-    public bool IsKeyPressed(InputKey key) =>
-        MapScreen.Instance?.Input?.IsKeyPressed(key) ?? false;
+    public bool IsSpacePressed =>
+        MapScreen.Instance?.Input?.IsKeyPressed(InputKey.Space) ?? false;
 
-    public bool IsKeyReleased(InputKey key) =>
-        MapScreen.Instance?.Input?.IsKeyReleased(key) ?? false;
+    public bool IsSpaceReleased =>
+        MapScreen.Instance?.Input?.IsKeyReleased(InputKey.Space) ?? false;
 
-    public bool IsControlDown() =>
+    public bool IsEKeyPressed =>
+        MapScreen.Instance?.Input?.IsKeyPressed(InputKey.E) ?? false;
+
+    public bool IsControlDown =>
         MapScreen.Instance?.Input?.IsControlDown() ?? false;
 }

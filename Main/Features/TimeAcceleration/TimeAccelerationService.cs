@@ -1,6 +1,3 @@
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.InputSystem;
-
 namespace TAOM.Features.TimeAcceleration;
 
 public class TimeAccelerationService : ITimeAccelerationService
@@ -10,7 +7,7 @@ public class TimeAccelerationService : ITimeAccelerationService
     private readonly ITimeAccelerationSettingsProvider _settings;
 
     private float _savedSpeed;
-    private CampaignTimeControlMode _savedMode;
+    private int _savedMode;
     private bool _ctrlSpaceActive;
 
     public TimeAccelerationService(
@@ -31,10 +28,7 @@ public class TimeAccelerationService : ITimeAccelerationService
         if (_timeControl.IsMenuOpen && !_timeControl.IsTimeControlLocked)
             return;
 
-        var spacePressed = _input.IsKeyPressed(InputKey.Space);
-        var ctrlDown = _input.IsControlDown();
-
-        if (ctrlDown && spacePressed)
+        if (_input.IsControlDown && _input.IsSpacePressed)
         {
             _savedSpeed = _timeControl.SpeedUpMultiplier;
             _savedMode = _timeControl.TimeControlMode;
@@ -42,18 +36,18 @@ public class TimeAccelerationService : ITimeAccelerationService
             _timeControl.SetTimeSpeed(2);
             _ctrlSpaceActive = true;
         }
-        else if (_ctrlSpaceActive && (!ctrlDown || _input.IsKeyReleased(InputKey.Space)))
+        else if (_ctrlSpaceActive && (!_input.IsControlDown || _input.IsSpaceReleased))
         {
             _timeControl.SpeedUpMultiplier = _savedSpeed;
             _timeControl.TimeControlMode = _savedMode;
             _ctrlSpaceActive = false;
         }
-        else if (_input.IsKeyPressed(InputKey.E))
+        else if (_input.IsEKeyPressed)
         {
             _timeControl.SpeedUpMultiplier = _settings.ExtraFastForwardMultiplier;
             _timeControl.SetTimeSpeed(2);
         }
-        else if (spacePressed)
+        else if (_input.IsSpacePressed)
         {
             _timeControl.SpeedUpMultiplier = _settings.FastForwardMultiplier;
         }

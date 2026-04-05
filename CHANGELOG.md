@@ -2,6 +2,30 @@
 
 ## 2026-04-05
 
+### Tooling: Codex Integration — Independent AI Verification
+
+Added OpenAI Codex as an independent code reviewer alongside Claude Code via the `codex-plugin-cc` plugin. Codex operates with equivalent project knowledge (via `AGENTS.md`) but no shared session context, providing genuine second-opinion reviews.
+
+- `.codex/config.toml` — Codex project config (o4-mini, MCP servers: filesystem, git, ilspy)
+- `AGENTS.md` — Distilled project rules for Codex (architecture, ADRs, adapters, harmony patches, GameModels, XSLT, testing)
+- `/codex-verify` skill — Dispatch background Codex verification while Claude continues building
+- `/deep-review --codex` flag — Full review combining Codex pre-review + 4 Claude agents
+- Updated `CLAUDE.md` with Codex integration section, enhanced completion workflow
+
+### Feature: TimeAcceleration — Configurable Campaign Map Speed (BetterTime replacement)
+
+Native implementation of BetterTime mod (Nexus #2849) functionality, removing the external dependency. Adds configurable campaign map time acceleration with three speed tiers and a visible Extra Fast-Forward button on the time bar via UIExtenderEx.
+
+- **Space** → configurable fast-forward multiplier (default 4×), preserves current time mode
+- **E key** → extra fast-forward multiplier (default 8×), forces fast-forward mode
+- **Ctrl+Space** → turbo multiplier (default 16×), held; saves and restores prior speed/mode on release
+- **Extra Fast-Forward button** — UIExtenderEx prefab patches insert a new button on the MapBar time panel; mixin data-binds `IsExtraFastForwardActive` for visual state via `MapTimeControlVM.RefreshValues()` hook
+- MCM settings: 3 integer sliders (1–128) in "Time Acceleration" group
+- Direct DLL reference to installed `Bannerlord.UIExtenderEx` module (no NuGet); `SubModule.xml` dependency declared with `LoadBeforeThis`
+- `OnApplicationTick` drives per-frame input detection via `IMapInputAdapter` / `ITimeControlAdapter` abstractions
+- ADR-007 compliant: adapter interfaces expose no TaleWorlds types; `InputKey` and `CampaignTimeControlMode` contained within adapter implementations
+- 14 unit tests; 795 total passing
+
 ### Feature: BannerColorPersistence — UI color persistence, drift guard, BannerPaste
 
 Comprehensive integration of banner color persistence into TAOM. Replaces the old postfix `Banner_TryGetBannerDataFromCode_Patch` with a superior transpiler that skips the `RemoveRange` call entirely, adds drift guard patches to prevent vanilla from overwriting lore-accurate banners mid-campaign, and ensures the player's custom clan colors persist across all UI screens (inventory, party, character sheet, encyclopedia, battle, etc.).

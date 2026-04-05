@@ -128,7 +128,8 @@
     "github@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "codex@openai-codex": true
   },
   "autoMemoryDirectory": ".claude/memory"
 }

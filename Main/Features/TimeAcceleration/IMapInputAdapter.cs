@@ -1,11 +1,10 @@
-using TaleWorlds.InputSystem;
-
 namespace TAOM.Features.TimeAcceleration;
 
 public interface IMapInputAdapter
 {
     bool IsMapActive { get; }
-    bool IsKeyPressed(InputKey key);
-    bool IsKeyReleased(InputKey key);
-    bool IsControlDown();
+    bool IsSpacePressed { get; }
+    bool IsSpaceReleased { get; }
+    bool IsEKeyPressed { get; }
+    bool IsControlDown { get; }
 }
