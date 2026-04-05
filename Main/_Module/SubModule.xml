@@ -29,6 +29,20 @@
 			<SubModuleClassType value="TAOM.SubModule" />
 			<Tags />
 		</SubModule>
+		<SubModule>
+			<Name value="MCMv5" />
+			<DLLName value="MCMv5.dll" />
+			<SubModuleClassType value="MCM.MCMSubModule" />
+			<Assemblies/>
+			<Tags />
+		</SubModule>
+		<SubModule>
+			<Name value="MCMv5 Basic Implementation" />
+			<DLLName value="MCMv5.dll" />
+			<SubModuleClassType value="MCM.Internal.MCMImplementationSubModule" />
+			<Assemblies/>
+			<Tags />
+		</SubModule>
 	</SubModules>
 	<Xmls>
 		<!-- XSLT transformations to replace vanilla kingdoms with TAOM versions -->
