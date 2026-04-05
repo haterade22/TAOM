@@ -442,18 +442,54 @@ Example: `feat: add garrison patrol calculation`
 
 ## ILSpy Usage for API Verification
 
-You have access to the `ilspy` MCP server for decompiling TaleWorlds DLLs. Use it when verifying:
+You have access to the `ilspy` MCP server for decompiling TaleWorlds DLLs. **Always cross-reference TaleWorlds API usage by decompiling the actual DLL** — never assume a method exists or has a particular signature.
 
-- Harmony patch target method signatures exist in Bannerlord v1.3.15
-- GameModel base class method signatures are correct
-- TaleWorlds API calls use the right parameter types and return types
+### DLL Location
 
-**DLL path:** `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+All Bannerlord DLLs are at:
+```
+E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\
+```
 
-**Key DLLs:**
-- `TaleWorlds.CampaignSystem.dll` — Campaign, Hero, Clan, Kingdom, Settlement
-- `TaleWorlds.Core.dll` — BasicCharacterObject, ItemObject, Banner
-- `TaleWorlds.MountAndBlade.dll` — Agent, Mission, MissionBehavior
-- `SandBox.dll` — Default*Model classes, SandboxAgentApplyDamageModel
+### Key DLLs and What They Contain
 
-If the ILSpy MCP is unavailable, mark API usages as `UNVERIFIED` rather than guessing.
+| DLL | Contains |
+|-----|----------|
+| `TaleWorlds.CampaignSystem.dll` | Campaign, Hero, Clan, Kingdom, Settlement, MobileParty, PartyBase, TroopRoster, CampaignBehaviorBase, all campaign logic |
+| `TaleWorlds.Core.dll` | BasicCharacterObject, ItemObject, Banner, FeatObject, CharacterSkills, GameModel base classes |
+| `TaleWorlds.MountAndBlade.dll` | Agent, Mission, MissionBehavior, FormationClass, BattleSideEnum |
+| `SandBox.dll` | All `Default*Model` classes (DefaultPartyWageModel, DefaultPartySizeLimitModel, etc.), SandboxAgentApplyDamageModel |
+| `SandBox.View.dll` | MobilePartyVisual, MapScreen, view-layer classes |
+| `StoryMode.dll` | StoryMode campaign behaviors |
+
+### How to Decompile
+
+Use the `ilspy` MCP tool:
+```
+mcp__ilspy__decompile_type — Decompile a specific class from a DLL
+mcp__ilspy__list_types     — List all types in an assembly
+```
+
+Example: To verify `DefaultPartyWageModel.GetCharacterWage` exists:
+```
+mcp__ilspy__decompile_type(
+  assembly: "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\SandBox.dll",
+  type: "SandBox.GameComponents.DefaultPartyWageModel"
+)
+```
+
+### When to Decompile
+
+1. **Harmony patches** — Verify the target method exists with the exact signature (name, params, return type, access modifier)
+2. **GameModel overrides** — Verify the base class method you're overriding exists and has the expected signature
+3. **Adapter interfaces** — Verify the TaleWorlds properties/methods being wrapped actually exist
+4. **Any API call you're uncertain about** — v1.2 to v1.3 renamed/removed several APIs
+
+### Fallback
+
+If the ILSpy MCP is unavailable, use `ilspycmd` directly:
+```bash
+ilspycmd "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\SandBox.dll" -t SandBox.GameComponents.DefaultPartyWageModel
+```
+
+If neither works, mark API usages as `UNVERIFIED` rather than guessing.

@@ -20,7 +20,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - use `/research` skill or read decompiled source |
+| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` first, fall back to `/research` or ILSpy MCP only if not found |
 | **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.3 incompatibilities, missing tests |
 
 ## Skills (Slash Commands)
@@ -118,6 +118,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
 | StartupResources config | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
+| Decompiled source | `E:\Decompiled_Bannerlord\` (pre-decompiled, organized by category) |
 | CI/CD | `.github/workflows/build.yml` |
 | Shared build props | `Directory.Build.props` |
 | Skills | `.claude/skills/` |
@@ -322,30 +323,56 @@ Before closing out any feature or fix, run this sequence:
 | **context7** | Global | Library documentation lookup | Global |
 | **filesystem** | Project | File operations across TAOM, Bannerlord Modules, LOTRAOM assets | `.vscode/mcp.json` |
 | **git** | Project | Rich git operations (diff, blame, log, branch management) | `.vscode/mcp.json` |
-| **ilspy** | Project | Decompile TaleWorlds DLLs — use for `/research` and adapter work | `.vscode/mcp.json` |
+| **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.vscode/mcp.json` |
 
 ### MCP Usage Guide
 
 | Task | Use This MCP | Instead Of |
 |------|-------------|------------|
 | Navigate C# symbols, find references | **Serena** (`find_symbol`, `get_symbols_overview`) | Grep for class names |
-| Decompile TaleWorlds classes | **ilspy** (`decompile_type`, `list_types`) | `ilspycmd` via Bash |
+| Research TaleWorlds classes | **Read/Grep** `E:\Decompiled_Bannerlord\` first, **ilspy** MCP as fallback | On-demand decompilation |
 | Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
 | Git blame, diff analysis | **git** (`git_blame`, `git_diff`) | `git` via Bash |
 | Create/close GitHub issues | **GitHub** | `gh` via Bash |
-| Research before implementing | **ilspy** + **Serena** together | Manual decompilation workflow |
+| Research before implementing | **Read/Grep** decompiled source + **Serena**, **ilspy** if needed | Manual decompilation workflow |
 
-### ILSpy MCP for TaleWorlds Research
+### TaleWorlds Research — Lookup Order
 
-The `ilspy` MCP server wraps `ilspycmd` and provides direct decompilation tools. Use it instead of manual `ilspycmd` bash commands when researching TaleWorlds internals:
+**ALWAYS check the pre-decompiled source first.** Only fall back to ILSpy MCP for types not found in the decompiled tree.
 
+| Step | Action | When |
+|------|--------|------|
+| 1. **Read decompiled source** | `Read` or `Grep` in `E:\Decompiled_Bannerlord\` | Always try first — instant, no tool overhead |
+| 2. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
+
+**Decompiled source layout** (`E:\Decompiled_Bannerlord\`):
+
+| Folder | Contents |
+|--------|----------|
+| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
+| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
+| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,362 files) |
+| `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
+| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
+| `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
+| `Network/` | Diamond, Network, PlayerServices (147 files) |
+| `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |
+| `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
+| `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
+
+**Quick lookup examples:**
+```bash
+# Find a class
+find "E:/Decompiled_Bannerlord/" -name "DefaultPartyWageModel.cs"
+
+# Search for a method across all decompiled source
+grep -r "GetCharacterWage" "E:/Decompiled_Bannerlord/Campaign/"
+
+# Browse a namespace
+ls "E:/Decompiled_Bannerlord/Campaign/TaleWorlds.CampaignSystem/TaleWorlds/CampaignSystem/GameComponents/"
 ```
-# These MCP tools replace manual ilspycmd usage:
-mcp__ilspy__decompile_type  — Decompile a specific class/type from a DLL
-mcp__ilspy__list_types      — List all types in an assembly
-```
 
-**Accessible DLL path**: `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+**DLL path** (for ILSpy fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
 
 ### Configuration
 

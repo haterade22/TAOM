@@ -65,16 +65,16 @@ public static class Banner_TryGetBannerDataFromCode_Transpiler
             return list;
         }
 
-        // The branch target of the Ble_S is where we want to jump when skipping RemoveRange
-        // Insert before the Ble_S: call ShouldSkipLayerLimit() + Brtrue_S to the same target
+        // Insert AFTER the Ble_S — at that point the stack is empty (ble consumed both operands).
+        // Inserting before would corrupt the stack: [Count][32] are already pushed for the ble comparison.
         var skipTarget = list[bleIdx].operand; // the Label the Ble_S jumps to when count <= 32
 
         var callHelper = new CodeInstruction(OpCodes.Call,
             AccessTools.Method(typeof(Banner_TryGetBannerDataFromCode_Transpiler), nameof(ShouldSkipLayerLimit)));
         var brTrue = new CodeInstruction(OpCodes.Brtrue_S, skipTarget);
 
-        list.Insert(bleIdx, brTrue);
-        list.Insert(bleIdx, callHelper);
+        list.Insert(bleIdx + 1, callHelper);
+        list.Insert(bleIdx + 2, brTrue);
 
         _logger?.LogDebug("[BannerColor] Transpiler: Banner layer limit patch applied");
         return list;

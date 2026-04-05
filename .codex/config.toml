@@ -26,3 +26,6 @@ args = ["mcp-server-git"]
 [mcp_servers.ilspy]
 command = "python"
 args = ["-m", "ilspy_mcp_server"]
+
+[mcp_servers.ilspy.env]
+ILSPY_PATH = "ilspycmd"
