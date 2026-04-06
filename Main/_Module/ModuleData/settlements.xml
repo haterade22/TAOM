@@ -1588,7 +1588,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_EW11" name="{=Settlements.Settlement.name.castle_EW11}Barad Harn" owner="Faction.clan_aserai_5" posX="783.121" posY="513.269" culture="Culture.aserai" gate_posX="780.9033" gate_posY="514.6349">
+  <Settlement id="castle_EW11" name="{=Settlements.Settlement.name.castle_EW11}Barad Harn" owner="Faction.clan_empire_west_2" posX="783.121" posY="513.269" culture="Culture.gondor" gate_posX="780.9033" gate_posY="514.6349">
     <Components>
       <Town id="castle_comp_EW11" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3179,7 +3179,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A11" name="{=Settlements.Settlement.name.castle_A11}Dân Shatagân" owner="Faction.clan_aserai_2" posX="1149.89" posY="441.185" culture="Culture.aserai" gate_posX="1150.556" gate_posY="439.9987">
+  <Settlement id="castle_A11" name="{=Settlements.Settlement.name.castle_A11}Dân Shatagân" owner="Faction.clan_shaghana_6" posX="1149.89" posY="441.185" culture="Culture.aserai" gate_posX="1150.556" gate_posY="439.9987">
     <Components>
       <Town id="castle_comp_A11" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3229,7 +3229,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A12" name="{=Settlements.Settlement.name.castle_A12}Khatzâla" owner="Faction.clan_aserai_6" posX="1196.176" posY="359.58" culture="Culture.aserai" gate_posX="1197.899" gate_posY="360.3527">
+  <Settlement id="castle_A12" name="{=Settlements.Settlement.name.castle_A12}Khatzâla" owner="Faction.clan_shaghana_3" posX="1196.176" posY="359.58" culture="Culture.aserai" gate_posX="1197.899" gate_posY="360.3527">
     <Components>
       <Town id="castle_comp_A12" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3279,7 +3279,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A13" name="{=Settlements.Settlement.name.castle_A13}Bâdrasag" owner="Faction.clan_aserai_13" posX="1011.296" posY="279.121" culture="Culture.aserai" gate_posX="1010.02" gate_posY="280.3429">
+  <Settlement id="castle_A13" name="{=Settlements.Settlement.name.castle_A13}Bâdrasag" owner="Faction.clan_shaghana_6" posX="1011.296" posY="279.121" culture="Culture.aserai" gate_posX="1010.02" gate_posY="280.3429">
     <Components>
       <Town id="castle_comp_A13" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3329,7 +3329,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A14" name="{=Settlements.Settlement.name.castle_A14}Kâna" owner="Faction.clan_aserai_10" posX="943.651" posY="206.949" culture="Culture.aserai" gate_posX="945.2901" gate_posY="207.6091">
+  <Settlement id="castle_A14" name="{=Settlements.Settlement.name.castle_A14}Kâna" owner="Faction.clan_shaghana_1" posX="943.651" posY="206.949" culture="Culture.aserai" gate_posX="945.2901" gate_posY="207.6091">
     <Components>
       <Town id="castle_comp_A14" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3379,7 +3379,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A15" name="{=Settlements.Settlement.name.castle_A15}Lajór" owner="Faction.clan_aserai_14" posX="683.216" posY="155.438" culture="Culture.aserai" gate_posX="681.4708" gate_posY="154.8572">
+  <Settlement id="castle_A15" name="{=Settlements.Settlement.name.castle_A15}Lajór" owner="Faction.clan_shaghana_7" posX="683.216" posY="155.438" culture="Culture.aserai" gate_posX="681.4708" gate_posY="154.8572">
     <Components>
       <Town id="castle_comp_A15" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3429,7 +3429,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A16" name="{=Settlements.Settlement.name.castle_A16}Gatúr" owner="Faction.clan_aserai_11" posX="1181.627" posY="270.501" culture="Culture.aserai" gate_posX="1182.967" gate_posY="270.2919">
+  <Settlement id="castle_A16" name="{=Settlements.Settlement.name.castle_A16}Gatúr" owner="Faction.clan_shaghana_5" posX="1181.627" posY="270.501" culture="Culture.aserai" gate_posX="1182.967" gate_posY="270.2919">
     <Components>
       <Town id="castle_comp_A16" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3479,7 +3479,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A17" name="{=Settlements.Settlement.name.castle_A17}Sâkhazai" owner="Faction.clan_aserai_15" posX="1112.743" posY="100.987" culture="Culture.aserai" gate_posX="1111.426" gate_posY="102.1648">
+  <Settlement id="castle_A17" name="{=Settlements.Settlement.name.castle_A17}Sâkhazai" owner="Faction.clan_shaghana_8" posX="1112.743" posY="100.987" culture="Culture.aserai" gate_posX="1111.426" gate_posY="102.1648">
     <Components>
       <Town id="castle_comp_A17" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3529,7 +3529,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A18" name="{=Settlements.Settlement.name.castle_A18}Kalmâkhila" owner="Faction.clan_aserai_18" posX="1002.579" posY="9.902" culture="Culture.aserai" gate_posX="1003.579" gate_posY="8.902">
+  <Settlement id="castle_A18" name="{=Settlements.Settlement.name.castle_A18}Kalmâkhila" owner="Faction.clan_shaghana_8" posX="1002.579" posY="9.902" culture="Culture.aserai" gate_posX="1003.579" gate_posY="8.902">
     <Components>
       <Town id="castle_comp_A18" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -3579,7 +3579,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_A19" name="{=Settlements.Settlement.name.castle_A19}Khâb Kitâx" owner="Faction.clan_aserai_16" posX="776.832" posY="11.816" culture="Culture.aserai" gate_posX="775.5263" gate_posY="11.33472">
+  <Settlement id="castle_A19" name="{=Settlements.Settlement.name.castle_A19}Khâb Kitâx" owner="Faction.clan_shaghana_9" posX="776.832" posY="11.816" culture="Culture.aserai" gate_posX="775.5263" gate_posY="11.33472">
     <Components>
       <Town id="castle_comp_A19" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -4104,7 +4104,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A10" name="{=Settlements.Settlement.name.town_A10}Khanâg Gúr" owner="Faction.clan_aserai_15" posX="1211.657" posY="129.499" culture="Culture.aserai" gate_posX="1210.114" gate_posY="132.8386">
+  <Settlement id="town_A10" name="{=Settlements.Settlement.name.town_A10}Khanâg Gúr" owner="Faction.clan_shaghana_4" posX="1211.657" posY="129.499" culture="Culture.aserai" gate_posX="1210.114" gate_posY="132.8386">
     <Components>
       <Town id="town_comp_A10" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
         <Buildings>
@@ -4192,7 +4192,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A11" name="{=Settlements.Settlement.name.town_A11}Menêsh" owner="Faction.clan_aserai_11" posX="1215.906" posY="256.436" culture="Culture.aserai" gate_posX="1216.294" gate_posY="257.9083">
+  <Settlement id="town_A11" name="{=Settlements.Settlement.name.town_A11}Menêsh" owner="Faction.clan_shaghana_5" posX="1215.906" posY="256.436" culture="Culture.aserai" gate_posX="1216.294" gate_posY="257.9083">
     <Components>
       <Town id="town_comp_A11" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
         <Buildings>
@@ -4267,7 +4267,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A12" name="{=Settlements.Settlement.name.town_A12}Jîret" owner="Faction.clan_aserai_24" posX="1369.533" posY="260.885" culture="Culture.aserai" gate_posX="1366.864" gate_posY="262.2953">
+  <Settlement id="town_A12" name="{=Settlements.Settlement.name.town_A12}Jîret" owner="Faction.clan_abanissa_2" posX="1369.533" posY="260.885" culture="Culture.aserai" gate_posX="1366.864" gate_posY="262.2953">
     <Components>
       <Town id="town_comp_A12" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
         <Buildings>
@@ -4342,7 +4342,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A13" name="{=Settlements.Settlement.name.town_A13}Naxar Dâl" owner="Faction.clan_aserai_26" posX="1532.246" posY="240.248" culture="Culture.aserai" gate_posX="1530.065" gate_posY="237.9809">
+  <Settlement id="town_A13" name="{=Settlements.Settlement.name.town_A13}Naxar Dâl" owner="Faction.clan_abanissa_3" posX="1532.246" posY="240.248" culture="Culture.aserai" gate_posX="1530.065" gate_posY="237.9809">
     <Components>
       <Town id="town_comp_A13" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
         <Buildings>
@@ -4417,7 +4417,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A14" name="{=Settlements.Settlement.name.town_A14}Damudûr" owner="Faction.clan_aserai_25" posX="1570.374" posY="65.986" culture="Culture.aserai" gate_posX="1567.303" gate_posY="65.47717">
+  <Settlement id="town_A14" name="{=Settlements.Settlement.name.town_A14}Damudûr" owner="Faction.clan_abanissa_1" posX="1570.374" posY="65.986" culture="Culture.aserai" gate_posX="1567.303" gate_posY="65.47717">
     <Components>
       <Town id="town_comp_A14" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
         <Buildings>
@@ -4753,7 +4753,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A6" name="{=Settlements.Settlement.name.town_A6}Zajâna" owner="Faction.clan_aserai_10" posX="861.737" posY="268.348" culture="Culture.aserai" gate_posX="863.1719" gate_posY="270.8366" text="{=uO4dxCl8}The port of Sanala is the gateway through which the grain of the lower Damar has flowed forth to feed a hungry world. The Empire's periodic advances south of the Perassic Sea have usually been aimed at seizing this strategic prize. Although the legions were long ago forced to retreat, Sanala remains among the most cosmopolitan cities in Calradia, filled with merchants from many lands bidding for the lowest bulk prices.">
+  <Settlement id="town_A6" name="{=Settlements.Settlement.name.town_A6}Zajâna" owner="Faction.clan_shaghana_1" posX="861.737" posY="268.348" culture="Culture.aserai" gate_posX="863.1719" gate_posY="270.8366" text="{=uO4dxCl8}The port of Sanala is the gateway through which the grain of the lower Damar has flowed forth to feed a hungry world. The Empire's periodic advances south of the Perassic Sea have usually been aimed at seizing this strategic prize. Although the legions were long ago forced to retreat, Sanala remains among the most cosmopolitan cities in Calradia, filled with merchants from many lands bidding for the lowest bulk prices.">
     <Components>
       <Town id="town_comp_A6" is_castle="false" background_crop_position="0.401" background_mesh="menu_aserai_4" wait_mesh="wait_aserai_town" gate_rotation="0.408" prosperity="4300">
         <Buildings>
@@ -4841,7 +4841,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A7" name="{=Settlements.Settlement.name.town_A7}Chatâk" owner="Faction.clan_aserai_16" posX="856.972" posY="103.592" culture="Culture.aserai" gate_posX="858.2878" gate_posY="105.0528" text="{=GChIoZdd}Askar dominates the middle stretches of the Damar River, as it weaves between the bluffs of the Jarjara Escarpment. This region has been thickly populated for thousands of years, but the river is restless, and every few centuries leaps its banks and erases what comes before. This latest regional capital was an imperial encampment  during their furthest penetration of the Nahasa several centuries ago, taken over by the Aserai tribes after the legions withdrew.">
+  <Settlement id="town_A7" name="{=Settlements.Settlement.name.town_A7}Chatâk" owner="Faction.clan_shaghana_2" posX="856.972" posY="103.592" culture="Culture.aserai" gate_posX="858.2878" gate_posY="105.0528" text="{=GChIoZdd}Askar dominates the middle stretches of the Damar River, as it weaves between the bluffs of the Jarjara Escarpment. This region has been thickly populated for thousands of years, but the river is restless, and every few centuries leaps its banks and erases what comes before. This latest regional capital was an imperial encampment  during their furthest penetration of the Nahasa several centuries ago, taken over by the Aserai tribes after the legions withdrew.">
     <Components>
       <Town id="town_comp_A7" is_castle="false" background_crop_position="0.401" background_mesh="menu_aserai_1" wait_mesh="wait_aserai_town" gate_rotation="0.408" prosperity="2100">
         <Buildings>
@@ -4916,7 +4916,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A8" name="{=Settlements.Settlement.name.town_A8}Sormedân" owner="Faction.clan_aserai_12" posX="1191.013" posY="158.279" culture="Culture.aserai" gate_posX="1187.607" gate_posY="156.1899" text="{=J4bgNT0r}The legendary Queen Eshora, it is said, punished the jinn who were harassing her people by imprisoning them in one of the caves above Qasira, carving the mystical eight-pointed star into the rock to seal them in. She sentenced them to haul water from the depths of the earth, feeding the springs that gush forth from the rocks and which for centuries have irrigated the date gardens of Qasira and its surrounding villages.">
+  <Settlement id="town_A8" name="{=Settlements.Settlement.name.town_A8}Sormedân" owner="Faction.clan_shaghana_3" posX="1191.013" posY="158.279" culture="Culture.aserai" gate_posX="1187.607" gate_posY="156.1899" text="{=J4bgNT0r}The legendary Queen Eshora, it is said, punished the jinn who were harassing her people by imprisoning them in one of the caves above Qasira, carving the mystical eight-pointed star into the rock to seal them in. She sentenced them to haul water from the depths of the earth, feeding the springs that gush forth from the rocks and which for centuries have irrigated the date gardens of Qasira and its surrounding villages.">
     <Components>
       <Town id="town_comp_A8" is_castle="false" background_crop_position="0.0" background_mesh="menu_aserai_2" wait_mesh="wait_aserai_town" gate_rotation="0.508" prosperity="3500">
         <Buildings>
@@ -4978,7 +4978,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="town_A9" name="{=Settlements.Settlement.name.town_A9}Charganpâta" owner="Faction.clan_aserai_19" posX="1492.06" posY="379.112" culture="Culture.aserai" gate_posX="1488.813" gate_posY="376.7833">
+  <Settlement id="town_A9" name="{=Settlements.Settlement.name.town_A9}Charganpâta" owner="Faction.clan_aserai_9" posX="1492.06" posY="379.112" culture="Culture.aserai" gate_posX="1488.813" gate_posY="376.7833">
     <Components>
       <Town id="town_comp_A9" is_castle="false" background_crop_position="0.0" background_mesh="gui_bg_town_aserai" wait_mesh="wait_aserai_town" gate_rotation="0.378" prosperity="3500">
         <Buildings>
@@ -5069,7 +5069,7 @@
   <!-- ============================================== -->
   <!-- FAR HARAD -->
   <!-- ============================================== -->
-  <Settlement id="castle_FH1" name="{=Settlements.Settlement.name.castle_FH1}Archadâzar" owner="Faction.clan_aserai_19" posX="1568.636" posY="360.71" culture="Culture.aserai" gate_posX="1569.04" gate_posY="358.8029">
+  <Settlement id="castle_FH1" name="{=Settlements.Settlement.name.castle_FH1}Archadâzar" owner="Faction.clan_abanissa_4" posX="1568.636" posY="360.71" culture="Culture.aserai" gate_posX="1569.04" gate_posY="358.8029">
     <Components>
       <Town id="castle_comp_FH1" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5132,7 +5132,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH2" name="{=Settlements.Settlement.name.castle_FH2}Erakúndo" owner="Faction.clan_aserai_20" posX="1513.075" posY="306.474" culture="Culture.aserai" gate_posX="1514.138" gate_posY="308.8854">
+  <Settlement id="castle_FH2" name="{=Settlements.Settlement.name.castle_FH2}Erakúndo" owner="Faction.clan_abanissa_4" posX="1513.075" posY="306.474" culture="Culture.aserai" gate_posX="1514.138" gate_posY="308.8854">
     <Components>
       <Town id="castle_comp_FH2" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5195,7 +5195,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH3" name="{=Settlements.Settlement.name.castle_FH3}Gebarakôr" owner="Faction.clan_aserai_26" posX="1589.284" posY="233.379" culture="Culture.aserai" gate_posX="1587.651" gate_posY="232.6875">
+  <Settlement id="castle_FH3" name="{=Settlements.Settlement.name.castle_FH3}Gebarakôr" owner="Faction.clan_abanissa_5" posX="1589.284" posY="233.379" culture="Culture.aserai" gate_posX="1587.651" gate_posY="232.6875">
     <Components>
       <Town id="castle_comp_FH3" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5258,7 +5258,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH4" name="{=Settlements.Settlement.name.castle_FH4}Shâlahin" owner="Faction.clan_aserai_23" posX="1435.876" posY="203.662" culture="Culture.aserai" gate_posX="1436.981" gate_posY="201.6967">
+  <Settlement id="castle_FH4" name="{=Settlements.Settlement.name.castle_FH4}Shâlahin" owner="Faction.clan_abanissa_5" posX="1435.876" posY="203.662" culture="Culture.aserai" gate_posX="1436.981" gate_posY="201.6967">
     <Components>
       <Town id="castle_comp_FH4" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5321,7 +5321,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH5" name="{=Settlements.Settlement.name.castle_FH5}Kôth Rau" owner="Faction.clan_aserai_24" posX="1313.864" posY="234.519" culture="Culture.aserai" gate_posX="1315.52" gate_posY="235.7509">
+  <Settlement id="castle_FH5" name="{=Settlements.Settlement.name.castle_FH5}Kôth Rau" owner="Faction.clan_abanissa_6" posX="1313.864" posY="234.519" culture="Culture.aserai" gate_posX="1315.52" gate_posY="235.7509">
     <Components>
       <Town id="castle_comp_FH5" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5384,7 +5384,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH6" name="{=Settlements.Settlement.name.castle_FH6}Onabóha" owner="Faction.clan_aserai_12" posX="1263.601" posY="189.287" culture="Culture.aserai" gate_posX="1266.06" gate_posY="188.1362">
+  <Settlement id="castle_FH6" name="{=Settlements.Settlement.name.castle_FH6}Onabóha" owner="Faction.clan_abanissa_6" posX="1263.601" posY="189.287" culture="Culture.aserai" gate_posX="1266.06" gate_posY="188.1362">
     <Components>
       <Town id="castle_comp_FH6" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5447,7 +5447,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH7" name="{=Settlements.Settlement.name.castle_FH7}Taridím" owner="Faction.clan_aserai_21" posX="1375.708" posY="98.475" culture="Culture.aserai" gate_posX="1377.162" gate_posY="97.04688">
+  <Settlement id="castle_FH7" name="{=Settlements.Settlement.name.castle_FH7}Taridím" owner="Faction.clan_abanissa_7" posX="1375.708" posY="98.475" culture="Culture.aserai" gate_posX="1377.162" gate_posY="97.04688">
     <Components>
       <Town id="castle_comp_FH7" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5510,7 +5510,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH8" name="{=Settlements.Settlement.name.castle_FH8}Urutúsh" owner="Faction.clan_aserai_17" posX="1299.732" posY="6.747" culture="Culture.aserai" gate_posX="1298.065" gate_posY="7.356484">
+  <Settlement id="castle_FH8" name="{=Settlements.Settlement.name.castle_FH8}Urutúsh" owner="Faction.clan_abanissa_7" posX="1299.732" posY="6.747" culture="Culture.aserai" gate_posX="1298.065" gate_posY="7.356484">
     <Components>
       <Town id="castle_comp_FH8" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -5573,7 +5573,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_FH9" name="{=Settlements.Settlement.name.castle_FH9}Zakhûr" owner="Faction.clan_aserai_22" posX="1528.656" posY="19.734" culture="Culture.aserai" gate_posX="1528.189" gate_posY="22.3488">
+  <Settlement id="castle_FH9" name="{=Settlements.Settlement.name.castle_FH9}Zakhûr" owner="Faction.clan_abanissa_8" posX="1528.656" posY="19.734" culture="Culture.aserai" gate_posX="1528.189" gate_posY="22.3488">
     <Components>
       <Town id="castle_comp_FH9" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
@@ -12650,7 +12650,7 @@
       <Area type="Bog" name="{=iXA5SttU}Bog" />
     </CommonAreas>
   </Settlement>
-  <Settlement id="castle_U5" name="{=Settlements.Settlement.name.castle_U5}Zamarzîr" owner="Faction.clan_aserai_14" posX="779.963" posY="232.296" culture="Culture.aserai" gate_posX="783.0332" gate_posY="234.242">
+  <Settlement id="castle_U5" name="{=Settlements.Settlement.name.castle_U5}Zamarzîr" owner="Faction.clan_umbar_5" posX="779.963" posY="232.296" culture="Culture.umbar" gate_posX="783.0332" gate_posY="234.242">
     <Components>
       <Town id="castle_comp_U5" is_castle="true" background_crop_position="0.0" background_mesh="menu_aserai_3" wait_mesh="wait_aserai_town" gate_rotation="0.908" prosperity="600">
         <Buildings>
