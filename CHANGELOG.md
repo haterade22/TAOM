@@ -1,5 +1,35 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-06
+
+### Quality: Full Codebase Adversarial Review — 25/25 Features
+
+Systematic Codex + Claude adversarial review of entire TAOM codebase. 16 reviews across 5 waves, prompt evolved v1→v6, accuracy improved 33%→81%.
+
+**41 bugs found and 37 fixed across all features:**
+
+- **CulturalFeats** — Forest speed terrain gate, caravan EffectBonus convention, null instance guard
+- **BannerColorPersistence** — Fail-safe defaults (??true→??false), unique color RGB inversion, sentinel removal
+- **TroopProgression** — Garrison IsGarrison gate, weighted healthy count, Rohan wage share
+- **Diplomacy** — Missing kingdoms in alignment.json, Honor bypass for independent players, WarPhase session restore
+- **FactionMap** — ModifyMenuCharacters side effect, stale banner sprite
+- **CustomBattles** — Commander regex accepting alpha lord IDs
+- **CharacterCreation** — Stale horse placeholder on culture switch
+- **RaceAge** — comesOfAge=18 standardized, becomeOld set per-race
+- **BattleBalance** — Config key fixes (rohan→vlandia, dol_guldur→dolguldur), test DataRows
+- **HeroRace** — ActionSetCode BaseMonster/StringId preference, EyeHeight init retry
+- **BannerInjection** — Kingdom ID exclusion for ruler banners
+- **AdvancedCombat** — Bone tick decoupled from 2s grid update throttle
+- **Warg** — Late-spawn BT attachment, FirstAttack flag consumption, team filter on rage targets
+- **ShaderPrecompilation** — Abort latch reset on completion
+- **TimeAcceleration** — Turbo restore before early returns
+- **StartupResources** — Per-subsystem idempotent completion tracking
+- **Infrastructure** — Kingdom color update without InitializeKingdom, MissionAdapter cache clear, FileLogger drain-before-dispose, AtmospherePersistence startup validation
+
+Review process docs: `docs/reviews/REVIEW-GUIDE.md`, `docs/reviews/REVIEW-LOG.md`, `docs/reviews/REVIEW-PLAN.md`
+
+---
+
 ## 2026-04-05
 
 ### Enhancement: BannerColorPersistence — Agent Visual & Conversation Color Coverage (PocColor Integration)

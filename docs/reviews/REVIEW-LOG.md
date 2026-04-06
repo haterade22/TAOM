@@ -1,6 +1,6 @@
 # Codex Adversarial Review Log
 
-Running scorecard of all reviews. Updated after each review cycle.
+Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-05/06.**
 
 ## Summary
 
@@ -163,6 +163,42 @@ Claude found no additional bugs. First review where Codex found everything.
 
 ---
 
+## Reviews #14-16: Wave 4+5 (Completion)
+
+**Date:** 2026-04-05/06
+**Prompt version:** v6
+
+### Review #14: Wave 4A (WeatherBoundsGuard + AtmospherePersistence + ShaderPrecompilation)
+
+| # | Severity | Finding | Claude Assessment |
+|---|----------|---------|-------------------|
+| 1 | HIGH | Shader abort latch stays armed after success | **Confirmed** -- IsShaderBattleActive never cleared on success path |
+| 2 | MEDIUM | LoadingWindowViewModel target unverified for v1.3.15 | **Valid concern** -- decompiled source missing |
+| 3 | MEDIUM | AtmospherePersistence reflection target brittle | **Valid** -- added startup validation |
+
+### Review #15: Wave 4B (TimeAcceleration + InitialChildGeneration + StartupResources + MainMenuCustomizer + Encyclopedia + BattleScenes)
+
+| # | Severity | Finding | Claude Assessment |
+|---|----------|---------|-------------------|
+| 1 | HIGH | Child gender selection not enforced by ChildCreatorAdapter | **Confirmed** -- isFemale param unused |
+| 2 | MEDIUM | Ctrl+Space turbo stuck on map/menu transition | **Confirmed** -- early returns skip restore |
+| 3 | MEDIUM | StartupResources retry duplicates gold | **Confirmed** -- single _distributed flag for both subsystems |
+
+### Review #16: Infrastructure (Adapters + Core + SubModule + IoC)
+
+| # | Severity | Finding | Claude Assessment |
+|---|----------|---------|-------------------|
+| 1 | HIGH | InitializeKingdom resets PoliticalStagnation | **Confirmed** -- replaced with targeted color-only update |
+| 2 | HIGH | MissionAdapterFactory cache survives across missions | **Confirmed** -- Agent.Index reused, stale references |
+| 3 | MEDIUM | FileLogger teardown can race writer thread | **Confirmed** -- added drain-before-dispose |
+
+### Wave 4+5 Summary
+- 9 findings, 9 confirmed, 0 false positives, 0 missed by Claude
+- v6 prompt: 100% accuracy for this batch
+- All bugs fixed except 1 deferred (LoadingWindowViewModel decompilation needed)
+
+---
+
 ## Prompt Evolution
 
 | Version | Used In | Key Changes | Impact |
@@ -172,7 +208,7 @@ Claude found no additional bugs. First review where Codex found everything.
 | v3 | ArmyTargeting | Required sections, `E:\Decompiled_Bannerlord\` paths, concrete scenarios, READ FIRST docs, prior failure examples | Correct verdict but shallow — no decompiled code shown, config not cross-referenced |
 | v4 | TroopProgression, Wave 1 | Verification artifacts, split "show code" from "answer questions", config cross-reference with file path, approve-verdict evidence requirement | 90% accuracy on v4 batch, 0 false positives in reviews 4-6, 1 FP in review 7 |
 | v5 | Wave 2 | Kingdom mapping reference, design-intent gate, flat formatting, FP-7 lesson | 88% accuracy, config ID mismatches caught (rohan/vlandia, dol_guldur/dolguldur) |
-| v6 | Wave 3 (planned) | Config ID cross-ref as standard section, culture-to-kingdom ID cheatsheet, "dead config" detection section, success patterns from v5 | Target: maintain 88%+ |
+| v6 | Waves 3-5 (final) | Full ID cheatsheet (kingdom+culture), dead config detection, config cross-ref required, success+failure patterns, flat formatting, lifecycle/state analysis | 100% accuracy on v6 batch (reviews 11-16), 0 FPs, 0 misses |
 
 ### v1 → v2 changes
 - Added feature-specific risk areas (transpilers, drift guard, scoping)

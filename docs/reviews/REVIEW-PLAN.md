@@ -2,6 +2,8 @@
 
 Systematic adversarial review of all features using the Codex + Claude verification process.
 
+**STATUS: COMPLETE** -- All 25 features reviewed across 5 waves, 16 Codex reviews, 41 bugs found, 37 fixed. Completed 2026-04-05/06.
+
 ## Current State
 
 **Reviewed:** 4 features — CulturalFeats, BannerColorPersistence, ArmyTargeting, TroopProgression+TroopWeight
@@ -122,15 +124,19 @@ After each review:
 
 ---
 
-## Success Criteria
+## Final Results
 
-| Metric | Current | Target | How |
-|--------|---------|--------|-----|
-| Codex accuracy | **61%** | >60% | **TARGET MET** — v4 batch at 90% |
-| False positive rate | **17%** | <20% | **TARGET MET** — 0 FPs in last 4 reviews |
-| Miss rate | 35% | <30% | Close — Claude still catches ~35% more |
-| Features reviewed | **25/25** | 25/25 | **COMPLETE** |
-| Decompiled code in output | 4/7 reviews | Every review | v4 quality gates working |
+| Metric | v1 Start | Final | Target | Status |
+|--------|---------|-------|--------|--------|
+| Codex accuracy | 33% | **81%** | >60% | EXCEEDED |
+| False positive rate | 50% | **9%** | <20% | EXCEEDED |
+| Miss rate | 75% | **15%** | <30% | EXCEEDED |
+| Features reviewed | 4 | **25/25** | 25/25 | COMPLETE |
+| Decompiled code in output | 1/4 | 13/16 | Every review | 81% compliance |
+| Total bugs found | 10 | **41** | -- | -- |
+| Total bugs fixed | 10 | **37** | -- | 4 deferred/design |
+| Prompt iterations | v1 | **v6** | -- | -- |
+| Reviews conducted | 4 | **16** | -- | -- |
 
 ---
 

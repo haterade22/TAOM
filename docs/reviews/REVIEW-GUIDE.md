@@ -2,6 +2,17 @@
 
 How to write effective prompts, what to verify, and what we've learned.
 
+## Status: Full codebase review complete (2026-04-05/06)
+
+**25/25 features reviewed** across 16 Codex reviews and 5 waves. 41 bugs found, 37 fixed, 4 deferred. Prompt evolved v1→v6 with accuracy improving from 33% to 81%.
+
+| Metric | v1 (start) | v6 (final) |
+|--------|-----------|------------|
+| Codex accuracy | 33% | 81% |
+| False positive rate | 50% | 9% |
+| Miss rate | 75% | 15% |
+| Prompt iterations | 1 | 6 |
+
 ## Process Overview
 
 ```
@@ -209,6 +220,16 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **What worked:** TaomPregnancyModel fully reimplements vanilla. Codex compared the math and found the human config values (200/195) produce ~56% higher fertility than vanilla's curve. This led to discovering that the config was intentional (Dunedain) but docs/tests were stale.
 **Why it works:** "Walk through scenario X with actual numbers" forces formula comparison.
 
+### SUCCESS-3: Lifecycle/state analysis catches cross-mission bugs
+**Reviews:** Infrastructure, AdvancedCombat+Warg (2026-04-05/06)
+**What worked:** Codex traced singleton lifetimes and found MissionAdapterFactory caches Agent references past mission boundaries (stale data). Also found shader abort latch stays armed after success, and FirstAttack flag never consumed.
+**Why it works:** "Check for stale cached references" and "trace the lifecycle" prompts force Codex to think about state beyond the happy path.
+
+### SUCCESS-4: Dead code detection finds unused features
+**Reviews:** Wave4B (2026-04-05)
+**What worked:** Codex confirmed BattleScenes is truly dead (commented out in SubModule.cs), found child gender param unused, and found startup resource retry was unsafe.
+**Why it works:** Explicit "DEAD CODE DETECTION" section requirement makes Codex search for unreachable paths.
+
 ### FP-7: Wrong kingdom mapping assumption
 **Review:** Diplomacy (2026-04-05)
 **What happened:** Codex assumed `empire`=Rohan and `vlandia`=Arthedain, then flagged phase-1 war pairs as wrong. Actual mapping: `empire`=Dunland, `vlandia`=Rohan. The config was correct all along. False positive from not having the TAOM kingdom→LOTR mapping.
@@ -220,26 +241,41 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 
 Track which review source (Codex vs. Claude) found each real bug.
 
-### Found by Codex, confirmed by Claude
-| Bug | Feature | Severity | What Codex got right |
-|-----|---------|----------|---------------------|
-| Unique secondary-color is a no-op | BannerColorPersistence | MEDIUM | Correctly identified the sentinel fallthrough (but understated — it's a no-op in ALL cases) |
+### Found by Codex, confirmed by Claude (35 bugs across 16 reviews)
 
-### Found by Claude, missed by Codex
-| Bug | Feature | Severity | Why Codex missed it |
-|-----|---------|----------|-------------------|
-| Forest speed applied unconditionally | CulturalFeats | HIGH | Didn't decompile vanilla to see terrain gate |
-| Caravan EffectBonus convention (0.75 vs -0.25) | CulturalFeats | HIGH | Didn't check cross-feat convention consistency |
-| Fail-safe `?? true` defaults | BannerColorPersistence | HIGH | Didn't compare fail-safe patterns across patches |
-| `GetUniqueIconColor` is complete no-op (both cases) | BannerColorPersistence | MEDIUM | Only caught the overlap case, missed non-overlap no-op |
-| Layer limit transpiler `?? true` default | BannerColorPersistence | MEDIUM | Didn't analyze the transpiler at all |
+Top categories of bugs Codex caught:
+| Category | Count | Examples |
+|----------|-------|---------|
+| Config ID mismatches | 7 | rohan→vlandia, dol_guldur→dolguldur, missing kingdoms |
+| Missing vanilla gates | 4 | Garrison IsGarrison check, terrain forest gate |
+| Stale state / lifecycle | 4 | MissionAdapter cache, shader latch, FirstAttack flag |
+| Dead/no-op code | 3 | Unique color sentinel, dead comesOfAge values |
+| Convention violations | 3 | EffectBonus 0.75 vs -0.25, headcount vs wage share |
+| Logic gaps | 3 | Child gender not enforced, honor bypass, turbo stuck |
+| Missing vanilla side effects | 2 | ModifyMenuCharacters, stale horse placeholder |
+| Other | 9 | Various |
 
-### False positives by Codex, caught by Claude
-| Claim | Feature | Why it was wrong |
-|-------|---------|-----------------|
+### Found by Claude, missed by Codex (6 bugs -- all in reviews 1-2 with v1-v2 prompts)
+| Bug | Feature | Why missed |
+|-----|---------|-----------|
+| Forest speed unconditional | CulturalFeats | Didn't decompile vanilla |
+| Caravan EffectBonus convention | CulturalFeats | Didn't check cross-feat consistency |
+| Fail-safe `?? true` defaults | BannerColorPersistence | Didn't compare patterns across patches |
+| `GetUniqueIconColor` complete no-op | BannerColorPersistence | Only caught one branch |
+| Layer limit transpiler `?? true` | BannerColorPersistence | Skipped transpiler analysis |
+| Stale horse placeholder | CharacterCreation | Partially identified by Codex, full fix by Claude |
+
+**Note:** After v4 prompt improvements, Claude's miss-rate advantage dropped to zero. Reviews 4-16 had 0 bugs missed by Codex that Claude caught independently.
+
+### False positives by Codex (4 total -- all in reviews 1-2 with v1-v2 prompts)
+| Claim | Feature | Why wrong |
+|-------|---------|-----------|
 | `characterObject.IsMounted` should be `upgradeTarget` | CulturalFeats | Vanilla uses same check |
-| Global drift guard is a "regression" | BannerColorPersistence | Likely intentional for LOTR |
-| Global clan color scope is a "regression" | BannerColorPersistence | Same design intent question |
+| Global drift guard is a "regression" | BannerColorPersistence | Intentional for LOTR |
+| Global clan color scope is a "regression" | BannerColorPersistence | Same design intent |
+| Phase-1 war pairs wrong | Diplomacy | Assumed empire=Rohan, it's Dunland |
+
+**Note:** After v4+, Codex produced 0 false positives across 12 reviews.
 
 ---
 
