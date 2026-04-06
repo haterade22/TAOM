@@ -158,7 +158,8 @@ Claude found no additional bugs. First review where Codex found everything.
 | v1 | CulturalFeats | ADR focus, generic focus areas, no decompilation guidance | 33% accuracy, 1 false positive |
 | v2 | BannerColorPersistence | Feature-specific focus, DO NOT section, decompilation requested | Still 33% accuracy — Codex skipped hard analysis |
 | v3 | ArmyTargeting | Required sections, `E:\Decompiled_Bannerlord\` paths, concrete scenarios, READ FIRST docs, prior failure examples | Correct verdict but shallow — no decompiled code shown, config not cross-referenced |
-| v4 | TroopProgression | Verification artifacts, split "show code" from "answer questions", config cross-reference with file path, approve-verdict evidence requirement | 67% accuracy, 0 false positives, first decompiled code in output |
+| v4 | TroopProgression, Wave 1 | Verification artifacts, split "show code" from "answer questions", config cross-reference with file path, approve-verdict evidence requirement | 90% accuracy on v4 batch, 0 false positives in reviews 4-6, 1 FP in review 7 |
+| v5 | Wave 2 (planned) | Kingdom mapping reference, design-intent gate, FP-7 lesson | Target: maintain 90%+ accuracy |
 
 ### v1 → v2 changes
 - Added feature-specific risk areas (transpilers, drift guard, scoping)

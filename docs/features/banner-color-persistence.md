@@ -113,7 +113,8 @@ All flags default to `true`. Set individual flags to `false` to disable specific
 
 | Test File | Coverage |
 |-----------|---------|
-| `BannerColorServiceTests.cs` | 12 tests — all `IBannerColorService` methods, enabled/disabled, unique icon color logic |
+| `BannerColorServiceTests.cs` | 14 tests — all `IBannerColorService` methods, enabled/disabled, unique icon color, agent visual + tableau flags |
+| `AgentColorStoreTests.cs` | 4 tests — register, overwrite, unregistered lookup, clear |
 | `BannerColorConfigProviderTests.cs` | 4 tests — valid JSON, missing file (defaults), invalid JSON (defaults), caching |
 | `Clan_UpdateBannerColorsAccordingToKingdom_PatchTests.cs` | 3 tests — null service, disabled, null instance guards |
 | `Clan_UpdateBannerColor_PatchTests.cs` | 3 tests — null service, disabled, null instance guards |

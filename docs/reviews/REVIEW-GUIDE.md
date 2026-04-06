@@ -19,7 +19,7 @@ How to write effective prompts, what to verify, and what we've learned.
 
 ---
 
-## Prompt Template (v4)
+## Prompt Template (v5)
 
 ```
 /codex:adversarial-review --background
@@ -27,6 +27,14 @@ How to write effective prompts, what to verify, and what we've learned.
 Adversarial review of {FeatureName}.
 
 {1-2 sentences: what the feature does, its risk profile, what's already good}
+
+TAOM KINGDOM MAPPING (prevents false positives from ID confusion):
+  empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan,
+  battania=Dunland(alt), aserai=Harad, khuzait=Easterlings,
+  sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell,
+  lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard,
+  gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar,
+  shaghana=Harad(sub), abanissa=Harad(sub)
 
 READ FIRST (required context):
 - docs/features/{feature-name}.md
@@ -97,6 +105,9 @@ Your review is INCOMPLETE if:
   - Section 4 claims validity without showing cross-reference evidence
   - All findings are the same severity (vary your calibration)
   - Section 5 has no observations on an approve verdict
+  - A finding claims "this is wrong" without checking feature docs for
+    design intent (Wave 1 produced a false positive from misreading
+    kingdom mapping — always check docs/features/ before flagging)
 
 Lessons from prior reviews — do NOT repeat these mistakes:
 {paste 2-3 concrete examples from Codex Failure Patterns section}
@@ -173,6 +184,11 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **Review:** ArmyTargeting (2026-04-05)
 **What happened:** Codex issued a correct "approve" verdict but produced no decompiled vanilla code (despite explicit instruction), claimed config IDs were valid without cross-referencing settlements.xml, and described vanilla behavior in prose instead of showing code. The verdict was right but indistinguishable from a rubber stamp.
 **Prevention:** Require "VERIFICATION ARTIFACTS" — specific code blocks that must appear in the output. For approve verdicts, require an "OBSERVATIONS" section (things worth noting even if not bugs). An approve with zero decompiled code is incomplete regardless of verdict.
+
+### FP-7: Wrong kingdom mapping assumption
+**Review:** Diplomacy (2026-04-05)
+**What happened:** Codex assumed `empire`=Rohan and `vlandia`=Arthedain, then flagged phase-1 war pairs as wrong. Actual mapping: `empire`=Dunland, `vlandia`=Rohan. The config was correct all along. False positive from not having the TAOM kingdom→LOTR mapping.
+**Prevention:** Include "TAOM KINGDOM MAPPING" reference block in every prompt. Prevents ID-to-faction confusion.
 
 ---
 
