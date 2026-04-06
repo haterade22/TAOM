@@ -25,8 +25,9 @@ public class ChildCreatorAdapter : IChildCreatorAdapter
 
         // HeroCreator.CreateChild inherits the template's sex. When the service
         // fell back to the opposite-sex pool (zero-male clan), enforce the requested sex.
+        // IsFemale backing field lives on BasicCharacterObject (base class), not CharacterObject.
         if (hero.IsFemale != isFemale)
-            ReflectionHelper.SetFieldValue(hero.CharacterObject, "<IsFemale>k__BackingField", isFemale);
+            ReflectionHelper.SetFieldValue((BasicCharacterObject)hero.CharacterObject, "<IsFemale>k__BackingField", isFemale);
 
         hero.UpdateHomeSettlement();
         hero.HeroDeveloper.InitializeHeroDeveloper();
