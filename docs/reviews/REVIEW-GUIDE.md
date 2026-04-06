@@ -19,6 +19,13 @@ How to write effective prompts, what to verify, and what we've learned.
 
 ---
 
+## Prompt Formatting Note
+
+**Avoid indented continuation lines** in prompts sent via `/codex:adversarial-review`. Leading whitespace gets backslash-escaped, triggering a confirmation prompt. Use flat formatting:
+- No leading spaces on lines inside sections
+- Use `--` or blank lines as visual separators instead of indentation
+- Lists use `a)` `b)` `c)` at the start of the line, not indented under a header
+
 ## Prompt Template (v5)
 
 ```

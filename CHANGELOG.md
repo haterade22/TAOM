@@ -149,6 +149,7 @@ Follow-up fixes to the Shaghâna/Âbanissa split:
 
 - **Banner keys**: All 17 new clan entries (clan_shaghana_1–9, clan_abanissa_1–8) had placeholder banner keys. Restored original keys copied from their source clans (clan_aserai_10–26) which held the real designed banners
 - **Education templates**: Added 6 `child_education_templates_stage_2_page_0_branch_{0-5}_{culture}` entries each for `Culture.shaghana` and `Culture.abanissa` to `taom_education_character_templates.xml` — without these the character creation education stage crashes for players starting as these cultures
+- **Removed duplicate clans**: Deleted `clan_aserai_10–26` from `clans.xml`, `lord_A10_1–A26_1` from `heroes.xml` and `lords.xml`. These old aserai entries were never removed when the new `clan_shaghana_*` / `clan_abanissa_*` entries were created, causing all 26 clans to appear under Harwan instead of 9
 - **Added `docs/features/kingdom-creation.md`**: Authoritative guide covering all 13 required files, naming conventions, filing order, inheritance table, SubModule.xml registration, and 3 known crash scenarios (including the heroes.xml omission and banner key placeholder pitfall)
 
 ## 2026-04-02
