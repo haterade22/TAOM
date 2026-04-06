@@ -2,6 +2,17 @@
 
 ## 2026-04-05
 
+### Enhancement: BannerColorPersistence — Agent Visual & Conversation Color Coverage (PocColor Integration)
+
+Extends BannerColorPersistence with deeper 3D battle scene and conversation color coverage, informed by PocColor Randomizer Revival (v1.3.4) analysis. Adds 5 new patches and an agent color store.
+
+- **Agent Color Store** (`IAgentColorStore`/`AgentColorStore`) — `ConcurrentDictionary<int, ClanColorInfo>` keyed by agent index; registered per-agent in `Mission.SpawnAgent` Postfix + `Agent.EquipItemsFromSpawnEquipment` Prefix; cleared via `AgentColorStoreCleanupBehavior` on mission end
+- **AgentVisuals.Create** (manual patch, View DLL) — disables `AddColorRandomness` when explicit clan colors are set, preventing engine HSB variation from overriding deterministic clan colors
+- **MapConversationTableau** (2 manual patches, SandBox.View.dll) — `SpawnOpponentLeader` and `SpawnOpponentBodyguardCharacter` Postfixes inject clan colors into conversation scene `AgentVisualsData`
+- **OrderOfBattleHeroItemVM.RefreshInformation** Postfix — rebuilds `CharacterCode` with clan colors (bypasses `CampaignUIHelper`)
+- Config: 2 new flags `EnableAgentVisualColors`, `EnableConversationTableauColors` in `banner_color_config.json`
+- 9 new tests (4 AgentColorStore + 2 service flag tests + 3 existing); 804 total passing
+
 ### Tooling: Codex Integration — Independent AI Verification
 
 Added OpenAI Codex as an independent code reviewer alongside Claude Code via the `codex-plugin-cc` plugin. Codex operates with equivalent project knowledge (via `AGENTS.md`) but no shared session context, providing genuine second-opinion reviews.

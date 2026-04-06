@@ -79,18 +79,25 @@ All flags default to `true`. Set individual flags to `false` to disable specific
 
 | File | Purpose |
 |------|---------|
-| `BannerColorConfig.cs` | POCO with 5 bool flags |
+| `BannerColorConfig.cs` | POCO with 7 bool flags |
 | `IBannerColorConfigProvider.cs` / `BannerColorConfigProvider.cs` | Reads JSON config, lazy cache |
 | `IBannerColorService.cs` / `BannerColorService.cs` | Pure logic: enabled checks, unique icon color calculation |
 | `Main/Adapters/ClanColorInfo.cs` | `readonly struct` carrying ClanStringId, Color1, Color2 across the sealed-type boundary |
 | `Main/Adapters/IBannerHeroAdapter.cs` / `BannerHeroAdapter.cs` | Extracts clan colors from `CharacterObject`/`Hero`/`Clan`; syncs kingdom colors for ruling clans |
-| `BannerColorPersistenceIoC.cs` | Registers all 3 singletons |
+| `IAgentColorStore.cs` / `AgentColorStore.cs` | Per-mission agent color cache (`ConcurrentDictionary<int, ClanColorInfo>`) |
+| `AgentColorStoreCleanupBehavior.cs` | MissionBehavior that clears the agent color store on mission end |
+| `BannerColorPersistenceIoC.cs` | Registers all 4 singletons |
 | `Hooks/Banner_TryGetBannerDataFromCode_Transpiler.cs` | Patch15 — IL transpiler skipping RemoveRange |
 | `Hooks/Clan_UpdateBannerColorsAccordingToKingdom_Patch.cs` | Patch24 — drift guard Prefix |
 | `Hooks/Clan_UpdateBannerColor_Patch.cs` | Patch24 — kingdom color sync Postfix |
 | `Hooks/BannerEditorView_OnTick_Patch.cs` | Patch23 — BannerPaste Ctrl+C/V; `MethodInfo` cached at Initialize |
 | `Hooks/MobilePartyVisual_AddCharacterToPartyIcon_Patch.cs` | No category — manual patch via reflection |
-| `TAOM.Tests/Features/BannerColorPersistence/` | 4 test files, 16 tests |
+| `Hooks/Agent_EquipItemsFromSpawnEquipment_Patch.cs` | Patch23 — registers agent in color store + resolves clan colors |
+| `Hooks/AgentVisuals_Create_Patch.cs` | Manual patch — disables color randomness when clan colors set |
+| `Hooks/MapConversationTableau_SpawnOpponentLeader_Patch.cs` | Manual patch — conversation leader clan colors |
+| `Hooks/MapConversationTableau_SpawnOpponentBodyguard_Patch.cs` | Manual patch — conversation bodyguard clan colors |
+| `Hooks/OrderOfBattleHeroItemVM_RefreshInformation_Patch.cs` | Patch23 — pre-battle deployment screen colors |
+| `TAOM.Tests/Features/BannerColorPersistence/` | 5 test files, 22 tests |
 
 ## Dependencies
 
