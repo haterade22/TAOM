@@ -9,7 +9,8 @@ public class StartupResourcesBehavior : CampaignBehaviorBase
     private readonly IStartupGoldService _goldService;
     private readonly IStartupInfluenceService _influenceService;
     private readonly IModLogger _logger;
-    private bool _distributed;
+    private bool _goldDistributed;
+    private bool _influenceDistributed;
 
     public StartupResourcesBehavior(IStartupGoldService goldService, IStartupInfluenceService influenceService, IModLogger logger)
     {
@@ -26,19 +27,33 @@ public class StartupResourcesBehavior : CampaignBehaviorBase
 
     public void OnNewGameCreatedPartialFollowUp(CampaignGameStarter starter, int index)
     {
-        if (index == 1 && !_distributed)
+        if (index != 1) return;
+
+        if (!_goldDistributed)
         {
-            _logger.LogInfo("[StartupResources] Distributing startup gold and influence...");
             try
             {
                 _goldService.DistributeStartupGold();
-                _influenceService.DistributeStartupInfluence();
-                _distributed = true;
-                _logger.LogInfo("[StartupResources] Distribution complete");
+                _goldDistributed = true;
+                _logger.LogInfo("[StartupResources] Gold distribution complete");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"[StartupResources] Distribution failed: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                _logger.LogError($"[StartupResources] Gold distribution failed: {ex.Message}");
+            }
+        }
+
+        if (!_influenceDistributed)
+        {
+            try
+            {
+                _influenceService.DistributeStartupInfluence();
+                _influenceDistributed = true;
+                _logger.LogInfo("[StartupResources] Influence distribution complete");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"[StartupResources] Influence distribution failed: {ex.Message}");
             }
         }
     }

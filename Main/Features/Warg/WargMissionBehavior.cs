@@ -166,6 +166,7 @@ public class WargMissionBehavior : MissionLogic
     public override void OnRemoveBehavior()
     {
         _wargComponents.Clear();
+        _adapterFactory.ClearCache();
         if (_managesCombatInfrastructure)
         {
             _boneCollisionService.Clear();

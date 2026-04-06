@@ -17,7 +17,12 @@ public static class Mission_Initialize_Patch
     private static readonly PropertyInfo InitializerRecordProperty =
         AccessTools.Property(typeof(Mission), "InitializerRecord");
 
-    public static void Initialize(IModLogger logger) => _logger = logger;
+    public static void Initialize(IModLogger logger)
+    {
+        _logger = logger;
+        if (InitializerRecordProperty == null)
+            _logger?.LogError("[Atmosphere] STARTUP: Mission.InitializerRecord property not found — atmosphere override will be disabled for this session");
+    }
 
     [HarmonyPrefix]
     public static void Prefix(Mission __instance)

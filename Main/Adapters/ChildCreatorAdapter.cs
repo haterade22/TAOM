@@ -1,4 +1,5 @@
 using Helpers;
+using TAOM.Core.Infrastructure;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
@@ -21,6 +22,11 @@ public class ChildCreatorAdapter : IChildCreatorAdapter
             clan.HomeSettlement,
             clan,
             age);
+
+        // HeroCreator.CreateChild inherits the template's sex. When the service
+        // fell back to the opposite-sex pool (zero-male clan), enforce the requested sex.
+        if (hero.IsFemale != isFemale)
+            ReflectionHelper.SetFieldValue(hero.CharacterObject, "<IsFemale>k__BackingField", isFemale);
 
         hero.UpdateHomeSettlement();
         hero.HeroDeveloper.InitializeHeroDeveloper();

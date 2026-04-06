@@ -56,9 +56,17 @@ public static class LoadingScreen_ShaderProgress_Patch
                 _abortTriggered  = false;
 
                 if (remaining > 0)
+                {
                     __instance.DescriptionText = $"Compiling shaders... {remaining} remaining";
-                else if (__instance.DescriptionText?.StartsWith("Compiling shaders") == true)
-                    __instance.DescriptionText = string.Empty;
+                }
+                else
+                {
+                    // All shaders compiled — clear the latch so later loading screens
+                    // don't inherit TAOM's text override and stuck-abort logic
+                    TaomShaderGameManager.ResetShaderBattleActive();
+                    if (__instance.DescriptionText?.StartsWith("Compiling shaders") == true)
+                        __instance.DescriptionText = string.Empty;
+                }
 
                 return;
             }

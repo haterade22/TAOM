@@ -129,7 +129,7 @@ After each review:
 | Codex accuracy | **61%** | >60% | **TARGET MET** — v4 batch at 90% |
 | False positive rate | **17%** | <20% | **TARGET MET** — 0 FPs in last 4 reviews |
 | Miss rate | 35% | <30% | Close — Claude still catches ~35% more |
-| Features reviewed | **15/25** | 25/25 | Waves 1-3 complete |
+| Features reviewed | **25/25** | 25/25 | **COMPLETE** |
 | Decompiled code in output | 4/7 reviews | Every review | v4 quality gates working |
 
 ---
@@ -151,6 +151,8 @@ After each review:
 | 3 | HeroRace | Done | 3 (2 HIGH, 1 MEDIUM) | 3 |
 | 3 | Siege + BannerInjection | Done | 2 (1 HIGH, 1 MEDIUM) | 1 (siege camp fallback deferred) |
 | 3 | AdvancedCombat + Warg | Done | 4 (2 HIGH, 2 MEDIUM) | 4 |
-| 4A | Transpilers (Atmosphere + Shader + Weather) | Pending | | |
-| 4B | Services (Time + ChildGen + Startup + Menu + Encyclopedia + BattleScenes) | Pending | | |
-| 5 | Infrastructure (Adapters + Core + SubModule) | Pending | | |
+| 4A | Transpilers (Atmosphere + Shader + Weather) | Done | 3 (1 HIGH, 2 MEDIUM) | 3 |
+| 4B | Services (Time + ChildGen + Startup + Menu + Encyclopedia + BattleScenes) | Done | 3 (1 HIGH, 2 MEDIUM) | 3 |
+| 5 | Infrastructure (Adapters + Core + SubModule) | Done | 3 (2 HIGH, 1 MEDIUM) | 3 |
+
+**ALL WAVES COMPLETE. 25/25 features reviewed. 41 bugs found, 37 fixed, 4 deferred/design.**

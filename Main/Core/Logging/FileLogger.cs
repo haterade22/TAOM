@@ -54,7 +54,14 @@ public class FileLogger : IModLogger
     public void Dispose()
     {
         _stopping = true;
-        _writerThread.Join(TimeSpan.FromSeconds(2));
+        // Wait for writer thread to drain the queue (up to 5s)
+        _writerThread.Join(TimeSpan.FromSeconds(5));
+
+        // Drain any remaining items if thread timed out
+        while (_queue.TryDequeue(out var line))
+            _logFile?.WriteLine(line);
+
+        _logFile?.Flush();
         _logFile?.Dispose();
         _logFile = null;
     }

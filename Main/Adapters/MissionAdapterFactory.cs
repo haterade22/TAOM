@@ -23,4 +23,6 @@ public class MissionAdapterFactory : IMissionAdapterFactory
         if (agent == null) return null;
         return _agentCache.GetOrAdd(agent.Index, _ => new AgentAdapter(agent, this, _logger, _boneCollisionServiceFactory));
     }
+
+    public void ClearCache() => _agentCache.Clear();
 }

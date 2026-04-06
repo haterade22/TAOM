@@ -19,13 +19,18 @@ Running scorecard of all reviews. Updated after each review cycle.
 | 11 | 2026-04-05 | HeroRace | no-ship | agree | 3 confirmed | 0 | 0 | v6 |
 | 12 | 2026-04-05 | Siege+BannerInjection | no-ship | agree (1 deferred) | 1 confirmed + 1 valid | 0 | 0 | v6 |
 | 13 | 2026-04-05 | AdvancedCombat+Warg | no-ship | agree | 4 confirmed | 0 | 0 | v6 |
+| 14 | 2026-04-05 | Wave4A (Weather+Atmosphere+Shader) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
+| 15 | 2026-04-05 | Wave4B (Time+ChildGen+Startup+Menu+Enc+BattleScenes) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
+| 16 | 2026-04-06 | Infrastructure (Adapters+Core+SubModule+IoC) | no-ship | agree | 3 (2 HIGH, 1 MEDIUM) | 0 | 0 | v6 |
 
 ## Metrics
 
-**Codex accuracy rate:** 26 real findings / 34 total findings = 76% (↑ from 69%)
-**Codex miss rate:** 6 missed bugs / 32 total real bugs = 19% (↓ from 25%)
-**False positive rate:** 4 false positives / 34 findings total = 12% (↓ from 15%)
+**Codex accuracy rate:** 35 real findings / 43 total findings = 81% (↑ from 76%)
+**Codex miss rate:** 6 missed bugs / 41 total real bugs = 15% (↓ from 19%)
+**False positive rate:** 4 false positives / 43 findings total = 9% (↓ from 12%)
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
+
+**CODEBASE REVIEW COMPLETE: 25/25 features reviewed.**
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 **v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**

@@ -1,3 +1,4 @@
+using TAOM.Core.Infrastructure;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Adapters;
@@ -25,20 +26,15 @@ public class BannerHeroAdapter : IBannerHeroAdapter
 
         uint bgColor = clan.Color;
         uint iconColor = clan.Color2;
-        if (bgColor == iconColor) iconColor = uint.MaxValue;
-        if (iconColor == uint.MaxValue) return;
+        if (bgColor == iconColor) return;
 
-        kingdom.InitializeKingdom(
-            kingdom.Name,
-            kingdom.InformalName,
-            kingdom.Culture,
-            clan.Banner,
-            bgColor,
-            iconColor,
-            kingdom.InitialHomeSettlement,
-            kingdom.EncyclopediaText,
-            kingdom.EncyclopediaTitle,
-            kingdom.EncyclopediaRulerTitle);
+        // Update kingdom colors directly instead of calling InitializeKingdom,
+        // which resets PoliticalStagnation and other unrelated state.
+        // Kingdom color properties are read-only — must use reflection.
+        ReflectionHelper.SetFieldValue(kingdom, "<PrimaryBannerColor>k__BackingField", bgColor);
+        ReflectionHelper.SetFieldValue(kingdom, "<SecondaryBannerColor>k__BackingField", iconColor);
+        kingdom.Banner?.ChangePrimaryColor(bgColor);
+        kingdom.Banner?.ChangeIconColors(iconColor);
 
         foreach (var kClan in kingdom.Clans)
         {

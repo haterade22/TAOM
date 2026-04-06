@@ -23,10 +23,16 @@ public class TimeAccelerationService : ITimeAccelerationService
     public void OnTick()
     {
         if (!_timeControl.IsCampaignActive || !_input.IsMapActive)
+        {
+            RestoreTurboIfActive();
             return;
+        }
 
         if (_timeControl.IsMenuOpen && !_timeControl.IsTimeControlLocked)
+        {
+            RestoreTurboIfActive();
             return;
+        }
 
         if (_input.IsControlDown && _input.IsSpacePressed)
         {
@@ -51,5 +57,13 @@ public class TimeAccelerationService : ITimeAccelerationService
         {
             _timeControl.SpeedUpMultiplier = _settings.FastForwardMultiplier;
         }
+    }
+
+    private void RestoreTurboIfActive()
+    {
+        if (!_ctrlSpaceActive) return;
+        _timeControl.SpeedUpMultiplier = _savedSpeed;
+        _timeControl.TimeControlMode = _savedMode;
+        _ctrlSpaceActive = false;
     }
 }

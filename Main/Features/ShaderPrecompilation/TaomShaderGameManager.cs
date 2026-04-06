@@ -26,6 +26,8 @@ public class TaomShaderGameManager : CustomGameManager
     // to enable stuck detection and auto-abort only during TAOM shader precompilation.
     public static bool IsShaderBattleActive { get; private set; }
 
+    public static void ResetShaderBattleActive() => IsShaderBattleActive = false;
+
     private readonly IShaderPrecompilationService _service;
     private readonly IModLogger _logger;
 
