@@ -164,7 +164,20 @@ internal static class NarrativeMenuCharacterArgsList
                 animationId: args.AnimationId,
                 spawnPointEntityId: args.SpawnPointEntityId,
                 isHuman: args.IsHuman,
-                isFemale: args.IsFemale)
+                isFemale: args.IsFemale),
+            // Include an empty horse entry so ModifyMenuCharacters clears any stale
+            // horse placeholder from a previously-selected mounted culture.
+            // SpawnNonHumanNarrativeMenuCharacter will attempt to spawn this entry,
+            // hit ArgumentNullException("key") on the empty equipment, and the
+            // existing Finalizer suppresses that crash gracefully.
+            new NarrativeMenuCharacterArgs(
+                characterId: "narrative_character_horse",
+                age: 0,
+                equipmentId: "",
+                animationId: "",
+                spawnPointEntityId: "",
+                isHuman: false,
+                isFemale: false)
         };
 }
 

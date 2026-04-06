@@ -13,15 +13,19 @@ Running scorecard of all reviews. Updated after each review cycle.
 | 5 | 2026-04-05 | Diplomacy+Execution | no-ship | agree | 4 confirmed + 1 valid | 0 | 0 | v4 |
 | 6 | 2026-04-05 | FactionMap | no-ship | agree | 2 confirmed | 0 | 0 | v4 |
 | 7 | 2026-04-05 | CustomBattles | no-ship | agree | 1 confirmed + 1 valid concern | 0 | 0 | v4 |
+| 8 | 2026-04-05 | CharacterCreation | no-ship | agree | 1 confirmed + 1 valid | 0 | 0 | v5 |
+| 9 | 2026-04-05 | RaceAge | no-ship | design questions | 3 valid (need design input) | 0 | 0 | v5 |
+| 10 | 2026-04-05 | BattleBalance | no-ship | agree | 3 confirmed | 0 | 0 | v5 |
 
 ## Metrics
 
-**Codex accuracy rate:** 11 real bugs found / 18 findings total = 61% (↑ from 44%)
-**Codex miss rate:** 6 missed bugs / 17 total real bugs = 35% (↓ from 60%)
-**False positive rate:** 3 false positives / 18 findings total = 17% (↓ from 33%)
+**Codex accuracy rate:** 18 real findings / 26 total findings = 69% (↑ from 61%)
+**Codex miss rate:** 6 missed bugs / 24 total real bugs = 25% (↓ from 35% -- TARGET MET)
+**False positive rate:** 4 false positives / 26 findings total = 15% (↓ from 17%)
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
+**v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**
 
 Target: accuracy >60%, miss rate <30%, false positives <20%
 
@@ -159,7 +163,8 @@ Claude found no additional bugs. First review where Codex found everything.
 | v2 | BannerColorPersistence | Feature-specific focus, DO NOT section, decompilation requested | Still 33% accuracy — Codex skipped hard analysis |
 | v3 | ArmyTargeting | Required sections, `E:\Decompiled_Bannerlord\` paths, concrete scenarios, READ FIRST docs, prior failure examples | Correct verdict but shallow — no decompiled code shown, config not cross-referenced |
 | v4 | TroopProgression, Wave 1 | Verification artifacts, split "show code" from "answer questions", config cross-reference with file path, approve-verdict evidence requirement | 90% accuracy on v4 batch, 0 false positives in reviews 4-6, 1 FP in review 7 |
-| v5 | Wave 2 (planned) | Kingdom mapping reference, design-intent gate, FP-7 lesson | Target: maintain 90%+ accuracy |
+| v5 | Wave 2 | Kingdom mapping reference, design-intent gate, flat formatting, FP-7 lesson | 88% accuracy, config ID mismatches caught (rohan/vlandia, dol_guldur/dolguldur) |
+| v6 | Wave 3 (planned) | Config ID cross-ref as standard section, culture-to-kingdom ID cheatsheet, "dead config" detection section, success patterns from v5 | Target: maintain 88%+ |
 
 ### v1 → v2 changes
 - Added feature-specific risk areas (transpilers, drift guard, scoping)
@@ -182,3 +187,10 @@ Claude found no additional bugs. First review where Codex found everything.
 - Config validation now requires cross-referencing against a specific file path
 - Added approve-verdict evidence requirement: "An approve with no decompiled code is incomplete"
 - Added "OBSERVATIONS" section requirement for approve verdicts (things worth noting even if not bugs)
+
+### v5 → v6 changes
+- Added TAOM ID CHEATSHEET — culture StringIds AND kingdom StringIds in one block (prevents rohan/vlandia-type mismatches)
+- Added "DEAD CONFIG DETECTION" as standard check — config values that exist but are never read at runtime
+- Config cross-reference is now a REQUIRED section, not optional (caught 5+ bugs across waves 1-2)
+- Added success patterns to prior-review-lessons (what WORKED, not just what failed)
+- Flat formatting standard (no indented continuation lines — prevents backslash-escape prompts)

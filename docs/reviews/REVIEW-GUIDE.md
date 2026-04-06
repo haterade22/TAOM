@@ -26,7 +26,7 @@ How to write effective prompts, what to verify, and what we've learned.
 - Use `--` or blank lines as visual separators instead of indentation
 - Lists use `a)` `b)` `c)` at the start of the line, not indented under a header
 
-## Prompt Template (v5)
+## Prompt Template (v6)
 
 ```
 /codex:adversarial-review --background
@@ -35,13 +35,11 @@ Adversarial review of {FeatureName}.
 
 {1-2 sentences: what the feature does, its risk profile, what's already good}
 
-TAOM KINGDOM MAPPING (prevents false positives from ID confusion):
-  empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan,
-  battania=Dunland(alt), aserai=Harad, khuzait=Easterlings,
-  sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell,
-  lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard,
-  gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar,
-  shaghana=Harad(sub), abanissa=Harad(sub)
+TAOM ID CHEATSHEET (prevents false positives from ID confusion):
+Kingdom StringIds: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Dunland(alt), aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Harad(sub), abanissa=Harad(sub)
+Culture StringIds (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
+Culture StringIds (XSLT/vanilla): vlandia (Rohan), empire (Dunland), empire_s (Mordor-region), empire_w (Gondor-region), battania (Dunland-alt), aserai (Harad), khuzait (Easterlings), sturgia (Dale)
+NOTE: Kingdom IDs and Culture IDs differ! "rohan" is NOT a valid ID. Rohan's kingdom=vlandia, culture=vlandia. Config keys must use the runtime StringId.
 
 READ FIRST (required context):
 - docs/features/{feature-name}.md
@@ -85,13 +83,15 @@ SECTION 3: {FEATURE-SPECIFIC DEEP ANALYSIS}
   b) {specific scenario with numbers}
   c) {edge case}
 
-SECTION 4: {SECOND ANALYSIS AREA — e.g., CONFIG VALIDATION}
-{Config validation, convention consistency, etc.}
-  a) {specific check with cross-reference file path}
-  b) {specific check}
-Cross-reference config values against {specific file path, e.g.,
-Main/_Module/ModuleData/settlements.xml} — do not claim validity
-without checking.
+SECTION 4: CONFIG CROSS-REFERENCE (required for any config-driven feature)
+a) List every string ID key in the config file(s)
+b) Cross-reference each against the source-of-truth file. Specify the file:
+-- Culture IDs: check against taom_spcultures.xml + spcultures.xslt
+-- Kingdom IDs: check against TAOM_spkingdoms.xml
+-- Settlement IDs: check against Main/_Module/ModuleData/settlements.xml
+-- Troop IDs: check against troops/troops_{culture}.xml
+Do NOT claim "config looks valid" without showing which file you checked.
+c) Check for DEAD CONFIG -- values that exist in config but are never read at runtime. Search for the config key in the C# codebase. If no code loads or uses a config field, it is dead.
 
 SECTION 5: FINDINGS OR OBSERVATIONS
 If bugs found — each finding MUST include:
@@ -116,8 +116,15 @@ Your review is INCOMPLETE if:
     design intent (Wave 1 produced a false positive from misreading
     kingdom mapping — always check docs/features/ before flagging)
 
-Lessons from prior reviews — do NOT repeat these mistakes:
-{paste 2-3 concrete examples from Codex Failure Patterns section}
+Lessons from prior reviews:
+SUCCESSES to repeat:
+- Config ID cross-reference caught "rohan"/"dol_guldur" mismatches (BattleBalance)
+- Vanilla reimplementation diff caught fertility formula drift (RaceAge)
+- Garrison wage gate found by comparing TAOM vs vanilla IsGarrison (TroopProgression)
+FAILURES to avoid:
+- Codex assumed empire=Rohan (it is Dunland). Use the ID cheatsheet above.
+- Codex skipped transpiler IL verification despite being focus #1 (BannerColor)
+- Codex flagged characterObject.IsMounted as bug -- vanilla uses same check (CulturalFeats)
 
 DO NOT flag architecture/pattern compliance {if feature is well-architected}.
 
@@ -191,6 +198,16 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **Review:** ArmyTargeting (2026-04-05)
 **What happened:** Codex issued a correct "approve" verdict but produced no decompiled vanilla code (despite explicit instruction), claimed config IDs were valid without cross-referencing settlements.xml, and described vanilla behavior in prose instead of showing code. The verdict was right but indistinguishable from a rubber stamp.
 **Prevention:** Require "VERIFICATION ARTIFACTS" — specific code blocks that must appear in the output. For approve verdicts, require an "OBSERVATIONS" section (things worth noting even if not bugs). An approve with zero decompiled code is incomplete regardless of verdict.
+
+### SUCCESS-1: Config ID cross-reference catches silent failures
+**Reviews:** BattleBalance, Diplomacy (2026-04-05)
+**What worked:** Codex cross-referenced config keys against actual culture/kingdom StringIds and found mismatches: `"rohan"` should be `"vlandia"`, `"dol_guldur"` should be `"dolguldur"`, missing kingdoms in alignment.json. These are silent failures — the feature runs without errors but the config values never match at runtime.
+**Why it works:** Explicit "cross-reference X against Y file" instructions in the prompt force Codex to actually check IDs. Without this instruction, Codex just says "config looks valid."
+
+### SUCCESS-2: Vanilla reimplementation diff catches formula drift
+**Review:** RaceAge (2026-04-05)
+**What worked:** TaomPregnancyModel fully reimplements vanilla. Codex compared the math and found the human config values (200/195) produce ~56% higher fertility than vanilla's curve. This led to discovering that the config was intentional (Dunedain) but docs/tests were stale.
+**Why it works:** "Walk through scenario X with actual numbers" forces formula comparison.
 
 ### FP-7: Wrong kingdom mapping assumption
 **Review:** Diplomacy (2026-04-05)

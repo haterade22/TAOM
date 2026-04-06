@@ -27,9 +27,9 @@ public class BattleBalanceConfig
         // Formula: newDeathChance = vanillaDeathChance * (1 - bonus)
         public Dictionary<string, float> CulturalSurvivalBonuses { get; set; } = new()
         {
-            ["gondor"] = 0.3f,    ["rohan"] = 0.2f,      ["lothlorien"] = 0.5f,
+            ["gondor"] = 0.3f,    ["vlandia"] = 0.2f,    ["lothlorien"] = 0.5f,
             ["erebor"] = 0.3f,    ["rivendell"] = 0.4f,
-            ["mordor"] = -0.2f,   ["gundabad"] = -0.1f,  ["dol_guldur"] = -0.1f
+            ["mordor"] = -0.2f,   ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
         };
 
         public float GetCulturalSurvivalBonus(string cultureId) =>

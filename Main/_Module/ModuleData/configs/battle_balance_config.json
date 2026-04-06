@@ -18,13 +18,13 @@
     "EnableCulturalSurvivalBonuses": true,
     "CulturalSurvivalBonuses": {
       "gondor": 0.3,
-      "rohan": 0.2,
+      "vlandia": 0.2,
       "lothlorien": 0.5,
       "erebor": 0.3,
       "rivendell": 0.4,
       "mordor": -0.2,
       "gundabad": -0.1,
-      "dol_guldur": -0.1
+      "dolguldur": -0.1
     }
   }
 }

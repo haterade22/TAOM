@@ -142,13 +142,13 @@ public class BattleBalanceConfigCasualtyRatiosTests
 
     [TestMethod]
     [DataRow("gondor", 0.3f)]
-    [DataRow("rohan", 0.2f)]
+    [DataRow("vlandia", 0.2f)]
     [DataRow("lothlorien", 0.5f)]
     [DataRow("erebor", 0.3f)]
     [DataRow("rivendell", 0.4f)]
     [DataRow("mordor", -0.2f)]
     [DataRow("gundabad", -0.1f)]
-    [DataRow("dol_guldur", -0.1f)]
+    [DataRow("dolguldur", -0.1f)]
     public void GetCulturalSurvivalBonus_AllDefinedCultures_ReturnExpectedBonus(
         string cultureId, float expected)
     {

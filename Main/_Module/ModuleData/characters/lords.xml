@@ -25591,7 +25591,7 @@
             <skill id="Engineering" value="80" />
         </skills>
         <Traits>
-            <Trait id="Valor" value="3" />
+            <Trait id="Valor" value="2" />
             <Trait id="Honor" value="-1" />
             <Trait id="Calculating" value="2" />
             <Trait id="Mercy" value="-2" />
@@ -25927,9 +25927,9 @@
             <skill id="Engineering" value="100" />
         </skills>
         <Traits>
-            <Trait id="Valor" value="3" />
+            <Trait id="Valor" value="2" />
             <Trait id="Honor" value="1" />
-            <Trait id="Calculating" value="3" />
+            <Trait id="Calculating" value="2" />
             <Trait id="Mercy" value="-1" />
             <Trait id="Generosity" value="0" />
         </Traits>

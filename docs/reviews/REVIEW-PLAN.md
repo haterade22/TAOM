@@ -145,9 +145,9 @@ After each review:
 | 1 | Diplomacy+Execution | Done | 5 (4 HIGH, 1 MEDIUM) | 2 code + 1 config (diplomacy matrix needs design input) |
 | 1 | FactionMap | Done | 2 (1 HIGH, 1 MEDIUM) | 2 |
 | 1 | CustomBattles | Done | 2 (1 HIGH, 1 MEDIUM) | 1 code (constructor sig needs DLL verification) |
-| 2 | CharacterCreation | Pending | | |
-| 2 | RaceAge + BattleBalance | Pending | | |
-| 2 | Execution | Pending | | |
+| 2 | CharacterCreation | Done | 2 (1 HIGH, 1 MEDIUM) | 0 (content gap + horse leak need design input) |
+| 2 | RaceAge | Done | 3 (2 HIGH, 1 MEDIUM) | 0 (all design questions — need user input) |
+| 2 | BattleBalance | Done | 3 (1 HIGH, 2 MEDIUM) | 3 (config key + defaults + test DataRows) |
 | 3 | HeroRace + Siege | Pending | | |
 | 3 | AdvancedCombat + Warg + BannerInjection | Pending | | |
 | 4A | Transpilers (Atmosphere + Shader + Weather) | Pending | | |
