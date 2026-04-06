@@ -36,7 +36,7 @@ Adversarial review of {FeatureName}.
 {1-2 sentences: what the feature does, its risk profile, what's already good}
 
 TAOM ID CHEATSHEET (prevents false positives from ID confusion):
-Kingdom StringIds: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Dunland(alt), aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Harad(sub), abanissa=Harad(sub)
+Kingdom StringIds: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
 Culture StringIds (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
 Culture StringIds (XSLT/vanilla): vlandia (Rohan), empire (Dunland), empire_s (Mordor-region), empire_w (Gondor-region), battania (Dunland-alt), aserai (Harad), khuzait (Easterlings), sturgia (Dale)
 NOTE: Kingdom IDs and Culture IDs differ! "rohan" is NOT a valid ID. Rohan's kingdom=vlandia, culture=vlandia. Config keys must use the runtime StringId.

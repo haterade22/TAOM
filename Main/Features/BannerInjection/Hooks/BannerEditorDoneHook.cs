@@ -13,9 +13,15 @@ public class BannerEditorDoneHook : IOnBannerEditorDone
         _logger = logger;
     }
 
-    public void OnBannerEditorDone(string clanStringId)
+    public void OnBannerEditorDone(string clanStringId, string kingdomStringId)
     {
         _exclusionService.MarkAsPlayerModified(clanStringId);
         _logger.LogInfo($"BannerInjection: Marked clan '{clanStringId}' as player-modified.");
+
+        if (!string.IsNullOrEmpty(kingdomStringId))
+        {
+            _exclusionService.MarkAsPlayerModified(kingdomStringId);
+            _logger.LogInfo($"BannerInjection: Marked kingdom '{kingdomStringId}' as player-modified (ruler banner).");
+        }
     }
 }

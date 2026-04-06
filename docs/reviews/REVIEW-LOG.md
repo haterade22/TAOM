@@ -16,12 +16,15 @@ Running scorecard of all reviews. Updated after each review cycle.
 | 8 | 2026-04-05 | CharacterCreation | no-ship | agree | 1 confirmed + 1 valid | 0 | 0 | v5 |
 | 9 | 2026-04-05 | RaceAge | no-ship | design questions | 3 valid (need design input) | 0 | 0 | v5 |
 | 10 | 2026-04-05 | BattleBalance | no-ship | agree | 3 confirmed | 0 | 0 | v5 |
+| 11 | 2026-04-05 | HeroRace | no-ship | agree | 3 confirmed | 0 | 0 | v6 |
+| 12 | 2026-04-05 | Siege+BannerInjection | no-ship | agree (1 deferred) | 1 confirmed + 1 valid | 0 | 0 | v6 |
+| 13 | 2026-04-05 | AdvancedCombat+Warg | no-ship | agree | 4 confirmed | 0 | 0 | v6 |
 
 ## Metrics
 
-**Codex accuracy rate:** 18 real findings / 26 total findings = 69% (↑ from 61%)
-**Codex miss rate:** 6 missed bugs / 24 total real bugs = 25% (↓ from 35% -- TARGET MET)
-**False positive rate:** 4 false positives / 26 findings total = 15% (↓ from 17%)
+**Codex accuracy rate:** 26 real findings / 34 total findings = 76% (↑ from 69%)
+**Codex miss rate:** 6 missed bugs / 32 total real bugs = 19% (↓ from 25%)
+**False positive rate:** 4 false positives / 34 findings total = 12% (↓ from 15%)
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**

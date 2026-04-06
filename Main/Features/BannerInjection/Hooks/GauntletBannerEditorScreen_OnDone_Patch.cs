@@ -18,10 +18,13 @@ public static class GauntletBannerEditorScreen_OnDone_Patch
     [HarmonyPostfix]
     public static void Postfix()
     {
-        var playerClanId = Clan.PlayerClan?.StringId;
-        if (playerClanId != null)
+        var playerClan = Clan.PlayerClan;
+        if (playerClan?.StringId != null)
         {
-            _hook?.OnBannerEditorDone(playerClanId);
+            var kingdomId = playerClan.Kingdom?.RulingClan == playerClan
+                ? playerClan.Kingdom.StringId
+                : null;
+            _hook?.OnBannerEditorDone(playerClan.StringId, kingdomId);
         }
     }
 }

@@ -58,13 +58,14 @@ public class EyeHeightAdjustmentHookTests
     }
 
     [TestMethod]
-    public void OnGetBaseMonsterFromRace_AfterInitFailure_DoesNotReinitialize()
+    public void OnGetBaseMonsterFromRace_AfterInitFailure_RetriesOnNextCall()
     {
         Monster monster = default;
 
         _sut.OnGetBaseMonsterFromRace(ref monster, 1);
         _sut.OnGetBaseMonsterFromRace(ref monster, 2);
 
-        _faceGenAdapter.Received(1).GetBaseMonsterFromRace(0);
+        // Should retry init on each call until successful
+        _faceGenAdapter.Received(2).GetBaseMonsterFromRace(0);
     }
 }

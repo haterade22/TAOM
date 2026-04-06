@@ -29,6 +29,8 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
     {
         if (FirstAttack.GetValue())
         {
+            FirstAttack.SetValue(false);
+
             if (Agent.GetValue().IsPlayerControlled)
             {
                 MBInformationManager.AddQuickInformation(new("Your warg entered into a rage, you lost control!"));

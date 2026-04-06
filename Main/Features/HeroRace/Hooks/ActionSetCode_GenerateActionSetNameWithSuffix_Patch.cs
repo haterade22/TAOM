@@ -20,9 +20,10 @@ public class ActionSetCode_GenerateActionSetNameWithSuffix_Patch
                 return false;
             }
 
-            var monsterId = monster.StringId;
-            if (monsterId.Contains("_"))
-                monsterId = monsterId.Split('_')[0];
+            // Match vanilla: prefer BaseMonster when present, otherwise use full StringId
+            var monsterId = !string.IsNullOrEmpty(monster.BaseMonster)
+                ? monster.BaseMonster
+                : monster.StringId;
 
             __result = "as_" + monsterId + (isFemale ? "_female" : "") + suffix;
             return false;

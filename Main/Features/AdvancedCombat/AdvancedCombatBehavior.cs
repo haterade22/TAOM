@@ -19,6 +19,10 @@ public class AdvancedCombatBehavior : MissionLogic
 
     public override void OnMissionTick(float dt)
     {
+        // Bone checks must tick every frame to catch short animation windows (0.5-0.7s)
+        _boneCollisionService.TickBoneChecks(dt);
+
+        // Grid rebuild and debug rendering are throttled to reduce overhead
         _timeSinceLastUpdate += dt;
         if (_timeSinceLastUpdate < GridUpdateInterval) return;
         _timeSinceLastUpdate = 0f;
@@ -28,8 +32,6 @@ public class AdvancedCombatBehavior : MissionLogic
             SpatialGrid.Instance.UpdateGrid(Mission.Current.AllAgents);
             _debugService.RenderDebugVisualization();
         }
-
-        _boneCollisionService.TickBoneChecks(dt);
     }
 
     public void AddBoneCheckComponent(BoneCheck component)

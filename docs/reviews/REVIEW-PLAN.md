@@ -129,7 +129,7 @@ After each review:
 | Codex accuracy | **61%** | >60% | **TARGET MET** — v4 batch at 90% |
 | False positive rate | **17%** | <20% | **TARGET MET** — 0 FPs in last 4 reviews |
 | Miss rate | 35% | <30% | Close — Claude still catches ~35% more |
-| Features reviewed | 7/25 | 25/25 | Wave 1 complete |
+| Features reviewed | **15/25** | 25/25 | Waves 1-3 complete |
 | Decompiled code in output | 4/7 reviews | Every review | v4 quality gates working |
 
 ---
@@ -148,8 +148,9 @@ After each review:
 | 2 | CharacterCreation | Done | 2 (1 HIGH, 1 MEDIUM) | 0 (content gap + horse leak need design input) |
 | 2 | RaceAge | Done | 3 (2 HIGH, 1 MEDIUM) | 0 (all design questions — need user input) |
 | 2 | BattleBalance | Done | 3 (1 HIGH, 2 MEDIUM) | 3 (config key + defaults + test DataRows) |
-| 3 | HeroRace + Siege | Pending | | |
-| 3 | AdvancedCombat + Warg + BannerInjection | Pending | | |
+| 3 | HeroRace | Done | 3 (2 HIGH, 1 MEDIUM) | 3 |
+| 3 | Siege + BannerInjection | Done | 2 (1 HIGH, 1 MEDIUM) | 1 (siege camp fallback deferred) |
+| 3 | AdvancedCombat + Warg | Done | 4 (2 HIGH, 2 MEDIUM) | 4 |
 | 4A | Transpilers (Atmosphere + Shader + Weather) | Pending | | |
 | 4B | Services (Time + ChildGen + Startup + Menu + Encyclopedia + BattleScenes) | Pending | | |
 | 5 | Infrastructure (Adapters + Core + SubModule) | Pending | | |

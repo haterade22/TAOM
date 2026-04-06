@@ -35,13 +35,14 @@ public class EyeHeightAdjustmentHook : IOnFaceGenGetBaseMonsterFromRace
         if (!_initialized)
         {
             _defaultMonster = _faceGenAdapter.GetBaseMonsterFromRace(0);
-            _initialized = true;
 
             if (_defaultMonster == null)
             {
-                _logger.LogError("EyeHeightAdjustmentHook: Failed to initialize _defaultMonster. FaceGen may not be ready.");
+                _logger.LogError("EyeHeightAdjustmentHook: Failed to initialize _defaultMonster. FaceGen may not be ready. Will retry.");
                 return;
             }
+
+            _initialized = true;
         }
 
         var raceName = _raceManager.GetRaceNameFromId(race)?.ToLower();

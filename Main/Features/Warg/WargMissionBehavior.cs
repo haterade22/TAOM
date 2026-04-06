@@ -6,6 +6,7 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.Services;
 using System;
 using System.Collections.Generic;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 
@@ -131,6 +132,34 @@ public class WargMissionBehavior : MissionLogic
             var errorKey = $"{ex.GetType().Name}:{ex.TargetSite?.Name}";
             if (_loggedErrors.Add(errorKey))
                 _logger.LogError($"[Warg] OnMissionTick error: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    public override void OnAgentBuild(Agent agent, Banner banner)
+    {
+        base.OnAgentBuild(agent, banner);
+
+        if (!_treesAdded || agent == null) return;
+
+        try
+        {
+            if (_adapterFactory.GetAgentAdapter(agent).IsWarg())
+            {
+                var comp = new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>());
+                agent.AddComponent(comp);
+
+                if (comp.Tree != null)
+                {
+                    _wargComponents.Add((agent, comp));
+                    _logger.LogDebug($"[Warg] Late-spawn BT attached to {agent.Name}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            var errorKey = $"OnAgentBuild:{ex.GetType().Name}";
+            if (_loggedErrors.Add(errorKey))
+                _logger.LogError($"[Warg] OnAgentBuild error: {ex.Message}");
         }
     }
 

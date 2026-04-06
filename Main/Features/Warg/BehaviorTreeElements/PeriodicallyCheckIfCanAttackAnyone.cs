@@ -19,11 +19,12 @@ public class PeriodicallyCheckIfCanAttackAnyone : WaitNSecondsTickDecorator, IBT
     public override bool Evaluate()
     {
         Agent warg = Agent.GetValue();
+        BattleSideEnum wargSide = warg.RiderAgent?.Team.Side ?? warg.Team.Side;
         List<Agent> nearbyAgents = SpatialGrid.Instance.GetNearAliveAgentsInRange(10, warg);
         foreach (Agent agent in nearbyAgents)
         {
             if (agent == warg || agent == warg.RiderAgent || agent.IsMount) continue;
-            if (agent.IsActive())
+            if (agent.IsActive() && agent.Team?.Side != wargSide)
             {
                 var agentAdapter = AdapterFactory.GetAgentAdapter(agent);
                 var wargAdapter = AdapterFactory.GetAgentAdapter(warg);

@@ -37,7 +37,12 @@ public class RacePersistenceService : IRacePersistenceService
     public void RestoreHeroRaces()
     {
         if (_heroRaceMap.Count == 0)
+        {
+            _logger.LogWarning("RacePersistenceService: No saved race data found. " +
+                "This is expected on first load with a pre-TAOM save — heroes will use " +
+                "their XML-defined races. Race data will be captured on next save.");
             return;
+        }
 
         var restoredCount = 0;
         var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
