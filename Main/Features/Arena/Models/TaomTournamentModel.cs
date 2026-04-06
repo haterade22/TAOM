@@ -79,13 +79,13 @@ public class TaomTournamentModel : DefaultTournamentModel
 
     public override Equipment GetParticipantArmor(CharacterObject participant)
     {
-        if (participant.Culture != null)
-        {
-            var dummy = Game.Current.ObjectManager.GetObject<CharacterObject>(
-                $"gear_practice_dummy_{participant.Culture.StringId}");
-            if (dummy?.RandomBattleEquipment != null)
-                return dummy.RandomBattleEquipment;
-        }
+        var dummyId = ResolveDummyId(
+            participant.Culture?.StringId,
+            null);
+
+        var dummy = Game.Current.ObjectManager.GetObject<CharacterObject>(dummyId);
+        if (dummy?.RandomBattleEquipment != null)
+            return dummy.RandomBattleEquipment;
 
         return base.GetParticipantArmor(participant);
     }

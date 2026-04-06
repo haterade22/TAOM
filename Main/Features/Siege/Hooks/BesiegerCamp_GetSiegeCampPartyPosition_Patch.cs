@@ -44,9 +44,17 @@ public class BesiegerCamp_GetSiegeCampPartyPosition_Patch
             }
 
             Debug.Print(
-                $"TAOM: No siege camp frames at all for '{settlementId}', using gate position",
+                $"TAOM: No siege camp frames at all for '{settlementId}', generating positions around gate",
                 0, Debug.DebugColor.Red, 17592186044416uL);
-            __result = settlement.GatePosition;
+            // Distribute parties around the gate instead of stacking on one point
+            var gate = settlement.GatePosition;
+            int partyIndex = mobileParty?.Party?.Index ?? 0;
+            float angle = (partyIndex % 8) * (MathF.PI * 2f / 8f);
+            float radius = 0.5f + (partyIndex / 8) * 0.3f;
+            __result = new CampaignVec2(
+                new Vec2(gate.X + MathF.Cos(angle) * radius,
+                         gate.Y + MathF.Sin(angle) * radius),
+                gate.IsOnLand);
             return false;
         }
         catch (Exception ex)

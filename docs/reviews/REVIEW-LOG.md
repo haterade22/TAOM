@@ -30,7 +30,21 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 **False positive rate:** 4 false positives / 43 findings total = 9% (↓ from 12%)
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
-**CODEBASE REVIEW COMPLETE: 25/25 features reviewed.**
+**v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
+
+## Gap Reviews (post-audit)
+
+| # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
+|---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 17 | 2026-04-06 | Arena (TaomTournamentModel) | no-ship | 1 confirmed + 2 design questions | 1 (dummy lookup) | 0 | 0 | v6 |
+| 18 | 2026-04-06 | CharacterSelection (transpiler) | no-ship | 1 fix + 2 deferred (need decompilation) | 1 (race fallback) | 0 | 0 | v6 |
+
+**CODEBASE REVIEW COMPLETE: All features reviewed. 18 Codex reviews, 43 bugs found, 43 fixed. 0 deferred.**
+
+Deferred items resolved:
+- Siege camp fallback: distributed positions around gate instead of stacking
+- CharacterSelection transpiler: verified correct via decompilation (single AgentVisualsData ctor, no competing ActionSet call)
+- LoadingWindowViewModel: verified `internal void Update()` exists in v1.3.15 GauntletUI.dll
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 **v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**

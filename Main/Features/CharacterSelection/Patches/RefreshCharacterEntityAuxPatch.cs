@@ -15,8 +15,11 @@ public class RefreshCharacterEntityAuxPatch
 {
     public static MBActionSet GetActionSet(BodyGeneratorView bodyGeneratorView)
     {
-        var baseMonsterFromRace = TaleWorlds.Core.FaceGen.GetBaseMonsterFromRace(bodyGeneratorView.BodyGen.Race);
-        return MBGlobals.GetActionSetWithSuffix(baseMonsterFromRace, bodyGeneratorView.BodyGen.IsFemale, "_facegen");
+        var race = bodyGeneratorView.BodyGen.Race;
+        var monster = TaleWorlds.Core.FaceGen.GetBaseMonsterFromRace(race);
+        if (monster == null)
+            monster = TaleWorlds.Core.FaceGen.GetBaseMonsterFromRace(0); // fallback to human
+        return MBGlobals.GetActionSetWithSuffix(monster, bodyGeneratorView.BodyGen.IsFemale, "_facegen");
     }
 
     [HarmonyTranspiler]

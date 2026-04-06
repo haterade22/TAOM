@@ -161,4 +161,9 @@ After each review:
 | 4B | Services (Time + ChildGen + Startup + Menu + Encyclopedia + BattleScenes) | Done | 3 (1 HIGH, 2 MEDIUM) | 3 |
 | 5 | Infrastructure (Adapters + Core + SubModule) | Done | 3 (2 HIGH, 1 MEDIUM) | 3 |
 
-**ALL WAVES COMPLETE. 25/25 features reviewed. 41 bugs found, 37 fixed, 4 deferred/design.**
+| Gap | Arena (TaomTournamentModel) | Done | 1 confirmed + 2 design | 1 (dummy lookup) |
+| Gap | CharacterSelection (transpiler) | Done | 1 fix + 2 verified OK | 1 (race fallback) + verified via decompilation |
+| Gap | Siege camp fallback | Done | 1 (previously deferred) | 1 (distributed positions) |
+| Gap | Decompilation verification | Done | 2 targets verified | LoadingWindowViewModel + BodyGeneratorView |
+
+**ALL FEATURES REVIEWED. 18 Codex reviews, 43 bugs found, 43 fixed. 0 deferred.**
