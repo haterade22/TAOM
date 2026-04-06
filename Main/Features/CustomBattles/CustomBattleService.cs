@@ -124,7 +124,7 @@ public class CustomBattleService : ICustomBattleService
     }
 
     private static readonly Regex _kingdomLordId =
-        new Regex(@"^lord_\d+_\d+$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        new Regex(@"^lord_[A-Za-z0-9]+_[A-Za-z0-9]+$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private static bool IsValidCommander(CharacterInfo c)
     {

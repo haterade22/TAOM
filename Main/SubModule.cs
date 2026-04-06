@@ -126,6 +126,9 @@ public class SubModule : MBSubModuleBase
         Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
         Agent_EquipItemsFromSpawnEquipment_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
+        MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        MapConversationTableau_SpawnOpponentBodyguard_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        OrderOfBattleHeroItemVM_RefreshInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
 
         Mission_Initialize_Patch.Initialize(logger);
 
@@ -286,6 +289,19 @@ public class SubModule : MBSubModuleBase
             _harmony.Patch(agentVisualsCreateTarget, prefix: new HarmonyMethod(
                 typeof(AgentVisuals_Create_Patch),
                 nameof(AgentVisuals_Create_Patch.Prefix)));
+
+        // Manual patches for MapConversationTableau (private methods in SandBox.View.dll)
+        var leaderTarget = MapConversationTableau_SpawnOpponentLeader_Patch.TargetMethod();
+        if (leaderTarget != null)
+            _harmony.Patch(leaderTarget, postfix: new HarmonyMethod(
+                typeof(MapConversationTableau_SpawnOpponentLeader_Patch),
+                nameof(MapConversationTableau_SpawnOpponentLeader_Patch.Postfix)));
+
+        var bodyguardTarget = MapConversationTableau_SpawnOpponentBodyguard_Patch.TargetMethod();
+        if (bodyguardTarget != null)
+            _harmony.Patch(bodyguardTarget, postfix: new HarmonyMethod(
+                typeof(MapConversationTableau_SpawnOpponentBodyguard_Patch),
+                nameof(MapConversationTableau_SpawnOpponentBodyguard_Patch.Postfix)));
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)
@@ -295,6 +311,10 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
+
+        var colorStore = IoC.Resolve<IAgentColorStore>();
+        if (colorStore != null)
+            mission.AddMissionBehavior(new AgentColorStoreCleanupBehavior(colorStore));
     }
 
     protected override void OnApplicationTick(float dt)

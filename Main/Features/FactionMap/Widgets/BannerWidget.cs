@@ -113,6 +113,7 @@ public class BannerWidget : ImageWidget
                 _textureLoaded = false;
                 _loadFailed = false;
                 _loadedSprite = null;
+                Sprite = null;
                 OnPropertyChanged(value, nameof(BannerImage));
             }
         }

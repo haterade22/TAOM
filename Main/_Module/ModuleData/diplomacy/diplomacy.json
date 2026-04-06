@@ -71,6 +71,14 @@
     { "kingdomA": "rivendell", "kingdomB": "khuzait", "tier": "Hostile" },
     { "kingdomA": "lothlorien", "kingdomB": "khuzait", "tier": "Hostile" },
     { "kingdomA": "mirkwood", "kingdomB": "khuzait", "tier": "Hostile" },
-    { "kingdomA": "empire_w", "kingdomB": "khuzait", "tier": "Hostile" }
+    { "kingdomA": "empire_w", "kingdomB": "khuzait", "tier": "Hostile" },
+
+    { "kingdomA": "battania", "kingdomB": "empire_w", "tier": "Neutral" },
+    { "kingdomA": "battania", "kingdomB": "vlandia", "tier": "Neutral" },
+    { "kingdomA": "battania", "kingdomB": "empire_s", "tier": "Neutral" },
+    { "kingdomA": "shaghana", "kingdomB": "empire_w", "tier": "Neutral" },
+    { "kingdomA": "shaghana", "kingdomB": "empire_s", "tier": "Neutral" },
+    { "kingdomA": "abanissa", "kingdomB": "empire_w", "tier": "Neutral" },
+    { "kingdomA": "abanissa", "kingdomB": "empire_s", "tier": "Neutral" }
   ]
 }

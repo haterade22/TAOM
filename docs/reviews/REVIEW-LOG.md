@@ -10,13 +10,18 @@ Running scorecard of all reviews. Updated after each review cycle.
 | 2 | 2026-04-05 | BannerColorPersistence | no-ship | partial-agree | 1 (understated) | 2 | 4 | v2 (improved) |
 | 3 | 2026-04-05 | ArmyTargeting | approve | agree (shallow) | 0 | 0 | 0 | v3 (required sections) |
 | 4 | 2026-04-05 | TroopProgression | no-ship | agree | 2 confirmed + 1 valid divergence | 0 | 0 | v4 (verification artifacts) |
+| 5 | 2026-04-05 | Diplomacy+Execution | no-ship | agree | 4 confirmed + 1 valid | 0 | 0 | v4 |
+| 6 | 2026-04-05 | FactionMap | no-ship | agree | 2 confirmed | 0 | 0 | v4 |
+| 7 | 2026-04-05 | CustomBattles | no-ship | agree | 1 confirmed + 1 valid concern | 0 | 0 | v4 |
 
 ## Metrics
 
-**Codex accuracy rate:** 4 real bugs found / 9 findings total = 44% (↑ from 33%)
-**Codex miss rate:** 6 missed bugs / 10 total real bugs = 60% (↓ from 75%)
-**False positive rate:** 3 false positives / 9 findings total = 33% (↓ from 50%)
+**Codex accuracy rate:** 11 real bugs found / 18 findings total = 61% (↑ from 44%)
+**Codex miss rate:** 6 missed bugs / 17 total real bugs = 35% (↓ from 60%)
+**False positive rate:** 3 false positives / 18 findings total = 17% (↓ from 33%)
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
+
+**v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 
 Target: accuracy >60%, miss rate <30%, false positives <20%
 

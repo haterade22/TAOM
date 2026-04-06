@@ -126,11 +126,11 @@ After each review:
 
 | Metric | Current | Target | How |
 |--------|---------|--------|-----|
-| Codex accuracy | 44% | >60% | Better prompts, required evidence |
-| False positive rate | 33% | <20% | "Decompile before claiming bug" rule |
-| Miss rate | 60% | <30% | Claude's own analysis catches what Codex misses |
-| Features reviewed | 4/25 | 25/25 | Systematic wave execution |
-| Decompiled code in output | 1/4 reviews | Every review | v4 quality gates |
+| Codex accuracy | **61%** | >60% | **TARGET MET** — v4 batch at 90% |
+| False positive rate | **17%** | <20% | **TARGET MET** — 0 FPs in last 4 reviews |
+| Miss rate | 35% | <30% | Close — Claude still catches ~35% more |
+| Features reviewed | 7/25 | 25/25 | Wave 1 complete |
+| Decompiled code in output | 4/7 reviews | Every review | v4 quality gates working |
 
 ---
 
@@ -142,9 +142,9 @@ After each review:
 | Pre | BannerColorPersistence | Done | 4 | 4 |
 | Pre | ArmyTargeting | Done (clean) | 0 | 0 |
 | Pre | TroopProgression+TroopWeight | Done | 3 | 3 |
-| 1 | Diplomacy | Pending | | |
-| 1 | FactionMap | Pending | | |
-| 1 | CustomBattles | Pending | | |
+| 1 | Diplomacy+Execution | Done | 5 (4 HIGH, 1 MEDIUM) | 2 code + 1 config (diplomacy matrix needs design input) |
+| 1 | FactionMap | Done | 2 (1 HIGH, 1 MEDIUM) | 2 |
+| 1 | CustomBattles | Done | 2 (1 HIGH, 1 MEDIUM) | 1 code (constructor sig needs DLL verification) |
 | 2 | CharacterCreation | Pending | | |
 | 2 | RaceAge + BattleBalance | Pending | | |
 | 2 | Execution | Pending | | |

@@ -23,6 +23,12 @@ public static class TraitLevelingHelper_OnLordExecuted_Patch
         var victimKingdomId = ExecutionContext.GetVictimKingdomId();
         var executorKingdomId = ExecutionContext.GetExecutorKingdomId();
 
+        // Fall through to vanilla when either kingdom is null/unknown
+        // (e.g., independent player) — only apply alignment logic when both
+        // kingdoms are known
+        if (string.IsNullOrEmpty(victimKingdomId) || string.IsNullOrEmpty(executorKingdomId))
+            return true;
+
         if (!_hook.ShouldApplyHonorPenalty(victimKingdomId, executorKingdomId))
             return false;
 

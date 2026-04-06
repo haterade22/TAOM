@@ -1,6 +1,6 @@
 {
   "empire_w": "free",
-  "empire": "free",
+  "empire": "evil",
   "vlandia": "free",
   "erebor": "free",
   "sturgia": "free",
@@ -14,5 +14,7 @@
   "khuzait": "evil",
   "battania": "evil",
   "aserai": "evil",
+  "shaghana": "evil",
+  "abanissa": "evil",
   "umbar": "neutral"
 }

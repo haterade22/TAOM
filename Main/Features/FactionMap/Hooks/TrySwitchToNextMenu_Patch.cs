@@ -25,6 +25,9 @@ public static class TrySwitchToNextMenu_Patch
                 {
                     var currentMenuProp = AccessTools.Property(typeof(CharacterCreationManager), nameof(CharacterCreationManager.CurrentMenu));
                     currentMenuProp.SetValue(__instance, narrativeMenu);
+                    // Vanilla calls ModifyMenuCharacters() after advancing — preserve that side effect
+                    var modifyMethod = AccessTools.Method(typeof(CharacterCreationManager), "ModifyMenuCharacters");
+                    modifyMethod?.Invoke(__instance, null);
                     __result = true;
                     return false; // skip original
                 }
