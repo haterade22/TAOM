@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -39,7 +38,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
-        _storage.SyncData(dataStore);
+        var data = _storage.GetAllData();
+        dataStore.SyncData("_taom_specialResources", ref data);
+        _storage.RestoreData(data);
     }
 
     private void OnNewGameCreated(CampaignGameStarter starter)
@@ -67,7 +68,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var resource = _service.GetResourceForKingdom(kingdomId);
         if (resource == null) return;
 
-        var ownedTowns = hero.Clan?.Settlements?.Count(s => s.IsTown) ?? 0;
+        var ownedTowns = CountOwnedTowns(hero);
         var troopUpkeep = GetTroopUpkeepFromParty(hero.PartyBelongedTo);
 
         _service.ApplyDailyTick(hero.StringId, kingdomId, ownedTowns, troopUpkeep);
@@ -88,9 +89,11 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
             if (!isPlayerVictor) return;
 
-            var enemyCount = mapEvent.BattleState == BattleState.AttackerVictory
-                ? mapEvent.DefenderSide.Parties.Sum(p => p.Party?.NumberOfAllMembers ?? 0)
-                : mapEvent.AttackerSide.Parties.Sum(p => p.Party?.NumberOfAllMembers ?? 0);
+            var enemySide = mapEvent.BattleState == BattleState.AttackerVictory
+                ? mapEvent.DefenderSide : mapEvent.AttackerSide;
+            var enemyCount = 0;
+            foreach (var p in enemySide.Parties)
+                enemyCount += p.Party?.NumberOfAllMembers ?? 0;
 
             var playerCount = hero.PartyBelongedTo?.MemberRoster?.TotalManCount ?? 1;
             var ratio = (float)enemyCount / playerCount;
@@ -119,24 +122,39 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var kingdomId = hero?.Clan?.Kingdom?.StringId;
         if (kingdomId == null) return;
 
-        var count = roster?.Count() ?? 0;
+        var count = 0;
+        if (roster != null)
+            foreach (var _ in roster)
+                count++;
         if (count > 0)
             _service.EarnFromPrisoners(hero.StringId, kingdomId, count);
     }
 
+    private static int CountOwnedTowns(Hero hero)
+    {
+        var settlements = hero.Clan?.Settlements;
+        if (settlements == null) return 0;
+
+        var count = 0;
+        foreach (var settlement in settlements)
+            if (settlement.IsTown)
+                count++;
+        return count;
+    }
+
     private List<TroopUpkeepInfo> GetTroopUpkeepFromParty(MobileParty party)
     {
-        var result = new List<TroopUpkeepInfo>();
-        if (party?.MemberRoster == null) return result;
+        if (party?.MemberRoster == null) return _emptyUpkeep;
 
+        var result = new List<TroopUpkeepInfo>(8);
         foreach (var element in party.MemberRoster.GetTroopRoster())
         {
             if (element.Character != null && _config.GetTroopCost(element.Character.StringId) != null)
-            {
                 result.Add(new TroopUpkeepInfo(element.Character.StringId, element.Number));
-            }
         }
 
         return result;
     }
+
+    private static readonly List<TroopUpkeepInfo> _emptyUpkeep = new();
 }

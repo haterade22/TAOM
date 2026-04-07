@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using TaleWorlds.CampaignSystem;
@@ -11,11 +10,16 @@ namespace TAOM.Features.SpecialResources.UI;
 [ViewModelMixin("RefreshValues")]
 internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 {
+    private readonly ISpecialResourceService _service;
+    private readonly ISpecialResourceConfigProvider _config;
     private MapInfoItemVM _resourceItem;
     private bool _itemAdded;
+    private int _lastAmount = -1;
 
     public SpecialResourceMapBarMixin(MapInfoVM viewModel) : base(viewModel)
     {
+        _service = IoC.Resolve<ISpecialResourceService>();
+        _config = IoC.Resolve<ISpecialResourceConfigProvider>();
     }
 
     public override void OnRefresh()
@@ -34,8 +38,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             return;
         }
 
-        var config = IoC.Resolve<ISpecialResourceConfigProvider>();
-        var resource = config.GetByKingdomId(kingdomId);
+        var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null)
         {
             RemoveItem();
@@ -44,11 +47,16 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         EnsureItemAdded(resource.IconSpriteName);
 
-        var service = IoC.Resolve<ISpecialResourceService>();
-        var amount = service.GetCurrentAmount(hero.StringId);
-        _resourceItem.IntValue = (int)amount;
-        _resourceItem.Value = $"{amount:F0}";
+        var amount = _service.GetCurrentAmount(hero.StringId);
+        var intAmount = (int)amount;
+        _resourceItem.IntValue = intAmount;
         _resourceItem.HasWarning = amount <= 0f;
+
+        if (intAmount != _lastAmount)
+        {
+            _resourceItem.Value = intAmount.ToString();
+            _lastAmount = intAmount;
+        }
     }
 
     public override void OnFinalize()
@@ -85,7 +93,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
     private List<TooltipProperty> GetTooltipProperties()
     {
-        var result = new List<TooltipProperty>();
+        var result = new List<TooltipProperty>(8);
 
         var hero = Hero.MainHero;
         if (hero == null) return result;
@@ -93,14 +101,12 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         var kingdomId = hero.Clan?.Kingdom?.StringId;
         if (kingdomId == null) return result;
 
-        var config = IoC.Resolve<ISpecialResourceConfigProvider>();
-        var resource = config.GetByKingdomId(kingdomId);
+        var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return result;
 
-        var service = IoC.Resolve<ISpecialResourceService>();
-        var amount = service.GetCurrentAmount(hero.StringId);
-        var ownedTowns = hero.Clan?.Settlements?.Count(s => s.IsTown) ?? 0;
-        var dailyEarning = service.GetDailyEarning(kingdomId, ownedTowns);
+        var amount = _service.GetCurrentAmount(hero.StringId);
+        var ownedTowns = CountOwnedTowns(hero);
+        var dailyEarning = _service.GetDailyEarning(kingdomId, ownedTowns);
 
         result.Add(new TooltipProperty(resource.DisplayName, $"{amount:F0} / {resource.Cap:F0}", 0));
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
@@ -111,5 +117,17 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         result.Add(new TooltipProperty("Per prisoner", $"+{resource.PerPrisoner:F0}", 0));
 
         return result;
+    }
+
+    private static int CountOwnedTowns(Hero hero)
+    {
+        var settlements = hero.Clan?.Settlements;
+        if (settlements == null) return 0;
+
+        var count = 0;
+        foreach (var settlement in settlements)
+            if (settlement.IsTown)
+                count++;
+        return count;
     }
 }

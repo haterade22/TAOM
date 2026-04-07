@@ -12,20 +12,20 @@ public static class PartyScreenLogic_UpgradeTroop_Patch
 
     public static void Initialize(IOnPartyUpgradeResourceCheck hook) => _hook = hook;
 
-    public static void Postfix(PartyScreenLogic __instance, TaleWorlds.CampaignSystem.Roster.TroopRosterElement element, int upgradeTargetIndex, int count)
+    public static void Postfix(PartyScreenLogic.PartyCommand command)
     {
         if (_hook == null) return;
-        if (count <= 0) return;
+        if (command?.TotalNumber <= 0) return;
 
         var heroId = Hero.MainHero?.StringId;
         if (heroId == null) return;
 
-        var targetId = element.Character?.UpgradeTargets?[upgradeTargetIndex]?.StringId;
+        var targetId = command.Character?.UpgradeTargets?[command.UpgradeTarget]?.StringId;
         if (targetId == null) return;
 
         var costPerUnit = _hook.GetUpgradeCost(targetId);
         if (costPerUnit <= 0) return;
 
-        _hook.SpendForUpgrade(heroId, targetId, count);
+        _hook.SpendForUpgrade(heroId, targetId, command.TotalNumber);
     }
 }

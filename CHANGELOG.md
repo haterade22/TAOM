@@ -1,5 +1,21 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-07
+
+### Feature: Per-Kingdom Special Resource System (#72)
+
+Data-driven per-faction resource system gating elite troop upgrades. Mordor "Scraps" as pilot kingdom.
+
+**Earning:** Battle victories (+10 scaled by enemy ratio), raids (+8), sieges (+15), prisoners (+1 each), daily passive from owned towns (+0.5/town). Cap: 500, starting: 30.
+
+**Spending:** T6+ Mordor elite troop upgrades (2-5 Scraps) and daily upkeep (0.1-0.3 per troop). 12 Mordor troops costed.
+
+**UI:** Map bar resource display via UIExtenderEx MapInfoVM mixin with tooltip breakdown. Party screen upgrade buttons greyed out when insufficient resources (Patch26_SpecialResources).
+
+**Architecture:** SpecialResourceService + StorageService + ConfigProvider (XML-driven). CampaignBehavior hooks DailyTick/MapEventEnded/RaidCompleted/PrisonerTaken. Harmony Patch26 on PartyCharacterVM.InitializeUpgrades (grey out) and PartyScreenLogic.UpgradeTroop (deduct). 24 unit tests.
+
+**Files:** `Main/Features/SpecialResources/` (16 files), `Main/_Module/ModuleData/special_resources/` (2 XML configs)
+
 ## 2026-04-06
 
 ### Feature: LOTR-Themed Minor Factions

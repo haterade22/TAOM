@@ -24,6 +24,8 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
         var resourceName = _hook.GetResourceDisplayName(kingdomId);
         if (resourceName == null) return;
 
+        var currentAmount = _hook.GetCurrentAmount(heroId);
+
         for (int i = 0; i < __instance.Upgrades.Count; i++)
         {
             var upgrade = __instance.Upgrades[i];
@@ -35,13 +37,13 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
             var resourceCost = _hook.GetUpgradeCost(targetId);
             if (resourceCost <= 0) continue;
 
-            var currentAmount = _hook.GetCurrentAmount(heroId);
             var maxAffordable = (int)(currentAmount / resourceCost);
             if (maxAffordable < upgrade.AvailableUpgrades)
             {
                 var clamped = System.Math.Max(0, maxAffordable);
                 var isDisabled = clamped == 0;
-                var costHint = $"{resourceName} cost: {resourceCost} per troop (have {currentAmount:F0})";
+                var costHint = string.Concat(resourceName, " cost: ", resourceCost.ToString(),
+                    " per troop (have ", ((int)currentAmount).ToString(), ")");
 
                 upgrade.Refresh(
                     clamped,

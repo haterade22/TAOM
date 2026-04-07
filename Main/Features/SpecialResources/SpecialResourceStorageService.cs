@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Features.SpecialResources;
 
@@ -24,8 +23,10 @@ public class SpecialResourceStorageService : ISpecialResourceStorageService
         Set(heroId, current + delta);
     }
 
-    public void SyncData(IDataStore dataStore)
+    public Dictionary<string, float> GetAllData() => _heroResources;
+
+    public void RestoreData(Dictionary<string, float> data)
     {
-        dataStore.SyncData("_taom_specialResources", ref _heroResources);
+        _heroResources = data ?? new Dictionary<string, float>();
     }
 }

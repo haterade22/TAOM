@@ -63,7 +63,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        var earning = GetDailyEarning(kingdomId, ownedTownCount);
+        var earning = resource.DailyPerTown * ownedTownCount;
         var upkeep = GetDailyUpkeep(troopsWithUpkeep);
         var net = earning - upkeep;
 
