@@ -12,6 +12,7 @@
           root_choice_id="warboss_root">
     <EligibleCultures>
       <Culture id="mordor" />
+      <Culture id="erebor" />
     </EligibleCultures>
     <ChoiceGroups>
       <Group id="warboss_brutality" />
