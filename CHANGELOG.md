@@ -10,13 +10,13 @@ Complete career/class progression system inspired by TOR_Core, adapted for LOTR.
 
 **Phase 2 — Registry & Logic:** XML config loading (`CareerConfigProvider`), career registry with eligibility checks and level-based tier gating (T2@10, T3@20), mutation calculator system (5 built-in calculators: flat, skill_scaling, level_scaling, replace, multiply), passive service with per-hero effect caching.
 
-**Phase 3 — Campaign Integration:** `CareerCampaignBehavior` (session launch cache refresh, hero level-up notifications, career cleanup on death), `CareerCreationHandler` (CC integration — sets career + root choice), `CareerSwitchService` (culture-validated career switching with choice reset).
+**Phase 3 — Campaign Integration:** `CareerCampaignBehavior` (auto-assigns first eligible career by culture on session launch, cache refresh, hero level-up notifications, career cleanup on death), `CareerCreationHandler` (CC integration — sets career + root choice), `CareerSwitchService` (culture-validated career switching with choice reset).
 
 **Phase 4 — Battle & Abilities:** `CareerAbility` class (6 charge types: CooldownOnly, DamageDone, Kills, DamageTaken, Healed, Custom), `CareerAbilityService` (per-hero ability state), `MutationService` (clone + mutate ability templates via calculator registry), `CareerPerkMissionBehavior` (per-second tick, kill-based charge accumulation). Self-only abilities in v1.
 
 **Phase 5 — GameModel Integration:** Career passives wired into 8 existing GameModels (PartySizeModel, PartyMoraleModel, BattleRewardModel, PartyWageModel, PartyTroopUpgradeModel, RaidModel, PartySpeedModel, SmithingModel) via `CareerPassiveHelper.ApplyFactor/ApplyFlat`. `ICareerHeroAdapterFactory` for GameModel boundary.
 
-**Phase 6 — UI:** `CareerScreenVM` hierarchy (CareerScreenVM → CareerChoiceGroupObjectVM → CareerChoiceObjectVM), `GauntletCareerScreen` (GlobalLayer with GauntletLayer), `CharacterDeveloperCareerMixin` (UIExtenderEx [ViewModelMixin] for career button), CareerScreen.xml prefab (two-panel layout with 3-tier choice tree).
+**Phase 6 — UI:** `CareerScreenVM` hierarchy (CareerScreenVM → CareerChoiceGroupObjectVM → CareerChoiceObjectVM), `GauntletCareerScreen` (GlobalLayer with GauntletLayer), `CharacterDeveloperCareerMixin` (UIExtenderEx [ViewModelMixin] for career button), `CareerButtonPrefab` (UIExtenderEx [PrefabExtension] injecting career button into CharacterDeveloper TopPanel), CareerScreen.xml prefab (two-panel layout with 3-tier choice tree).
 
 **Pilot Data:** Mordor Warboss career with "Rally the Horde" ability (Kills charge type), 6 choice groups across 3 tiers (Brutality, Dominion, Scavenger, Warlord, Siegemaster, Tyrant), 31 total choices with passives covering 15+ PassiveEffectTypes.
 

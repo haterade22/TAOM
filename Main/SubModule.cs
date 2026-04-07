@@ -278,8 +278,9 @@ public class SubModule : MBSubModuleBase
             var careerPassiveService = IoC.Resolve<ICareerPassiveService>();
             var careerLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService));
+            var careerCreationHandler = IoC.Resolve<ICareerCreationHandler>();
             campaignStarter.AddBehavior(new CareerCampaignBehavior(
-                careerDataService, careerRegistry, careerPassiveService, careerLogger));
+                careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerLogger));
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();

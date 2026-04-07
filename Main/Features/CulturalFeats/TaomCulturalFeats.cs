@@ -177,9 +177,6 @@ public class TaomCulturalFeats
 
     public static void CreateAndRegister()
     {
-        if (_instance != null)
-            return;
-
         _instance = new TaomCulturalFeats();
         _instance.RegisterAll();
         _instance.InitializeAll();

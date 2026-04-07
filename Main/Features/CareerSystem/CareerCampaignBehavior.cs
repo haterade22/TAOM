@@ -9,17 +9,20 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
     private readonly ICareerDataService _dataService;
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
+    private readonly ICareerCreationHandler _creationHandler;
     private readonly IModLogger _logger;
 
     public CareerCampaignBehavior(
         ICareerDataService dataService,
         ICareerRegistry registry,
         ICareerPassiveService passiveService,
+        ICareerCreationHandler creationHandler,
         IModLogger logger)
     {
         _dataService = dataService;
         _registry = registry;
         _passiveService = passiveService;
+        _creationHandler = creationHandler;
         _logger = logger;
     }
 
@@ -55,8 +58,7 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
                     }
                     if (eligible)
                     {
-                        var handler = IoC.Resolve<ICareerCreationHandler>();
-                        handler?.OnCareerSelected(hero.StringId, career.Id);
+                        _creationHandler.OnCareerSelected(hero.StringId, career.Id);
                         _logger.LogInfo($"CareerSystem: Auto-assigned career '{career.Id}' to {hero.Name} (culture: {cultureId})");
                         break;
                     }
