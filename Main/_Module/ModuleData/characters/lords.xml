@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Lords - New lords from LOTRAOM not in vanilla Bannerlord 
      NOT registered in SubModule.xml - staged for future activation -->
 <NPCCharacters>
@@ -6551,7 +6551,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.erebor -->
-    <NPCCharacter id="lord_E1_1" race="dwarf" name="{=aom_lord_E1_1_name}DÃ¡in II Ironfoot" age="38" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_E1_1" race="dwarf" name="{=aom_lord_E1_1_name}Dáin II Ironfoot" age="38" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" age="25.22" weight="0.4699" build="1"  key="00000007800021C88F8870F099200F450000857877777878FFFFEFFF7000000200BF76030BFFEFFF00000000000000000000000000000000000000000F6C0140" />
             <hair_tags>
@@ -6652,7 +6652,7 @@
             <EquipmentSet id="erebor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E1_3" race="dwarf" name="{=aom_lord_E1_3_name}DÃ­sa" age="27" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+    <NPCCharacter id="lord_E1_3" race="dwarf" name="{=aom_lord_E1_3_name}Dísa" age="27" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -6705,7 +6705,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E1_4" race="dwarf" name="{=aom_lord_E1_4_name}NÃ¡in" age="38" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
+    <NPCCharacter id="lord_E1_4" race="dwarf" name="{=aom_lord_E1_4_name}Náin" age="38" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -6923,7 +6923,7 @@
             <EquipmentSet id="erebor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E2_1" race="dwarf" name="{=aom_lord_E2_1_name}NÃ¡th" age="21" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_E2_1" race="dwarf" name="{=aom_lord_E2_1_name}Náth" age="21" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7029,7 +7029,7 @@
             <EquipmentSet id="erebor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E2_3" race="dwarf" name="{=aom_lord_E2_3_name}RÃºni" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_E2_3" race="dwarf" name="{=aom_lord_E2_3_name}Rúni" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7085,7 +7085,7 @@
             <EquipmentSet id="erebor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E2_4" race="dwarf" name="{=aom_lord_E2_4_name}LÃ³mi" age="34" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_E2_4" race="dwarf" name="{=aom_lord_E2_4_name}Lómi" age="34" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7197,7 +7197,7 @@
             <EquipmentSet id="erebor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E3_1" race="dwarf" name="{=aom_lord_E3_1_name}GÃ¡rjan" age="19" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_E3_1" race="dwarf" name="{=aom_lord_E3_1_name}Gárjan" age="19" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7253,7 +7253,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E3_2" race="dwarf" name="{=aom_lord_E3_2_name}ThÃ¡lfi" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_E3_2" race="dwarf" name="{=aom_lord_E3_2_name}Thálfi" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7306,7 +7306,7 @@
             <EquipmentSet id="erebor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E3_3" race="dwarf" name="{=aom_lord_E3_3_name}ImÃ¡k" age="22" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_E3_3" race="dwarf" name="{=aom_lord_E3_3_name}Imák" age="22" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7362,7 +7362,7 @@
             <EquipmentSet id="erebor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E3_4" race="dwarf" name="{=aom_lord_E3_4_name}NÃ­li" age="19" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_E3_4" race="dwarf" name="{=aom_lord_E3_4_name}Níli" age="19" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7524,7 +7524,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_1" race="dwarf" name="{=aom_lord_E4_1_name}NÃ¡r" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_E4_1" race="dwarf" name="{=aom_lord_E4_1_name}Nár" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7580,7 +7580,7 @@
             <EquipmentSet id="erebor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_2" race="dwarf" name="{=aom_lord_E4_2_name}TÃ­li" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
+    <NPCCharacter id="lord_E4_2" race="dwarf" name="{=aom_lord_E4_2_name}Tíli" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7689,7 +7689,7 @@
             <EquipmentSet id="erebor_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_4" race="dwarf" name="{=aom_lord_E4_4_name}TÃ¡li" age="37" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+    <NPCCharacter id="lord_E4_4" race="dwarf" name="{=aom_lord_E4_4_name}Táli" age="37" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7742,7 +7742,7 @@
             <EquipmentSet id="erebor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_11" race="dwarf" name="{=aom_lord_E4_11_name}Ã”rn" age="1" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_E4_11" race="dwarf" name="{=aom_lord_E4_11_name}Ôrn" age="1" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7798,7 +7798,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E5_1" race="dwarf" name="{=aom_lord_E5_1_name}GÃ³rli" age="30" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_E5_1" race="dwarf" name="{=aom_lord_E5_1_name}Górli" age="30" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -7907,7 +7907,7 @@
             <EquipmentSet id="erebor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E5_3" race="dwarf" name="{=aom_lord_E5_3_name}GaÃ­n" age="21" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_E5_3" race="dwarf" name="{=aom_lord_E5_3_name}Gaín" age="21" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8075,7 +8075,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E5_11" race="dwarf" name="{=aom_lord_E5_11_name}ThÃ©lor" age="13" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_E5_11" race="dwarf" name="{=aom_lord_E5_11_name}Thélor" age="13" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8131,7 +8131,7 @@
             <EquipmentSet id="erebor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_1" race="dwarf" name="{=aom_lord_E6_1_name}FlÃ³i" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_E6_1" race="dwarf" name="{=aom_lord_E6_1_name}Flói" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8187,7 +8187,7 @@
             <EquipmentSet id="erebor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_2" race="dwarf" name="{=aom_lord_E6_2_name}DrÃ¡li" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
+    <NPCCharacter id="lord_E6_2" race="dwarf" name="{=aom_lord_E6_2_name}Dráli" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8240,7 +8240,7 @@
             <EquipmentSet id="erebor_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_3" race="dwarf" name="{=aom_lord_E6_3_name}FlÃ¡si" age="23" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_E6_3" race="dwarf" name="{=aom_lord_E6_3_name}Flási" age="23" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8293,7 +8293,7 @@
             <EquipmentSet id="erebor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_4" race="dwarf" name="{=aom_lord_E6_4_name}IdrÃºn" age="25" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_E6_4" race="dwarf" name="{=aom_lord_E6_4_name}Idrún" age="25" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8349,7 +8349,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_11" race="dwarf" name="{=aom_lord_E6_11_name}ThrÃ¢n" age="4" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_E6_11" race="dwarf" name="{=aom_lord_E6_11_name}Thrân" age="4" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8405,7 +8405,7 @@
             <EquipmentSet id="erebor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E7_1" race="dwarf" name="{=aom_lord_E7_1_name}NÃ¡ran" age="22" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_E7_1" race="dwarf" name="{=aom_lord_E7_1_name}Náran" age="22" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -8461,7 +8461,7 @@
             <EquipmentSet id="erebor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E7_11" race="dwarf" name="{=aom_lord_E7_11_name}ThÃ¡lia" age="15" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_E7_11" race="dwarf" name="{=aom_lord_E7_11_name}Thália" age="15" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -9532,7 +9532,7 @@
             <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_53_3" name="{=aom_lord_1_53_3_name}AncalimÃº" age="6" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_1_53_3" name="{=aom_lord_1_53_3_name}Ancalimú" age="6" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.08" weight="0.3889" build="0.6134" key="0005C00E52003015168000006BA200588727888B0CA31A0072796A0F56EAAF1200596603050944941F6410605020004000000000000017670000000056AC1003" />
             <hair_tags>
@@ -10636,7 +10636,7 @@
             <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_EW_14_3" name="{=aom_lord_EW_14_3_name}RÃºmen" age="23" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+    <NPCCharacter id="lord_EW_14_3" name="{=aom_lord_EW_14_3_name}Rúmen" age="23" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
         <face>
             <BodyProperties version="4" age="23.00" weight="0.4" build="0.5" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
             <hair_tags>
@@ -14023,7 +14023,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.isengard -->
-    <NPCCharacter id="lord_I1_1" race="uruk_hai" name="{=aom_lord_I1_1_name}UglÃºk, Chieftain of Isengard" age="30" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_I1_1" race="uruk_hai" name="{=aom_lord_I1_1_name}Uglúk, Chieftain of Isengard" age="30" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" age="35" weight="0.6713" build="0.9606" key="0000F00E40CC3002F18111F1FAFE111F010186EE87FE5F001010F10E8550FF4A008EA60308FFE01E000000000000000000000000000000000000000043040142" />
             <hair_tags>
@@ -14071,7 +14071,7 @@
             <EquipmentSet id="isengard_civ_template_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I1_11" race="uruk_hai" name="{=aom_lord_I1_11_name}UglÃºk Child" age="10" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_I1_11" race="uruk_hai" name="{=aom_lord_I1_11_name}Uglúk Child" age="10" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -14127,7 +14127,7 @@
             <EquipmentSet id="isengard_civ_template_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I2_1" race="uruk_hai" name="{=aom_lord_I2_1_name}MauhÃºr, Uruk-Hai Warlord" age="25" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
+    <NPCCharacter id="lord_I2_1" race="uruk_hai" name="{=aom_lord_I2_1_name}Mauhúr, Uruk-Hai Warlord" age="25" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
         <face>
             <BodyProperties version="4" age="22.09" weight="0.4282" build="0.5139" key="0000F008C0CC3002F181116178B9111F00F086EE87FE5F0010100100807000120088660308FEE01A000000000000000000000000000000000000000043040042" />
             <hair_tags>
@@ -14175,7 +14175,7 @@
             <EquipmentSet id="isengard_civ_template_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I2_11" race="uruk_hai" name="{=aom_lord_I2_11_name}MauhÃºr Child" age="10" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_I2_11" race="uruk_hai" name="{=aom_lord_I2_11_name}Mauhúr Child" age="10" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -15079,7 +15079,7 @@
             <EquipmentSet id="isengard_civ_template_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I4_31" race="uruk_hai" name="{=aom_lord_I4_31_name}DrÃ»gash" age="5" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_I4_31" race="uruk_hai" name="{=aom_lord_I4_31_name}Drûgash" age="5" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <BodyProperties version="4" age="13" weight="0.19" build="0.68" key="00020006C0001602A1799668B1010AD848B08A0037ECFD009915381985F3C39B009B6D0309FC7F4E324300013302235C00000000000019EE0000000054245009" />
             <hair_tags>
@@ -15371,7 +15371,7 @@
             <EquipmentSet id="isengard_civ_template_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I1_7" race="uruk_hai" name="{=aom_lord_I1_7_name}KrÃ»klash, Uruk-hai Enforcer" age="27" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_I1_7" race="uruk_hai" name="{=aom_lord_I1_7_name}Krûklash, Uruk-hai Enforcer" age="27" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="33" weight="0.7856" build="0.9456" key="0000F00E40CC3002798119F9F2FE119F09018EEE8FFEDF001810F90E89D0FFCA008EAE0B08FFE09E000000000000000000000000000000000000000041030140" />
             <hair_tags>
@@ -15419,7 +15419,7 @@
             <EquipmentSet id="isengard_civ_template_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I1_8" race="berserker" name="{=aom_lord_I1_8_name}DÃ»shrat, Uruk-hai Champion" age="25" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
+    <NPCCharacter id="lord_I1_8" race="berserker" name="{=aom_lord_I1_8_name}Dûshrat, Uruk-hai Champion" age="25" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
             <BodyProperties version="4" age="31" weight="0.6945" build="0.8845" key="0000F00E40CC300260811AFAFAFE11AF0A018FEE80FEFF001910FA0E89E0FFDA008EAF0C08FFE0AE000000000000000000000000000000000000000042040141" />
             <hair_tags>
@@ -16925,7 +16925,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.lothlorien -->
-    <NPCCharacter id="lord_L1_1" name="{=aom_lord_L1_1_name}Galadriel, Lady of LothlÃ³rien" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_L1_1" name="{=aom_lord_L1_1_name}Galadriel, Lady of Lothlórien" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="28.01" weight="0.0139" build="0.9583" key="0000700000003005E77CE80EEFF01FF018FE88105FBF11800FF60FEE8EBF68F100DE06030D71E0E0000000000000000000000000000000000000000043AC2103" />
             <hair_tags>
@@ -16970,7 +16970,7 @@
             <EquipmentSet id="galadriel_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_2" name="{=aom_lord_L1_2_name}Celeborn, Lord of LothlÃ³rien" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_L1_2" name="{=aom_lord_L1_2_name}Celeborn, Lord of Lothlórien" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.1968" build="0.9583" key="0000CC0000003003E77FF80E81B7100118EE88105FBF11800FF60FEE8F86686000EE36030E71E0E0000000000000000000000000000000000000000043CC4142" />
             <hair_tags>
@@ -17074,7 +17074,7 @@
             <EquipmentSet id="lothlorien_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L2_1" name="{=aom_lord_L2_1_name}CaurmÃ­nas" age="25" voice="curt" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_L2_1" name="{=aom_lord_L2_1_name}Caurmínas" age="25" voice="curt" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.0294" build="0.128" key="0005B40A400000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
             <hair_tags>
@@ -17598,7 +17598,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M2_4" name="{=aom_lord_M2_4_name}AnairÃ«" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M2_4" name="{=aom_lord_M2_4_name}Anairë" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17925,7 +17925,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M4_2" name="{=aom_lord_M4_2_name}AmariÃ«" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M4_2" name="{=aom_lord_M4_2_name}Amarië" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -18922,7 +18922,7 @@
             <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_1" name="{=aom_lord_1_48_1_name}NazgÃ»l, the Tainted" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_1_48_1" name="{=aom_lord_1_48_1_name}Nazgûl, the Tainted" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -18973,7 +18973,7 @@
             <EquipmentSet id="mordor_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}NazgÃ»l, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -19024,7 +19024,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_3" name="{=aom_lord_1_48_3_name}NazgÃ»l, the Shadow of Umbar" default_group="Infantry" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_1_48_3" name="{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar" default_group="Infantry" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -19537,7 +19537,7 @@
             <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_l" name="{=aom_lord_SE9_l_name}GrishnÃ¡kh, Uruk Captain" age="30" voice="ironic" default_group="Infantry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_SE9_l" name="{=aom_lord_SE9_l_name}Grishnákh, Uruk Captain" age="30" voice="ironic" default_group="Infantry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.6" key="000BDC0FCFCC038F3D38B65122600AD02FEE2A646411F7F894359F648858075D064976670485629500000000000000000000000044FC1002000000007E7C4084" />
             <hair_tags>
@@ -19925,7 +19925,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M12_1" name="{=aom_lord_M12_1_name}RÃ»klash" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_M12_1" name="{=aom_lord_M12_1_name}Rûklash" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <!--face_key
 		value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -20032,7 +20032,7 @@
             <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M13_1" name="{=aom_lord_M13_1_name}ThÃ»rak" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
+    <NPCCharacter id="lord_M13_1" name="{=aom_lord_M13_1_name}Thûrak" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20080,7 +20080,7 @@
             <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M13_11" name="{=aom_lord_M13_11_name}GÃ»drak" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_M13_11" name="{=aom_lord_M13_11_name}Gûdrak" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20180,7 +20180,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M14_11" name="{=aom_lord_M14_11_name}MÃ¢gzÃ»k" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_M14_11" name="{=aom_lord_M14_11_name}Mâgzûk" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20232,7 +20232,7 @@
             <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M15_1" name="{=aom_lord_M15_1_name}DÃ»rzan" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
+    <NPCCharacter id="lord_M15_1" name="{=aom_lord_M15_1_name}Dûrzan" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20280,7 +20280,7 @@
             <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M15_11" name="{=aom_lord_M15_11_name}RÃ»zkhan" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_M15_11" name="{=aom_lord_M15_11_name}Rûzkhan" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20332,7 +20332,7 @@
             <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M16_1" name="{=aom_lord_M16_1_name}GÃ»lnak" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_M16_1" name="{=aom_lord_M16_1_name}Gûlnak" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20432,7 +20432,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M17_1" name="{=aom_lord_M17_1_name}ThÃ»lnar" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
+    <NPCCharacter id="lord_M17_1" name="{=aom_lord_M17_1_name}Thûlnar" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20480,7 +20480,7 @@
             <EquipmentSet id="mordor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M17_11" name="{=aom_lord_M17_11_name}GÃ»ltor" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_M17_11" name="{=aom_lord_M17_11_name}Gûltor" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20532,7 +20532,7 @@
             <EquipmentSet id="mordor_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M18_1" name="{=aom_lord_M18_1_name}KÃ»ragh" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_M18_1" name="{=aom_lord_M18_1_name}Kûragh" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20580,7 +20580,7 @@
             <EquipmentSet id="mordor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M18_11" name="{=aom_lord_M18_11_name}LÃ»rtag" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_M18_11" name="{=aom_lord_M18_11_name}Lûrtag" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20681,7 +20681,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R1_2" name="{=aom_lord_R1_2_name}CelebrÃ­an" age="20" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
+    <NPCCharacter id="lord_R1_2" name="{=aom_lord_R1_2_name}Celebrían" age="20" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="00020000000016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -22178,7 +22178,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.umbar -->
-    <NPCCharacter id="lord_U1_1" name="{=aom_lord_U1_1_name}Ar-GimilkhÃ¢d" age="50" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_U1_1" name="{=aom_lord_U1_1_name}Ar-Gimilkhâd" age="50" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -22234,7 +22234,7 @@
             <EquipmentSet id="umbar_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_U1_11" name="{=aom_lord_U1_11_name}Lord GimilzÃ´r" age="20" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_U1_11" name="{=aom_lord_U1_11_name}Lord Gimilzôr" age="20" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -22290,7 +22290,7 @@
             <EquipmentSet id="umbar_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_U1_12" name="{=aom_lord_U1_12_name}GimilthÃ´n" age="20" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_U1_12" name="{=aom_lord_U1_12_name}Gimilthôn" age="20" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -22346,7 +22346,7 @@
             <EquipmentSet id="umbar_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_U1_13" name="{=aom_lord_U1_13_name}PharazÃ´n" age="15" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_U1_13" name="{=aom_lord_U1_13_name}Pharazôn" age="15" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -22446,7 +22446,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.vlandia -->
-    <NPCCharacter id="lord_4_3_1" name="{=aom_lord_4_3_1_name}Ã‰omer Eoforing" age="21" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
+    <NPCCharacter id="lord_4_3_1" name="{=aom_lord_4_3_1_name}Éomer Eoforing" age="21" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
         <face>
             <BodyProperties version="4" weight="0.1" build="0.5" key="0002B404000011826B700D6F80961035305E80B2BFEB0E00775161048C771F0400AB36030A62AA0300000000000000000000000000000000000000003D447002" />
             <hair_tags>
@@ -22494,7 +22494,7 @@
             <EquipmentSet id="eomer_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_3_2" name="{=aom_lord_4_3_2_name}Ã‰owyn Eoforing" age="18" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_4_3_2" name="{=aom_lord_4_3_2_name}Éowyn Eoforing" age="18" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0011A407144400062897A829649497DB8C988BB9BCD4B379A5868D485A689A9A0167761306297985000000000000000000000000000000000000000038D42003" />
             <hair_tags>
@@ -22539,7 +22539,7 @@
             <EquipmentSet id="eowyn_civ_equipment" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_3_3" name="{=aom_lord_4_3_3_name}ThÃ©odwyn Eoforing" age="26" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+    <NPCCharacter id="lord_4_3_3" name="{=aom_lord_4_3_3_name}Théodwyn Eoforing" age="26" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
         <face>
             <BodyProperties version="4" age="22.16" weight="0.1852" build="0.7199" key="0000240011B40004007033909950BA113BEE80A17FBF0E017751B80B8C7D1F04007B36030763A11700000000000000000000000000000000000000003CF420C3" />
             <hair_tags>
@@ -22584,7 +22584,7 @@
             <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_6_1" name="{=aom_lord_4_6_1_name}DÃ©orwyn Grimingas" age="18" voice="curt" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_4_6_1" name="{=aom_lord_4_6_1_name}Déorwyn Grimingas" age="18" voice="curt" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="000B040B4070300A59453CA886740D767888B63281AA8878BC957C5659C2945701777613078AB58600000000000000000000000000000000000000006AF420C3" />
             <hair_tags>
@@ -22679,7 +22679,7 @@
             <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_16_1" name="{=aom_lord_4_16_1_name}MÃ©rthÃº FelÃ¡nding" age="29" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_4_16_1" name="{=aom_lord_4_16_1_name}Mérthú Felánding" age="29" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" weight="0.4524" build="0.5804" key="0005340140CC00017071527435736265B7BE7A79B0614997BAB7F9397C2A987203597635053CBA5A00000000000000000000000000000000000000005CB41044" />
             <hair_tags>
@@ -22711,7 +22711,7 @@
         </skills>
         <Traits>
             <Trait id="Honor" value="2" />
-            <!-- Fierce loyalty to Rohanâ€™s values -->
+            <!-- Fierce loyalty to Rohan’s values -->
             <Trait id="Generosity" value="1" />
             <!-- Cares for her comrades -->
             <Trait id="Calculating" value="0" />
@@ -22732,7 +22732,7 @@
             <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_16_2" name="{=aom_lord_4_16_2_name}Herubrand FelÃ¡nding" age="19" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
+    <NPCCharacter id="lord_4_16_2" name="{=aom_lord_4_16_2_name}Herubrand Felánding" age="19" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
             <BodyProperties version="4" age="35.13" weight="0.5602" build="0.5718" key="00057805400013C10F72496C008D58E89E91831000BB8633B74194048FD29F3600A986030A8C97F900000000000000000000000000000000000000002B5C7002" />
             <hair_tags>
@@ -22767,9 +22767,9 @@
         </skills>
         <Traits>
             <Trait id="Honor" value="2" />
-            <!-- Steadfast loyalty to Rohan and ThÃ©oden -->
+            <!-- Steadfast loyalty to Rohan and Théoden -->
             <Trait id="Generosity" value="1" />
-            <!-- Cares for his menâ€™s welfare -->
+            <!-- Cares for his men’s welfare -->
             <Trait id="Calculating" value="1" />
             <!-- Strategic in battle planning -->
             <Trait id="Mercy" value="1" />
@@ -23236,7 +23236,7 @@
             <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_27_1" name="{=aom_lord_4_27_1_name}WÃ¦rburg Ã†thellafing" age="49" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_4_27_1" name="{=aom_lord_4_27_1_name}Wærburg Æthellafing" age="49" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="45.15" weight="0.4769" build="0.6042" key="000D3006D014200A8E8000120BC13021A78A806C0FC77034A4591B1C8A87119900797603070CEF0C00000000000000000000000000000000000000003EFC2003" />
             <hair_tags>
@@ -23268,7 +23268,7 @@
         </skills>
         <Traits>
             <Trait id="Honor" value="2" />
-            <!-- Fierce loyalty to Rohanâ€™s values -->
+            <!-- Fierce loyalty to Rohan’s values -->
             <Trait id="Generosity" value="1" />
             <!-- Cares deeply for her kin -->
             <Trait id="Calculating" value="0" />
@@ -23289,7 +23289,7 @@
             <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_27_2" name="{=aom_lord_4_27_2_name}Ã†lfstan Ã†thellafing" age="26" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
+    <NPCCharacter id="lord_4_27_2" name="{=aom_lord_4_27_2_name}Ælfstan Æthellafing" age="26" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
         <face>
             <!--face_key
 			value="000c73f31a0003cd33bd62c7862c39599c824998719e7eb543b588b88b13688b0007c2af855a1122000000000000000000000000000000000000000000000000"
@@ -23344,7 +23344,7 @@
             <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_27_3" name="{=aom_lord_4_27_3_name}Ã†lfwynn Ã†thellafing" age="19" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_4_27_3" name="{=aom_lord_4_27_3_name}Ælfwynn Æthellafing" age="19" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <BodyProperties version="4" age="35.15" weight="0.3565" build="0.6042" key="000A300280143004B08001420BC1D041A76A806C0FC77001A789101B8A871B99007956030706EF0C00000000000000000000000000000000000000003EEC1003" />
             <hair_tags>
@@ -23389,7 +23389,7 @@
             <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_27_4" name="{=aom_lord_4_27_4_name}SÃ¦weald Ã†thellafing" age="19" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+    <NPCCharacter id="lord_4_27_4" name="{=aom_lord_4_27_4_name}Sæweald Æthellafing" age="19" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
         <face>
             <BodyProperties version="4" age="17.16" weight="0.5741" build="0.4699" key="000A60080000100510806F61F007FF07B8058C60D0646C0460194B168B50D104008796030854C59E00000000000000000000000000000000000000003EFC2002" />
             <hair_tags>
@@ -23576,7 +23576,7 @@
             <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_29_1" name="{=aom_lord_4_29_1_name}Octreda Ã†lfwiging" age="40" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_4_29_1" name="{=aom_lord_4_29_1_name}Octreda Ælfwiging" age="40" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="47.15" weight="0.4514" build="0.6806" key="00022C029100300D9280000694B5E006C014C590007DB103A428260C8B9B1B06008A76030805BC6200000000000000000000000000000000000000003F140003" />
             <hair_tags>
@@ -23621,7 +23621,7 @@
             <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_29_2" name="{=aom_lord_4_29_2_name}Eadweald Ã†lfwiging" age="3" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+    <NPCCharacter id="lord_4_29_2" name="{=aom_lord_4_29_2_name}Eadweald Ælfwiging" age="3" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
         <face>
             <BodyProperties version="4" age="10.16" weight="0" build="0.5926" key="0005240140001342308166E1190590568049BB608F98FF004006000F7CA72640009906030919F31A00000000000000000000000000000000000000003F2C4002" />
             <hair_tags>
@@ -23673,7 +23673,7 @@
             <EquipmentSet id="rohan_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_V11_l" name="{=aom_lord_V11_l_name}LÃ©omund DeÃ¡fringas" age="45" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
+    <NPCCharacter id="lord_V11_l" name="{=aom_lord_V11_l_name}Léomund Deáfringas" age="45" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
         <face>
             <BodyProperties version="4" age="40.16" weight="0.4306" build="0.4699" key="0005CC0D800013436E8F6EF11905A009717CC2604DB77E03C01904008E50E60400776603075AC59900000000000000000000000000000000000000003EFC1002" />
             <hair_tags>
@@ -23721,7 +23721,7 @@
             <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_V11_l_1" name="{=aom_lord_V11_l_1_name}WynnÃ°ryÃ° DeÃ¡fringas" age="44" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
+    <NPCCharacter id="lord_V11_l_1" name="{=aom_lord_V11_l_1_name}Wynnðryð Deáfringas" age="44" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills">
         <face>
             <BodyProperties version="4" age="33.15" weight="0.4514" build="0.6806" key="000D300290B41004378E608F0B4200049464C53A05CDD001A00C491C89F71BA6007A7603070023F400000000000000000000000000000000000000003EFC1003" />
             <hair_tags>
@@ -23766,7 +23766,7 @@
             <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_V11_l_2" name="{=aom_lord_V11_l_2_name}LÃ©othen DeÃ¡fringas" age="20" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+    <NPCCharacter id="lord_V11_l_2" name="{=aom_lord_V11_l_2_name}Léothen Deáfringas" age="20" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
         <face>
             <BodyProperties version="4" age="27.16" weight="0.3704" build="0.5926" key="00054003400013836E816EF119089109863FC260BD959095C01905008E57B60000896603081AC50C00000000000000000000000000000000000000003F141002" />
             <hair_tags>
@@ -23818,7 +23818,7 @@
             <EquipmentSet id="rohan_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_V11_l_3" name="{=aom_lord_V11_l_3_name}LÃ©obrand DeÃ¡fringas" age="19" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
+    <NPCCharacter id="lord_V11_l_3" name="{=aom_lord_V11_l_3_name}Léobrand Deáfringas" age="19" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.16" weight="0.3704" build="0.5926" key="000AC40C400010026E8116E1190BE10981FFBA60BD97563353567D083E57B60000896603081AD0F900000000000000000000000000000000000000003F141002" />
             <hair_tags>
@@ -23866,7 +23866,7 @@
             <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_V11_l_4" name="{=aom_lord_V11_l_4_name}LÃ©owynn DeÃ¡fringas" age="13" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_V11_l_4" name="{=aom_lord_V11_l_4_name}Léowynn Deáfringas" age="13" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <BodyProperties version="4" age="16.15" weight="0.4514" build="0.6806" key="000DB40D901410042780000001440004C014C59A097D4102A74FF90C8B9B1B06007A76030700281400000000000000000000000000000000000000003EFC1003" />
             <hair_tags>
@@ -24007,7 +24007,7 @@
             <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_rohan_9_1" name="{=aom_lord_rohan_9_1_name}DÃºnhere DÃºning" age="45" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+    <NPCCharacter id="lord_rohan_9_1" name="{=aom_lord_rohan_9_1_name}Dúnhere Dúning" age="45" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008F00D800002423BB625668464386847289A9B61E6937AC7573C1D9156C97600BA86030B9F786800000000000000000000000000000000000000003F7C8142" />
             <hair_tags>
@@ -24247,7 +24247,7 @@
             <EquipmentSet id="rohan_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_rohan_15_1" name="{=aom_lord_rohan_15_1_name}FrÃ³da Ordgaring" age="37" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_rohan_15_1" name="{=aom_lord_rohan_15_1_name}Fróda Ordgaring" age="37" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="000A4C08C0003001678599B73553916664999358666643565967991567553944009A8603093D6A8300000000000000000000000000000000000000003F243003" />
             <hair_tags>
@@ -24337,7 +24337,7 @@
             <EquipmentSet id="rohan_civ_template_default_e" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_rohan_17_1" name="{=aom_lord_rohan_17_1_name}WaldÃ¦g Bregdaning" age="39" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
+    <NPCCharacter id="lord_rohan_17_1" name="{=aom_lord_rohan_17_1_name}Waldæg Bregdaning" age="39" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
         <face>
             <BodyProperties version="4" age="28.01" weight="0.5139" build="0.6435" key="0008D40A40001344355B9985B42884476B6E6A6A754456D77C8886674396586D008A860308939C7700000000000000000000000000000000000000003F1490C2" />
             <hair_tags>
@@ -24433,7 +24433,7 @@
             <EquipmentSet id="rohan_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_rohan_22_1" name="{=aom_lord_rohan_22_1_name}BÃ©owyrt Rungaring" age="41" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
+    <NPCCharacter id="lord_rohan_22_1" name="{=aom_lord_rohan_22_1_name}Béowyrt Rungaring" age="41" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
         <face>
             <BodyProperties version="4" age="28.01" weight="0.5139" build="0.6435" key="0008AC0A400013434BB775D797887753784AA748467146752C7CB7865956A66B00BA86030B99C41600000000000000000000000000000000000000003F742042" />
             <hair_tags>
@@ -24629,7 +24629,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <!-- Clan 10 - HÃ½arthulionath family -->
+    <!-- Clan 10 - Hýarthulionath family -->
     <NPCCharacter id="lord_1_59_4" name="{=aom_lord_1_59_4_name}Galdirion" age="14" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <BodyProperties version="4" age="14.00" weight="0.2" build="0.5" key="00027001400001C3547317A5A360004400318908384666579918711981B003170099060309683B0632430001330223550000000000001977000000004D347002" />
@@ -24719,8 +24719,8 @@
             <EquipmentSet id="gondor_civ_template_default_a" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <!-- Clan 2 - ImrazÃ´rionath: daughter of Imrahil -->
-    <NPCCharacter id="lord_1_9_6" name="{=aom_lord_1_9_6_name}LothÃ­riel" age="33" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <!-- Clan 2 - Imrazôrionath: daughter of Imrahil -->
+    <NPCCharacter id="lord_1_9_6" name="{=aom_lord_1_9_6_name}Lothíriel" age="33" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
@@ -25022,7 +25022,7 @@
     </NPCCharacter>
 
     <!-- ========== ROHAN (VLANDIA) - New Clan Leaders ========== -->
-    <NPCCharacter id="lord_4_29" name="{=aom_lord_4_29_name}Eadfrith Ã†lfwiging" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
+    <NPCCharacter id="lord_4_29" name="{=aom_lord_4_29_name}Eadfrith Ælfwiging" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
         <face>
             <BodyProperties version="4" age="45.16" weight="0" build="0.5926" key="00056005400012C3308166EF1A6B90598049BB608F98FF004006000F3C072660009906030919FD8C00000000000000000000000000000000000000003F2C4002" />
             <hair_tags>
@@ -25123,7 +25123,7 @@
             <EquipmentSet id="rhun_civ_template_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_6_26" name="{=aom_lord_6_26_name}LeÃ´rdinoth Kalkian" age="32" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+    <NPCCharacter id="lord_6_26" name="{=aom_lord_6_26_name}Leôrdinoth Kalkian" age="32" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
         <face>
             <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
             <hair_tags>
@@ -25452,7 +25452,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="lord_U4_1" name="{=aom_lord_U4_1_name}PharakhÃ´n" age="50" voice="softspoken" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
+    <NPCCharacter id="lord_U4_1" name="{=aom_lord_U4_1_name}Pharakhôn" age="50" voice="softspoken" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
             <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
@@ -25489,7 +25489,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="lord_U5_1" name="{=aom_lord_U5_1_name}InkaldÃ´r" age="28" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
+    <NPCCharacter id="lord_U5_1" name="{=aom_lord_U5_1_name}Inkaldôr" age="28" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
             <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
@@ -25526,7 +25526,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="lord_U6_1" name="{=aom_lord_U6_1_name}ZimrathÃ´r" age="39" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
+    <NPCCharacter id="lord_U6_1" name="{=aom_lord_U6_1_name}Zimrathôr" age="39" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
             <face_key_template value="BodyProperty.fighter_umbar" />
         </face>

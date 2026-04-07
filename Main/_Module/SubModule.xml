@@ -13,6 +13,7 @@
 		<DependedModule Id="Sandbox" />
 		<DependedModule Id="CustomBattle" />
 		<DependedModule Id="Bannerlord.UIExtenderEx" />
+		<DependedModule Id="Bannerlord.MBOptionScreen" />
 	</DependedModules>
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
@@ -21,26 +22,13 @@
 		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Bannerlord.MBOptionScreen" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
 	<SubModules>
 		<SubModule>
 			<Name value="TAOM" />
 			<DLLName value="TAOM.dll" />
 			<SubModuleClassType value="TAOM.SubModule" />
-			<Tags />
-		</SubModule>
-		<SubModule>
-			<Name value="MCMv5" />
-			<DLLName value="MCMv5.dll" />
-			<SubModuleClassType value="MCM.MCMSubModule" />
-			<Assemblies/>
-			<Tags />
-		</SubModule>
-		<SubModule>
-			<Name value="MCMv5 Basic Implementation" />
-			<DLLName value="MCMv5.dll" />
-			<SubModuleClassType value="MCM.Internal.MCMImplementationSubModule" />
-			<Assemblies/>
 			<Tags />
 		</SubModule>
 	</SubModules>

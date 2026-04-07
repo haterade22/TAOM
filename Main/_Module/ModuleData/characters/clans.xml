@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Clans - All Cultures -->
 <Factions>
 
@@ -8,7 +8,7 @@
   <!-- ============================================== -->
   <Faction
 		id="clan_empire_west_10"
-		name="{=aom_clan_empire_west_10_name}House of HÃ½arthulionath"
+		name="{=aom_clan_empire_west_10_name}House of Hýarthulionath"
 		initial_home_settlement="Settlement.town_EW1"
 		tier="1"
 		owner="Hero.lord_1_59"
@@ -67,7 +67,7 @@
 
   <Faction
 		id="clan_empire_south_10"
-		name="{=aom_clan_empire_south_10_name}Ã‚rki"
+		name="{=aom_clan_empire_south_10_name}Ârki"
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M10_1"
@@ -77,7 +77,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17128.2002.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_11"
-		name="{=aom_clan_empire_south_11_name}ÃŽkhon"
+		name="{=aom_clan_empire_south_11_name}Îkhon"
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M11_1"
@@ -97,7 +97,7 @@
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.14004.171.171.600.600.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_13"
-		name="{=aom_clan_empire_south_13_name}ZarÃ»nik"
+		name="{=aom_clan_empire_south_13_name}Zarûnik"
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M13_1"
@@ -107,7 +107,7 @@
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17137.2002.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_14"
-		name="{=aom_clan_empire_south_14_name}Ã›grakhÃ»r"
+		name="{=aom_clan_empire_south_14_name}Ûgrakhûr"
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M14_1"
@@ -133,7 +133,7 @@
 
   <Faction
 		id="clan_vlandia_12"
-		name="{=aom_clan_vlandia_12_name}House of Ã†lfwiging"
+		name="{=aom_clan_vlandia_12_name}House of Ælfwiging"
 		initial_home_settlement="Settlement.town_V1"
 		tier="1"
 		owner="Hero.lord_4_29"
@@ -193,7 +193,7 @@
 		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_18"
-		name="{=aom_clan_vlandia_18_name}House of DeÃ¡fringas"
+		name="{=aom_clan_vlandia_18_name}House of Deáfringas"
 		initial_home_settlement="Settlement.town_V1"
 		tier="4"
 		owner="Hero.lord_V11_l"
@@ -273,7 +273,7 @@
 		banner_key="11.116.75.4345.4345.764.764.1.0.0.17354.83.116.550.550.750.750.1.0.0" />
   <Faction
 		id="clan_khuzait_12"
-		name="{=aom_clan_khuzait_12_name}HÃ»z"
+		name="{=aom_clan_khuzait_12_name}Hûz"
 		initial_home_settlement="Settlement.town_K3"
 		tier="2"
 		owner="Hero.lord_6_23"
@@ -369,11 +369,11 @@
 		is_noble="true"
 		banner_key="11.100.75.4345.4345.764.764.1.0.0.521.172.100.51.51.652.641.0.0.267.521.172.100.45.45.583.712.0.0.267.521.172.100.35.35.602.802.0.0.267.521.172.100.51.51.877.641.0.1.87.521.172.100.45.45.944.712.0.1.87.521.172.100.35.35.925.802.0.1.87.24019.31.240.334.334.764.854.1.0.0.24510.31.240.167.167.764.589.1.0.0" />
 
-  <!-- Bit LÃ³ni -->
+  <!-- Bit Lóni -->
   <Faction
 		id="clan_erebor_2"
 		initial_home_settlement="Settlement.town_E1"
-		name="{=aom_clan_erebor_2_name}Bit LÃ³ni"
+		name="{=aom_clan_erebor_2_name}Bit Lóni"
 		tier="4"
 		owner="Hero.lord_E2_1"
 		culture="Culture.erebor"
@@ -381,11 +381,11 @@
 		is_noble="true"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.24030.330.172.900.1100.765.1024.1.0.0.515.143.143.50.50.650.745.1.0.0.515.143.143.50.50.878.745.1.0.0.24509.143.172.200.200.765.656.1.0.0" />
 
-  <!-- Bit RÃ¡r -->
+  <!-- Bit Rár -->
   <Faction
 		id="clan_erebor_3"
 		initial_home_settlement="Settlement.town_E1"
-		name="{=aom_clan_erebor_3_name}Bit RÃ¡r"
+		name="{=aom_clan_erebor_3_name}Bit Rár"
 		tier="5"
 		owner="Hero.lord_E3_1"
 		culture="Culture.erebor"
@@ -405,11 +405,11 @@
 		is_noble="true"
 		banner_key="11.99.166.1528.1528.764.764.1.0.0.24022.29.193.800.800.782.819.1.0.0.505.97.171.5988.914.717.1314.0.0.0.24505.172.116.150.150.764.1004.1.0.0.24505.172.116.150.150.655.1004.1.0.0.24505.172.116.150.150.877.1004.1.0.0.24509.249.251.250.250.762.554.1.0.0" />
 
-  <!-- Bit GÃ³rli -->
+  <!-- Bit Górli -->
   <Faction
 		id="clan_erebor_5"
 		initial_home_settlement="Settlement.town_E1"
-		name="{=aom_clan_erebor_5_name}Bit GÃ³rli"
+		name="{=aom_clan_erebor_5_name}Bit Górli"
 		tier="4"
 		owner="Hero.lord_E5_1"
 		culture="Culture.erebor"
@@ -417,11 +417,11 @@
 		is_noble="true"
 		banner_key="11.100.166.1528.1528.764.764.1.0.0.504.101.171.214.214.501.756.0.0.0.504.101.171.214.214.605.756.0.0.0.504.101.171.214.214.709.756.0.0.0.504.101.171.214.214.813.756.0.0.0.504.101.171.214.214.920.756.0.0.0.504.101.171.214.214.1024.756.0.0.0.504.100.171.178.178.501.762.0.0.0.504.100.171.178.178.605.762.0.0.0.504.100.171.178.178.709.762.0.0.0.504.100.171.178.178.813.762.0.0.0.504.100.171.178.178.919.762.0.0.0.504.100.171.178.178.1024.762.0.0.0.505.109.171.2003.679.791.1105.0.0.0.505.101.171.2003.845.1278.1116.0.0.44.505.101.171.2003.845.249.1116.0.1.313.505.101.171.38.126.727.1050.0.1.44.505.101.171.38.126.781.1050.0.0.314.505.101.171.38.169.783.967.0.1.26.505.101.171.38.169.725.967.0.0.330.504.101.171.38.63.756.891.0.0.0.505.102.171.34.110.729.1044.0.1.44.505.102.171.34.110.777.1044.0.0.314.505.102.171.34.149.779.972.0.1.26.505.102.171.34.149.728.972.0.0.330.504.102.171.34.56.756.905.0.0.0.504.101.171.120.120.500.778.0.0.0.504.101.171.120.120.604.778.0.0.0.504.101.171.120.120.708.778.0.0.0.504.101.171.120.120.812.778.0.0.0.504.101.171.120.120.919.778.0.0.0.504.101.171.120.120.1024.778.0.0.0.504.100.171.86.86.1024.782.0.0.0.504.100.171.86.86.919.782.0.0.0.504.100.171.86.86.812.782.0.0.0.504.100.171.86.86.707.782.0.0.0.504.100.171.86.86.604.782.0.0.0.504.100.171.86.86.500.782.0.0.0.504.101.171.120.120.973.778.0.0.0.504.101.171.120.120.868.778.0.0.0.504.101.171.120.120.762.778.0.0.0.504.101.171.120.120.658.778.0.0.0.504.101.171.120.120.553.778.0.0.0.504.100.171.86.86.552.782.0.0.0.504.100.171.86.86.657.782.0.0.0.504.100.171.86.86.761.782.0.0.0.504.100.171.86.86.867.782.0.0.0.504.100.171.86.86.972.782.0.0.0.504.101.171.28.28.541.772.0.0.0.504.101.171.28.28.563.772.0.0.0.504.101.171.28.28.647.772.0.0.0.504.101.171.28.28.669.772.0.0.0.504.101.171.28.28.751.772.0.0.0.504.101.171.28.28.773.772.0.0.0.504.101.171.28.28.751.772.0.0.0.504.101.171.28.28.773.772.0.0.0.24510.35.101.300.300.755.559.1.0.0" />
 
-  <!-- Bit RÃ³ri -->
+  <!-- Bit Róri -->
   <Faction
 		id="clan_erebor_6"
 		initial_home_settlement="Settlement.town_E1"
-		name="{=aom_clan_erebor_6_name}Bit RÃ³ri"
+		name="{=aom_clan_erebor_6_name}Bit Róri"
 		tier="3"
 		owner="Hero.lord_E6_1"
 		culture="Culture.erebor"
@@ -429,11 +429,11 @@
 		is_noble="true"
 		banner_key="11.127.166.1528.1528.764.764.1.0.0.500.330.75.691.683.764.794.0.0.0.24024.331.75.400.700.924.872.1.0.0.24024.331.75.400.700.604.872.1.0.0.24025.331.75.600.600.765.946.1.0.0.505.324.116.15.200.668.900.0.0.148.505.324.116.15.200.881.944.0.1.210.505.100.171.2003.845.1287.1116.0.0.44.505.100.171.2003.845.257.1116.0.1.314" />
 
-  <!-- Bit NÃ³rin -->
+  <!-- Bit Nórin -->
   <Faction
 		id="clan_erebor_7"
 		initial_home_settlement="Settlement.town_E1"
-		name="{=aom_clan_erebor_7_name}Bit NÃ³rin"
+		name="{=aom_clan_erebor_7_name}Bit Nórin"
 		tier="3"
 		owner="Hero.lord_E7_1"
 		culture="Culture.erebor"
@@ -523,11 +523,11 @@
 		is_noble="true"
 		banner_key="11.139.166.1528.1528.764.764.1.0.0.505.44.171.499.499.764.764.0.0.43.505.138.171.476.476.764.764.0.0.43.503.44.116.375.375.765.763.0.0.0.503.44.116.38.53.764.608.0.0.0.503.44.116.38.53.764.920.0.0.0.503.44.116.38.53.920.764.0.0.89.503.44.116.38.53.608.764.0.0.89.503.44.116.38.53.654.655.0.0.44.503.44.116.75.75.765.761.0.0.0.503.44.116.38.53.873.655.0.1.314.503.44.116.38.53.873.873.0.0.-134.503.44.116.38.53.655.873.0.1.134.503.44.116.38.53.707.905.0.1.153.503.44.116.38.53.821.905.0.0.203.503.44.116.38.53.707.623.0.0.24.503.44.116.38.53.821.623.0.1.-25.503.44.116.38.53.906.707.0.0.-65.503.44.116.38.53.904.821.0.1.-116.503.44.116.38.53.621.707.0.1.64.503.44.116.38.53.623.821.0.0.115.17006.293.116.400.400.765.765.1.0.0.17007.297.116.375.375.772.765.1.0.0.17008.293.116.150.150.765.760.0.0.0" />
 
-  <!-- Nos AlenwÃ© -->
+  <!-- Nos Alenwé -->
   <Faction
 		id="clan_mirkwood_5"
 		initial_home_settlement="Settlement.town_M1"
-		name="{=aom_clan_mirkwood_5_name}Nos AlenwÃ©"
+		name="{=aom_clan_mirkwood_5_name}Nos Alenwé"
 		tier="3"
 		owner="Hero.lord_M5_1"
 		culture="Culture.mirkwood"
@@ -535,11 +535,11 @@
 		is_noble="true"
 		banner_key="11.158.75.4345.4345.764.764.1.0.0.505.274.100.471.471.764.764.0.0.45.505.126.100.460.460.764.764.0.0.45.17299.128.116.75.75.764.1002.0.0.0.17299.128.116.75.75.764.526.0.0.0.17299.128.116.75.75.1002.764.0.0.0.17299.128.116.75.75.526.764.0.0.0.17358.31.165.500.500.763.763.1.0.0" />
 
-  <!-- Nos IminyÃ© -->
+  <!-- Nos Iminyé -->
   <Faction
 		id="clan_mirkwood_6"
 		initial_home_settlement="Settlement.town_M1"
-		name="{=aom_clan_mirkwood_6_name}Nos IminyÃ©"
+		name="{=aom_clan_mirkwood_6_name}Nos Iminyé"
 		tier="4"
 		owner="Hero.lord_M6_1"
 		culture="Culture.mirkwood"
@@ -742,11 +742,11 @@
 		is_noble="true"
 		banner_key="11.2011.2011.1528.1528.764.764.1.0.0.17086.2000.171.700.700.764.764.0.0.0" />
 
-  <!-- MorzÃ»g -->
+  <!-- Morzûg -->
   <Faction
 		id="clan_gundabad_4"
 		initial_home_settlement="Settlement.town_G1"
-		name="{=aom_clan_gundabad_4_name}MorzÃ»g"
+		name="{=aom_clan_gundabad_4_name}Morzûg"
 		tier="5"
 		owner="Hero.lord_G4_1"
 		culture="Culture.gundabad"
@@ -754,11 +754,11 @@
 		is_noble="true"
 		banner_key="11.2011.2011.1528.1528.764.764.1.0.0.17184.2000.171.700.700.764.764.0.0.0" />
 
-  <!-- KrÃ»gash -->
+  <!-- Krûgash -->
   <Faction
 		id="clan_gundabad_5"
 		initial_home_settlement="Settlement.town_G1"
-		name="{=aom_clan_gundabad_5_name}KrÃ»gash"
+		name="{=aom_clan_gundabad_5_name}Krûgash"
 		tier="3"
 		owner="Hero.lord_G5_1"
 		culture="Culture.gundabad"
@@ -775,7 +775,7 @@
   <Faction
 		id="clan_umbar_1"
 		initial_home_settlement="Settlement.town_U1"
-		name="{=aom_clan_umbar_1_name}House of CasÃ®mirionÃ®"
+		name="{=aom_clan_umbar_1_name}House of Casîmirionî"
 		tier="6"
 		owner="Hero.lord_U1_1"
 		culture="Culture.umbar"
@@ -785,7 +785,7 @@
   <Faction
 		id="clan_umbar_2"
 		initial_home_settlement="Settlement.town_U2"
-		name="{=aom_clan_umbar_1_name}House of JarjÃ¢x"
+		name="{=aom_clan_umbar_1_name}House of Jarjâx"
 		tier="5"
 		owner="Hero.lord_U2_1"
 		culture="Culture.umbar"
@@ -794,7 +794,7 @@
 		banner_key="11.17.166.1528.1528.764.764.1.0.0.12004.2014.171.600.600.764.761.0.0.0" />
   <Faction
 		id="clan_umbar_3"
-		name="{=aom_clan_umbar_1_name}House of HeshlÃ¢"
+		name="{=aom_clan_umbar_1_name}House of Heshlâ"
 		tier="4"
 		owner="Hero.lord_U3_1"
 		culture="Culture.umbar"
@@ -804,7 +804,7 @@
   <Faction
 		id="clan_umbar_4"
 		initial_home_settlement="Settlement.castle_U2"
-		name="{=aom_clan_umbar_1_name}House of Bel InzÃ»l"
+		name="{=aom_clan_umbar_1_name}House of Bel Inzûl"
 		tier="3"
 		owner="Hero.lord_U4_1"
 		culture="Culture.umbar"
@@ -824,7 +824,7 @@
   <Faction
 		id="clan_umbar_6"
 		initial_home_settlement="Settlement.castle_U7"
-		name="{=aom_clan_umbar_1_name}House of KhatÃ»g"
+		name="{=aom_clan_umbar_1_name}House of Khatûg"
 		tier="3"
 		owner="Hero.lord_U6_1"
 		culture="Culture.umbar"
@@ -837,7 +837,7 @@
   <!-- Eastern Harad tribal clans                     -->
   <!-- ============================================== -->
 
-  <!-- Ezarkia - Ruling clan of ShaghÃ¢na -->
+  <!-- Ezarkia - Ruling clan of Shaghâna -->
   <Faction
 		id="clan_shaghana_1"
 		initial_home_settlement="Settlement.town_A6"
@@ -851,7 +851,7 @@
   <Faction
 		id="clan_shaghana_2"
 		initial_home_settlement="Settlement.town_A7"
-		name="{=aom_clan_shaghana_2_name}KÃ»maraknis"
+		name="{=aom_clan_shaghana_2_name}Kûmaraknis"
 		tier="5"
 		owner="Hero.lord_SH2_1"
 		culture="Culture.shaghana"
@@ -861,7 +861,7 @@
   <Faction
 		id="clan_shaghana_3"
 		initial_home_settlement="Settlement.town_A8"
-		name="{=aom_clan_shaghana_3_name}TaiymÃ¢kÃ¤"
+		name="{=aom_clan_shaghana_3_name}Taiymâkä"
 		tier="5"
 		owner="Hero.lord_SH3_1"
 		culture="Culture.shaghana"
@@ -871,7 +871,7 @@
   <Faction
 		id="clan_shaghana_4"
 		initial_home_settlement="Settlement.town_A10"
-		name="{=aom_clan_shaghana_4_name}ZayaknÃ»ri"
+		name="{=aom_clan_shaghana_4_name}Zayaknûri"
 		tier="4"
 		owner="Hero.lord_SH4_1"
 		culture="Culture.shaghana"
@@ -891,7 +891,7 @@
   <Faction
 		id="clan_shaghana_6"
 		initial_home_settlement="Settlement.castle_A13"
-		name="{=aom_clan_shaghana_6_name}UzharÃªs"
+		name="{=aom_clan_shaghana_6_name}Uzharês"
 		tier="3"
 		owner="Hero.lord_SH6_1"
 		culture="Culture.shaghana"
@@ -901,7 +901,7 @@
   <Faction
 		id="clan_shaghana_7"
 		initial_home_settlement="Settlement.castle_A15"
-		name="{=aom_clan_shaghana_7_name}AlÃ¢ranin"
+		name="{=aom_clan_shaghana_7_name}Alâranin"
 		tier="3"
 		owner="Hero.lord_SH7_1"
 		culture="Culture.shaghana"
@@ -911,7 +911,7 @@
   <Faction
 		id="clan_shaghana_8"
 		initial_home_settlement="Settlement.castle_A17"
-		name="{=aom_clan_shaghana_8_name}BanÃ»gand"
+		name="{=aom_clan_shaghana_8_name}Banûgand"
 		tier="3"
 		owner="Hero.lord_SH8_1"
 		culture="Culture.shaghana"
@@ -934,11 +934,11 @@
   <!-- Far Harad dynastic houses                      -->
   <!-- ============================================== -->
 
-  <!-- House of PhaxsharÃ¢n - Ruling house of Ã‚banissa -->
+  <!-- House of Phaxsharân - Ruling house of Âbanissa -->
   <Faction
 		id="clan_abanissa_1"
 		initial_home_settlement="Settlement.town_A14"
-		name="{=aom_clan_abanissa_1_name}House of PhaxsharÃ¢n"
+		name="{=aom_clan_abanissa_1_name}House of Phaxsharân"
 		tier="6"
 		owner="Hero.lord_AB1_1"
 		culture="Culture.abanissa"
@@ -948,7 +948,7 @@
   <Faction
 		id="clan_abanissa_2"
 		initial_home_settlement="Settlement.town_A12"
-		name="{=aom_clan_abanissa_2_name}House of HoshÃªdharma"
+		name="{=aom_clan_abanissa_2_name}House of Hoshêdharma"
 		tier="5"
 		owner="Hero.lord_AB2_1"
 		culture="Culture.abanissa"
@@ -958,7 +958,7 @@
   <Faction
 		id="clan_abanissa_3"
 		initial_home_settlement="Settlement.town_A13"
-		name="{=aom_clan_abanissa_3_name}House of VasnÃ¢rad"
+		name="{=aom_clan_abanissa_3_name}House of Vasnârad"
 		tier="4"
 		owner="Hero.lord_AB3_1"
 		culture="Culture.abanissa"
@@ -988,7 +988,7 @@
   <Faction
 		id="clan_abanissa_6"
 		initial_home_settlement="Settlement.castle_FH5"
-		name="{=aom_clan_abanissa_6_name}House of ArtaxshÃ¢san"
+		name="{=aom_clan_abanissa_6_name}House of Artaxshâsan"
 		tier="3"
 		owner="Hero.lord_AB6_1"
 		culture="Culture.abanissa"
@@ -998,7 +998,7 @@
   <Faction
 		id="clan_abanissa_7"
 		initial_home_settlement="Settlement.castle_FH7"
-		name="{=aom_clan_abanissa_7_name}House of ArdÃ¢cheran"
+		name="{=aom_clan_abanissa_7_name}House of Ardâcheran"
 		tier="3"
 		owner="Hero.lord_AB7_1"
 		culture="Culture.abanissa"
@@ -1008,7 +1008,7 @@
   <Faction
 		id="clan_abanissa_8"
 		initial_home_settlement="Settlement.castle_FH9"
-		name="{=aom_clan_abanissa_8_name}House of TÃ®rdahanÃ¢"
+		name="{=aom_clan_abanissa_8_name}House of Tîrdahanâ"
 		tier="3"
 		owner="Hero.lord_AB8_1"
 		culture="Culture.abanissa"
@@ -1021,11 +1021,11 @@
   <!-- Dark forces of the Necromancer                 -->
   <!-- ============================================== -->
 
-  <!-- HÃ®ondrÃ»s -->
+  <!-- Hîondrûs -->
   <Faction
 		id="clan_dolguldur_1"
 		initial_home_settlement="Settlement.town_DG1"
-		name="{=aom_clan_dolguldur_1_name}HÃ®ondrÃ»s"
+		name="{=aom_clan_dolguldur_1_name}Hîondrûs"
 		tier="6"
 		owner="Hero.lord_1_48"
 		culture="Culture.dolguldur"
@@ -1033,11 +1033,11 @@
 		is_noble="true"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
-  <!-- GÃ»rzrak -->
+  <!-- Gûrzrak -->
   <Faction
 		id="clan_dolguldur_2"
 		initial_home_settlement="Settlement.town_DG1"
-		name="{=aom_clan_dolguldur_2_name}GÃ»rzrak"
+		name="{=aom_clan_dolguldur_2_name}Gûrzrak"
 		tier="5"
 		owner="Hero.lord_D2_1"
 		culture="Culture.dolguldur"
@@ -1057,11 +1057,11 @@
 		is_noble="true"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
-  <!-- DÃ»rzan -->
+  <!-- Dûrzan -->
   <Faction
 		id="clan_dolguldur_4"
 		initial_home_settlement="Settlement.town_DG1"
-		name="{=aom_clan_dolguldur_4_name}DÃ»rzan"
+		name="{=aom_clan_dolguldur_4_name}Dûrzan"
 		tier="5"
 		owner="Hero.lord_D4_1"
 		culture="Culture.dolguldur"
@@ -1069,11 +1069,11 @@
 		is_noble="true"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
-  <!-- KrÃ¢zgoth -->
+  <!-- Krâzgoth -->
   <Faction
 		id="clan_dolguldur_5"
 		initial_home_settlement="Settlement.town_DG1"
-		name="{=aom_clan_dolguldur_5_name}KrÃ¢zgoth"
+		name="{=aom_clan_dolguldur_5_name}Krâzgoth"
 		tier="3"
 		owner="Hero.lord_D5_1"
 		culture="Culture.dolguldur"
@@ -1081,11 +1081,11 @@
 		is_noble="true"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
-  <!-- ZÃ»rbak -->
+  <!-- Zûrbak -->
   <Faction
 		id="clan_dolguldur_6"
 		initial_home_settlement="Settlement.town_DG1"
-		name="{=aom_clan_dolguldur_6_name}ZÃ»rbak"
+		name="{=aom_clan_dolguldur_6_name}Zûrbak"
 		tier="4"
 		owner="Hero.lord_D6_1"
 		culture="Culture.dolguldur"
