@@ -667,5 +667,8 @@
 		<XmlNode>
 			<XmlName id="BannerIcons" path="banner_icons"/>
 		</XmlNode>
+		<XmlNode>
+			<XmlName id="CustomBattleScenes" path="custom_battle_scenes" />
+		</XmlNode>
 	</Xmls>
 </Module>
