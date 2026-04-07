@@ -10,9 +10,20 @@
           max_charge="100"
           min_clan_tier="0"
           root_choice_id="warboss_root">
+    <!-- NOTE: Custom culture IDs (mordor, erebor) don't reach Hero.Culture.StringId at runtime.
+         Heroes get vanilla culture IDs from CC. Known CC bug — investigate separately.
+         For now, include ALL vanilla culture IDs so any hero can test the career system. -->
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="erebor" />
+      <Culture id="empire_s" />
+      <Culture id="battania" />
+      <Culture id="empire_w" />
+      <Culture id="empire" />
+      <Culture id="vlandia" />
+      <Culture id="aserai" />
+      <Culture id="khuzait" />
+      <Culture id="sturgia" />
     </EligibleCultures>
     <ChoiceGroups>
       <Group id="warboss_brutality" />
