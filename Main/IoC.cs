@@ -25,6 +25,7 @@ using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
 using TAOM.Features.ArmyTargeting;
 using TAOM.Features.TimeAcceleration;
+using TAOM.Features.SpecialResources;
 
 namespace TAOM;
 
@@ -62,6 +63,7 @@ public static class IoC
         SiegeDefenseIoC.RegisterSiegeDefenseFeature(container);
         ArmyTargetingIoC.RegisterArmyTargetingFeature(container);
         TimeAccelerationIoC.RegisterTimeAccelerationFeature(container);
+        SpecialResourcesIoC.RegisterSpecialResourcesFeature(container);
 
         _container = container;
     }

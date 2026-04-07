@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TroopResourceCosts>
+  <!-- Mordor T6+ elite troops require Scraps to upgrade and maintain -->
+  <!-- Melee line -->
+  <Troop id="mordor_uruk_darkblade" resource_id="scraps" upgrade_cost="2" daily_upkeep="0.1" />
+  <Troop id="mordor_uruk_halberdier" resource_id="scraps" upgrade_cost="2" daily_upkeep="0.1" />
+  <Troop id="mordor_uruk_reaper" resource_id="scraps" upgrade_cost="3" daily_upkeep="0.15" />
+  <Troop id="mordor_uruk_deathwarden" resource_id="scraps" upgrade_cost="5" daily_upkeep="0.3" />
+  <!-- Ranged line -->
+  <Troop id="mordor_uruk_marksman" resource_id="scraps" upgrade_cost="2" daily_upkeep="0.1" />
+  <!-- Shield line -->
+  <Troop id="mordor_uruk_vanguard" resource_id="scraps" upgrade_cost="2" daily_upkeep="0.1" />
+  <Troop id="mordor_uruk_shieldguard" resource_id="scraps" upgrade_cost="3" daily_upkeep="0.15" />
+  <!-- Command line -->
+  <Troop id="mordor_uruk_captain" resource_id="scraps" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="mordor_uruk_baraddurguard" resource_id="scraps" upgrade_cost="5" daily_upkeep="0.3" />
+  <!-- Special -->
+  <Troop id="mordor_black_numenorean" resource_id="scraps" upgrade_cost="3" daily_upkeep="0.2" />
+  <Troop id="mordor_orc_warbrute" resource_id="scraps" upgrade_cost="2" daily_upkeep="0.15" />
+  <Troop id="mordor_orc_blackguard" resource_id="scraps" upgrade_cost="4" daily_upkeep="0.25" />
+</TroopResourceCosts>

@@ -46,6 +46,9 @@ using TAOM.Features.BannerColorPersistence;
 using TAOM.Features.BannerColorPersistence.Hooks;
 using TAOM.Features.LocalizationOverride;
 using TAOM.Features.LocalizationOverride.Hooks;
+using TAOM.Features.SpecialResources;
+using TAOM.Features.SpecialResources.Hooks;
+using TAOM.Features.SpecialResources.Models;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -261,6 +264,14 @@ public class SubModule : MBSubModuleBase
             var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
             campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService));
 
+            var specialResourceService = IoC.Resolve<ISpecialResourceService>();
+            var specialResourceStorage = IoC.Resolve<ISpecialResourceStorageService>();
+            var specialResourceConfig = IoC.Resolve<ISpecialResourceConfigProvider>();
+            var specialResourceLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new SpecialResourcesBehavior(
+                specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger));
+            campaignStarter.AddModel(new TaomSpecialResourceModel(specialResourceService));
+
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
             var startupLogger = IoC.Resolve<IModLogger>();
@@ -294,6 +305,11 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch17_TroopWeight");
         _harmony.PatchCategory("Patch23_BannerColorPersistence");
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
+
+        var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
+        PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook);
+        PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook);
+        _harmony.PatchCategory("Patch26_SpecialResources");
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
         var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();

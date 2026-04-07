@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SpecialResources>
+  <Resource id="scraps" kingdom_id="mordor" display_name="Scraps" icon_sprite="taom_scraps_icon" cap="500" starting_amount="30" daily_per_town="0.5" per_battle_victory_base="10" per_raid="8" per_siege_victory="15" per_prisoner="1" />
+</SpecialResources>
