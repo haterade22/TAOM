@@ -2,7 +2,7 @@
 
 ## 2026-04-07
 
-### Feature: Per-Kingdom Special Resource System (#72)
+### Feature: Per-Kingdom Special Resource System (#73)
 
 Data-driven per-faction resource system gating elite troop upgrades. Mordor "Scraps" as pilot kingdom.
 

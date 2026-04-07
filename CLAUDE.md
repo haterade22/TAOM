@@ -109,6 +109,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | MainMenuCustomizer | `Main/Features/MainMenuCustomizer/` (hide Campaign, rename Sandbox → "Enter The Age Of Men") |
 | ShaderPrecompilation | `Main/Features/ShaderPrecompilation/` (pre-compile shaders menu option, eliminates in-game stutter) |
 | SiegeDefense | `Main/Features/Siege/` (timed defense events when watched factions are besieged; config-driven watched factions, CampaignTime deadline, relation+influence reward on arrival) |
+| SpecialResources | `Main/Features/SpecialResources/` (per-kingdom resource system — Mordor "Scraps" pilot; XML-driven earning/spending, Patch26 party screen gating, map bar UI) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
@@ -169,6 +170,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific relation penalties for executions |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions per settings |
 | `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Besieger army: commitment stickiness (4×), faction priority lists, strength gate bypass per faction, distance compensation; `Patch22_ArmyTargeting` border proximity floor |
+| `TaomSpecialResourceModel` | `GameModel` (new, no vanilla base) | Per-kingdom special resource facade (delegates to service) |
 | `TaomSpecialResourceModel` | `GameModel` | Service facade for special resource queries (no vanilla equivalent) |
 
 ## Harmony Patch Categories
@@ -199,6 +201,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` |
 | `Patch23_BannerColorPersistence` | UI color persistence + 3D battle + conversation — player clan colors everywhere | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM` |
 | `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` |
+| `Patch26_SpecialResources` | Per-kingdom resource upgrade gating + spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop` |
 | `Patch26_SpecialResources` | Per-kingdom resource gating on troop upgrades | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop` |
 
 ## Codex Integration
