@@ -186,6 +186,10 @@ internal static class NarrativeHorseGuardPatchHelper
     internal static string ResolveTitle(CharacterCreationManager manager, string occupationType)
     {
         var selected = manager.CharacterCreationContent.SelectedTitleType;
-        return string.IsNullOrEmpty(selected) ? occupationType : selected;
+        if (!string.IsNullOrEmpty(selected))
+            return selected;
+        if (!string.IsNullOrEmpty(occupationType))
+            return occupationType;
+        return "guard";
     }
 }

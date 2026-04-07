@@ -120,4 +120,19 @@ public class NarrativeHorseGuardServiceTests
         // Assert
         _rosterProvider.Received(1).HasHorse("player_char_creation_rohan_rider_f");
     }
+
+    [TestMethod]
+    public void TryBuildNoHorseArgs_NullTitleType_UsesGuardDefault_ReturnsArgsForHorselessCulture()
+    {
+        // Arrange — Erebor "guard" roster has no horse (the default when SelectedTitleType is null)
+        _rosterProvider.HasHorse("player_char_creation_erebor_guard_m").Returns((bool?)false);
+
+        // Act — titleType "guard" is what ResolveTitle would produce when both inputs are null
+        var result = _sut.TryBuildNoHorseArgs("erebor", "guard", isFemale: false,
+            characterId: "player_youth_character", age: 17);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("player_char_creation_erebor_guard_m", result.EquipmentId);
+    }
 }
