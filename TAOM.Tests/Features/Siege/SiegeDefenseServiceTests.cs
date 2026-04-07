@@ -33,6 +33,17 @@ public class SiegeDefenseServiceTests
         var config = new SiegeDefenseConfig
         {
             WatchedSettlementIds = new List<string> { "town_special" },
+            KingdomMessages = new Dictionary<string, KingdomSiegeMessages>
+            {
+                ["gondor"] = new KingdomSiegeMessages
+                {
+                    Title = "Gondor Calls For Aid!",
+                    Body = "{attacker} besieges {settlement}! You have {days} days.",
+                    AcceptButton = "For Gondor!",
+                    AcceptMessage = "Ride to {settlement}!",
+                    RewardMessage = "Gondor remembers! +{influence} influence, +{relation} relation."
+                }
+            },
             ResponseWindowDays = 3,
             RewardRelation = 5,
             RewardInfluence = 10
@@ -330,5 +341,39 @@ public class SiegeDefenseServiceTests
 
         // Assert
         Assert.IsFalse(_sut.ActiveEvents["town_gondor_1"].RewardClaimed);
+    }
+
+    // --- GetMessages ---
+
+    [TestMethod]
+    public void GetMessages_KnownFactionId_ReturnsConfigMessages()
+    {
+        // Act
+        var msgs = _sut.GetMessages("gondor");
+
+        // Assert
+        Assert.AreEqual("Gondor Calls For Aid!", msgs.Title);
+        Assert.AreEqual("For Gondor!", msgs.AcceptButton);
+    }
+
+    [TestMethod]
+    public void GetMessages_UnknownFactionId_ReturnsDefaultMessages()
+    {
+        // Act
+        var msgs = _sut.GetMessages("unknown_faction");
+
+        // Assert
+        Assert.IsTrue(msgs.Title.Contains("{attacker}"));
+        Assert.AreEqual("Help Defend", msgs.AcceptButton);
+    }
+
+    [TestMethod]
+    public void GetMessages_EmptyFactionId_ReturnsDefaultMessages()
+    {
+        // Act
+        var msgs = _sut.GetMessages("");
+
+        // Assert
+        Assert.AreEqual("Help Defend", msgs.AcceptButton);
     }
 }

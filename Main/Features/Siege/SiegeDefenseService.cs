@@ -14,6 +14,15 @@ namespace TAOM.Features.Siege;
 
 public class SiegeDefenseService : ISiegeDefenseService
 {
+    private static readonly KingdomSiegeMessages DefaultMessages = new KingdomSiegeMessages
+    {
+        Title = "{attacker} is besieging {settlement}!",
+        Body = "Will you answer the call to defend? You have {days} days to reach the settlement.",
+        AcceptButton = "Help Defend",
+        AcceptMessage = "You have pledged to defend {settlement}. Ride now!",
+        RewardMessage = "You answered the call! +{influence} influence, +{relation} relation."
+    };
+
     private readonly ISiegeDefenseSettingsProvider _settings;
     private readonly IPlayerContextAdapter _playerContext;
     private readonly IModLogger _logger;
@@ -55,6 +64,26 @@ public class SiegeDefenseService : ISiegeDefenseService
         return false;
     }
 
+    internal KingdomSiegeMessages GetMessages(string factionId)
+    {
+        if (!string.IsNullOrEmpty(factionId) &&
+            _config.KingdomMessages.TryGetValue(factionId, out var messages))
+            return messages;
+        return DefaultMessages;
+    }
+
+    private static string Resolve(string template, string settlement, string attacker,
+        int days, int influence, int relation)
+    {
+        if (string.IsNullOrEmpty(template)) return "";
+        return template
+            .Replace("{settlement}", settlement)
+            .Replace("{attacker}", attacker)
+            .Replace("{days}", days.ToString())
+            .Replace("{influence}", influence.ToString())
+            .Replace("{relation}", relation.ToString());
+    }
+
     public void OnSiegeStarted(ISiegeEventAdapter siege)
     {
         if (!IsWatchedSiege(siege))
@@ -87,20 +116,24 @@ public class SiegeDefenseService : ISiegeDefenseService
             var settlementName = siege.SettlementName;
             var attackerName = siege.AttackerName;
             var days = _settings.SiegeDefenseResponseDays;
+            var msgs = GetMessages(siege.DefenderFactionId);
+
+            var title = Resolve(msgs.Title, settlementName, attackerName, days, 0, 0);
+            var body = Resolve(msgs.Body, settlementName, attackerName, days, 0, 0);
+            var acceptMsg = Resolve(msgs.AcceptMessage, settlementName, attackerName, days, 0, 0);
 
             InformationManager.ShowInquiry(new InquiryData(
-                titleText: $"{attackerName} is besieging {settlementName}!",
-                text: $"Will you answer the call to defend? You have {days} days to reach the settlement.",
+                titleText: title,
+                text: body,
                 isAffirmativeOptionShown: true,
                 isNegativeOptionShown: true,
-                affirmativeText: "Help Defend",
+                affirmativeText: msgs.AcceptButton,
                 negativeText: "Ignore",
                 affirmativeAction: () =>
                 {
                     evt.PlayerAccepted = true;
                     TrackSettlement(evt.SettlementId);
-                    InformationManager.DisplayMessage(new InformationMessage(
-                        $"You have pledged to defend {settlementName}. Ride now!"));
+                    InformationManager.DisplayMessage(new InformationMessage(acceptMsg));
                     _logger.LogInfo($"[SiegeDefense] Player accepted defense of {evt.SettlementId}");
                 },
                 negativeAction: () => { }));
@@ -198,10 +231,10 @@ public class SiegeDefenseService : ISiegeDefenseService
                 Hero.MainHero, defender.Leader, _config.RewardRelation);
         }
 
-        var defenderName = defender?.Name?.ToString() ?? "defenders";
-        InformationManager.DisplayMessage(new InformationMessage(
-            $"[TAOM] You answered the call! +{_config.RewardInfluence} influence, +{_config.RewardRelation} relation with {defenderName}.",
-            Color.FromUint(0xFF00FF00)));
+        var msgs = GetMessages(evt.DefenderFactionId);
+        var rewardMsg = Resolve(msgs.RewardMessage, evt.SettlementId, "", 0,
+            _config.RewardInfluence, _config.RewardRelation);
+        InformationManager.DisplayMessage(new InformationMessage(rewardMsg, Color.FromUint(0xFF00FF00)));
 
         _logger.LogInfo($"[SiegeDefense] Reward granted for defending {evt.SettlementId}: +{_config.RewardInfluence} influence, +{_config.RewardRelation} relation");
     }

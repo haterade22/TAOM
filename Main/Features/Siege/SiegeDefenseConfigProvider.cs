@@ -32,7 +32,7 @@ public class SiegeDefenseConfigProvider : ISiegeDefenseConfigProvider
         {
             var json = File.ReadAllText(path);
             var config = JsonConvert.DeserializeObject<SiegeDefenseConfig>(json) ?? new SiegeDefenseConfig();
-            _logger.LogInfo($"[SiegeDefense] Loaded config: {config.WatchedFactionIds.Count} watched factions, {config.WatchedSettlementIds.Count} watched settlements");
+            _logger.LogInfo($"[SiegeDefense] Loaded config: {config.KingdomMessages.Count} kingdom messages, {config.WatchedSettlementIds.Count} watched settlements");
             return config;
         }
         catch (Exception ex)

@@ -1,5 +1,133 @@
 {
   "WatchedSettlementIds": [],
+  "KingdomMessages": {
+    "empire_w": {
+      "Title": "Gondor Calls For Aid!",
+      "Body": "{attacker} besieges {settlement}! The White Tower calls upon all loyal servants. You have {days} days.",
+      "AcceptButton": "For Gondor!",
+      "AcceptMessage": "Ride now! Ride to the defense of {settlement}!",
+      "RewardMessage": "Gondor remembers your valor! +{influence} influence, +{relation} relation."
+    },
+    "empire_s": {
+      "Title": "Sauron Commands You!",
+      "Body": "{attacker} dares assault {settlement}! The Dark Lord demands its defense. You have {days} days.",
+      "AcceptButton": "I obey!",
+      "AcceptMessage": "March! Defend {settlement} in the name of Sauron!",
+      "RewardMessage": "The Dark Lord is pleased. +{influence} influence, +{relation} relation."
+    },
+    "vlandia": {
+      "Title": "Rohan Calls For Aid!",
+      "Body": "{attacker} threatens {settlement}! The Rohirrim must answer. You have {days} days.",
+      "AcceptButton": "Forth Eorlingas!",
+      "AcceptMessage": "The Riders of Rohan ride to {settlement}!",
+      "RewardMessage": "The Rohirrim sing of your courage! +{influence} influence, +{relation} relation."
+    },
+    "erebor": {
+      "Title": "The Mountain Calls!",
+      "Body": "{attacker} besieges {settlement}! The Dwarves of Erebor will not stand idle. You have {days} days.",
+      "AcceptButton": "Baruk Khazad!",
+      "AcceptMessage": "Axes of the Dwarves! To the defense of {settlement}!",
+      "RewardMessage": "The halls of Erebor honor your bravery! +{influence} influence, +{relation} relation."
+    },
+    "rivendell": {
+      "Title": "The Last Homely House Calls!",
+      "Body": "{attacker} threatens {settlement}! Elrond summons the Elves to war. You have {days} days.",
+      "AcceptButton": "For Imladris!",
+      "AcceptMessage": "The Elves of Rivendell march to {settlement}!",
+      "RewardMessage": "Elrond honors your service. +{influence} influence, +{relation} relation."
+    },
+    "lothlorien": {
+      "Title": "The Golden Wood Is Threatened!",
+      "Body": "{attacker} assails {settlement}! The Lady of Light calls her wardens. You have {days} days.",
+      "AcceptButton": "For Lothlorien!",
+      "AcceptMessage": "The wardens of the Golden Wood march to {settlement}!",
+      "RewardMessage": "The Lady of the Wood is grateful. +{influence} influence, +{relation} relation."
+    },
+    "mirkwood": {
+      "Title": "The Woodland Realm Calls!",
+      "Body": "{attacker} threatens {settlement}! King Thranduil summons his hunters. You have {days} days.",
+      "AcceptButton": "For the Woodland Realm!",
+      "AcceptMessage": "The hunters of Mirkwood march to {settlement}!",
+      "RewardMessage": "King Thranduil acknowledges your loyalty. +{influence} influence, +{relation} relation."
+    },
+    "isengard": {
+      "Title": "Saruman Orders You!",
+      "Body": "{attacker} attacks {settlement}! The White Wizard will not suffer this insult. You have {days} days.",
+      "AcceptButton": "By Saruman's will!",
+      "AcceptMessage": "The Uruk-hai march to {settlement}!",
+      "RewardMessage": "Saruman rewards your obedience. +{influence} influence, +{relation} relation."
+    },
+    "gundabad": {
+      "Title": "Gundabad Stirs!",
+      "Body": "{attacker} dares assault {settlement}! The war drums sound. You have {days} days.",
+      "AcceptButton": "For Gundabad!",
+      "AcceptMessage": "The hosts of Gundabad march to {settlement}!",
+      "RewardMessage": "Gundabad rewards the strong. +{influence} influence, +{relation} relation."
+    },
+    "dolguldur": {
+      "Title": "The Necromancer Commands!",
+      "Body": "{attacker} threatens {settlement}! The shadow of Dol Guldur demands obedience. You have {days} days.",
+      "AcceptButton": "The shadow commands!",
+      "AcceptMessage": "The servants of Dol Guldur march to {settlement}!",
+      "RewardMessage": "The shadow is appeased. +{influence} influence, +{relation} relation."
+    },
+    "sturgia": {
+      "Title": "Dale Calls For Aid!",
+      "Body": "{attacker} threatens {settlement}! The Men of Dale require your sword. You have {days} days.",
+      "AcceptButton": "For Dale!",
+      "AcceptMessage": "March to the defense of {settlement}!",
+      "RewardMessage": "The people of Dale honor your courage! +{influence} influence, +{relation} relation."
+    },
+    "empire": {
+      "Title": "Dunland Calls For Aid!",
+      "Body": "{attacker} besieges {settlement}! The Dunlendings demand vengeance. You have {days} days.",
+      "AcceptButton": "For Dunland!",
+      "AcceptMessage": "The Dunlendings march to {settlement}!",
+      "RewardMessage": "Dunland remembers your service. +{influence} influence, +{relation} relation."
+    },
+    "aserai": {
+      "Title": "The Haradrim Call!",
+      "Body": "{attacker} threatens {settlement}! The Serpent Lord demands your spear. You have {days} days.",
+      "AcceptButton": "For Harad!",
+      "AcceptMessage": "The Haradrim march to {settlement}!",
+      "RewardMessage": "The Serpent Lord is satisfied. +{influence} influence, +{relation} relation."
+    },
+    "khuzait": {
+      "Title": "The Easterlings Call!",
+      "Body": "{attacker} threatens {settlement}! The Wainriders demand your blade. You have {days} days.",
+      "AcceptButton": "For Rhun!",
+      "AcceptMessage": "The hosts of Rhun march to {settlement}!",
+      "RewardMessage": "The lords of Rhun acknowledge your service. +{influence} influence, +{relation} relation."
+    },
+    "battania": {
+      "Title": "Khand Calls For Aid!",
+      "Body": "{attacker} threatens {settlement}! The Variags demand your service. You have {days} days.",
+      "AcceptButton": "For Khand!",
+      "AcceptMessage": "The Variags of Khand march to {settlement}!",
+      "RewardMessage": "The Variags honor the bold. +{influence} influence, +{relation} relation."
+    },
+    "umbar": {
+      "Title": "The Corsairs Call!",
+      "Body": "{attacker} threatens {settlement}! The fleet demands its captains. You have {days} days.",
+      "AcceptButton": "For Umbar!",
+      "AcceptMessage": "The Corsairs of Umbar sail to {settlement}!",
+      "RewardMessage": "The fleet remembers your service. +{influence} influence, +{relation} relation."
+    },
+    "shaghana": {
+      "Title": "Shaghana Calls!",
+      "Body": "{attacker} threatens {settlement}! Your people need you. You have {days} days.",
+      "AcceptButton": "Defend!",
+      "AcceptMessage": "March to the defense of {settlement}!",
+      "RewardMessage": "Your people are grateful. +{influence} influence, +{relation} relation."
+    },
+    "abanissa": {
+      "Title": "Abanissa Calls!",
+      "Body": "{attacker} threatens {settlement}! Your people need you. You have {days} days.",
+      "AcceptButton": "Defend!",
+      "AcceptMessage": "March to the defense of {settlement}!",
+      "RewardMessage": "Your people are grateful. +{influence} influence, +{relation} relation."
+    }
+  },
   "RelationshipThreshold": -20,
   "ResponseWindowDays": 3,
   "RewardRelation": 5,
