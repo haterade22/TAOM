@@ -25,9 +25,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 
 ## Metrics
 
-**Codex accuracy rate:** 35 real findings / 43 total findings = 81% (↑ from 76%)
-**Codex miss rate:** 6 missed bugs / 41 total real bugs = 15% (↓ from 19%)
-**False positive rate:** 4 false positives / 43 findings total = 9% (↓ from 12%)
+**Codex accuracy rate:** 40 real findings / 48 total findings = 83% (↑ from 81%)
+**Codex miss rate:** 7 missed bugs / 48 total real bugs = 15%
+**False positive rate:** 4 false positives / 48 findings total = 8% (↓ from 9%)
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
@@ -38,8 +38,10 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
 | 17 | 2026-04-06 | Arena (TaomTournamentModel) | no-ship | 1 confirmed + 2 design questions | 1 (dummy lookup) | 0 | 0 | v6 |
 | 18 | 2026-04-06 | CharacterSelection (transpiler) | no-ship | 1 fix + 2 deferred (need decompilation) | 1 (race fallback) | 0 | 0 | v6 |
+| 19 | 2026-04-07 | SpecialResources | needs-attention | agree (5 confirmed + 1 ship-blocker Claude found) | 5 (1 CRIT pending txn, 1 CRIT no clamp, 1 HIGH raid, 1 HIGH save, 1 LOW cap) | 0 | 1 (wrong kingdom_id) | v6 |
+| 20 | 2026-04-07 | CareerSystem | N/A — feature not built | N/A | 0 | 0 | 0 | v6 |
 
-**CODEBASE REVIEW COMPLETE: All features reviewed. 18 Codex reviews, 43 bugs found, 43 fixed. 0 deferred.**
+**Post-codebase reviews:** 19 = SpecialResources (new feature), 20 = CareerSystem (premature — no code exists yet). 20 Codex reviews total, 48 bugs found across codebase.
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
