@@ -41,6 +41,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
+| `/review-codex [review.md]` | Critically verify Codex review output, implement confirmed fixes, log results |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -117,7 +118,6 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
-| SpecialResources | `Main/Features/SpecialResources/` (per-kingdom resource system — Mordor "Scraps" pilot, Patch26, MapInfoVM mixin) |
 | SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
 | StartupResources config | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
@@ -170,8 +170,6 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific relation penalties for executions |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions per settings |
 | `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Besieger army: commitment stickiness (4×), faction priority lists, strength gate bypass per faction, distance compensation; `Patch22_ArmyTargeting` border proximity floor |
-| `TaomSpecialResourceModel` | `GameModel` (new, no vanilla base) | Per-kingdom special resource facade (delegates to service) |
-| `TaomSpecialResourceModel` | `GameModel` | Service facade for special resource queries (no vanilla equivalent) |
 
 ## Harmony Patch Categories
 
@@ -201,8 +199,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` |
 | `Patch23_BannerColorPersistence` | UI color persistence + 3D battle + conversation — player clan colors everywhere | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM` |
 | `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` |
-| `Patch26_SpecialResources` | Per-kingdom resource upgrade gating + spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop` |
-| `Patch26_SpecialResources` | Per-kingdom resource gating on troop upgrades | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop` |
+| `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` |
 
 ## Codex Integration
 

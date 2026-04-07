@@ -24,7 +24,7 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
         var resourceName = _hook.GetResourceDisplayName(kingdomId);
         if (resourceName == null) return;
 
-        var currentAmount = _hook.GetCurrentAmount(heroId);
+        var currentAmount = _hook.GetAvailableAmount(heroId);
 
         for (int i = 0; i < __instance.Upgrades.Count; i++)
         {

@@ -48,7 +48,6 @@ using TAOM.Features.LocalizationOverride;
 using TAOM.Features.LocalizationOverride.Hooks;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
-using TAOM.Features.SpecialResources.Models;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -268,9 +267,10 @@ public class SubModule : MBSubModuleBase
             var specialResourceStorage = IoC.Resolve<ISpecialResourceStorageService>();
             var specialResourceConfig = IoC.Resolve<ISpecialResourceConfigProvider>();
             var specialResourceLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new SpecialResourcesBehavior(
-                specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger));
-            campaignStarter.AddModel(new TaomSpecialResourceModel(specialResourceService));
+            var specialResourceBehavior = new SpecialResourcesBehavior(
+                specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger);
+            campaignStarter.AddBehavior(specialResourceBehavior);
+            PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
@@ -309,6 +309,7 @@ public class SubModule : MBSubModuleBase
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook);
         PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook);
+        PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook);
         _harmony.PatchCategory("Patch26_SpecialResources");
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)

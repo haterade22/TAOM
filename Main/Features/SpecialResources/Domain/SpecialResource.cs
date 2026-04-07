@@ -13,6 +13,8 @@ public sealed class SpecialResource
     public float PerRaid { get; }
     public float PerSiegeVictory { get; }
     public float PerPrisoner { get; }
+    public float PerTournamentWin { get; }
+    public float PerHideoutClear { get; }
 
     public SpecialResource(
         string id,
@@ -25,7 +27,9 @@ public sealed class SpecialResource
         float perBattleVictoryBase,
         float perRaid,
         float perSiegeVictory,
-        float perPrisoner)
+        float perPrisoner,
+        float perTournamentWin = 0f,
+        float perHideoutClear = 0f)
     {
         Id = id;
         KingdomId = kingdomId;
@@ -38,5 +42,7 @@ public sealed class SpecialResource
         PerRaid = perRaid;
         PerSiegeVictory = perSiegeVictory;
         PerPrisoner = perPrisoner;
+        PerTournamentWin = perTournamentWin;
+        PerHideoutClear = perHideoutClear;
     }
 }

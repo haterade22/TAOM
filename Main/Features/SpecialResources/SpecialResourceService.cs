@@ -8,6 +8,8 @@ public class SpecialResourceService : ISpecialResourceService
 {
     private readonly ISpecialResourceConfigProvider _config;
     private readonly ISpecialResourceStorageService _storage;
+    private float _pendingSpend;
+    private bool _inSession;
 
     public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage)
     {
@@ -58,6 +60,22 @@ public class SpecialResourceService : ISpecialResourceService
         AddCapped(heroId, resource.PerPrisoner * prisonerCount, resource.Cap);
     }
 
+    public void EarnFromTournament(string heroId, string kingdomId)
+    {
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return;
+
+        AddCapped(heroId, resource.PerTournamentWin, resource.Cap);
+    }
+
+    public void EarnFromHideout(string heroId, string kingdomId)
+    {
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return;
+
+        AddCapped(heroId, resource.PerHideoutClear, resource.Cap);
+    }
+
     public void ApplyDailyTick(string heroId, string kingdomId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
     {
         var resource = _config.GetByKingdomId(kingdomId);
@@ -88,6 +106,52 @@ public class SpecialResourceService : ISpecialResourceService
         if (cost == null) return;
 
         _storage.Add(heroId, -(cost.UpgradeCost * count));
+    }
+
+    public void BeginPartyScreenSession()
+    {
+        _pendingSpend = 0f;
+        _inSession = true;
+    }
+
+    public void QueueUpgradeSpend(string heroId, string troopId, int count)
+    {
+        var cost = _config.GetTroopCost(troopId);
+        if (cost == null) return;
+
+        _pendingSpend += cost.UpgradeCost * count;
+    }
+
+    public float GetAvailableAfterPending(string heroId)
+    {
+        return _storage.Get(heroId) - _pendingSpend;
+    }
+
+    public int ClampUpgradeCount(string heroId, string troopId, int requestedCount)
+    {
+        var cost = _config.GetTroopCost(troopId);
+        if (cost == null || cost.UpgradeCost <= 0) return requestedCount;
+
+        var available = GetAvailableAfterPending(heroId);
+        var maxAffordable = (int)(available / cost.UpgradeCost);
+        return Math.Max(0, Math.Min(requestedCount, maxAffordable));
+    }
+
+    public void CommitSession(string heroId)
+    {
+        if (!_inSession) return;
+
+        if (_pendingSpend > 0f)
+            _storage.Add(heroId, -_pendingSpend);
+
+        _pendingSpend = 0f;
+        _inSession = false;
+    }
+
+    public void CancelSession()
+    {
+        _pendingSpend = 0f;
+        _inSession = false;
     }
 
     public float GetDailyEarning(string kingdomId, int ownedTownCount)

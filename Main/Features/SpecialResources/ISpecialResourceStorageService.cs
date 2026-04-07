@@ -9,4 +9,5 @@ public interface ISpecialResourceStorageService
     void Add(string heroId, float delta);
     Dictionary<string, float> GetAllData();
     void RestoreData(Dictionary<string, float> data);
+    void ClampAll(float cap);
 }

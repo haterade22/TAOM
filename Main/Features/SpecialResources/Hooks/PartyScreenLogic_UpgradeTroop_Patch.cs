@@ -26,6 +26,6 @@ public static class PartyScreenLogic_UpgradeTroop_Patch
         var costPerUnit = _hook.GetUpgradeCost(targetId);
         if (costPerUnit <= 0) return;
 
-        _hook.SpendForUpgrade(heroId, targetId, command.TotalNumber);
+        _hook.QueueUpgradeSpend(heroId, targetId, command.TotalNumber);
     }
 }

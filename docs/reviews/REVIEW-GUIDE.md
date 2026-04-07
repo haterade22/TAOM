@@ -30,6 +30,49 @@ How to write effective prompts, what to verify, and what we've learned.
 
 ---
 
+## Repeatable Process
+
+### End-to-end workflow:
+
+```
+Step 1: WRITE PROMPT (Claude Code or manual)
+  Use the v6 template below. Customize sections for the feature.
+  For features with prior internal review, add Known Suspects section.
+
+Step 2: DISPATCH TO CODEX (terminal -- Codex is a separate CLI tool)
+  Option A: Copy prompt, run in Codex CLI terminal
+  Option B: /codex:adversarial-review --background (via codex-plugin-cc)
+  Codex writes output to: docs/reviews/codex-adversarial-{feature}-{date}.md
+
+Step 3: VERIFY OUTPUT (Claude Code)
+  /review-codex docs/reviews/codex-adversarial-{feature}-{date}.md
+  The skill reads the review, verifies every finding against source code,
+  implements confirmed fixes, and updates REVIEW-LOG.md.
+```
+
+**Key:** Steps 1 and 2 are manual (you write and dispatch). Step 3 is the `/review-codex` skill which encapsulates ALL lessons from 18 reviews into a repeatable verification workflow. Any new Claude Code session can invoke it without needing prior context.
+
+## Advanced Pattern: Known Suspects
+
+For features where you've already done internal review (e.g., `/deep-review`), add a "Known Suspects" section to the Codex prompt. This forces Codex to CONFIRM or DISPUTE specific hypotheses with evidence, rather than finding its own surface-level issues.
+
+Format in the prompt:
+```
+=== KNOWN SUSPECTS (confirm or dispute each with evidence) ===
+1. [TITLE]: [hypothesis]. Read [specific file] to confirm.
+2. [TITLE]: [hypothesis]. Read [specific file] to confirm.
+```
+
+Format in the expected output:
+```
+## KNOWN SUSPECTS VERDICT
+1. [TITLE]: CONFIRMED -- [file:line evidence] or DISPUTED -- [counter-evidence]
+```
+
+Quality gate: add "Section N skips any suspect or says 'could not verify'" to enforce engagement.
+
+This pattern produced the highest-quality Codex output in our review history because it forces deep reading of specific code paths instead of surface scanning.
+
 ## Prompt Formatting Note
 
 **Avoid indented continuation lines** in prompts sent via `/codex:adversarial-review`. Leading whitespace gets backslash-escaped, triggering a confirmation prompt. Use flat formatting:

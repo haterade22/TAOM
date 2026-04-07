@@ -16,8 +16,11 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
     public bool CanAffordUpgrade(string heroId, string troopId, int count)
         => _service.CanAffordUpgrade(heroId, troopId, count);
 
-    public void SpendForUpgrade(string heroId, string troopId, int count)
-        => _service.SpendForUpgrade(heroId, troopId, count);
+    public void QueueUpgradeSpend(string heroId, string troopId, int count)
+        => _service.QueueUpgradeSpend(heroId, troopId, count);
+
+    public int ClampUpgradeCount(string heroId, string troopId, int requestedCount)
+        => _service.ClampUpgradeCount(heroId, troopId, requestedCount);
 
     public int GetUpgradeCost(string troopId)
     {
@@ -25,12 +28,16 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
         return cost?.UpgradeCost ?? 0;
     }
 
-    public float GetCurrentAmount(string heroId)
-        => _service.GetCurrentAmount(heroId);
+    public float GetAvailableAmount(string heroId)
+        => _service.GetAvailableAfterPending(heroId);
 
     public string GetResourceDisplayName(string kingdomId)
     {
         var resource = _config.GetByKingdomId(kingdomId);
         return resource?.DisplayName;
     }
+
+    public void BeginSession() => _service.BeginPartyScreenSession();
+    public void CommitSession(string heroId) => _service.CommitSession(heroId);
+    public void CancelSession() => _service.CancelSession();
 }

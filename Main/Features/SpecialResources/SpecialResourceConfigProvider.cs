@@ -81,7 +81,9 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                     perBattleVictoryBase: ParseFloat(el, "per_battle_victory_base", 0f),
                     perRaid: ParseFloat(el, "per_raid", 0f),
                     perSiegeVictory: ParseFloat(el, "per_siege_victory", 0f),
-                    perPrisoner: ParseFloat(el, "per_prisoner", 0f));
+                    perPrisoner: ParseFloat(el, "per_prisoner", 0f),
+                    perTournamentWin: ParseFloat(el, "per_tournament_win", 0f),
+                    perHideoutClear: ParseFloat(el, "per_hideout_clear", 0f));
 
                 _resources.Add(resource);
 

@@ -16,6 +16,18 @@ Data-driven per-faction resource system gating elite troop upgrades. Mordor "Scr
 
 **Files:** `Main/Features/SpecialResources/` (16 files), `Main/_Module/ModuleData/special_resources/` (2 XML configs)
 
+### Fix: Codex Adversarial Review — 6 Bugs Fixed (#72)
+
+Codex adversarial review compared TAOM SpecialResources against TOR_Core CustomResources. 5 Codex findings confirmed, 1 ship-blocker found independently.
+
+- **SHIP-BLOCKER:** `kingdom_id="mordor"` in XML config was wrong — runtime ID is `empire_s`. Feature was completely inert.
+- **CRITICAL:** Upgrade spending was immediate (postfix), not transactional. Cancel party screen lost resources permanently. Added pending transaction pattern with Begin/Commit/Cancel session lifecycle.
+- **HIGH:** Added `AddCommand` prefix to clamp upgrade count before execution (prevents free upgrades from stale UI).
+- **HIGH:** `OnRaidCompleted` awarded resources for any AI raid, not just player raids. Added `IsPlayerMapEvent` guard.
+- **MEDIUM:** Deleted dead `TaomSpecialResourceModel` (registered but never called).
+- **LOW:** Added cap enforcement on save load (`ClampAll` in `RestoreData` path).
+- **Tests:** 10 new tests (34 total) covering pending transactions, cancel recovery, budget clamping, and root-cause prevention.
+
 ## 2026-04-06
 
 ### Feature: LOTR-Themed Minor Factions

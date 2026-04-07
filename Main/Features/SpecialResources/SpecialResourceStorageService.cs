@@ -29,4 +29,10 @@ public class SpecialResourceStorageService : ISpecialResourceStorageService
     {
         _heroResources = data ?? new Dictionary<string, float>();
     }
+
+    public void ClampAll(float cap)
+    {
+        foreach (var key in new List<string>(_heroResources.Keys))
+            _heroResources[key] = Math.Max(0f, Math.Min(cap, _heroResources[key]));
+    }
 }

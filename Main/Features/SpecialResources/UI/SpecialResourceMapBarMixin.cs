@@ -45,7 +45,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             return;
         }
 
-        EnsureItemAdded(resource.IconSpriteName);
+        EnsureItemAdded();
 
         var amount = _service.GetCurrentAmount(hero.StringId);
         var intAmount = (int)amount;
@@ -64,13 +64,14 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         RemoveItem();
     }
 
-    private void EnsureItemAdded(string iconSpriteName)
+    private void EnsureItemAdded()
     {
         if (_itemAdded && _resourceItem != null)
             return;
 
+        // VisualId stays "special_resource" — the SpecialResourceSpriteWidget
+        // detects this sentinel and loads the correct sprite dynamically.
         _resourceItem = new MapInfoItemVM("special_resource", GetTooltipProperties);
-        _resourceItem.SetOverriddenVisualId(iconSpriteName);
 
         if (ViewModel is MapInfoVM mapInfo)
         {
