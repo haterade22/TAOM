@@ -126,11 +126,12 @@ public static class CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Pa
 }
 
 /// <summary>
-/// Guards against ArgumentNullException in SpawnNonHumanNarrativeMenuCharacter when
-/// the youth narrative scene horse character has a null item ID. This happens when a
-/// culture's CC roster omits horse slots — ModifyMenuCharacters skips the horse entry,
-/// leaving the scene horse character with uninitialized IDs.
-/// The Finalizer suppresses the null-key crash so the horse is simply not spawned.
+/// Guards against exceptions in SpawnNonHumanNarrativeMenuCharacter when
+/// a culture's CC roster omits horse slots. Two crash paths exist:
+/// 1. ArgumentNullException("key") — vanilla tries to look up a null item key
+/// 2. NullReferenceException — GetObject returns null for empty Item1Id,
+///    then val.HorseComponent dereferences null (line 206 in decompiled view)
+/// The Finalizer suppresses both so the horse is simply not spawned.
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
@@ -147,6 +148,8 @@ public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
     static Exception Finalizer(Exception __exception)
     {
         if (__exception is ArgumentNullException ane && ane.ParamName == "key")
+            return null;
+        if (__exception is NullReferenceException)
             return null;
         return __exception;
     }
