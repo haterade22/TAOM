@@ -43,6 +43,7 @@ public static class CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch
         if (args == null)
             return true;
 
+        NarrativeHorseGuardPatchHelper.RemoveHorseCharacters(characterCreationManager);
         __result = NarrativeMenuCharacterArgsList.FromGuardArgs(args);
         return false;
     }
@@ -81,6 +82,7 @@ public static class CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch
         if (args == null)
             return true;
 
+        NarrativeHorseGuardPatchHelper.RemoveHorseCharacters(characterCreationManager);
         __result = NarrativeMenuCharacterArgsList.FromGuardArgs(args);
         return false;
     }
@@ -120,18 +122,17 @@ public static class CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Pa
         if (args == null)
             return true;
 
+        NarrativeHorseGuardPatchHelper.RemoveHorseCharacters(characterCreationManager);
         __result = NarrativeMenuCharacterArgsList.FromGuardArgs(args);
         return false;
     }
 }
 
 /// <summary>
-/// Guards against exceptions in SpawnNonHumanNarrativeMenuCharacter when
-/// a culture's CC roster omits horse slots. Two crash paths exist:
-/// 1. ArgumentNullException("key") — vanilla tries to look up a null item key
-/// 2. NullReferenceException — GetObject returns null for empty Item1Id,
-///    then val.HorseComponent dereferences null (line 206 in decompiled view)
-/// The Finalizer suppresses both so the horse is simply not spawned.
+/// Fallback Finalizer for SpawnNonHumanNarrativeMenuCharacter. Suppresses NRE/ANE
+/// when horse data is invalid. Applied at Patch20 time — may silently fail if
+/// SandBox.GauntletUI isn't loaded yet. The primary defense is RemoveHorseCharacters
+/// in the prefix guards above; this is belt-and-suspenders.
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
@@ -167,25 +168,14 @@ internal static class NarrativeMenuCharacterArgsList
                 animationId: args.AnimationId,
                 spawnPointEntityId: args.SpawnPointEntityId,
                 isHuman: args.IsHuman,
-                isFemale: args.IsFemale),
-            // Include an empty horse entry so ModifyMenuCharacters clears any stale
-            // horse placeholder from a previously-selected mounted culture.
-            // SpawnNonHumanNarrativeMenuCharacter will attempt to spawn this entry,
-            // hit ArgumentNullException("key") on the empty equipment, and the
-            // existing Finalizer suppresses that crash gracefully.
-            new NarrativeMenuCharacterArgs(
-                characterId: "narrative_character_horse",
-                age: 0,
-                equipmentId: "",
-                animationId: "",
-                spawnPointEntityId: "",
-                isHuman: false,
-                isFemale: false)
+                isFemale: args.IsFemale)
         };
 }
 
 internal static class NarrativeHorseGuardPatchHelper
 {
+    private const string HorseCharacterId = "narrative_character_horse";
+
     internal static string ResolveTitle(CharacterCreationManager manager, string occupationType)
     {
         var selected = manager.CharacterCreationContent.SelectedTitleType;
@@ -194,5 +184,18 @@ internal static class NarrativeHorseGuardPatchHelper
         if (!string.IsNullOrEmpty(occupationType))
             return occupationType;
         return "guard";
+    }
+
+    internal static void RemoveHorseCharacters(CharacterCreationManager manager)
+    {
+        var characters = manager.CurrentMenu?.Characters;
+        if (characters == null)
+            return;
+
+        for (int i = characters.Count - 1; i >= 0; i--)
+        {
+            if (!characters[i].IsHuman)
+                characters.RemoveAt(i);
+        }
     }
 }
