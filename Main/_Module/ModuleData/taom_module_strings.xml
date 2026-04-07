@@ -718,4 +718,56 @@
 	<string id="aom_ab_headman_2" text="{=aom_ab_headman_2}Âbanissa elder headman" />
 	<string id="aom_ab_headman_3" text="{=aom_ab_headman_3}Âbanissa village elder" />
 
+	<!-- ==================== MINOR FACTION NAMES ==================== -->
+
+	<!-- Mercenary Clans -->
+	<string id="TAOM_ghilman_name" text="{=TAOM_ghilman_name}Serpent Guard" />
+	<string id="TAOM_ghilman_short" text="{=TAOM_ghilman_short}Serpent Guard" />
+	<string id="TAOM_ghilman_text" text="{=TAOM_ghilman_text}The Serpent Guard are mounted soldiers in the service of the Serpentlord of Near Harad. Bred in the saddle on the rolling plains south of the Ephel Dúath, they are unmatched as horse-archers in all of Middle-earth's southern lands. In times of peace between Harad and Mordor, the Guard hires its services to Haradrim lords and to any other power rich enough to afford their golden fee." />
+	<string id="TAOM_legion_name" text="{=TAOM_legion_name}The Grey Company" />
+	<string id="TAOM_legion_short" text="{=TAOM_legion_short}Grey Company" />
+	<string id="TAOM_legion_text" text="{=TAOM_legion_text}The Grey Company are the last organised brotherhood of the Dúnedain Rangers, descendants of the kings of Arnor who lost their kingdom ages ago. They ride across the North without a home of their own, keeping the peace in lands that have forgotten their names. Though their first loyalty is to the line of Elendil, they take contracts from lords across Middle-earth when their wandering brings them through civilised lands." />
+	<string id="TAOM_skolderbrotva_name" text="{=TAOM_skolderbrotva_name}Axemen of Erebor" />
+	<string id="TAOM_skolderbrotva_short" text="{=TAOM_skolderbrotva_short}Axemen" />
+	<string id="TAOM_skolderbrotva_text" text="{=TAOM_skolderbrotva_text}The Axemen of Erebor are veterans of King Thorin's battles who found peacetime ill-suited to their temperament. Trained in the close-quarter fighting of the Dwarven halls — shield wall, short axe, mattock — they are formidable on any terrain but excel in the mountain passes that connect Erebor to the kingdoms of men. They take contracts from any who can afford their fee, but will not raise an axe against Erebor or Rivendell." />
+	<string id="TAOM_company_name" text="{=TAOM_company_name}Corsair Blades" />
+	<string id="TAOM_company_short" text="{=TAOM_company_short}Corsairs" />
+	<string id="TAOM_company_text" text="{=TAOM_company_text}The Corsair Blades are veteran sea-fighters from the harbours of Umbar who have taken to selling their skills on land. They fight as crossbowmen — the preferred arm of shipboard warfare — and are as comfortable in a siege as they are on a rolling deck. Their captain, a scarred Númenórean exile, keeps them to their contracts with iron discipline, knowing that their reputation is their most valuable cargo." />
+
+	<!-- Mafia Factions -->
+	<string id="TAOM_beni_zilal_name" text="{=TAOM_beni_zilal_name}The Blind Eye" />
+	<string id="TAOM_beni_zilal_short" text="{=TAOM_beni_zilal_short}Blind Eye" />
+	<string id="TAOM_beni_zilal_text" text="{=TAOM_beni_zilal_text}The Blind Eye is a brotherhood of smugglers, fences, and hired killers operating across the coasts of Harad and the deep desert. They are said to descend from a cult of assassins who served a forgotten Haradrim king, and their methods — poison, shadow, and the leveraging of secrets — remain unchanged. Lords who wish to quietly remove a rival, or merchants who need cargo moved without customs inspection, know where to leave a gold coin and a sealed letter." />
+	<string id="TAOM_wolfskins_name" text="{=TAOM_wolfskins_name}Variag Ravagers" />
+	<string id="TAOM_wolfskins_short" text="{=TAOM_wolfskins_short}Ravagers" />
+	<string id="TAOM_wolfskins_text" text="{=TAOM_wolfskins_text}The Variag Ravagers are war-bands of young Variag warriors from the steppes of Khand who spend their early manhood in a state of ritual warfare: they may own no cooked food, sleep under no permanent roof, and take no mercy. While most eventually return to the settled life of their clans, some never do, and these form the Ravagers — outlaws who prey on the roads of Khand and raid across its borders into Harad and Gondor." />
+	<string id="TAOM_brotherhood_name" text="{=TAOM_brotherhood_name}Dunlending Reavers" />
+	<string id="TAOM_brotherhood_short" text="{=TAOM_brotherhood_short}Reavers" />
+	<string id="TAOM_brotherhood_text" text="{=TAOM_brotherhood_text}The Dunlending Reavers are the broken remnant of a hill-clan that once dwelt in the valleys now ruled by the Rohirrim. Their grandfathers were driven from fertile land into the rocky heights, and they have nursed that bitterness into a raider's philosophy: everything taken from a southron or a king's man is merely the restoration of what was stolen. In practice they are brigands, but dangerous ones who know every goat-track through the hills." />
+	<string id="TAOM_hidden_hand_name" text="{=TAOM_hidden_hand_name}The Mouth's Servants" />
+	<string id="TAOM_hidden_hand_short" text="{=TAOM_hidden_hand_short}Servants" />
+	<string id="TAOM_hidden_hand_text" text="{=TAOM_hidden_hand_text}The Mouth's Servants are the Eyes of Barad-dûr operating beyond the Black Gate — informants, enforcers, and spies embedded among the peoples bordering Mordor. Where Sauron's armies cannot yet reach, these agents collect tribute and silence dissent. They work through bribery, blackmail, and quiet murder, ensuring that no conspiracy against the Dark Lord takes root before it is uprooted and crushed." />
+	<string id="TAOM_lakepike_name" text="{=TAOM_lakepike_name}Wreckers of the Long Lake" />
+	<string id="TAOM_lakepike_short" text="{=TAOM_lakepike_short}Wreckers" />
+	<string id="TAOM_lakepike_text" text="{=TAOM_lakepike_text}The Wreckers of the Long Lake live in the reed-beds and rotting old jetties of the Long Lake's shadowed shores, far from the respectable lights of Esgaroth. They make their living by luring barges onto hidden shoals with false lanterns, then stripping the cargo and selling it through fences in the town itself. Despite the efforts of the Lake-town Master and the Dale merchants, the Wreckers have too many friends in the dockside taverns to be easily driven out." />
+
+	<!-- Sect Faction -->
+	<string id="TAOM_embers_name" text="{=TAOM_embers_name}Cult of the Lidless Eye" />
+	<string id="TAOM_embers_short" text="{=TAOM_embers_short}Eye Cult" />
+	<string id="TAOM_embers_text" text="{=TAOM_embers_text}The Cult of the Lidless Eye is a secret society rooted in the Black Númenórean tradition, venerating Sauron as a god-king who will restore his faithful to glory when he rises again. They recruit among the dispossessed of Dunland and the forgotten corners of the realm, promising divine favour and earthly power. In truth, their leaders answer to agents of Barad-dûr, and their cell-based structure makes them nearly impossible for any lord's justice to eradicate." />
+
+	<!-- Nomad Factions -->
+	<string id="TAOM_jawwal_name" text="{=TAOM_jawwal_name}The Sand-Riders" />
+	<string id="TAOM_jawwal_short" text="{=TAOM_jawwal_short}Sand-Riders" />
+	<string id="TAOM_jawwal_text" text="{=TAOM_jawwal_text}The Sand-Riders are the nomadic desert clans of the deep Harad interior, masters of the waterless wastes between the Ephel Dúath and the distant southern sea. They range across routes known only to themselves, demanding tribute from any caravan bold enough to cross their territory. The settled lords of Near Harad treat them as a nuisance; the Sand-Riders consider the settled lords thieves who stole what the desert had already given freely." />
+	<string id="TAOM_karakhuzaits_name" text="{=TAOM_karakhuzaits_name}The Wild Easterlings" />
+	<string id="TAOM_karakhuzaits_short" text="{=TAOM_karakhuzaits_short}Wild Ones" />
+	<string id="TAOM_karakhuzaits_text" text="{=TAOM_karakhuzaits_text}The Wild Easterlings are the unconquered steppe clans of the Sea of Rhûn, who have resisted the authority of every lord who has tried to bring them to heel — Rhûn chieftain, Mordor lieutenant, and King of Dale alike. They range across the grasslands east of the Celduin, rounding up horses, raiding flocks, and collecting road tribute from any caravan foolish enough to cross their steppe without an armed escort." />
+	<string id="TAOM_forest_people_name" text="{=TAOM_forest_people_name}The Drúedain" />
+	<string id="TAOM_forest_people_short" text="{=TAOM_forest_people_short}Woses" />
+	<string id="TAOM_forest_people_text" text="{=TAOM_forest_people_text}The Drúedain, known to Men as Woses or the Wild Men of the Woods, are an ancient people who dwell in the deep forest of Drúadan and the hidden valleys of the White Mountains. They clear ground with fire, grow what they need on the ash-rich soil, and move on when the land is spent — a way of life the settled peoples of Middle-earth have never understood and never bothered to. The Drúedain want no lord, pay no tax, and ask only to be left to the forest's silence." />
+	<string id="TAOM_eleftheroi_name" text="{=TAOM_eleftheroi_name}The Beornings" />
+	<string id="TAOM_eleftheroi_short" text="{=TAOM_eleftheroi_short}Beornings" />
+	<string id="TAOM_eleftheroi_text" text="{=TAOM_eleftheroi_text}The Beornings are the great woodmen who dwell in the vale of the Anduin between the Misty Mountains and Mirkwood, led by the skin-changers of Beorn's line. They allow no Orc to cross their territory, charge a toll at the Ford of Carrock to fund their watch, and answer to no king in Middle-earth. Though they will trade and talk with Elves and Dwarves, any army that marches through their forest without leave will find that the Beornings have very large teeth." />
+
 </strings>
