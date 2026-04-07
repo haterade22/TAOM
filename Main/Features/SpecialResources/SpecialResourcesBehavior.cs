@@ -47,15 +47,20 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        _logger.LogInfo("[SpecRes] SyncData called (save/load)");
         var data = _storage.GetAllData();
         dataStore.SyncData("_taom_specialResources", ref data);
         _storage.RestoreData(data);
+        _logger.LogInfo($"[SpecRes] SyncData restored {data?.Count ?? 0} entries");
 
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource != null)
+        {
             _storage.ClampAll(resource.Cap);
+            _logger.LogInfo($"[SpecRes] SyncData clamped all values to cap={resource.Cap}");
+        }
     }
 
     private void OnNewGameCreated(CampaignGameStarter starter)
@@ -91,7 +96,11 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
-        if (resource == null) return;
+        if (resource == null)
+        {
+            _logger.LogDebug($"[SpecRes] DailyTick: no resource for hero (kingdom='{kingdomId}', culture='{cultureId}')");
+            return;
+        }
 
         var ownedTowns = CountOwnedTowns(hero);
         var troopUpkeep = GetTroopUpkeepFromParty(hero.PartyBelongedTo);
@@ -105,6 +114,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
+        _logger.LogDebug($"[SpecRes] MapEventEnded: state={mapEvent.BattleState}, isSiege={mapEvent.IsSiegeAssault || mapEvent.IsSiegeOutside}");
 
         if (mapEvent.BattleState == BattleState.AttackerVictory || mapEvent.BattleState == BattleState.DefenderVictory)
         {

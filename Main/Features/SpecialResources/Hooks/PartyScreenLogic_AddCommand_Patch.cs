@@ -3,6 +3,7 @@ using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Library;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.SpecialResources.Hooks;
 
@@ -11,10 +12,15 @@ namespace TAOM.Features.SpecialResources.Hooks;
 public static class PartyScreenLogic_AddCommand_Patch
 {
     private static IOnPartyUpgradeResourceCheck _hook;
+    private static IModLogger _logger;
     private static FieldInfo _totalNumberField;
     private static SpecialResourcesBehavior _behavior;
 
-    public static void Initialize(IOnPartyUpgradeResourceCheck hook) => _hook = hook;
+    public static void Initialize(IOnPartyUpgradeResourceCheck hook, IModLogger logger)
+    {
+        _hook = hook;
+        _logger = logger;
+    }
 
     public static void SetBehavior(SpecialResourcesBehavior behavior) => _behavior = behavior;
 
@@ -37,13 +43,23 @@ public static class PartyScreenLogic_AddCommand_Patch
         if (costPerUnit <= 0) return true;
 
         var clamped = _hook.ClampUpgradeCount(heroId, kingdomId, cultureId, targetId, command.TotalNumber);
-        if (clamped <= 0) return false;
+
+        if (clamped <= 0)
+        {
+            _logger?.LogDebug($"[SpecRes] Patch26-AddCmd: BLOCKED {targetId} x{command.TotalNumber} (insufficient resources)");
+            return false;
+        }
 
         if (clamped < command.TotalNumber)
         {
+            _logger?.LogDebug($"[SpecRes] Patch26-AddCmd: CLAMPED {targetId} {command.TotalNumber}→{clamped}");
             SetTotalNumber(ref command, clamped);
             InformationManager.DisplayMessage(new InformationMessage(
                 $"Only enough resources for {clamped} upgrade(s).", Colors.Yellow));
+        }
+        else
+        {
+            _logger?.LogDebug($"[SpecRes] Patch26-AddCmd: ALLOWED {targetId} x{command.TotalNumber}");
         }
 
         return true;

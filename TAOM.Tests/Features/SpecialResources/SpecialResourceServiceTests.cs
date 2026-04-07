@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Domain;
 
@@ -11,6 +12,7 @@ public class SpecialResourceServiceTests
 {
     private ISpecialResourceConfigProvider _config;
     private ISpecialResourceStorageService _storage;
+    private IModLogger _logger;
     private SpecialResourceService _service;
 
     private static readonly SpecialResource MordorResource = new(
@@ -32,7 +34,8 @@ public class SpecialResourceServiceTests
     {
         _config = Substitute.For<ISpecialResourceConfigProvider>();
         _storage = Substitute.For<ISpecialResourceStorageService>();
-        _service = new SpecialResourceService(_config, _storage);
+        _logger = Substitute.For<IModLogger>();
+        _service = new SpecialResourceService(_config, _storage, _logger);
 
         _config.GetByKingdomId("empire_s").Returns(MordorResource);
         _config.GetByCultureId("mordor").Returns(MordorResource);

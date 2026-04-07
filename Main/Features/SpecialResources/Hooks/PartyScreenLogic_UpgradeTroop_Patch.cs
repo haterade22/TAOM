@@ -1,6 +1,7 @@
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.SpecialResources.Hooks;
 
@@ -9,8 +10,13 @@ namespace TAOM.Features.SpecialResources.Hooks;
 public static class PartyScreenLogic_UpgradeTroop_Patch
 {
     private static IOnPartyUpgradeResourceCheck _hook;
+    private static IModLogger _logger;
 
-    public static void Initialize(IOnPartyUpgradeResourceCheck hook) => _hook = hook;
+    public static void Initialize(IOnPartyUpgradeResourceCheck hook, IModLogger logger)
+    {
+        _hook = hook;
+        _logger = logger;
+    }
 
     public static void Postfix(PartyScreenLogic.PartyCommand command)
     {
@@ -27,5 +33,6 @@ public static class PartyScreenLogic_UpgradeTroop_Patch
         if (costPerUnit <= 0) return;
 
         _hook.QueueUpgradeSpend(heroId, targetId, command.TotalNumber);
+        _logger?.LogDebug($"[SpecRes] Patch26-Upgrade: queued {targetId} x{command.TotalNumber} (cost/unit={costPerUnit})");
     }
 }

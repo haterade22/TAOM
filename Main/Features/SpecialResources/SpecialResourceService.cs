@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TAOM.Core.Logging;
 using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Features.SpecialResources;
@@ -8,13 +9,15 @@ public class SpecialResourceService : ISpecialResourceService
 {
     private readonly ISpecialResourceConfigProvider _config;
     private readonly ISpecialResourceStorageService _storage;
+    private readonly IModLogger _logger;
     private float _pendingSpend;
     private bool _inSession;
 
-    public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage)
+    public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage, IModLogger logger)
     {
         _config = config;
         _storage = storage;
+        _logger = logger;
     }
 
     public SpecialResource ResolveResource(string kingdomId, string cultureId)
@@ -22,12 +25,22 @@ public class SpecialResourceService : ISpecialResourceService
         if (kingdomId != null)
         {
             var byKingdom = _config.GetByKingdomId(kingdomId);
-            if (byKingdom != null) return byKingdom;
+            if (byKingdom != null)
+            {
+                _logger.LogDebug($"[SpecRes] Resolved resource '{byKingdom.Id}' via kingdom '{kingdomId}'");
+                return byKingdom;
+            }
         }
         if (cultureId != null)
         {
-            return _config.GetByCultureId(cultureId);
+            var byCulture = _config.GetByCultureId(cultureId);
+            if (byCulture != null)
+            {
+                _logger.LogDebug($"[SpecRes] Resolved resource '{byCulture.Id}' via culture '{cultureId}' (kingdom '{kingdomId}' had no match)");
+                return byCulture;
+            }
         }
+        _logger.LogDebug($"[SpecRes] No resource resolved for kingdom='{kingdomId}', culture='{cultureId}'");
         return null;
     }
 
@@ -43,8 +56,12 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var amount = resource.PerBattleVictoryBase * Math.Max(0.5f, Math.Min(2f, enemySizeRatio));
+        var clampedRatio = Math.Max(0.5f, Math.Min(2f, enemySizeRatio));
+        var amount = resource.PerBattleVictoryBase * clampedRatio;
+        var before = _storage.Get(heroId, resource.Id);
         AddCapped(heroId, resource, amount);
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] BATTLE: +{amount:F1} {resource.DisplayName} (ratio {enemySizeRatio:F2}→{clampedRatio:F2}) | {before:F0}→{after:F0}");
     }
 
     public void EarnFromRaid(string heroId, string kingdomId, string cultureId)
@@ -52,7 +69,10 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
+        var before = _storage.Get(heroId, resource.Id);
         AddCapped(heroId, resource, resource.PerRaid);
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] RAID: +{resource.PerRaid:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
     }
 
     public void EarnFromSiege(string heroId, string kingdomId, string cultureId)
@@ -60,7 +80,10 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
+        var before = _storage.Get(heroId, resource.Id);
         AddCapped(heroId, resource, resource.PerSiegeVictory);
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] SIEGE: +{resource.PerSiegeVictory:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
     }
 
     public void EarnFromPrisoners(string heroId, string kingdomId, string cultureId, int prisonerCount)
@@ -68,7 +91,11 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        AddCapped(heroId, resource, resource.PerPrisoner * prisonerCount);
+        var earned = resource.PerPrisoner * prisonerCount;
+        var before = _storage.Get(heroId, resource.Id);
+        AddCapped(heroId, resource, earned);
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] PRISONERS: +{earned:F0} {resource.DisplayName} ({prisonerCount} captured) | {before:F0}→{after:F0}");
     }
 
     public void EarnFromTournament(string heroId, string kingdomId, string cultureId)
@@ -76,7 +103,10 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
+        var before = _storage.Get(heroId, resource.Id);
         AddCapped(heroId, resource, resource.PerTournamentWin);
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] TOURNAMENT: +{resource.PerTournamentWin:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
     }
 
     public void EarnFromHideout(string heroId, string kingdomId, string cultureId)
@@ -84,7 +114,10 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
+        var before = _storage.Get(heroId, resource.Id);
         AddCapped(heroId, resource, resource.PerHideoutClear);
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] HIDEOUT: +{resource.PerHideoutClear:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
     }
 
     public void ApplyDailyTick(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
@@ -95,11 +128,15 @@ public class SpecialResourceService : ISpecialResourceService
         var earning = resource.DailyPerTown * ownedTownCount;
         var upkeep = GetDailyUpkeep(troopsWithUpkeep);
         var net = earning - upkeep;
+        var before = _storage.Get(heroId, resource.Id);
 
         if (net >= 0)
             AddCapped(heroId, resource, net);
         else
             _storage.Add(heroId, resource.Id, net);
+
+        var after = _storage.Get(heroId, resource.Id);
+        _logger.LogDebug($"[SpecRes] DAILY: earn={earning:F1} ({ownedTownCount} towns) upkeep={upkeep:F1} net={net:+0.0;-0.0} | {before:F0}→{after:F0}");
     }
 
     public bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count)
@@ -111,7 +148,10 @@ public class SpecialResourceService : ISpecialResourceService
         if (cost == null) return true;
 
         var totalCost = cost.UpgradeCost * count;
-        return _storage.Get(heroId, resource.Id) >= totalCost;
+        var available = _storage.Get(heroId, resource.Id);
+        var canAfford = available >= totalCost;
+        _logger.LogDebug($"[SpecRes] CanAfford: {troopId} x{count} cost={totalCost} available={available:F0} → {canAfford}");
+        return canAfford;
     }
 
     public void SpendForUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count)
@@ -122,13 +162,16 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return;
 
-        _storage.Add(heroId, resource.Id, -(cost.UpgradeCost * count));
+        var totalCost = cost.UpgradeCost * count;
+        _storage.Add(heroId, resource.Id, -totalCost);
+        _logger.LogInfo($"[SpecRes] SPEND: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
     }
 
     public void BeginPartyScreenSession()
     {
         _pendingSpend = 0f;
         _inSession = true;
+        _logger.LogDebug("[SpecRes] PartyScreen session BEGUN");
     }
 
     public void QueueUpgradeSpend(string heroId, string troopId, int count)
@@ -136,7 +179,9 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return;
 
-        _pendingSpend += cost.UpgradeCost * count;
+        var added = cost.UpgradeCost * count;
+        _pendingSpend += added;
+        _logger.LogDebug($"[SpecRes] QUEUED: {troopId} x{count} = {added} pending (total pending={_pendingSpend:F0})");
     }
 
     public float GetAvailableAfterPending(string heroId, string kingdomId, string cultureId)
@@ -153,7 +198,12 @@ public class SpecialResourceService : ISpecialResourceService
 
         var available = GetAvailableAfterPending(heroId, kingdomId, cultureId);
         var maxAffordable = (int)(available / cost.UpgradeCost);
-        return Math.Max(0, Math.Min(requestedCount, maxAffordable));
+        var clamped = Math.Max(0, Math.Min(requestedCount, maxAffordable));
+
+        if (clamped < requestedCount)
+            _logger.LogDebug($"[SpecRes] CLAMP: {troopId} requested={requestedCount} clamped={clamped} (available={available:F0}, cost/unit={cost.UpgradeCost})");
+
+        return clamped;
     }
 
     public void CommitSession(string heroId, string kingdomId, string cultureId)
@@ -164,7 +214,14 @@ public class SpecialResourceService : ISpecialResourceService
         {
             var resource = ResolveResource(kingdomId, cultureId);
             if (resource != null)
+            {
                 _storage.Add(heroId, resource.Id, -_pendingSpend);
+                _logger.LogInfo($"[SpecRes] PartyScreen COMMITTED: -{_pendingSpend:F0} {resource.DisplayName}");
+            }
+        }
+        else
+        {
+            _logger.LogDebug("[SpecRes] PartyScreen COMMITTED: no pending spend");
         }
 
         _pendingSpend = 0f;
@@ -173,16 +230,23 @@ public class SpecialResourceService : ISpecialResourceService
 
     public void CancelSession()
     {
+        var wasPending = _pendingSpend;
         _pendingSpend = 0f;
         _inSession = false;
+        _logger.LogDebug($"[SpecRes] PartyScreen CANCELLED: discarded {wasPending:F0} pending spend");
     }
 
     public void InitializeHero(string heroId, string kingdomId, string cultureId)
     {
         var resource = ResolveResource(kingdomId, cultureId);
-        if (resource == null) return;
+        if (resource == null)
+        {
+            _logger.LogWarning($"[SpecRes] InitializeHero: no resource for kingdom='{kingdomId}', culture='{cultureId}'");
+            return;
+        }
 
         _storage.Set(heroId, resource.Id, resource.StartingAmount);
+        _logger.LogInfo($"[SpecRes] InitializeHero: {heroId} → {resource.DisplayName} = {resource.StartingAmount}");
     }
 
     public float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount)

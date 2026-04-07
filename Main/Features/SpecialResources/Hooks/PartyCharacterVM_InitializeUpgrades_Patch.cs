@@ -1,6 +1,7 @@
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.SpecialResources.Hooks;
 
@@ -9,8 +10,13 @@ namespace TAOM.Features.SpecialResources.Hooks;
 public static class PartyCharacterVM_InitializeUpgrades_Patch
 {
     private static IOnPartyUpgradeResourceCheck _hook;
+    private static IModLogger _logger;
 
-    public static void Initialize(IOnPartyUpgradeResourceCheck hook) => _hook = hook;
+    public static void Initialize(IOnPartyUpgradeResourceCheck hook, IModLogger logger)
+    {
+        _hook = hook;
+        _logger = logger;
+    }
 
     public static void Postfix(PartyCharacterVM __instance)
     {
@@ -45,6 +51,8 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
                 var isDisabled = clamped == 0;
                 var costHint = string.Concat(resourceName, " cost: ", resourceCost.ToString(),
                     " per troop (have ", ((int)currentAmount).ToString(), ")");
+
+                _logger?.LogDebug($"[SpecRes] Patch26-UI: {__instance.Character.StringId}→{targetId} cost={resourceCost} available={currentAmount:F0} clamped={clamped}/{upgrade.AvailableUpgrades}");
 
                 upgrade.Refresh(
                     clamped,
