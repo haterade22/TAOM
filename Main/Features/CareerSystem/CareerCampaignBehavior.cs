@@ -36,10 +36,35 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
-        _passiveService.RefreshCache(_dataService, _registry);
-
         var hero = Hero.MainHero;
         if (hero == null) return;
+
+        // Auto-assign career for eligible heroes without one
+        if (!_dataService.HasCareer(hero.StringId))
+        {
+            var cultureId = hero.Culture?.StringId;
+            if (!string.IsNullOrEmpty(cultureId))
+            {
+                foreach (var career in _registry.GetAllCareers())
+                {
+                    var eligible = false;
+                    foreach (var id in career.EligibleCultureIds)
+                    {
+                        if (string.Equals(id, cultureId, System.StringComparison.OrdinalIgnoreCase))
+                        { eligible = true; break; }
+                    }
+                    if (eligible)
+                    {
+                        var handler = IoC.Resolve<ICareerCreationHandler>();
+                        handler?.OnCareerSelected(hero.StringId, career.Id);
+                        _logger.LogInfo($"CareerSystem: Auto-assigned career '{career.Id}' to {hero.Name} (culture: {cultureId})");
+                        break;
+                    }
+                }
+            }
+        }
+
+        _passiveService.RefreshCache(_dataService, _registry);
 
         var careerId = _dataService.GetCareerStringId(hero.StringId);
         if (careerId != null)
