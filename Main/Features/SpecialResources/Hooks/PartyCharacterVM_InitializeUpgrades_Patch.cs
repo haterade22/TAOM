@@ -19,12 +19,13 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
 
         var heroId = Hero.MainHero?.StringId;
         var kingdomId = Hero.MainHero?.Clan?.Kingdom?.StringId;
-        if (heroId == null || kingdomId == null) return;
+        var cultureId = Hero.MainHero?.Culture?.StringId;
+        if (heroId == null) return;
 
-        var resourceName = _hook.GetResourceDisplayName(kingdomId);
+        var resourceName = _hook.GetResourceDisplayName(kingdomId, cultureId);
         if (resourceName == null) return;
 
-        var currentAmount = _hook.GetAvailableAmount(heroId, kingdomId);
+        var currentAmount = _hook.GetAvailableAmount(heroId, kingdomId, cultureId);
 
         for (int i = 0; i < __instance.Upgrades.Count; i++)
         {

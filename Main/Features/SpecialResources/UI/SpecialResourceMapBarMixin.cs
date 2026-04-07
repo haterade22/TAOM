@@ -32,13 +32,9 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             return;
 
         var kingdomId = hero.Clan?.Kingdom?.StringId;
-        if (kingdomId == null)
-        {
-            RemoveItem();
-            return;
-        }
+        var cultureId = hero.Culture?.StringId;
+        var resource = _service.ResolveResource(kingdomId, cultureId);
 
-        var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null)
         {
             RemoveItem();
@@ -47,7 +43,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         EnsureItemAdded();
 
-        var amount = _service.GetCurrentAmount(hero.StringId, kingdomId);
+        var amount = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         var intAmount = (int)amount;
         _resourceItem.IntValue = intAmount;
         _resourceItem.HasWarning = amount <= 0f;
@@ -69,8 +65,6 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         if (_itemAdded && _resourceItem != null)
             return;
 
-        // VisualId stays "special_resource" — the SpecialResourceSpriteWidget
-        // detects this sentinel and loads the correct sprite dynamically.
         _resourceItem = new MapInfoItemVM("special_resource", GetTooltipProperties);
 
         if (ViewModel is MapInfoVM mapInfo)
@@ -100,14 +94,13 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         if (hero == null) return result;
 
         var kingdomId = hero.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return result;
-
-        var resource = _config.GetByKingdomId(kingdomId);
+        var cultureId = hero.Culture?.StringId;
+        var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return result;
 
-        var amount = _service.GetCurrentAmount(hero.StringId, kingdomId);
+        var amount = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         var ownedTowns = CountOwnedTowns(hero);
-        var dailyEarning = _service.GetDailyEarning(kingdomId, ownedTowns);
+        var dailyEarning = _service.GetDailyEarning(kingdomId, cultureId, ownedTowns);
 
         result.Add(new TooltipProperty(resource.DisplayName, $"{amount:F0} / {resource.Cap:F0}", 0));
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
