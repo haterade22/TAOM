@@ -16,6 +16,13 @@ Data-driven per-faction resource system gating elite troop upgrades. Mordor "Scr
 
 **Files:** `Main/Features/SpecialResources/` (16 files), `Main/_Module/ModuleData/special_resources/` (2 XML configs)
 
+### Fix: Post-Review Hardening — Storage Restructure + Sprite Fix
+
+- **Storage keys changed** from `heroId` to `heroId:resourceId` composite key. Phase 3 multi-kingdom ready — multiple resources per hero supported without migration.
+- **SpriteWidget fix:** `SetOverriddenVisualId` was overwriting the sentinel `VisualId`, causing the custom sprite branch to be dead code. Removed the override; widget now detects `"special_resource"` and loads sprites dynamically.
+- **NaN/Infinity guard** added to `ClampAll` on save restore.
+- **Tests updated:** 864 total (was 858). Added multi-resource isolation, clamp, restore-null, initialize-hero tests.
+
 ### Fix: Codex Adversarial Review — 6 Bugs Fixed (#72)
 
 Codex adversarial review compared TAOM SpecialResources against TOR_Core CustomResources. 5 Codex findings confirmed, 1 ship-blocker found independently.

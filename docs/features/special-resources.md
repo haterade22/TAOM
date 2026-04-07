@@ -22,7 +22,8 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 - **CampaignBehavior:** Hooks into DailyTick, MapEventEnded, RaidCompleted, PrisonerTaken for earning
 - **Harmony patches (Patch26):** Postfix on PartyCharacterVM.InitializeUpgrades (grey out + hint) and PartyScreenLogic.UpgradeTroop (deduct on upgrade)
 - **UIExtenderEx mixin:** MapInfoVM mixin displays resource in map bar with tooltip breakdown
-- **SyncData persistence:** Dictionary<string, float> per hero saved via CampaignBehaviorBase.SyncData
+- **Pending transaction pattern:** Party screen upgrades queue resource spend; only committed on screen close, reverted on cancel
+- **SyncData persistence:** Dictionary<string, float> with composite `heroId:resourceId` keys, saved via CampaignBehaviorBase.SyncData. Supports multiple resources per hero for Phase 3 expansion.
 
 ### Component Diagram
 
@@ -68,7 +69,7 @@ Behavior  Patch26    MapBarMixin
 ### Current Values (Mordor Pilot)
 
 - Cap: 500, Starting: 30
-- Daily per town: +0.5, Battle: +10 (x enemy ratio), Raid: +8, Siege: +15, Prisoner: +1
+- Daily per town: +0.5, Battle: +10 (x enemy ratio), Raid: +8, Siege: +15, Prisoner: +1, Tournament: configurable, Hideout: configurable
 - 12 elite troops costed (T6+ melee, ranged, shield, command lines)
 
 ## Key Files
@@ -78,19 +79,21 @@ Behavior  Patch26    MapBarMixin
 | `Main/Features/SpecialResources/ISpecialResourceService.cs` | Service interface |
 | `Main/Features/SpecialResources/SpecialResourceService.cs` | Core logic (earn, spend, validate) |
 | `Main/Features/SpecialResources/ISpecialResourceStorageService.cs` | Storage interface |
-| `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | In-memory dict persistence |
+| `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | Composite-key dict (`heroId:resourceId`) persistence |
 | `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface |
 | `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with caching |
 | `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior (events + SyncData) |
 | `Main/Features/SpecialResources/SpecialResourcesIoC.cs` | DryIoc registrations |
 | `Main/Features/SpecialResources/Domain/SpecialResource.cs` | Resource definition record |
 | `Main/Features/SpecialResources/Domain/TroopResourceCostEntry.cs` | Per-troop cost record |
-| `Main/Features/SpecialResources/Models/TaomSpecialResourceModel.cs` | GameModel facade |
-| `Main/Features/SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs` | Grey out upgrades |
-| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` | Deduct on upgrade |
+| `Main/Features/SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs` | Grey out upgrades, show resource cost hint |
+| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_AddCommand_Patch.cs` | Prefix: clamp upgrade count before execution |
+| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` | Queue resource spend (pending transaction) |
 | `Main/Features/SpecialResources/Hooks/IOnPartyUpgradeResourceCheck.cs` | Hook interface |
 | `Main/Features/SpecialResources/Hooks/PartyUpgradeResourceCheckHook.cs` | Hook implementation |
 | `Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Map bar UIExtenderEx mixin |
+| `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
+| `Main/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |
 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | Resource definitions |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | Troop costs |
 
@@ -101,8 +104,8 @@ Behavior  Patch26    MapBarMixin
 
 ## Tests
 
-- `TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs` — 17 tests (earn, spend, validate, daily tick, cap, edge cases)
-- `TAOM.Tests/Features/SpecialResources/SpecialResourceStorageServiceTests.cs` — 7 tests (get/set/add, clamp, multi-hero)
+- `TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs` — 30 tests (earn, spend, validate, daily tick, cap, pending transaction, edge cases)
+- `TAOM.Tests/Features/SpecialResources/SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null, NaN guard)
 
 ## How to Add a New Kingdom's Resource
 

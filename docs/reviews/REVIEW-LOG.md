@@ -22,12 +22,13 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 14 | 2026-04-05 | Wave4A (Weather+Atmosphere+Shader) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
 | 15 | 2026-04-05 | Wave4B (Time+ChildGen+Startup+Menu+Enc+BattleScenes) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
 | 16 | 2026-04-06 | Infrastructure (Adapters+Core+SubModule+IoC) | no-ship | agree | 3 (2 HIGH, 1 MEDIUM) | 0 | 0 | v6 |
+| 17 | 2026-04-07 | SpecialResources (adversarial vs TOR_Core) | needs-attention | partial-agree | 2 confirmed (sprite, storage) | 1 (kingdom_id) | 0 | v6-adversarial |
 
 ## Metrics
 
-**Codex accuracy rate:** 40 real findings / 48 total findings = 83% (↑ from 81%)
-**Codex miss rate:** 7 missed bugs / 48 total real bugs = 15%
-**False positive rate:** 4 false positives / 48 findings total = 8% (↓ from 9%)
+**Codex accuracy rate:** 42 real findings / 51 total findings = 82%
+**Codex miss rate:** 7 missed bugs / 49 total real bugs = 14%
+**False positive rate:** 5 false positives / 51 findings total = 10%
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
@@ -41,7 +42,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 19 | 2026-04-07 | SpecialResources | needs-attention | agree (5 confirmed + 1 ship-blocker Claude found) | 5 (1 CRIT pending txn, 1 CRIT no clamp, 1 HIGH raid, 1 HIGH save, 1 LOW cap) | 0 | 1 (wrong kingdom_id) | v6 |
 | 20 | 2026-04-07 | CareerSystem | N/A — feature not built | N/A | 0 | 0 | 0 | v6 |
 
-**Post-codebase reviews:** 19 = SpecialResources (new feature), 20 = CareerSystem (premature — no code exists yet). 20 Codex reviews total, 48 bugs found across codebase.
+**Post-codebase reviews:** 19 = SpecialResources (new feature), 20 = CareerSystem (premature — no code exists yet), 21 = SpecialResources adversarial follow-up (2 confirmed: sprite widget dead code, single-bucket storage; 1 FP: kingdom_id already fixed; 4 findings already fixed by user before review landed). 21 Codex reviews total, 50 bugs found across codebase.
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
