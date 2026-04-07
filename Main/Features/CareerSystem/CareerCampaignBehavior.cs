@@ -46,9 +46,12 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
         if (!_dataService.HasCareer(hero.StringId))
         {
             var cultureId = hero.Culture?.StringId;
+            _logger.LogInfo($"CareerSystem: Hero '{hero.Name}' culture = '{cultureId ?? "null"}'");
             if (!string.IsNullOrEmpty(cultureId))
             {
-                foreach (var career in _registry.GetAllCareers())
+                var allCareers = _registry.GetAllCareers();
+                _logger.LogInfo($"CareerSystem: {allCareers.Count} career(s) in registry");
+                foreach (var career in allCareers)
                 {
                     var eligible = false;
                     foreach (var id in career.EligibleCultureIds)
