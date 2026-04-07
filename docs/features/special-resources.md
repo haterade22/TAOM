@@ -2,122 +2,155 @@
 
 ## Overview
 
-Per-kingdom special resources that gate elite troop upgrades and maintenance. Each kingdom can define a unique resource (e.g., Mordor's "Scraps") earned through combat and spent on T6+ troop upgrades and daily upkeep. Resources are displayed in the map bar and enforced in the party screen.
+Per-kingdom special resource system where all 18 TAOM kingdoms have a unique secondary currency required to recruit and maintain elite troops. 11 unique resources mapped to faction groups — shared balance within each group. Resources are earned through combat, displayed in the map bar, enforced in the party screen with pending transaction support, and trigger troop desertion when depleted.
 
 ## Why This Exists
 
 - **Vanilla behavior:** All troop upgrades cost only gold and XP — no faction flavor
-- **TAOM requirement:** Elite troops should feel expensive and faction-specific. Mordor orcs scavenge battlefield scraps; dwarves hoard mithril; Gondor earns noble authority
+- **TAOM requirement:** Elite troops should feel expensive and faction-specific
 - **Without this feature:** Elite armies are trivially affordable, reducing faction identity and strategic tension
+
+## Resources
+
+| Resource | Kingdoms | Theme |
+|----------|----------|-------|
+| War Spoils | Mordor, Isengard, Gundabad, Dol Guldur | Orc plunder from battles |
+| Gems | Erebor | Dwarven mining wealth |
+| Caster | Gondor | Silver coin currency |
+| Marks | Rohan | Horse-lord currency |
+| Elven Wine | Rivendell, Lothlorien, Mirkwood | Elven trade goods |
+| Lake Fish | Dale | Laketown trade |
+| War Drums | Harad, Shaghana, Abanissa | Tribal war currency |
+| Tribal Relics | Khand | Sacred artifacts |
+| Dunlending Ale | Dunland | Clan tribute |
+| Plunder | Umbar | Corsair loot |
+| War Banners | Rhun | Easterling standards |
+
+Factions sharing a resource share the same balance (e.g., switching from Mordor to Isengard keeps your War Spoils).
 
 ## Architecture
 
 ### Design Challenge
 
-Bannerlord has no concept of per-faction resources beyond gold and influence. The party screen upgrade flow is hardcoded to check only gold costs. We need to inject resource checks without breaking vanilla upgrade logic.
+Bannerlord has no concept of per-faction resources beyond gold and influence. The party screen upgrade flow is hardcoded to check only gold costs.
 
-### Solution Approach
+### Solution
 
-- **XML-driven config:** Resource definitions and troop costs in sidecar XML files (no recompilation to add kingdoms)
-- **CampaignBehavior:** Hooks into DailyTick, MapEventEnded, RaidCompleted, PrisonerTaken for earning
-- **Harmony patches (Patch26):** Postfix on PartyCharacterVM.InitializeUpgrades (grey out + hint) and PartyScreenLogic.UpgradeTroop (deduct on upgrade)
-- **UIExtenderEx mixin:** MapInfoVM mixin displays resource in map bar with tooltip breakdown
-- **Pending transaction pattern:** Party screen upgrades queue resource spend; only committed on screen close, reverted on cancel
-- **SyncData persistence:** Dictionary<string, float> with composite `heroId:resourceId` keys, saved via CampaignBehaviorBase.SyncData. Supports multiple resources per hero for Phase 3 expansion.
+- **XML-driven config:** Resource definitions with nested `<Kingdom>` and `<Culture>` child elements for many-to-one mappings
+- **Culture fallback:** Resolves via kingdom first, then culture — supports kingdomless players
+- **CampaignBehavior:** Hooks 8 events (DailyTick, MapEventEnded, RaidCompleted, PrisonerTaken, TournamentFinished, HideoutCompleted, NewGameCreated, SessionLaunched)
+- **Harmony Patch26:** 3 patches — InitializeUpgrades (grey out + hint), AddCommand prefix (clamp count), UpgradeTroop postfix (queue spend)
+- **Pending transaction:** Upgrades queue during party screen, commit on close, revert on cancel
+- **Desertion:** At 0 balance, 10% of each upkeep-troop type deserts daily (min 1 per type)
+- **Notifications:** Green chat for earnings, yellow warning at <10% cap, center-screen desertion alert
+- **SyncData persistence:** Composite `heroId:resourceId` keys, cap enforcement on load
+- **Comprehensive logging:** `[SpecRes]` prefix throughout all components
 
 ### Component Diagram
 
 ```
 special_resources_config.xml + troop_resource_costs.xml
         |
-  SpecialResourceConfigProvider (loads + caches XML)
+  SpecialResourceConfigProvider (loads + caches XML, multi-key indexes)
         |
-  SpecialResourceService (earn, spend, validate, daily tick)
-       / \         \
-      /   \         \
-Behavior  Patch26    MapBarMixin
-(events)  (party UI) (map bar)
+  SpecialResourceService (resolve, earn, spend, validate, daily tick, desertion)
+       / \         \          \
+      /   \         \          \
+Behavior  Patch26    MapBarMixin  SpriteWidget
+(events)  (party UI) (map bar)   (dynamic icon)
 ```
 
 ## Configuration
 
 ### Resource Definitions: `Main/_Module/ModuleData/special_resources/special_resources_config.xml`
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `id` | string | Unique resource identifier |
-| `kingdom_id` | string | Kingdom this resource belongs to |
-| `display_name` | string | Shown in UI |
-| `icon_sprite` | string | Sprite name for map bar icon |
-| `cap` | float | Maximum stockpile |
-| `starting_amount` | float | Amount on new game |
-| `daily_per_town` | float | Passive daily income per owned town |
-| `per_battle_victory_base` | float | Base earned per battle (scaled by enemy ratio) |
-| `per_raid` | float | Earned per successful raid |
-| `per_siege_victory` | float | Earned per siege victory |
-| `per_prisoner` | float | Earned per prisoner taken |
+```xml
+<Resource id="war_spoils" display_name="War Spoils" icon_sprite="taom_war_spoils_icon"
+  cap="500" starting_amount="30" daily_per_town="0.5"
+  per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+  per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+  <Kingdom id="empire_s" />
+  <Kingdom id="isengard" />
+  <Culture id="mordor" />
+  <Culture id="isengard" />
+</Resource>
+```
+
+Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (many-to-one).
 
 ### Troop Costs: `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml`
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `id` | string | Troop character ID |
-| `resource_id` | string | Which resource this costs |
-| `upgrade_cost` | int | Resource cost to upgrade TO this troop |
-| `daily_upkeep` | float | Daily resource drain per troop |
+```xml
+<Troop id="mordor_uruk_darkblade" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" />
+```
 
-### Current Values (Mordor Pilot)
+### Current Values (all resources)
 
 - Cap: 500, Starting: 30
-- Daily per town: +0.5, Battle: +10 (x enemy ratio), Raid: +8, Siege: +15, Prisoner: +1, Tournament: configurable, Hideout: configurable
-- 12 elite troops costed (T6+ melee, ranged, shield, command lines)
+- Daily per town: +0.5, Battle: +10 (x enemy ratio 0.5-2x), Raid: +8, Siege: +15, Prisoner: +1, Tournament: +5, Hideout: +6
+- 12 Mordor elite troops costed (other factions pending)
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/SpecialResources/ISpecialResourceService.cs` | Service interface |
-| `Main/Features/SpecialResources/SpecialResourceService.cs` | Core logic (earn, spend, validate) |
+| `Main/Features/SpecialResources/ISpecialResourceService.cs` | Service interface + TroopUpkeepInfo + TroopDesertionEntry |
+| `Main/Features/SpecialResources/SpecialResourceService.cs` | Core logic (resolve, earn, spend, desertion, session) |
 | `Main/Features/SpecialResources/ISpecialResourceStorageService.cs` | Storage interface |
-| `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | Composite-key dict (`heroId:resourceId`) persistence |
-| `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface |
-| `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with caching |
-| `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior (events + SyncData) |
+| `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | Composite-key dict persistence |
+| `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface (GetByKingdomId, GetByCultureId) |
+| `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing |
+| `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior (8 events, desertion, notifications) |
 | `Main/Features/SpecialResources/SpecialResourcesIoC.cs` | DryIoc registrations |
-| `Main/Features/SpecialResources/Domain/SpecialResource.cs` | Resource definition record |
+| `Main/Features/SpecialResources/Domain/SpecialResource.cs` | Resource definition (KingdomIds/CultureIds lists) |
 | `Main/Features/SpecialResources/Domain/TroopResourceCostEntry.cs` | Per-troop cost record |
-| `Main/Features/SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs` | Grey out upgrades, show resource cost hint |
-| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_AddCommand_Patch.cs` | Prefix: clamp upgrade count before execution |
-| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` | Queue resource spend (pending transaction) |
+| `Main/Features/SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs` | Grey out upgrades, show cost hint |
+| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_AddCommand_Patch.cs` | Prefix: clamp count before execution |
+| `Main/Features/SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` | Postfix: queue resource spend |
 | `Main/Features/SpecialResources/Hooks/IOnPartyUpgradeResourceCheck.cs` | Hook interface |
 | `Main/Features/SpecialResources/Hooks/PartyUpgradeResourceCheckHook.cs` | Hook implementation |
 | `Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Map bar UIExtenderEx mixin |
 | `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
 | `Main/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |
-| `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | Resource definitions |
-| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | Troop costs |
+| `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | 11 resource definitions |
+| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | Mordor troop costs |
 
 ## Dependencies
 
 - `IPathService` (Core) — module data path resolution
-- `IModLogger` (Core) — logging
+- `IModLogger` (Core) — logging (`[SpecRes]` prefix)
+- UIExtenderEx — map bar mixin + prefab extension
+- Harmony 2.x — Patch26_SpecialResources (3 patches)
 
 ## Tests
 
-- `TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs` — 30 tests (earn, spend, validate, daily tick, cap, pending transaction, edge cases)
-- `TAOM.Tests/Features/SpecialResources/SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null, NaN guard)
+- `SpecialResourceServiceTests.cs` — 36 tests (resolve, earn, spend, validate, daily tick, pending transaction, desertion, edge cases)
+- `SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null)
 
 ## How to Add a New Kingdom's Resource
 
-1. Add a `<Resource>` row to `special_resources_config.xml` with the kingdom's ID and earning rates
-2. Add `<Troop>` rows to `troop_resource_costs.xml` for T6+ troops requiring the resource
-3. No C# changes needed — the system is fully data-driven
-4. If the kingdom needs unique earning mechanics (e.g., mining), implement `IKingdomResourceStrategy` (Phase 3 pattern)
+1. Add a `<Resource>` element with `<Kingdom>` and `<Culture>` children to `special_resources_config.xml`
+2. Or add `<Kingdom>`/`<Culture>` children to an existing resource for shared balance
+3. Add `<Troop>` rows to `troop_resource_costs.xml` for T6+ troops
+4. Add a 33x33 PNG icon to `Main/_Module/GUI/SpriteParts/ui_taom/MapBar/`
+5. No C# changes needed — fully data-driven
+
+## How to Tune Earning Rates
+
+Edit attributes on the `<Resource>` element. Each resource can have independent rates. Current values are identical across all 11 resources.
+
+## Desertion Mechanics
+
+- Triggers daily when resource balance is 0 and party has upkeep-costing troops
+- 10% of each troop type deserts per day (minimum 1 per type)
+- Center-screen notification: "X elite troops deserted — your [Resource] are depleted!"
+- Uses vanilla `TroopRoster.AddToCounts(character, -count)` for roster removal
 
 ## Performance
 
 - IoC.Resolve cached in MapBarMixin constructor (not per-refresh)
+- Config provider lazy-loaded with dictionary indexes
 - No LINQ in hot paths — direct enumeration loops
-- List pre-allocated with capacity(8) for tooltip
-- String formatting only when amount changes (cached)
-- Empty upkeep list reused as static readonly
+- SpriteWidget caches resolved sprite (loads once, not per-frame)
+- String formatting only when amount changes (cached `_lastAmount`)
+- Comprehensive logging uses `LogDebug` for high-frequency paths, `LogInfo` for events

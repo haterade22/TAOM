@@ -26,24 +26,19 @@ Complete career/class progression system inspired by TOR_Core, adapted for LOTR.
 
 ### Feature: Per-Kingdom Special Resource System (#73)
 
-Data-driven per-faction resource system gating elite troop upgrades. Mordor "Scraps" as pilot kingdom.
+Data-driven per-faction resource system gating elite troop upgrades. All 18 kingdoms covered with 11 unique resources.
 
-**Earning:** Battle victories (+10 scaled by enemy ratio), raids (+8), sieges (+15), prisoners (+1 each), daily passive from owned towns (+0.5/town). Cap: 500, starting: 30.
+**Phase 1 — Core:** Earning (battle/raid/siege/prisoner/tournament/hideout/daily town income), spending (T6+ upgrade gating via Patch26, pending transaction with cancel support), map bar UI (UIExtenderEx MapInfoVM mixin + custom SpecialResourceSpriteWidget), SyncData persistence with composite `heroId:resourceId` keys. Culture-based fallback for kingdomless players.
 
-**Spending:** T6+ Mordor elite troop upgrades (2-5 Scraps) and daily upkeep (0.1-0.3 per troop). 12 Mordor troops costed.
+**Phase 2 — Polish:** Troop desertion when resources hit 0 (10% per type daily, min 1), center-screen desertion warning, low-resource warning at <10% cap, green chat notifications for all earning events (battle/raid/siege/prisoner/tournament/hideout).
 
-**UI:** Map bar resource display via UIExtenderEx MapInfoVM mixin with tooltip breakdown. Party screen upgrade buttons greyed out when insufficient resources (Patch26_SpecialResources).
+**Phase 3 — All Kingdoms:** 11 unique resources across 18 kingdoms. Shared balance for faction groups (War Spoils for Mordor/Isengard/Gundabad/Dol Guldur, Elven Wine for Rivendell/Lothlorien/Mirkwood, War Drums for Harad/Shaghana/Abanissa). XML schema supports many-to-one kingdom/culture mappings via nested `<Kingdom>` and `<Culture>` child elements. Same earning rates for all resources.
 
-**Architecture:** SpecialResourceService + StorageService + ConfigProvider (XML-driven). CampaignBehavior hooks DailyTick/MapEventEnded/RaidCompleted/PrisonerTaken. Harmony Patch26 on PartyCharacterVM.InitializeUpgrades (grey out) and PartyScreenLogic.UpgradeTroop (deduct). 24 unit tests.
+**Resources:** War Spoils (4 orc factions), Gems (Erebor), Caster (Gondor), Marks (Rohan), Elven Wine (3 elven factions), Lake Fish (Dale), War Drums (3 Harad factions), Tribal Relics (Khand), Dunlending Ale (Dunland), Plunder (Umbar), War Banners (Rhun).
 
-**Files:** `Main/Features/SpecialResources/` (16 files), `Main/_Module/ModuleData/special_resources/` (2 XML configs)
+**Architecture:** SpecialResourceService + StorageService + ConfigProvider (XML-driven). CampaignBehavior hooks 8 events. Harmony Patch26 (3 patches: InitializeUpgrades, AddCommand prefix, UpgradeTroop postfix). Comprehensive `[SpecRes]` logging throughout. 46 unit tests.
 
-### Fix: Post-Review Hardening — Storage Restructure + Sprite Fix
-
-- **Storage keys changed** from `heroId` to `heroId:resourceId` composite key. Phase 3 multi-kingdom ready — multiple resources per hero supported without migration.
-- **SpriteWidget fix:** `SetOverriddenVisualId` was overwriting the sentinel `VisualId`, causing the custom sprite branch to be dead code. Removed the override; widget now detects `"special_resource"` and loads sprites dynamically.
-- **NaN/Infinity guard** added to `ClampAll` on save restore.
-- **Tests updated:** 864 total (was 858). Added multi-resource isolation, clamp, restore-null, initialize-hero tests.
+**Files:** `Main/Features/SpecialResources/` (18 files), `Main/_Module/ModuleData/special_resources/` (2 XML configs)
 
 ### Fix: Codex Adversarial Review — 6 Bugs Fixed (#72)
 

@@ -110,7 +110,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | MainMenuCustomizer | `Main/Features/MainMenuCustomizer/` (hide Campaign, rename Sandbox → "Enter The Age Of Men") |
 | ShaderPrecompilation | `Main/Features/ShaderPrecompilation/` (pre-compile shaders menu option, eliminates in-game stutter) |
 | SiegeDefense | `Main/Features/Siege/` (timed defense events when watched factions are besieged; config-driven watched factions, CampaignTime deadline, relation+influence reward on arrival) |
-| SpecialResources | `Main/Features/SpecialResources/` (per-kingdom resource system — Mordor "Scraps" pilot; XML-driven earning/spending, pending transaction upgrade flow, Patch26 party screen gating, map bar UI, composite `heroId:resourceId` storage) |
+| SpecialResources | `Main/Features/SpecialResources/` (11 resources across 18 kingdoms — War Spoils/Gems/Caster/Marks/Elven Wine/Lake Fish/War Drums/Tribal Relics/Dunlending Ale/Plunder/War Banners; XML-driven with many-to-one kingdom/culture mappings, shared balance, pending transaction upgrades, desertion at 0, notifications, Patch26, composite `heroId:resourceId` storage) |
 | CareerSystem | `Main/Features/CareerSystem/` (career/class progression — Mordor Warboss pilot; XML-driven career defs, mutation calculator registry, passive service with GameModel integration, ability system, career screen UI via UIExtenderEx, level-based tier gating, SyncData persistence) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
