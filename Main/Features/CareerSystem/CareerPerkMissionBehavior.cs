@@ -1,5 +1,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
@@ -17,6 +19,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private float _tickAccumulator;
     private const float TickInterval = 1f;
     private bool _loggedMissionStart;
+    private bool _abilityReadyNotified;
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -34,14 +37,11 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
     public override void OnMissionTick(float dt)
     {
-        _tickAccumulator += dt;
-        if (_tickAccumulator < TickInterval) return;
-        _tickAccumulator -= TickInterval;
-
         var hero = Hero.MainHero;
         if (hero == null) return;
 
         var heroId = hero.StringId;
+
         if (!_loggedMissionStart)
         {
             _loggedMissionStart = true;
@@ -52,7 +52,34 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         if (!_dataService.HasCareer(heroId)) return;
 
-        _abilityService.Tick(heroId, TickInterval);
+        // Tick ability cooldowns/timers once per second
+        _tickAccumulator += dt;
+        if (_tickAccumulator >= TickInterval)
+        {
+            _tickAccumulator -= TickInterval;
+            _abilityService.Tick(heroId, TickInterval);
+        }
+
+        // Check ability ready notification (every frame, not gated by tick interval)
+        if (_abilityService.IsAbilityReady(heroId) && !_abilityReadyNotified)
+        {
+            _abilityReadyNotified = true;
+            InformationManager.DisplayMessage(new InformationMessage(
+                "Career ability is ready! Press V to activate.", Colors.Green));
+        }
+
+        // Check ability activation input (every frame, once per key press)
+        if (Input.IsKeyPressed(InputKey.V))
+        {
+            if (_abilityService.IsAbilityReady(heroId))
+            {
+                _abilityService.ActivateAbility(heroId);
+                _abilityReadyNotified = false;
+                _logger.LogInfo($"CareerSystem: Ability activated for hero '{heroId}' via V key");
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "Career ability activated!", Colors.Yellow));
+            }
+        }
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
@@ -74,6 +101,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
     {
         _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
+        _abilityReadyNotified = false;
         _abilityService.ClearAll();
     }
 }

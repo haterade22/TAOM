@@ -49,6 +49,7 @@ using TAOM.Features.LocalizationOverride.Hooks;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
 using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Models;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -281,6 +282,15 @@ public class SubModule : MBSubModuleBase
             var careerCreationHandler = IoC.Resolve<ICareerCreationHandler>();
             campaignStarter.AddBehavior(new CareerCampaignBehavior(
                 careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerLogger));
+
+            var careerSwitchService = IoC.Resolve<ICareerSwitchService>();
+            var careerAdapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
+            campaignStarter.AddBehavior(new CareerSwitchDialogueBehavior(
+                careerDataService, careerRegistry, careerSwitchService, careerAdapterFactory, careerLogger));
+
+            // Career system GameModels
+            campaignStarter.AddModel(new TaomMapVisibilityModel());
+            campaignStarter.AddModel(new TaomInventoryCapacityModel());
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();

@@ -3,6 +3,8 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.BattleBalance.Models;
 
@@ -24,25 +26,40 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
         float vanillaSurvival = base.GetSurvivalChance(
             party, character, damageType, canDamageKillEvenIfBlunt, enemyParty);
 
-        if (!_settings.EnableCulturalSurvivalBonuses)
-            return vanillaSurvival;
-
         if (party == null)
             return vanillaSurvival;
 
-        var config = _configProvider.GetConfig();
-        if (!config.CasualtyRatios.EnableCulturalSurvivalBonuses)
-            return vanillaSurvival;
+        float result = vanillaSurvival;
 
-        var culture = party.Owner?.Culture ?? party.Culture;
-        if (culture == null)
-            return vanillaSurvival;
+        if (_settings.EnableCulturalSurvivalBonuses)
+        {
+            var config = _configProvider.GetConfig();
+            if (config.CasualtyRatios.EnableCulturalSurvivalBonuses)
+            {
+                var culture = party.Owner?.Culture ?? party.Culture;
+                if (culture != null)
+                {
+                    float bonus = config.CasualtyRatios.GetCulturalSurvivalBonus(culture.StringId);
+                    if (bonus != 0f)
+                        result = ApplyCulturalSurvivalBonus(result, bonus);
+                }
+            }
+        }
 
-        float bonus = config.CasualtyRatios.GetCulturalSurvivalBonus(culture.StringId);
-        if (bonus == 0f)
-            return vanillaSurvival;
+        // Career passive: TroopRegeneration increases survival chance
+        var hero = party.Owner ?? party.LeaderHero;
+        if (hero != null)
+        {
+            var passiveService = IoC.Resolve<ICareerPassiveService>();
+            if (passiveService != null)
+            {
+                float magnitude = passiveService.GetPassiveMagnitude(hero.StringId, PassiveEffectType.TroopRegeneration);
+                if (magnitude != 0f)
+                    result = Math.Min(1f, result * (1f + magnitude));
+            }
+        }
 
-        return ApplyCulturalSurvivalBonus(vanillaSurvival, bonus);
+        return result;
     }
 
     internal static float ApplyCulturalSurvivalBonus(float vanillaSurvival, float culturalBonus)
