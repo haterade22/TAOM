@@ -291,6 +291,7 @@ public class SubModule : MBSubModuleBase
             // Career system GameModels
             campaignStarter.AddModel(new TaomMapVisibilityModel());
             campaignStarter.AddModel(new TaomInventoryCapacityModel());
+            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel());
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();

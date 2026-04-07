@@ -1,0 +1,34 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+            SuggestedWidth="200" SuggestedHeight="50"
+            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            MarginRight="20" MarginBottom="80"
+            IsVisible="@IsVisible">
+      <Children>
+        <!-- Background -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                Sprite="BlankWhiteSquare_9" Color="#000000AA" />
+        <!-- Fill bar -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                SuggestedHeight="8" VerticalAlignment="Bottom"
+                MarginBottom="5" MarginLeft="5" MarginRight="5">
+          <Children>
+            <FillBarWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                           CurrentAmount="@ChargePercent" MaxAmount="100"
+                           Sprite="BlankWhiteSquare_9" />
+          </Children>
+        </Widget>
+        <!-- Ability name -->
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                    Text="@AbilityName" VerticalAlignment="Top" MarginTop="5"
+                    Brush="ButtonBrush1.Text" />
+        <!-- Ready indicator -->
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                    Text="Press V" VerticalAlignment="Center"
+                    IsVisible="@IsReady"
+                    Brush="ButtonBrush1.Text" />
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

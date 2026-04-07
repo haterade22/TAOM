@@ -1,11 +1,14 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.ScreenSystem;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CareerSystem.UI;
 
 namespace TAOM.Features.CareerSystem;
 
@@ -20,6 +23,11 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private const float TickInterval = 1f;
     private bool _loggedMissionStart;
     private bool _abilityReadyNotified;
+
+    private GauntletLayer _hudLayer;
+    private CareerAbilityHudVM _hudVM;
+    private GauntletMovieIdentifier _hudMovie;
+    private bool _hudInitialized;
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -49,6 +57,9 @@ public class CareerPerkMissionBehavior : MissionBehavior
             var careerId = _dataService.GetCareerStringId(heroId);
             _logger.LogInfo($"CareerSystem: Mission started — hero='{heroId}' hasCareer={hasCareer} career='{careerId ?? "none"}'");
         }
+
+        TryInitializeHud();
+        UpdateHud(heroId);
 
         if (!_dataService.HasCareer(heroId)) return;
 
@@ -82,6 +93,45 @@ public class CareerPerkMissionBehavior : MissionBehavior
         }
     }
 
+    private void TryInitializeHud()
+    {
+        if (_hudInitialized) return;
+
+        var topScreen = ScreenManager.TopScreen;
+        if (topScreen == null) return;
+
+        _hudVM = new CareerAbilityHudVM();
+        _hudLayer = new GauntletLayer("CareerAbilityHUD", 50);
+        _hudMovie = _hudLayer.LoadMovie("AbilityHUD", _hudVM);
+        topScreen.AddLayer(_hudLayer);
+        _hudInitialized = true;
+        _logger.LogInfo("CareerSystem: HUD layer initialized");
+    }
+
+    private void UpdateHud(string heroId)
+    {
+        if (_hudVM == null) return;
+
+        if (!_dataService.HasCareer(heroId))
+        {
+            _hudVM.Update(false, null, 0f, 0f, false);
+            return;
+        }
+
+        var ability = _abilityService.GetOrCreateAbility(heroId, _registry, _dataService);
+        if (ability == null)
+        {
+            _hudVM.Update(false, null, 0f, 0f, false);
+            return;
+        }
+
+        var careerId = _dataService.GetCareerStringId(heroId);
+        var career = careerId != null ? _registry.GetCareer(careerId) : null;
+        var abilityName = career?.DisplayName ?? ability.TemplateId;
+
+        _hudVM.Update(true, abilityName, ability.CurrentCharge, ability.MaxCharge, ability.IsReady);
+    }
+
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
         if (affectorAgent == null) return;
@@ -99,9 +149,30 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
     protected override void OnEndMission()
     {
+        CleanupHud();
         _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
         _abilityReadyNotified = false;
         _abilityService.ClearAll();
+    }
+
+    private void CleanupHud()
+    {
+        if (!_hudInitialized) return;
+
+        var topScreen = ScreenManager.TopScreen;
+        if (topScreen != null && _hudLayer != null)
+        {
+            topScreen.RemoveLayer(_hudLayer);
+        }
+
+        if (_hudMovie != null && _hudLayer != null)
+            _hudLayer.ReleaseMovie(_hudMovie);
+
+        _hudVM?.OnFinalize();
+        _hudLayer = null;
+        _hudVM = null;
+        _hudMovie = null;
+        _hudInitialized = false;
     }
 }
