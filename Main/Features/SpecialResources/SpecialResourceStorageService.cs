@@ -5,34 +5,46 @@ namespace TAOM.Features.SpecialResources;
 
 public class SpecialResourceStorageService : ISpecialResourceStorageService
 {
-    private Dictionary<string, float> _heroResources = new();
+    private Dictionary<string, float> _data = new();
 
-    public float Get(string heroId)
+    public float Get(string heroId, string resourceId)
     {
-        return _heroResources.TryGetValue(heroId, out var amount) ? amount : 0f;
+        var key = MakeKey(heroId, resourceId);
+        return _data.TryGetValue(key, out var amount) ? amount : 0f;
     }
 
-    public void Set(string heroId, float amount)
+    public void Set(string heroId, string resourceId, float amount)
     {
-        _heroResources[heroId] = Math.Max(0f, amount);
+        _data[MakeKey(heroId, resourceId)] = Math.Max(0f, amount);
     }
 
-    public void Add(string heroId, float delta)
+    public void Add(string heroId, string resourceId, float delta)
     {
-        var current = Get(heroId);
-        Set(heroId, current + delta);
+        var current = Get(heroId, resourceId);
+        Set(heroId, resourceId, current + delta);
     }
 
-    public Dictionary<string, float> GetAllData() => _heroResources;
+    public Dictionary<string, float> GetAllData() => _data;
 
     public void RestoreData(Dictionary<string, float> data)
     {
-        _heroResources = data ?? new Dictionary<string, float>();
+        _data = data ?? new Dictionary<string, float>();
     }
 
     public void ClampAll(float cap)
     {
-        foreach (var key in new List<string>(_heroResources.Keys))
-            _heroResources[key] = Math.Max(0f, Math.Min(cap, _heroResources[key]));
+        foreach (var key in new List<string>(_data.Keys))
+        {
+            var val = _data[key];
+            if (float.IsNaN(val) || float.IsInfinity(val))
+                _data[key] = 0f;
+            else
+                _data[key] = Math.Max(0f, Math.Min(cap, val));
+        }
+    }
+
+    private static string MakeKey(string heroId, string resourceId)
+    {
+        return string.Concat(heroId, ":", resourceId);
     }
 }

@@ -26,7 +26,8 @@ public static class PartyScreenLogic_AddCommand_Patch
         _behavior?.AttachToPartyScreen(__instance);
 
         var heroId = Hero.MainHero?.StringId;
-        if (heroId == null) return true;
+        var kingdomId = Hero.MainHero?.Clan?.Kingdom?.StringId;
+        if (heroId == null || kingdomId == null) return true;
 
         var targetId = command.Character?.UpgradeTargets?[command.UpgradeTarget]?.StringId;
         if (targetId == null) return true;
@@ -34,7 +35,7 @@ public static class PartyScreenLogic_AddCommand_Patch
         var costPerUnit = _hook.GetUpgradeCost(targetId);
         if (costPerUnit <= 0) return true;
 
-        var clamped = _hook.ClampUpgradeCount(heroId, targetId, command.TotalNumber);
+        var clamped = _hook.ClampUpgradeCount(heroId, kingdomId, targetId, command.TotalNumber);
         if (clamped <= 0) return false;
 
         if (clamped < command.TotalNumber)

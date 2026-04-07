@@ -22,9 +22,11 @@ public class SpecialResourceService : ISpecialResourceService
         return _config.GetByKingdomId(kingdomId);
     }
 
-    public float GetCurrentAmount(string heroId)
+    public float GetCurrentAmount(string heroId, string kingdomId)
     {
-        return _storage.Get(heroId);
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return 0f;
+        return _storage.Get(heroId, resource.Id);
     }
 
     public void EarnFromBattle(string heroId, string kingdomId, float enemySizeRatio)
@@ -33,7 +35,7 @@ public class SpecialResourceService : ISpecialResourceService
         if (resource == null) return;
 
         var amount = resource.PerBattleVictoryBase * Math.Max(0.5f, Math.Min(2f, enemySizeRatio));
-        AddCapped(heroId, amount, resource.Cap);
+        AddCapped(heroId, resource, amount);
     }
 
     public void EarnFromRaid(string heroId, string kingdomId)
@@ -41,7 +43,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        AddCapped(heroId, resource.PerRaid, resource.Cap);
+        AddCapped(heroId, resource, resource.PerRaid);
     }
 
     public void EarnFromSiege(string heroId, string kingdomId)
@@ -49,7 +51,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        AddCapped(heroId, resource.PerSiegeVictory, resource.Cap);
+        AddCapped(heroId, resource, resource.PerSiegeVictory);
     }
 
     public void EarnFromPrisoners(string heroId, string kingdomId, int prisonerCount)
@@ -57,7 +59,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        AddCapped(heroId, resource.PerPrisoner * prisonerCount, resource.Cap);
+        AddCapped(heroId, resource, resource.PerPrisoner * prisonerCount);
     }
 
     public void EarnFromTournament(string heroId, string kingdomId)
@@ -65,7 +67,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        AddCapped(heroId, resource.PerTournamentWin, resource.Cap);
+        AddCapped(heroId, resource, resource.PerTournamentWin);
     }
 
     public void EarnFromHideout(string heroId, string kingdomId)
@@ -73,7 +75,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        AddCapped(heroId, resource.PerHideoutClear, resource.Cap);
+        AddCapped(heroId, resource, resource.PerHideoutClear);
     }
 
     public void ApplyDailyTick(string heroId, string kingdomId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
@@ -86,26 +88,32 @@ public class SpecialResourceService : ISpecialResourceService
         var net = earning - upkeep;
 
         if (net >= 0)
-            AddCapped(heroId, net, resource.Cap);
+            AddCapped(heroId, resource, net);
         else
-            _storage.Add(heroId, net);
+            _storage.Add(heroId, resource.Id, net);
     }
 
-    public bool CanAffordUpgrade(string heroId, string troopId, int count)
+    public bool CanAffordUpgrade(string heroId, string kingdomId, string troopId, int count)
     {
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return true;
+
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return true;
 
         var totalCost = cost.UpgradeCost * count;
-        return _storage.Get(heroId) >= totalCost;
+        return _storage.Get(heroId, resource.Id) >= totalCost;
     }
 
-    public void SpendForUpgrade(string heroId, string troopId, int count)
+    public void SpendForUpgrade(string heroId, string kingdomId, string troopId, int count)
     {
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return;
+
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return;
 
-        _storage.Add(heroId, -(cost.UpgradeCost * count));
+        _storage.Add(heroId, resource.Id, -(cost.UpgradeCost * count));
     }
 
     public void BeginPartyScreenSession()
@@ -122,27 +130,33 @@ public class SpecialResourceService : ISpecialResourceService
         _pendingSpend += cost.UpgradeCost * count;
     }
 
-    public float GetAvailableAfterPending(string heroId)
+    public float GetAvailableAfterPending(string heroId, string kingdomId)
     {
-        return _storage.Get(heroId) - _pendingSpend;
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return 0f;
+        return _storage.Get(heroId, resource.Id) - _pendingSpend;
     }
 
-    public int ClampUpgradeCount(string heroId, string troopId, int requestedCount)
+    public int ClampUpgradeCount(string heroId, string kingdomId, string troopId, int requestedCount)
     {
         var cost = _config.GetTroopCost(troopId);
         if (cost == null || cost.UpgradeCost <= 0) return requestedCount;
 
-        var available = GetAvailableAfterPending(heroId);
+        var available = GetAvailableAfterPending(heroId, kingdomId);
         var maxAffordable = (int)(available / cost.UpgradeCost);
         return Math.Max(0, Math.Min(requestedCount, maxAffordable));
     }
 
-    public void CommitSession(string heroId)
+    public void CommitSession(string heroId, string kingdomId)
     {
         if (!_inSession) return;
 
         if (_pendingSpend > 0f)
-            _storage.Add(heroId, -_pendingSpend);
+        {
+            var resource = _config.GetByKingdomId(kingdomId);
+            if (resource != null)
+                _storage.Add(heroId, resource.Id, -_pendingSpend);
+        }
 
         _pendingSpend = 0f;
         _inSession = false;
@@ -152,6 +166,14 @@ public class SpecialResourceService : ISpecialResourceService
     {
         _pendingSpend = 0f;
         _inSession = false;
+    }
+
+    public void InitializeHero(string heroId, string kingdomId)
+    {
+        var resource = _config.GetByKingdomId(kingdomId);
+        if (resource == null) return;
+
+        _storage.Set(heroId, resource.Id, resource.StartingAmount);
     }
 
     public float GetDailyEarning(string kingdomId, int ownedTownCount)
@@ -177,10 +199,10 @@ public class SpecialResourceService : ISpecialResourceService
         return total;
     }
 
-    private void AddCapped(string heroId, float amount, float cap)
+    private void AddCapped(string heroId, SpecialResource resource, float amount)
     {
-        var current = _storage.Get(heroId);
-        var newAmount = Math.Min(current + amount, cap);
-        _storage.Set(heroId, newAmount);
+        var current = _storage.Get(heroId, resource.Id);
+        var newAmount = Math.Min(current + amount, resource.Cap);
+        _storage.Set(heroId, resource.Id, newAmount);
     }
 }

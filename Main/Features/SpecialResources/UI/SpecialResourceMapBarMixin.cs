@@ -47,7 +47,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         EnsureItemAdded();
 
-        var amount = _service.GetCurrentAmount(hero.StringId);
+        var amount = _service.GetCurrentAmount(hero.StringId, kingdomId);
         var intAmount = (int)amount;
         _resourceItem.IntValue = intAmount;
         _resourceItem.HasWarning = amount <= 0f;
@@ -105,7 +105,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return result;
 
-        var amount = _service.GetCurrentAmount(hero.StringId);
+        var amount = _service.GetCurrentAmount(hero.StringId, kingdomId);
         var ownedTowns = CountOwnedTowns(hero);
         var dailyEarning = _service.GetDailyEarning(kingdomId, ownedTowns);
 

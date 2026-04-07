@@ -290,18 +290,39 @@ Every completed feature MUST have a documentation file at `docs/features/<featur
 
 **Rule:** If a future session needs to understand a feature, the doc should contain enough detail that ZERO decompilation, code reading, or re-analysis is needed for the conceptual understanding. Code reading is only for the current state of the implementation.
 
-### Completion Workflow (MANDATORY)
+### Completion Workflow (MANDATORY — every feature, no exceptions)
 
-Before closing out any feature or fix, run this sequence:
+Before closing out any feature or fix, run this FULL sequence:
 
-1. `/verify` — build + tests pass
-2. `/deep-review [feature-name]` — launches 4 parallel agents (standards, Bannerlord 1.3 compat, efficiency, completeness)
-3. Fix any issues flagged by the review
-4. Create/close GitHub issue with full details
-5. Write/update `docs/features/<name>.md`
-6. Update `CHANGELOG.md`
+```
+Phase 1: BUILD & INTERNAL REVIEW
+  1. /verify                        — build + tests pass
+  2. /deep-review [feature]         — 4 parallel agents (standards, compat, efficiency, completeness)
+  3. Fix issues from deep-review
 
-**Do not skip `/deep-review`.** It catches adapter pattern violations, v1.3 API incompatibilities, performance issues, and missing docs/tests before they become bugs.
+Phase 2: CODEX ADVERSARIAL REVIEW
+  4. Write Codex prompt             — use v6 template from docs/reviews/REVIEW-GUIDE.md
+     - Include Known Suspects from deep-review findings
+     - Include ID cheatsheet, required sections, quality gates
+  5. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
+  6. /review-codex [review.md]      — verify findings, implement confirmed fixes
+
+Phase 3: SELF-REVIEW (review our OWN fixes)
+  7. Write Codex prompt for fixes   — list every file changed in phases 1-6
+     - Focus on: reflection targets, patch signatures, config IDs, fail-safe defaults
+  8. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
+  9. /review-codex [review.md]      — verify findings, implement confirmed fixes
+
+Phase 4: CLOSE OUT
+  10. /verify                       — final build + tests pass
+  11. Create/close GitHub issue with full details
+  12. Write/update docs/features/<name>.md
+  13. Update CHANGELOG.md
+```
+
+**Do not skip any phase.** Phase 2 catches bugs Claude misses (43 found in codebase review). Phase 3 catches bugs in our fixes (already caught IsFemale field targeting wrong type, shaghana/abanissa alignment mismatch). Each phase exists because the previous one proved insufficient.
+
+**Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history)
 
 ## Commits
 

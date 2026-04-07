@@ -1,5 +1,3 @@
-using TAOM.Features.SpecialResources.Domain;
-
 namespace TAOM.Features.SpecialResources.Hooks;
 
 public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
@@ -13,14 +11,14 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
         _config = config;
     }
 
-    public bool CanAffordUpgrade(string heroId, string troopId, int count)
-        => _service.CanAffordUpgrade(heroId, troopId, count);
+    public bool CanAffordUpgrade(string heroId, string kingdomId, string troopId, int count)
+        => _service.CanAffordUpgrade(heroId, kingdomId, troopId, count);
 
     public void QueueUpgradeSpend(string heroId, string troopId, int count)
         => _service.QueueUpgradeSpend(heroId, troopId, count);
 
-    public int ClampUpgradeCount(string heroId, string troopId, int requestedCount)
-        => _service.ClampUpgradeCount(heroId, troopId, requestedCount);
+    public int ClampUpgradeCount(string heroId, string kingdomId, string troopId, int requestedCount)
+        => _service.ClampUpgradeCount(heroId, kingdomId, troopId, requestedCount);
 
     public int GetUpgradeCost(string troopId)
     {
@@ -28,8 +26,8 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
         return cost?.UpgradeCost ?? 0;
     }
 
-    public float GetAvailableAmount(string heroId)
-        => _service.GetAvailableAfterPending(heroId);
+    public float GetAvailableAmount(string heroId, string kingdomId)
+        => _service.GetAvailableAfterPending(heroId, kingdomId);
 
     public string GetResourceDisplayName(string kingdomId)
     {
@@ -38,6 +36,6 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
     }
 
     public void BeginSession() => _service.BeginPartyScreenSession();
-    public void CommitSession(string heroId) => _service.CommitSession(heroId);
+    public void CommitSession(string heroId, string kingdomId) => _service.CommitSession(heroId, kingdomId);
     public void CancelSession() => _service.CancelSession();
 }

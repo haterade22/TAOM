@@ -69,11 +69,8 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var kingdomId = hero.Clan?.Kingdom?.StringId;
         if (kingdomId == null) return;
 
-        var resource = _config.GetByKingdomId(kingdomId);
-        if (resource == null) return;
-
-        _storage.Set(hero.StringId, resource.StartingAmount);
-        _logger.LogInfo($"SpecialResources: Initialized {resource.DisplayName} = {resource.StartingAmount} for {hero.Name}");
+        _service.InitializeHero(hero.StringId, kingdomId);
+        _logger.LogInfo($"SpecialResources: Initialized resource for {hero.Name} (kingdom: {kingdomId})");
     }
 
     private void OnSessionLaunched(CampaignGameStarter starter)
@@ -87,10 +84,10 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var resource = _config.GetByKingdomId(kingdomId);
         if (resource == null) return;
 
-        var current = _storage.Get(hero.StringId);
+        var current = _storage.Get(hero.StringId, resource.Id);
         if (current <= 0f && resource.StartingAmount > 0f)
         {
-            _storage.Set(hero.StringId, resource.StartingAmount);
+            _storage.Set(hero.StringId, resource.Id, resource.StartingAmount);
             _logger.LogInfo($"SpecialResources: Seeded {resource.DisplayName} = {resource.StartingAmount} for legacy save ({hero.Name})");
         }
     }
@@ -221,7 +218,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (fromCancel)
             _service.CancelSession();
         else
-            _service.CommitSession(Hero.MainHero?.StringId);
+            _service.CommitSession(Hero.MainHero?.StringId, Hero.MainHero?.Clan?.Kingdom?.StringId);
     }
 
     private void OnPartyScreenReset(PartyScreenLogic logic, bool fromCancel)
