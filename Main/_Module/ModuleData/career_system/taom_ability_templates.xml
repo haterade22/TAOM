@@ -1,17 +1,468 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AbilityTemplates>
 
-  <AbilityTemplate id="warboss_rally_horde"
-                   display_name="{=taom_ability_warboss_rally}Rally the Horde"
-                   sprite="ability_warboss_rally_icon"
-                   cooldown="0"
-                   duration="8"
-                   radius="10"
-                   cast_type="Instant"
-                   target_type="Self"
-                   crosshair_type="Self"
-                   particle_effect="warboss_rally_particle"
-                   sound_effect="warboss_rally_activate"
-                   tooltip="{=taom_ability_warboss_rally_tt}Rally nearby allies, granting increased damage and morale for a short duration. Charges from killing enemies." />
+  <!-- ═══ GONDOR ═══ -->
+
+  <AbilityTemplate id="ranger_of_ithilien_ability"
+                   display_name="{=taom_ability_ranger_of_ithilien}Ambush"
+                   sprite="ability_ranger_of_ithilien_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="ranger_of_ithilien_particle"
+                   sound_effect="ranger_of_ithilien_activate"
+                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting ranged damage and stealth for a short duration." />
+
+  <AbilityTemplate id="osgiliath_captain_ability"
+                   display_name="{=taom_ability_osgiliath_captain}Shield Wall"
+                   sprite="ability_osgiliath_captain_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="osgiliath_captain_particle"
+                   sound_effect="osgiliath_captain_activate"
+                   tooltip="{=taom_ability_osgiliath_captain_tt}Brace your shield and rally defenders, greatly increasing resistance and troop morale." />
+
+  <AbilityTemplate id="swan_knight_ability"
+                   display_name="{=taom_ability_swan_knight}Cavalry Charge"
+                   sprite="ability_swan_knight_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="swan_knight_particle"
+                   sound_effect="swan_knight_activate"
+                   tooltip="{=taom_ability_swan_knight_tt}Launch a devastating mounted charge, boosting speed and melee damage while mounted." />
+
+  <!-- ═══ MORDOR ═══ -->
+
+  <AbilityTemplate id="black_guard_ability"
+                   display_name="{=taom_ability_black_guard}Dark Fortitude"
+                   sprite="ability_black_guard_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="black_guard_particle"
+                   sound_effect="black_guard_activate"
+                   tooltip="{=taom_ability_black_guard_tt}Draw upon the Dark Lord's will to become nearly impervious, absorbing massive damage." />
+
+  <AbilityTemplate id="mordor_archer_ability"
+                   display_name="{=taom_ability_mordor_archer}Shadow Volley"
+                   sprite="ability_mordor_archer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="mordor_archer_particle"
+                   sound_effect="mordor_archer_activate"
+                   tooltip="{=taom_ability_mordor_archer_tt}Unleash a hail of darkened arrows with increased damage and armor penetration." />
+
+  <AbilityTemplate id="warg_rider_ability"
+                   display_name="{=taom_ability_warg_rider}Savage Pounce"
+                   sprite="ability_warg_rider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warg_rider_particle"
+                   sound_effect="warg_rider_activate"
+                   tooltip="{=taom_ability_warg_rider_tt}Command your warg to lunge with terrifying ferocity, boosting charge damage and speed." />
+
+  <!-- ═══ ROHAN ═══ -->
+
+  <AbilityTemplate id="shieldmaiden_ability"
+                   display_name="{=taom_ability_shieldmaiden}Defiant Stand"
+                   sprite="ability_shieldmaiden_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="shieldmaiden_particle"
+                   sound_effect="shieldmaiden_activate"
+                   tooltip="{=taom_ability_shieldmaiden_tt}Stand defiant against overwhelming odds, gaining massive resistance and inspiring nearby allies." />
+
+  <AbilityTemplate id="rohirrim_scout_ability"
+                   display_name="{=taom_ability_rohirrim_scout}Eagle Eye"
+                   sprite="ability_rohirrim_scout_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="rohirrim_scout_particle"
+                   sound_effect="rohirrim_scout_activate"
+                   tooltip="{=taom_ability_rohirrim_scout_tt}Focus your senses to spot distant targets, greatly boosting ranged accuracy and damage." />
+
+  <AbilityTemplate id="rider_of_the_mark_ability"
+                   display_name="{=taom_ability_rider_of_the_mark}Thundering Charge"
+                   sprite="ability_rider_of_the_mark_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="rider_of_the_mark_particle"
+                   sound_effect="rider_of_the_mark_activate"
+                   tooltip="{=taom_ability_rider_of_the_mark_tt}Ride forth with the fury of the Rohirrim, scattering enemies with a devastating mounted charge." />
+
+  <!-- ═══ DUNLAND ═══ -->
+
+  <AbilityTemplate id="hillman_warrior_ability"
+                   display_name="{=taom_ability_hillman_warrior}Berserker Fury"
+                   sprite="ability_hillman_warrior_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="hillman_warrior_particle"
+                   sound_effect="hillman_warrior_activate"
+                   tooltip="{=taom_ability_hillman_warrior_tt}Fly into a savage rage, trading defense for massively increased melee damage and health." />
+
+  <AbilityTemplate id="dunland_stalker_ability"
+                   display_name="{=taom_ability_dunland_stalker}Misty Ambush"
+                   sprite="ability_dunland_stalker_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dunland_stalker_particle"
+                   sound_effect="dunland_stalker_activate"
+                   tooltip="{=taom_ability_dunland_stalker_tt}Vanish into the hill mists, boosting ranged damage and movement speed for a surprise attack." />
+
+  <AbilityTemplate id="hillman_raider_ability"
+                   display_name="{=taom_ability_hillman_raider}Highland Rush"
+                   sprite="ability_hillman_raider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="hillman_raider_particle"
+                   sound_effect="hillman_raider_activate"
+                   tooltip="{=taom_ability_hillman_raider_tt}Surge downhill with reckless momentum, boosting mounted damage and charge speed." />
+
+  <!-- ═══ KHAND ═══ -->
+
+  <AbilityTemplate id="variag_champion_ability"
+                   display_name="{=taom_ability_variag_champion}Dual Blade Storm"
+                   sprite="ability_variag_champion_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="variag_champion_particle"
+                   sound_effect="variag_champion_activate"
+                   tooltip="{=taom_ability_variag_champion_tt}Unleash a whirlwind of twin blades, increasing swing speed and damage resistance." />
+
+  <AbilityTemplate id="variag_archer_ability"
+                   display_name="{=taom_ability_variag_archer}Desert Wind"
+                   sprite="ability_variag_archer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="variag_archer_particle"
+                   sound_effect="variag_archer_activate"
+                   tooltip="{=taom_ability_variag_archer_tt}Channel the desert wind to guide your arrows, greatly increasing ranged accuracy and speed." />
+
+  <AbilityTemplate id="variag_horseman_ability"
+                   display_name="{=taom_ability_variag_horseman}Steppe Stampede"
+                   sprite="ability_variag_horseman_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="variag_horseman_particle"
+                   sound_effect="variag_horseman_activate"
+                   tooltip="{=taom_ability_variag_horseman_tt}Spur your steed into a devastating stampede, crushing enemies beneath thundering hooves." />
+
+  <!-- ═══ HARAD ═══ -->
+
+  <AbilityTemplate id="haradrim_spearman_ability"
+                   display_name="{=taom_ability_haradrim_spearman}Phalanx of Harad"
+                   sprite="ability_haradrim_spearman_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="haradrim_spearman_particle"
+                   sound_effect="haradrim_spearman_activate"
+                   tooltip="{=taom_ability_haradrim_spearman_tt}Lock shields in a Southron phalanx, massively increasing resistance and troop defense." />
+
+  <AbilityTemplate id="serpent_archer_ability"
+                   display_name="{=taom_ability_serpent_archer}Venom Shot"
+                   sprite="ability_serpent_archer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="serpent_archer_particle"
+                   sound_effect="serpent_archer_activate"
+                   tooltip="{=taom_ability_serpent_archer_tt}Coat your arrows in serpent venom, adding damage over time and armor penetration." />
+
+  <AbilityTemplate id="mumak_commander_ability"
+                   display_name="{=taom_ability_mumak_commander}Stampede"
+                   sprite="ability_mumak_commander_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="mumak_commander_particle"
+                   sound_effect="mumak_commander_activate"
+                   tooltip="{=taom_ability_mumak_commander_tt}Drive your mount into a frenzied stampede, devastating everything in your path." />
+
+  <!-- ═══ EASTERLINGS ═══ -->
+
+  <AbilityTemplate id="kataphract_ability"
+                   display_name="{=taom_ability_kataphract}Iron Shell"
+                   sprite="ability_kataphract_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="kataphract_particle"
+                   sound_effect="kataphract_activate"
+                   tooltip="{=taom_ability_kataphract_tt}Seal your lacquered armor tight, becoming nearly invulnerable to all but the heaviest blows." />
+
+  <AbilityTemplate id="eastern_bowman_ability"
+                   display_name="{=taom_ability_eastern_bowman}Rain of Arrows"
+                   sprite="ability_eastern_bowman_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="eastern_bowman_particle"
+                   sound_effect="eastern_bowman_activate"
+                   tooltip="{=taom_ability_eastern_bowman_tt}Loose arrows with blinding speed, greatly increasing fire rate and ranged damage." />
+
+  <AbilityTemplate id="wainrider_ability"
+                   display_name="{=taom_ability_wainrider}War Wagon Rush"
+                   sprite="ability_wainrider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="wainrider_particle"
+                   sound_effect="wainrider_activate"
+                   tooltip="{=taom_ability_wainrider_tt}Whip your team into a frenzy, smashing through enemy lines with unstoppable momentum." />
+
+  <!-- ═══ DALE ═══ -->
+
+  <AbilityTemplate id="dale_guardsman_ability"
+                   display_name="{=taom_ability_dale_guardsman}Gate Hold"
+                   sprite="ability_dale_guardsman_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_guardsman_particle"
+                   sound_effect="dale_guardsman_activate"
+                   tooltip="{=taom_ability_dale_guardsman_tt}Plant your feet and hold the gate, greatly increasing health and resistance while stationary." />
+
+  <AbilityTemplate id="dale_marksman_ability"
+                   display_name="{=taom_ability_dale_marksman}Black Arrow"
+                   sprite="ability_dale_marksman_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_marksman_particle"
+                   sound_effect="dale_marksman_activate"
+                   tooltip="{=taom_ability_dale_marksman_tt}Channel the legacy of Bard the Bowman, massively boosting your next shots' damage and penetration." />
+
+  <AbilityTemplate id="dale_outrider_ability"
+                   display_name="{=taom_ability_dale_outrider}Trade Road Sprint"
+                   sprite="ability_dale_outrider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_outrider_particle"
+                   sound_effect="dale_outrider_activate"
+                   tooltip="{=taom_ability_dale_outrider_tt}Spur your horse along familiar roads, gaining a burst of speed and mounted combat prowess." />
+
+  <!-- ═══ EREBOR ═══ -->
+
+  <AbilityTemplate id="ironguard_ability"
+                   display_name="{=taom_ability_ironguard}Mithril Bastion"
+                   sprite="ability_ironguard_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="ironguard_particle"
+                   sound_effect="ironguard_activate"
+                   tooltip="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft, wreathing yourself in near-impenetrable defense." />
+
+  <AbilityTemplate id="crossbow_master_ability"
+                   display_name="{=taom_ability_crossbow_master}Precision Barrage"
+                   sprite="ability_crossbow_master_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="crossbow_master_particle"
+                   sound_effect="crossbow_master_activate"
+                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork bolts for devastating damage, each shot piercing through the thickest armor." />
+
+  <AbilityTemplate id="ram_rider_ability"
+                   display_name="{=taom_ability_ram_rider}Mountain Charge"
+                   sprite="ability_ram_rider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="ram_rider_particle"
+                   sound_effect="ram_rider_activate"
+                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward with dwarven stubbornness, smashing through shields and armor." />
+
+  <!-- ═══ RIVENDELL ═══ -->
+
+  <AbilityTemplate id="blade_dancer_ability"
+                   display_name="{=taom_ability_blade_dancer}Starlight Weave"
+                   sprite="ability_blade_dancer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="blade_dancer_particle"
+                   sound_effect="blade_dancer_activate"
+                   tooltip="{=taom_ability_blade_dancer_tt}Enter a graceful combat trance, dodging attacks while striking with elven precision." />
+
+  <AbilityTemplate id="elven_archer_ability"
+                   display_name="{=taom_ability_elven_archer}Elven Sight"
+                   sprite="ability_elven_archer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="elven_archer_particle"
+                   sound_effect="elven_archer_activate"
+                   tooltip="{=taom_ability_elven_archer_tt}Focus ancient elven perception, allowing unerring accuracy at extreme range." />
+
+  <AbilityTemplate id="rivendell_knight_ability"
+                   display_name="{=taom_ability_rivendell_knight}Last Alliance"
+                   sprite="ability_rivendell_knight_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="rivendell_knight_particle"
+                   sound_effect="rivendell_knight_activate"
+                   tooltip="{=taom_ability_rivendell_knight_tt}Ride with the valor of the Last Alliance, boosting mounted damage and inspiring all nearby allies." />
+
+  <!-- ═══ LOTHLORIEN ═══ -->
+
+  <AbilityTemplate id="warden_ability"
+                   display_name="{=taom_ability_warden}Nimrodel's Blessing"
+                   sprite="ability_warden_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warden_particle"
+                   sound_effect="warden_activate"
+                   tooltip="{=taom_ability_warden_tt}Invoke the waters of Nimrodel, healing wounds and boosting resistance for a brief time." />
+
+  <AbilityTemplate id="galadhrim_archer_ability"
+                   display_name="{=taom_ability_galadhrim_archer}Silver Rain"
+                   sprite="ability_galadhrim_archer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="galadhrim_archer_particle"
+                   sound_effect="galadhrim_archer_activate"
+                   tooltip="{=taom_ability_galadhrim_archer_tt}Loose a volley of silver-tipped arrows with blinding speed, shredding enemy ranks." />
+
+  <AbilityTemplate id="sentinel_ability"
+                   display_name="{=taom_ability_sentinel}Elanor's Swiftness"
+                   sprite="ability_sentinel_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="sentinel_particle"
+                   sound_effect="sentinel_activate"
+                   tooltip="{=taom_ability_sentinel_tt}Channel the grace of the Golden Wood, surging forward with supernatural speed and precision." />
+
+  <!-- ═══ MIRKWOOD ═══ -->
+
+  <AbilityTemplate id="shadow_walker_ability"
+                   display_name="{=taom_ability_shadow_walker}Forest Cloak"
+                   sprite="ability_shadow_walker_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="shadow_walker_particle"
+                   sound_effect="shadow_walker_activate"
+                   tooltip="{=taom_ability_shadow_walker_tt}Blend into the forest shadows, greatly boosting evasion and striking power from concealment." />
+
+  <AbilityTemplate id="silvan_archer_ability"
+                   display_name="{=taom_ability_silvan_archer}Canopy Strike"
+                   sprite="ability_silvan_archer_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="silvan_archer_particle"
+                   sound_effect="silvan_archer_activate"
+                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, increasing ranged damage and penetration against targets below." />
+
+  <AbilityTemplate id="elk_rider_ability"
+                   display_name="{=taom_ability_elk_rider}Antler Crash"
+                   sprite="ability_elk_rider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="elk_rider_particle"
+                   sound_effect="elk_rider_activate"
+                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, sending enemies flying with massive impact damage." />
+
+  <!-- ═══ ISENGARD ═══ -->
+
+  <AbilityTemplate id="uruk_berserker_ability"
+                   display_name="{=taom_ability_uruk_berserker}Blood Rage"
+                   sprite="ability_uruk_berserker_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="uruk_berserker_particle"
+                   sound_effect="uruk_berserker_activate"
+                   tooltip="{=taom_ability_uruk_berserker_tt}Enter a berserk frenzy, massively boosting damage and health while ignoring pain." />
+
+  <AbilityTemplate id="uruk_crossbow_ability"
+                   display_name="{=taom_ability_uruk_crossbow}Iron Rain"
+                   sprite="ability_uruk_crossbow_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="uruk_crossbow_particle"
+                   sound_effect="uruk_crossbow_activate"
+                   tooltip="{=taom_ability_uruk_crossbow_tt}Unleash a barrage of Orthanc-forged bolts with devastating penetration and fire rate." />
+
+  <AbilityTemplate id="warg_scout_ability"
+                   display_name="{=taom_ability_warg_scout}Pack Howl"
+                   sprite="ability_warg_scout_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warg_scout_particle"
+                   sound_effect="warg_scout_activate"
+                   tooltip="{=taom_ability_warg_scout_tt}Unleash a terrifying howl that boosts your speed and strikes fear into nearby enemies." />
+
+  <!-- ═══ GUNDABAD ═══ -->
+
+  <AbilityTemplate id="cave_troll_master_ability"
+                   display_name="{=taom_ability_cave_troll_master}Troll Frenzy"
+                   sprite="ability_cave_troll_master_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="cave_troll_master_particle"
+                   sound_effect="cave_troll_master_activate"
+                   tooltip="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy, massively boosting health and troop damage." />
+
+  <AbilityTemplate id="goblin_sniper_ability"
+                   display_name="{=taom_ability_goblin_sniper}Poison Dart"
+                   sprite="ability_goblin_sniper_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="goblin_sniper_particle"
+                   sound_effect="goblin_sniper_activate"
+                   tooltip="{=taom_ability_goblin_sniper_tt}Coat your projectiles in cave fungus toxin, adding damage over time and slowing targets." />
+
+  <AbilityTemplate id="warg_pack_leader_ability"
+                   display_name="{=taom_ability_warg_pack_leader}Alpha Howl"
+                   sprite="ability_warg_pack_leader_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warg_pack_leader_particle"
+                   sound_effect="warg_pack_leader_activate"
+                   tooltip="{=taom_ability_warg_pack_leader_tt}Assert dominance with a thundering howl, boosting pack speed and ferocity." />
+
+  <!-- ═══ DOL GULDUR ═══ -->
+
+  <AbilityTemplate id="shadow_warrior_ability"
+                   display_name="{=taom_ability_shadow_warrior}Soul Drain"
+                   sprite="ability_shadow_warrior_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="shadow_warrior_particle"
+                   sound_effect="shadow_warrior_activate"
+                   tooltip="{=taom_ability_shadow_warrior_tt}Drain the life force of nearby enemies, healing yourself and weakening their attacks." />
+
+  <AbilityTemplate id="necromancer_acolyte_ability"
+                   display_name="{=taom_ability_necromancer_acolyte}Dark Bolt"
+                   sprite="ability_necromancer_acolyte_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="necromancer_acolyte_particle"
+                   sound_effect="necromancer_acolyte_activate"
+                   tooltip="{=taom_ability_necromancer_acolyte_tt}Channel necromantic energy through your attacks, greatly boosting ranged damage and armor penetration." />
+
+  <AbilityTemplate id="fell_rider_ability"
+                   display_name="{=taom_ability_fell_rider}Dread Charge"
+                   sprite="ability_fell_rider_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="fell_rider_particle"
+                   sound_effect="fell_rider_activate"
+                   tooltip="{=taom_ability_fell_rider_tt}Charge wreathed in shadow, causing enemies to flee in terror while dealing devastating damage." />
+
+  <!-- ═══ UMBAR ═══ -->
+
+  <AbilityTemplate id="corsair_boarder_ability"
+                   display_name="{=taom_ability_corsair_boarder}Boarding Action"
+                   sprite="ability_corsair_boarder_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="corsair_boarder_particle"
+                   sound_effect="corsair_boarder_activate"
+                   tooltip="{=taom_ability_corsair_boarder_tt}Launch a brutal boarding assault, boosting melee damage and resistance in close quarters." />
+
+  <AbilityTemplate id="corsair_crossbow_ability"
+                   display_name="{=taom_ability_corsair_crossbow}Rigging Shot"
+                   sprite="ability_corsair_crossbow_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="corsair_crossbow_particle"
+                   sound_effect="corsair_crossbow_activate"
+                   tooltip="{=taom_ability_corsair_crossbow_tt}Fire from a stable position with deadly precision, greatly boosting ranged damage and accuracy." />
+
+  <AbilityTemplate id="corsair_captain_ability"
+                   display_name="{=taom_ability_corsair_captain}Plunder"
+                   sprite="ability_corsair_captain_icon"
+                   cooldown="0" duration="8" radius="10"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="corsair_captain_particle"
+                   sound_effect="corsair_captain_activate"
+                   tooltip="{=taom_ability_corsair_captain_tt}Rally your crew with promises of plunder, boosting speed, damage, and troop morale." />
 
 </AbilityTemplates>

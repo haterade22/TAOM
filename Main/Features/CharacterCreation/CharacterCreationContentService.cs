@@ -146,6 +146,17 @@ public class CharacterCreationContentService : ICharacterCreationContentService
             return;
         }
 
+        // BL's ApplyCulture() should have set Hero.Culture = SelectedCulture already.
+        // Log and force-set as safety net for custom cultures.
+        var heroCultureBefore = Hero.MainHero?.Culture?.StringId ?? "null";
+        _logger.LogInfo($"CC Finalize: SelectedCulture='{selectedCulture.StringId}', Hero.Culture before='{heroCultureBefore}'");
+
+        if (Hero.MainHero != null && Hero.MainHero.Culture?.StringId != selectedCulture.StringId)
+        {
+            Hero.MainHero.Culture = selectedCulture;
+            _logger.LogInfo($"CC Finalize: Force-set Hero.Culture to '{selectedCulture.StringId}' (was '{heroCultureBefore}')");
+        }
+
         TeleportToStartingSettlement(cultureData);
         SetPlayerRace(cultureData, Hero.MainHero?.StringId);
         AssignCareer(selectedCulture.StringId, Hero.MainHero?.StringId);
