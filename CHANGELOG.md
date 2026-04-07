@@ -2,6 +2,24 @@
 
 ## 2026-04-06
 
+### Feature: LOTR-Themed Minor Factions
+
+Replaced all 14 vanilla minor factions with lore-appropriate Middle-earth equivalents via XSLT overrides and localization strings. No C# changes — pure data work.
+
+**Mercenary clans:** Ghilman → Serpent Guard (Harad), Legion of the Betrayed → The Grey Company (Dúnedain), Skolderbroda → Axemen of Erebor (Dwarves), Company of the Golden Boar → Corsair Blades (Umbar)
+
+**Mafia factions:** Beni Zilal → The Blind Eye (Harad), Wolfskins → Variag Ravagers (Khand), Brotherhood of the Woods → Dunlending Reavers (Dunland), Hidden Hand → The Mouth's Servants (Mordor), Lake Rats → Wreckers of the Long Lake (Esgaroth)
+
+**Sect:** Embers of the Flame → Cult of the Lidless Eye (Black Númenórean)
+
+**Nomads:** Jawwal → The Sand-Riders (Harad), Karakhergit → The Wild Easterlings (Rhûn), Forest People → The Drúedain (Woses), Eleftheroi → The Beornings (Anduin vale)
+
+**Settlement remaps:** Dunlending Reavers → castle_EN3 (Tûr Morva), Wild Easterlings → castle_RU10 (Nîrakh), Beornings → castle_M1 (Glad Thaw). Culture change: Dunlending Reavers from vlandia → empire (Dunland).
+
+**Files:** `spclans.xslt` (14 templates), `taom_module_strings.xml` (42 strings)
+
+## 2026-04-06
+
 ### Quality: Full Codebase Adversarial Review — 25/25 Features
 
 Systematic Codex + Claude adversarial review of entire TAOM codebase. 16 reviews across 5 waves, prompt evolved v1→v6, accuracy improved 33%→81%.

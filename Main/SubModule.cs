@@ -44,6 +44,8 @@ using TAOM.Features.ArmyTargeting.Models;
 using TAOM.Features.TimeAcceleration;
 using TAOM.Features.BannerColorPersistence;
 using TAOM.Features.BannerColorPersistence.Hooks;
+using TAOM.Features.LocalizationOverride;
+using TAOM.Features.LocalizationOverride.Hooks;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -68,6 +70,25 @@ public class SubModule : MBSubModuleBase
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
         _harmony = new Harmony("com.taom.mod");
+
+        // Must be first — intercepts GetLocalizedText before any game texts are resolved.
+        // Loads English string overrides from taom_module_strings.xml (removes hardcoded "The" articles).
+        _harmony.PatchCategory("Patch25_LocalizationOverride");
+        var pathService0 = IoC.Resolve<IPathService>();
+        var logger0 = IoC.Resolve<IModLogger>();
+        var xmlPath = System.IO.Path.Combine(pathService0.ModuleDataPath, "taom_module_strings.xml");
+        try
+        {
+            var overrides = LocalizationOverrideLoader.ParseOverridesFromFile(xmlPath);
+            foreach (var kvp in overrides)
+                MBTextManager_GetLocalizedText_Patch.RegisterOverride(kvp.Key, kvp.Value);
+            logger0.LogInfo($"[LocalizationOverride] Registered {overrides.Count} English string overrides");
+        }
+        catch (System.Exception ex)
+        {
+            logger0.LogError($"[LocalizationOverride] Failed to load overrides: {ex.Message}");
+        }
+
         _harmony.PatchCategory("Patch18_CulturalFeats");
         _harmony.PatchCategory("Patch19_CustomBattles");
         // Battle scenes disabled — custom map not yet ready, will re-enable when TAOM_Map is integrated
