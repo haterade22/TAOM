@@ -148,6 +148,43 @@ public class CharacterCreationContentService : ICharacterCreationContentService
 
         TeleportToStartingSettlement(cultureData);
         SetPlayerRace(cultureData, Hero.MainHero?.StringId);
+        AssignCareer(selectedCulture.StringId, Hero.MainHero?.StringId);
+    }
+
+    private void AssignCareer(string cultureId, string heroStringId)
+    {
+        if (string.IsNullOrEmpty(heroStringId) || string.IsNullOrEmpty(cultureId))
+            return;
+
+        try
+        {
+            var registry = IoC.Resolve<CareerSystem.ICareerRegistry>();
+            var handler = IoC.Resolve<CareerSystem.ICareerCreationHandler>();
+            if (registry == null || handler == null)
+            {
+                _logger.LogWarning("CareerSystem: Cannot assign career at CC — services not resolved");
+                return;
+            }
+
+            foreach (var career in registry.GetAllCareers())
+            {
+                foreach (var eligibleCulture in career.EligibleCultureIds)
+                {
+                    if (string.Equals(eligibleCulture, cultureId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        handler.OnCareerSelected(heroStringId, career.Id);
+                        _logger.LogInfo($"CareerSystem: Assigned career '{career.Id}' during CC for culture '{cultureId}'");
+                        return;
+                    }
+                }
+            }
+
+            _logger.LogInfo($"CareerSystem: No eligible career found for culture '{cultureId}' during CC");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"CareerSystem: Failed to assign career during CC: {ex.Message}");
+        }
     }
 
     internal void SetPlayerRace(CultureCreationData cultureData, string heroStringId)

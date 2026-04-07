@@ -47,16 +47,15 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
             return;
         }
 
-        // Auto-assign career for eligible heroes without one
+        // Legacy save fallback: assign career if hero doesn't have one
+        // (New games get career assigned during CC finalization)
         if (!_dataService.HasCareer(hero.StringId))
         {
             var cultureId = hero.Culture?.StringId;
-            _logger.LogInfo($"CareerSystem: Hero '{hero.Name}' culture = '{cultureId ?? "null"}'");
+            _logger.LogInfo($"CareerSystem: Legacy save detected — hero '{hero.Name}' has no career (culture='{cultureId ?? "null"}')");
             if (!string.IsNullOrEmpty(cultureId))
             {
-                var allCareers = _registry.GetAllCareers();
-                _logger.LogInfo($"CareerSystem: {allCareers.Count} career(s) in registry");
-                foreach (var career in allCareers)
+                foreach (var career in _registry.GetAllCareers())
                 {
                     var eligible = false;
                     foreach (var id in career.EligibleCultureIds)
@@ -67,12 +66,8 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
                     if (eligible)
                     {
                         _creationHandler.OnCareerSelected(hero.StringId, career.Id);
-                        _logger.LogInfo($"CareerSystem: Auto-assigned career '{career.Id}' to {hero.Name} (culture: {cultureId})");
+                        _logger.LogInfo($"CareerSystem: Legacy fallback — assigned career '{career.Id}' to {hero.Name}");
                         break;
-                    }
-                    else
-                    {
-                        _logger.LogDebug($"CareerSystem: Skipped career '{career.Id}' for {hero.Name} — eligible cultures [{string.Join(", ", career.EligibleCultureIds)}] do not include '{cultureId}'");
                     }
                 }
             }
