@@ -272,6 +272,37 @@ public class SpecialResourceService : ISpecialResourceService
         return total;
     }
 
+    public IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+    {
+        var result = new List<TroopDesertionEntry>();
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null || troopsWithUpkeep == null || troopsWithUpkeep.Count == 0)
+            return result;
+
+        var balance = _storage.Get(heroId, resource.Id);
+        if (balance > 0f)
+            return result;
+
+        // At 0 resources: 10% of each upkeep troop type deserts per day (min 1)
+        foreach (var troop in troopsWithUpkeep)
+        {
+            var desertCount = Math.Max(1, (int)(troop.Count * 0.1f));
+            desertCount = Math.Min(desertCount, troop.Count);
+            result.Add(new TroopDesertionEntry(troop.TroopId, desertCount));
+        }
+
+        if (result.Count > 0)
+        {
+            var totalDeserted = 0;
+            foreach (var entry in result)
+                totalDeserted += entry.DesertCount;
+            _logger.LogInfo($"[SpecRes] DESERTION: {totalDeserted} elite troops deserting (balance={balance:F0}, {result.Count} troop types affected)");
+        }
+
+        return result;
+    }
+
     private void AddCapped(string heroId, SpecialResource resource, float amount)
     {
         var current = _storage.Get(heroId, resource.Id);

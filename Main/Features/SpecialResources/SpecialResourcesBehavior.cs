@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.ScreenSystem;
 using TAOM.Core.Logging;
 
@@ -106,6 +107,30 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var troopUpkeep = GetTroopUpkeepFromParty(hero.PartyBelongedTo);
 
         _service.ApplyDailyTick(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
+
+        // Check balance for warnings and desertion
+        var balance = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
+
+        if (balance <= 0f && troopUpkeep.Count > 0)
+        {
+            // Desertion: remove troops from roster
+            var desertions = _service.CalculateDesertion(hero.StringId, kingdomId, cultureId, troopUpkeep);
+            var totalDeserted = ApplyDesertion(hero.PartyBelongedTo, desertions);
+
+            if (totalDeserted > 0)
+            {
+                MBInformationManager.AddQuickInformation(
+                    new TextObject($"{{=taom_res_desertion}}{totalDeserted} elite troops deserted — your {resource.DisplayName} are depleted!"),
+                    extraTimeInMs: 3000);
+            }
+        }
+        else if (balance > 0f && balance < resource.Cap * 0.1f)
+        {
+            // Low resource warning (below 10% of cap)
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{resource.DisplayName} running low: {balance:F0}/{resource.Cap:F0}",
+                Colors.Yellow));
+        }
     }
 
     private void OnMapEventEnded(MapEvent mapEvent)
@@ -132,10 +157,25 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             var playerCount = hero.PartyBelongedTo?.MemberRoster?.TotalManCount ?? 1;
             var ratio = (float)enemyCount / playerCount;
 
+            var resource = _service.ResolveResource(kingdomId, cultureId);
+            var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
+
             if (mapEvent.IsSiegeAssault || mapEvent.IsSiegeOutside)
                 _service.EarnFromSiege(hero.StringId, kingdomId, cultureId);
             else
                 _service.EarnFromBattle(hero.StringId, kingdomId, cultureId, ratio);
+
+            if (resource != null)
+            {
+                var after = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
+                var earned = after - before;
+                if (earned > 0f)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"+{earned:F0} {resource.DisplayName} earned from victory",
+                        Colors.Green));
+                }
+            }
         }
     }
 
@@ -148,6 +188,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         _service.EarnFromRaid(hero.StringId, kingdomId, cultureId);
+        NotifyEarning(hero.StringId, kingdomId, cultureId, "raid");
     }
 
     private void OnPrisonerTaken(FlattenedTroopRoster roster)
@@ -160,7 +201,11 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             foreach (var _ in roster)
                 count++;
         if (count > 0)
+        {
+            var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
             _service.EarnFromPrisoners(hero.StringId, kingdomId, cultureId, count);
+            NotifyEarningDelta(kingdomId, cultureId, hero.StringId, before, "prisoners");
+        }
     }
 
     private void OnTournamentFinished(CharacterObject winner, MBReadOnlyList<CharacterObject> participants, Town town, ItemObject prize)
@@ -169,6 +214,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
         _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId, cultureId);
+        NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament");
     }
 
     private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component)
@@ -180,6 +226,59 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         _service.EarnFromHideout(hero.StringId, kingdomId, cultureId);
+        NotifyEarning(hero.StringId, kingdomId, cultureId, "hideout");
+    }
+
+    private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source)
+    {
+        var resource = _service.ResolveResource(kingdomId, cultureId);
+        if (resource == null) return;
+
+        var amount = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
+        InformationManager.DisplayMessage(new InformationMessage(
+            $"{resource.DisplayName} earned from {source} (total: {amount:F0})",
+            Colors.Green));
+    }
+
+    private void NotifyEarningDelta(string kingdomId, string cultureId, string heroId, float before, string source)
+    {
+        var resource = _service.ResolveResource(kingdomId, cultureId);
+        if (resource == null) return;
+
+        var after = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
+        var earned = after - before;
+        if (earned > 0f)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"+{earned:F0} {resource.DisplayName} from {source}",
+                Colors.Green));
+        }
+    }
+
+    private int ApplyDesertion(MobileParty party, IReadOnlyList<TroopDesertionEntry> desertions)
+    {
+        if (party?.MemberRoster == null || desertions == null || desertions.Count == 0)
+            return 0;
+
+        var totalDeserted = 0;
+        foreach (var entry in desertions)
+        {
+            var character = CharacterObject.Find(entry.TroopId);
+            if (character == null) continue;
+
+            var index = party.MemberRoster.FindIndexOfTroop(character);
+            if (index < 0) continue;
+
+            var currentCount = party.MemberRoster.GetElementNumber(index);
+            var toRemove = System.Math.Min(entry.DesertCount, currentCount);
+            if (toRemove <= 0) continue;
+
+            party.MemberRoster.AddToCounts(character, -toRemove);
+            totalDeserted += toRemove;
+            _logger.LogInfo($"[SpecRes] Deserted: {entry.TroopId} x{toRemove}");
+        }
+
+        return totalDeserted;
     }
 
     private void OnScreenPushed(ScreenBase screen)

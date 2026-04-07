@@ -16,11 +16,11 @@ public class SpecialResourceServiceTests
     private SpecialResourceService _service;
 
     private static readonly SpecialResource MordorResource = new(
-        id: "scraps",
-        kingdomId: "empire_s",
-        cultureId: "mordor",
-        displayName: "Scraps",
-        iconSpriteName: "taom_scraps_icon",
+        id: "war_spoils",
+        kingdomIds: new[] { "empire_s", "isengard" },
+        cultureIds: new[] { "mordor", "isengard" },
+        displayName: "War Spoils",
+        iconSpriteName: "taom_war_spoils_icon",
         cap: 500f,
         startingAmount: 30f,
         dailyPerTown: 0.5f,
@@ -38,7 +38,9 @@ public class SpecialResourceServiceTests
         _service = new SpecialResourceService(_config, _storage, _logger);
 
         _config.GetByKingdomId("empire_s").Returns(MordorResource);
+        _config.GetByKingdomId("isengard").Returns(MordorResource);
         _config.GetByCultureId("mordor").Returns(MordorResource);
+        _config.GetByCultureId("isengard").Returns(MordorResource);
     }
 
     // ── Resolution ──
@@ -65,6 +67,15 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
+    public void ResolveResource_SharedResource_BothKingdomsResolveSameInstance()
+    {
+        var fromMordor = _service.ResolveResource("empire_s", null);
+        var fromIsengard = _service.ResolveResource("isengard", null);
+        Assert.AreSame(fromMordor, fromIsengard);
+        Assert.AreEqual("war_spoils", fromMordor.Id);
+    }
+
+    [TestMethod]
     public void ResolveResource_FallsToCulture_WhenKingdomNotConfigured()
     {
         _config.GetByKingdomId("empire_w").Returns((SpecialResource)null);
@@ -77,41 +88,41 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void EarnFromBattle_AddsScaledAmount_BasedOnEnemySizeRatio()
     {
-        _storage.Get("hero1", "scraps").Returns(100f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
         _service.EarnFromBattle("hero1", "empire_s", null, 1.5f);
-        _storage.Received(1).Set("hero1", "scraps", 115f);
+        _storage.Received(1).Set("hero1", "war_spoils", 115f);
     }
 
     [TestMethod]
     public void EarnFromBattle_WorksViaCultureFallback()
     {
-        _storage.Get("hero1", "scraps").Returns(100f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
         _service.EarnFromBattle("hero1", null, "mordor", 1.0f);
-        _storage.Received(1).Set("hero1", "scraps", 110f);
+        _storage.Received(1).Set("hero1", "war_spoils", 110f);
     }
 
     [TestMethod]
     public void EarnFromBattle_ClampsRatio_ToMinHalf()
     {
-        _storage.Get("hero1", "scraps").Returns(100f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
         _service.EarnFromBattle("hero1", "empire_s", null, 0.1f);
-        _storage.Received(1).Set("hero1", "scraps", 105f);
+        _storage.Received(1).Set("hero1", "war_spoils", 105f);
     }
 
     [TestMethod]
     public void EarnFromBattle_ClampsRatio_ToMaxTwo()
     {
-        _storage.Get("hero1", "scraps").Returns(100f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
         _service.EarnFromBattle("hero1", "empire_s", null, 5.0f);
-        _storage.Received(1).Set("hero1", "scraps", 120f);
+        _storage.Received(1).Set("hero1", "war_spoils", 120f);
     }
 
     [TestMethod]
     public void EarnFromBattle_CapsAtResourceMax()
     {
-        _storage.Get("hero1", "scraps").Returns(498f);
+        _storage.Get("hero1", "war_spoils").Returns(498f);
         _service.EarnFromBattle("hero1", "empire_s", null, 1.0f);
-        _storage.Received(1).Set("hero1", "scraps", 500f);
+        _storage.Received(1).Set("hero1", "war_spoils", 500f);
     }
 
     [TestMethod]
@@ -126,25 +137,25 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void EarnFromRaid_AddsConfiguredAmount()
     {
-        _storage.Get("hero1", "scraps").Returns(50f);
+        _storage.Get("hero1", "war_spoils").Returns(50f);
         _service.EarnFromRaid("hero1", "empire_s", null);
-        _storage.Received(1).Set("hero1", "scraps", 58f);
+        _storage.Received(1).Set("hero1", "war_spoils", 58f);
     }
 
     [TestMethod]
     public void EarnFromSiege_AddsConfiguredAmount()
     {
-        _storage.Get("hero1", "scraps").Returns(50f);
+        _storage.Get("hero1", "war_spoils").Returns(50f);
         _service.EarnFromSiege("hero1", "empire_s", null);
-        _storage.Received(1).Set("hero1", "scraps", 65f);
+        _storage.Received(1).Set("hero1", "war_spoils", 65f);
     }
 
     [TestMethod]
     public void EarnFromPrisoners_AddsPerPrisonerTimesCount()
     {
-        _storage.Get("hero1", "scraps").Returns(50f);
+        _storage.Get("hero1", "war_spoils").Returns(50f);
         _service.EarnFromPrisoners("hero1", "empire_s", null, 7);
-        _storage.Received(1).Set("hero1", "scraps", 57f);
+        _storage.Received(1).Set("hero1", "war_spoils", 57f);
     }
 
     // ── Upgrade Affordability ──
@@ -152,9 +163,9 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void CanAffordUpgrade_ReturnsFalse_WhenInsufficientResources()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "scraps", 5, 0.3f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(cost);
-        _storage.Get("hero1", "scraps").Returns(8f);
+        _storage.Get("hero1", "war_spoils").Returns(8f);
 
         Assert.IsFalse(_service.CanAffordUpgrade("hero1", "empire_s", null, "mordor_uruk_deathwarden", 2));
     }
@@ -162,9 +173,9 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void CanAffordUpgrade_ReturnsTrue_WhenSufficientResources()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "scraps", 5, 0.3f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(cost);
-        _storage.Get("hero1", "scraps").Returns(15f);
+        _storage.Get("hero1", "war_spoils").Returns(15f);
 
         Assert.IsTrue(_service.CanAffordUpgrade("hero1", "empire_s", null, "mordor_uruk_deathwarden", 2));
     }
@@ -172,11 +183,11 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void SpendForUpgrade_DeductsCorrectAmount()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "scraps", 4, 0.2f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
 
         _service.SpendForUpgrade("hero1", "empire_s", null, "mordor_uruk_captain", 3);
-        _storage.Received(1).Add("hero1", "scraps", -12f);
+        _storage.Received(1).Add("hero1", "war_spoils", -12f);
     }
 
     // ── Daily Tick ──
@@ -184,21 +195,21 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void ApplyDailyTick_EarningExceedsUpkeep_AddsCapped()
     {
-        _storage.Get("hero1", "scraps").Returns(100f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
         _service.ApplyDailyTick("hero1", "empire_s", null, 4, new List<TroopUpkeepInfo>());
-        _storage.Received(1).Set("hero1", "scraps", 102f);
+        _storage.Received(1).Set("hero1", "war_spoils", 102f);
     }
 
     [TestMethod]
     public void ApplyDailyTick_UpkeepExceedsEarning_SubtractsFromStorage()
     {
-        _storage.Get("hero1", "scraps").Returns(100f);
-        var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "scraps", 5, 0.3f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
+        var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 20) };
 
         _service.ApplyDailyTick("hero1", "empire_s", null, 0, troops);
-        _storage.Received(1).Add("hero1", "scraps", -6f);
+        _storage.Received(1).Add("hero1", "war_spoils", -6f);
     }
 
     [TestMethod]
@@ -212,7 +223,7 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void QueueUpgradeSpend_DoesNotMutateStorage()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "scraps", 4, 0.2f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
 
         _service.BeginPartyScreenSession();
@@ -225,9 +236,9 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void GetAvailableAfterPending_SubtractsPendingFromStorage()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "scraps", 4, 0.2f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
-        _storage.Get("hero1", "scraps").Returns(100f);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
 
         _service.BeginPartyScreenSession();
         _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
@@ -238,20 +249,20 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void CommitSession_AppliesPendingToStorage()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "scraps", 4, 0.2f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
 
         _service.BeginPartyScreenSession();
         _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
         _service.CommitSession("hero1", "empire_s", null);
 
-        _storage.Received(1).Add("hero1", "scraps", -12f);
+        _storage.Received(1).Add("hero1", "war_spoils", -12f);
     }
 
     [TestMethod]
     public void CancelSession_DiscardsAndNeverMutatesStorage()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "scraps", 4, 0.2f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
 
         _service.BeginPartyScreenSession();
@@ -264,9 +275,9 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void ClampUpgradeCount_LimitsByAvailableMinusPending()
     {
-        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "scraps", 4, 0.2f);
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
-        _storage.Get("hero1", "scraps").Returns(10f);
+        _storage.Get("hero1", "war_spoils").Returns(10f);
 
         _service.BeginPartyScreenSession();
         Assert.AreEqual(2, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5));
@@ -292,14 +303,14 @@ public class SpecialResourceServiceTests
     public void InitializeHero_SetsStartingAmount()
     {
         _service.InitializeHero("hero1", "empire_s", null);
-        _storage.Received(1).Set("hero1", "scraps", 30f);
+        _storage.Received(1).Set("hero1", "war_spoils", 30f);
     }
 
     [TestMethod]
     public void InitializeHero_WorksViaCulture()
     {
         _service.InitializeHero("hero1", null, "mordor");
-        _storage.Received(1).Set("hero1", "scraps", 30f);
+        _storage.Received(1).Set("hero1", "war_spoils", 30f);
     }
 
     [TestMethod]
@@ -308,5 +319,83 @@ public class SpecialResourceServiceTests
         _config.GetByKingdomId("empire_w").Returns((SpecialResource)null);
         _config.GetByCultureId("gondor").Returns((SpecialResource)null);
         Assert.AreEqual(0f, _service.GetCurrentAmount("hero1", "empire_w", "gondor"));
+    }
+
+    // ── Desertion ──
+
+    [TestMethod]
+    public void CalculateDesertion_BalanceAboveZero_ReturnsEmpty()
+    {
+        _storage.Get("hero1", "war_spoils").Returns(10f);
+        var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 20) };
+
+        var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void CalculateDesertion_BalanceZero_Deserts10Percent()
+    {
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+        var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 20) };
+
+        var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("mordor_uruk_darkblade", result[0].TroopId);
+        Assert.AreEqual(2, result[0].DesertCount); // 10% of 20 = 2
+    }
+
+    [TestMethod]
+    public void CalculateDesertion_BalanceZero_MinimumOnePerType()
+    {
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+        var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 3) };
+
+        var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(1, result[0].DesertCount); // 10% of 3 = 0.3 → min 1
+    }
+
+    [TestMethod]
+    public void CalculateDesertion_NoTroops_ReturnsEmpty()
+    {
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+        var troops = new List<TroopUpkeepInfo>();
+
+        var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void CalculateDesertion_NoResource_ReturnsEmpty()
+    {
+        _config.GetByKingdomId("empire_w").Returns((SpecialResource)null);
+        _config.GetByCultureId("gondor").Returns((SpecialResource)null);
+        var troops = new List<TroopUpkeepInfo> { new("gondor_knight", 10) };
+
+        var result = _service.CalculateDesertion("hero1", "empire_w", "gondor", troops);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void CalculateDesertion_MultipleTroopTypes_DesertsEach()
+    {
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+        var troops = new List<TroopUpkeepInfo>
+        {
+            new("mordor_uruk_darkblade", 10),
+            new("mordor_uruk_deathwarden", 5)
+        };
+
+        var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual(1, result[0].DesertCount); // 10% of 10 = 1
+        Assert.AreEqual(1, result[1].DesertCount); // 10% of 5 = 0.5 → min 1
     }
 }

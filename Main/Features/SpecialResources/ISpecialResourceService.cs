@@ -25,6 +25,7 @@ public interface ISpecialResourceService
     void InitializeHero(string heroId, string kingdomId, string cultureId);
     float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount);
     float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
+    IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
 }
 
 public sealed class TroopUpkeepInfo
@@ -36,5 +37,17 @@ public sealed class TroopUpkeepInfo
     {
         TroopId = troopId;
         Count = count;
+    }
+}
+
+public sealed class TroopDesertionEntry
+{
+    public string TroopId { get; }
+    public int DesertCount { get; }
+
+    public TroopDesertionEntry(string troopId, int desertCount)
+    {
+        TroopId = troopId;
+        DesertCount = desertCount;
     }
 }

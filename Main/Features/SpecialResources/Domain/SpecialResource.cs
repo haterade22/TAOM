@@ -1,10 +1,12 @@
+using System.Collections.Generic;
+
 namespace TAOM.Features.SpecialResources.Domain;
 
 public sealed class SpecialResource
 {
     public string Id { get; }
-    public string KingdomId { get; }
-    public string CultureId { get; }
+    public IReadOnlyList<string> KingdomIds { get; }
+    public IReadOnlyList<string> CultureIds { get; }
     public string DisplayName { get; }
     public string IconSpriteName { get; }
     public float Cap { get; }
@@ -19,8 +21,8 @@ public sealed class SpecialResource
 
     public SpecialResource(
         string id,
-        string kingdomId,
-        string cultureId,
+        IReadOnlyList<string> kingdomIds,
+        IReadOnlyList<string> cultureIds,
         string displayName,
         string iconSpriteName,
         float cap,
@@ -34,8 +36,8 @@ public sealed class SpecialResource
         float perHideoutClear = 0f)
     {
         Id = id;
-        KingdomId = kingdomId;
-        CultureId = cultureId;
+        KingdomIds = kingdomIds;
+        CultureIds = cultureIds;
         DisplayName = displayName;
         IconSpriteName = iconSpriteName;
         Cap = cap;

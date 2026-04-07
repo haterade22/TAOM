@@ -1,4 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SpecialResources>
-  <Resource id="scraps" kingdom_id="empire_s" culture_id="mordor" display_name="Scraps" icon_sprite="taom_scraps_icon" cap="500" starting_amount="30" daily_per_town="0.5" per_battle_victory_base="10" per_raid="8" per_siege_victory="15" per_prisoner="1" per_tournament_win="5" per_hideout_clear="6" />
+
+  <Resource id="war_spoils" display_name="War Spoils" icon_sprite="taom_war_spoils_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="empire_s" />
+    <Kingdom id="isengard" />
+    <Kingdom id="gundabad" />
+    <Kingdom id="dolguldur" />
+    <Culture id="mordor" />
+    <Culture id="isengard" />
+    <Culture id="gundabad" />
+    <Culture id="dolguldur" />
+  </Resource>
+
+  <Resource id="gems" display_name="Gems" icon_sprite="taom_gems_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="erebor" />
+    <Culture id="erebor" />
+  </Resource>
+
+  <Resource id="caster" display_name="Caster" icon_sprite="taom_caster_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="empire_w" />
+    <Culture id="gondor" />
+  </Resource>
+
+  <Resource id="marks" display_name="Marks" icon_sprite="taom_marks_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="vlandia" />
+    <Culture id="vlandia" />
+  </Resource>
+
+  <Resource id="elven_wine" display_name="Elven Wine" icon_sprite="taom_elven_wine_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="rivendell" />
+    <Kingdom id="lothlorien" />
+    <Kingdom id="mirkwood" />
+    <Culture id="rivendell" />
+    <Culture id="lothlorien" />
+    <Culture id="mirkwood" />
+  </Resource>
+
+  <Resource id="lake_fish" display_name="Lake Fish" icon_sprite="taom_lake_fish_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="sturgia" />
+    <Culture id="sturgia" />
+  </Resource>
+
+  <Resource id="war_drums" display_name="War Drums" icon_sprite="taom_war_drums_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="aserai" />
+    <Kingdom id="shaghana" />
+    <Kingdom id="abanissa" />
+    <Culture id="aserai" />
+    <Culture id="shaghana" />
+    <Culture id="abanissa" />
+  </Resource>
+
+  <Resource id="tribal_relics" display_name="Tribal Relics" icon_sprite="taom_tribal_relics_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="battania" />
+    <Culture id="battania" />
+  </Resource>
+
+  <Resource id="dunlending_ale" display_name="Dunlending Ale" icon_sprite="taom_dunlending_ale_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="empire" />
+    <Culture id="empire" />
+  </Resource>
+
+  <Resource id="plunder" display_name="Plunder" icon_sprite="taom_plunder_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="umbar" />
+    <Culture id="umbar" />
+  </Resource>
+
+  <Resource id="war_banners" display_name="War Banners" icon_sprite="taom_war_banners_icon"
+    cap="500" starting_amount="30" daily_per_town="0.5"
+    per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
+    per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+    <Kingdom id="khuzait" />
+    <Culture id="khuzait" />
+  </Resource>
+
 </SpecialResources>

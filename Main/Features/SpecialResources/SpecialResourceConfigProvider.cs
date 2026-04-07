@@ -78,10 +78,26 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
             var doc = XDocument.Load(path);
             foreach (var el in doc.Root.Elements("Resource"))
             {
+                var kingdomIds = new List<string>();
+                foreach (var k in el.Elements("Kingdom"))
+                {
+                    var kid = k.Attribute("id")?.Value;
+                    if (!string.IsNullOrEmpty(kid))
+                        kingdomIds.Add(kid);
+                }
+
+                var cultureIds = new List<string>();
+                foreach (var c in el.Elements("Culture"))
+                {
+                    var cid = c.Attribute("id")?.Value;
+                    if (!string.IsNullOrEmpty(cid))
+                        cultureIds.Add(cid);
+                }
+
                 var resource = new SpecialResource(
                     id: el.Attribute("id")?.Value ?? "",
-                    kingdomId: el.Attribute("kingdom_id")?.Value ?? "",
-                    cultureId: el.Attribute("culture_id")?.Value ?? "",
+                    kingdomIds: kingdomIds,
+                    cultureIds: cultureIds,
                     displayName: el.Attribute("display_name")?.Value ?? "",
                     iconSpriteName: el.Attribute("icon_sprite")?.Value ?? "",
                     cap: ParseFloat(el, "cap", 100f),
@@ -96,10 +112,10 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
 
                 _resources.Add(resource);
 
-                if (!string.IsNullOrEmpty(resource.KingdomId))
-                    _byKingdom[resource.KingdomId] = resource;
-                if (!string.IsNullOrEmpty(resource.CultureId))
-                    _byCulture[resource.CultureId] = resource;
+                foreach (var kid in kingdomIds)
+                    _byKingdom[kid] = resource;
+                foreach (var cid in cultureIds)
+                    _byCulture[cid] = resource;
             }
 
             _logger.LogInfo($"SpecialResourceConfigProvider: Loaded {_resources.Count} resource definitions");
