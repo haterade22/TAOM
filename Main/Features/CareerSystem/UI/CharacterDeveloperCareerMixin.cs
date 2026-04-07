@@ -50,7 +50,6 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
         }
     }
 
-    [DataSourceMethod]
     public void ExecuteOpenCareerScreen()
     {
         IoC.Resolve<IModLogger>()?.LogInfo("CareerSystem: ExecuteOpenCareerScreen triggered from character developer");

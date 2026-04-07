@@ -25,6 +25,8 @@ internal class CareerButtonPrefab : PrefabExtensionInsertPatch
             "MarginTop=\"155\" " +
             "IsVisible=\"@HasCareer\" " +
             "Command.Click=\"ExecuteOpenCareerScreen\" " +
+            "DoNotPassEventsToChildren=\"true\" " +
+            "UpdateChildrenStates=\"true\" " +
             "Brush=\"ButtonBrush1\">" +
             "<Children>" +
             "<TextWidget " +
