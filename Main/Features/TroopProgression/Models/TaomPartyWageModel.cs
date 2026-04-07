@@ -5,6 +5,8 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CulturalFeats;
 
 namespace TAOM.Features.TroopProgression.Models;
@@ -76,6 +78,9 @@ public class TaomPartyWageModel : DefaultPartyWageModel
                 }
             }
         }
+
+        if (mobileParty.LeaderHero != null)
+            CareerPassiveHelper.ApplyFactor(mobileParty.LeaderHero, ref result, PassiveEffectType.TroopWages);
 
         return result;
     }

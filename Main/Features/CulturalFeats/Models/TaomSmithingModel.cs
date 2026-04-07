@@ -1,6 +1,8 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -38,9 +40,18 @@ public class TaomSmithingModel : DefaultSmithingModel
         if (culture.HasFeat(TaomCulturalFeats.IsengardSmithingFeat))
             factor += TaomCulturalFeats.IsengardSmithingFeat.EffectBonus;
 
-        if (factor == 0f)
+        if (factor == 0f && hero == null)
             return baseCost;
 
-        return (int)(baseCost * (1f + factor));
+        int featResult = factor != 0f ? (int)(baseCost * (1f + factor)) : baseCost;
+
+        if (hero != null)
+        {
+            var explained = new ExplainedNumber(featResult, false);
+            CareerPassiveHelper.ApplyFactor(hero, ref explained, PassiveEffectType.EnchantmentCostReduction);
+            return (int)explained.ResultNumber;
+        }
+
+        return featResult;
     }
 }

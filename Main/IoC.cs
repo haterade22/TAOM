@@ -26,6 +26,7 @@ using TAOM.Features.Siege;
 using TAOM.Features.ArmyTargeting;
 using TAOM.Features.TimeAcceleration;
 using TAOM.Features.SpecialResources;
+using TAOM.Features.CareerSystem;
 
 namespace TAOM;
 
@@ -64,8 +65,12 @@ public static class IoC
         ArmyTargetingIoC.RegisterArmyTargetingFeature(container);
         TimeAccelerationIoC.RegisterTimeAccelerationFeature(container);
         SpecialResourcesIoC.RegisterSpecialResourcesFeature(container);
+        CareerSystemIoC.RegisterCareerSystemFeature(container);
 
         _container = container;
+
+        // Post-registration initialization
+        CareerSystemIoC.InitializeCalculators(container.Resolve<Features.CareerSystem.Mutations.IMutationCalculatorRegistry>());
     }
 
     private static void RegisterCoreServices(IContainer container)

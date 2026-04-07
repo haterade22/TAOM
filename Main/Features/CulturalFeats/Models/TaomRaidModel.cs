@@ -3,6 +3,8 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -28,6 +30,10 @@ public class TaomRaidModel : DefaultRaidModel
 
         if (culture.HasFeat(TaomCulturalFeats.IsengardRaidDamageFeat))
             result.AddFactor(TaomCulturalFeats.IsengardRaidDamageFeat.EffectBonus, CultureText);
+
+        var hero = attackerSide?.LeaderParty?.Owner;
+        if (hero != null)
+            CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.TroopDamage);
 
         return result;
     }

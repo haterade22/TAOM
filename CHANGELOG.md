@@ -2,6 +2,28 @@
 
 ## 2026-04-07
 
+### Feature: Career System — Full Implementation (Phases 1-6)
+
+Complete career/class progression system inspired by TOR_Core, adapted for LOTR. Mordor Warboss as pilot career.
+
+**Phase 1 — Foundation:** Domain types (11 enums + data classes), `ICareerHeroAdapter` wrapping `Hero`, `ICareerDataService` for per-hero career state CRUD, `CareerPersistenceBehavior` with SyncData, DryIoc IoC wiring.
+
+**Phase 2 — Registry & Logic:** XML config loading (`CareerConfigProvider`), career registry with eligibility checks and level-based tier gating (T2@10, T3@20), mutation calculator system (5 built-in calculators: flat, skill_scaling, level_scaling, replace, multiply), passive service with per-hero effect caching.
+
+**Phase 3 — Campaign Integration:** `CareerCampaignBehavior` (session launch cache refresh, hero level-up notifications, career cleanup on death), `CareerCreationHandler` (CC integration — sets career + root choice), `CareerSwitchService` (culture-validated career switching with choice reset).
+
+**Phase 4 — Battle & Abilities:** `CareerAbility` class (6 charge types: CooldownOnly, DamageDone, Kills, DamageTaken, Healed, Custom), `CareerAbilityService` (per-hero ability state), `MutationService` (clone + mutate ability templates via calculator registry), `CareerPerkMissionBehavior` (per-second tick, kill-based charge accumulation). Self-only abilities in v1.
+
+**Phase 5 — GameModel Integration:** Career passives wired into 8 existing GameModels (PartySizeModel, PartyMoraleModel, BattleRewardModel, PartyWageModel, PartyTroopUpgradeModel, RaidModel, PartySpeedModel, SmithingModel) via `CareerPassiveHelper.ApplyFactor/ApplyFlat`. `ICareerHeroAdapterFactory` for GameModel boundary.
+
+**Phase 6 — UI:** `CareerScreenVM` hierarchy (CareerScreenVM → CareerChoiceGroupObjectVM → CareerChoiceObjectVM), `GauntletCareerScreen` (GlobalLayer with GauntletLayer), `CharacterDeveloperCareerMixin` (UIExtenderEx [ViewModelMixin] for career button), CareerScreen.xml prefab (two-panel layout with 3-tier choice tree).
+
+**Pilot Data:** Mordor Warboss career with "Rally the Horde" ability (Kills charge type), 6 choice groups across 3 tiers (Brutality, Dominion, Scavenger, Warlord, Siegemaster, Tyrant), 31 total choices with passives covering 15+ PassiveEffectTypes.
+
+**Architecture:** Plain C# classes (not PropertyObject), XML-driven career definitions, hybrid mutation system (XML params + C# calculator registry), UIExtenderEx for UI injection, adapter pattern at all sealed-type boundaries. 103 unit tests across 11 test files.
+
+**Files:** `Main/Features/CareerSystem/` (28 files), `Main/Adapters/` (4 files), `Main/_Module/ModuleData/career_system/` (3 XML configs), `Main/_Module/GUI/Prefabs/CareerSystem/` (1 prefab), `TAOM.Tests/Features/CareerSystem/` (11 test files). 7 existing GameModels modified.
+
 ### Feature: Per-Kingdom Special Resource System (#73)
 
 Data-driven per-faction resource system gating elite troop upgrades. Mordor "Scraps" as pilot kingdom.

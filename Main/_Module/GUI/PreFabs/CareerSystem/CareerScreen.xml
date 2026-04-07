@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+            Sprite="BlankWhiteSquare_9" Color="#000000CC">
+
+      <!-- Main Container -->
+      <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+              SuggestedWidth="1600" SuggestedHeight="900"
+              HorizontalAlignment="Center" VerticalAlignment="Center"
+              Sprite="SPGeneral.CharacterDeveloper.MainPanel"
+              MarginTop="20" MarginBottom="20">
+
+        <!-- Title -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Top"
+                    MarginTop="15"
+                    Text="Career" Brush="Title.TitleBrush" />
+
+        <!-- Left Panel: Career Info -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="400" MarginLeft="30" MarginTop="60" MarginBottom="60">
+
+          <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                     StackLayout.LayoutMethod="VerticalBottomToTop">
+
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        Text="@CareerName" Brush="CharacterDeveloper.NameText" />
+
+            <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            Text="@CareerDescription" Brush="CharacterDeveloper.DescriptionText"
+                            MarginTop="10" />
+
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        Text="@AbilityName" Brush="CharacterDeveloper.SkillNameText"
+                        MarginTop="20" />
+          </ListPanel>
+        </Widget>
+
+        <!-- Right Panel: Choice Tree -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                SuggestedWidth="1120" HorizontalAlignment="Right"
+                MarginRight="30" MarginTop="60" MarginBottom="60">
+
+          <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                     StackLayout.LayoutMethod="VerticalBottomToTop">
+
+            <!-- Tier 3 -->
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        Text="Tier 3" Brush="CharacterDeveloper.SkillNameText" MarginBottom="5" />
+            <ListPanel DataSource="{ChoiceGroupsTier3}"
+                       WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <ItemTemplate>
+                <CareerChoiceGroupWidget Parameter.GroupVM="{..}" />
+              </ItemTemplate>
+            </ListPanel>
+
+            <!-- Tier 2 -->
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        Text="Tier 2" Brush="CharacterDeveloper.SkillNameText"
+                        MarginTop="15" MarginBottom="5" />
+            <ListPanel DataSource="{ChoiceGroupsTier2}"
+                       WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <ItemTemplate>
+                <CareerChoiceGroupWidget Parameter.GroupVM="{..}" />
+              </ItemTemplate>
+            </ListPanel>
+
+            <!-- Tier 1 -->
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        Text="Tier 1" Brush="CharacterDeveloper.SkillNameText"
+                        MarginTop="15" MarginBottom="5" />
+            <ListPanel DataSource="{ChoiceGroupsTier1}"
+                       WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <ItemTemplate>
+                <CareerChoiceGroupWidget Parameter.GroupVM="{..}" />
+              </ItemTemplate>
+            </ListPanel>
+          </ListPanel>
+        </Widget>
+
+        <!-- Free Points Display -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    MarginRight="40" MarginBottom="70"
+                    Brush="CharacterDeveloper.FocusPointText">
+          <TextWidget.PrefixText>Free Points: </TextWidget.PrefixText>
+          <TextWidget.IntText>@FreeCareerPoints</TextWidget.IntText>
+        </TextWidget>
+
+        <!-- Done Button -->
+        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                      SuggestedWidth="200" SuggestedHeight="50"
+                      HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                      MarginBottom="15" Command.Click="ExecuteClose"
+                      Brush="ButtonBrush1">
+          <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                      Text="Done" Brush="ButtonBrush1.Text" />
+        </ButtonWidget>
+
+      </Widget>
+    </Widget>
+  </Window>
+</Prefab>

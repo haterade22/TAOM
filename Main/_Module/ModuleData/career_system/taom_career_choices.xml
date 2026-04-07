@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CareerChoices>
+
+  <!-- ═══ Root (always active) ═══ -->
+  <Choice id="warboss_root" group_id="" type="Passive"
+          description="{=taom_warboss_root_desc}Rally the Horde grants +5% troop damage and scales duration with Leadership."
+          icon_sprite="career_choice_warboss_root">
+    <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    <Mutations>
+      <Mutation target_id="warboss_rally_horde" property="Duration"
+                calculator="skill_scaling" skill="Leadership" factor="0.02" operation="Add" />
+    </Mutations>
+  </Choice>
+
+  <!-- ═══ Tier 1: Brutality (melee damage) ═══ -->
+  <ChoiceGroup id="warboss_brutality" career_id="warboss" tier="1">
+    <Choice id="warboss_brutality_keystone" type="Keystone"
+            description="{=taom_warboss_brut_key}Rally the Horde also charges from damage dealt. Ability radius increased."
+            icon_sprite="career_choice_brutality_key">
+      <Mutations>
+        <Mutation target_id="warboss_rally_horde" property="Radius"
+                  calculator="flat" value="3" operation="Add" />
+      </Mutations>
+    </Choice>
+    <Choice id="warboss_brutality_p1" type="Passive"
+            description="{=taom_warboss_brut_p1}+10% personal melee damage."
+            icon_sprite="career_choice_brutality_p1">
+      <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="warboss_brutality_p2" type="Passive"
+            description="{=taom_warboss_brut_p2}+5% armor penetration."
+            icon_sprite="career_choice_brutality_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_brutality_p3" type="Passive"
+            description="{=taom_warboss_brut_p3}+15% swing speed."
+            icon_sprite="career_choice_brutality_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_brutality_p4" type="Passive"
+            description="{=taom_warboss_brut_p4}+50 max health."
+            icon_sprite="career_choice_brutality_p4">
+      <PassiveEffect type="Health" magnitude="50" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Tier 1: Dominion (party/army buffs) ═══ -->
+  <ChoiceGroup id="warboss_dominion" career_id="warboss" tier="1">
+    <Choice id="warboss_dominion_keystone" type="Keystone"
+            description="{=taom_warboss_dom_key}Rally the Horde duration extended. Troops gain morale boost in battle."
+            icon_sprite="career_choice_dominion_key">
+      <Mutations>
+        <Mutation target_id="warboss_rally_horde" property="Duration"
+                  calculator="flat" value="4" operation="Add" />
+      </Mutations>
+    </Choice>
+    <Choice id="warboss_dominion_p1" type="Passive"
+            description="{=taom_warboss_dom_p1}+10% troop morale."
+            icon_sprite="career_choice_dominion_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_dominion_p2" type="Passive"
+            description="{=taom_warboss_dom_p2}+5% party size."
+            icon_sprite="career_choice_dominion_p2">
+      <PassiveEffect type="PartySize" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_dominion_p3" type="Passive"
+            description="{=taom_warboss_dom_p3}+5% troop damage."
+            icon_sprite="career_choice_dominion_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_dominion_p4" type="Passive"
+            description="{=taom_warboss_dom_p4}-10% troop wages."
+            icon_sprite="career_choice_dominion_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Tier 2: Scavenger (economy/resources) ═══ -->
+  <ChoiceGroup id="warboss_scavenger_t2" career_id="warboss" tier="2">
+    <Choice id="warboss_scavenger_keystone" type="Keystone"
+            description="{=taom_warboss_scav_key}Rally the Horde max charge reduced by 20, making it easier to activate."
+            icon_sprite="career_choice_scavenger_key">
+      <Mutations>
+        <Mutation target_id="warboss_rally_horde" property="MaxCharge"
+                  calculator="flat" value="-20" operation="Add" />
+      </Mutations>
+    </Choice>
+    <Choice id="warboss_scavenger_p1" type="Passive"
+            description="{=taom_warboss_scav_p1}+10% battle renown gain."
+            icon_sprite="career_choice_scavenger_p1">
+      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_scavenger_p2" type="Passive"
+            description="{=taom_warboss_scav_p2}+15% custom resource gain."
+            icon_sprite="career_choice_scavenger_p2">
+      <PassiveEffect type="CustomResourceGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_scavenger_p3" type="Passive"
+            description="{=taom_warboss_scav_p3}-10% troop upgrade cost."
+            icon_sprite="career_choice_scavenger_p3">
+      <PassiveEffect type="TroopUpgradeCost" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_scavenger_p4" type="Passive"
+            description="{=taom_warboss_scav_p4}+10% inventory capacity."
+            icon_sprite="career_choice_scavenger_p4">
+      <PassiveEffect type="InventoryCapacity" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Tier 2: Warlord (combat leadership) ═══ -->
+  <ChoiceGroup id="warboss_warlord" career_id="warboss" tier="2">
+    <Choice id="warboss_warlord_keystone" type="Keystone"
+            description="{=taom_warboss_war_key}Rally the Horde grants additional troop resistance buff."
+            icon_sprite="career_choice_warlord_key">
+      <Mutations>
+        <Mutation target_id="warboss_rally_horde" property="Duration"
+                  calculator="flat" value="2" operation="Add" />
+      </Mutations>
+    </Choice>
+    <Choice id="warboss_warlord_p1" type="Passive"
+            description="{=taom_warboss_war_p1}+5% troop resistance."
+            icon_sprite="career_choice_warlord_p1">
+      <PassiveEffect type="TroopResistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_warlord_p2" type="Passive"
+            description="{=taom_warboss_war_p2}+5% party movement speed."
+            icon_sprite="career_choice_warlord_p2">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_warlord_p3" type="Passive"
+            description="{=taom_warboss_war_p3}+10% troop regeneration."
+            icon_sprite="career_choice_warlord_p3">
+      <PassiveEffect type="TroopRegeneration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_warlord_p4" type="Passive"
+            description="{=taom_warboss_war_p4}+5% morale damage to enemy on kill."
+            icon_sprite="career_choice_warlord_p4">
+      <PassiveEffect type="MoraleDamageToEnemyOnKill" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Tier 3: Siegemaster ═══ -->
+  <ChoiceGroup id="warboss_siegemaster_t3" career_id="warboss" tier="3">
+    <Choice id="warboss_siegemaster_keystone" type="Keystone"
+            description="{=taom_warboss_siege_key}Rally the Horde doubles in effect during siege battles."
+            icon_sprite="career_choice_siegemaster_key">
+      <Mutations>
+        <Mutation target_id="warboss_rally_horde" property="Radius"
+                  calculator="flat" value="5" operation="Add" />
+      </Mutations>
+    </Choice>
+    <Choice id="warboss_siegemaster_p1" type="Passive"
+            description="{=taom_warboss_siege_p1}+10% troop damage."
+            icon_sprite="career_choice_siegemaster_p1">
+      <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_siegemaster_p2" type="Passive"
+            description="{=taom_warboss_siege_p2}+100 max health."
+            icon_sprite="career_choice_siegemaster_p2">
+      <PassiveEffect type="Health" magnitude="100" operation="Add" />
+    </Choice>
+    <Choice id="warboss_siegemaster_p3" type="Passive"
+            description="{=taom_warboss_siege_p3}+10% resistance."
+            icon_sprite="career_choice_siegemaster_p3">
+      <PassiveEffect type="Resistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_siegemaster_p4" type="Passive"
+            description="{=taom_warboss_siege_p4}+10% party size."
+            icon_sprite="career_choice_siegemaster_p4">
+      <PassiveEffect type="PartySize" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Tier 3: Tyrant ═══ -->
+  <ChoiceGroup id="warboss_tyrant_t3" career_id="warboss" tier="3">
+    <Choice id="warboss_tyrant_keystone" type="Keystone"
+            description="{=taom_warboss_tyrant_key}Rally the Horde additionally charges from damage taken. Maximum charge greatly reduced."
+            icon_sprite="career_choice_tyrant_key">
+      <Mutations>
+        <Mutation target_id="warboss_rally_horde" property="MaxCharge"
+                  calculator="flat" value="-30" operation="Add" />
+      </Mutations>
+    </Choice>
+    <Choice id="warboss_tyrant_p1" type="Passive"
+            description="{=taom_warboss_tyrant_p1}+15% personal melee damage."
+            icon_sprite="career_choice_tyrant_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="warboss_tyrant_p2" type="Passive"
+            description="{=taom_warboss_tyrant_p2}+15% health regeneration."
+            icon_sprite="career_choice_tyrant_p2">
+      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_tyrant_p3" type="Passive"
+            description="{=taom_warboss_tyrant_p3}+20% troop morale."
+            icon_sprite="career_choice_tyrant_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warboss_tyrant_p4" type="Passive"
+            description="{=taom_warboss_tyrant_p4}-15% custom resource upkeep."
+            icon_sprite="career_choice_tyrant_p4">
+      <PassiveEffect type="CustomResourceUpkeepModifier" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+</CareerChoices>

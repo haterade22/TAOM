@@ -3,6 +3,8 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -34,6 +36,10 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
 
         if (culture.HasFeat(TaomCulturalFeats.GondorPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.GondorPartySizeFeat.EffectBonus, CultureText);
+
+        var hero = party.Owner ?? party.LeaderHero;
+        if (hero != null)
+            CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.PartySize);
 
         return result;
     }

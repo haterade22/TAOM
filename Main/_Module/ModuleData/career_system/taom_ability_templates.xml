@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbilityTemplates>
+
+  <AbilityTemplate id="warboss_rally_horde"
+                   display_name="{=taom_ability_warboss_rally}Rally the Horde"
+                   sprite="ability_warboss_rally_icon"
+                   cooldown="0"
+                   duration="8"
+                   radius="10"
+                   cast_type="Instant"
+                   target_type="Self"
+                   crosshair_type="Self"
+                   particle_effect="warboss_rally_particle"
+                   sound_effect="warboss_rally_activate"
+                   tooltip="{=taom_ability_warboss_rally_tt}Rally nearby allies, granting increased damage and morale for a short duration. Charges from killing enemies." />
+
+</AbilityTemplates>

@@ -3,6 +3,8 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -34,6 +36,9 @@ public class TaomPartyMoraleModel : DefaultPartyMoraleModel
 
         if (culture.HasFeat(TaomCulturalFeats.LothlorienMoraleFeat))
             result.Add(TaomCulturalFeats.LothlorienMoraleFeat.EffectBonus, CultureText);
+
+        if (party.LeaderHero != null)
+            CareerPassiveHelper.ApplyFactor(party.LeaderHero, ref result, PassiveEffectType.TroopMorale);
 
         return result;
     }

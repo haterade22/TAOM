@@ -48,6 +48,7 @@ using TAOM.Features.LocalizationOverride;
 using TAOM.Features.LocalizationOverride.Hooks;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
+using TAOM.Features.CareerSystem;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -272,6 +273,14 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(specialResourceBehavior);
             PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
 
+            var careerDataService = IoC.Resolve<ICareerDataService>();
+            var careerRegistry = IoC.Resolve<ICareerRegistry>();
+            var careerPassiveService = IoC.Resolve<ICareerPassiveService>();
+            var careerLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService));
+            campaignStarter.AddBehavior(new CareerCampaignBehavior(
+                careerDataService, careerRegistry, careerPassiveService, careerLogger));
+
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
             var startupLogger = IoC.Resolve<IModLogger>();
@@ -353,6 +362,16 @@ public class SubModule : MBSubModuleBase
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
             mission.AddMissionBehavior(new AgentColorStoreCleanupBehavior(colorStore));
+
+        var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
+        if (careerAbilityService != null)
+        {
+            mission.AddMissionBehavior(new Features.CareerSystem.CareerPerkMissionBehavior(
+                IoC.Resolve<ICareerDataService>(),
+                IoC.Resolve<ICareerRegistry>(),
+                careerAbilityService,
+                IoC.Resolve<IModLogger>()));
+        }
     }
 
     protected override void OnApplicationTick(float dt)

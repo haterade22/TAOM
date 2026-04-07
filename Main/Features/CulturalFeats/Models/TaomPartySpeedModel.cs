@@ -4,6 +4,8 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -58,6 +60,9 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
                     result.AddFactor(TaomCulturalFeats.RohanInfantrySpeedFeat.EffectBonus, CultureText);
             }
         }
+
+        if (mobileParty.LeaderHero != null)
+            CareerPassiveHelper.ApplyFactor(mobileParty.LeaderHero, ref result, PassiveEffectType.PartyMovementSpeed);
 
         return result;
     }

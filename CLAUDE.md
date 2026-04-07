@@ -111,6 +111,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | ShaderPrecompilation | `Main/Features/ShaderPrecompilation/` (pre-compile shaders menu option, eliminates in-game stutter) |
 | SiegeDefense | `Main/Features/Siege/` (timed defense events when watched factions are besieged; config-driven watched factions, CampaignTime deadline, relation+influence reward on arrival) |
 | SpecialResources | `Main/Features/SpecialResources/` (per-kingdom resource system — Mordor "Scraps" pilot; XML-driven earning/spending, pending transaction upgrade flow, Patch26 party screen gating, map bar UI, composite `heroId:resourceId` storage) |
+| CareerSystem | `Main/Features/CareerSystem/` (career/class progression — Mordor Warboss pilot; XML-driven career defs, mutation calculator registry, passive service with GameModel integration, ability system, career screen UI via UIExtenderEx, level-based tier gating, SyncData persistence) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
@@ -119,6 +120,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
 | SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
+| CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates XML) |
 | StartupResources config | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | Decompiled source | `E:\Decompiled_Bannerlord\` (pre-decompiled, organized by category) |
@@ -200,6 +202,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch23_BannerColorPersistence` | UI color persistence + 3D battle + conversation — player clan colors everywhere | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM` |
 | `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` |
 | `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` |
+| `Patch27_CareerSystem` | Career ability charge + battle integration (WIP — Phase 4) | TBD |
 
 ## Codex Integration
 
