@@ -4,6 +4,7 @@ public sealed class SpecialResource
 {
     public string Id { get; }
     public string KingdomId { get; }
+    public string CultureId { get; }
     public string DisplayName { get; }
     public string IconSpriteName { get; }
     public float Cap { get; }
@@ -19,6 +20,7 @@ public sealed class SpecialResource
     public SpecialResource(
         string id,
         string kingdomId,
+        string cultureId,
         string displayName,
         string iconSpriteName,
         float cap,
@@ -33,6 +35,7 @@ public sealed class SpecialResource
     {
         Id = id;
         KingdomId = kingdomId;
+        CultureId = cultureId;
         DisplayName = displayName;
         IconSpriteName = iconSpriteName;
         Cap = cap;

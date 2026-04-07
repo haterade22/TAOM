@@ -7,5 +7,6 @@ public interface ISpecialResourceConfigProvider
 {
     IReadOnlyList<SpecialResource> GetAllResources();
     SpecialResource GetByKingdomId(string kingdomId);
+    SpecialResource GetByCultureId(string cultureId);
     TroopResourceCostEntry GetTroopCost(string troopId);
 }

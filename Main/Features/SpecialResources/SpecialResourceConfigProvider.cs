@@ -16,6 +16,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     private readonly IModLogger _logger;
     private List<SpecialResource> _resources;
     private Dictionary<string, SpecialResource> _byKingdom;
+    private Dictionary<string, SpecialResource> _byCulture;
     private Dictionary<string, TroopResourceCostEntry> _troopCosts;
 
     public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger)
@@ -33,7 +34,13 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     public SpecialResource GetByKingdomId(string kingdomId)
     {
         EnsureLoaded();
-        return _byKingdom.TryGetValue(kingdomId, out var resource) ? resource : null;
+        return kingdomId != null && _byKingdom.TryGetValue(kingdomId, out var resource) ? resource : null;
+    }
+
+    public SpecialResource GetByCultureId(string cultureId)
+    {
+        EnsureLoaded();
+        return cultureId != null && _byCulture.TryGetValue(cultureId, out var resource) ? resource : null;
     }
 
     public TroopResourceCostEntry GetTroopCost(string troopId)
@@ -49,6 +56,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
 
         _resources = new List<SpecialResource>();
         _byKingdom = new Dictionary<string, SpecialResource>();
+        _byCulture = new Dictionary<string, SpecialResource>();
         _troopCosts = new Dictionary<string, TroopResourceCostEntry>();
 
         LoadResources();
@@ -73,6 +81,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                 var resource = new SpecialResource(
                     id: el.Attribute("id")?.Value ?? "",
                     kingdomId: el.Attribute("kingdom_id")?.Value ?? "",
+                    cultureId: el.Attribute("culture_id")?.Value ?? "",
                     displayName: el.Attribute("display_name")?.Value ?? "",
                     iconSpriteName: el.Attribute("icon_sprite")?.Value ?? "",
                     cap: ParseFloat(el, "cap", 100f),
@@ -89,6 +98,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
 
                 if (!string.IsNullOrEmpty(resource.KingdomId))
                     _byKingdom[resource.KingdomId] = resource;
+                if (!string.IsNullOrEmpty(resource.CultureId))
+                    _byCulture[resource.CultureId] = resource;
             }
 
             _logger.LogInfo($"SpecialResourceConfigProvider: Loaded {_resources.Count} resource definitions");

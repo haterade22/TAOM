@@ -52,13 +52,10 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         _storage.RestoreData(data);
 
         var hero = Hero.MainHero;
-        var kingdomId = hero?.Clan?.Kingdom?.StringId;
-        if (kingdomId != null)
-        {
-            var resource = _config.GetByKingdomId(kingdomId);
-            if (resource != null)
-                _storage.ClampAll(resource.Cap);
-        }
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        var resource = _service.ResolveResource(kingdomId, cultureId);
+        if (resource != null)
+            _storage.ClampAll(resource.Cap);
     }
 
     private void OnNewGameCreated(CampaignGameStarter starter)
@@ -66,11 +63,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         if (hero == null) return;
 
-        var kingdomId = hero.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
-
-        _service.InitializeHero(hero.StringId, kingdomId);
-        _logger.LogInfo($"SpecialResources: Initialized resource for {hero.Name} (kingdom: {kingdomId})");
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        _service.InitializeHero(hero.StringId, kingdomId, cultureId);
+        _logger.LogInfo($"SpecialResources: Initialized resource for {hero.Name}");
     }
 
     private void OnSessionLaunched(CampaignGameStarter starter)
@@ -78,10 +73,8 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         if (hero == null) return;
 
-        var kingdomId = hero.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
-
-        var resource = _config.GetByKingdomId(kingdomId);
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
         var current = _storage.Get(hero.StringId, resource.Id);
@@ -96,16 +89,14 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (hero != Hero.MainHero) return;
 
-        var kingdomId = hero.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
-
-        var resource = _service.GetResourceForKingdom(kingdomId);
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
         var ownedTowns = CountOwnedTowns(hero);
         var troopUpkeep = GetTroopUpkeepFromParty(hero.PartyBelongedTo);
 
-        _service.ApplyDailyTick(hero.StringId, kingdomId, ownedTowns, troopUpkeep);
+        _service.ApplyDailyTick(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
     }
 
     private void OnMapEventEnded(MapEvent mapEvent)
@@ -113,8 +104,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!mapEvent.IsPlayerMapEvent) return;
 
         var hero = Hero.MainHero;
-        var kingdomId = hero?.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         if (mapEvent.BattleState == BattleState.AttackerVictory || mapEvent.BattleState == BattleState.DefenderVictory)
         {
@@ -133,9 +123,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             var ratio = (float)enemyCount / playerCount;
 
             if (mapEvent.IsSiegeAssault || mapEvent.IsSiegeOutside)
-                _service.EarnFromSiege(hero.StringId, kingdomId);
+                _service.EarnFromSiege(hero.StringId, kingdomId, cultureId);
             else
-                _service.EarnFromBattle(hero.StringId, kingdomId, ratio);
+                _service.EarnFromBattle(hero.StringId, kingdomId, cultureId, ratio);
         }
     }
 
@@ -145,34 +135,30 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
 
         var hero = Hero.MainHero;
-        var kingdomId = hero?.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
 
-        _service.EarnFromRaid(hero.StringId, kingdomId);
+        _service.EarnFromRaid(hero.StringId, kingdomId, cultureId);
     }
 
     private void OnPrisonerTaken(FlattenedTroopRoster roster)
     {
         var hero = Hero.MainHero;
-        var kingdomId = hero?.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         var count = 0;
         if (roster != null)
             foreach (var _ in roster)
                 count++;
         if (count > 0)
-            _service.EarnFromPrisoners(hero.StringId, kingdomId, count);
+            _service.EarnFromPrisoners(hero.StringId, kingdomId, cultureId, count);
     }
 
     private void OnTournamentFinished(CharacterObject winner, MBReadOnlyList<CharacterObject> participants, Town town, ItemObject prize)
     {
         if (winner != Hero.MainHero?.CharacterObject) return;
 
-        var kingdomId = Hero.MainHero?.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
-
-        _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId);
+        GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
+        _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId, cultureId);
     }
 
     private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component)
@@ -181,10 +167,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
 
         var hero = Hero.MainHero;
-        var kingdomId = hero?.Clan?.Kingdom?.StringId;
-        if (kingdomId == null) return;
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
 
-        _service.EarnFromHideout(hero.StringId, kingdomId);
+        _service.EarnFromHideout(hero.StringId, kingdomId, cultureId);
     }
 
     private void OnScreenPushed(ScreenBase screen)
@@ -216,15 +201,27 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         }
 
         if (fromCancel)
+        {
             _service.CancelSession();
+        }
         else
-            _service.CommitSession(Hero.MainHero?.StringId, Hero.MainHero?.Clan?.Kingdom?.StringId);
+        {
+            var hero = Hero.MainHero;
+            GetHeroIds(hero, out var kingdomId, out var cultureId);
+            _service.CommitSession(hero?.StringId, kingdomId, cultureId);
+        }
     }
 
     private void OnPartyScreenReset(PartyScreenLogic logic, bool fromCancel)
     {
         _service.CancelSession();
         _service.BeginPartyScreenSession();
+    }
+
+    private static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)
+    {
+        kingdomId = hero?.Clan?.Kingdom?.StringId;
+        cultureId = hero?.Culture?.StringId;
     }
 
     private static int CountOwnedTowns(Hero hero)
