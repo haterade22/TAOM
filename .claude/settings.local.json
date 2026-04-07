@@ -16,7 +16,8 @@
       "Bash(Select-String:*)",
       "Bash(powershell.exe -ExecutionPolicy Bypass -File ./build.ps1)",
       "Edit(/.claude/skills/verify/**)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Skill(codex:rescue)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
