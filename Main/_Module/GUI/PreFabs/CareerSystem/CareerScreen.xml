@@ -52,7 +52,28 @@
                        WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                        StackLayout.LayoutMethod="HorizontalLeftToRight">
               <ItemTemplate>
-                <CareerChoiceGroupWidget Parameter.GroupVM="{..}" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                        SuggestedWidth="250" MarginRight="10"
+                        Sprite="SPGeneral.CharacterDeveloper.SkillGroup">
+                  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                             StackLayout.LayoutMethod="VerticalBottomToTop" MarginLeft="5" MarginRight="5">
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" MarginBottom="3" />
+                    <ListPanel DataSource="{Choices}"
+                               WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="VerticalBottomToTop">
+                      <ItemTemplate>
+                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                      SuggestedHeight="30" MarginBottom="2"
+                                      IsEnabled="@IsFreeToTake"
+                                      Brush="CharacterDeveloper.PerkItemButtonBrush">
+                          <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                      Text="@Description" Brush="CharacterDeveloper.PerkItemTextBrush" />
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </ListPanel>
+                </Widget>
               </ItemTemplate>
             </ListPanel>
 
@@ -64,7 +85,28 @@
                        WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                        StackLayout.LayoutMethod="HorizontalLeftToRight">
               <ItemTemplate>
-                <CareerChoiceGroupWidget Parameter.GroupVM="{..}" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                        SuggestedWidth="250" MarginRight="10"
+                        Sprite="SPGeneral.CharacterDeveloper.SkillGroup">
+                  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                             StackLayout.LayoutMethod="VerticalBottomToTop" MarginLeft="5" MarginRight="5">
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" MarginBottom="3" />
+                    <ListPanel DataSource="{Choices}"
+                               WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="VerticalBottomToTop">
+                      <ItemTemplate>
+                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                      SuggestedHeight="30" MarginBottom="2"
+                                      IsEnabled="@IsFreeToTake"
+                                      Brush="CharacterDeveloper.PerkItemButtonBrush">
+                          <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                      Text="@Description" Brush="CharacterDeveloper.PerkItemTextBrush" />
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </ListPanel>
+                </Widget>
               </ItemTemplate>
             </ListPanel>
 
@@ -76,7 +118,28 @@
                        WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                        StackLayout.LayoutMethod="HorizontalLeftToRight">
               <ItemTemplate>
-                <CareerChoiceGroupWidget Parameter.GroupVM="{..}" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                        SuggestedWidth="250" MarginRight="10"
+                        Sprite="SPGeneral.CharacterDeveloper.SkillGroup">
+                  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                             StackLayout.LayoutMethod="VerticalBottomToTop" MarginLeft="5" MarginRight="5">
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" MarginBottom="3" />
+                    <ListPanel DataSource="{Choices}"
+                               WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="VerticalBottomToTop">
+                      <ItemTemplate>
+                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                      SuggestedHeight="30" MarginBottom="2"
+                                      IsEnabled="@IsFreeToTake"
+                                      Brush="CharacterDeveloper.PerkItemButtonBrush">
+                          <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                      Text="@Description" Brush="CharacterDeveloper.PerkItemTextBrush" />
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </ListPanel>
+                </Widget>
               </ItemTemplate>
             </ListPanel>
           </ListPanel>
