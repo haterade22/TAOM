@@ -115,6 +115,92 @@ public class CareerScreenVMTests
         _passiveService.Received().RefreshCache(_dataService, _registry);
     }
 
+    // ── Preventive: Tier Gating (root cause: missing integration test for composed selection flow) ──
+
+    [TestMethod]
+    public void ExecuteSelectChoice_Tier2ChoiceAtLevel5_Rejected()
+    {
+        // Tier 2 requires level 10. Hero is level 5 → IsTierAvailable(5, 2) returns false.
+        SetupHeroWithCareer();
+
+        var tier2Group = new CareerChoiceGroupDefinition(
+            id: "wb_scavenger", careerId: "warboss", tier: 2,
+            choiceIds: new List<string> { "wb_scav_key" });
+        var tier2Keystone = new CareerChoiceDefinition(
+            id: "wb_scav_key", groupId: "wb_scavenger", type: ChoiceType.Keystone,
+            description: "Tier 2 keystone", iconSprite: "icon", passive: null, mutations: null);
+
+        _registry.GetGroup("wb_scavenger").Returns(tier2Group);
+        _registry.GetChoice("wb_scav_key").Returns(tier2Keystone);
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_scav_key");
+
+        Assert.IsFalse(_dataService.GetOrCreateData("hero1").HasChoice("wb_scav_key"),
+            "Tier 2 choice should be rejected when hero level is below threshold");
+    }
+
+    [TestMethod]
+    public void ExecuteSelectChoice_SecondKeystoneInSameTier_Rejected()
+    {
+        // Set up career with 2 groups in tier 1, each with a keystone.
+        // Selecting the first keystone should succeed, selecting the second should be rejected.
+        SetupHeroWithCareer();
+
+        var dominionGroup = new CareerChoiceGroupDefinition(
+            id: "wb_dominion", careerId: "warboss", tier: 1,
+            choiceIds: new List<string> { "wb_dom_key" });
+        var dominionKeystone = new CareerChoiceDefinition(
+            id: "wb_dom_key", groupId: "wb_dominion", type: ChoiceType.Keystone,
+            description: "Dominion keystone", iconSprite: "icon", passive: null, mutations: null);
+
+        // Expand career to have both groups
+        var expandedCareer = new CareerDefinition(
+            id: "warboss", displayName: "Warboss", description: "A brute.",
+            portraitSprite: "wb_sprite", abilityTemplateId: "rally_horde",
+            chargeType: ChargeType.Kills, maxCharge: 100, minClanTier: 0,
+            rootChoiceId: "wb_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string> { "wb_brutality", "wb_dominion" });
+        _registry.GetCareer("warboss").Returns(expandedCareer);
+
+        _registry.GetGroup("wb_dominion").Returns(dominionGroup);
+        _registry.GetChoice("wb_dom_key").Returns(dominionKeystone);
+        _registry.GetChoicesForGroup("wb_dominion").Returns(new List<CareerChoiceDefinition> { dominionKeystone });
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+
+        var vm = CreateVM();
+
+        // First keystone succeeds
+        vm.ExecuteSelectChoice("wb_brut_key");
+        Assert.IsTrue(_dataService.GetOrCreateData("hero1").HasChoice("wb_brut_key"),
+            "First keystone in tier should be accepted");
+
+        // Second keystone in same tier rejected
+        vm.ExecuteSelectChoice("wb_dom_key");
+        Assert.IsFalse(_dataService.GetOrCreateData("hero1").HasChoice("wb_dom_key"),
+            "Second keystone in same tier should be rejected (mutual exclusion)");
+    }
+
+    [TestMethod]
+    public void ExecuteSelectChoice_PassiveInSameTierAsExistingKeystone_Allowed()
+    {
+        // Passives should still be selectable even after a keystone in the same tier
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        _dataService.TryAddChoice("hero1", "wb_brut_key", 10);
+
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_brut_p1");
+
+        Assert.IsTrue(_dataService.GetOrCreateData("hero1").HasChoice("wb_brut_p1"),
+            "Passive choices in same tier should still be selectable");
+    }
+
+    // ── Preventive: Serialization Safety (root cause: vanilla API not researched) ──
+    // These tests are in CareerPersistenceTests below.
+
     private void SetupHeroWithCareer()
     {
         _dataService.SetCareer("hero1", "warboss");
