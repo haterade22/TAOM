@@ -26,9 +26,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 
 ## Metrics
 
-**Codex accuracy rate:** 42 real findings / 51 total findings = 82%
-**Codex miss rate:** 7 missed bugs / 49 total real bugs = 14%
-**False positive rate:** 5 false positives / 51 findings total = 10%
+**Codex accuracy rate:** 45 real findings / 57 total findings = 79%
+**Codex miss rate:** 8 missed bugs / 53 total real bugs = 15%
+**False positive rate:** 8 false positives / 57 findings total = 14%
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
@@ -41,6 +41,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 18 | 2026-04-06 | CharacterSelection (transpiler) | no-ship | 1 fix + 2 deferred (need decompilation) | 1 (race fallback) | 0 | 0 | v6 |
 | 19 | 2026-04-07 | SpecialResources | needs-attention | agree (5 confirmed + 1 ship-blocker Claude found) | 5 (1 CRIT pending txn, 1 CRIT no clamp, 1 HIGH raid, 1 HIGH save, 1 LOW cap) | 0 | 1 (wrong kingdom_id) | v6 |
 | 20 | 2026-04-07 | CareerSystem | N/A — feature not built | N/A | 0 | 0 | 0 | v6 |
+| 21 | 2026-04-07 | CareerSystem (impl vs TOR) | needs-attention | partial-agree | 2 confirmed (tier validation, save serialization) + 1 partial (widget def) | 3 (mutation scope, ability scope, passive coverage — intentional v1 scope) | 1 (hallucinated AllowedRaces property) | v6-adversarial |
 
 **Post-codebase reviews:** 19 = SpecialResources (new feature), 20 = CareerSystem (premature — no code exists yet), 21 = SpecialResources adversarial follow-up (2 confirmed: sprite widget dead code, single-bucket storage; 1 FP: kingdom_id already fixed; 4 findings already fixed by user before review landed). 21 Codex reviews total, 50 bugs found across codebase.
 

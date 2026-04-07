@@ -48,6 +48,8 @@ public class CareerScreenVMTests
 
         _registry.GetCareer("warboss").Returns(WarbossCareer);
         _registry.GetGroup("wb_brutality").Returns(BrutalityGroup);
+        _registry.GetChoice("wb_brut_key").Returns(KeystoneChoice);
+        _registry.GetChoice("wb_brut_p1").Returns(PassiveChoice);
         _registry.GetChoicesForGroup("wb_brutality").Returns(new List<CareerChoiceDefinition> { KeystoneChoice, PassiveChoice });
         _registry.GetMaxChoicesForHero(5).Returns(6);
         _registry.IsTierAvailable(5, 1).Returns(true);

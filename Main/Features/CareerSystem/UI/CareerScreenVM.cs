@@ -111,6 +111,39 @@ public class CareerScreenVM : ViewModel
     {
         if (FreeCareerPoints <= 0) return;
 
+        var choice = _registry.GetChoice(choiceId);
+        if (choice == null) return;
+
+        // Tier gating: check hero level meets tier requirement
+        if (!string.IsNullOrEmpty(choice.GroupId))
+        {
+            var group = _registry.GetGroup(choice.GroupId);
+            if (group != null && !_registry.IsTierAvailable(_heroLevel, group.Tier))
+                return;
+
+            // Keystone exclusivity: only one keystone per tier
+            if (choice.Type == Domain.ChoiceType.Keystone && group != null)
+            {
+                var heroData = _dataService.GetOrCreateData(_heroStringId);
+                var careerId = _dataService.GetCareerStringId(_heroStringId);
+                var career = careerId != null ? _registry.GetCareer(careerId) : null;
+                if (career != null)
+                {
+                    foreach (var gId in career.ChoiceGroupIds)
+                    {
+                        var otherGroup = _registry.GetGroup(gId);
+                        if (otherGroup == null || otherGroup.Tier != group.Tier) continue;
+                        var otherChoices = _registry.GetChoicesForGroup(gId);
+                        foreach (var oc in otherChoices)
+                        {
+                            if (oc.Type == Domain.ChoiceType.Keystone && heroData.HasChoice(oc.Id))
+                                return; // Already has a keystone in this tier
+                        }
+                    }
+                }
+            }
+        }
+
         var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
         if (_dataService.TryAddChoice(_heroStringId, choiceId, maxChoices))
         {
