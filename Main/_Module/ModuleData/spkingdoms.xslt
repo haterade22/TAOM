@@ -167,7 +167,7 @@
 			id="vlandia"
 			initial_home_settlement="Settlement.town_V1"
 			owner="Hero.lord_4_1"
-			banner_key="11.14.14.1536.1536.764.764.1.0.0.160.15.15.497.497.764.764.1.0.0"
+			banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0"
 			primary_banner_color="0xff8D291A"
 			secondary_banner_color="0xffF7BF46"
 			color="FF5C2017"

@@ -140,7 +140,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.293.293.1528.1528.764.764.1.0.0.17286.171.171.635.635.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_13"
 		name="{=aom_clan_vlandia_13_name}House of Celmunding"
@@ -150,7 +150,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.273.273.1528.1528.764.764.1.0.0.17287.172.171.593.593.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_14"
 		name="{=aom_clan_vlandia_14_name}House of Widmunding"
@@ -160,7 +160,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.272.272.1528.1528.764.764.1.0.0.17291.172.171.593.593.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_15"
 		name="{=aom_clan_vlandia_15_name}House of Ordgaring"
@@ -170,7 +170,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.263.263.1528.1528.764.764.1.0.0.17290.172.171.593.593.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_16"
 		name="{=aom_clan_vlandia_16_name}House of Hunthelming"
@@ -180,7 +180,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.261.261.1528.1528.764.764.1.0.0.17288.172.171.593.593.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_17"
 		name="{=aom_clan_vlandia_17_name}House of Bregdaning"
@@ -190,7 +190,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.293.293.1528.1528.764.764.1.0.0.17286.171.171.635.635.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_18"
 		name="{=aom_clan_vlandia_18_name}House of DeÃ¡fringas"
@@ -200,7 +200,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.2003.2003.1528.1528.764.764.1.0.0.17289.248.171.593.593.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_19"
 		name="{=aom_clan_vlandia_19_name}House of Marhad"
@@ -210,7 +210,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.263.263.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_20"
 		name="{=aom_clan_vlandia_20_name}House of Morcargas"
@@ -220,7 +220,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.262.262.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_21"
 		name="{=aom_clan_vlandia_21_name}House of Halethring"
@@ -230,7 +230,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.273.273.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_22"
 		name="{=aom_clan_vlandia_22_name}House of Rungaring"
@@ -240,7 +240,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.158.158.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+		banner_key="11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0" />
   <!-- ============================================== -->
   <!-- HARAD CLANS 10-26: moved to clan_shaghana_1-9  -->
   <!-- and clan_abanissa_1-8 (Harad kingdom split)    -->
@@ -1031,7 +1031,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.149.166.1528.1528.764.764.1.0.0.18002.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
   <!-- GÃ»rzrak -->
   <Faction
@@ -1043,7 +1043,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17047.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
   <!-- Maugdur -->
   <Faction
@@ -1055,7 +1055,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17298.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
   <!-- DÃ»rzan -->
   <Faction
@@ -1067,7 +1067,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17190.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
   <!-- KrÃ¢zgoth -->
   <Faction
@@ -1079,7 +1079,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17156.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 
   <!-- ZÃ»rbak -->
   <Faction
@@ -1091,5 +1091,5 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17335.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18001.259.171.700.700.764.764.0.0.0" />
 </Factions>

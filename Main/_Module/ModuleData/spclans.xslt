@@ -427,93 +427,104 @@
   <!-- ==================== ROHAN CLANS (Vlandia) ==================== -->
   <xsl:template match="Faction[@id='clan_vlandia_1']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_1}House of Eorling</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_2']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_2}House of Cerdicing</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_3']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_3}House of Grimingas</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_4']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_4}House of Felánding</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_5']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_5}House of Oscyteling</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_6']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_6}House of Ordlacing</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_V6</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_7']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_7}House of Æthellafing</xsl:attribute>
       <xsl:attribute name="owner">Hero.lord_4_23_1</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_8']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_8}House of Grimmóding</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_V3</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_9']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_9}House of Dúning</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_10']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_10}House of Eoforing</xsl:attribute>
       <xsl:attribute name="owner">Hero.lord_4_28_1</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template match="Faction[@id='clan_vlandia_11']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_11}House of Tordaging</xsl:attribute>
       <xsl:attribute name="owner">Hero.lord_V11_u</xsl:attribute>
+      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
