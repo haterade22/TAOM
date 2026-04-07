@@ -277,7 +277,7 @@ public class SubModule : MBSubModuleBase
             var careerRegistry = IoC.Resolve<ICareerRegistry>();
             var careerPassiveService = IoC.Resolve<ICareerPassiveService>();
             var careerLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService));
+            campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService, careerLogger));
             var careerCreationHandler = IoC.Resolve<ICareerCreationHandler>();
             campaignStarter.AddBehavior(new CareerCampaignBehavior(
                 careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerLogger));
@@ -317,9 +317,10 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
-        PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook);
-        PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook);
-        PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook);
+        var specResLogger = IoC.Resolve<IModLogger>();
+        PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook, specResLogger);
+        PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook, specResLogger);
+        PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
         _harmony.PatchCategory("Patch26_SpecialResources");
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)

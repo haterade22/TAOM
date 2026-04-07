@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem;
@@ -8,6 +9,7 @@ namespace TAOM.Features.CareerSystem;
 public class CareerRegistry : ICareerRegistry
 {
     private readonly ICareerConfigProvider _configProvider;
+    private readonly IModLogger _logger;
 
     private Dictionary<string, CareerDefinition> _careers;
     private Dictionary<string, CareerChoiceDefinition> _choices;
@@ -17,9 +19,10 @@ public class CareerRegistry : ICareerRegistry
 
     private static readonly IReadOnlyList<CareerChoiceDefinition> EmptyChoices = new List<CareerChoiceDefinition>();
 
-    public CareerRegistry(ICareerConfigProvider configProvider)
+    public CareerRegistry(ICareerConfigProvider configProvider, IModLogger logger)
     {
         _configProvider = configProvider;
+        _logger = logger;
     }
 
     public CareerDefinition GetCareer(string careerStringId)
@@ -63,10 +66,22 @@ public class CareerRegistry : ICareerRegistry
     public bool IsEligible(string careerStringId, ICareerHeroAdapter hero)
     {
         EnsureLoaded();
-        if (hero == null) return false;
-        if (!_careers.TryGetValue(careerStringId, out var career)) return false;
+        if (hero == null)
+        {
+            _logger.LogDebug($"CareerSystem: IsEligible — hero is null for career '{careerStringId}'");
+            return false;
+        }
+        if (!_careers.TryGetValue(careerStringId, out var career))
+        {
+            _logger.LogWarning($"CareerSystem: IsEligible — career '{careerStringId}' not found in registry");
+            return false;
+        }
 
-        if (hero.ClanTier < career.MinClanTier) return false;
+        if (hero.ClanTier < career.MinClanTier)
+        {
+            _logger.LogDebug($"CareerSystem: IsEligible — hero culture='{hero.CultureStringId}' clanTier={hero.ClanTier} < minClanTier={career.MinClanTier} for career '{careerStringId}'");
+            return false;
+        }
 
         if (career.EligibleCultureIds.Count > 0)
         {
@@ -80,9 +95,14 @@ public class CareerRegistry : ICareerRegistry
                     break;
                 }
             }
-            if (!found) return false;
+            if (!found)
+            {
+                _logger.LogDebug($"CareerSystem: IsEligible — hero culture '{heroCulture}' not in [{string.Join(", ", career.EligibleCultureIds)}] for career '{careerStringId}'");
+                return false;
+            }
         }
 
+        _logger.LogDebug($"CareerSystem: IsEligible — hero culture='{hero.CultureStringId}' IS eligible for career '{careerStringId}'");
         return true;
     }
 
@@ -123,5 +143,7 @@ public class CareerRegistry : ICareerRegistry
 
         foreach (var choice in _configProvider.LoadChoices())
             _choices[choice.Id] = choice;
+
+        _logger.LogInfo($"CareerSystem: Registry initialized: {_careers.Count} careers, {_groups.Count} groups, {_choices.Count} choices, maxPerkPoints={_maxPerkPoints}");
     }
 }

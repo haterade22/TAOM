@@ -39,8 +39,13 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        _logger.LogInfo("CareerSystem: OnSessionLaunched fired");
         var hero = Hero.MainHero;
-        if (hero == null) return;
+        if (hero == null)
+        {
+            _logger.LogWarning("CareerSystem: OnSessionLaunched — MainHero is null, aborting");
+            return;
+        }
 
         // Auto-assign career for eligible heroes without one
         if (!_dataService.HasCareer(hero.StringId))
@@ -65,10 +70,15 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
                         _logger.LogInfo($"CareerSystem: Auto-assigned career '{career.Id}' to {hero.Name} (culture: {cultureId})");
                         break;
                     }
+                    else
+                    {
+                        _logger.LogDebug($"CareerSystem: Skipped career '{career.Id}' for {hero.Name} — eligible cultures [{string.Join(", ", career.EligibleCultureIds)}] do not include '{cultureId}'");
+                    }
                 }
             }
         }
 
+        _logger.LogInfo("CareerSystem: Refreshing passive cache after session launch");
         _passiveService.RefreshCache(_dataService, _registry);
 
         var careerId = _dataService.GetCareerStringId(hero.StringId);
@@ -81,7 +91,11 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
     private void OnHeroLeveledUp(Hero hero, bool shouldNotify)
     {
         if (hero != Hero.MainHero) return;
-        if (!_dataService.HasCareer(hero.StringId)) return;
+        if (!_dataService.HasCareer(hero.StringId))
+        {
+            _logger.LogDebug($"CareerSystem: OnHeroLeveledUp — hero '{hero.StringId}' has no career, skipping");
+            return;
+        }
 
         var maxChoices = _registry.GetMaxChoicesForHero(hero.Level);
         var currentChoices = _dataService.GetChoiceCount(hero.StringId);
@@ -96,6 +110,7 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
 
         if (_dataService.HasCareer(victim.StringId))
         {
+            _logger.LogInfo($"CareerSystem: Hero '{victim.StringId}' killed — clearing career data");
             _dataService.ClearCareer(victim.StringId);
             _passiveService.RefreshCache(_dataService, _registry);
         }

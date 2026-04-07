@@ -3,6 +3,7 @@ using Bannerlord.UIExtenderEx.ViewModels;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Library;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CareerSystem.UI;
 
@@ -32,6 +33,7 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
 
         var dataService = IoC.Resolve<ICareerDataService>();
         HasCareer = dataService?.HasCareer(hero.StringId) ?? false;
+        IoC.Resolve<IModLogger>()?.LogDebug($"CareerSystem: RefreshCareerState — hero='{hero.StringId}' HasCareer={HasCareer}");
     }
 
     [DataSourceProperty]
@@ -51,6 +53,7 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
     [DataSourceMethod]
     public void ExecuteOpenCareerScreen()
     {
+        IoC.Resolve<IModLogger>()?.LogInfo("CareerSystem: ExecuteOpenCareerScreen triggered from character developer");
         GauntletCareerScreen.OpenCareerScreen();
     }
 }

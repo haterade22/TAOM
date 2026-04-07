@@ -16,6 +16,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
     private float _tickAccumulator;
     private const float TickInterval = 1f;
+    private bool _loggedMissionStart;
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -41,6 +42,14 @@ public class CareerPerkMissionBehavior : MissionBehavior
         if (hero == null) return;
 
         var heroId = hero.StringId;
+        if (!_loggedMissionStart)
+        {
+            _loggedMissionStart = true;
+            var hasCareer = _dataService.HasCareer(heroId);
+            var careerId = _dataService.GetCareerStringId(heroId);
+            _logger.LogInfo($"CareerSystem: Mission started — hero='{heroId}' hasCareer={hasCareer} career='{careerId ?? "none"}'");
+        }
+
         if (!_dataService.HasCareer(heroId)) return;
 
         _abilityService.Tick(heroId, TickInterval);
@@ -58,10 +67,13 @@ public class CareerPerkMissionBehavior : MissionBehavior
         if (mainAgent == null || affectorAgent != mainAgent) return;
 
         _abilityService.AddCharge(hero.StringId, 1f, ChargeType.Kills);
+        _logger.LogDebug($"CareerSystem: Kill charge added for hero '{hero.StringId}'");
     }
 
     protected override void OnEndMission()
     {
+        _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
+        _loggedMissionStart = false;
         _abilityService.ClearAll();
     }
 }

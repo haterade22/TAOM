@@ -53,17 +53,22 @@ public class CareerConfigProvider : ICareerConfigProvider
     {
         if (_careers != null) return;
 
+        _logger.LogInfo("CareerSystem: Loading career config...");
+
         _careers = new List<CareerDefinition>();
         _groups = new List<CareerChoiceGroupDefinition>();
         _choices = new List<CareerChoiceDefinition>();
 
         LoadCareersXml();
         LoadChoicesXml();
+
+        _logger.LogInfo($"CareerSystem: Loaded {_careers.Count} careers, {_groups.Count} groups, {_choices.Count} choices, maxPerkPoints={_maxPerkPoints}");
     }
 
     private void LoadCareersXml()
     {
         var path = Path.Combine(_pathService.ModuleDataPath, "career_system", "taom_careers.xml");
+        _logger.LogInfo($"CareerSystem: Loading careers from '{path}'");
         if (!File.Exists(path))
         {
             _logger.LogWarning($"CareerConfig: careers file not found at {path}");
@@ -120,10 +125,11 @@ public class CareerConfigProvider : ICareerConfigProvider
                         choiceGroupIds: groupIds);
 
                     _careers.Add(career);
+                    _logger.LogDebug($"CareerSystem: Parsed career '{career.Id}' — cultures=[{string.Join(", ", cultureIds)}], groups=[{string.Join(", ", groupIds)}], rootChoice='{career.RootChoiceId}'");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"CareerConfig: failed to parse career element: {ex.Message}");
+                    _logger.LogError($"CareerSystem: Failed to parse career element: {ex.Message}");
                 }
             }
         }
@@ -136,6 +142,7 @@ public class CareerConfigProvider : ICareerConfigProvider
     private void LoadChoicesXml()
     {
         var path = Path.Combine(_pathService.ModuleDataPath, "career_system", "taom_career_choices.xml");
+        _logger.LogInfo($"CareerSystem: Loading choices from '{path}'");
         if (!File.Exists(path))
         {
             _logger.LogWarning($"CareerConfig: choices file not found at {path}");

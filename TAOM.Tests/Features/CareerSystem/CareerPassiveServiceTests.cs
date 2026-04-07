@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -23,7 +24,7 @@ public class CareerPassiveServiceTests
     [TestInitialize]
     public void Setup()
     {
-        _service = new CareerPassiveService();
+        _service = new CareerPassiveService(Substitute.For<IModLogger>());
         _dataService = new CareerDataService();
         _registry = Substitute.For<ICareerRegistry>();
 

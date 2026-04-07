@@ -24,8 +24,14 @@ public class CareerSwitchService : ICareerSwitchService
 
     public bool CanSwitch(ICareerHeroAdapter hero, string newCareerStringId)
     {
-        if (hero == null || string.IsNullOrEmpty(newCareerStringId)) return false;
-        return _registry.IsEligible(newCareerStringId, hero);
+        if (hero == null || string.IsNullOrEmpty(newCareerStringId))
+        {
+            _logger.LogDebug($"CareerSystem: CanSwitch — null hero or empty careerId '{newCareerStringId}'");
+            return false;
+        }
+        var eligible = _registry.IsEligible(newCareerStringId, hero);
+        _logger.LogDebug($"CareerSystem: CanSwitch — hero culture='{hero.CultureStringId}' career='{newCareerStringId}' result={eligible}");
+        return eligible;
     }
 
     public bool SwitchCareer(string heroStringId, ICareerHeroAdapter hero, string newCareerStringId)
@@ -38,6 +44,7 @@ public class CareerSwitchService : ICareerSwitchService
 
         var oldCareer = _dataService.GetCareerStringId(heroStringId);
 
+        _logger.LogInfo($"CareerSystem: Clearing old career '{oldCareer}' for hero '{heroStringId}'");
         _dataService.ClearCareer(heroStringId);
         _dataService.SetCareer(heroStringId, newCareerStringId);
 

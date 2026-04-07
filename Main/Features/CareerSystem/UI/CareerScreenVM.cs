@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.Library;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.UI;
@@ -9,6 +10,7 @@ public class CareerScreenVM : ViewModel
     private readonly ICareerDataService _dataService;
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
+    private readonly IModLogger _logger;
     private readonly string _heroStringId;
     private readonly int _heroLevel;
     private readonly Action _onClose;
@@ -34,6 +36,7 @@ public class CareerScreenVM : ViewModel
         _dataService = dataService;
         _registry = registry;
         _passiveService = passiveService;
+        try { _logger = IoC.Resolve<IModLogger>(); } catch { _logger = null; }
         _heroStringId = heroStringId;
         _heroLevel = heroLevel;
         _onClose = onClose;
@@ -52,6 +55,7 @@ public class CareerScreenVM : ViewModel
         var careerId = _dataService.GetCareerStringId(_heroStringId);
         if (string.IsNullOrEmpty(careerId))
         {
+            _logger?.LogDebug($"CareerSystem: CareerScreenVM.RefreshValues — no career for hero '{_heroStringId}'");
             HasCareer = false;
             return;
         }
@@ -59,6 +63,7 @@ public class CareerScreenVM : ViewModel
         var career = _registry.GetCareer(careerId);
         if (career == null)
         {
+            _logger?.LogWarning($"CareerSystem: CareerScreenVM.RefreshValues — career '{careerId}' not found in registry");
             HasCareer = false;
             return;
         }
@@ -73,6 +78,7 @@ public class CareerScreenVM : ViewModel
         var currentChoices = _dataService.GetChoiceCount(_heroStringId);
         FreeCareerPoints = maxChoices - currentChoices;
 
+        _logger?.LogInfo($"CareerSystem: CareerScreenVM.RefreshValues — career='{careerId}' freePoints={FreeCareerPoints} groupCount={career.ChoiceGroupIds.Count}");
         RebuildChoiceGroups(career);
     }
 
@@ -109,10 +115,19 @@ public class CareerScreenVM : ViewModel
 
     public void ExecuteSelectChoice(string choiceId)
     {
-        if (FreeCareerPoints <= 0) return;
+        _logger?.LogInfo($"CareerSystem: ExecuteSelectChoice — choiceId='{choiceId}' freePoints={FreeCareerPoints}");
+        if (FreeCareerPoints <= 0)
+        {
+            _logger?.LogWarning($"CareerSystem: ExecuteSelectChoice — no free points, rejecting choice '{choiceId}'");
+            return;
+        }
 
         var choice = _registry.GetChoice(choiceId);
-        if (choice == null) return;
+        if (choice == null)
+        {
+            _logger?.LogWarning($"CareerSystem: ExecuteSelectChoice — choice '{choiceId}' not found in registry");
+            return;
+        }
 
         // Tier gating: check hero level meets tier requirement
         if (!string.IsNullOrEmpty(choice.GroupId))
@@ -147,8 +162,13 @@ public class CareerScreenVM : ViewModel
         var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
         if (_dataService.TryAddChoice(_heroStringId, choiceId, maxChoices))
         {
+            _logger?.LogInfo($"CareerSystem: Choice '{choiceId}' added for hero '{_heroStringId}' — refreshing passives");
             _passiveService.RefreshCache(_dataService, _registry);
             RefreshValues();
+        }
+        else
+        {
+            _logger?.LogWarning($"CareerSystem: TryAddChoice failed for '{choiceId}' hero '{_heroStringId}' (maxChoices={maxChoices})");
         }
     }
 

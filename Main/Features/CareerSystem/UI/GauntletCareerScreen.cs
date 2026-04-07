@@ -1,6 +1,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.ScreenSystem;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CareerSystem.UI;
 
@@ -12,14 +13,26 @@ public class GauntletCareerScreen : GlobalLayer
 
     public static void OpenCareerScreen()
     {
+        var logger = IoC.Resolve<IModLogger>();
+        logger?.LogInfo("CareerSystem: OpenCareerScreen called");
+
         var hero = Hero.MainHero;
-        if (hero == null) return;
+        if (hero == null)
+        {
+            logger?.LogWarning("CareerSystem: OpenCareerScreen — MainHero is null");
+            return;
+        }
 
         var dataService = IoC.Resolve<ICareerDataService>();
         var registry = IoC.Resolve<ICareerRegistry>();
         var passiveService = IoC.Resolve<ICareerPassiveService>();
-        if (dataService == null || registry == null || passiveService == null) return;
+        if (dataService == null || registry == null || passiveService == null)
+        {
+            logger?.LogError($"CareerSystem: OpenCareerScreen — service resolution failed: dataService={dataService != null}, registry={registry != null}, passiveService={passiveService != null}");
+            return;
+        }
 
+        logger?.LogInfo($"CareerSystem: Opening career screen for hero '{hero.StringId}' level={hero.Level}");
         var screen = new GauntletCareerScreen();
         screen.Initialize(dataService, registry, passiveService, hero.StringId, hero.Level);
         ScreenManager.AddGlobalLayer(screen, true);
@@ -41,6 +54,7 @@ public class GauntletCareerScreen : GlobalLayer
 
     private void Close()
     {
+        IoC.Resolve<IModLogger>()?.LogInfo("CareerSystem: Closing career screen");
         _gauntletLayer?.InputRestrictions.ResetInputRestrictions();
         if (_movie != null)
             _gauntletLayer?.ReleaseMovie(_movie);

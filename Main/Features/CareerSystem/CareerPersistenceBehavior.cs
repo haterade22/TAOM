@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem;
@@ -8,10 +9,12 @@ namespace TAOM.Features.CareerSystem;
 public class CareerPersistenceBehavior : CampaignBehaviorBase
 {
     private readonly ICareerDataService _dataService;
+    private readonly IModLogger _logger;
 
-    public CareerPersistenceBehavior(ICareerDataService dataService)
+    public CareerPersistenceBehavior(ICareerDataService dataService, IModLogger logger)
     {
         _dataService = dataService;
+        _logger = logger;
     }
 
     public override void RegisterEvents()
@@ -20,6 +23,7 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        _logger.LogInfo("CareerSystem: SyncData called — serializing career data");
         // Serialize as flat primitive dictionaries to avoid SaveableTypeDefiner requirement
         var careerIds = new Dictionary<string, string>();
         var choiceLists = new Dictionary<string, string>();
@@ -84,5 +88,6 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
         }
 
         _dataService.RestoreData(restored);
+        _logger.LogInfo($"CareerSystem: SyncData complete — restored {restored.Count} heroes' career data (careerIds={careerIds?.Count ?? 0}, choiceLists={choiceLists?.Count ?? 0}, tierLists={tierLists?.Count ?? 0})");
     }
 }

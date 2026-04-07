@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -24,7 +25,7 @@ public class CareerPersistenceTests
     public void Setup()
     {
         _dataService = new CareerDataService();
-        _behavior = new CareerPersistenceBehavior(_dataService);
+        _behavior = new CareerPersistenceBehavior(_dataService, Substitute.For<IModLogger>());
     }
 
     [TestMethod]
@@ -79,7 +80,7 @@ public class CareerPersistenceTests
 
         // Simulate loading into a fresh service
         var freshService = new CareerDataService();
-        var loadBehavior = new CareerPersistenceBehavior(freshService);
+        var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
         var loadStore = new FakeDataStore();
         loadStore.SetData("_taom_careerIds", savedCareerIds);
         loadStore.SetData("_taom_careerChoices", savedChoices);
@@ -128,7 +129,7 @@ public class CareerPersistenceTests
         _behavior.SyncData(store);
 
         var freshService = new CareerDataService();
-        var loadBehavior = new CareerPersistenceBehavior(freshService);
+        var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
         var loadStore = new FakeDataStore();
         loadStore.SetData("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
         loadStore.SetData("_taom_careerChoices", store.GetSaved<Dictionary<string, string>>("_taom_careerChoices"));

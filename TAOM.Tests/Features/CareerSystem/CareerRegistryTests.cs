@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -55,7 +56,7 @@ public class CareerRegistryTests
         _hero.ClanTier.Returns(2);
         _hero.Level.Returns(5);
 
-        _registry = new CareerRegistry(_config);
+        _registry = new CareerRegistry(_config, Substitute.For<IModLogger>());
     }
 
     [TestMethod]
