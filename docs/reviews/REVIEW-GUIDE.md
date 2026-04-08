@@ -273,6 +273,15 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **What worked:** Codex confirmed BattleScenes is truly dead (commented out in SubModule.cs), found child gender param unused, and found startup resource retry was unsafe.
 **Why it works:** Explicit "DEAD CODE DETECTION" section requirement makes Codex search for unreachable paths.
 
+### MISS-1: Load-path mutation without entity state enumeration
+**Review:** NamedCompanions (2026-04-08)
+**What happened:** `EnsureCompanionsPlaced()` (OnGameLoaded) teleported recruited companions out of the player's party because `IsPlacedInSettlement()` returned false for heroes traveling on the map. The implementation only considered the happy-path state (unrecruited, in settlement) and two negative states (dead, disabled) -- but missed the most common real-world state (recruited, in player party).
+**Root cause:** Copied the "run same logic on load" pattern from BannerInjectionBehavior without checking whether the operation was idempotent. Banner color injection is harmless when repeated; hero teleportation is destructive.
+**Prevention:**
+1. Added "Entity State Matrix" requirement to `csharp-architecture.md` -- any OnGameLoaded behavior that mutates hero state must enumerate all possible states before writing the code
+2. Added "Skip-Guard Exhaustion" requirement to `tests.md` -- every guard clause needs a test for every entity state that should be skipped
+3. Added "idempotent vs destructive" check to architecture rules -- before copying a pattern, ask if the operation has side effects
+
 ### FP-7: Wrong kingdom mapping assumption
 **Review:** Diplomacy (2026-04-05)
 **What happened:** Codex assumed `empire`=Rohan and `vlandia`=Arthedain, then flagged phase-1 war pairs as wrong. Actual mapping: `empire`=Dunland, `vlandia`=Rohan. The config was correct all along. False positive from not having the TAOM kingdom→LOTR mapping.
@@ -284,15 +293,15 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 
 Track which review source (Codex vs. Claude) found each real bug.
 
-### Found by Codex, confirmed by Claude (35 bugs across 16 reviews)
+### Found by Codex, confirmed by Claude (37 bugs across 17 reviews)
 
 Top categories of bugs Codex caught:
 | Category | Count | Examples |
 |----------|-------|---------|
 | Config ID mismatches | 7 | rohan→vlandia, dol_guldur→dolguldur, missing kingdoms |
 | Missing vanilla gates | 4 | Garrison IsGarrison check, terrain forest gate |
-| Stale state / lifecycle | 4 | MissionAdapter cache, shader latch, FirstAttack flag |
-| Dead/no-op code | 3 | Unique color sentinel, dead comesOfAge values |
+| Stale state / lifecycle | 5 | MissionAdapter cache, shader latch, FirstAttack flag, load-path teleport |
+| Dead/no-op code | 4 | Unique color sentinel, dead comesOfAge values, unused _logger field |
 | Convention violations | 3 | EffectBonus 0.75 vs -0.25, headcount vs wage share |
 | Logic gaps | 3 | Child gender not enforced, honor bypass, turbo stuck |
 | Missing vanilla side effects | 2 | ModifyMenuCharacters, stale horse placeholder |

@@ -59,6 +59,8 @@ Run a quick analysis of the feature for likely issues:
 - Check for convention consistency with other TAOM features
 - Check any reflection usage for correct field/type targets
 - Check for stale state across lifecycle boundaries
+- **Entity state matrix for OnGameLoaded behaviors:** If the feature has an `OnGameLoadedEvent` handler that mutates Hero/Settlement state, enumerate all possible entity states (recruited, traveling, dead, prisoner, fugitive) and check whether the mutation is guarded for each. This is a HIGH-priority suspect — Review #23 found a ship-blocking bug from this pattern.
+- **Idempotent vs destructive operations:** If the feature copies a behavior pattern from another feature (e.g., "run same logic on new game and load"), check whether the operation is idempotent. Destructive operations (moving heroes, changing state) need stricter guards on the load path than their new-game counterparts.
 
 List 3-6 Known Suspects with specific hypotheses for Codex to CONFIRM or DISPUTE.
 
@@ -134,6 +136,7 @@ For EACH finding:
 - No-op code paths
 - Dead config values
 - Stale state across lifecycle boundaries
+- **OnGameLoaded entity state matrix**: If the feature mutates Hero/Settlement state on load, verify all entity states are guarded (recruited, traveling, dead, prisoner, fugitive). This is a HIGH-priority check — Review #23 found a load-path teleport bug from this exact gap.
 
 ### 3c: Verify Known Suspects
 
@@ -173,8 +176,9 @@ For EACH confirmed bug that Codex found, answer:
 - Didn't decompile vanilla target before writing the patch/model
 - Didn't cross-reference config IDs against source-of-truth files
 - Didn't trace the full lifecycle (init → runtime → save/load → cleanup)
+- Didn't enumerate all entity states for a load-path mutation (see csharp-architecture.md "Entity State Matrix")
 - Assumed an API worked a certain way without verifying
-- Copied a pattern from another feature without checking if it fits
+- Copied a pattern from another feature without checking if it fits (idempotent vs destructive)
 - Other — describe
 
 **Preventive action:** For each root cause, add ONE of:
