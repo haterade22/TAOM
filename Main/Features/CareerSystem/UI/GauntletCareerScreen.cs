@@ -1,15 +1,36 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Engine.GauntletUI;
+using TaleWorlds.InputSystem;
 using TaleWorlds.ScreenSystem;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.CareerSystem.UI;
 
-public class GauntletCareerScreen : GlobalLayer
+public class GauntletCareerScreen : ScreenBase
 {
     private GauntletLayer _gauntletLayer;
     private GauntletMovieIdentifier _movie;
     private CareerScreenVM _viewModel;
+
+    private readonly ICareerDataService _dataService;
+    private readonly ICareerRegistry _registry;
+    private readonly ICareerPassiveService _passiveService;
+    private readonly string _heroStringId;
+    private readonly int _heroLevel;
+
+    public GauntletCareerScreen(
+        ICareerDataService dataService,
+        ICareerRegistry registry,
+        ICareerPassiveService passiveService,
+        string heroStringId,
+        int heroLevel)
+    {
+        _dataService = dataService;
+        _registry = registry;
+        _passiveService = passiveService;
+        _heroStringId = heroStringId;
+        _heroLevel = heroLevel;
+    }
 
     public static void OpenCareerScreen()
     {
@@ -28,39 +49,52 @@ public class GauntletCareerScreen : GlobalLayer
         var passiveService = IoC.Resolve<ICareerPassiveService>();
         if (dataService == null || registry == null || passiveService == null)
         {
-            logger?.LogError($"CareerSystem: OpenCareerScreen — service resolution failed: dataService={dataService != null}, registry={registry != null}, passiveService={passiveService != null}");
+            logger?.LogError($"CareerSystem: OpenCareerScreen — service resolution failed");
             return;
         }
 
         logger?.LogInfo($"CareerSystem: Opening career screen for hero '{hero.StringId}' level={hero.Level}");
-        var screen = new GauntletCareerScreen();
-        screen.Initialize(dataService, registry, passiveService, hero.StringId, hero.Level);
-        ScreenManager.AddGlobalLayer(screen, true);
+        ScreenManager.PushScreen(new GauntletCareerScreen(
+            dataService, registry, passiveService, hero.StringId, hero.Level));
     }
 
-    private void Initialize(
-        ICareerDataService dataService,
-        ICareerRegistry registry,
-        ICareerPassiveService passiveService,
-        string heroStringId,
-        int heroLevel)
+    protected override void OnInitialize()
     {
-        _gauntletLayer = new GauntletLayer("CareerScreen", 100);
+        base.OnInitialize();
+
+        _gauntletLayer = new GauntletLayer("CareerScreen", 1);
         _gauntletLayer.IsFocusLayer = true;
-        _viewModel = new CareerScreenVM(dataService, registry, passiveService, heroStringId, heroLevel, Close);
+        _viewModel = new CareerScreenVM(_dataService, _registry, _passiveService, _heroStringId, _heroLevel, CloseScreen);
         _movie = _gauntletLayer.LoadMovie("CareerScreen", _viewModel);
         _gauntletLayer.InputRestrictions.SetInputRestrictions();
-        Layer = _gauntletLayer;
+        AddLayer(_gauntletLayer);
         ScreenManager.TrySetFocus(_gauntletLayer);
     }
 
-    private void Close()
+    protected override void OnFrameTick(float dt)
+    {
+        base.OnFrameTick(dt);
+
+        if (_gauntletLayer.Input.IsKeyPressed(InputKey.Escape))
+        {
+            CloseScreen();
+        }
+    }
+
+    private void CloseScreen()
     {
         IoC.Resolve<IModLogger>()?.LogInfo("CareerSystem: Closing career screen");
         _gauntletLayer?.InputRestrictions.ResetInputRestrictions();
         if (_movie != null)
             _gauntletLayer?.ReleaseMovie(_movie);
         _viewModel?.OnFinalize();
-        ScreenManager.RemoveGlobalLayer(this);
+        ScreenManager.PopScreen();
+    }
+
+    protected override void OnFinalize()
+    {
+        base.OnFinalize();
+        _viewModel = null;
+        _gauntletLayer = null;
     }
 }

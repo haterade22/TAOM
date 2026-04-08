@@ -112,6 +112,20 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 5. Tune values in-game by equipping a hero of the race in inventory and adjusting until framing looks correct.
 6. If the race requires eye-height adjustment (e.g., very short), extend `EyeHeightAdjustmentHook.OnGetBaseMonsterFromRace` with a new branch for the race name, write the test first.
 
+## Wanderer Race Fix (2026-04-08)
+
+Bannerlord's `BasicCharacterObject.Deserialize()` natively supports a `race=` XML attribute (lines 323-328), calling `FaceGen.GetRaceOrDefault(value)`. This means wanderer templates can declare their race directly in XML — no C# code needed.
+
+**Changes applied to `taom_wanderers.xml`:**
+- 30 elven wanderers (Rivendell 10, Mirkwood 10, Lothlorien 10): added `race="elf"`
+- 10 Dol Guldur wanderers: fixed `race="orc"` to `race="dg_uruk"`, fixed `BodyProperty.fighter_empire` to `BodyProperty.fighter_dolguldur`
+- 57 wanderers already had correct race attributes (Mordor, Gundabad, Isengard, Erebor)
+- 83 human-culture wanderers correctly default to race 0 by omission
+
+The existing `RacePersistenceService` automatically handles wanderer race persistence — when a wanderer is spawned from a template with `race="elf"`, the Hero inherits the race via `CharacterObject.CreateFrom()` / `FillFrom()`, and `CaptureHeroRaces()` captures it on save.
+
+**Save compatibility:** Pre-existing wanderer heroes keep race=0 until they die and are replaced by new wanderers from updated templates. Natural wanderer turnover handles migration.
+
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown

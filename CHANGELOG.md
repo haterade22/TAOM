@@ -1,6 +1,55 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
-## 2026-04-07
+## 2026-04-08
+
+### Feature: Named Companion System
+
+XML-driven system for placing lore-significant characters as recruitable wanderer companions in specific settlements. 18 named companions across 7 cultures (Gondor, Erebor, Mirkwood, Rivendell, Rohan, Harad, Isengard).
+
+- Uses `is_hero="true"` + `occupation="Wanderer"` — invisible to vanilla CompanionsCampaignBehavior, triggers vanilla recruitment dialog automatically
+- Converted 18 LOTRAOM special wanderers to new system with race corrections (6 elves were missing `race="elf"`, 2 uruk_hai were missing race)
+- Custom backstory dialog per companion (126 strings, 7 per companion)
+- JSON config for spawn settlements, race, enable/disable per companion
+- `NamedCompanionBehavior` places companions on new game, re-pins on load with recruited-companion guard
+- Fixed Hero.Deserialize NullReferenceException — `faction="Faction.neutral"` required on Hero entries
+- Fixed 6 deleted LOTRAOM Armory item IDs replaced with LOTRLOME_Armory equivalents
+- 13 service tests + 7 config provider tests (20 total)
+
+### Fix: Wanderer Race Attributes
+
+Added correct `race=` XML attributes to 40 wanderer templates that were spawning as human regardless of culture.
+
+- 30 elven wanderers (Rivendell/Mirkwood/Lothlorien): added `race="elf"`
+- 10 Dol Guldur wanderers: fixed `race="orc"` to `race="dg_uruk"`, fixed `BodyProperty.fighter_empire` to `BodyProperty.fighter_dolguldur`
+- Native `BasicCharacterObject.Deserialize()` reads `race=` from XML — no C# changes needed
+- Existing `RacePersistenceService` handles save/load automatically
+
+### Process: Entity State Matrix + Skip-Guard Exhaustion
+
+New documentation standards from Codex Review #23 root cause analysis:
+
+- `csharp-architecture.md`: Entity State Matrix required for any OnGameLoaded behavior that mutates Hero state
+- `tests.md`: Skip-Guard Exhaustion — every guard clause needs a test for every entity state that should be skipped
+- `REVIEW-GUIDE.md`: MISS-1 failure pattern (load-path mutation without state enumeration)
+- `review-codex` skill: enhanced Known Suspects and verification with lifecycle state checks
+
+### Feature: Per-Settlement Guard System
+
+XML-driven guard customization that replaces vanilla's culture-only guard spawning with per-settlement troop pools. Guards in Minas Tirith are now Fountain Guards and Citadel Guards; Osgiliath has Dome Guards; Dol Amroth has Swan Guards, etc.
+
+- Harmony prefix on `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (private) injects settlement-specific guard characters via `SettlementGuardService` with settlement→clan→culture fallback chain
+- Harmony prefix on `GuardsCampaignBehavior.GetSuitableSpear` (private static) provides per-culture spear item mapping, replacing the vanilla hardcode of battania=northern vs all-else=western
+- XML config at `settlement_guards/settlement_guards_config.xml` with 14 Gondor settlements, per-spawn-point troop mapping, weighted random selection, and 16 culture spear mappings
+- 27 tests (13 config provider + 14 service) covering fallback chain, weighted selection, spawn-point filtering, spear resolution
+- Save compatible (no SyncData — guards spawn fresh every settlement entry)
+
+### Process: Config ID Validation & Reflection Caching Rules
+
+Root cause analysis from Codex review #22 identified 3 process gaps:
+
+- Added "Config ID Cross-Reference (MANDATORY)" section to `.claude/rules/xml-data.md` with culture StringId mapping table (custom LOTR names vs XSLT engine IDs)
+- Added reflection caching rule to `.claude/rules/harmony-patches.md` — `AccessTools.Method` must be cached in `Initialize()`, never in hot paths
+- Added `ConfigIdValidationTests.cs` (11 tests) — validates all config culture IDs against known valid set, catches lore-vs-engine ID mistakes at test time
 
 ### Fix: CC Parent Equipment Rosters for shaghana & abanissa
 
@@ -8,6 +57,7 @@ Added missing Character Creation equipment rosters for `shaghana` and `abanissa`
 
 - Added `shaghana` culture items (T1-T2 Harad: steppe raider aesthetic) and `abanissa` culture items (T3-T4 Harad: palace dynasty aesthetic) to `tools/generate_char_creation_equipment.py`
 - Fixed script OUTPUT_PATH bug (was writing to wrong directory)
+- Fixed 5 invalid Gondor item IDs that didn't exist in LOTRLOME_Armory (`sk_gondor_lossarnach_boots_a`, `cts_gondor_boot`, `gondor_solider_helm`, `citidel_guard_gloves`, `gond_spear2` → replaced with verified IDs)
 - Regenerated `taom_char_creation_equipment.xml`: 550 → 660 rosters (55 per culture × 12 cultures)
 - All item IDs validated against LOTRLOME_Armory and SandBoxCore
 
