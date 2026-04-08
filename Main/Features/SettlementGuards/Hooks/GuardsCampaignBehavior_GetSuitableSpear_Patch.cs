@@ -7,7 +7,6 @@ using TaleWorlds.ObjectSystem;
 
 namespace TAOM.Features.SettlementGuards.Hooks;
 
-[HarmonyPatchCategory("Patch28_SettlementGuards")]
 public static class GuardsCampaignBehavior_GetSuitableSpear_Patch
 {
     private static ISettlementGuardService _service;

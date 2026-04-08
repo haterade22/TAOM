@@ -148,7 +148,7 @@
 
   <Spears>
     <Spear culture="gondor" item="western_spear_3_t3" />
-    <Spear culture="rohan" item="western_spear_3_t3" />
+    <!-- Custom cultures use LOTR names as StringIds -->
     <Spear culture="erebor" item="western_spear_3_t3" />
     <Spear culture="isengard" item="western_spear_3_t3" />
     <Spear culture="mordor" item="western_spear_3_t3" />
@@ -157,12 +157,14 @@
     <Spear culture="mirkwood" item="western_spear_3_t3" />
     <Spear culture="gundabad" item="northern_spear_2_t3" />
     <Spear culture="dolguldur" item="northern_spear_2_t3" />
-    <Spear culture="dunland" item="northern_spear_2_t3" />
-    <Spear culture="harad" item="western_spear_3_t3" />
-    <Spear culture="rhun" item="western_spear_3_t3" />
-    <Spear culture="dale" item="western_spear_3_t3" />
-    <Spear culture="khand" item="northern_spear_2_t3" />
     <Spear culture="umbar" item="western_spear_3_t3" />
+    <!-- XSLT cultures use vanilla engine StringIds -->
+    <Spear culture="vlandia" item="western_spear_3_t3" />
+    <Spear culture="empire" item="northern_spear_2_t3" />
+    <Spear culture="aserai" item="western_spear_3_t3" />
+    <Spear culture="khuzait" item="western_spear_3_t3" />
+    <Spear culture="sturgia" item="western_spear_3_t3" />
+    <Spear culture="battania" item="northern_spear_2_t3" />
   </Spears>
 
 </SettlementGuards>

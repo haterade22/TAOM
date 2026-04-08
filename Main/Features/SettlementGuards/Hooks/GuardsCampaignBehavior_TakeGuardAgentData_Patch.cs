@@ -10,14 +10,18 @@ using TAOM.Features.SettlementGuards.Domain;
 
 namespace TAOM.Features.SettlementGuards.Hooks;
 
-[HarmonyPatchCategory("Patch28_SettlementGuards")]
 public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
 {
     private static ISettlementGuardService _service;
+    private static MethodInfo _prepareMethod;
 
     public static void Initialize(ISettlementGuardService service)
     {
         _service = service;
+        _prepareMethod = AccessTools.Method(
+            typeof(GuardsCampaignBehavior),
+            "PrepareGuardAgentDataFromGarrison",
+            new[] { typeof(CharacterObject), typeof(bool), typeof(bool) });
     }
 
     public static MethodBase TargetMethod()
@@ -55,24 +59,9 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
             var character = MBObjectManager.Instance.GetObject<CharacterObject>(troopId);
             if (character == null) return true;
 
-            // Delegate to the vanilla PrepareGuardAgentDataFromGarrison for equipment assembly.
-            // We can't call it directly (private static), so we let the original method run
-            // but swap the garrison troop list to force our character.
-            // Instead, skip and return false — but we need the AgentData built.
-            // The cleanest approach: let vanilla run but ensure it picks our character.
-            // Since we can't easily inject into the weighted random, we use a different approach:
-            // We don't skip vanilla — instead we just return true and let it run normally
-            // when there's no config. When there IS config, we need to build the AgentData ourselves.
-
-            // Call the private static PrepareGuardAgentDataFromGarrison via reflection
-            var prepareMethod = AccessTools.Method(
-                typeof(GuardsCampaignBehavior),
-                "PrepareGuardAgentDataFromGarrison",
-                new[] { typeof(CharacterObject), typeof(bool), typeof(bool) });
-
-            if (prepareMethod != null)
+            if (_prepareMethod != null)
             {
-                __result = (AgentData)prepareMethod.Invoke(null, new object[] { character, overrideWeaponWithSpear, unarmed });
+                __result = (AgentData)_prepareMethod.Invoke(null, new object[] { character, overrideWeaponWithSpear, unarmed });
                 return false;
             }
         }

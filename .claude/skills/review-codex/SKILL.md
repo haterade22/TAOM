@@ -154,19 +154,55 @@ Then categorize:
 - **Design questions** — need user input
 - **Things Codex missed** — additional bugs found
 
-### 3e: Implement Confirmed Fixes
+### 3e: Root Cause Analysis — Why Did We Miss This?
+
+For EACH confirmed bug that Codex found, answer:
+
+**What category?** (pick one)
+- Config ID mismatch — wrong kingdom/culture/troop/settlement ID in config
+- Missing vanilla gate — didn't check what vanilla does before overriding
+- Stale state / lifecycle — cache, flag, or reference survives past its intended scope
+- Dead / no-op code — code exists but does nothing in all cases
+- Convention inconsistency — pattern used differently than rest of codebase
+- Reflection target wrong — field/property on wrong type or wrong name
+- Missing null guard — didn't handle the null/empty/missing case
+- Logic error — wrong formula, wrong condition, wrong comparison
+- Other — describe
+
+**Why did Claude miss it during implementation?**
+- Didn't decompile vanilla target before writing the patch/model
+- Didn't cross-reference config IDs against source-of-truth files
+- Didn't trace the full lifecycle (init → runtime → save/load → cleanup)
+- Assumed an API worked a certain way without verifying
+- Copied a pattern from another feature without checking if it fits
+- Other — describe
+
+**Preventive action:** For each root cause, add ONE of:
+- A new unit test that would catch this category of bug
+- A config validation test that cross-references IDs at test time
+- A note in `docs/reviews/REVIEW-GUIDE.md` as a new check item
+- A rule in `.claude/rules/` if it's a recurring pattern
+
+Do NOT skip this step. The point is not just to fix bugs — it's to make the same category of bug impossible in future features. Output the analysis as:
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+
+### 3f: Implement Confirmed Fixes
 
 For each confirmed bug:
 1. Make the code change
 2. `dotnet build TAOM.Tests` — must compile
 3. `dotnet test TAOM.Tests` — must pass
 4. Update tests if behavior changed
+5. Add any preventive tests identified in 3e
 
-### 3f: Update Review Log
+### 3h: Update Review Log
 
 1. Add entry to `docs/reviews/REVIEW-LOG.md`
 2. Update metrics
 3. Add new failure patterns to `docs/reviews/REVIEW-GUIDE.md` if discovered
+4. Include the root cause table from 3e in the review log entry
 
 ## Rules
 

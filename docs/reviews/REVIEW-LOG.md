@@ -26,9 +26,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 
 ## Metrics
 
-**Codex accuracy rate:** 45 real findings / 57 total findings = 79%
-**Codex miss rate:** 8 missed bugs / 53 total real bugs = 15%
-**False positive rate:** 8 false positives / 57 findings total = 14%
+**Codex accuracy rate:** 46 real findings / 59 total findings = 78%
+**Codex miss rate:** 8 missed bugs / 54 total real bugs = 15%
+**False positive rate:** 9 false positives / 59 findings total = 15%
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
@@ -42,8 +42,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 19 | 2026-04-07 | SpecialResources | needs-attention | agree (5 confirmed + 1 ship-blocker Claude found) | 5 (1 CRIT pending txn, 1 CRIT no clamp, 1 HIGH raid, 1 HIGH save, 1 LOW cap) | 0 | 1 (wrong kingdom_id) | v6 |
 | 20 | 2026-04-07 | CareerSystem | N/A — feature not built | N/A | 0 | 0 | 0 | v6 |
 | 21 | 2026-04-07 | CareerSystem (impl vs TOR) | needs-attention | partial-agree | 2 confirmed (tier validation, save serialization) + 1 partial (widget def) | 3 (mutation scope, ability scope, passive coverage — intentional v1 scope) | 1 (hallucinated AllowedRaces property) | v6-adversarial |
+| 22 | 2026-04-08 | SettlementGuards | needs-attention | partial-agree | 1 confirmed (spear culture IDs) + 2 self-found (reflection caching, dead attributes) | 1 (spawn-point severity overstated) | 0 | v6 |
 
-**Post-codebase reviews:** 19 = SpecialResources (new feature), 20 = CareerSystem (premature — no code exists yet), 21 = SpecialResources adversarial follow-up (2 confirmed: sprite widget dead code, single-bucket storage; 1 FP: kingdom_id already fixed; 4 findings already fixed by user before review landed). 21 Codex reviews total, 50 bugs found across codebase.
+**Post-codebase reviews:** 19 = SpecialResources, 20 = CareerSystem (premature), 21 = CareerSystem adversarial, 22 = SettlementGuards (1 MEDIUM spear ID bug confirmed, 1 HIGH spawn-point finding downgraded to LOW — impact overstated since castle+spear guards intentionally share pool). 22 Codex reviews total, 51 bugs found across codebase.
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
