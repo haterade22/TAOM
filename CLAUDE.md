@@ -41,7 +41,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
-| `/review-codex [feature]` | Write Codex adversarial prompt for a feature, OR verify existing review + implement fixes |
+| `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
 
 ## Scoped Rules (auto-loaded by file path)
 

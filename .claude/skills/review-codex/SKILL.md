@@ -1,197 +1,179 @@
 ---
 name: review-codex
-description: Write a Codex adversarial review prompt, OR verify an existing Codex review and implement fixes
-argument-hint: "[feature-name] or [path-to-codex-review.md]"
+description: Auto-detect what was built, write a Codex adversarial prompt, dispatch instructions, then verify results when ready
+argument-hint: "[optional: feature-name or path-to-review.md]"
 ---
 
 # Codex Adversarial Review Pipeline
 
-This skill handles BOTH sides of the Codex review process:
-- If `$ARGUMENTS` is a feature name (no `.md` extension): **write a Codex prompt** for that feature
-- If `$ARGUMENTS` is a path to an existing review `.md` file: **verify and implement fixes**
-- If `$ARGUMENTS` is empty: look in `docs/reviews/` for the most recently modified `codex-adversarial-*.md` and verify it
+Handles the full Codex review lifecycle automatically. Detects what needs reviewing from context.
 
-## Mode A: Write Codex Prompt (argument is a feature name)
+**Argument handling:**
+- No argument: auto-detect from git what was changed, write prompt, guide dispatch
+- Feature name (no `.md`): write prompt for that feature, guide dispatch
+- Path to `.md` file: verify that existing Codex review, implement fixes
+- If a `codex-adversarial-*.md` file was recently created in `docs/reviews/`, ask user if they want to verify it
 
-### A1: Gather feature files
+## Phase 1: Detect What to Review
+
+### If no argument provided:
+
+1. Run `git diff --name-only HEAD` and `git diff --name-only HEAD~3..HEAD` to find recently changed `.cs` files
+2. Group changed files by feature directory (e.g., `Main/Features/SettlementGuards/` → SettlementGuards)
+3. Check `docs/reviews/` for any `codex-adversarial-*.md` file modified in the last hour
+   - If found: go to **Phase 3** (verify that review)
+   - If not found: go to **Phase 2** (write prompt for the most-changed feature)
+
+### If argument is a feature name:
+Go to **Phase 2** with that feature.
+
+### If argument is a `.md` path:
+Go to **Phase 3** with that file.
+
+## Phase 2: Write Codex Prompt
+
+### 2a: Gather feature files
 
 Find all files for the feature:
-- `Main/Features/{feature}/` -- all .cs files (services, hooks, models, UI, IoC)
-- `TAOM.Tests/Features/{feature}/` -- all test files
-- `Main/_Module/ModuleData/` -- any config files (JSON, XML) used by the feature
-- `Main/Adapters/` -- any adapters used by this feature
-- `docs/features/{feature}.md` -- feature documentation if it exists
+- `Main/Features/{feature}/` — all .cs files (services, hooks, models, UI, IoC)
+- `TAOM.Tests/Features/{feature}/` — all test files
+- `Main/_Module/ModuleData/` — any config files (JSON, XML) used by the feature
+- `Main/Adapters/` — any adapters used by this feature (grep for feature-related types)
+- `docs/features/{feature}.md` — feature documentation if it exists
 - Check `Main/SubModule.cs` and `Main/IoC.cs` for registration lines
 
 Count files, identify GameModel overrides, Harmony patches, config files, and test coverage.
 
-### A2: Identify vanilla targets
+### 2b: Identify vanilla targets
 
 For each Harmony patch, identify the vanilla class and method being patched.
 For each GameModel, identify the vanilla base class being overridden.
 Map these to paths in `E:\Decompiled_Bannerlord\` for the prompt.
 
-### A3: Identify Known Suspects
+### 2c: Identify Known Suspects
 
 Run a quick analysis of the feature for likely issues:
-- Check all config files for kingdom/culture IDs -- do they match the cheatsheet?
+- Check all config files for kingdom/culture IDs — do they match the cheatsheet?
 - Check all Harmony patches for fail-safe defaults (`?? true` vs `?? false`)
 - Check for dead code (methods defined but never called)
 - Check for convention consistency with other TAOM features
 - Check any reflection usage for correct field/type targets
+- Check for stale state across lifecycle boundaries
 
 List 3-6 Known Suspects with specific hypotheses for Codex to CONFIRM or DISPUTE.
 
-### A4: Write the prompt
+### 2d: Write the prompt
 
-Use the v6 template from `docs/reviews/REVIEW-GUIDE.md`. The prompt must include:
+Use flat formatting — NO indented continuation lines (triggers backslash-escape prompt). Use `--` not `—`.
 
-1. **Feature description** (1-2 lines: what it does, risk profile, what's already good)
-2. **TAOM ID CHEATSHEET** (always include -- prevents false positives):
-   Kingdom IDs: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
-   Culture IDs (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
-   Culture IDs (XSLT/vanilla): vlandia=Rohan, empire=Dunland, empire_w=Gondor, empire_s=Mordor, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale
-   NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid -- use "dolguldur".
-3. **READ FIRST** section (feature docs, config files)
-4. **Known Suspects** section (from A3 analysis)
-5. **File lists** (grouped by category: services, entry points, config, tests)
-6. **REQUIRED SECTIONS** with feature-specific questions:
-   - SECTION 1: VANILLA CODE (decompile targets, paste as code blocks)
-   - SECTION 2: Feature-specific deep analysis (concrete scenarios with numbers)
-   - SECTION 3: CONFIG CROSS-REFERENCE (cross-ref IDs against actual files)
-   - SECTION 4: FINDINGS OR OBSERVATIONS
-7. **QUALITY GATES** (Section 1 must have code blocks, config must be cross-referenced, etc.)
-8. **Prior review lessons** (successes + failures from our 18-review history)
-9. **Output to:** `docs/reviews/codex-adversarial-{feature}-{date}.md`
+The prompt must include:
 
-CRITICAL formatting rules:
-- Flat formatting only -- NO indented continuation lines (triggers backslash-escape prompt)
-- Use `--` instead of `—` for dashes
-- Lists use `a)` `b)` `c)` at start of line, not indented
-
-### A5: Display the prompt
-
-Output the complete prompt for the user to copy and dispatch to Codex CLI.
-
-Then tell the user:
-```
-Dispatch this prompt to Codex:
-  /codex:adversarial-review --background
-
-When Codex finishes writing to docs/reviews/codex-adversarial-{feature}-{date}.md, run:
-  /review-codex docs/reviews/codex-adversarial-{feature}-{date}.md
-```
-
----
-
-## Mode B: Verify Codex Review (argument is a .md file path)
-
-### Context
-
-Read these first for process knowledge:
-- `docs/reviews/REVIEW-GUIDE.md` -- prompt template, failure patterns, success patterns
-- `docs/reviews/REVIEW-LOG.md` -- scoring history (18 reviews, 81% accuracy, 9% FP rate)
-
-Key lessons from 18 prior reviews:
-- Codex accuracy improved from 33% (v1) to 81% (v6) through structured prompts
-- After v4 prompts, Codex produced 0 false positives across 12 reviews
-- Most common Codex mistakes: assumed empire=Rohan (it's Dunland), flagged vanilla-matching code as bugs, skipped hard sections silently, claimed "config looks valid" without checking
-- Most common real bugs found: config ID mismatches, missing vanilla gates, stale state/lifecycle, dead/no-op code, convention inconsistencies
-
-### B1: Read the Review
-
-Read the Codex review file. Identify:
-- Total number of findings and their severities
-- Whether the review has a "Known Suspects" section (if so, these are highest priority)
-- Whether the review includes code blocks from BOTH codebases (quality indicator)
-- Whether config was cross-referenced against actual files (quality indicator)
-
-### B2: Verify Each Finding
-
-For EACH finding in the review:
-
-**B2a: Read the TAOM source**
-Read the exact file and line Codex references. Does the code actually do what Codex claims?
-
-**B2b: Verify "missing" claims**
-If Codex claims TAOM is missing something, grep the codebase. Don't trust "I didn't find it" -- actually search.
-
-**B2c: Decompile vanilla targets**
-For Harmony patch or GameModel findings, check the vanilla target in `E:\Decompiled_Bannerlord\` (organized by: Campaign/, MountAndBlade/, Modules/, Core/, UI/). Verify method signatures and behavior match what Codex claims.
-
-**B2d: Check TOR comparison fairness**
-If Codex compares against TOR_Core, note that TOR targets older Bannerlord. Flag any API differences.
-
-**B2e: Check what Codex missed**
-For each feature area, also check:
-- Cross-file convention consistency (do all config IDs match real TAOM kingdom/culture IDs?)
-- Fail-safe defaults (null-coalescing `?? true` vs `?? false` -- which matches intent?)
-- No-op code paths (code that exists but does nothing)
-- Dead config values (defined but never loaded)
-- Stale state across lifecycle boundaries (save/load, mission end, kingdom change)
-
-### B3: Verify Known Suspects (if present)
-
-If the review has a "Known Suspects" section where Codex was asked to CONFIRM or DISPUTE pre-identified issues:
-- Verify each verdict independently by reading the source
-- These are typically the highest-value findings
-- Codex has been wrong about these -- don't trust the verdict without checking
-
-### B4: Kingdom/Culture ID Cross-Reference
-
-For any finding involving config IDs, use this reference:
-
+1. Feature description (1-2 lines)
+2. TAOM ID CHEATSHEET:
 Kingdom IDs: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
-
 Culture IDs (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
 Culture IDs (XSLT/vanilla): vlandia=Rohan, empire=Dunland, empire_w=Gondor, empire_s=Mordor, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale
+NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid -- use "dolguldur".
+3. READ FIRST section (feature docs, config files)
+4. Known Suspects section (from 2c)
+5. File lists grouped by category
+6. REQUIRED SECTIONS with feature-specific questions:
+   - VANILLA CODE (decompile targets, paste as code blocks)
+   - Feature-specific deep analysis (concrete scenarios)
+   - CONFIG CROSS-REFERENCE
+   - FINDINGS OR OBSERVATIONS
+7. QUALITY GATES
+8. Prior review lessons:
+   SUCCESSES: Config ID cross-ref caught rohan/dol_guldur mismatches. Vanilla decompilation caught missing gates. Lifecycle tracing caught stale caches.
+   FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
+9. Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 
-CRITICAL: "rohan" is NOT a valid ID anywhere. "dol_guldur" is NOT valid -- use "dolguldur". Kingdom IDs and culture IDs differ.
+### 2e: Display and guide dispatch
 
-### B5: Produce Assessment
+Output the complete prompt, then tell the user:
 
-Output a table of ALL findings:
+```
+Copy the prompt above and dispatch to Codex:
+  /codex:adversarial-review --background
+
+When the review file appears at docs/reviews/codex-adversarial-{feature}-{date}.md, run:
+  /review-codex
+```
+
+Then **stop and wait** — Codex runs in a separate terminal.
+
+## Phase 3: Verify Codex Review
+
+Read process docs first:
+- `docs/reviews/REVIEW-GUIDE.md` — failure patterns, success patterns
+- `docs/reviews/REVIEW-LOG.md` — scoring history
+
+### 3a: Read the Review
+
+Read the Codex review file. Identify:
+- Total findings and severities
+- Known Suspects section (highest priority if present)
+- Whether code blocks from both codebases are present (quality indicator)
+- Whether config was cross-referenced (quality indicator)
+
+### 3b: Verify Each Finding
+
+For EACH finding:
+
+**Read the TAOM source.** Does the code do what Codex claims?
+
+**Verify "missing" claims.** Grep the codebase — don't trust "I didn't find it."
+
+**Decompile vanilla targets.** For Harmony/GameModel findings, check `E:\Decompiled_Bannerlord\` (Campaign/, MountAndBlade/, Modules/, Core/, UI/).
+
+**Check TOR comparison fairness.** TOR targets older Bannerlord — flag API differences.
+
+**Check what Codex missed:**
+- Config ID consistency (kingdom/culture IDs match cheatsheet?)
+- Fail-safe defaults (`?? true` vs `?? false`)
+- No-op code paths
+- Dead config values
+- Stale state across lifecycle boundaries
+
+### 3c: Verify Known Suspects
+
+If the review has Known Suspects with CONFIRMED/DISPUTED verdicts:
+- Verify each independently by reading source
+- Codex has been wrong about these before
+
+### 3d: Produce Assessment
+
+Output table:
 
 | # | Codex Severity | Your Severity | Agree? | Reason |
 |---|---------------|--------------|--------|--------|
 
 Then categorize:
+- **Confirmed bugs** — file, line, what to change, why
+- **False positives** — why Codex was wrong
+- **Design questions** — need user input
+- **Things Codex missed** — additional bugs found
 
-**Confirmed bugs (implement these)**
-For each, specify: file, line, what to change, why.
-
-**False positives (do not implement)**
-For each, explain why Codex was wrong.
-
-**Design questions (need user input)**
-For each, explain the trade-off and what decision is needed.
-
-**Things Codex missed**
-Any additional bugs you found that Codex didn't catch.
-
-### B6: Implement Confirmed Fixes
+### 3e: Implement Confirmed Fixes
 
 For each confirmed bug:
 1. Make the code change
-2. Run `dotnet build TAOM.Tests` to verify compilation
-3. Run `dotnet test TAOM.Tests` to verify tests pass
-4. If a test needs updating due to changed behavior, update it
+2. `dotnet build TAOM.Tests` — must compile
+3. `dotnet test TAOM.Tests` — must pass
+4. Update tests if behavior changed
 
-### B7: Update Review Log
+### 3f: Update Review Log
 
-After all fixes are implemented:
-1. Add an entry to `docs/reviews/REVIEW-LOG.md` with the review number, date, feature, findings table, and scores
-2. Update the metrics (accuracy rate, false positive rate, miss rate)
-3. If you discovered a new Codex failure pattern, add it to `docs/reviews/REVIEW-GUIDE.md`
-
----
+1. Add entry to `docs/reviews/REVIEW-LOG.md`
+2. Update metrics
+3. Add new failure patterns to `docs/reviews/REVIEW-GUIDE.md` if discovered
 
 ## Rules
 
 - NEVER implement a fix without reading the source file first
-- NEVER agree with a Codex finding just because it sounds plausible -- verify
+- NEVER agree with a Codex finding just because it sounds plausible — verify
 - Decompile vanilla targets for ALL Harmony patch and GameModel findings
 - Config cross-reference is mandatory, not optional
 - When in doubt about design intent, flag for user input rather than guessing
 - Build and test after EVERY batch of fixes
-- Flat formatting in prompts -- no indented continuation lines
+- Flat formatting in prompts — no indented continuation lines
