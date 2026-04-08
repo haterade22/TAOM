@@ -46,10 +46,12 @@ public class GauntletCareerScreen : GlobalLayer
         int heroLevel)
     {
         _gauntletLayer = new GauntletLayer("CareerScreen", 100);
+        _gauntletLayer.IsFocusLayer = true;
         _viewModel = new CareerScreenVM(dataService, registry, passiveService, heroStringId, heroLevel, Close);
         _movie = _gauntletLayer.LoadMovie("CareerScreen", _viewModel);
         _gauntletLayer.InputRestrictions.SetInputRestrictions();
         Layer = _gauntletLayer;
+        ScreenManager.TrySetFocus(_gauntletLayer);
     }
 
     private void Close()
