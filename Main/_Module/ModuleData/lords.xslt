@@ -2636,7 +2636,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_57']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_57</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_57_name}Altenos</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_57_name}Baranor</xsl:attribute>
             <xsl:attribute name="age">25</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -4489,8 +4489,8 @@
     <xsl:template match="NPCCharacter[@id='lord_1_40_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_40_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_40_1_name}Catella</xsl:attribute>
-            <xsl:attribute name="age">33</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_40_1_name}Lindariel</xsl:attribute>
+            <xsl:attribute name="age">63</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4521,12 +4521,12 @@
     <xsl:template match="NPCCharacter[@id='lord_1_46_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_46_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_46_1_name}Seorgys</xsl:attribute>
-            <xsl:attribute name="age">19</xsl:attribute>
-            <xsl:attribute name="voice">ironic</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_46_1_name}Thorwen</xsl:attribute>
+            <xsl:attribute name="age">39</xsl:attribute>
+            <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">false</xsl:attribute>
+            <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -4559,7 +4559,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_45_1_name}Berethiel</xsl:attribute>
-            <xsl:attribute name="age">38</xsl:attribute>
+            <xsl:attribute name="age">53</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4689,7 +4689,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_57_2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_57_2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_57_2_name}Jephalia</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_57_2_name}Imloth</xsl:attribute>
             <xsl:attribute name="age">2</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>

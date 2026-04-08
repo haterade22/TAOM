@@ -6397,67 +6397,6 @@
             <EquipmentSet id="dunland_civ_template_default_c" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_l_2" name="{=aom_lord_WE9_l_2_name}Derufin" age="31" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
-        <face>
-            <BodyProperties version="4" age="28.11" weight="0.1088" build="0.5139" key="0000AC04C00018440E802E038706E098A89483B0D1956001675810068FA00A450098260309798B0600000000000000000000000000000000000000003B343002" />
-            <hair_tags>
-                <hair_tag name="empire" />
-            </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
-        </face>
-        <skills>
-            <skill id="OneHanded" value="200" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="55" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="175" />
-            <skill id="Riding" value="90" />
-            <skill id="Athletics" value="245" />
-            <skill id="Crafting" value="50" />
-            <skill id="Scouting" value="140" />
-            <skill id="Tactics" value="140" />
-            <skill id="Roguery" value="110" />
-            <skill id="Charm" value="60" />
-            <skill id="Leadership" value="105" />
-            <skill id="Trade" value="30" />
-            <skill id="Steward" value="60" />
-            <skill id="Medicine" value="120" />
-            <skill id="Engineering" value="40" />
-        </skills>
-        <Traits>
-            <Trait id="KnightFightingSkills" value="2" />
-            <Trait id="Commander" value="5" />
-            <Trait id="Politician" value="10" />
-            <Trait id="Manager" value="4" />
-            <!-- PERSONALITY/REPUTATION -->
-            <Trait id="Valor" value="2" />
-            <Trait id="Generosity" value="1" />
-            <Trait id="Mercy" value="0" />
-            <Trait id="Honor" value="2" />
-            <Trait id="Calculating" value="1" />
-            <Trait id="Egalitarian" value="0" />
-            <Trait id="Oligarchic" value="1" />
-            <Trait id="Authoritarian" value="1" />
-        </Traits>
-        <Equipments>
-            <EquipmentRoster>
-                <equipment slot="Item1" id="Item.anduril" />
-                <equipment slot="Item2" id="Item.gond_shld2" />
-                <equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
-                <equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
-                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-            </EquipmentRoster>
-            <EquipmentSet id="dunland_civ_template_default_d" civilian="true" />
-        </Equipments>
-    </NPCCharacter>
     <NPCCharacter id="lord_WE9_u" name="{=aom_lord_WE9_u_name}Euresa" age="26" voice="earnest" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003" />
@@ -8733,7 +8672,7 @@
             <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_9_5" name="{=aom_lord_1_9_5_name}Andriel" age="48" voice="ironic" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_1_9_5" name="{=aom_lord_1_9_5_name}Lothwen" age="72" voice="ironic" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0002540E40B430150A7000391900C1012A278BFF80A61508B0090A0F7FFBA8230074060307176B051F6410605020004000000000000017670000000042EC1003" />
             <hair_tags>
@@ -9406,7 +9345,7 @@
             <EquipmentSet id="gondor_civ_template_default_d" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_52_4" name="{=aom_lord_1_52_4_name}Silmarien" age="44" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_1_52_4" name="{=aom_lord_1_52_4_name}Nauriel" age="60" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="22.11" weight="0.0185" build="0" key="0000C00FD0FC000480801020FC600020A1B68570086D38016649C50F7FFE9BA1009006030906B4051F64106050200040000000000000176700000000452C4003" />
             <hair_tags>
@@ -9575,7 +9514,7 @@
             <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_71_1" name="{=aom_lord_1_71_1_name}Narien" age="33" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_1_71_1" name="{=aom_lord_1_71_1_name}Laswen" age="53" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="22.11" weight="0" build="0.3981" key="000A080E51003004318000C16601FE0486278B8915A61A04BB79880A7FFCA8E3007606030710660E1F6410605020004000000000000017670000000042FC2003" />
             <hair_tags>
@@ -10264,7 +10203,7 @@
             <EquipmentSet id="gondor_civ_template_default_b" civilian="true" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_EW_9" name="{=aom_lord_EW_9_name}Thingol" age="133" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_EW_9" name="{=aom_lord_EW_9_name}Thingol" age="55" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="50.08" weight="0.0486" build="0.3611" key="00025C04001403030B82005700C07504944685853CB98070BB79530E7ECBFEA200B516030B3BB5731F6410605020004000000000000017670000000043647003" />
             <hair_tags>

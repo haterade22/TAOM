@@ -780,8 +780,7 @@
 	<xsl:template match="Hero[@id='lord_1_57']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_57}Altenos serves as a captain in the Lossarnach contingent.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_1_57_1</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_57}Baranor serves as a captain in the Lossarnach contingent, a trusted officer of Lord Forlong.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -798,9 +797,8 @@
 	<xsl:template match="Hero[@id='lord_1_57_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_57_2}Jephalia is daughter of Altenos, learning the ways of nobility.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_57_2}Imloth is daughter of Baranor, learning the ways of Gondor's nobility in the valleys of Lossarnach.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_57</xsl:attribute>
-			<xsl:attribute name="mother">Hero.lord_1_57_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>

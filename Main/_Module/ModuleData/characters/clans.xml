@@ -12,7 +12,7 @@
 		initial_home_settlement="Settlement.town_EW1"
 		tier="1"
 		owner="Hero.lord_1_59"
-		culture="Culture.empire"
+		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
 		banner_key="11.251.166.1528.1528.764.764.1.0.0.10016.303.290.600.600.764.800.0.0.0" />
@@ -23,7 +23,7 @@
 		initial_home_settlement="Settlement.town_EW1"
 		tier="1"
 		owner="Hero.lord_1_60"
-		culture="Culture.empire"
+		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
 		banner_key="11.172.166.1528.1528.764.764.1.0.0.10012.332.171.1000.1000.764.770.0.0.0" />
@@ -34,7 +34,7 @@
 		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
 		owner="Hero.lord_EW_14"
-		culture="Culture.empire"
+		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
 		banner_key="11.101.166.1528.1528.764.764.1.0.0.10009.35.171.500.550.765.730.0.0.0" />
@@ -45,7 +45,7 @@
 		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
 		owner="Hero.lord_EW_1"
-		culture="Culture.empire"
+		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
 		banner_key="11.293.203.1528.1528.764.764.1.0.0.10014.35.171.800.800.764.806.0.0.0" />
@@ -56,7 +56,7 @@
 		initial_home_settlement="Settlement.town_EW1"
 		tier="3"
 		owner="Hero.lord_EW_6"
-		culture="Culture.empire"
+		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
 		banner_key="11.2014.262.1528.1528.764.857.1.0.0.10007.172.171.600.600.765.742.0.0.0" />

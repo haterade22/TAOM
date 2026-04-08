@@ -119,9 +119,9 @@
   <xsl:template match="Faction[@id='clan_empire_west_4']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
-      <xsl:attribute name="name">{=TAOM_clan_empire_west_4}House of Ausirionath</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_empire_west_4}House of Barahirionath</xsl:attribute>
       <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-      <xsl:attribute name="banner_key">11.2.149.1528.1528.764.732.1.0.0.10024.172.2000.650.650.764.760.0.0.0</xsl:attribute>
+      <xsl:attribute name="banner_key">11.240.149.1528.1528.764.732.1.0.0.10019.172.2000.700.700.764.760.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -129,9 +129,9 @@
   <xsl:template match="Faction[@id='clan_empire_west_5']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
-      <xsl:attribute name="name">{=TAOM_clan_empire_west_5}House of Barahirionath</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_empire_west_5}House of Ausirionath</xsl:attribute>
       <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-      <xsl:attribute name="banner_key">11.240.149.1528.1528.764.732.1.0.0.10019.172.2000.700.700.764.760.0.0.0</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2.149.1528.1528.764.732.1.0.0.10024.172.2000.650.650.764.760.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
