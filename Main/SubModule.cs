@@ -333,6 +333,7 @@ public class SubModule : MBSubModuleBase
         PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
         _harmony.PatchCategory("Patch26_SpecialResources");
+        _harmony.PatchCategory("Patch27_CareerSystem");
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
         var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();
