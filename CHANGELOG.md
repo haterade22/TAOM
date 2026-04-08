@@ -2,6 +2,15 @@
 
 ## 2026-04-07
 
+### Fix: CC Parent Equipment Rosters for shaghana & abanissa
+
+Added missing Character Creation equipment rosters for `shaghana` and `abanissa` cultures. Without these, BL's parent narrative stage silently reverted the hero's culture to the vanilla default, breaking career auto-assignment.
+
+- Added `shaghana` culture items (T1-T2 Harad: steppe raider aesthetic) and `abanissa` culture items (T3-T4 Harad: palace dynasty aesthetic) to `tools/generate_char_creation_equipment.py`
+- Fixed script OUTPUT_PATH bug (was writing to wrong directory)
+- Regenerated `taom_char_creation_equipment.xml`: 550 → 660 rosters (55 per culture × 12 cultures)
+- All item IDs validated against LOTRLOME_Armory and SandBoxCore
+
 ### Feature: Career System — Full Implementation (Phases 1-6)
 
 Complete career/class progression system inspired by TOR_Core, adapted for LOTR. Mordor Warboss as pilot career.
