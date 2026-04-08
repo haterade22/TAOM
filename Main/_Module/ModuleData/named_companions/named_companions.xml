@@ -35,14 +35,14 @@
 			<Equipments>
 				<EquipmentRoster>
 				<equipment slot="Item0" id="Item.strider_sword" />
-				<equipment slot="Body" id="Item.gond_tab_9ld"/>
-				<equipment slot="Gloves" id="Item.boromir_gloves"/>
-				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a"/>
+				<equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a"/>
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a"/>
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.strider_sword" />
-				<equipment slot="Body" id="Item.gond_tab_9ld"/>
-				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a"/>
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a"/>
 				</EquipmentRoster>
 			</Equipments>
 		</NPCCharacter>
@@ -591,7 +591,7 @@
 				<equipment slot="Item1" id="Item.piercing_arrows" />
 				<equipment slot="Body" id="Item.roh_nbl_arm_g" />				
 				<equipment slot="Cape" id="Item.roh_nbl_shldr_s" />
-				<equipment slot="Gloves" id="Item.roh_sol_brcr_ng" />
+				<equipment slot="Gloves" id="Item.roh_nbl_glv" />
 				<equipment slot="Leg" id="Item.roh_nbl_bts" />
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
@@ -684,14 +684,14 @@
 			<Equipments>
 				<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
-				<equipment slot="Body" id="Item.citidel_guard_armor1"/>
-				<equipment slot="Gloves" id="Item.citidel_guard_bracers"/>
-				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				<equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a"/>
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a"/>
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a"/>
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
-				<equipment slot="Body" id="Item.citidel_guard_armor1"/>
-				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				<equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a"/>
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a"/>
 				</EquipmentRoster>
 			</Equipments>
 		</NPCCharacter>
