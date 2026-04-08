@@ -1426,24 +1426,24 @@
 	<!-- NAMED COMPANIONS (recruitable lore heroes)     -->
 	<!-- ============================================== -->
 
-	<Hero id="named_companion_aragorn" />
-	<Hero id="named_companion_legolas" />
-	<Hero id="named_companion_gimli" />
-	<Hero id="named_companion_swan" />
-	<Hero id="named_companion_rcmcplayz" />
-	<Hero id="named_companion_leovsilva" />
-	<Hero id="named_companion_yotthani" />
-	<Hero id="named_companion_whitegoat" />
-	<Hero id="named_companion_igor" />
-	<Hero id="named_companion_thyrell" />
-	<Hero id="named_companion_haterade" />
-	<Hero id="named_companion_hart" />
-	<Hero id="named_companion_blackrose" />
-	<Hero id="named_companion_spartan" />
-	<Hero id="named_companion_solus" />
-	<Hero id="named_companion_maztog" />
-	<Hero id="named_companion_balakhor" />
-	<Hero id="named_companion_noxix" />
+	<Hero id="named_companion_aragorn" faction="Faction.neutral" />
+	<Hero id="named_companion_legolas" faction="Faction.neutral" />
+	<Hero id="named_companion_gimli" faction="Faction.neutral" />
+	<Hero id="named_companion_swan" faction="Faction.neutral" />
+	<Hero id="named_companion_rcmcplayz" faction="Faction.neutral" />
+	<Hero id="named_companion_leovsilva" faction="Faction.neutral" />
+	<Hero id="named_companion_yotthani" faction="Faction.neutral" />
+	<Hero id="named_companion_whitegoat" faction="Faction.neutral" />
+	<Hero id="named_companion_igor" faction="Faction.neutral" />
+	<Hero id="named_companion_thyrell" faction="Faction.neutral" />
+	<Hero id="named_companion_haterade" faction="Faction.neutral" />
+	<Hero id="named_companion_hart" faction="Faction.neutral" />
+	<Hero id="named_companion_blackrose" faction="Faction.neutral" />
+	<Hero id="named_companion_spartan" faction="Faction.neutral" />
+	<Hero id="named_companion_solus" faction="Faction.neutral" />
+	<Hero id="named_companion_maztog" faction="Faction.neutral" />
+	<Hero id="named_companion_balakhor" faction="Faction.neutral" />
+	<Hero id="named_companion_noxix" faction="Faction.neutral" />
 
 </Heroes>
 
