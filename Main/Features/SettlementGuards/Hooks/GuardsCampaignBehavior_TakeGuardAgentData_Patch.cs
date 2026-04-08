@@ -86,8 +86,13 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
 
     private static string GetSpawnPointTag(bool overrideWeaponWithSpear, bool unarmed)
     {
+        // Note: vanilla calls this method with (spear=true, unarmed=false) for BOTH
+        // sp_guard_castle and sp_guard_with_spear. We can't distinguish them here
+        // since the spawn point tag isn't passed to TakeGuardAgentDataFromGarrisonTroopList.
+        // We return null for the spear case to match ALL spear-eligible guards
+        // (those mapped to sp_guard_castle OR sp_guard_with_spear).
         if (unarmed) return "sp_guard_unarmed";
-        if (overrideWeaponWithSpear) return "sp_guard_with_spear";
+        if (overrideWeaponWithSpear) return null;
         return "sp_guard";
     }
 }

@@ -304,15 +304,14 @@ Phase 1: BUILD & INTERNAL REVIEW
   3. Fix issues from deep-review
 
 Phase 2: CODEX ADVERSARIAL REVIEW
-  4. /review-codex [feature]        — writes the Codex prompt (Mode A)
+  4. /review-codex                  — auto-detects what was built, writes Codex prompt
   5. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
-  6. /review-codex [review.md]      — verify findings, implement confirmed fixes (Mode B)
+  6. /review-codex                  — detects review file, verifies findings, implements fixes
 
 Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. Write Codex prompt for fixes   — list every file changed in phases 1-6
-     - Focus on: reflection targets, patch signatures, config IDs, fail-safe defaults
+  7. /review-codex                  — detects fix changes, writes new Codex prompt for our fixes
   8. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
-  9. /review-codex [review.md]      — verify findings, implement confirmed fixes
+  9. /review-codex                  — verifies findings on our fixes, implements confirmed fixes
 
 Phase 4: CLOSE OUT
   10. /verify                       — final build + tests pass
