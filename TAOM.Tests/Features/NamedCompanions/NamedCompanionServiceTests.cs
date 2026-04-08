@@ -173,12 +173,32 @@ public class NamedCompanionServiceTests
         });
         _companionAdapter.HeroExists("nc_a").Returns(true);
         _companionAdapter.IsHeroAlive("nc_a").Returns(true);
+        _companionAdapter.IsRecruitedOrInParty("nc_a").Returns(false);
         _companionAdapter.IsPlacedInSettlement("nc_a").Returns(false);
 
         _sut.EnsureCompanionsPlaced();
 
         _companionAdapter.Received(1).PlaceInSettlement("nc_a", "town_1");
         _companionAdapter.Received(1).MarkAsMet("nc_a");
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_RecruitedCompanion_SkipsPlacement()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_a").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_a").Returns(true);
+        _companionAdapter.IsRecruitedOrInParty("nc_a").Returns(true);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.DidNotReceive().PlaceInSettlement(Arg.Any<string>(), Arg.Any<string>());
     }
 
     [TestMethod]

@@ -302,8 +302,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
 
             var namedCompanionService = IoC.Resolve<INamedCompanionService>();
-            var namedCompanionLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService, namedCompanionLogger));
+            campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
         }
     }
 

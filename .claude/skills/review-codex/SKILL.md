@@ -197,7 +197,18 @@ For each confirmed bug:
 4. Update tests if behavior changed
 5. Add any preventive tests identified in 3e
 
-### 3h: Update Review Log
+### 3h: Update Codex Instructions (AGENTS.md)
+
+Codex learns from us through `AGENTS.md`. After each review, update the "Lessons From Prior Reviews" section:
+
+1. If Codex produced a **new false positive pattern** not already listed, add it to "False positives Codex has produced"
+2. If Codex **missed a bug category** that Claude caught, add it to "Bugs Codex typically misses"
+3. If Codex did something **particularly well** in this review, add it to "What Codex does well"
+4. Update the "Last updated" date
+
+This creates a feedback loop: Claude's findings improve Codex's next review. Over time, Codex's accuracy improves and the gap between what Codex finds and what Claude catches shrinks.
+
+### 3i: Update Review Log
 
 1. Add entry to `docs/reviews/REVIEW-LOG.md`
 2. Update metrics

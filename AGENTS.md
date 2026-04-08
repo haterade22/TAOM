@@ -37,6 +37,33 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
+### Lessons From Prior Reviews (22 reviews, 51 bugs found)
+
+These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
+
+**Bugs Codex typically misses (Claude catches these — look harder here):**
+- Config ID mismatches: keys like "rohan" (should be "vlandia"), "dol_guldur" (should be "dolguldur"). Always cross-reference config IDs against taom_spcultures.xml and TAOM_spkingdoms.xml.
+- Fail-safe default inconsistency: some patches use `?? true` (feature active when null) and others use `?? false` (feature inactive when null). Check ALL patches in a feature for consistency.
+- Convention inconsistency across files: e.g., one file uses `EffectBonus` as a direct multiplier (0.75) while all others use it as an additive factor (-0.25). Compare against sibling files.
+- No-op code paths: features that run but produce no effect in all cases (e.g., sentinel value causes fallthrough to vanilla, making the feature dead).
+- Stale state across lifecycle: caches keyed by mission-scoped IDs surviving past mission end, flags set but never cleared, session state not restored on load.
+
+**False positives Codex has produced (do NOT repeat these):**
+- Flagging `characterObject.IsMounted` as wrong when vanilla uses the same check. ALWAYS decompile vanilla before claiming divergence.
+- Flagging global scope as a "regression" when it's intentional design (e.g., War of the Ring banner drift guard applies to all clans by design).
+- Assuming kingdom mapping: `empire` = Dunland (NOT Rohan), `vlandia` = Rohan, `battania` = Khand (NOT Dunland). Use the ID cheatsheet in the prompt.
+- Rating all findings the same severity. Vary calibration — if everything is HIGH, something is wrong.
+- Claiming "config looks valid" without actually cross-referencing against source-of-truth XML files.
+- Skipping hard analysis sections (transpiler IL verification, mutation system completeness) and only reporting easy surface findings.
+
+**What Codex does well (keep doing these):**
+- Config ID cross-referencing when explicitly instructed to do so
+- Comparing TAOM code against decompiled vanilla to find missing gates
+- Tracing lifecycle flows (init → runtime → save/load) to find state bugs
+- Walking through math formulas with concrete numbers to find drift
+
+This section is updated by Claude after each review cycle. Last updated: 2026-04-08.
+
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only
 - `IoC.ResolveAll<T>()` for hook dispatch — intentional multi-hook pattern

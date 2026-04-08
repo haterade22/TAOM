@@ -27,6 +27,32 @@ Culture XML attributes (`merchant_notary`, `artisan_notary`, etc.) must referenc
 ## Region Codes
 EN=Rohan, ES=Mordor, EW=Gondor, A=Harad, B=Dunland, V=Vlandia, K=Easterlings, S=Dale/North, DG=Dol Guldur, E=Erebor, G=Gundabad, I=Isengard, L=Lothlorien, M=Mirkwood, R=Rivendell, RU=Rhun, U=Umbar
 
+## Config ID Cross-Reference (MANDATORY)
+
+After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs, cross-reference EVERY ID against this table before moving on.
+
+### Culture StringIds (runtime values)
+
+| Type | StringIds | Note |
+|------|-----------|------|
+| **Custom cultures** | `gondor`, `mordor`, `erebor`, `rivendell`, `lothlorien`, `mirkwood`, `isengard`, `gundabad`, `dolguldur`, `umbar` | Use LOTR names |
+| **XSLT cultures** | `vlandia` (Rohan), `empire` (Dunland), `aserai` (Harad), `khuzait` (Easterlings), `sturgia` (Dale), `battania` (Khand) | Use vanilla engine IDs |
+
+**Common mistake:** Writing lore names for XSLT cultures. `rohan` is WRONG — use `vlandia`. `dunland` is WRONG — use `empire`. `harad`/`rhun`/`dale`/`khand` are WRONG — use `aserai`/`khuzait`/`sturgia`/`battania`.
+
+### Checklist
+
+| Step | What to check |
+|------|---------------|
+| 1 | Every `culture=` attribute uses a StringId from the table above |
+| 2 | Every `kingdom=` attribute uses a kingdom ID from CLAUDE.md cheatsheet |
+| 3 | Every `settlement=` attribute exists in `settlements.xml` |
+| 4 | Every `troop=` attribute exists in `troops/troops_{culture}.xml` |
+
+### Why this matters
+
+This exact bug pattern has been caught in 5+ Codex reviews. Custom cultures happen to use LOTR names as StringIds, which makes it easy to assume ALL cultures do — but XSLT cultures inherit vanilla engine IDs.
+
 ## Formatting
 - 2-space indentation (per .editorconfig)
 - UTF-8 encoding

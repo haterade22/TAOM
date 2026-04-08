@@ -76,6 +76,7 @@ public class NamedCompanionService : INamedCompanionService
             if (!companion.Enabled) continue;
             if (!_companionAdapter.HeroExists(companion.CharacterId)) continue;
             if (!_companionAdapter.IsHeroAlive(companion.CharacterId)) continue;
+            if (_companionAdapter.IsRecruitedOrInParty(companion.CharacterId)) continue;
             if (_companionAdapter.IsPlacedInSettlement(companion.CharacterId)) continue;
 
             try

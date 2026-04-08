@@ -24,6 +24,13 @@ public class NamedCompanionAdapter : INamedCompanionAdapter
         return hero?.StayingInSettlement != null || hero?.CurrentSettlement != null;
     }
 
+    public bool IsRecruitedOrInParty(string characterId)
+    {
+        var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == characterId);
+        if (hero == null) return false;
+        return hero.CompanionOf != null || hero.PartyBelongedTo != null;
+    }
+
     public void PlaceInSettlement(string characterId, string settlementId)
     {
         var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == characterId);

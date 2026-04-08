@@ -44,7 +44,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 21 | 2026-04-07 | CareerSystem (impl vs TOR) | needs-attention | partial-agree | 2 confirmed (tier validation, save serialization) + 1 partial (widget def) | 3 (mutation scope, ability scope, passive coverage — intentional v1 scope) | 1 (hallucinated AllowedRaces property) | v6-adversarial |
 | 22 | 2026-04-08 | SettlementGuards | needs-attention | partial-agree | 1 confirmed (spear culture IDs) + 2 self-found (reflection caching, dead attributes) | 1 (spawn-point severity overstated) | 0 | v6 |
 
-**Post-codebase reviews:** 19 = SpecialResources, 20 = CareerSystem (premature), 21 = CareerSystem adversarial, 22 = SettlementGuards (1 MEDIUM spear ID bug confirmed, 1 HIGH spawn-point finding downgraded to LOW — impact overstated since castle+spear guards intentionally share pool). 22 Codex reviews total, 51 bugs found across codebase.
+| 23 | 2026-04-08 | NamedCompanions + Wanderer Race | needs-attention | agree | 1 confirmed (load teleport) + 1 dead code | 0 | 0 | v6 |
+
+**Post-codebase reviews:** 19 = SpecialResources, 20 = CareerSystem (premature), 21 = CareerSystem adversarial, 22 = SettlementGuards, 23 = NamedCompanions (1 HIGH load-path teleport bug, 1 LOW dead field). 23 Codex reviews total, 53 bugs found across codebase.
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
@@ -257,3 +259,48 @@ Claude found no additional bugs. First review where Codex found everything.
 - Config cross-reference is now a REQUIRED section, not optional (caught 5+ bugs across waves 1-2)
 - Added success patterns to prior-review-lessons (what WORKED, not just what failed)
 - Flat formatting standard (no indented continuation lines — prevents backslash-escape prompts)
+
+---
+
+## Review #23: Named Companions + Wanderer Race Fix
+
+**Date:** 2026-04-08
+**Prompt version:** v6
+**Report:** [codex-adversarial-named-companions-2026-04-08.md](codex-adversarial-named-companions-2026-04-08.md)
+
+### Codex Findings
+
+| # | Severity | Finding | Claude Assessment |
+|---|----------|---------|-------------------|
+| 1 | HIGH | EnsureCompanionsPlaced teleports recruited companions on load | **Confirmed** — IsPlacedInSettlement returns false for companions traveling with player party, causing forced re-placement. Fixed by adding IsRecruitedOrInParty check. |
+
+### Known Suspects Verdict
+
+| # | Suspect | Codex Verdict | Claude Verdict |
+|---|---------|---------------|----------------|
+| 1 | Unused _logger in behavior | Not explicitly checked | **Confirmed** — removed dead field |
+| 2 | ChangeState(Active) on Active hero | CONFIRMED (context of larger bug) | Agree — safe call but part of the load teleport bug |
+| 3 | IsPlacedInSettlement misses traveling companions | CONFIRMED | **Agree** — core bug, fixed |
+| 4 | Race double-set redundancy | Not explicitly checked | **Harmless** — defensive, keep as insurance |
+| 5 | Config settlement IDs | PASSED | **Agree** — all 18 IDs verified |
+| 6 | Wanderer race fix completeness | PASSED | **Agree** — 30 elf + 10 dg_uruk correct |
+
+### Manual Verification Results
+
+- **TryKillCompanion protection**: `HasMet` is unnecessary because named companions (`is_hero="true"`) never enter `_aliveCompanionTemplates` (requires `IsTemplate`). `TryKillCompanion()` can never target them. `HasMet` is harmless belt-and-suspenders.
+
+### Root Cause Analysis
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Load teleports recruited companions | Stale state / lifecycle | Didn't trace full lifecycle — focused on spawn path, missed load-path scenario where companion is recruited and traveling | Added test `EnsureCompanionsPlaced_RecruitedCompanion_SkipsPlacement` |
+| 2 | Unused _logger field | Dead code | Copied pattern from StartupResourcesBehavior which uses logger, but NamedCompanionBehavior delegates entirely to service | Note: behavior pattern review — only inject what's used |
+
+### Fixes Implemented
+
+1. Added `IsRecruitedOrInParty(characterId)` to `INamedCompanionAdapter` — checks `CompanionOf != null || PartyBelongedTo != null`
+2. Added guard in `NamedCompanionService.EnsureCompanionsPlaced()` — skips recruited/in-party companions
+3. Removed unused `_logger` from `NamedCompanionBehavior`, simplified constructor
+4. Updated `SubModule.cs` to match new constructor
+5. Added test: `EnsureCompanionsPlaced_RecruitedCompanion_SkipsPlacement`
+6. All 1037 tests pass

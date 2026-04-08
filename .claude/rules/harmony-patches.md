@@ -35,3 +35,4 @@ ALWAYS decompile the target method with `ilspycmd` before writing a patch. Verif
 - Null handling — TaleWorlds often expects `TextObject.Empty` not `null`
 - Event timing — verify when events fire vs when state changes
 - Static state — avoid unless using thread-local pattern
+- **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
