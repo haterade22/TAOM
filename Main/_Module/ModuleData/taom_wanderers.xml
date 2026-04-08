@@ -1736,6 +1736,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_0_skills">
 		<face>
@@ -1759,6 +1760,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_1_skills">
 		<face>
@@ -1782,6 +1784,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_2_skills">
 		<face>
@@ -1805,6 +1808,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_3_skills">
 		<face>
@@ -1828,6 +1832,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_4_skills">
 		<face>
@@ -1851,6 +1856,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_5_skills">
 		<face>
@@ -1874,6 +1880,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_6_skills">
 		<face>
@@ -1897,6 +1904,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_7_skills">
 		<face>
@@ -1920,6 +1928,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_8_skills">
 		<face>
@@ -1943,6 +1952,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.rivendell"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_rivendell_9_skills">
 		<face>
@@ -1968,6 +1978,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_0_skills">
 		<face>
@@ -1991,6 +2002,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_1_skills">
 		<face>
@@ -2014,6 +2026,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_2_skills">
 		<face>
@@ -2037,6 +2050,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_3_skills">
 		<face>
@@ -2060,6 +2074,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_4_skills">
 		<face>
@@ -2083,6 +2098,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_5_skills">
 		<face>
@@ -2106,6 +2122,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_6_skills">
 		<face>
@@ -2129,6 +2146,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_7_skills">
 		<face>
@@ -2152,6 +2170,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_8_skills">
 		<face>
@@ -2175,6 +2194,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.mirkwood"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_mirkwood_9_skills">
 		<face>
@@ -2200,6 +2220,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_0_skills">
 		<face>
@@ -2223,6 +2244,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_1_skills">
 		<face>
@@ -2246,6 +2268,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_2_skills">
 		<face>
@@ -2269,6 +2292,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_3_skills">
 		<face>
@@ -2292,6 +2316,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_4_skills">
 		<face>
@@ -2315,6 +2340,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_5_skills">
 		<face>
@@ -2338,6 +2364,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_6_skills">
 		<face>
@@ -2361,6 +2388,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_7_skills">
 		<face>
@@ -2384,6 +2412,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_8_skills">
 		<face>
@@ -2407,6 +2436,7 @@
 		default_group="Infantry"
 		is_hero="false"
 		culture="Culture.lothlorien"
+		race="elf"
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_lothlorien_9_skills">
 		<face>
@@ -2433,10 +2463,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_0_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -2457,10 +2487,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_1_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Valor" value="1" />
@@ -2481,10 +2511,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_2_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -2505,10 +2535,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_3_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Mercy" value="1" />
@@ -2529,10 +2559,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_4_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -2553,10 +2583,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_5_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -2577,10 +2607,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_6_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Valor" value="1" />
@@ -2601,10 +2631,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_7_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Honor" value="1" />
@@ -2625,10 +2655,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_8_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Valor" value="1" />
@@ -2649,10 +2679,10 @@
 		is_hero="false"
 		culture="Culture.dolguldur"
 		occupation="Wanderer"
-		race="orc"
+		race="dg_uruk"
 		skill_template="SkillSet.spc_wanderer_dolguldur_9_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_empire" />
+			<face_key_template value="BodyProperty.fighter_dolguldur" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />

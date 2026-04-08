@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<NPCCharacter id="named_companion_aragorn" name="{=nc_aragorn_name}Aragorn" age="27" voice="earnest" culture="Culture.gondor" race="human" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="300"/>
+				<skill id="TwoHanded" value="290"/>
+				<skill id="Polearm" value="280"/>
+				<skill id="Bow" value="220"/>
+				<skill id="Crossbow" value="150"/>
+				<skill id="Throwing" value="180"/>
+				<skill id="Riding" value="270"/>
+				<skill id="Athletics" value="240"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="250"/>
+				<skill id="Tactics" value="280"/>
+				<skill id="Charm" value="220"/>
+				<skill id="Roguery" value="350"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="160"/>
+				<skill id="Medicine" value="150"/>
+				<skill id="Engineering" value="60"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="1"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.strider_sword" />
+				<equipment slot="Body" id="Item.gond_tab_9ld"/>
+				<equipment slot="Gloves" id="Item.boromir_gloves"/>
+				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.strider_sword" />
+				<equipment slot="Body" id="Item.gond_tab_9ld"/>
+				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_legolas" name="{=nc_legolas_name}Legolas" age="30" voice="earnest" culture="Culture.mirkwood" race="elf" default_group="Ranged" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="25.97" weight="0.4301" build="0.4" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="180"/>
+				<skill id="Polearm" value="150"/>
+				<skill id="Bow" value="300"/>
+				<skill id="Crossbow" value="100"/>
+				<skill id="Throwing" value="200"/>
+				<skill id="Riding" value="200"/>
+				<skill id="Athletics" value="250"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="280"/>
+				<skill id="Tactics" value="110"/>
+				<skill id="Charm" value="120"/>
+				<skill id="Roguery" value="250"/>
+				<skill id="Leadership" value="50"/>
+				<skill id="Trade" value="50"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="200"/>
+				<skill id="Engineering" value="60"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="1"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
+				<equipment slot="Item1" id="Item.wm_mirkwood_arrow_a01" />
+				<equipment slot="Item2" id="Item.wm_legolas_sword" />
+				<equipment slot="Body" id="Item.legolas_body" />
+				<equipment slot="Cape" id="Item.legolas_shoulder" />
+				<equipment slot ="Gloves" id="Item.legolas_gloves" />
+				<equipment slot="Leg" id="Item.legolas_boots" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.legolas_body" />
+				<equipment slot="Leg" id="Item.legolas_boots" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_gimli" name="{=nc_gimli_name}Gimli" age="30" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="32.01" weight="0.7454" build="0.8379"  key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142"  />
+	</face>
+			<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="280"/>
+				<skill id="Polearm" value="200"/>
+				<skill id="Bow" value="50"/>
+				<skill id="Crossbow" value="50"/>
+				<skill id="Throwing" value="50"/>
+				<skill id="Riding" value="0"/>
+				<skill id="Athletics" value="220"/>
+				<skill id="Crafting" value="150"/>
+				<skill id="Scouting" value="100"/>
+				<skill id="Tactics" value="50"/>
+				<skill id="Charm" value="50"/>
+				<skill id="Roguery" value="260"/>
+				<skill id="Leadership" value="40"/>
+				<skill id="Trade" value="150"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="160"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+				<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a"/>
+				<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_swan" name="{=nc_swan_name}Swan, the Cartographer" age="27" voice="earnest" culture="Culture.gondor" race="human" default_group="Cavalry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+				<face>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+	</face>
+				<skills>
+				<skill id="OneHanded" value="150"/>
+				<skill id="TwoHanded" value="210"/>
+				<skill id="Polearm" value="230"/>
+				<skill id="Bow" value="220"/>
+				<skill id="Crossbow" value="150"/>
+				<skill id="Throwing" value="180"/>
+				<skill id="Riding" value="270"/>
+				<skill id="Athletics" value="180"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="150"/>
+				<skill id="Roguery" value="100"/>
+				<skill id="Tactics" value="100"/>
+				<skill id="Charm" value="220"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="160"/>
+				<skill id="Medicine" value="150"/>
+				<skill id="Engineering" value="300"/>
+				</skills>
+				<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="1"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+				</Traits>
+				<Equipments>
+				<EquipmentRoster>
+					<equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
+					<equipment slot="Item1"	id="Item.gond_shield_two_swan" />
+					<equipment slot="Item2" 	id="Item.wm_swan_knight_sworda" />
+					<equipment slot="Body" id="Item.imrahil_body" />
+					<equipment slot="Head" id="Item.imrahil_helmet" />
+					<equipment slot="Gloves" id="Item.imrahil_gloves" />
+					<equipment slot="Leg" id="Item.imrahil_boot" />
+					<equipment slot="Cape" id="Item.imrahil_shoulder" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+					<equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
+					<equipment slot="Item1"	id="Item.gond_shield_two_swan" />
+					<equipment slot="Item2" 	id="Item.wm_swan_knight_sworda" />
+					<equipment slot="Body" id="Item.imrahil_body" />
+					<equipment slot="Head" id="Item.imrahil_helmet" />
+					<equipment slot="Gloves" id="Item.imrahil_gloves" />
+					<equipment slot="Leg" id="Item.imrahil_boot" />
+					<equipment slot="Cape" id="Item.imrahil_shoulder" />
+				</EquipmentRoster>
+				</Equipments>
+			</NPCCharacter>
+
+	<NPCCharacter id="named_companion_rcmcplayz" name="{=nc_rcmcplayz_name}Rukumazig-khamîz, the Smith" age="30" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+				<face>
+				<BodyProperties version="4" age="32.01" weight="0.7454" build="0.8379"  key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142"  />
+	</face>
+				<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="180"/>
+				<skill id="Polearm" value="200"/>
+				<skill id="Bow" value="50"/>
+				<skill id="Crossbow" value="50"/>
+				<skill id="Throwing" value="50"/>
+				<skill id="Riding" value="0"/>
+				<skill id="Athletics" value="220"/>
+				<skill id="Crafting" value="350"/>
+				<skill id="Roguery" value="150"/>
+				<skill id="Scouting" value="100"/>
+				<skill id="Tactics" value="50"/>
+				<skill id="Charm" value="50"/>
+				<skill id="Leadership" value="40"/>
+				<skill id="Trade" value="150"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="160"/>
+				</skills>
+				<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+				</Traits>
+				<Equipments>
+				<EquipmentRoster>
+					<equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+					<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a"/>
+					<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+					<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+				</Equipments>
+			</NPCCharacter>
+
+	<NPCCharacter id="named_companion_leovsilva" name="{=nc_leovsilva_name}Leovlas, of the Silvans" age="30" voice="earnest" culture="Culture.mirkwood" race="elf" default_group="Ranged" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+				<face>
+				<BodyProperties version="4" age="25.97" weight="0.4301" build="0.4" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002"/>
+	</face>
+				<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="180"/>
+				<skill id="Polearm" value="150"/>
+				<skill id="Bow" value="300"/>
+				<skill id="Crossbow" value="100"/>
+				<skill id="Throwing" value="200"/>
+				<skill id="Riding" value="200"/>
+				<skill id="Athletics" value="250"/>
+				<skill id="Crafting" value="350"/>
+				<skill id="Scouting" value="280"/>
+				<skill id="Tactics" value="110"/>
+				<skill id="Charm" value="120"/>
+				<skill id="Roguery" value="250"/>
+				<skill id="Leadership" value="50"/>
+				<skill id="Trade" value="50"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="200"/>
+				<skill id="Engineering" value="60"/>
+				</skills>
+				<Traits>
+				<Trait id="Honor" value="1"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+				</Traits>
+				<Equipments>
+				<EquipmentRoster>
+					<equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
+					<equipment slot="Item1" id="Item.wm_mirkwood_arrow_a01" />
+					<equipment slot="Item2" id="Item.wm_legolas_sword" />
+					<equipment slot="Item3" id="Item.wm_mirkwood_arrow_a02" />
+					<equipment slot="Head" id="Item.mkwd_inf1_t4_helmet_silver_hc" />
+					<equipment slot="Body" id="Item.mkwd_inf3_chest_silver" />
+					<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_silver" />
+					<equipment slot ="Gloves" id="Item.mkwd_inf3_vambraces_silver" />
+					<equipment slot="Leg" id="Item.mkwd_inf3_greaves_silver" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+					<equipment slot="Body" id="Item.legolas_body" />
+					<equipment slot="Leg" id="Item.legolas_boots" />
+				</EquipmentRoster>
+				</Equipments>
+			</NPCCharacter>
+
+	<NPCCharacter id="named_companion_yotthani" name="{=nc_yotthani_name}Thanor" age="30" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+				<face>
+				<BodyProperties version="4" age="32.01" weight="0.7454" build="0.8379"  key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142"  />
+	</face>
+				<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="280"/>
+				<skill id="Polearm" value="200"/>
+				<skill id="Bow" value="50"/>
+				<skill id="Crossbow" value="50"/>
+				<skill id="Throwing" value="50"/>
+				<skill id="Riding" value="0"/>
+				<skill id="Athletics" value="220"/>
+				<skill id="Crafting" value="350"/>
+				<skill id="Roguery" value="150"/>
+				<skill id="Scouting" value="100"/>
+				<skill id="Tactics" value="50"/>
+				<skill id="Charm" value="50"/>
+				<skill id="Leadership" value="40"/>
+				<skill id="Trade" value="150"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="360"/>
+				</skills>
+				<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+				</Traits>
+				<Equipments>
+				<EquipmentRoster>
+					<equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+					<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_legionary_b2_blue"/>
+					<equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a_blue"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_d_blue"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_d_blue"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_a_blue"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+					<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+				</Equipments>
+			</NPCCharacter>
+
+	<NPCCharacter id="named_companion_whitegoat" name="{=nc_whitegoat_name}Whitegoat, the Pathfinder" age="30" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+				<face>
+				<BodyProperties version="4" age="32.01" weight="0.7454" build="0.8379"  key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142"  />
+	</face>
+				<skills>
+				<skill id="OneHanded" value="100"/>
+				<skill id="TwoHanded" value="180"/>
+				<skill id="Polearm" value="100"/>
+				<skill id="Bow" value="50"/>
+				<skill id="Crossbow" value="50"/>
+				<skill id="Throwing" value="50"/>
+				<skill id="Riding" value="0"/>
+				<skill id="Athletics" value="220"/>
+				<skill id="Crafting" value="350"/>
+				<skill id="Roguery" value="150"/>
+				<skill id="Scouting" value="300"/>
+				<skill id="Tactics" value="50"/>
+				<skill id="Charm" value="50"/>
+				<skill id="Leadership" value="40"/>
+				<skill id="Trade" value="150"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="260"/>
+				</skills>
+				<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+				</Traits>
+				<Equipments>
+				<EquipmentRoster>
+					<equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+					<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a"/>
+					<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+					<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+				</Equipments>
+			</NPCCharacter>
+
+	<NPCCharacter id="named_companion_igor" name="{=nc_igor_name}Igor Fahlun, the Lost" age="27" voice="earnest" culture="Culture.aserai" race="human" default_group="Cavalry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="190"/>
+				<skill id="Polearm" value="180"/>
+				<skill id="Bow" value="120"/>
+				<skill id="Crossbow" value="150"/>
+				<skill id="Throwing" value="180"/>
+				<skill id="Riding" value="170"/>
+				<skill id="Athletics" value="240"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="150"/>
+				<skill id="Roguery" value="100"/>
+				<skill id="Tactics" value="180"/>
+				<skill id="Charm" value="120"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="160"/>
+				<skill id="Medicine" value="150"/>
+				<skill id="Engineering" value="100"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="1"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+				<equipment slot="Item1"	id="Item.ornate_adarga" />
+				<equipment slot="Item2" id="Item.wm_swan_knight_sworda" />
+				<equipment slot="Body" id="Item.harad07_torso" />
+				<equipment slot="Head" id="Item.harad07_helmet" />
+				<equipment slot="Gloves" id="Item.harad07_glove" />
+				<equipment slot="Leg" id="Item.harad06_v1_boots" />
+				<equipment slot="Cape" id="Item.harad06_v1_cape" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+				<equipment slot="Item1"	id="Item.ornate_adarga" />
+				<equipment slot="Item2" id="Item.wm_swan_knight_sworda" />
+				<equipment slot="Body" id="Item.harad07_torso" />
+				<equipment slot="Head" id="Item.harad07_helmet" />
+				<equipment slot="Gloves" id="Item.harad07_glove" />
+				<equipment slot="Leg" id="Item.harad06_v1_boots" />
+				<equipment slot="Cape" id="Item.harad06_v1_cape" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_thyrell" name="{=nc_thyrell_name}Thyrell, the Golden" age="27" voice="earnest" culture="Culture.rivendell" race="elf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="300"/>
+				<skill id="TwoHanded" value="290"/>
+				<skill id="Polearm" value="280"/>
+				<skill id="Bow" value="220"/>
+				<skill id="Crossbow" value="150"/>
+				<skill id="Throwing" value="180"/>
+				<skill id="Riding" value="270"/>
+				<skill id="Athletics" value="240"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="250"/>
+				<skill id="Roguery" value="200"/>
+				<skill id="Tactics" value="280"/>
+				<skill id="Charm" value="220"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="160"/>
+				<skill id="Medicine" value="150"/>
+				<skill id="Engineering" value="100"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="1"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gf_knight_spear" />
+				<equipment slot="Item1"	id="Item.wm_gf_knight_longsword" />
+				<equipment slot="Item2" id="Item.wm_gf_knight_shield_cloth" />
+				<equipment slot="Body" id="Item.gf_body_4" />
+				<equipment slot="Head" id="Item.glorfindel_helmet" />
+				<equipment slot="Gloves" id="Item.gf_gauntlets" />
+				<equipment slot="Leg" id="Item.gf_boots" />
+				<equipment slot="Cape" id="Item.gf_pauldrons_1" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gf_knight_spear" />
+				<equipment slot="Item1"	id="Item.wm_gf_knight_longsword" />
+				<equipment slot="Item2" id="Item.wm_gf_knight_shield_cloth" />
+				<equipment slot="Body" id="Item.gf_body_4" />
+				<equipment slot="Head" id="Item.glorfindel_helmet" />
+				<equipment slot="Gloves" id="Item.gf_gauntlets" />
+				<equipment slot="Leg" id="Item.gf_boots" />
+				<equipment slot="Cape" id="Item.gf_pauldrons_1" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_haterade" name="{=nc_haterade_name}Hatérade" age="34" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="34.01" weight="0.4861" build="0.5255"  key="0017B80E40003141B336CC45379764C8A799445A61778AB5CA7B84364597A77900987603098DAA840000000000000000000000000000000000000000432C0000"  />
+	</face>
+			<skills>
+				<skill id="OneHanded" value="100"/>
+				<skill id="TwoHanded" value="280"/>
+				<skill id="Polearm" value="100"/>
+				<skill id="Bow" value="50"/>
+				<skill id="Crossbow" value="50"/>
+				<skill id="Throwing" value="50"/>
+				<skill id="Riding" value="0"/>
+				<skill id="Athletics" value="120"/>
+				<skill id="Crafting" value="150"/>
+				<skill id="Roguery" value="300"/>
+				<skill id="Scouting" value="100"/>
+				<skill id="Tactics" value="300"/>
+				<skill id="Charm" value="50"/>
+				<skill id="Leadership" value="270"/>
+				<skill id="Trade" value="150"/>
+				<skill id="Steward" value="300"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="100"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="2"/>
+				<Trait id="Mercy" value="2"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment	slot="Head"	id="Item.sk_dwarf_dain_crown_a" />
+				<equipment	slot="Body"	id="Item.sk_dwarf_dain_chest_heavy_d" />
+				<equipment	slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+				<equipment	slot="Leg"	id="Item.sk_dwarf_dain_boots_elite_a" />
+				<equipment	slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
+				<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a"/>
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d"/>
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_hart" name="{=nc_hart_name}Éohart, of the Wold" age="27" voice="earnest" culture="Culture.vlandia" race="human" default_group="HorseArcher" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="200"/>
+				<skill id="TwoHanded" value="190"/>
+				<skill id="Polearm" value="180"/>
+				<skill id="Bow" value="220"/>
+				<skill id="Crossbow" value="150"/>
+				<skill id="Throwing" value="180"/>
+				<skill id="Riding" value="210"/>
+				<skill id="Athletics" value="210"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="150"/>
+				<skill id="Roguery" value="100"/>
+				<skill id="Tactics" value="180"/>
+				<skill id="Charm" value="120"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="160"/>
+				<skill id="Medicine" value="150"/>
+				<skill id="Engineering" value="100"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="1"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="2"/>
+				<Trait id="Mercy" value="0"/>
+				<Trait id="Valor" value="1"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.steppe_war_bow" />
+				<equipment slot="Item1" id="Item.piercing_arrows" />
+				<equipment slot="Body" id="Item.roh_nbl_arm_g" />				
+				<equipment slot="Cape" id="Item.roh_nbl_shldr_s" />
+				<equipment slot="Gloves" id="Item.roh_sol_brcr_ng" />
+				<equipment slot="Leg" id="Item.roh_nbl_bts" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.roh_nbl_arm_g" />
+				<equipment slot="Leg" id="Item.roh_nbl_bts" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_blackrose" name="{=nc_blackrose_name}BlackRose" age="30" voice="earnest" culture="Culture.isengard" race="uruk_hai" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="22.01" weight="0.0348" build="0.456"  key="000C580FC0002000B78479D2379D74D8B78C57C97AAB4B927948C45B978B4768009716030956D6E5000000000000000000000000000000000000000043340000"  />
+	</face>
+			<skills>
+				<skill id="OneHanded" value="150"/>
+				<skill id="TwoHanded" value="180"/>
+				<skill id="Polearm" value="100"/>
+				<skill id="Bow" value="50"/>
+				<skill id="Crossbow" value="50"/>
+				<skill id="Throwing" value="50"/>
+				<skill id="Riding" value="0"/>
+				<skill id="Athletics" value="120"/>
+				<skill id="Crafting" value="150"/>
+				<skill id="Roguery" value="100"/>
+				<skill id="Scouting" value="100"/>
+				<skill id="Tactics" value="200"/>
+				<skill id="Charm" value="50"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="80"/>
+				<skill id="Steward" value="100"/>
+				<skill id="Medicine" value="50"/>
+				<skill id="Engineering" value="200"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="1"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="2"/>
+				<Trait id="Mercy" value="-2"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4"/>
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2"/>
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1"/>
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4"/>
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2"/>
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1"/>
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1"/>
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_spartan" name="{=nc_spartan_name}Belecthar, the Spartan" age="27" voice="earnest" culture="Culture.gondor" race="human" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="100"/>
+				<skill id="TwoHanded" value="190"/>
+				<skill id="Polearm" value="180"/>
+				<skill id="Bow" value="120"/>
+				<skill id="Crossbow" value="150"/>
+				<skill id="Throwing" value="180"/>
+				<skill id="Riding" value="170"/>
+				<skill id="Athletics" value="140"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="150"/>
+				<skill id="Tactics" value="180"/>
+				<skill id="Charm" value="120"/>
+				<skill id="Roguery" value="150"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="160"/>
+				<skill id="Medicine" value="150"/>
+				<skill id="Engineering" value="60"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="1"/>
+				<Trait id="Mercy" value="0"/>
+				<Trait id="Valor" value="0"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
+				<equipment slot="Body" id="Item.citidel_guard_armor1"/>
+				<equipment slot="Gloves" id="Item.citidel_guard_bracers"/>
+				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
+				<equipment slot="Body" id="Item.citidel_guard_armor1"/>
+				<equipment slot="Leg" id="Item.gond_bts_lth_ld"/>
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_solus" name="{=nc_solus_name}Solus, the Cairn" age="30" voice="earnest" culture="Culture.rivendell" race="elf" default_group="Ranged" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="25.97" weight="0.4301" build="0.4" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002"/>
+	</face>
+			<skills>
+				<skill id="OneHanded" value="100"/>
+				<skill id="TwoHanded" value="180"/>
+				<skill id="Polearm" value="150"/>
+				<skill id="Bow" value="200"/>
+				<skill id="Crossbow" value="100"/>
+				<skill id="Throwing" value="100"/>
+				<skill id="Riding" value="100"/>
+				<skill id="Athletics" value="150"/>
+				<skill id="Crafting" value="50"/>
+				<skill id="Scouting" value="180"/>
+				<skill id="Tactics" value="110"/>
+				<skill id="Charm" value="120"/>
+				<skill id="Roguery" value="150"/>
+				<skill id="Leadership" value="50"/>
+				<skill id="Trade" value="50"/>
+				<skill id="Steward" value="80"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="60"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="0"/>
+				<Trait id="Calculating" value="1"/>
+				<Trait id="Mercy" value="1"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
+				<equipment slot="Item1" id="Item.wm_mirkwood_arrow_a01" />
+				<equipment slot="Item2" id="Item.wm_gf_knight_broadsword" />
+				<equipment slot="Body" id="Item.gf_body_2" />
+				<equipment slot="Cape" id="Item.gf_pauldrons_3" />
+				<equipment slot ="Gloves" id="Item.gf_gauntlets" />
+				<equipment slot="Leg" id="Item.gf_boots" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gf_body_2" />
+				<equipment slot="Leg" id="Item.gf_boots" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_maztog" name="{=nc_maztog_name}Maztog, the Ostler's Dread" age="28" voice="earnest" culture="Culture.isengard" race="uruk_hai" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="32.01" weight="0.0348" build="0.456"  key="000C580FC0002000B78479D2379D74D8B78C57C97AAB4B927948C45B978B4768009716030956D6E5000000000000000000000000000000000000000043340000"  />
+	</face>
+			<skills>
+				<skill id="OneHanded" value="160"/>
+				<skill id="TwoHanded" value="160"/>
+				<skill id="Polearm" value="140"/>
+				<skill id="Bow" value="180"/>
+				<skill id="Crossbow" value="80"/>
+				<skill id="Throwing" value="100"/>
+				<skill id="Riding" value="60"/>
+				<skill id="Athletics" value="140"/>
+				<skill id="Crafting" value="120"/>
+				<skill id="Roguery" value="80"/>
+				<skill id="Scouting" value="120"/>
+				<skill id="Tactics" value="180"/>
+				<skill id="Charm" value="140"/>
+				<skill id="Leadership" value="160"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="140"/>
+				<skill id="Medicine" value="100"/>
+				<skill id="Engineering" value="160"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="2"/>
+				<Trait id="Generosity" value="2"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="-2"/>
+				<Trait id="Valor" value="1"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_isengard_bow_a02"/>
+				<equipment slot="Item1" id="Item.wm_isengard_arrow_a01"/>
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_a3"/>
+				<equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_a2"/>
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b2"/>
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_a1"/>
+				<equipment slot="Leg" id="Item.sk_uruk_hai_greaves_medium_b1"/>
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+				<equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_a3"/>
+				<equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_a2"/>
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b2"/>
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_a1"/>
+				<equipment slot="Leg" id="Item.sk_uruk_hai_greaves_medium_b1"/>
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_balakhor" name="{=nc_balakhor_name}Balakhôr, the Lore-Grandmaster" age="28" voice="softspoken" culture="Culture.rivendell" race="elf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="30.01" weight="0.6454" build="0.7379" key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142" />
+	</face>
+			<skills>
+				<skill id="OneHanded" value="180"/>
+				<skill id="TwoHanded" value="160"/>
+				<skill id="Polearm" value="160"/>
+				<skill id="Bow" value="100"/>
+				<skill id="Crossbow" value="60"/>
+				<skill id="Throwing" value="100"/>
+				<skill id="Riding" value="140"/>
+				<skill id="Athletics" value="160"/>
+				<skill id="Crafting" value="140"/>
+				<skill id="Roguery" value="40"/>
+				<skill id="Scouting" value="180"/>
+				<skill id="Tactics" value="250"/>
+				<skill id="Charm" value="160"/>
+				<skill id="Leadership" value="100"/>
+				<skill id="Trade" value="140"/>
+				<skill id="Steward" value="220"/>
+				<skill id="Medicine" value="180"/>
+				<skill id="Engineering" value="160"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="1"/>
+				<Trait id="Generosity" value="0"/>
+				<Trait id="Calculating" value="0"/>
+				<Trait id="Mercy" value="0"/>
+				<Trait id="Valor" value="0"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gf_knight_spear" />
+				<equipment slot="Item1"	id="Item.wm_gf_knight_longsword" />
+				<equipment slot="Item2" id="Item.wm_gf_knight_shield_cloth" />
+				<equipment slot="Body" id="Item.gf_body_4" />
+				<equipment slot="Head" id="Item.glorfindel_helmet" />
+				<equipment slot="Gloves" id="Item.gf_gauntlets" />
+				<equipment slot="Leg" id="Item.gf_boots" />
+				<equipment slot="Cape" id="Item.gf_pauldrons_1" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gf_knight_spear" />
+				<equipment slot="Item1"	id="Item.wm_gf_knight_longsword" />
+				<equipment slot="Item2" id="Item.wm_gf_knight_shield_cloth" />
+				<equipment slot="Body" id="Item.gf_body_4" />
+				<equipment slot="Head" id="Item.glorfindel_helmet" />
+				<equipment slot="Gloves" id="Item.gf_gauntlets" />
+				<equipment slot="Leg" id="Item.gf_boots" />
+				<equipment slot="Cape" id="Item.gf_pauldrons_1" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+	<NPCCharacter id="named_companion_noxix" name="{=nc_noxix_name}Noxix Ilúvatar, Flame of the East" age="1892" voice="earnest" culture="Culture.mirkwood" race="elf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<face>
+				<BodyProperties version="4" age="28.01" weight="0.6854" build="0.7579" key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142" />
+	</face>
+			<skills>
+				<skill id="OneHanded" value="180"/>
+				<skill id="TwoHanded" value="160"/>
+				<skill id="Polearm" value="140"/>
+				<skill id="Bow" value="220"/>
+				<skill id="Crossbow" value="60"/>
+				<skill id="Throwing" value="120"/>
+				<skill id="Riding" value="160"/>
+				<skill id="Athletics" value="180"/>
+				<skill id="Crafting" value="180"/>
+				<skill id="Roguery" value="60"/>
+				<skill id="Scouting" value="200"/>
+				<skill id="Tactics" value="200"/>
+				<skill id="Charm" value="140"/>
+				<skill id="Leadership" value="180"/>
+				<skill id="Trade" value="120"/>
+				<skill id="Steward" value="180"/>
+				<skill id="Medicine" value="140"/>
+				<skill id="Engineering" value="200"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="0"/>
+				<Trait id="Generosity" value="1"/>
+				<Trait id="Calculating" value="2"/>
+				<Trait id="Mercy" value="-2"/>
+				<Trait id="Valor" value="2"/>
+			</Traits>
+			<Equipments>
+				<EquipmentRoster>
+					<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
+					<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
+					<equipment slot="Head" id="Item.mkwd_palace_t3_helmet_green_hc" />
+					<equipment slot="Body" id="Item.mirkwood_body" />
+					<equipment slot="Cape" id="Item.mirkwood_shoulder" />
+					<equipment slot="Gloves" id="Item.mirkwood_gloves" />
+					<equipment slot="Leg" id="Item.mirkwood_boots" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+					<equipment slot="Body" id="Item.mirkwood_body" />
+					<equipment slot="Cape" id="Item.mirkwood_shoulder" />
+					<equipment slot="Gloves" id="Item.mirkwood_gloves" />
+					<equipment slot="Leg" id="Item.mirkwood_boots" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
+</NPCCharacters>

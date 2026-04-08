@@ -616,6 +616,21 @@
 				<GameType value = "EditorGame"/>
 			</IncludedGameTypes>
 		</XmlNode>
+		<!-- Named companion characters (lore heroes as recruitable wanderers) -->
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="named_companions/named_companions"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_named_companions"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+			</IncludedGameTypes>
+		</XmlNode>
 		<!-- Character creation equipment rosters for 10 custom cultures -->
 		<XmlNode>
 			<XmlName id="EquipmentRosters" path="equipmentsets/taom_char_creation_equipment"/>
@@ -662,6 +677,13 @@
 				<GameType value ="CampaignStoryMode"/>
 				<GameType value = "CustomGame"/>
 				<GameType value = "EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="GameText" path="named_companions/named_companion_strings"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>

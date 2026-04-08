@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Named companion equipment is defined inline in named_companions.xml -->
+<!-- This file exists for future per-companion equipment roster overrides -->
+<EquipmentRosters>
+</EquipmentRosters>

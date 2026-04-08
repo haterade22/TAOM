@@ -159,9 +159,13 @@
                       SuggestedWidth="200" SuggestedHeight="50"
                       HorizontalAlignment="Center" VerticalAlignment="Bottom"
                       MarginBottom="15" Command.Click="ExecuteClose"
+                      DoNotPassEventsToChildren="true"
+                      UpdateChildrenStates="true"
                       Brush="ButtonBrush1">
-          <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                      Text="Done" Brush="ButtonBrush1.Text" />
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                        Text="Done" Brush="ButtonBrush1.Text" />
+          </Children>
         </ButtonWidget>
 
       </Widget>

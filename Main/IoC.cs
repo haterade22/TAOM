@@ -27,6 +27,8 @@ using TAOM.Features.ArmyTargeting;
 using TAOM.Features.TimeAcceleration;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.CareerSystem;
+using TAOM.Features.SettlementGuards;
+using TAOM.Features.NamedCompanions;
 
 namespace TAOM;
 
@@ -66,6 +68,8 @@ public static class IoC
         TimeAccelerationIoC.RegisterTimeAccelerationFeature(container);
         SpecialResourcesIoC.RegisterSpecialResourcesFeature(container);
         CareerSystemIoC.RegisterCareerSystemFeature(container);
+        SettlementGuardsIoC.RegisterSettlementGuardsFeature(container);
+        NamedCompanionIoC.RegisterNamedCompanionsFeature(container);
 
         _container = container;
 

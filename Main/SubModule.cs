@@ -22,6 +22,7 @@ using TAOM.Features.Execution.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
 using TAOM.Features.StartupResources;
+using TAOM.Features.NamedCompanions;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.TroopWeight.Hooks;
@@ -50,6 +51,8 @@ using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Models;
+using TAOM.Features.SettlementGuards;
+using TAOM.Features.SettlementGuards.Hooks;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -297,6 +300,10 @@ public class SubModule : MBSubModuleBase
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
             var startupLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
+
+            var namedCompanionService = IoC.Resolve<INamedCompanionService>();
+            var namedCompanionLogger = IoC.Resolve<IModLogger>();
+            campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService, namedCompanionLogger));
         }
     }
 
@@ -334,6 +341,27 @@ public class SubModule : MBSubModuleBase
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
         _harmony.PatchCategory("Patch26_SpecialResources");
         _harmony.PatchCategory("Patch27_CareerSystem");
+
+        var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
+        GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
+        GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(settlementGuardService);
+
+        // Manual patches for private GuardsCampaignBehavior methods (SandBox.dll)
+        var takeGuardTarget = GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod();
+        if (takeGuardTarget != null)
+            _harmony.Patch(takeGuardTarget, prefix: new HarmonyMethod(
+                typeof(GuardsCampaignBehavior_TakeGuardAgentData_Patch),
+                nameof(GuardsCampaignBehavior_TakeGuardAgentData_Patch.Prefix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] TakeGuardAgentDataFromGarrisonTroopList not found — custom guards will not apply");
+
+        var spearTarget = GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod();
+        if (spearTarget != null)
+            _harmony.Patch(spearTarget, prefix: new HarmonyMethod(
+                typeof(GuardsCampaignBehavior_GetSuitableSpear_Patch),
+                nameof(GuardsCampaignBehavior_GetSuitableSpear_Patch.Prefix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] GetSuitableSpear not found — culture-specific spears will not apply");
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
         var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();

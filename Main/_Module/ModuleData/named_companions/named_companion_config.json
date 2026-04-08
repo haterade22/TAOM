@@ -1,0 +1,110 @@
+[
+  {
+    "character_id": "named_companion_aragorn",
+    "spawn_settlement": "town_EN2",
+    "race": "human",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_legolas",
+    "spawn_settlement": "town_M1",
+    "race": "elf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_gimli",
+    "spawn_settlement": "town_E1",
+    "race": "dwarf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_swan",
+    "spawn_settlement": "town_EW2",
+    "race": "human",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_rcmcplayz",
+    "spawn_settlement": "town_E2",
+    "race": "dwarf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_leovsilva",
+    "spawn_settlement": "town_M1",
+    "race": "elf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_yotthani",
+    "spawn_settlement": "town_E1",
+    "race": "dwarf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_whitegoat",
+    "spawn_settlement": "town_E1",
+    "race": "dwarf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_igor",
+    "spawn_settlement": "town_A3",
+    "race": "human",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_thyrell",
+    "spawn_settlement": "town_R1",
+    "race": "elf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_haterade",
+    "spawn_settlement": "town_E1",
+    "race": "dwarf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_hart",
+    "spawn_settlement": "town_EN3",
+    "race": "human",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_blackrose",
+    "spawn_settlement": "town_isengard",
+    "race": "uruk_hai",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_spartan",
+    "spawn_settlement": "town_EW1",
+    "race": "human",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_solus",
+    "spawn_settlement": "town_R1",
+    "race": "elf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_maztog",
+    "spawn_settlement": "town_isengard",
+    "race": "uruk_hai",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_balakhor",
+    "spawn_settlement": "town_R1",
+    "race": "elf",
+    "enabled": true
+  },
+  {
+    "character_id": "named_companion_noxix",
+    "spawn_settlement": "town_M1",
+    "race": "elf",
+    "enabled": true
+  }
+]

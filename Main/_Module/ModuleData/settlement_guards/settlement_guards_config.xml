@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SettlementGuards>
+
+  <!-- ==================== GONDOR SETTLEMENTS ==================== -->
+
+  <!-- Minas Tirith (town_EW1) — Citadel Guards & Fountain Guards -->
+  <Settlement id="town_EW1">
+    <Guards>
+      <Guard troop="gondor_mt_fountain_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_mt_captain" weight="2" spawn_points="sp_guard_castle" />
+      <Guard troop="gondor_mt_sergeant" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+      <Guard troop="gondor_mt_veteran" weight="2" spawn_points="sp_guard,sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Osgiliath (town_EW2) — Osgiliath garrison troops -->
+  <Settlement id="town_EW2">
+    <Guards>
+      <Guard troop="gondor_osg_dome_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_osg_guard" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+      <Guard troop="gondor_osg_infantry" weight="2" spawn_points="sp_guard" />
+      <Guard troop="gondor_osg_archer" weight="2" spawn_points="sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Pelargir (town_EW4) — Pelargir anchor guards -->
+  <Settlement id="town_EW4">
+    <Guards>
+      <Guard troop="gondor_pel_anchor_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_leb_sea_guard" weight="2" spawn_points="sp_guard,sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Dol Amroth (town_EW5) — Swan Knights -->
+  <Settlement id="town_EW5">
+    <Guards>
+      <Guard troop="gondor_da_swan_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_da_foot_knight" weight="2" spawn_points="sp_guard_castle" />
+      <Guard troop="gondor_da_vet_infantry" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+      <Guard troop="gondor_da_infantry" weight="2" spawn_points="sp_guard" />
+    </Guards>
+  </Settlement>
+
+  <!-- Linhir (town_EW7) — Linhir garrison -->
+  <Settlement id="town_EW7">
+    <Guards>
+      <Guard troop="gondor_lg_haven_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_lg_pavise_guard" weight="2" spawn_points="sp_guard,sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Cair Andros (castle_EW4) — Cair Andros wardens -->
+  <Settlement id="castle_EW4">
+    <Guards>
+      <Guard troop="gondor_ca_warden" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_ca_guard" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+      <Guard troop="gondor_ca_pikewarden" weight="2" spawn_points="sp_guard_with_spear" />
+    </Guards>
+  </Settlement>
+
+  <!-- Ithilien castles — Rangers -->
+  <Settlement id="castle_EW15">
+    <Guards>
+      <Guard troop="gondor_ith_captain" weight="2" spawn_points="sp_guard_castle" />
+      <Guard troop="gondor_ith_sergeant" weight="3" spawn_points="sp_guard,sp_guard_with_spear" />
+      <Guard troop="gondor_ith_veteran" weight="3" spawn_points="sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <Settlement id="castle_EW16">
+    <Guards>
+      <Guard troop="gondor_ith_captain" weight="2" spawn_points="sp_guard_castle" />
+      <Guard troop="gondor_ith_sergeant" weight="3" spawn_points="sp_guard,sp_guard_with_spear" />
+      <Guard troop="gondor_ith_veteran" weight="3" spawn_points="sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Lossarnach castles -->
+  <Settlement id="castle_EW8">
+    <Guards>
+      <Guard troop="gondor_loss_vet_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_loss_guard" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+      <Guard troop="gondor_loss_axeguard" weight="2" spawn_points="sp_guard" />
+    </Guards>
+  </Settlement>
+
+  <Settlement id="castle_EW12">
+    <Guards>
+      <Guard troop="gondor_loss_vet_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_loss_guard" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Harondor castle -->
+  <Settlement id="castle_EW6">
+    <Guards>
+      <Guard troop="gondor_har_frontier_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="gondor_har_guardsman" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
+  <!-- Anfalas castles -->
+  <Settlement id="castle_EW7">
+    <Guards>
+      <Guard troop="gondor_anf_guardsman" weight="3" spawn_points="sp_guard_castle,sp_guard,sp_guard_with_spear" />
+    </Guards>
+  </Settlement>
+
+  <Settlement id="castle_EW13">
+    <Guards>
+      <Guard troop="gondor_anf_guardsman" weight="3" spawn_points="sp_guard_castle,sp_guard,sp_guard_with_spear" />
+    </Guards>
+  </Settlement>
+
+  <!-- Methring castle -->
+  <Settlement id="castle_EW11">
+    <Guards>
+      <Guard troop="gondor_met_glaive_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+    </Guards>
+  </Settlement>
+
+  <!-- Ringló castle -->
+  <Settlement id="castle_EW2">
+    <Guards>
+      <Guard troop="gondor_ring_guardsman" weight="3" spawn_points="sp_guard_castle,sp_guard,sp_guard_with_spear" />
+    </Guards>
+  </Settlement>
+
+  <!-- Linhir / Lebennin castle -->
+  <Settlement id="castle_EW14">
+    <Guards>
+      <Guard troop="gondor_lin_high_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+    </Guards>
+  </Settlement>
+
+  <!-- ==================== GONDOR CULTURE FALLBACK ==================== -->
+
+  <Culture id="gondor">
+    <Guards>
+      <Guard troop="guard_gondor" weight="1" />
+    </Guards>
+  </Culture>
+
+  <!-- ==================== SPEAR MAPPINGS ==================== -->
+  <!-- Per-culture spear items for guards with spear override.
+       Replaces the vanilla hardcode of battania=northern_spear_2_t3, else=western_spear_3_t3.
+       Only cultures listed here will use custom spears; unlisted cultures fall back to vanilla. -->
+
+  <Spears>
+    <Spear culture="gondor" item="western_spear_3_t3" />
+    <Spear culture="rohan" item="western_spear_3_t3" />
+    <Spear culture="erebor" item="western_spear_3_t3" />
+    <Spear culture="isengard" item="western_spear_3_t3" />
+    <Spear culture="mordor" item="western_spear_3_t3" />
+    <Spear culture="lothlorien" item="western_spear_3_t3" />
+    <Spear culture="rivendell" item="western_spear_3_t3" />
+    <Spear culture="mirkwood" item="western_spear_3_t3" />
+    <Spear culture="gundabad" item="northern_spear_2_t3" />
+    <Spear culture="dolguldur" item="northern_spear_2_t3" />
+    <Spear culture="dunland" item="northern_spear_2_t3" />
+    <Spear culture="harad" item="western_spear_3_t3" />
+    <Spear culture="rhun" item="western_spear_3_t3" />
+    <Spear culture="dale" item="western_spear_3_t3" />
+    <Spear culture="khand" item="northern_spear_2_t3" />
+    <Spear culture="umbar" item="western_spear_3_t3" />
+  </Spears>
+
+</SettlementGuards>

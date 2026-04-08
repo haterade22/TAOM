@@ -41,7 +41,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
-| `/review-codex [review.md]` | Critically verify Codex review output, implement confirmed fixes, log results |
+| `/review-codex [feature]` | Write Codex adversarial prompt for a feature, OR verify existing review + implement fixes |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -304,11 +304,9 @@ Phase 1: BUILD & INTERNAL REVIEW
   3. Fix issues from deep-review
 
 Phase 2: CODEX ADVERSARIAL REVIEW
-  4. Write Codex prompt             — use v6 template from docs/reviews/REVIEW-GUIDE.md
-     - Include Known Suspects from deep-review findings
-     - Include ID cheatsheet, required sections, quality gates
+  4. /review-codex [feature]        — writes the Codex prompt (Mode A)
   5. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
-  6. /review-codex [review.md]      — verify findings, implement confirmed fixes
+  6. /review-codex [review.md]      — verify findings, implement confirmed fixes (Mode B)
 
 Phase 3: SELF-REVIEW (review our OWN fixes)
   7. Write Codex prompt for fixes   — list every file changed in phases 1-6
