@@ -1,55 +1,28 @@
-using System;
-using HarmonyLib;
+using Bannerlord.UIExtenderEx.Attributes;
+using Bannerlord.UIExtenderEx.ViewModels;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Library;
-using TAOM.Core.UI;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.CareerSystem.UI;
 
-/// <summary>
-/// Injects career-related data binding properties into CharacterDeveloperVM
-/// using direct Harmony patches and ViewModelMixinSupport instead of UIExtenderEx.
-/// </summary>
-[HarmonyPatch]
-[HarmonyPatchCategory("Patch27_CareerSystem")]
-internal static class CharacterDeveloperCareerMixin
+[ViewModelMixin("RefreshValues")]
+internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDeveloperVM>
 {
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(CharacterDeveloperVM), MethodType.Constructor,
-        new[] { typeof(Action) })]
-    private static void Postfix_Constructor(CharacterDeveloperVM __instance)
-    {
-        var mixin = ViewModelMixinSupport.GetOrCreate(__instance, () => new CareerMixinData(__instance));
-        mixin.RefreshCareerState();
-        ViewModelMixinSupport.InjectBindings(__instance, mixin, typeof(CareerMixinData));
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(CharacterDeveloperVM), nameof(CharacterDeveloperVM.RefreshValues))]
-    private static void Postfix_RefreshValues(CharacterDeveloperVM __instance)
-    {
-        if (ViewModelMixinSupport.TryGet<CareerMixinData>(__instance, out var mixin))
-            mixin.RefreshCareerState();
-    }
-}
-
-/// <summary>
-/// Holds mixin state for a single CharacterDeveloperVM instance.
-/// Properties marked with [DataSourceProperty] are injected into the VM's Gauntlet bindings.
-/// </summary>
-internal sealed class CareerMixinData
-{
-    private readonly WeakReference<CharacterDeveloperVM> _vmRef;
     private bool _hasCareer;
 
-    public CareerMixinData(CharacterDeveloperVM vm)
+    public CharacterDeveloperCareerMixin(CharacterDeveloperVM viewModel) : base(viewModel)
     {
-        _vmRef = new WeakReference<CharacterDeveloperVM>(vm);
+        RefreshCareerState();
     }
 
-    internal void RefreshCareerState()
+    public override void OnRefresh()
+    {
+        RefreshCareerState();
+    }
+
+    private void RefreshCareerState()
     {
         var hero = Hero.MainHero;
         if (hero == null)
@@ -72,8 +45,7 @@ internal sealed class CareerMixinData
             if (_hasCareer != value)
             {
                 _hasCareer = value;
-                if (_vmRef.TryGetTarget(out var vm))
-                    vm.OnPropertyChanged(nameof(HasCareer));
+                OnPropertyChanged(nameof(HasCareer));
             }
         }
     }

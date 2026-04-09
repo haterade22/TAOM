@@ -1,10 +1,10 @@
+using Bannerlord.UIExtenderEx;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TAOM.Core.UI;
 using TAOM.Features;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
@@ -50,7 +50,6 @@ using TAOM.Features.LocalizationOverride;
 using TAOM.Features.LocalizationOverride.Hooks;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
-using TAOM.Features.SpecialResources.UI;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.SettlementGuards;
@@ -63,6 +62,7 @@ namespace TAOM;
 public class SubModule : MBSubModuleBase
 {
     private Harmony _harmony;
+    private UIExtender? _uiExtender;
     private ITimeAccelerationService? _timeAccelerationService;
 
     protected override void OnSubModuleLoad()
@@ -73,22 +73,13 @@ public class SubModule : MBSubModuleBase
 
         TaomSettings.Initialize(IoC.Resolve<IPathService>().ModuleDataPath);
 
-        // Register TAOM prefab patches (Career button, Time accel, Special resources)
-        Features.CareerSystem.UI.CareerButtonPrefab.Register();
-        Features.TimeAcceleration.UI.TimeAccelerationPrefab.Register();
-        SpecialResourcePrefab.Register();
+        _uiExtender = UIExtender.Create("TAOM");
+        _uiExtender.Register(typeof(SubModule).Assembly);
+        _uiExtender.Enable();
 
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
         _harmony = new Harmony("com.taom.mod");
-
-        // Patch BrushFactory + WidgetFactory so game finds TAOM custom brushes/widgets
-        _harmony.PatchCategory("Patch_ResourceManager");
-        ResourceManagerPatches.RegisterWidgetType(typeof(Features.SpecialResources.UI.SpecialResourceSpriteWidget));
-        ResourceManagerPatches.RegisterWidgetType(typeof(Features.FactionMap.Widgets.MapContainerWidget));
-
-        // Activate WidgetPrefab postfix hook — must be before any prefabs load
-        _harmony.PatchCategory("Patch_WidgetPrefabLoader");
 
         // Must be first — intercepts GetLocalizedText before any game texts are resolved.
         // Loads English string overrides from taom_module_strings.xml (removes hardcoded "The" articles).
@@ -352,7 +343,6 @@ public class SubModule : MBSubModuleBase
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
         _harmony.PatchCategory("Patch26_SpecialResources");
         _harmony.PatchCategory("Patch27_CareerSystem");
-        _harmony.PatchCategory("Patch29_TimeAcceleration");
 
         var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
         GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
