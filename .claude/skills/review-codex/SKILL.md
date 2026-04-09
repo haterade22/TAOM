@@ -157,9 +157,13 @@ Then categorize:
 - **Design questions** — need user input
 - **Things Codex missed** — additional bugs found
 
-### 3e: Root Cause Analysis — Why Did We Miss This?
+### 3e: Root Cause Analysis — Why Did We Miss This? (MANDATORY — DO NOT SKIP)
 
-For EACH confirmed bug that Codex found, answer:
+**BLOCKING GATE:** You MUST complete this section before proceeding to 3f. If there are confirmed bugs from Codex OR from deep-review, produce the root cause table. If you skip this step, the entire review is INCOMPLETE and cannot be committed.
+
+This analysis also covers bugs found by `/deep-review` agents that the implementation agents missed. The goal is bidirectional: understand what Claude missed AND what Codex missed, so both improve.
+
+For EACH confirmed bug (from Codex AND from deep-review), answer:
 
 **What category?** (pick one)
 - Config ID mismatch — wrong kingdom/culture/troop/settlement ID in config
@@ -228,3 +232,4 @@ This creates a feedback loop: Claude's findings improve Codex's next review. Ove
 - When in doubt about design intent, flag for user input rather than guessing
 - Build and test after EVERY batch of fixes
 - Flat formatting in prompts — no indented continuation lines
+- **Root cause analysis (3e) is MANDATORY** — if confirmed bugs exist from either Codex or deep-review, the root cause table MUST be produced before fixes are committed. This step updates `.claude/rules/` and `AGENTS.md` to prevent recurrence. Skipping it means the same bug category will repeat in future features.
