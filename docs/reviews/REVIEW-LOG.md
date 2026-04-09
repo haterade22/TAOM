@@ -46,7 +46,22 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 
 | 23 | 2026-04-08 | NamedCompanions + Wanderer Race | needs-attention | agree | 1 confirmed (load teleport) + 1 dead code | 0 | 0 | v6 |
 
-**Post-codebase reviews:** 19 = SpecialResources, 20 = CareerSystem (premature), 21 = CareerSystem adversarial, 22 = SettlementGuards, 23 = NamedCompanions (1 HIGH load-path teleport bug, 1 LOW dead field). 23 Codex reviews total, 53 bugs found across codebase.
+| 24 | 2026-04-09 | v1.4.0 API Compat | approve | agree | 0 | 0 | 0 | v6 |
+| 25 | 2026-04-09 | MCM Replacement | needs-attention | agree | 0 new (1 LOW migration path, 1 MEDIUM range validation) | 0 | 0 | v6 |
+| 26 | 2026-04-09 | UIExtenderEx Replacement | needs-attention | agree | 2 confirmed (double-fire, BindingPath type) | 0 | 0 | v6 |
+
+**Post-codebase reviews:** 19-23 = original gap reviews, 24-26 = v1.4.0 migration + BUTR internalization. 26 Codex reviews total, 55 bugs found across codebase.
+
+### Review #26 Root Cause Analysis: BUTR Internalization (6 bugs total)
+
+| # | Bug | Found By | Category | Why Missed | Preventive Action |
+|---|-----|----------|----------|-----------|-------------------|
+| 1 | WidgetPrefab patch no PatchCategory | Deep-review | Convention inconsistency | Agent used standard Harmony conventions; didn't know TAOM uses PatchCategory exclusively | Rule added to harmony-patches.md |
+| 2 | `{ExtraFastForwardHint}` wrong binding type | Deep-review | Missing vanilla gate | Treated `@` and `{` as equivalent without decompiling Gauntlet binding types | Rule added to harmony-patches.md |
+| 3 | TimeAccel CtorPostfix missing OnRefresh | Deep-review | Convention inconsistency | Career/SpecialResource agents did it; TimeAccel agent omitted — oversight | Cross-mixin comparison in review caught it |
+| 4 | ExecuteOpenCareerScreen double-fire | Codex | Dead code / lifecycle | Deep-review only reviewed changed files, not pre-existing patches that became redundant | Rule added: grep for existing patches handling same command |
+| 5 | `{...}` needs BindingPath not Binding | Codex | Missing vanilla gate | Deep-review caught the `@/{` issue but prescribed same type for both | Codex decompiled PrefabDatabindingExtension — deeper analysis |
+| 6 | MethodType.Constructor needs param types | Runtime testing | Missing vanilla gate | MapTimeControlVM has 3-param ctor, not parameterless; agent assumed parameterless | Rule added to harmony-patches.md |
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
