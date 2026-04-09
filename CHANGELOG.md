@@ -2,9 +2,22 @@
 
 ## 2026-04-09
 
+### Feature: Fork Harmony 2.4.2 into TAOM.Dependencies — Zero External Module Dependencies
+
+Forked Harmony 2.4.2 (including MonoMod.Core, MonoMod.Utils, Mono.Cecil, Iced.Intel) source into `Dependencies/ThirdParty/Harmony/`. TAOM now ships fully self-contained with zero external module requirements — no Bannerlord.Harmony module needed.
+
+- Decompiled fat `0Harmony.dll` (1,392 files, ~48K LOC) and compiled into `TAOM.Dependencies.dll`
+- Fixed 900+ decompilation artifacts (missing backing fields, unsafe context, ref-assign scope, readonly struct, IntPtr null-coalescing, local function scoping)
+- Added 3 safety features: `UnpatchAll(null)` guard, duplicate Harmony detection, load-order assertion
+- Excluded `TaleWorlds.CampaignSystem.dll` reference from Dependencies (its `Helpers` namespace shadowed MonoMod's `Helpers` class)
+- Updated `PatchProcessor.VersionInfo` to recognize `TAOM.Dependencies` assembly name
+- Removed `Bannerlord.Harmony` from SubModule.xml dependencies and launch profiles
+- Created `/harmony-update` skill for automated upstream merge workflow
+- All 1055 tests pass, all 61 Harmony patches compile against forked types
+
 ### Feature: Internalize MCM and UIExtenderEx — Zero BUTR Dependencies
 
-Removed all 3 external BUTR library dependencies (MCM, ButterLib, UIExtenderEx). TAOM now ships self-contained with only Harmony as an external dependency.
+Removed 3 external BUTR library dependencies (MCM, ButterLib, UIExtenderEx). Harmony was the last remaining external dependency (now also forked -- see above).
 
 **Phase 1: MCM Replacement**
 - Replaced `AttributeGlobalSettings<TaomSettings>` with plain JSON singleton using Newtonsoft.Json
