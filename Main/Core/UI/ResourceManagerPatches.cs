@@ -135,4 +135,33 @@ internal static class ResourceManagerPatches
     [MethodImpl(MethodImplOptions.NoInlining)]
     static IEnumerable<CodeInstruction> LoadMovie_Transpiler(IEnumerable<CodeInstruction> instructions)
         => instructions;
+
+    [HarmonyTranspiler]
+    [HarmonyPatch("TaleWorlds.MountAndBlade.GauntletUI.Widgets.BoolBrushChangerBrushWidget", "OnBooleanUpdated")]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static IEnumerable<CodeInstruction> BoolBrushChanger_Transpiler(IEnumerable<CodeInstruction> instructions)
+        => instructions;
+
+    // --- UIConfig: Force XML prefab parsing ---
+    // Vanilla can skip XML parsing and use pre-generated prefabs. This blocks that
+    // optimization so TAOM's custom prefab overrides (nameplates, etc.) are always loaded.
+
+    [HarmonyPrefix]
+    [HarmonyPatch("TaleWorlds.Engine.GauntletUI.UIConfig", "DoNotUseGeneratedPrefabs", MethodType.Setter)]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static bool DoNotUseGeneratedPrefabs_Prefix() => false; // block setter — always parse XML
+
+    // --- WidgetFactory.IsCustomType prefix ---
+    // Reports TAOM prefab-based widgets as custom types so the factory handles them correctly.
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WidgetFactory), nameof(WidgetFactory.IsCustomType))]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static bool IsCustomTypePrefix(string typeName, ref bool __result)
+    {
+        if (!_builtinTypes.ContainsKey(typeName))
+            return true;
+        __result = false; // builtin types registered by TAOM are NOT custom (they're C# classes)
+        return false;
+    }
 }
