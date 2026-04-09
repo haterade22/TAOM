@@ -6,14 +6,15 @@
 		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
 		<ModuleId>TAOM.Dependencies</ModuleId>
 		<ModuleName>TAOM.Dependencies</ModuleName>
-		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625</NoWarn>
+		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625;8374;8174</NoWarn>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll"
-				   Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll">
+				   Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll;$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.CampaignSystem.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
@@ -23,6 +24,17 @@
 		<Compile Remove="_Module\bin\**" />
 		<EmbeddedResource Remove="_Module\bin\**" />
 		<None Remove="_Module\bin\**" />
+		<!-- Exclude Harmony's AssemblyInfo — conflicts with TAOM.Dependencies assembly identity -->
+		<Compile Remove="ThirdParty\Harmony\Properties\AssemblyInfo.cs" />
+	</ItemGroup>
+
+	<!-- Harmony native exception helpers (Linux/macOS only, but resource stream calls expect them) -->
+	<ItemGroup>
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_linux_x86_64.so" LogicalName="exhelper_linux_x86_64.so" />
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_linux_arm64.so" LogicalName="exhelper_linux_arm64.so" />
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_macos_x86_64.dylib" LogicalName="exhelper_macos_x86_64.dylib" />
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_macos_arm64.dylib" LogicalName="exhelper_macos_arm64.dylib" />
+		<EmbeddedResource Include="ThirdParty\Harmony\ILRepack.List" LogicalName="ILRepack.List" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -30,11 +42,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Lib.Harmony" Version="2.4.2" IncludeAssets="compile" />
 		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
 		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />
-		<PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-		<PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
 	</ItemGroup>
 
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
