@@ -73,7 +73,8 @@ internal sealed class TimeAccelerationMixinData
 internal static class TimeAccelerationMixinPatch
 {
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(MapTimeControlVM), MethodType.Constructor)]
+    [HarmonyPatch(typeof(MapTimeControlVM), MethodType.Constructor,
+        new[] { typeof(Func<MapBarShortcuts>), typeof(Action), typeof(Action) })]
     static void CtorPostfix(MapTimeControlVM __instance)
     {
         var data = ViewModelMixinSupport.GetOrCreate(
