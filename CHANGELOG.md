@@ -2,6 +2,31 @@
 
 ## 2026-04-09
 
+### Feature: Internalize MCM and UIExtenderEx — Zero BUTR Dependencies
+
+Removed all 3 external BUTR library dependencies (MCM, ButterLib, UIExtenderEx). TAOM now ships self-contained with only Harmony as an external dependency.
+
+**Phase 1: MCM Replacement**
+- Replaced `AttributeGlobalSettings<TaomSettings>` with plain JSON singleton using Newtonsoft.Json
+- 29 settings preserved with identical names/types/defaults, loaded from `ModuleData/configs/taom_settings.json`
+- All 33 consumer callsites unchanged (`TaomSettings.Instance?.Property ?? default`)
+- Eliminates ButterLib crash on Bannerlord 1.4.0 (`HotKeyManager.RegisterInitialContexts` signature change)
+- 7 new tests (load, save, round-trip, defaults, malformed, partial, empty)
+
+**Phase 2: UIExtenderEx Replacement**
+- Built `Core/UI/` mixin infrastructure: `ViewModelMixinSupport`, `WrappedPropertyInfo`, `WrappedMethodInfo`, `WidgetPrefabPatcher`
+- Gauntlet property/command injection via cloned `_propertiesAndMethods` dictionary with wrapped PropertyInfo/MethodInfo
+- Harmony postfix on `WidgetPrefab.LoadFrom()` for prefab modifications (no transpiler needed)
+- Rewrote 6 UI files: CareerSystem (button + mixin), SpecialResources (bar + mixin), TimeAcceleration (button + mixin)
+- Deleted redundant `ViewModel_ExecuteCommand_CareerScreen_Patch.cs` (commands now injected via WrappedMethodInfo)
+
+**Bugs caught by review process (5 total):**
+- CRITICAL: `WidgetPrefab_LoadFrom_Patch` had no `HarmonyPatchCategory` and was never activated
+- HIGH: `ExecuteOpenCareerScreen` fired twice (old postfix + new injected method)
+- MEDIUM: `{ExtraFastForwardHint}` DataSource binding needed `WidgetAttributeValueTypeBindingPath`, not `Binding`
+- MINOR: TimeAcceleration mixin missing `OnRefresh()` in constructor postfix
+- MINOR: Bare exception catch in TaomSettings missing logging
+
 ### Tooling: Bannerlord 1.4.0 Decompilation & Compatibility System
 
 Bannerlord updated to v1.4.0. Built reusable decompilation tooling and a full compatibility review system.
