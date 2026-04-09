@@ -1,6 +1,6 @@
 ---
 name: review-codex
-description: Auto-detect what was built, write a Codex adversarial prompt, dispatch instructions, then verify results when ready
+description: Auto-detect what was built, write a Codex adversarial prompt, dispatch to Codex directly, then verify results when ready
 argument-hint: "[optional: feature-name or path-to-review.md]"
 ---
 
@@ -9,8 +9,8 @@ argument-hint: "[optional: feature-name or path-to-review.md]"
 Handles the full Codex review lifecycle automatically. Detects what needs reviewing from context.
 
 **Argument handling:**
-- No argument: auto-detect from git what was changed, write prompt, guide dispatch
-- Feature name (no `.md`): write prompt for that feature, guide dispatch
+- No argument: auto-detect from git what was changed, write prompt, dispatch to Codex
+- Feature name (no `.md`): write prompt for that feature, dispatch to Codex
 - Path to `.md` file: verify that existing Codex review, implement fixes
 - If a `codex-adversarial-*.md` file was recently created in `docs/reviews/`, ask user if they want to verify it
 
@@ -90,19 +90,19 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
    FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
 9. Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 
-### 2e: Display and guide dispatch
+### 2e: Dispatch to Codex directly
 
-Output the complete prompt, then tell the user:
+Dispatch the prompt to Codex via the rescue skill:
 
 ```
-Copy the prompt above and dispatch to Codex:
-  /codex:adversarial-review --background
-
-When the review file appears at docs/reviews/codex-adversarial-{feature}-{date}.md, run:
-  /review-codex
+/codex:rescue [full prompt text from 2d]
 ```
 
-Then **stop and wait** — Codex runs in a separate terminal.
+This sends the prompt directly to Codex without requiring the user to copy/paste. The rescue subagent handles the `codex-companion.mjs task` invocation.
+
+After Codex completes and the review file is saved to `docs/reviews/codex-adversarial-{feature}-{date}.md`, proceed immediately to **Phase 3** (verify the review).
+
+If Codex returns the review content inline (sandbox restriction), write it to `docs/reviews/codex-adversarial-{feature}-{date}.md` yourself, then proceed to Phase 3.
 
 ## Phase 3: Verify Codex Review
 

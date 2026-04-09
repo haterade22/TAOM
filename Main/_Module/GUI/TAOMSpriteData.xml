@@ -139,6 +139,33 @@
       <CategoryName>ui_loading</CategoryName>
     </SpritePart>
     <SpritePart>
+      <SheetID>2</SheetID>
+      <Name>ui_loading_8</Name>
+      <Width>1500</Width>
+      <Height>1000</Height>
+      <SheetX>1512</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_loading</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>2</SheetID>
+      <Name>ui_loading_9</Name>
+      <Width>1500</Width>
+      <Height>1000</Height>
+      <SheetX>4</SheetX>
+      <SheetY>1012</SheetY>
+      <CategoryName>ui_loading</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>2</SheetID>
+      <Name>ui_loading_10</Name>
+      <Width>1500</Width>
+      <Height>1000</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_loading</CategoryName>
+    </SpritePart>
+    <SpritePart>
       <SheetID>1</SheetID>
       <Name>background_1</Name>
       <Width>1920</Width>
@@ -7078,6 +7105,18 @@
     <GenericSprite>
       <Name>ui_loading_7</Name>
       <SpritePartName>ui_loading_7</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>ui_loading_8</Name>
+      <SpritePartName>ui_loading_8</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>ui_loading_9</Name>
+      <SpritePartName>ui_loading_9</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>ui_loading_10</Name>
+      <SpritePartName>ui_loading_10</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>background_1</Name>
