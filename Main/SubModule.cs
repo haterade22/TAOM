@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.UI;
 using TAOM.Features;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
@@ -80,6 +81,11 @@ public class SubModule : MBSubModuleBase
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
         _harmony = new Harmony("com.taom.mod");
+
+        // Patch BrushFactory + WidgetFactory so game finds TAOM custom brushes/widgets
+        _harmony.PatchCategory("Patch_ResourceManager");
+        ResourceManagerPatches.RegisterWidgetType(typeof(Features.SpecialResources.UI.SpecialResourceSpriteWidget));
+        ResourceManagerPatches.RegisterWidgetType(typeof(Features.FactionMap.Widgets.MapContainerWidget));
 
         // Activate WidgetPrefab postfix hook — must be before any prefabs load
         _harmony.PatchCategory("Patch_WidgetPrefabLoader");
