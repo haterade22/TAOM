@@ -27,6 +27,22 @@ Removed all 3 external BUTR library dependencies (MCM, ButterLib, UIExtenderEx).
 - MINOR: TimeAcceleration mixin missing `OnRefresh()` in constructor postfix
 - MINOR: Bare exception catch in TaomSettings missing logging
 
+### Feature: TAOM.Dependencies Pre-Native Module
+
+Created a separate `TAOM.Dependencies` module that loads before Native to apply UIExtenderEx system patches at the correct time.
+
+- Separate `.csproj` and `SubModule.xml` with `ModulesToLoadAfterThis` — load order: Harmony -> TAOM.Dependencies -> Native -> SandBox -> TAOM
+- Sets `UIConfig.DoNotUseGeneratedPrefabs = true` before any prefabs load — the missing piece causing transparent banner backgrounds
+- Triggers UIExtenderEx's static constructor which applies 5 system Harmony patches (BrushFactory, WidgetFactory, UIConfig, WidgetPrefab, ViewModel)
+- Forked UIExtenderEx code (43 files) moved from `Main/ThirdParty/` to `Dependencies/ThirdParty/`
+- TAOM's main `SubModule.cs` calls `UIExtender.Create/Register/Enable` after Dependencies loads
+
+**Verified in-game:** Settlement nameplates render with colored diamond backgrounds; all custom brushes, widgets, and prefab overrides working without external UIExtenderEx.
+
+### Fix: CanMakeAlliance Override for Racial Enmity
+
+Added `CanMakeAlliance` override to `TaomAllianceModel` to enforce hard alliance blocks for permanently hostile factions. Previously only alliance scores were modified (via lore modifier), meaning extreme vanilla factors could theoretically override the penalty. Now uses `IDiplomacyService.IsAllianceAllowed()` as a hard gate.
+
 ### Tooling: Bannerlord 1.4.0 Decompilation & Compatibility System
 
 Bannerlord updated to v1.4.0. Built reusable decompilation tooling and a full compatibility review system.

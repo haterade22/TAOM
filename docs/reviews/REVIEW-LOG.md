@@ -49,8 +49,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 24 | 2026-04-09 | v1.4.0 API Compat | approve | agree | 0 | 0 | 0 | v6 |
 | 25 | 2026-04-09 | MCM Replacement | needs-attention | agree | 0 new (1 LOW migration path, 1 MEDIUM range validation) | 0 | 0 | v6 |
 | 26 | 2026-04-09 | UIExtenderEx Replacement | needs-attention | agree | 2 confirmed (double-fire, BindingPath type) | 0 | 0 | v6 |
+| 27 | 2026-04-09 | UIExtenderEx Fork | needs-attention | agree | 1 confirmed (Harmony ID collision) | 0 | 1 (UIConfig.DoNotUseGeneratedPrefabs not set) | v6 |
 
-**Post-codebase reviews:** 19-23 = original gap reviews, 24-26 = v1.4.0 migration + BUTR internalization. 26 Codex reviews total, 55 bugs found across codebase.
+**Post-codebase reviews:** 19-23 = original gap reviews, 24-27 = v1.4.0 migration + BUTR internalization + fork. 27 Codex reviews total, 57 bugs found across codebase.
 
 ### Review #26 Root Cause Analysis: BUTR Internalization (6 bugs total)
 
@@ -62,6 +63,14 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 4 | ExecuteOpenCareerScreen double-fire | Codex | Dead code / lifecycle | Deep-review only reviewed changed files, not pre-existing patches that became redundant | Rule added: grep for existing patches handling same command |
 | 5 | `{...}` needs BindingPath not Binding | Codex | Missing vanilla gate | Deep-review caught the `@/{` issue but prescribed same type for both | Codex decompiled PrefabDatabindingExtension — deeper analysis |
 | 6 | MethodType.Constructor needs param types | Runtime testing | Missing vanilla gate | MapTimeControlVM has 3-param ctor, not parameterless; agent assumed parameterless | Rule added to harmony-patches.md |
+
+### Review #27 Root Cause Analysis: UIExtenderEx Fork (3 bugs total)
+
+| # | Bug | Found By | Category | Why Missed | Preventive Action |
+|---|-----|----------|----------|-----------|-------------------|
+| 1 | Harmony ID collision with external UIExtenderEx | Codex | Convention inconsistency | Forked code copied with hardcoded identity string "bannerlord.uiextender.ex" | Rule: search for identity strings when forking third-party code |
+| 2 | UIConfig.DoNotUseGeneratedPrefabs never set to true | Runtime testing | Missing vanilla gate | Harmony patch BLOCKS the setter but doesn't SET the initial value. External UIExtenderEx SubModule.cs sets it in static ctor — we omitted the SubModule.cs | Rule: when forking a module, trace ALL init paths from original SubModule.cs |
+| 3 | Load timing — fork in TAOM loaded after Native | Architecture | Missing vanilla gate | System patches must run before Native loads prefabs. TAOM loads after SandBox. | Created TAOM.Dependencies pre-Native module |
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
