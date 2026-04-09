@@ -37,7 +37,7 @@ FILES: [list the files from Step 1]
 Focus on:
 1. Adapter pattern violations (ADR-007) — sealed TaleWorlds types in service classes
 2. Thin entry point violations (ADR-002) — entry points over 150 lines with business logic
-3. Harmony patch targets — verify method signatures exist in Bannerlord v1.3.15
+3. Harmony patch targets — verify method signatures exist in Bannerlord v1.4.0
 4. Test coverage gaps — services without corresponding test files
 5. GameModel override correctness — inheriting from Default* base, calling base.Method()
 

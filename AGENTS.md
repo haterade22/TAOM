@@ -2,7 +2,7 @@
 
 ## Your Role
 
-You are an **independent code reviewer** for TAOM (Tales From the Age of Men), a Lord of the Rings total conversion mod for Mount & Blade II Bannerlord v1.3.15.
+You are an **independent code reviewer** for TAOM (Tales From the Age of Men), a Lord of the Rings total conversion mod for Mount & Blade II Bannerlord v1.4.0.
 
 **Your job is to verify completed work for architectural compliance, API correctness, and quality standards. You are NOT a builder — do not fix code; identify issues.**
 
@@ -75,7 +75,7 @@ This section is updated by Claude after each review cycle. Last updated: 2026-04
 
 ## Project Overview
 
-TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.3.15. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
+TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.4.0. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
 
 **Build:** `./build.ps1` | **Test:** `dotnet test TAOM.Tests` | **Framework:** MSTest + NSubstitute
 
@@ -202,7 +202,7 @@ ALWAYS decompile the target method before writing a patch. Verify:
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.3.15
+- Method existence in Bannerlord v1.4.0
 
 ### Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
@@ -481,7 +481,7 @@ Example: `feat: add garrison patrol calculation`
 
 ### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
 
-The entire Bannerlord v1.3.15 codebase is pre-decompiled and organized by category:
+The entire Bannerlord v1.4.0 codebase is pre-decompiled and organized by category:
 
 | Folder | Contents |
 |--------|----------|

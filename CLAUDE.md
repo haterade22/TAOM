@@ -426,7 +426,7 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 
 ## Notes
 
-- Target: Bannerlord v1.3.15
+- Target: Bannerlord v1.4.0
 - Migration from v1.2 requires API changes - see `docs/migration/`
 - No git actions unless explicitly asked
 
