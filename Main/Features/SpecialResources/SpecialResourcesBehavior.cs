@@ -217,7 +217,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament");
     }
 
-    private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component)
+    private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component, HideoutEventComponent.HideoutBattleEndState endState)
     {
         if (winnerSide != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;

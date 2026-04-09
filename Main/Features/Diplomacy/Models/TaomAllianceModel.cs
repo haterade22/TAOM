@@ -20,13 +20,12 @@ public class TaomAllianceModel : DefaultAllianceModel
     public override ExplainedNumber GetScoreOfStartingAlliance(
         Kingdom kingdomDeclaresAlliance,
         Kingdom kingdomDeclaredAlliance,
-        IFaction evaluatingFaction,
         out TextObject explanation,
         bool includeDescription = false)
     {
         var result = base.GetScoreOfStartingAlliance(
             kingdomDeclaresAlliance, kingdomDeclaredAlliance,
-            evaluatingFaction, out explanation, includeDescription);
+            out explanation, includeDescription);
 
         float modifier = _diplomacyService.GetAllianceScoreModifier(
             kingdomDeclaresAlliance.StringId, kingdomDeclaredAlliance.StringId);

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
+Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
 ## Commands
 
@@ -379,11 +379,11 @@ Phase 4: CLOSE OUT
 
 | Folder | Contents |
 |--------|----------|
-| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
-| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
-| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,362 files) |
+| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,557 files) |
+| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (2,363 files) |
+| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,366 files) |
 | `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
-| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
+| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (387 files) |
 | `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
 | `Network/` | Diamond, Network, PlayerServices (147 files) |
 | `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |

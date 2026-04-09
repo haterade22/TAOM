@@ -1,5 +1,36 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-09
+
+### Tooling: Bannerlord 1.4.0 Decompilation & Compatibility System
+
+Bannerlord updated to v1.4.0. Built reusable decompilation tooling and a full compatibility review system.
+
+- `tools/Decompile-Bannerlord.ps1` — batch decompiles all 72 Bannerlord DLLs into organized folder structure (Campaign/, Core/, Engine/, etc.) with `--DryRun` support
+- `tools/Diff-BannerlordAPI.ps1` — scans TAOM source for all 108 TaleWorlds types referenced, diffs only those files between version trees, produces structured change report
+- `/compat-check` skill — orchestrates diff script + 3 parallel review agents (Harmony patches, GameModel overrides, reflection targets), compiles prioritized remediation report
+- Decompiled v1.4.0 to `E:\Decompiled_Bannerlord\` (7,961 .cs files), backed up v1.3.15 to `E:\Decompiled_Bannerlord_v1.3.15\`
+- New DLL in 1.4.0: `TaleWorlds.ServiceDiscovery.Client` (Network/)
+
+### Fix: Bannerlord 1.4.0 API Compatibility (3 breaking changes)
+
+Compatibility review found 37 changed types across 108 TAOM references. 3 compile-breaking changes fixed:
+
+- `TaomAllianceModel.GetScoreOfStartingAlliance` — removed `IFaction evaluatingFaction` parameter (dropped in v1.4.0 base class)
+- `TaomBattleRewardModel.CalculateRenownGain` — added `float renownMultiplierForWinnerSide` and `bool includeDescriptions` parameters (added in v1.4.0 base class)
+- `SpecialResourcesBehavior.OnHideoutCompleted` — added `HideoutBattleEndState endState` parameter (event delegate changed in v1.4.0)
+
+### Verified Safe (no changes needed)
+
+- Mission.RegisterBlow signature unchanged — warg combat safe
+- GuardsCampaignBehavior.PrepareGuardAgentDataFromGarrison intact — settlement guards safe
+- All 25+ CharacterTableau/CharacterSpawner reflection fields verified intact
+- AgentVisuals.Create 5-parameter overload confirmed
+- TaomKingdomDecisionPermissionModel compatible with new bidirectional call-to-war checks
+- CultureSettingService dynamic reflection targets all present
+- 20+ Harmony patches confirmed safe with unchanged targets
+- Full report: `docs/migration/compat-check-v1.4.0.md`
+
 ## 2026-04-08
 
 ### Feature: Named Companion System
