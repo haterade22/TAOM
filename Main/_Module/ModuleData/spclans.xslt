@@ -429,7 +429,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_1}House of Eorling</xsl:attribute>
-      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
+      <xsl:attribute name="banner_key">11.157.166.1528.1528.764.764.1.0.0.21004.172.36.550.550.780.765.1.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -514,7 +514,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'owner' and local-name() != 'banner_key']"/>
       <xsl:attribute name="name">{=TAOM_clan_vlandia_10}House of Eoforing</xsl:attribute>
       <xsl:attribute name="owner">Hero.lord_4_28_1</xsl:attribute>
-      <xsl:attribute name="banner_key">11.272.272.1528.1528.764.764.1.0.0.21007.172.171.700.700.764.764.0.0.0</xsl:attribute>
+      <xsl:attribute name="banner_key">11.149.166.1528.1528.764.764.1.0.0.21004.172.36.550.550.780.765.1.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -567,7 +567,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_battania_4}Khorvash</xsl:attribute>
-      <xsl:attribute name="banner_key">11.99.166.1528.1528.764.764.1.0.0.504.132.116.240.106.849.679.0.1.237.504.144.116.240.106.799.648.0.1.57.504.132.116.240.106.890.735.0.0.358.504.144.116.240.106.888.795.0.0.178.504.132.116.240.106.680.679.0.0.122.504.144.116.240.106.731.648.0.0.302.504.132.116.240.106.638.735.0.1.2.504.144.116.240.106.641.795.0.1.-178.504.132.116.240.106.848.848.0.0.-58.504.144.116.240.106.798.880.0.0.122.504.132.116.240.106.679.848.0.1.57.504.144.116.240.106.729.880.0.1.-123</xsl:attribute>
+      <xsl:attribute name="banner_key">11.99.166.1528.1528.764.764.1.0.0.504.144.116.240.106.849.679.0.1.237.504.144.116.240.106.799.648.0.1.57.504.144.116.240.106.890.735.0.0.358.504.144.116.240.106.888.795.0.0.178.504.144.116.240.106.680.679.0.0.122.504.144.116.240.106.731.648.0.0.302.504.144.116.240.106.638.735.0.1.2.504.144.116.240.106.641.795.0.1.-178.504.144.116.240.106.848.848.0.0.-58.504.144.116.240.106.798.880.0.0.122.504.144.116.240.106.679.848.0.1.57.504.144.116.240.106.729.880.0.1.-123</xsl:attribute>
       <xsl:attribute name="tier">4</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.town_K4</xsl:attribute>
       <xsl:apply-templates select="node()"/>
