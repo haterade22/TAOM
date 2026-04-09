@@ -116,6 +116,8 @@
       <Icon id="15005" material_name="taom_banners_noldor_alpha_01" texture_index="5" />
       <Icon id="15006" material_name="taom_banners_noldor_alpha_01" texture_index="6" />
       <Icon id="15007" material_name="taom_banners_noldor_alpha_01" texture_index="7" />
+      <Icon id="15008" material_name="taom_banners_noldor_alpha_01" texture_index="8" />
+      <Icon id="15009" material_name="taom_banners_noldor_alpha_01" texture_index="9" />
     </BannerIconGroup>
 
     <!-- Sindar Icons -->
@@ -128,6 +130,8 @@
       <Icon id="16005" material_name="taom_banners_sindar_alpha_01" texture_index="5" />
       <Icon id="16006" material_name="taom_banners_sindar_alpha_01" texture_index="6" />
       <Icon id="16007" material_name="taom_banners_sindar_alpha_01" texture_index="7" />
+      <Icon id="16008" material_name="taom_banners_sindar_alpha_01" texture_index="8" />
+      <Icon id="16009" material_name="taom_banners_sindar_alpha_01" texture_index="9" />
     </BannerIconGroup>
 
     <!-- Silvan Icons -->
@@ -282,6 +286,21 @@
       <Icon id="25013" material_name="taom_banners_abanissa_alpha_01" texture_index="13" />
       <Icon id="25014" material_name="taom_banners_abanissa_alpha_01" texture_index="14" />
       <Icon id="25015" material_name="taom_banners_abanissa_alpha_01" texture_index="15" />
+    </BannerIconGroup>
+
+    <!-- Dunland Icons -->
+    <BannerIconGroup id="260" name="{=!}TAOM Dunland Alpha 01" is_pattern="false">
+      <Icon id="26000" material_name="taom_banners_dunland_alpha_01" texture_index="0" />
+      <Icon id="26001" material_name="taom_banners_dunland_alpha_01" texture_index="1" />
+      <Icon id="26002" material_name="taom_banners_dunland_alpha_01" texture_index="2" />
+      <Icon id="26003" material_name="taom_banners_dunland_alpha_01" texture_index="3" />
+      <Icon id="26004" material_name="taom_banners_dunland_alpha_01" texture_index="4" />
+      <Icon id="26005" material_name="taom_banners_dunland_alpha_01" texture_index="5" />
+      <Icon id="26006" material_name="taom_banners_dunland_alpha_01" texture_index="6" />
+      <Icon id="26007" material_name="taom_banners_dunland_alpha_01" texture_index="7" />
+      <Icon id="26008" material_name="taom_banners_dunland_alpha_01" texture_index="8" />
+      <Icon id="26009" material_name="taom_banners_dunland_alpha_01" texture_index="9" />
+      <Icon id="26010" material_name="taom_banners_dunland_alpha_01" texture_index="10" />
     </BannerIconGroup>
     <BannerColors>
       <!-- New colours element-->

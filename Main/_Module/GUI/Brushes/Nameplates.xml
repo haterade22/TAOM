@@ -201,6 +201,24 @@
     </Layers>
   </Brush>
 
+  <Brush Name="TAOM.Nameplate.SettlementBar.Background">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="TAOM\Nameplates\settlement_nameplate_background" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="TAOM.Nameplate.ScoreboardParty.Background">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="TAOM\SPScoreboard\divider_nameplate" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="TAOM.Nameplate.SettlementBanner.Large.Border">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="TAOM\Nameplates\settlement_banner_large_background" />
+    </Layers>
+  </Brush>
+
   <Brush Name="PartyNameplate.FullName.Text" Font="ringbearer" TextHorizontalAlignment="Left">
     <Styles>
       <Style Name="Default" FontColor="#A1A1A1FF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.01" TextGlowRadius="0" TextBlur="0.5" FontSize="25" />

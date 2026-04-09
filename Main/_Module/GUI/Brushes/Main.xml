@@ -77,6 +77,16 @@
       </Style>
     </Styles>
   </Brush>
+  <Brush Name="TAOM.Scoreboard.BackgroundOverlay">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="TAOM\SPScoreboard\background_overlay" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" />
+      </Style>
+    </Styles>
+  </Brush>
   <Brush Name="InnerFrameShadow1Brush">
     <Layers>
       <BrushLayer Name="Default" ExtendTop="0" ExtendLeft="0" ExtendRight="0" ExtendBottom="0" Sprite="InnerFrame1_shadow" />
