@@ -50,7 +50,7 @@ public class UIExtender
 	{
 		//IL_0005: Unknown result type (might be due to invalid IL or missing references)
 		//IL_000f: Expected O, but got Unknown
-		Harmony = new Harmony("bannerlord.uiextender.ex");
+		Harmony = new Harmony("com.taom.uiextender");
 		Instances = new Dictionary<string, UIExtender>();
 		UIConfigPatch.Patch(Harmony);
 		ViewModelPatch.Patch(Harmony);

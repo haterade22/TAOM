@@ -39,7 +39,7 @@ internal class ViewModelComponent
 		//IL_0060: Unknown result type (might be due to invalid IL or missing references)
 		//IL_006a: Expected O, but got Unknown
 		_moduleName = moduleName;
-		_harmony = new Harmony("bannerlord.uiextender.ex.viewmodels." + _moduleName);
+		_harmony = new Harmony("com.taom.uiextender.viewmodels." + _moduleName);
 	}
 
 	public void Enable()
