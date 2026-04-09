@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 using TAOM.Core.Infrastructure;
@@ -69,6 +70,8 @@ public class SubModule : MBSubModuleBase
         base.OnSubModuleLoad();
 
         IoC.Configure();
+
+        TaomSettings.Initialize(IoC.Resolve<IPathService>().ModuleDataPath);
 
         _uiExtender = UIExtender.Create("TAOM");
         _uiExtender.Register(typeof(SubModule).Assembly);
@@ -424,6 +427,7 @@ public class SubModule : MBSubModuleBase
     {
         base.OnSubModuleUnloaded();
         _harmony?.UnpatchAll("com.taom.mod");
+        TaomSettings.Reset();
         IoC.Dispose();
     }
 }
