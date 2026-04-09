@@ -23,13 +23,14 @@ public static class WidgetFactoryManager
 
 	private delegate Widget WidgetConstructor(UIContext uiContext);
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "BHA0001", Justification = "Reflection target resolved at runtime; analyzer cannot verify")]
 	private static readonly ReloadDelegate? Reload = AccessTools2.GetDeclaredDelegate<ReloadDelegate>(typeof(WidgetInfo), "Reload");
 
 	private static readonly FieldRef<WidgetFactory, IDictionary>? _liveCustomTypes = AccessTools2.FieldRefAccess<WidgetFactory, IDictionary>("_liveCustomTypes");
 
-	private static readonly ConcurrentDictionary<Type, WidgetConstructor?> WidgetConstructors = new ConcurrentDictionary<Type, WidgetConstructor>();
+	private static readonly ConcurrentDictionary<Type, WidgetConstructor?> WidgetConstructors = new ConcurrentDictionary<Type, WidgetConstructor?>();
 
-	private static readonly Dictionary<string, Func<WidgetPrefab?>> CustomTypes = new Dictionary<string, Func<WidgetPrefab>>();
+	private static readonly Dictionary<string, Func<WidgetPrefab?>> CustomTypes = new Dictionary<string, Func<WidgetPrefab?>>();
 
 	private static readonly Dictionary<string, Type> BuiltinTypes = new Dictionary<string, Type>();
 

@@ -52,64 +52,50 @@ internal class UIExtenderRuntime
 					continue;
 				}
 				object obj = constructor.Invoke(Array.Empty<object>());
-				if (!(obj is Bannerlord.UIExtenderEx.Prefabs.PrefabExtensionSetAttributePatch patch))
+				if (!(obj is PrefabExtensionReplacePatch patch3))
 				{
-					if (!(obj is Bannerlord.UIExtenderEx.Prefabs.PrefabExtensionInsertPatch patch2))
+					if (!(obj is PrefabExtensionInsertAsSiblingPatch patch4))
 					{
-						if (!(obj is PrefabExtensionReplacePatch patch3))
+						if (!(obj is CustomPatch<XmlDocument> customPatch))
 						{
-							if (!(obj is PrefabExtensionInsertAsSiblingPatch patch4))
+							if (!(obj is CustomPatch<XmlNode> customPatch2))
 							{
-								if (!(obj is CustomPatch<XmlDocument> customPatch))
+								if (!(obj is Bannerlord.UIExtenderEx.Prefabs2.PrefabExtensionSetAttributePatch patch5))
 								{
-									if (!(obj is CustomPatch<XmlNode> customPatch2))
+									if (obj is Bannerlord.UIExtenderEx.Prefabs2.PrefabExtensionInsertPatch patch6)
 									{
-										if (!(obj is Bannerlord.UIExtenderEx.Prefabs2.PrefabExtensionSetAttributePatch patch5))
-										{
-											if (obj is Bannerlord.UIExtenderEx.Prefabs2.PrefabExtensionInsertPatch patch6)
-											{
-												PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch6);
-											}
-											else
-											{
-												MessageUtils.Fail($"Patch class is unsupported - {type}!");
-											}
-										}
-										else
-										{
-											PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch5);
-										}
+										PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch6);
 									}
 									else
 									{
-										PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, customPatch2.GetType(), customPatch2.Apply);
+										MessageUtils.Fail($"Patch class is unsupported - {type}!");
 									}
 								}
 								else
 								{
-									PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, customPatch.GetType(), customPatch.Apply);
+									PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch5);
 								}
 							}
 							else
 							{
-								PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch4);
+								PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, customPatch2.GetType(), customPatch2.Apply);
 							}
 						}
 						else
 						{
-							PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch3);
+							PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, customPatch.GetType(), customPatch.Apply);
 						}
 					}
 					else
 					{
-						PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch2);
+						PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch4);
 					}
 				}
 				else
 				{
-					PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch);
+					PrefabComponent.RegisterPatch(prefabExtensionAttribute.Movie, prefabExtensionAttribute.XPath, patch3);
 				}
-				GauntletMoviePatch.Register(this, prefabExtensionAttribute.AutoGenWidgetName);
+				GauntletMoviePatch.Register(this, null);
 			}
 		}
 	}

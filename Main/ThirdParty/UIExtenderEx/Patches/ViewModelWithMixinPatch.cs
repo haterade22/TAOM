@@ -15,9 +15,9 @@ namespace Bannerlord.UIExtenderEx.Patches;
 
 internal static class ViewModelWithMixinPatch
 {
-	private static ConcurrentDictionary<Type, object?> ViewModelInitializations { get; } = new ConcurrentDictionary<Type, object>();
+	private static ConcurrentDictionary<Type, object?> ViewModelInitializations { get; } = new ConcurrentDictionary<Type, object?>();
 
-	private static ConcurrentDictionary<string, object?> ViewModelsRefreshPatches { get; } = new ConcurrentDictionary<string, object>();
+	private static ConcurrentDictionary<string, object?> ViewModelsRefreshPatches { get; } = new ConcurrentDictionary<string, object?>();
 
 	public static void Patch(Harmony harmony, Type viewModelType, string? refreshMethodName = null)
 	{

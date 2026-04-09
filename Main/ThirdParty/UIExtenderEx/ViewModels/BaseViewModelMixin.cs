@@ -31,7 +31,7 @@ public abstract class BaseViewModelMixin<TViewModel> : IViewModelMixin where TVi
 
 	private static readonly OnPropertyChangedWithValueDelegate0? OnPropertyChangedWithValue0 = AccessTools2.GetDelegate<OnPropertyChangedWithValueDelegate0>(typeof(ViewModel), "OnPropertyChangedWithValue");
 
-	private static readonly ConcurrentDictionary<Type, OnPropertyChangedWithValueDelegate0?> OnPropertyChangedWithValue1 = new ConcurrentDictionary<Type, OnPropertyChangedWithValueDelegate0>();
+	private static readonly ConcurrentDictionary<Type, OnPropertyChangedWithValueDelegate0?> OnPropertyChangedWithValue1 = new ConcurrentDictionary<Type, OnPropertyChangedWithValueDelegate0?>();
 
 	private static readonly OnPropertyChangedWithValueDelegate2? OnPropertyChangedWithValue2 = AccessTools2.GetDelegate<OnPropertyChangedWithValueDelegate2>(typeof(ViewModel), "OnPropertyChangedWithValue", new Type[2]
 	{

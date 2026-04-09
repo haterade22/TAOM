@@ -17,9 +17,9 @@ internal static class ReflectionHelpers
 
 	private static readonly ConcurrentDictionary<Type, Dictionary<string, MemberInfo>> _fieldPropertyCache = new ConcurrentDictionary<Type, Dictionary<string, MemberInfo>>();
 
-	private static readonly ConcurrentDictionary<MemberInfo, Delegate?> _getDelegateCache = new ConcurrentDictionary<MemberInfo, Delegate>();
+	private static readonly ConcurrentDictionary<MemberInfo, Delegate?> _getDelegateCache = new ConcurrentDictionary<MemberInfo, Delegate?>();
 
-	private static readonly ConcurrentDictionary<MemberInfo, Delegate?> _setDelegateCache = new ConcurrentDictionary<MemberInfo, Delegate>();
+	private static readonly ConcurrentDictionary<MemberInfo, Delegate?> _setDelegateCache = new ConcurrentDictionary<MemberInfo, Delegate?>();
 
 	public static T? PrivateValue<T>(this object? o, string fieldPropertyName)
 	{
