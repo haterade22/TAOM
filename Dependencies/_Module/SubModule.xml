@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+	<Id value="TAOM.Dependencies" />
+	<Name value="TAOM Dependencies" />
+	<Version value="v0.1.0" />
+	<DefaultModule value="false" />
+	<ModuleCategory value="Singleplayer" />
+	<ModuleType value="Community" />
+	<DependedModules>
+		<DependedModule Id="Bannerlord.Harmony" />
+	</DependedModules>
+	<ModulesToLoadAfterThis>
+		<Module Id="Native" />
+		<Module Id="SandBoxCore" />
+		<Module Id="Sandbox" />
+		<Module Id="StoryMode" />
+		<Module Id="CustomBattle" />
+	</ModulesToLoadAfterThis>
+	<DependedModuleMetadatas>
+		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Native" order="LoadAfterThis" optional="true" />
+		<DependedModuleMetadata id="SandBoxCore" order="LoadAfterThis" optional="true" />
+		<DependedModuleMetadata id="Sandbox" order="LoadAfterThis" optional="true" />
+		<DependedModuleMetadata id="StoryMode" order="LoadAfterThis" optional="true" />
+		<DependedModuleMetadata id="CustomBattle" order="LoadAfterThis" optional="true" />
+	</DependedModuleMetadatas>
+	<SubModules>
+		<SubModule>
+			<Name value="TAOM.Dependencies" />
+			<DLLName value="TAOM.Dependencies.dll" />
+			<SubModuleClassType value="TAOM.Dependencies.SubModule" />
+			<Assemblies />
+			<Tags />
+		</SubModule>
+	</SubModules>
+</Module>
