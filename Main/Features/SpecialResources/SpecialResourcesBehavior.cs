@@ -208,7 +208,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         {
             var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
             _service.EarnFromPrisoners(hero.StringId, kingdomId, cultureId, count);
-            _notifier.NotifyEarnedDelta(kingdomId, cultureId, hero.StringId, before, "prisoners");
+            _notifier.NotifyEarnedDelta(hero.StringId, kingdomId, cultureId, before, "prisoners");
         }
     }
 
