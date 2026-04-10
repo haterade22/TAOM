@@ -67,9 +67,9 @@ internal sealed class ConfigurableArrayPool<T> : ArrayPool<T>
 			try
 			{
 				_lock.Enter(ref lockTaken);
-				if (_index != 0)
+				if (_index < _buffers.Length)
 				{
-					_buffers[--_index] = array;
+					_buffers[_index++] = array;
 				}
 			}
 			finally

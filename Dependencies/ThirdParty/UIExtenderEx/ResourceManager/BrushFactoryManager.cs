@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -21,7 +22,13 @@ public static class BrushFactoryManager
 
 	public static IEnumerable<Brush> Create(XmlDocument xmlDocument)
 	{
-		foreach (XmlNode childNode in xmlDocument.SelectSingleNode("Brushes").ChildNodes)
+		XmlNode? brushesNode = xmlDocument.SelectSingleNode("Brushes");
+		if (brushesNode == null)
+		{
+			Trace.TraceWarning("BrushFactoryManager.Create: XML document has no <Brushes> root node, skipping.");
+			yield break;
+		}
+		foreach (XmlNode childNode in brushesNode.ChildNodes)
 		{
 			Brush val = LoadBrushFrom?.Invoke(UIResourceManager.BrushFactory, childNode);
 			if (val != null)

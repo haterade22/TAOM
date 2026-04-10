@@ -161,7 +161,11 @@ internal class PrefabComponent
 		Dictionary<string, string> dictionary = PrefabNamesMethod?.Invoke(UIResourceManager.WidgetFactory);
 		if (dictionary != null)
 		{
-			return dictionary[movie];
+			if (dictionary.TryGetValue(movie, out string? path))
+			{
+				return path;
+			}
+			return null;
 		}
 		MessageUtils.DisplayUserError("UIExtenderEx could not find WidgetFactory.GetPrefabNamesAndPathsFromCurrentPath!");
 		return null;

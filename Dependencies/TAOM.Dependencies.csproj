@@ -31,6 +31,9 @@
 		     The System.Runtime.CompilerServices.Unsafe NuGet provides proper IL implementations. -->
 		<Compile Remove="ThirdParty\Harmony\System.Runtime.CompilerServices\Unsafe.cs" />
 		<Compile Remove="ThirdParty\Harmony\MonoMod.Backports.ILHelpers\UnsafeRaw.cs" />
+		<!-- Dead code identified by audit — unused in Harmony/TAOM runtime paths -->
+		<Compile Remove="ThirdParty\Harmony\System.Collections\HashHelpers.cs" />
+		<Compile Remove="ThirdParty\Harmony\System.IO\StreamExtensions.cs" />
 	</ItemGroup>
 
 	<!-- Harmony native exception helpers (Linux/macOS only, but resource stream calls expect them) -->

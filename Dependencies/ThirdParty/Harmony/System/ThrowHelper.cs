@@ -273,7 +273,7 @@ internal static class ThrowHelper
 	[MethodImpl(MethodImplOptions.NoInlining)]
 	private static Exception CreateThrowNotSupportedException(string? msg)
 	{
-		return new NotSupportedException();
+		return new NotSupportedException(msg);
 	}
 
 	[_003C1c2fb156_002De9ba_002D45cc_002Daf54_002Dd5335bdb59af_003EDoesNotReturn]

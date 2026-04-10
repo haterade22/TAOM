@@ -479,7 +479,7 @@ internal readonly struct ReadOnlySequence<T>
 		}
 		if (typeof(T) == typeof(char) && integer2 < 0)
 		{
-			return (ReadOnlyMemory<T>)(object)((string)obj).AsMemory(integer & 0x7FFFFFFF, integer2 - integer);
+			return (ReadOnlyMemory<T>)(object)((string)obj).AsMemory(integer & 0x7FFFFFFF, (integer2 & 0x7FFFFFFF) - integer);
 		}
 		integer &= 0x7FFFFFFF;
 		return ((MemoryManager<T>)obj).Memory.Slice(integer, integer2 - integer);

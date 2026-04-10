@@ -153,7 +153,7 @@ public class UIExtender
 
 	public void Disable(Type type)
 	{
-		Trace.TraceInformation("{0} - Enable {1}", _moduleName, type);
+		Trace.TraceInformation("{0} - Disable {1}", _moduleName, type);
 		if (_runtime == null)
 		{
 			MessageUtils.Fail("Register() method was not called before Disable(type)!");

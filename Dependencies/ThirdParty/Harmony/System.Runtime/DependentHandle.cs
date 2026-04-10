@@ -27,7 +27,7 @@ internal struct DependentHandle : IDisposable
 				{
 					intPtr = dependent;
 				}
-				while (Interlocked.CompareExchange(ref dependent, value2, intPtr) == intPtr);
+				while (Interlocked.CompareExchange(ref dependent, value2, intPtr) != intPtr);
 				GCHandle.FromIntPtr(intPtr).Free();
 			}
 		}
