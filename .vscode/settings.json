@@ -7,5 +7,6 @@
     "editor.formatOnSave": true,
     "editor.bracketPairColorization.enabled": true,
     "testing.automaticallyOpenPeekView": "failureInVisibleDocument",
-    "xml.validation.enabled": true
+    "xml.validation.enabled": true,
+    "chat.tools.terminal.backgroundNotifications": true
 }

@@ -22,7 +22,7 @@ Decompile and analyze: `$ARGUMENTS`
    - `TaleWorlds.Library.dll` — Base types, PropertyOwner
    - `SandBox.dll` / `SandBox.ViewModelCollection.dll` — Sandbox-specific logic
 
-2. **Decompile the class** — Use the ILSpy MCP server (preferred) or fall back to `ilspycmd`:
+2. **Decompile the class** — Use the ILSpy MCP server (preferred) or fall back to `ilspycmd`. For large classes, the MCP result size override (`_meta["anthropic/maxResultSizeChars"]` up to 500K) prevents silent truncation of decompilation output:
    ```
    # Preferred: ILSpy MCP (configured in .vscode/mcp.json)
    mcp__ilspy__decompile_type("E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<ClassName>")

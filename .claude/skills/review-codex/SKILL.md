@@ -100,6 +100,8 @@ Dispatch the prompt to Codex via the rescue skill:
 
 This sends the prompt directly to Codex without requiring the user to copy/paste. The rescue subagent handles the `codex-companion.mjs task` invocation.
 
+Use the Monitor tool to stream Codex progress — it auto-notifies when the job completes, eliminating the need to poll with `/codex:status`.
+
 After Codex completes and the review file is saved to `docs/reviews/codex-adversarial-{feature}-{date}.md`, proceed immediately to **Phase 3** (verify the review).
 
 If Codex returns the review content inline (sandbox restriction), write it to `docs/reviews/codex-adversarial-{feature}-{date}.md` yourself, then proceed to Phase 3.

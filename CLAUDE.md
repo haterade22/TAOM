@@ -427,8 +427,13 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 | `mcp-health-check.sh` | PreToolUse (mcp__*) | Blocks MCP calls to servers marked unhealthy in last 60s |
 | `mcp-health-mark.sh` | PostToolUseFailure (mcp__*) | Marks MCP server unhealthy after failed tool call, 60s backoff |
 | `check-deep-review.sh` | Stop | Reminds to run `/deep-review` if real work was done |
+| `log-permission-denied.sh` | PermissionDenied | Audit logs blocked tool calls to `.claude/logs/permission-denied.log` |
+| `set-session-title.sh` | UserPromptSubmit | Auto-sets session title to `TAOM: <branch>` for multi-window disambiguation |
+| `notify-test-results.sh` | PostToolUse (Bash) | Surfaces test pass/fail from dotnet test output |
 
 ## Notes
+
+- Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
 - Target: Bannerlord v1.4.0
 - Migration from v1.2 requires API changes - see `docs/migration/`

@@ -1,7 +1,9 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "API_TIMEOUT_MS": "600000"
   },
+  "showThinkingSummaries": true,
   "hooks": {
     "SessionStart": [
       {
@@ -119,6 +121,28 @@
           }
         ]
       }
+    ],
+    "PermissionDenied": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/log-permission-denied.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/set-session-title.sh"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
@@ -131,5 +155,10 @@
     "skill-creator@claude-plugins-official": true,
     "codex@openai-codex": true
   },
-  "autoMemoryDirectory": ".claude/memory"
+  "autoMemoryDirectory": ".claude/memory",
+  "statusLine": {
+    "type": "command",
+    "command": "cd c:/Users/mikew/source/repos/TAOM && branch=$(git branch --show-current 2>/dev/null); dirty=$(git diff --shortstat 2>/dev/null | sed 's/ file.*/f/' | sed 's/^ //'); echo \"${branch:-detached}${dirty:+ ($dirty)}\"",
+    "refreshInterval": 30
+  }
 }

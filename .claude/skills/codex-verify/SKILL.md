@@ -45,9 +45,16 @@ Rate each finding: CRITICAL / HIGH / MEDIUM / LOW
 Format: [SEVERITY] file.cs:line — description — remediation
 ```
 
-## Step 3: Continue Other Work (Optional)
+## Step 3: Monitor Background Job
 
-While Codex runs in background, continue building, researching, or writing tests. Check progress:
+Use the Monitor tool to stream Codex progress. This auto-notifies when the job completes — no manual polling needed:
+
+```
+Monitor the Codex background process output for completion signals.
+When "Review complete" or similar appears, proceed to Step 4.
+```
+
+Alternatively, continue other work and check manually:
 
 ```
 /codex:status
