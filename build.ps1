@@ -23,11 +23,38 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-Write-Host "Building solution in $Configuration configuration..." -ForegroundColor Yellow
+Write-Host "Building C# projects in $Configuration configuration..." -ForegroundColor Yellow
 & dotnet build "TAOM.sln" -c $Configuration --no-restore
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Build failed." -ForegroundColor Red
     exit 1
+}
+
+# Build C++ native hooks project (requires Visual C++ build tools)
+$nativeDll = "Main\_Module\bin\Win64_Shipping_Client\TAOM.NativeSkinFixes.dll"
+$vcxproj = "Dependencies\ThirdParty\NativeSkinFixes\TAOM.NativeSkinFixes.vcxproj"
+$vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+if (Test-Path $vsWhere) {
+    $msbuildPath = & $vsWhere -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe" | Select-Object -First 1
+    if ($msbuildPath) {
+        Write-Host "Building NativeSkinFixes C++ project..." -ForegroundColor Yellow
+        & $msbuildPath $vcxproj /p:Configuration=$Configuration /p:Platform=x64 /v:minimal
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "NativeSkinFixes C++ build failed." -ForegroundColor Red
+            exit 1
+        }
+        Write-Host "NativeSkinFixes C++ build succeeded!" -ForegroundColor Green
+    } else {
+        Write-Host "MSBuild not found — skipping NativeSkinFixes C++ build." -ForegroundColor Yellow
+        if (-not (Test-Path $nativeDll)) {
+            Write-Host "WARNING: $nativeDll not found. Native skin fixes will not work at runtime." -ForegroundColor Yellow
+        }
+    }
+} else {
+    Write-Host "Visual Studio not found — skipping NativeSkinFixes C++ build." -ForegroundColor Yellow
+    if (-not (Test-Path $nativeDll)) {
+        Write-Host "WARNING: $nativeDll not found. Native skin fixes will not work at runtime." -ForegroundColor Yellow
+    }
 }
 
 Write-Host "Build succeeded!" -ForegroundColor Green

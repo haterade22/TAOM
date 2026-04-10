@@ -54,6 +54,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
+using TAOM.Features.NativeSkinFixes;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -182,6 +183,8 @@ public class SubModule : MBSubModuleBase
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
+
+        NativeSkinFixesLoader.Install(IoC.Resolve<IModLogger>());
 
         if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
         {
@@ -438,6 +441,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
+        NativeSkinFixesLoader.Uninstall();
         _harmony?.UnpatchAll("com.taom.mod");
         TaomSettings.Reset();
         IoC.Dispose();
