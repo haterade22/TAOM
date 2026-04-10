@@ -20,17 +20,10 @@ internal static class ILHelpers
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public unsafe static ref T ObjectAsRef<T>(object obj)
 	{
-		// Decompilation artifact: original IL pins the object reference directly.
-		// This implementation achieves the same result via GCHandle.
-		var handle = System.Runtime.InteropServices.GCHandle.Alloc(obj, System.Runtime.InteropServices.GCHandleType.Pinned);
-		try
-		{
-			T** ptr = (T**)(void*)handle.AddrOfPinnedObject();
-			return ref *(*ptr);
-		}
-		finally
-		{
-			handle.Free();
-		}
+		// Original IL: ldarg.0; ret — reinterprets object ref as byref T.
+		// Used by Span/ReadOnlySpan for pinning. When obj is null, returns null ref
+		// (caller adds byte offset to get actual pointer).
+		var rawPtr = Unsafe.As<object, IntPtr>(ref obj);
+		return ref Unsafe.AsRef<T>((void*)rawPtr);
 	}
 }
