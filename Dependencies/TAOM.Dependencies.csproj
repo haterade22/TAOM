@@ -26,6 +26,11 @@
 		<None Remove="_Module\bin\**" />
 		<!-- Exclude Harmony's AssemblyInfo — conflicts with TAOM.Dependencies assembly identity -->
 		<Compile Remove="ThirdParty\Harmony\Properties\AssemblyInfo.cs" />
+		<!-- Exclude decompiled Unsafe polyfills — they were IL intrinsics that can't be expressed in C#.
+		     UnsafeRaw delegates to Unsafe and vice versa, causing infinite recursion at runtime.
+		     The System.Runtime.CompilerServices.Unsafe NuGet provides proper IL implementations. -->
+		<Compile Remove="ThirdParty\Harmony\System.Runtime.CompilerServices\Unsafe.cs" />
+		<Compile Remove="ThirdParty\Harmony\MonoMod.Backports.ILHelpers\UnsafeRaw.cs" />
 	</ItemGroup>
 
 	<!-- Harmony native exception helpers (Linux/macOS only, but resource stream calls expect them) -->
@@ -42,6 +47,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
 		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
 		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />
 	</ItemGroup>

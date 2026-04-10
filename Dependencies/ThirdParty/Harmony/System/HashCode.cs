@@ -211,7 +211,7 @@ internal struct HashCode
 	{
 		ref byte reference = ref MemoryMarshal.GetReference(value);
 		ref byte reference2 = ref Unsafe.Add(ref reference, value.Length);
-		while (Unsafe.ByteOffset(ref reference, ref reference2) >= 4)
+		while ((long)Unsafe.ByteOffset(ref reference, ref reference2) >= 4)
 		{
 			Add(Unsafe.ReadUnaligned<int>(ref reference));
 			reference = ref Unsafe.Add(ref reference, 4);
