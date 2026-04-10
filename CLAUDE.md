@@ -43,6 +43,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
 | `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
 | `/harmony-update [version]` | Check for upstream Harmony updates, diff against fork, apply with review |
+| `/tooling-review` | Review last 2 weeks of Claude Code + VS Code updates, find project improvements |
 
 ## Scoped Rules (auto-loaded by file path)
 
