@@ -42,6 +42,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
 | `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
+| `/harmony-update [version]` | Check for upstream Harmony updates, diff against fork, apply with review |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -115,6 +116,8 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | SettlementGuards | `Main/Features/SettlementGuards/` (per-settlement guard customization — XML-driven guard troop pools with settlement→clan→culture fallback, spawn-point filtering, weighted random selection, per-culture spear mapping; Harmony prefixes on private GuardsCampaignBehavior methods) |
 | NamedCompanions | `Main/Features/NamedCompanions/` (18 lore companions as recruitable wanderers — Aragorn/Legolas/Gimli/etc; `is_hero="true"` + `occupation="Wanderer"`, JSON config for spawn settlements, vanilla dialog integration, race persistence via existing HeroRace system) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
+| Harmony fork | `Dependencies/ThirdParty/Harmony/` (1,392 vendored files — Harmony 2.4.2 + MonoMod + Cecil + Iced) |
+| EarlyLog | `Dependencies/EarlyLog.cs` (static log buffer, drained into FileLogger on Main startup) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
 | CC narrative data | `Main/_Module/ModuleData/charactercreation/` (JSON) |
