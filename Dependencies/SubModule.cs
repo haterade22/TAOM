@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.Engine.GauntletUI;
@@ -17,30 +16,41 @@ public class SubModule : MBSubModuleBase
 
     static SubModule()
     {
-        // Force GauntletUI assembly load before UIExtenderEx static ctor fires
+        EarlyLog.Info("[TAOM.Dependencies] Static init: loading TaleWorlds.Engine.GauntletUI");
         Assembly.Load("TaleWorlds.Engine.GauntletUI");
 
-        // Force XML prefab parsing — without this, the game uses pre-generated prefabs
-        // that don't contain TAOM's custom brushes/sprites. Must be set BEFORE any
-        // prefab is loaded (i.e., before Native). The UIConfigPatch Harmony prefix
-        // then blocks anything from setting it back to false.
         UIConfig.DoNotUseGeneratedPrefabs = true;
+        EarlyLog.Info("[TAOM.Dependencies] Static init: DoNotUseGeneratedPrefabs = true");
     }
 
     protected override void OnSubModuleLoad()
     {
         base.OnSubModuleLoad();
+        EarlyLog.Info($"[TAOM.Dependencies] Harmony forked v{typeof(Harmony).Assembly.GetName().Version} loaded from {typeof(Harmony).Assembly.GetName().Name}");
 
-        ApplyHarmonyGuards();
+        try
+        {
+            ApplyHarmonyGuards();
+            EarlyLog.Info("[TAOM.Dependencies] UnpatchAll guard applied");
+        }
+        catch (Exception ex)
+        {
+            EarlyLog.Error($"[TAOM.Dependencies] Failed to apply Harmony guards: {ex.Message}");
+        }
+
         CheckForDuplicateHarmony();
 
-        // Touching the UIExtender type triggers its static constructor, which applies:
-        // 1. UIConfigPatch — blocks DoNotUseGeneratedPrefabs setter (keeps it true)
-        // 2. ViewModelPatch — patches ViewModel ctor + ExecuteCommand
-        // 3. WidgetPrefabPatch — transpiles WidgetPrefab.LoadFrom for XML injection
-        // 4. BrushFactoryManager — patches GetBrush/Brushes for custom brushes
-        // 5. WidgetFactoryManager — patches CreateBuiltinWidget/GetCustomType for custom widgets
-        _ = typeof(Bannerlord.UIExtenderEx.UIExtender);
+        try
+        {
+            _ = typeof(Bannerlord.UIExtenderEx.UIExtender);
+            EarlyLog.Info("[TAOM.Dependencies] UIExtenderEx patches applied (5 system patches)");
+        }
+        catch (Exception ex)
+        {
+            EarlyLog.Error($"[TAOM.Dependencies] UIExtenderEx initialization failed: {ex.Message}");
+        }
+
+        EarlyLog.Info("[TAOM.Dependencies] OnSubModuleLoad complete");
     }
 
     private static void ApplyHarmonyGuards()
@@ -50,14 +60,11 @@ public class SubModule : MBSubModuleBase
         harmony.Patch(unpatchAll, prefix: new HarmonyMethod(typeof(SubModule), nameof(UnpatchAllGuard)));
     }
 
-    /// <summary>
-    /// Blocks UnpatchAll(null) which would wipe ALL patches across all mods in the AppDomain.
-    /// </summary>
     private static bool UnpatchAllGuard(string harmonyID)
     {
         if (harmonyID is null)
         {
-            FileLog.Log("[TAOM.Dependencies] Blocked UnpatchAll(null) — would wipe all Harmony patches globally.");
+            EarlyLog.Error("[TAOM.Dependencies] Blocked UnpatchAll(null) -- would wipe all Harmony patches globally");
             return false;
         }
         return true;
@@ -70,8 +77,10 @@ public class SubModule : MBSubModuleBase
         {
             if (asm.GetName().Name == "0Harmony" && asm != harmonyAssembly)
             {
-                FileLog.Log($"[TAOM.Dependencies] WARNING: Another 0Harmony.dll detected: {asm.FullName} at {asm.Location}. This may cause patching conflicts.");
+                EarlyLog.Error($"[TAOM.Dependencies] Another 0Harmony.dll detected: {asm.FullName} at {asm.Location}. May cause patching conflicts.");
+                return;
             }
         }
+        EarlyLog.Info("[TAOM.Dependencies] No duplicate Harmony assemblies detected");
     }
 }

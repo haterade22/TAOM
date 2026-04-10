@@ -86,6 +86,18 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch25_LocalizationOverride");
         var pathService0 = IoC.Resolve<IPathService>();
         var logger0 = IoC.Resolve<IModLogger>();
+
+        // Drain Dependencies' early log buffer into the real FileLogger
+        TAOM.Dependencies.EarlyLog.DrainTo((level, msg) =>
+        {
+            switch (level)
+            {
+                case "ERROR": logger0.LogError(msg); break;
+                case "WARNING": logger0.LogWarning(msg); break;
+                default: logger0.LogInfo(msg); break;
+            }
+        });
+
         var xmlPath = System.IO.Path.Combine(pathService0.ModuleDataPath, "taom_module_strings.xml");
         try
         {
