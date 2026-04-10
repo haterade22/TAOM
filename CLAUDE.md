@@ -117,6 +117,9 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | SettlementGuards | `Main/Features/SettlementGuards/` (per-settlement guard customization — XML-driven guard troop pools with settlement→clan→culture fallback, spawn-point filtering, weighted random selection, per-culture spear mapping; Harmony prefixes on private GuardsCampaignBehavior methods) |
 | NamedCompanions | `Main/Features/NamedCompanions/` (18 lore companions as recruitable wanderers — Aragorn/Legolas/Gimli/etc; `is_hero="true"` + `occupation="Wanderer"`, JSON config for spawn settlements, vanilla dialog integration, race persistence via existing HeroRace system) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
+| NativeSkinFixes (C++) | `Dependencies/ThirdParty/NativeSkinFixes/` (forked community mod — 3 MinHook detours for covers_head morph + hair/beard cloth physics) |
+| NativeSkinFixes (C#) | `Main/Features/NativeSkinFixes/` (5 P/Invoke interop files — DLL loader, 3 hook interops, orchestrator) |
+| NativeSkinFixes runtime | `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll`, `MinHook.x64.dll` |
 | Harmony fork | `Dependencies/ThirdParty/Harmony/` (1,392 vendored files — Harmony 2.4.2 + MonoMod + Cecil + Iced) |
 | EarlyLog | `Dependencies/EarlyLog.cs` (static log buffer, drained into FileLogger on Main startup) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |

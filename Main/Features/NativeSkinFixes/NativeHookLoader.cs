@@ -12,9 +12,6 @@ namespace TAOM.Features.NativeSkinFixes
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern IntPtr LoadLibrary(string lpFileName);
 
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern bool SetDllDirectory(string? lpPathName);
-
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi, ExactSpelling = true)]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
@@ -41,21 +38,19 @@ namespace TAOM.Features.NativeSkinFixes
             }
 
             string modulePath = ModuleHelper.GetModuleFullPath("TAOM");
-            string binDir = System.IO.Path.GetFullPath(
-                System.IO.Path.Combine(modulePath, "bin", "Win64_Shipping_Client")
+            string dllPath = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(modulePath, "bin", "Win64_Shipping_Client", DllName + ".dll")
             );
-            SetDllDirectory(binDir);
-            HooksModule = LoadLibrary(DllName + ".dll");
-            SetDllDirectory(null);
+            HooksModule = LoadLibrary(dllPath);
 
             if (HooksModule == IntPtr.Zero)
             {
                 int error = Marshal.GetLastWin32Error();
-                logger.LogError($"[NativeSkinFixes] Failed to load {DllName}.dll from {binDir} (Win32 error {error})");
+                logger.LogError($"[NativeSkinFixes] Failed to load {dllPath} (Win32 error {error})");
                 return false;
             }
 
-            logger.LogInfo($"[NativeSkinFixes] Loaded {DllName}.dll from {binDir}");
+            logger.LogInfo($"[NativeSkinFixes] Loaded {dllPath}");
             return true;
         }
 

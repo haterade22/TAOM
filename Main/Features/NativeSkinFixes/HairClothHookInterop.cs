@@ -23,11 +23,13 @@ namespace TAOM.Features.NativeSkinFixes
 
         private static InstallDelegate? _install;
         private static VoidDelegate? _uninstall;
+        private static IModLogger? _logger;
 
         public static bool IsInstalled { get; private set; }
 
         public static void InstallHook(IModLogger logger)
         {
+            _logger = logger;
             try
             {
                 _install = NativeHookLoader.GetExport<InstallDelegate>("HairClothHook_Install");
@@ -67,7 +69,7 @@ namespace TAOM.Features.NativeSkinFixes
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Print($"[NativeSkinFixes] HairCloth: shutdown error — {ex.Message}");
+                _logger?.LogError($"[NativeSkinFixes] HairCloth: shutdown error — {ex.Message}");
             }
         }
     }

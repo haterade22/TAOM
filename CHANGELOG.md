@@ -1,5 +1,18 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-10
+
+### Feature: Fork NativeSkinFixes — covers_head Morph Fix + Hair/Beard Cloth Physics
+
+Forked community NativeSkinFixes mod into TAOM. Fixes two Bannerlord native engine bugs by hooking C++ functions in TaleWorlds.Native.dll via MinHook:
+
+- **covers_head jazz hands fix**: Helmets with `covers_head="true"` no longer break hand grip animations. The hook forces Face_mesh creation for the GPU morph pipeline while suppressing face rendering via the render list.
+- **Hair/beard cloth physics**: Hair and beard meshes with cloth simulation data now animate with physics instead of rendering as static geometry. The hook rescues orphaned cloth from the cloth factory and registers it for both rendering and simulation.
+
+**Architecture**: C++ native DLL (`TAOM.NativeSkinFixes.dll`) with 3 MinHook detours + C# P/Invoke interop layer. All 7 RVAs verified against Bannerlord v1.4.0. Transactional install with rollback on partial failure.
+
+**Files**: `Dependencies/ThirdParty/NativeSkinFixes/` (C++ source + MinHook), `Main/Features/NativeSkinFixes/` (C# interop)
+
 ## 2026-04-09
 
 ### Fix: Dependencies Audit — 7 Bugs Fixed Across Harmony Fork + UIExtenderEx

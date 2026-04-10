@@ -49,10 +49,12 @@ namespace TAOM.Features.NativeSkinFixes
                 }
                 else if (installed > 0)
                 {
-                    logger.LogWarning($"[NativeSkinFixes] Partial install: {installed}/3 hooks active");
-                    InformationManager.DisplayMessage(new InformationMessage(
-                        $"NativeSkinFixes partially loaded ({installed}/3 hooks)",
-                        new Color(1f, 0.8f, 0.2f)));
+                    // Rollback: partial install leaves hooks in inconsistent state
+                    logger.LogWarning($"[NativeSkinFixes] Partial install ({installed}/3) — rolling back");
+                    FaceMeshObserveInterop.RemoveHook();
+                    HairClothHookInterop.RemoveHook();
+                    CoversHeadHookInterop.RemoveHook();
+                    logger.LogError("[NativeSkinFixes] All hooks rolled back due to partial failure");
                 }
                 else
                 {
