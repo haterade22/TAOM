@@ -2,6 +2,20 @@
 
 ## 2026-04-09
 
+### Fix: Dependencies Audit — 7 Bugs Fixed Across Harmony Fork + UIExtenderEx
+
+Full audit of 1,442 vendored files across 7 subsystems. Found and fixed:
+- ConfigurableArrayPool.Bucket.Return() — audited and confirmed correct (initial false-positive retracted)
+- ReadOnlySequence.GetFirstBuffer() computed wrong length for string-backed sequences (unmasked bit 31)
+- DependentHandle CAS loop inverted (infinite loop on successful compare-exchange)
+- ThrowHelper.CreateThrowNotSupportedException() ignored error message parameter
+- BrushFactoryManager.Create() null dereference on malformed brush XML
+- UIExtender.Disable() log message said "Enable" instead of "Disable"
+- PrefabComponent.PathForMovie() threw KeyNotFoundException on missing movie name
+- Excluded 2 dead code files (HashHelpers.cs, StreamExtensions.cs)
+
+Also identified (no fix needed): HarmonyLib BuildCategoryCache misleading condition, AccessTools silent null returns, PatchInfoSerialization BinaryFormatter thread safety, MonoMod dead platform paths (CoreCLR/Mono/ARM)
+
 ### Feature: Fork Harmony 2.4.2 into TAOM.Dependencies — Zero External Module Dependencies
 
 Forked Harmony 2.4.2 (including MonoMod.Core, MonoMod.Utils, Mono.Cecil, Iced.Intel) source into `Dependencies/ThirdParty/Harmony/`. TAOM now ships fully self-contained with zero external module requirements — no Bannerlord.Harmony module needed.
