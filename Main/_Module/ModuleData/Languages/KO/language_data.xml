@@ -2,4 +2,5 @@
 <LanguageData id="한국어">
   <LanguageFile xml_path="KO/std_taom_module_strings_kor-KO.xml" />
   <LanguageFile xml_path="KO/std_taom_wanderer_strings_kor-KO.xml" />
+  <LanguageFile xml_path="KO/std_taom_named_companion_strings_kor-KO.xml" />
 </LanguageData>

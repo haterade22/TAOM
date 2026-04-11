@@ -2,4 +2,5 @@
 <LanguageData id="日本語">
   <LanguageFile xml_path="JP/std_taom_module_strings_jpn-JP.xml" />
   <LanguageFile xml_path="JP/std_taom_wanderer_strings_jpn-JP.xml" />
+  <LanguageFile xml_path="JP/std_taom_named_companion_strings_jpn-JP.xml" />
 </LanguageData>
