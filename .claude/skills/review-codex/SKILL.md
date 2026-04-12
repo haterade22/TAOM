@@ -1,6 +1,6 @@
 ---
 name: review-codex
-description: Auto-detect what was built, write a Codex adversarial prompt, dispatch instructions, then verify results when ready
+description: Auto-detect what was built, write a Codex adversarial prompt, dispatch to Codex directly, then verify results when ready
 argument-hint: "[optional: feature-name or path-to-review.md]"
 ---
 
@@ -9,8 +9,8 @@ argument-hint: "[optional: feature-name or path-to-review.md]"
 Handles the full Codex review lifecycle automatically. Detects what needs reviewing from context.
 
 **Argument handling:**
-- No argument: auto-detect from git what was changed, write prompt, guide dispatch
-- Feature name (no `.md`): write prompt for that feature, guide dispatch
+- No argument: auto-detect from git what was changed, write prompt, dispatch to Codex
+- Feature name (no `.md`): write prompt for that feature, dispatch to Codex
 - Path to `.md` file: verify that existing Codex review, implement fixes
 - If a `codex-adversarial-*.md` file was recently created in `docs/reviews/`, ask user if they want to verify it
 
@@ -90,19 +90,19 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
    FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
 9. Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 
-### 2e: Display and guide dispatch
+### 2e: Dispatch to Codex directly
 
-Output the complete prompt, then tell the user:
+Dispatch the prompt to Codex via the rescue skill:
 
 ```
-Copy the prompt above and dispatch to Codex:
-  /codex:adversarial-review --background
-
-When the review file appears at docs/reviews/codex-adversarial-{feature}-{date}.md, run:
-  /review-codex
+/codex:rescue [full prompt text from 2d]
 ```
 
-Then **stop and wait** — Codex runs in a separate terminal.
+This sends the prompt directly to Codex without requiring the user to copy/paste. The rescue subagent handles the `codex-companion.mjs task` invocation.
+
+After Codex completes and the review file is saved to `docs/reviews/codex-adversarial-{feature}-{date}.md`, proceed immediately to **Phase 3** (verify the review).
+
+If Codex returns the review content inline (sandbox restriction), write it to `docs/reviews/codex-adversarial-{feature}-{date}.md` yourself, then proceed to Phase 3.
 
 ## Phase 3: Verify Codex Review
 
@@ -157,9 +157,13 @@ Then categorize:
 - **Design questions** — need user input
 - **Things Codex missed** — additional bugs found
 
-### 3e: Root Cause Analysis — Why Did We Miss This?
+### 3e: Root Cause Analysis — Why Did We Miss This? (MANDATORY — DO NOT SKIP)
 
-For EACH confirmed bug that Codex found, answer:
+**BLOCKING GATE:** You MUST complete this section before proceeding to 3f. If there are confirmed bugs from Codex OR from deep-review, produce the root cause table. If you skip this step, the entire review is INCOMPLETE and cannot be committed.
+
+This analysis also covers bugs found by `/deep-review` agents that the implementation agents missed. The goal is bidirectional: understand what Claude missed AND what Codex missed, so both improve.
+
+For EACH confirmed bug (from Codex AND from deep-review), answer:
 
 **What category?** (pick one)
 - Config ID mismatch — wrong kingdom/culture/troop/settlement ID in config
@@ -228,3 +232,4 @@ This creates a feedback loop: Claude's findings improve Codex's next review. Ove
 - When in doubt about design intent, flag for user input rather than guessing
 - Build and test after EVERY batch of fixes
 - Flat formatting in prompts — no indented continuation lines
+- **Root cause analysis (3e) is MANDATORY** — if confirmed bugs exist from either Codex or deep-review, the root cause table MUST be produced before fixes are committed. This step updates `.claude/rules/` and `AGENTS.md` to prevent recurrence. Skipping it means the same bug category will repeat in future features.

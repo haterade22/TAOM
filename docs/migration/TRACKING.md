@@ -311,6 +311,31 @@ Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/`
 
 ---
 
+## Bannerlord 1.4.0 Migration (2026-04-09)
+
+Bannerlord updated from v1.3.15 to v1.4.0. Full compatibility review performed using automated tooling.
+
+| Area | Status | Notes |
+|------|--------|-------|
+| Decompilation | DONE | 72 DLLs, 7,961 .cs files at `E:\Decompiled_Bannerlord\` |
+| API diff | DONE | 108 types checked, 37 changed, 0 removed |
+| GameModel overrides | FIXED | `TaomAllianceModel`, `TaomBattleRewardModel` signatures updated |
+| Harmony patches | VERIFIED SAFE | All 41+ patch targets confirmed intact |
+| Reflection targets | VERIFIED SAFE | 50+ AccessTools/ReflectionHelper targets confirmed |
+| CampaignBehavior events | FIXED | `OnHideoutBattleCompletedEvent` gained third parameter |
+| Build | PASSING | 0 errors, 1 pre-existing warning |
+| Tests | PASSING | 1048/1048 |
+| SubModule.xml version | TODO | Update DependentVersion to v1.4.0 |
+
+**Tooling created:**
+- `tools/Decompile-Bannerlord.ps1` — reusable batch decompiler
+- `tools/Diff-BannerlordAPI.ps1` — TAOM-focused API diff
+- `/compat-check` skill — orchestrates full compatibility review
+
+**Full report:** `docs/migration/compat-check-v1.4.0.md`
+
+---
+
 ## Bannerlord 1.3.15 (BannerlordTogether Requirement)
 
 BannerlordTogether v0.2.2 requires `DependentVersion="v1.3.15.110062"`. TAOM's SubModule.xml declares `v1.3.12` but the mod is **confirmed running on 1.3.15 in singleplayer** as of 2026-04-02 with no observed runtime failures.

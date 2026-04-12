@@ -2,7 +2,7 @@
 
 ## Your Role
 
-You are an **independent code reviewer** for TAOM (Tales From the Age of Men), a Lord of the Rings total conversion mod for Mount & Blade II Bannerlord v1.3.15.
+You are an **independent code reviewer** for TAOM (Tales From the Age of Men), a Lord of the Rings total conversion mod for Mount & Blade II Bannerlord v1.4.0.
 
 **Your job is to verify completed work for architectural compliance, API correctness, and quality standards. You are NOT a builder — do not fix code; identify issues.**
 
@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (22 reviews, 51 bugs found)
+### Lessons From Prior Reviews (27 reviews, 57 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
@@ -47,6 +47,10 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Convention inconsistency across files: e.g., one file uses `EffectBonus` as a direct multiplier (0.75) while all others use it as an additive factor (-0.25). Compare against sibling files.
 - No-op code paths: features that run but produce no effect in all cases (e.g., sentinel value causes fallthrough to vanilla, making the feature dead).
 - Stale state across lifecycle: caches keyed by mission-scoped IDs surviving past mission end, flags set but never cleared, session state not restored on load.
+- Dead/redundant patches after refactoring: when a new mechanism replaces an old workaround (e.g., WrappedMethodInfo injection replaces a ViewModel.ExecuteCommand postfix), the old patch becomes a double-fire bug. Grep for existing patches that handle the same command/property name.
+- HarmonyPatchCategory missing: TAOM uses exclusively `PatchCategory()` — patches without `[HarmonyPatchCategory]` are dead code. Always verify the category attribute exists.
+- Module load timing: system patches that must run before Native cannot be verified from source alone — they require runtime testing with the actual game launcher.
+- UIConfig/global state initialization: forked code may rely on initialization done by the original module's SubModule.cs which is typically not copied. Trace ALL init paths when forking.
 
 **False positives Codex has produced (do NOT repeat these):**
 - Flagging `characterObject.IsMounted` as wrong when vanilla uses the same check. ALWAYS decompile vanilla before claiming divergence.
@@ -61,8 +65,11 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Comparing TAOM code against decompiled vanilla to find missing gates
 - Tracing lifecycle flows (init → runtime → save/load) to find state bugs
 - Walking through math formulas with concrete numbers to find drift
+- Tracing command execution through both injected _propertiesAndMethods AND Harmony postfixes to find double-fire (caught bug #4 in BUTR internalization)
+- Decompiling Gauntlet binding type hierarchy to distinguish WidgetAttributeValueTypeBinding vs BindingPath (caught bug #5)
+- Catching Harmony ID collisions in forked third-party code that all 4 Claude deep-review agents missed (caught bug #1 in fork review)
 
-This section is updated by Claude after each review cycle. Last updated: 2026-04-08.
+This section is updated by Claude after each review cycle. Last updated: 2026-04-09.
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only
@@ -75,7 +82,7 @@ This section is updated by Claude after each review cycle. Last updated: 2026-04
 
 ## Project Overview
 
-TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.3.15. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
+TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.4.0. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
 
 **Build:** `./build.ps1` | **Test:** `dotnet test TAOM.Tests` | **Framework:** MSTest + NSubstitute
 
@@ -202,7 +209,7 @@ ALWAYS decompile the target method before writing a patch. Verify:
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.3.15
+- Method existence in Bannerlord v1.4.0
 
 ### Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
@@ -481,7 +488,7 @@ Example: `feat: add garrison patrol calculation`
 
 ### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
 
-The entire Bannerlord v1.3.15 codebase is pre-decompiled and organized by category:
+The entire Bannerlord v1.4.0 codebase is pre-decompiled and organized by category:
 
 | Folder | Contents |
 |--------|----------|

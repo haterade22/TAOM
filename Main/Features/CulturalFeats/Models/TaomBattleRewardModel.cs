@@ -14,15 +14,20 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     public override ExplainedNumber CalculateRenownGain(
-        PartyBase party, float renownValueOfBattle, float contributionShare)
+        PartyBase winnerParty, float renownValueOfBattleForWinnerSide,
+        float contributionShareOfWinnerParty, float renownMultiplierForWinnerSide,
+        bool includeDescriptions)
     {
-        var result = base.CalculateRenownGain(party, renownValueOfBattle, contributionShare);
+        var result = base.CalculateRenownGain(
+            winnerParty, renownValueOfBattleForWinnerSide,
+            contributionShareOfWinnerParty, renownMultiplierForWinnerSide,
+            includeDescriptions);
 
-        var culture = party.Owner?.Culture ?? party.Culture;
+        var culture = winnerParty.Owner?.Culture ?? winnerParty.Culture;
         if (culture?.HasFeat(TaomCulturalFeats.UmbarRenownFeat) == true)
             result.AddFactor(TaomCulturalFeats.UmbarRenownFeat.EffectBonus, CultureText);
 
-        var hero = party.Owner ?? party.LeaderHero;
+        var hero = winnerParty.Owner ?? winnerParty.LeaderHero;
         if (hero != null)
             CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.BattleRenownGain);
 

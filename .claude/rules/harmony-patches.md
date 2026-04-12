@@ -30,9 +30,23 @@ ALWAYS decompile the target method with `ilspycmd` before writing a patch. Verif
 - Name: `{TargetClass}{TargetMethod}Patch.cs`
 - Register in `SubModule.cs` patch categories (Patch0 through Patch6)
 
+## PatchCategory Required (MANDATORY)
+TAOM uses exclusively `_harmony.PatchCategory("CategoryName")` — there is NO `PatchAll()` call anywhere. A patch class without `[HarmonyPatchCategory("CategoryName")]` is **dead code** that will never be activated. Every patch class MUST have this attribute.
+
+When introducing a new injection mechanism (e.g., WrappedMethodInfo for commands), grep for existing patches that already handle the same command/property name. Old workarounds become double-fire bugs when a new system makes them redundant.
+
+## Gauntlet Binding Types
+When working with Gauntlet XML bindings programmatically:
+- `@PropertyName` uses `WidgetAttributeValueTypeBinding` (property binding)
+- `{DataSourcePath}` uses `WidgetAttributeValueTypeBindingPath` (DataSource path)
+- Literal values use `WidgetAttributeValueTypeDefault`
+These are DIFFERENT types. Decompile `PrefabDatabindingExtension` to verify before implementing.
+
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy
 - Null handling — TaleWorlds often expects `TextObject.Empty` not `null`
 - Event timing — verify when events fire vs when state changes
 - Static state — avoid unless using thread-local pattern
 - **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
+- **Constructor patches** — `MethodType.Constructor` without parameter types matches ONLY the parameterless constructor. If the target has parameters (e.g., `MapTimeControlVM(Func<MapBarShortcuts>, Action, Action)`), you MUST specify them: `[HarmonyPatch(typeof(T), MethodType.Constructor, new[] { typeof(Func<MapBarShortcuts>), typeof(Action), typeof(Action) })]`. Always decompile to check. Bug #6 from BUTR internalization review.
+- **Redundant patches after refactoring** — When introducing a new mechanism (e.g., WrappedMethodInfo command injection), grep for existing patches that handle the same command name. Old workarounds cause double-fire. Bug #4 from BUTR internalization review.

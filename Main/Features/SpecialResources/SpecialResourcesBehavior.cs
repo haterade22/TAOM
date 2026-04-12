@@ -18,6 +18,8 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private readonly ISpecialResourceStorageService _storage;
     private readonly ISpecialResourceConfigProvider _config;
     private readonly IModLogger _logger;
+    private readonly SpecialResourceNotifier _notifier;
+    private readonly List<TroopUpkeepInfo> _upkeepBuffer = new(8);
 
     public SpecialResourcesBehavior(
         ISpecialResourceService service,
@@ -29,6 +31,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         _storage = storage;
         _config = config;
         _logger = logger;
+        _notifier = new SpecialResourceNotifier(service);
     }
 
     private PartyScreenLogic _activePartyScreenLogic;
@@ -55,7 +58,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         _logger.LogInfo($"[SpecRes] SyncData restored {data?.Count ?? 0} entries");
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource != null)
         {
@@ -69,7 +72,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         if (hero == null) return;
 
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
         _service.InitializeHero(hero.StringId, kingdomId, cultureId);
         _logger.LogInfo($"SpecialResources: Initialized resource for {hero.Name}");
     }
@@ -79,7 +82,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         if (hero == null) return;
 
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
@@ -95,7 +98,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (hero != Hero.MainHero) return;
 
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null)
         {
@@ -103,19 +106,20 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             return;
         }
 
-        var ownedTowns = CountOwnedTowns(hero);
-        var troopUpkeep = GetTroopUpkeepFromParty(hero.PartyBelongedTo);
+        var ownedTowns = SpecialResourcesBehaviorHelpers.CountOwnedTowns(hero);
+        _upkeepBuffer.Clear();
+        SpecialResourcesBehaviorHelpers.FillTroopUpkeep(hero.PartyBelongedTo, _config, _upkeepBuffer);
 
-        _service.ApplyDailyTick(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
+        _service.ApplyDailyTick(hero.StringId, kingdomId, cultureId, ownedTowns, _upkeepBuffer);
 
         // Check balance for warnings and desertion
         var balance = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
 
-        if (balance <= 0f && troopUpkeep.Count > 0)
+        if (balance <= 0f && _upkeepBuffer.Count > 0)
         {
             // Desertion: remove troops from roster
-            var desertions = _service.CalculateDesertion(hero.StringId, kingdomId, cultureId, troopUpkeep);
-            var totalDeserted = ApplyDesertion(hero.PartyBelongedTo, desertions);
+            var desertions = _service.CalculateDesertion(hero.StringId, kingdomId, cultureId, _upkeepBuffer);
+            var totalDeserted = SpecialResourcesBehaviorHelpers.ApplyDesertion(hero.PartyBelongedTo, desertions, _logger);
 
             if (totalDeserted > 0)
             {
@@ -138,7 +142,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!mapEvent.IsPlayerMapEvent) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
         _logger.LogDebug($"[SpecRes] MapEventEnded: state={mapEvent.BattleState}, isSiege={mapEvent.IsSiegeAssault || mapEvent.IsSiegeOutside}");
 
         if (mapEvent.BattleState == BattleState.AttackerVictory || mapEvent.BattleState == BattleState.DefenderVictory)
@@ -185,16 +189,16 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         _service.EarnFromRaid(hero.StringId, kingdomId, cultureId);
-        NotifyEarning(hero.StringId, kingdomId, cultureId, "raid");
+        _notifier.NotifyEarned(hero.StringId, kingdomId, cultureId, "raid");
     }
 
     private void OnPrisonerTaken(FlattenedTroopRoster roster)
     {
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         var count = 0;
         if (roster != null)
@@ -204,7 +208,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         {
             var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
             _service.EarnFromPrisoners(hero.StringId, kingdomId, cultureId, count);
-            NotifyEarningDelta(kingdomId, cultureId, hero.StringId, before, "prisoners");
+            _notifier.NotifyEarnedDelta(hero.StringId, kingdomId, cultureId, before, "prisoners");
         }
     }
 
@@ -212,73 +216,21 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (winner != Hero.MainHero?.CharacterObject) return;
 
-        GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
         _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId, cultureId);
-        NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament");
+        _notifier.NotifyEarned(Hero.MainHero.StringId, kingdomId, cultureId, "tournament");
     }
 
-    private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component)
+    private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component, HideoutEventComponent.HideoutBattleEndState endState)
     {
         if (winnerSide != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         _service.EarnFromHideout(hero.StringId, kingdomId, cultureId);
-        NotifyEarning(hero.StringId, kingdomId, cultureId, "hideout");
-    }
-
-    private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source)
-    {
-        var resource = _service.ResolveResource(kingdomId, cultureId);
-        if (resource == null) return;
-
-        var amount = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
-        InformationManager.DisplayMessage(new InformationMessage(
-            $"{resource.DisplayName} earned from {source} (total: {amount:F0})",
-            Colors.Green));
-    }
-
-    private void NotifyEarningDelta(string kingdomId, string cultureId, string heroId, float before, string source)
-    {
-        var resource = _service.ResolveResource(kingdomId, cultureId);
-        if (resource == null) return;
-
-        var after = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
-        var earned = after - before;
-        if (earned > 0f)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(
-                $"+{earned:F0} {resource.DisplayName} from {source}",
-                Colors.Green));
-        }
-    }
-
-    private int ApplyDesertion(MobileParty party, IReadOnlyList<TroopDesertionEntry> desertions)
-    {
-        if (party?.MemberRoster == null || desertions == null || desertions.Count == 0)
-            return 0;
-
-        var totalDeserted = 0;
-        foreach (var entry in desertions)
-        {
-            var character = CharacterObject.Find(entry.TroopId);
-            if (character == null) continue;
-
-            var index = party.MemberRoster.FindIndexOfTroop(character);
-            if (index < 0) continue;
-
-            var currentCount = party.MemberRoster.GetElementNumber(index);
-            var toRemove = System.Math.Min(entry.DesertCount, currentCount);
-            if (toRemove <= 0) continue;
-
-            party.MemberRoster.AddToCounts(character, -toRemove);
-            totalDeserted += toRemove;
-            _logger.LogInfo($"[SpecRes] Deserted: {entry.TroopId} x{toRemove}");
-        }
-
-        return totalDeserted;
+        _notifier.NotifyEarned(hero.StringId, kingdomId, cultureId, "hideout");
     }
 
     private void OnScreenPushed(ScreenBase screen)
@@ -316,7 +268,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         else
         {
             var hero = Hero.MainHero;
-            GetHeroIds(hero, out var kingdomId, out var cultureId);
+            SpecialResourcesBehaviorHelpers.GetHeroIds(hero, out var kingdomId, out var cultureId);
             _service.CommitSession(hero?.StringId, kingdomId, cultureId);
         }
     }
@@ -327,37 +279,4 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         _service.BeginPartyScreenSession();
     }
 
-    private static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)
-    {
-        kingdomId = hero?.Clan?.Kingdom?.StringId;
-        cultureId = hero?.Culture?.StringId;
-    }
-
-    private static int CountOwnedTowns(Hero hero)
-    {
-        var settlements = hero.Clan?.Settlements;
-        if (settlements == null) return 0;
-
-        var count = 0;
-        foreach (var settlement in settlements)
-            if (settlement.IsTown)
-                count++;
-        return count;
-    }
-
-    private List<TroopUpkeepInfo> GetTroopUpkeepFromParty(MobileParty party)
-    {
-        if (party?.MemberRoster == null) return _emptyUpkeep;
-
-        var result = new List<TroopUpkeepInfo>(8);
-        foreach (var element in party.MemberRoster.GetTroopRoster())
-        {
-            if (element.Character != null && _config.GetTroopCost(element.Character.StringId) != null)
-                result.Add(new TroopUpkeepInfo(element.Character.StringId, element.Number));
-        }
-
-        return result;
-    }
-
-    private static readonly List<TroopUpkeepInfo> _emptyUpkeep = new();
 }

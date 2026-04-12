@@ -1,5 +1,90 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-09
+
+### Feature: Fork Harmony 2.4.2 into TAOM.Dependencies — Zero External Module Dependencies
+
+Forked Harmony 2.4.2 (including MonoMod.Core, MonoMod.Utils, Mono.Cecil, Iced.Intel) source into `Dependencies/ThirdParty/Harmony/`. TAOM now ships fully self-contained with zero external module requirements — no Bannerlord.Harmony module needed.
+
+- Decompiled fat `0Harmony.dll` (1,392 files, ~48K LOC) and compiled into `TAOM.Dependencies.dll`
+- Fixed 900+ decompilation artifacts (missing backing fields, unsafe context, ref-assign scope, readonly struct, IntPtr null-coalescing, local function scoping)
+- Added 3 safety features: `UnpatchAll(null)` guard, duplicate Harmony detection, load-order assertion
+- Excluded `TaleWorlds.CampaignSystem.dll` reference from Dependencies (its `Helpers` namespace shadowed MonoMod's `Helpers` class)
+- Updated `PatchProcessor.VersionInfo` to recognize `TAOM.Dependencies` assembly name
+- Removed `Bannerlord.Harmony` from SubModule.xml dependencies and launch profiles
+- Created `/harmony-update` skill for automated upstream merge workflow
+- All 1055 tests pass, all 61 Harmony patches compile against forked types
+
+### Feature: Internalize MCM and UIExtenderEx — Zero BUTR Dependencies
+
+Removed 3 external BUTR library dependencies (MCM, ButterLib, UIExtenderEx). Harmony was the last remaining external dependency (now also forked -- see above).
+
+**Phase 1: MCM Replacement**
+- Replaced `AttributeGlobalSettings<TaomSettings>` with plain JSON singleton using Newtonsoft.Json
+- 29 settings preserved with identical names/types/defaults, loaded from `ModuleData/configs/taom_settings.json`
+- All 33 consumer callsites unchanged (`TaomSettings.Instance?.Property ?? default`)
+- Eliminates ButterLib crash on Bannerlord 1.4.0 (`HotKeyManager.RegisterInitialContexts` signature change)
+- 7 new tests (load, save, round-trip, defaults, malformed, partial, empty)
+
+**Phase 2: UIExtenderEx Replacement**
+- Built `Core/UI/` mixin infrastructure: `ViewModelMixinSupport`, `WrappedPropertyInfo`, `WrappedMethodInfo`, `WidgetPrefabPatcher`
+- Gauntlet property/command injection via cloned `_propertiesAndMethods` dictionary with wrapped PropertyInfo/MethodInfo
+- Harmony postfix on `WidgetPrefab.LoadFrom()` for prefab modifications (no transpiler needed)
+- Rewrote 6 UI files: CareerSystem (button + mixin), SpecialResources (bar + mixin), TimeAcceleration (button + mixin)
+- Deleted redundant `ViewModel_ExecuteCommand_CareerScreen_Patch.cs` (commands now injected via WrappedMethodInfo)
+
+**Bugs caught by review process (5 total):**
+- CRITICAL: `WidgetPrefab_LoadFrom_Patch` had no `HarmonyPatchCategory` and was never activated
+- HIGH: `ExecuteOpenCareerScreen` fired twice (old postfix + new injected method)
+- MEDIUM: `{ExtraFastForwardHint}` DataSource binding needed `WidgetAttributeValueTypeBindingPath`, not `Binding`
+- MINOR: TimeAcceleration mixin missing `OnRefresh()` in constructor postfix
+- MINOR: Bare exception catch in TaomSettings missing logging
+
+### Feature: TAOM.Dependencies Pre-Native Module
+
+Created a separate `TAOM.Dependencies` module that loads before Native to apply UIExtenderEx system patches at the correct time.
+
+- Separate `.csproj` and `SubModule.xml` with `ModulesToLoadAfterThis` — load order: Harmony -> TAOM.Dependencies -> Native -> SandBox -> TAOM
+- Sets `UIConfig.DoNotUseGeneratedPrefabs = true` before any prefabs load — the missing piece causing transparent banner backgrounds
+- Triggers UIExtenderEx's static constructor which applies 5 system Harmony patches (BrushFactory, WidgetFactory, UIConfig, WidgetPrefab, ViewModel)
+- Forked UIExtenderEx code (43 files) moved from `Main/ThirdParty/` to `Dependencies/ThirdParty/`
+- TAOM's main `SubModule.cs` calls `UIExtender.Create/Register/Enable` after Dependencies loads
+
+**Verified in-game:** Settlement nameplates render with colored diamond backgrounds; all custom brushes, widgets, and prefab overrides working without external UIExtenderEx.
+
+### Fix: CanMakeAlliance Override for Racial Enmity
+
+Added `CanMakeAlliance` override to `TaomAllianceModel` to enforce hard alliance blocks for permanently hostile factions. Previously only alliance scores were modified (via lore modifier), meaning extreme vanilla factors could theoretically override the penalty. Now uses `IDiplomacyService.IsAllianceAllowed()` as a hard gate.
+
+### Tooling: Bannerlord 1.4.0 Decompilation & Compatibility System
+
+Bannerlord updated to v1.4.0. Built reusable decompilation tooling and a full compatibility review system.
+
+- `tools/Decompile-Bannerlord.ps1` — batch decompiles all 72 Bannerlord DLLs into organized folder structure (Campaign/, Core/, Engine/, etc.) with `--DryRun` support
+- `tools/Diff-BannerlordAPI.ps1` — scans TAOM source for all 108 TaleWorlds types referenced, diffs only those files between version trees, produces structured change report
+- `/compat-check` skill — orchestrates diff script + 3 parallel review agents (Harmony patches, GameModel overrides, reflection targets), compiles prioritized remediation report
+- Decompiled v1.4.0 to `E:\Decompiled_Bannerlord\` (7,961 .cs files), backed up v1.3.15 to `E:\Decompiled_Bannerlord_v1.3.15\`
+- New DLL in 1.4.0: `TaleWorlds.ServiceDiscovery.Client` (Network/)
+
+### Fix: Bannerlord 1.4.0 API Compatibility (3 breaking changes)
+
+Compatibility review found 37 changed types across 108 TAOM references. 3 compile-breaking changes fixed:
+
+- `TaomAllianceModel.GetScoreOfStartingAlliance` — removed `IFaction evaluatingFaction` parameter (dropped in v1.4.0 base class)
+- `TaomBattleRewardModel.CalculateRenownGain` — added `float renownMultiplierForWinnerSide` and `bool includeDescriptions` parameters (added in v1.4.0 base class)
+- `SpecialResourcesBehavior.OnHideoutCompleted` — added `HideoutBattleEndState endState` parameter (event delegate changed in v1.4.0)
+
+### Verified Safe (no changes needed)
+
+- Mission.RegisterBlow signature unchanged — warg combat safe
+- GuardsCampaignBehavior.PrepareGuardAgentDataFromGarrison intact — settlement guards safe
+- All 25+ CharacterTableau/CharacterSpawner reflection fields verified intact
+- AgentVisuals.Create 5-parameter overload confirmed
+- TaomKingdomDecisionPermissionModel compatible with new bidirectional call-to-war checks
+- CultureSettingService dynamic reflection targets all present
+- 20+ Harmony patches confirmed safe with unchanged targets
+- Full report: `docs/migration/compat-check-v1.4.0.md`
+
 ## 2026-04-08
 
 ### Feature: Named Companion System

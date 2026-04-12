@@ -41,6 +41,13 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
         return base.IsWarDecisionAllowedBetweenKingdoms(kingdom1, kingdom2, out reason);
     }
 
+    // v1.4.0 compat: DefaultKingdomDecisionPermissionModel.IsPeaceDecisionAllowedBetweenKingdoms
+    // was rewritten to check IsAtWarByCallToWarAgreement in both directions (k1→k2 and k2→k1),
+    // and that method's signature gained an `out Kingdom callingKingdom` parameter.
+    // TAOM is unaffected because:
+    //   1. We never call IsAtWarByCallToWarAgreement directly — base handles it.
+    //   2. WotR gate runs first; if it blocks, base is never reached.
+    //   3. If WotR allows, base runs with the new bidirectional checks — additive safety, no conflict.
     public override bool IsPeaceDecisionAllowedBetweenKingdoms(
         Kingdom kingdom1, Kingdom kingdom2, out TextObject reason)
     {

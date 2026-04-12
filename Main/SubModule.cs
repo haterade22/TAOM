@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 using TAOM.Core.Infrastructure;
@@ -70,6 +71,8 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        TaomSettings.Initialize(IoC.Resolve<IPathService>().ModuleDataPath);
+
         _uiExtender = UIExtender.Create("TAOM");
         _uiExtender.Register(typeof(SubModule).Assembly);
         _uiExtender.Enable();
@@ -83,6 +86,18 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch25_LocalizationOverride");
         var pathService0 = IoC.Resolve<IPathService>();
         var logger0 = IoC.Resolve<IModLogger>();
+
+        // Drain Dependencies' early log buffer into the real FileLogger
+        TAOM.Dependencies.EarlyLog.DrainTo((level, msg) =>
+        {
+            switch (level)
+            {
+                case "ERROR": logger0.LogError(msg); break;
+                case "WARNING": logger0.LogWarning(msg); break;
+                default: logger0.LogInfo(msg); break;
+            }
+        });
+
         var xmlPath = System.IO.Path.Combine(pathService0.ModuleDataPath, "taom_module_strings.xml");
         try
         {
@@ -424,6 +439,7 @@ public class SubModule : MBSubModuleBase
     {
         base.OnSubModuleUnloaded();
         _harmony?.UnpatchAll("com.taom.mod");
+        TaomSettings.Reset();
         IoC.Dispose();
     }
 }

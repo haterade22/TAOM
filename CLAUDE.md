@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
+Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
 ## Commands
 
@@ -42,6 +42,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
 | `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
+| `/harmony-update [version]` | Check for upstream Harmony updates, diff against fork, apply with review |
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -115,6 +116,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | SettlementGuards | `Main/Features/SettlementGuards/` (per-settlement guard customization — XML-driven guard troop pools with settlement→clan→culture fallback, spawn-point filtering, weighted random selection, per-culture spear mapping; Harmony prefixes on private GuardsCampaignBehavior methods) |
 | NamedCompanions | `Main/Features/NamedCompanions/` (18 lore companions as recruitable wanderers — Aragorn/Legolas/Gimli/etc; `is_hero="true"` + `occupation="Wanderer"`, JSON config for spawn settlements, vanilla dialog integration, race persistence via existing HeroRace system) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
+| Harmony fork | `Dependencies/ThirdParty/Harmony/` (1,392 vendored files — Harmony 2.4.2 + MonoMod + Cecil + Iced) |
+| EarlyLog | `Dependencies/EarlyLog.cs` (static log buffer, drained into FileLogger on Main startup) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
 | CC narrative data | `Main/_Module/ModuleData/charactercreation/` (JSON) |
@@ -379,11 +382,11 @@ Phase 4: CLOSE OUT
 
 | Folder | Contents |
 |--------|----------|
-| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
-| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
-| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,362 files) |
+| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,557 files) |
+| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (2,363 files) |
+| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,366 files) |
 | `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
-| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
+| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (387 files) |
 | `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
 | `Network/` | Diamond, Network, PlayerServices (147 files) |
 | `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |
@@ -426,7 +429,7 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 
 ## Notes
 
-- Target: Bannerlord v1.3.15
+- Target: Bannerlord v1.4.0
 - Migration from v1.2 requires API changes - see `docs/migration/`
 - No git actions unless explicitly asked
 
