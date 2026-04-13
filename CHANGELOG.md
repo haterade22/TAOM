@@ -1,5 +1,29 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-13
+
+### Feature: Career System Overhaul + TOR Parity — 23 LOTR Careers + System Upgrades
+
+Redesigned career system based on gap analysis against The Old Realms (TOR) Warhammer mod. Replaced 21 generic careers across 7 factions with 23 lore-accurate LOTR careers, each with full choice trees (31 choices per career).
+
+**New careers by faction:**
+- Gondor: Ranger of Ithilien, Captain of Pelargir, Knight of Belfalas
+- Mordor: Black Uruk Captain, Mulkerhili Cultist, Snaga Rider, Olog-Hai Warchief (new Monster class)
+- Rohan: Marksman of Aldburg, Eotheod Windrider, Watchman of Stangard
+- Dunland: Avanc-luth Raider, Wolfskin Hunter, Clanguard Rider
+- Rhun: Codyan Legionaire, Lokhas Drus Marksman, Balchoth Kan
+- Harad: Tribesman of Jelut, Pezarsani Javelineer, Mahud Beast Rider, Far Harad Halftroll (Monster)
+- Khand: Blademaster of Ren, Steppe Bowmaster, Chariot Warlord
+
+**System upgrades (TOR parity):**
+- Wired 3 cross-system passives: CustomResourceGain, CustomResourceUpkeepModifier, CustomResourceUpgradeCostModifier — careers now affect special resource economics
+- New TaomAgentApplyDamageModel: ArmorPenetration, Resistance, ShruggedOff passives now functional in combat
+- New TaomClanTierModel: CompanionLimit passive now functional
+- Differentiated all 11 special resource earning rates per faction identity (no more identical values)
+- Career screen UI rewrite: TOR-pattern expandable panels, career portrait, ability icons, lock chains, +/- selection buttons, hover interactions
+
+**Totals:** 50 careers, 300 choice groups, ~1,550 choices, 50 ability templates
+
 ## 2026-04-10
 
 ### Feature: Fork NativeSkinFixes — covers_head Morph Fix + Hair/Beard Cloth Physics
