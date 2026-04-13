@@ -318,6 +318,30 @@ public class SpecialResourceService : ISpecialResourceService
         return result;
     }
 
+    public ResourceTier GetCurrentTier(string heroId, string kingdomId, string cultureId)
+    {
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null || resource.TierThresholds.Count == 0)
+            return null;
+
+        var amount = _storage.Get(heroId, resource.Id);
+
+        // Walk from highest tier to lowest; return first one whose threshold is met
+        for (var i = resource.TierThresholds.Count - 1; i >= 0; i--)
+        {
+            if (amount >= resource.TierThresholds[i].Threshold)
+                return resource.TierThresholds[i];
+        }
+
+        return null;
+    }
+
+    public int GetCurrentTierLevel(string heroId, string kingdomId, string cultureId)
+    {
+        var tier = GetCurrentTier(heroId, kingdomId, cultureId);
+        return tier?.Level ?? 0;
+    }
+
     private void AddCapped(string heroId, SpecialResource resource, float amount)
     {
         var current = _storage.Get(heroId, resource.Id);

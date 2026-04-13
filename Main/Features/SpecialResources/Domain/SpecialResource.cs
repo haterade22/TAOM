@@ -19,6 +19,12 @@ public sealed class SpecialResource
     public float PerTournamentWin { get; }
     public float PerHideoutClear { get; }
 
+    /// <summary>
+    /// Ordered list of tier milestones (ascending by <see cref="ResourceTier.Threshold"/>).
+    /// Empty for resources that have no tier system.
+    /// </summary>
+    public IReadOnlyList<ResourceTier> TierThresholds { get; }
+
     public SpecialResource(
         string id,
         IReadOnlyList<string> kingdomIds,
@@ -33,7 +39,8 @@ public sealed class SpecialResource
         float perSiegeVictory,
         float perPrisoner,
         float perTournamentWin = 0f,
-        float perHideoutClear = 0f)
+        float perHideoutClear = 0f,
+        IReadOnlyList<ResourceTier> tierThresholds = null)
     {
         Id = id;
         KingdomIds = kingdomIds;
@@ -49,5 +56,6 @@ public sealed class SpecialResource
         PerPrisoner = perPrisoner;
         PerTournamentWin = perTournamentWin;
         PerHideoutClear = perHideoutClear;
+        TierThresholds = tierThresholds ?? new List<ResourceTier>();
     }
 }

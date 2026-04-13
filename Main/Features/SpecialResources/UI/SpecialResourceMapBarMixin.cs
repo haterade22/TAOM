@@ -50,7 +50,10 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         if (intAmount != _lastAmount)
         {
-            _resourceItem.Value = intAmount.ToString();
+            var tier = _service.GetCurrentTier(hero.StringId, kingdomId, cultureId);
+            _resourceItem.Value = tier != null
+                ? $"{intAmount} ({tier.Name})"
+                : intAmount.ToString();
             _lastAmount = intAmount;
         }
     }
@@ -103,6 +106,19 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         var dailyEarning = _service.GetDailyEarning(kingdomId, cultureId, ownedTowns);
 
         result.Add(new TooltipProperty(resource.DisplayName, $"{amount:F0} / {resource.Cap:F0}", 0));
+
+        var currentTier = _service.GetCurrentTier(hero.StringId, kingdomId, cultureId);
+        if (currentTier != null)
+        {
+            result.Add(new TooltipProperty("Tier", $"{currentTier.Level} — {currentTier.Name}", 0));
+            result.Add(new TooltipProperty("Effect", currentTier.Description, 0));
+        }
+        else if (resource.TierThresholds.Count > 0)
+        {
+            var nextTier = resource.TierThresholds[0];
+            result.Add(new TooltipProperty("Next tier at", $"{nextTier.Threshold:F0} ({nextTier.Name})", 0));
+        }
+
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
         result.Add(new TooltipProperty("Daily from towns", $"+{dailyEarning:F1}", 0));
         result.Add(new TooltipProperty("Per battle victory", $"+{resource.PerBattleVictoryBase:F0}", 0));

@@ -25,6 +25,14 @@
     per_prisoner="0" per_tournament_win="8" per_hideout_clear="4">
     <Kingdom id="erebor" />
     <Culture id="erebor" />
+    <Tiers>
+      <Tier level="1" name="Apprentice Miner" threshold="100"
+            description="Dwarven mining efficiency improves. -5% troop upgrade cost." />
+      <Tier level="2" name="Journeyman Smith" threshold="250"
+            description="Erebor's forges burn bright. -8% enchantment cost, +5% troop morale." />
+      <Tier level="3" name="Master of the Treasury" threshold="400"
+            description="The wealth of Erebor flows. -12% troop wages, +3 party size." />
+    </Tiers>
   </Resource>
 
   <!-- Caster (Gondor) — ancient Numenorean lore, scholarly and defensive -->
