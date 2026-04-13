@@ -20,11 +20,12 @@ public class TaomAllianceModel : DefaultAllianceModel
     public override ExplainedNumber GetScoreOfStartingAlliance(
         Kingdom kingdomDeclaresAlliance,
         Kingdom kingdomDeclaredAlliance,
+        IFaction evaluatingFaction,
         out TextObject explanation,
         bool includeDescription = false)
     {
         var result = base.GetScoreOfStartingAlliance(
-            kingdomDeclaresAlliance, kingdomDeclaredAlliance,
+            kingdomDeclaresAlliance, kingdomDeclaredAlliance, evaluatingFaction,
             out explanation, includeDescription);
 
         float modifier = _diplomacyService.GetAllianceScoreModifier(
@@ -35,22 +36,11 @@ public class TaomAllianceModel : DefaultAllianceModel
             result.Add(modifier, new TextObject("{=taom_alliance_lore}Lore Alignment"));
         }
 
-        return result;
-    }
-
-    public override bool CanMakeAlliance(
-        Kingdom kingdom,
-        Kingdom targetKingdom,
-        IFaction evaluatingFaction,
-        out TextObject reason,
-        bool includeReason = false)
-    {
-        if (!_diplomacyService.IsAllianceAllowed(kingdom.StringId, targetKingdom.StringId))
+        if (!_diplomacyService.IsAllianceAllowed(kingdomDeclaresAlliance.StringId, kingdomDeclaredAlliance.StringId))
         {
-            reason = new TextObject("{=taom_alliance_blocked}These kingdoms can never be allied.");
-            return false;
+            result.Add(-10000f, new TextObject("{=taom_alliance_blocked}Lore Enmity"));
         }
 
-        return base.CanMakeAlliance(kingdom, targetKingdom, evaluatingFaction, out reason, includeReason);
+        return result;
     }
 }

@@ -15,13 +15,11 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
 
     public override ExplainedNumber CalculateRenownGain(
         PartyBase winnerParty, float renownValueOfBattleForWinnerSide,
-        float contributionShareOfWinnerParty, float renownMultiplierForWinnerSide,
-        bool includeDescriptions)
+        float contributionShareOfWinnerParty)
     {
         var result = base.CalculateRenownGain(
             winnerParty, renownValueOfBattleForWinnerSide,
-            contributionShareOfWinnerParty, renownMultiplierForWinnerSide,
-            includeDescriptions);
+            contributionShareOfWinnerParty);
 
         var culture = winnerParty.Owner?.Culture ?? winnerParty.Culture;
         if (culture?.HasFeat(TaomCulturalFeats.UmbarRenownFeat) == true)
