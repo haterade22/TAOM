@@ -2,4 +2,5 @@
 <LanguageData id="Türkçe">
   <LanguageFile xml_path="TR/std_taom_module_strings_tur-TR.xml" />
   <LanguageFile xml_path="TR/std_taom_wanderer_strings_tur-TR.xml" />
+  <LanguageFile xml_path="TR/std_taom_named_companion_strings_tur-TR.xml" />
 </LanguageData>

@@ -2,4 +2,5 @@
 <LanguageData id="繁體中文">
   <LanguageFile xml_path="CNt/std_taom_module_strings_zho-HK.xml" />
   <LanguageFile xml_path="CNt/std_taom_wanderer_strings_zho-HK.xml" />
+  <LanguageFile xml_path="CNt/std_taom_named_companion_strings_zho-HK.xml" />
 </LanguageData>

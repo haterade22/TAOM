@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace TAOM.Tests.Infrastructure.Localization;
@@ -102,6 +103,35 @@ public class LanguageDataXmlTests
             var id = (string?)doc.Root?.Attribute("id");
             Assert.IsFalse(string.IsNullOrWhiteSpace(id),
                 $"Languages/{lang}/language_data.xml must have a non-empty id attribute");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveExactlyThreeLanguageFiles()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(path);
+            var count = doc.Descendants("LanguageFile").Count();
+            Assert.AreEqual(3, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 3 LanguageFile entries (module, wanderer, companion)");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveCompanionStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("named_companion_strings")),
+                $"Languages/{lang}/language_data.xml missing named_companion_strings reference");
         }
     }
 

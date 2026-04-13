@@ -2,4 +2,5 @@
 <LanguageData id="简体中文">
   <LanguageFile xml_path="CNs/std_taom_module_strings_zho-CN.xml" />
   <LanguageFile xml_path="CNs/std_taom_wanderer_strings_zho-CN.xml" />
+  <LanguageFile xml_path="CNs/std_taom_named_companion_strings_zho-CN.xml" />
 </LanguageData>

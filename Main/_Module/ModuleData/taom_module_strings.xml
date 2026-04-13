@@ -770,4 +770,16 @@
 	<string id="TAOM_eleftheroi_short" text="{=TAOM_eleftheroi_short}Beornings" />
 	<string id="TAOM_eleftheroi_text" text="{=TAOM_eleftheroi_text}The Beornings are the great woodmen who dwell in the vale of the Anduin between the Misty Mountains and Mirkwood, led by the skin-changers of Beorn's line. They allow no Orc to cross their territory, charge a toll at the Ford of Carrock to fund their watch, and answer to no king in Middle-earth. Though they will trade and talk with Elves and Dwarves, any army that marches through their forest without leave will find that the Beornings have very large teeth." />
 
+	<!-- ============================================== -->
+	<!-- UI Strings (referenced from C# code)          -->
+	<!-- ============================================== -->
+
+	<string id="taom_career" text="{=taom_career}Career" />
+	<string id="taom_alliance_lore" text="{=taom_alliance_lore}Lore Alignment" />
+	<string id="taom_alliance_blocked" text="{=taom_alliance_blocked}These kingdoms can never be allied." />
+	<string id="taom_war_blocked" text="{=taom_war_blocked}These kingdoms are bound by an unbreakable alliance." />
+	<string id="taom_wotr_no_peace" text="{=taom_wotr_no_peace}The War of the Ring rages. There can be no peace." />
+	<string id="taom_precompile_shaders" text="{=taom_precompile_shaders}Pre-compile Shaders" />
+	<string id="taom_precompile_hint" text="{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM." />
+
 </strings>

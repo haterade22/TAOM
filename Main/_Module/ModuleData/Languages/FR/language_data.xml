@@ -2,4 +2,5 @@
 <LanguageData id="Français">
   <LanguageFile xml_path="FR/std_taom_module_strings_fre-FR.xml" />
   <LanguageFile xml_path="FR/std_taom_wanderer_strings_fre-FR.xml" />
+  <LanguageFile xml_path="FR/std_taom_named_companion_strings_fre-FR.xml" />
 </LanguageData>
