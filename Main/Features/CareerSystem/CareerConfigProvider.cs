@@ -18,6 +18,7 @@ public class CareerConfigProvider : ICareerConfigProvider
     private List<CareerChoiceGroupDefinition> _groups;
     private List<CareerChoiceDefinition> _choices;
     private int _maxPerkPoints = 30;
+    private Dictionary<string, AbilityTemplateData> _abilityTemplates;
 
     public CareerConfigProvider(IPathService pathService, IModLogger logger)
     {
@@ -49,6 +50,13 @@ public class CareerConfigProvider : ICareerConfigProvider
         return _maxPerkPoints;
     }
 
+    public AbilityTemplateData GetAbilityTemplate(string templateId)
+    {
+        EnsureLoaded();
+        if (string.IsNullOrEmpty(templateId)) return null;
+        return _abilityTemplates.TryGetValue(templateId, out var t) ? t : null;
+    }
+
     private void EnsureLoaded()
     {
         if (_careers != null) return;
@@ -58,9 +66,11 @@ public class CareerConfigProvider : ICareerConfigProvider
         _careers = new List<CareerDefinition>();
         _groups = new List<CareerChoiceGroupDefinition>();
         _choices = new List<CareerChoiceDefinition>();
+        _abilityTemplates = new Dictionary<string, AbilityTemplateData>();
 
         LoadCareersXml();
         LoadChoicesXml();
+        LoadAbilityTemplatesXml();
 
         _logger.LogInfo($"CareerSystem: Loaded {_careers.Count} careers, {_groups.Count} groups, {_choices.Count} choices, maxPerkPoints={_maxPerkPoints}");
     }
@@ -251,6 +261,58 @@ public class CareerConfigProvider : ICareerConfigProvider
         {
             _logger.LogError($"CareerConfig: failed to parse choice: {ex.Message}");
             return null;
+        }
+    }
+
+    private void LoadAbilityTemplatesXml()
+    {
+        var path = Path.Combine(_pathService.ModuleDataPath, "career_system", "taom_ability_templates.xml");
+        if (!File.Exists(path))
+        {
+            _logger.LogWarning($"CareerConfig: ability templates file not found at {path}");
+            return;
+        }
+
+        try
+        {
+            var doc = XDocument.Load(path);
+            var root = doc.Root;
+            if (root == null) return;
+
+            foreach (var el in root.Elements("AbilityTemplate"))
+            {
+                try
+                {
+                    var id = el.Attribute("id")?.Value;
+                    if (string.IsNullOrEmpty(id)) continue;
+
+                    var template = new AbilityTemplateData
+                    {
+                        Id = id,
+                        DisplayName = el.Attribute("display_name")?.Value ?? "",
+                        SpriteName = el.Attribute("sprite")?.Value ?? "",
+                        Cooldown = ParseFloat(el, "cooldown", 0f),
+                        Duration = ParseFloat(el, "duration", 8f),
+                        Radius = ParseFloat(el, "radius", 10f),
+                        MaxCharge = ParseFloat(el, "max_charge", 0f),
+                        ParticleEffect = el.Attribute("particle_effect")?.Value ?? "",
+                        SoundEffect = el.Attribute("sound_effect")?.Value ?? "",
+                        TooltipDescription = el.Attribute("tooltip")?.Value ?? "",
+                    };
+
+                    _abilityTemplates[id] = template;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"CareerConfig: failed to parse ability template element: {ex.Message}");
+                }
+            }
+
+            _logger.LogInfo($"CareerSystem: Loaded {_abilityTemplates.Count} ability templates");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"CareerConfig: failed to load ability templates XML: {ex.Message}");
         }
     }
 

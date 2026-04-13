@@ -17,6 +17,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private readonly ICareerDataService _dataService;
     private readonly ICareerRegistry _registry;
     private readonly ICareerAbilityService _abilityService;
+    private readonly ICareerConfigProvider _configProvider;
+    private readonly CareerAbilityEffectRegistry _effectRegistry;
     private readonly IModLogger _logger;
 
     private float _tickAccumulator;
@@ -29,17 +31,23 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private GauntletMovieIdentifier _hudMovie;
     private bool _hudInitialized;
 
+    private MissionAbilityExecutionContext _activeContext;
+
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
     public CareerPerkMissionBehavior(
         ICareerDataService dataService,
         ICareerRegistry registry,
         ICareerAbilityService abilityService,
+        ICareerConfigProvider configProvider,
+        CareerAbilityEffectRegistry effectRegistry,
         IModLogger logger)
     {
         _dataService = dataService;
         _registry = registry;
         _abilityService = abilityService;
+        _configProvider = configProvider;
+        _effectRegistry = effectRegistry;
         _logger = logger;
     }
 
@@ -79,6 +87,9 @@ public class CareerPerkMissionBehavior : MissionBehavior
                 "Career ability is ready! Press V to activate.", Colors.Green));
         }
 
+        // Tick active execution context to expire timed buffs
+        _activeContext?.Tick(Mission.Current?.CurrentTime ?? 0f);
+
         // Check ability activation input (every frame, once per key press)
         if (Input.IsKeyPressed(InputKey.V))
         {
@@ -87,10 +98,40 @@ public class CareerPerkMissionBehavior : MissionBehavior
                 _abilityService.ActivateAbility(heroId);
                 _abilityReadyNotified = false;
                 _logger.LogInfo($"CareerSystem: Ability activated for hero '{heroId}' via V key");
-                InformationManager.DisplayMessage(new InformationMessage(
-                    "Career ability activated!", Colors.Yellow));
+                ExecuteAbilityEffect(heroId);
             }
         }
+    }
+
+    private void ExecuteAbilityEffect(string heroId)
+    {
+        var careerId = _dataService.GetCareerStringId(heroId);
+        if (string.IsNullOrEmpty(careerId)) return;
+
+        var career = _registry.GetCareer(careerId);
+        if (career == null) return;
+
+        var template = _configProvider.GetAbilityTemplate(career.AbilityTemplateId);
+        var duration = template?.Duration ?? 8f;
+        var radius = template?.Radius ?? 10f;
+
+        var mainAgent = Mission.Current?.MainAgent;
+        var context = new MissionAbilityExecutionContext(
+            heroId, duration, radius, mainAgent, Mission.Current, _logger);
+
+        _activeContext = context;
+
+        var executor = _effectRegistry.GetExecutor(careerId);
+        executor.Execute(context);
+
+        var abilityName = career.DisplayName;
+        InformationManager.DisplayMessage(new InformationMessage(
+            $"{abilityName} activated!", Colors.Yellow));
+
+        if (!string.IsNullOrEmpty(template?.SoundEffect))
+            context.PlaySound(template.SoundEffect);
+        if (!string.IsNullOrEmpty(template?.ParticleEffect))
+            context.PlayParticle(template.ParticleEffect);
     }
 
     private void TryInitializeHud()
@@ -153,6 +194,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
         _abilityReadyNotified = false;
+        _activeContext = null;
         _abilityService.ClearAll();
     }
 
