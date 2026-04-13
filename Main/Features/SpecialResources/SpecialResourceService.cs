@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Features.SpecialResources;
@@ -10,14 +12,16 @@ public class SpecialResourceService : ISpecialResourceService
     private readonly ISpecialResourceConfigProvider _config;
     private readonly ISpecialResourceStorageService _storage;
     private readonly IModLogger _logger;
+    private readonly ICareerPassiveService _passiveService;
     private float _pendingSpend;
     private bool _inSession;
 
-    public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage, IModLogger logger)
+    public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage, IModLogger logger, ICareerPassiveService passiveService = null)
     {
         _config = config;
         _storage = storage;
         _logger = logger;
+        _passiveService = passiveService;
     }
 
     public SpecialResource ResolveResource(string kingdomId, string cultureId)
@@ -126,7 +130,11 @@ public class SpecialResourceService : ISpecialResourceService
         if (resource == null) return;
 
         var earning = resource.DailyPerTown * ownedTownCount;
-        var upkeep = GetDailyUpkeep(troopsWithUpkeep);
+        var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceGain);
+        if (gainModifier != 0f)
+            earning *= (1f + gainModifier);
+
+        var upkeep = GetDailyUpkeep(troopsWithUpkeep, heroId);
         var net = earning - upkeep;
         var before = _storage.Get(heroId, resource.Id);
 
@@ -162,7 +170,7 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return;
 
-        var totalCost = cost.UpgradeCost * count;
+        var totalCost = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, count);
         _storage.Add(heroId, resource.Id, -totalCost);
         _logger.LogInfo($"[SpecRes] SPEND: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
     }
@@ -196,8 +204,11 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null || cost.UpgradeCost <= 0) return requestedCount;
 
+        var effectivePerUnit = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, 1);
+        if (effectivePerUnit <= 0) return requestedCount;
+
         var available = GetAvailableAfterPending(heroId, kingdomId, cultureId);
-        var maxAffordable = (int)(available / cost.UpgradeCost);
+        var maxAffordable = (int)(available / effectivePerUnit);
         var clamped = Math.Max(0, Math.Min(requestedCount, maxAffordable));
 
         if (clamped < requestedCount)
@@ -257,7 +268,7 @@ public class SpecialResourceService : ISpecialResourceService
         return resource.DailyPerTown * ownedTownCount;
     }
 
-    public float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+    public float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep, string heroId = null)
     {
         var total = 0f;
         if (troopsWithUpkeep == null) return total;
@@ -269,7 +280,11 @@ public class SpecialResourceService : ISpecialResourceService
                 total += cost.DailyUpkeep * troop.Count;
         }
 
-        return total;
+        var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceUpkeepModifier);
+        if (upkeepModifier != 0f)
+            total *= (1f + upkeepModifier);
+
+        return Math.Max(0f, total);
     }
 
     public IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
@@ -308,5 +323,20 @@ public class SpecialResourceService : ISpecialResourceService
         var current = _storage.Get(heroId, resource.Id);
         var newAmount = Math.Min(current + amount, resource.Cap);
         _storage.Set(heroId, resource.Id, newAmount);
+    }
+
+    private float GetEffectiveUpgradeCost(string heroId, float baseCostPerUnit, int count)
+    {
+        var totalCost = baseCostPerUnit * count;
+        var costModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceUpgradeCostModifier);
+        if (costModifier != 0f)
+            totalCost *= (1f + costModifier);
+        return Math.Max(0f, totalCost);
+    }
+
+    private float GetPassiveMagnitude(string heroId, PassiveEffectType type)
+    {
+        if (_passiveService == null || heroId == null) return 0f;
+        return _passiveService.GetPassiveMagnitude(heroId, type);
     }
 }

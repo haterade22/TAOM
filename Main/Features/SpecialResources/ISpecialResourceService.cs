@@ -24,7 +24,7 @@ public interface ISpecialResourceService
     void CancelSession();
     void InitializeHero(string heroId, string kingdomId, string cultureId);
     float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount);
-    float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
+    float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep, string heroId = null);
     IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
 }
 

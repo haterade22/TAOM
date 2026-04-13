@@ -5,6 +5,8 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using TAOM.Features;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
 using TAOM.Core.Infrastructure;
@@ -295,6 +297,8 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomMapVisibilityModel());
             campaignStarter.AddModel(new TaomInventoryCapacityModel());
             campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel());
+            campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel());
+            campaignStarter.AddModel(new TaomClanTierModel());
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();
