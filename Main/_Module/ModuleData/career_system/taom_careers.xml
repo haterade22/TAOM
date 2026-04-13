@@ -28,49 +28,49 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="osgiliath_captain"
-          display_name="{=taom_career_osgiliath_captain}Captain of Osgiliath"
-          description="{=taom_career_osgiliath_captain_desc}A hardened defender who holds the line at the ruins of Osgiliath, inspiring troops to stand firm against overwhelming odds."
-          portrait_sprite="career_osgiliath_captain_portrait"
-          ability_template_id="osgiliath_captain_ability"
+  <Career id="captain_of_pelargir"
+          display_name="{=taom_career_captain_of_pelargir}Captain of Pelargir"
+          description="{=taom_career_captain_of_pelargir_desc}A seasoned mariner who commands Gondor's river fleet from Pelargir, blending naval discipline with fearsome close-quarters combat. Equally at home on a ship's deck or a battlefield, the Captain rallies sailors and soldiers alike."
+          portrait_sprite="career_captain_of_pelargir_portrait"
+          ability_template_id="captain_of_pelargir_ability"
           charge_type="DamageTaken"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="osgiliath_captain_root">
+          root_choice_id="captain_of_pelargir_root">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="osgiliath_captain_t1_a" />
-      <Group id="osgiliath_captain_t1_b" />
-      <Group id="osgiliath_captain_t2_a" />
-      <Group id="osgiliath_captain_t2_b" />
-      <Group id="osgiliath_captain_t3_a" />
-      <Group id="osgiliath_captain_t3_b" />
+      <Group id="captain_of_pelargir_t1_a" />
+      <Group id="captain_of_pelargir_t1_b" />
+      <Group id="captain_of_pelargir_t2_a" />
+      <Group id="captain_of_pelargir_t2_b" />
+      <Group id="captain_of_pelargir_t3_a" />
+      <Group id="captain_of_pelargir_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="swan_knight"
-          display_name="{=taom_career_swan_knight}Swan Knight"
-          description="{=taom_career_swan_knight_desc}A noble knight of Dol Amroth who rides with unmatched grace, shattering enemy lines with devastating cavalry charges."
-          portrait_sprite="career_swan_knight_portrait"
-          ability_template_id="swan_knight_ability"
-          charge_type="Kills"
+  <Career id="knight_of_belfalas"
+          display_name="{=taom_career_knight_of_belfalas}Knight of Belfalas"
+          description="{=taom_career_knight_of_belfalas_desc}An armored champion of the coastal fiefdom of Belfalas, whose thundering charge has broken countless enemy formations. The Knight of Belfalas combines Gondorian discipline with Dol Amroth's proud cavalry tradition, becoming an immovable wall of steel."
+          portrait_sprite="career_knight_of_belfalas_portrait"
+          ability_template_id="knight_of_belfalas_ability"
+          charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="swan_knight_root">
+          root_choice_id="knight_of_belfalas_root">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="swan_knight_t1_a" />
-      <Group id="swan_knight_t1_b" />
-      <Group id="swan_knight_t2_a" />
-      <Group id="swan_knight_t2_b" />
-      <Group id="swan_knight_t3_a" />
-      <Group id="swan_knight_t3_b" />
+      <Group id="knight_of_belfalas_t1_a" />
+      <Group id="knight_of_belfalas_t1_b" />
+      <Group id="knight_of_belfalas_t2_a" />
+      <Group id="knight_of_belfalas_t2_b" />
+      <Group id="knight_of_belfalas_t3_a" />
+      <Group id="knight_of_belfalas_t3_b" />
     </ChoiceGroups>
   </Career>
 
@@ -78,72 +78,95 @@
   <!-- MORDOR (mordor / empire_s)                                 -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="black_guard"
-          display_name="{=taom_career_black_guard}Black Guard"
-          description="{=taom_career_black_guard_desc}An iron-clad enforcer of Barad-dur who crushes resistance with brutal force and unwavering loyalty to the Dark Lord."
-          portrait_sprite="career_black_guard_portrait"
-          ability_template_id="black_guard_ability"
+  <Career id="black_uruk_captain"
+          display_name="{=taom_career_black_uruk_captain}Black Uruk Captain"
+          description="{=taom_career_black_uruk_captain_desc}An iron-muscled champion of Mordor who leads Black Uruk warbands into the breach, absorbing punishment that would fell lesser warriors and turning the tide through sheer brutish dominance."
+          portrait_sprite="career_black_uruk_captain_portrait"
+          ability_template_id="black_uruk_captain_ability"
           charge_type="DamageTaken"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="black_guard_root">
+          root_choice_id="black_uruk_captain_root">
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="empire_s" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="black_guard_t1_a" />
-      <Group id="black_guard_t1_b" />
-      <Group id="black_guard_t2_a" />
-      <Group id="black_guard_t2_b" />
-      <Group id="black_guard_t3_a" />
-      <Group id="black_guard_t3_b" />
+      <Group id="black_uruk_captain_t1_a" />
+      <Group id="black_uruk_captain_t1_b" />
+      <Group id="black_uruk_captain_t2_a" />
+      <Group id="black_uruk_captain_t2_b" />
+      <Group id="black_uruk_captain_t3_a" />
+      <Group id="black_uruk_captain_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="mordor_archer"
-          display_name="{=taom_career_mordor_archer}Mordor Archer"
-          description="{=taom_career_mordor_archer_desc}A shadowy marksman who rains poisoned arrows from the battlements of Mordor, weakening foes before the assault."
-          portrait_sprite="career_mordor_archer_portrait"
-          ability_template_id="mordor_archer_ability"
-          charge_type="DamageDone"
-          max_charge="100"
-          min_clan_tier="0"
-          root_choice_id="mordor_archer_root">
-    <EligibleCultures>
-      <Culture id="mordor" />
-      <Culture id="empire_s" />
-    </EligibleCultures>
-    <ChoiceGroups>
-      <Group id="mordor_archer_t1_a" />
-      <Group id="mordor_archer_t1_b" />
-      <Group id="mordor_archer_t2_a" />
-      <Group id="mordor_archer_t2_b" />
-      <Group id="mordor_archer_t3_a" />
-      <Group id="mordor_archer_t3_b" />
-    </ChoiceGroups>
-  </Career>
-
-  <Career id="warg_rider"
-          display_name="{=taom_career_warg_rider}Warg Rider"
-          description="{=taom_career_warg_rider_desc}A savage rider bonded to a ferocious warg, terrorizing the battlefield with lightning raids and brutal charges."
-          portrait_sprite="career_warg_rider_portrait"
-          ability_template_id="warg_rider_ability"
+  <Career id="mulkerhili_cultist"
+          display_name="{=taom_career_mulkerhili_cultist}Mulkerhílí Cultist"
+          description="{=taom_career_mulkerhili_cultist_desc}A fanatical devotee of the One Ring's whispered promises who channels the terror of Sauron's voice to shatter enemy resolve, blending cursed archery with a maddening presence that erodes the will to fight."
+          portrait_sprite="career_mulkerhili_cultist_portrait"
+          ability_template_id="mulkerhili_cultist_ability"
           charge_type="Kills"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="warg_rider_root">
+          root_choice_id="mulkerhili_cultist_root">
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="empire_s" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="warg_rider_t1_a" />
-      <Group id="warg_rider_t1_b" />
-      <Group id="warg_rider_t2_a" />
-      <Group id="warg_rider_t2_b" />
-      <Group id="warg_rider_t3_a" />
-      <Group id="warg_rider_t3_b" />
+      <Group id="mulkerhili_cultist_t1_a" />
+      <Group id="mulkerhili_cultist_t1_b" />
+      <Group id="mulkerhili_cultist_t2_a" />
+      <Group id="mulkerhili_cultist_t2_b" />
+      <Group id="mulkerhili_cultist_t3_a" />
+      <Group id="mulkerhili_cultist_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="snaga_rider"
+          display_name="{=taom_career_snaga_rider}Snaga Rider"
+          description="{=taom_career_snaga_rider_desc}A wiry Snaga cavalry raider who slips behind enemy lines with unnerving silence, striking supply columns and isolated units before vanishing into the smoke of Mordor."
+          portrait_sprite="career_snaga_rider_portrait"
+          ability_template_id="snaga_rider_ability"
+          charge_type="DamageDone"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="snaga_rider_root">
+    <EligibleCultures>
+      <Culture id="mordor" />
+      <Culture id="empire_s" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="snaga_rider_t1_a" />
+      <Group id="snaga_rider_t1_b" />
+      <Group id="snaga_rider_t2_a" />
+      <Group id="snaga_rider_t2_b" />
+      <Group id="snaga_rider_t3_a" />
+      <Group id="snaga_rider_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="olog_hai_warchief"
+          display_name="{=taom_career_olog_hai_warchief}Olog-Hai Warchief"
+          description="{=taom_career_olog_hai_warchief_desc}A towering Olog-Hai war-troll who wades into the thickest fighting as a living battering ram, soaking up tremendous punishment and hammering foes into the ground with devastating overhead blows."
+          portrait_sprite="career_olog_hai_warchief_portrait"
+          ability_template_id="olog_hai_warchief_ability"
+          charge_type="DamageTaken"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="olog_hai_warchief_root">
+    <EligibleCultures>
+      <Culture id="mordor" />
+      <Culture id="empire_s" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="olog_hai_warchief_t1_a" />
+      <Group id="olog_hai_warchief_t1_b" />
+      <Group id="olog_hai_warchief_t2_a" />
+      <Group id="olog_hai_warchief_t2_b" />
+      <Group id="olog_hai_warchief_t3_a" />
+      <Group id="olog_hai_warchief_t3_b" />
     </ChoiceGroups>
   </Career>
 
@@ -151,69 +174,69 @@
   <!-- ROHAN (vlandia)                                            -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="shieldmaiden"
-          display_name="{=taom_career_shieldmaiden}Shieldmaiden"
-          description="{=taom_career_shieldmaiden_desc}A fearless warrior of the Riddermark who stands unyielding against the darkness, guarding hearth and homeland."
-          portrait_sprite="career_shieldmaiden_portrait"
-          ability_template_id="shieldmaiden_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
-          min_clan_tier="0"
-          root_choice_id="shieldmaiden_root">
-    <EligibleCultures>
-      <Culture id="vlandia" />
-    </EligibleCultures>
-    <ChoiceGroups>
-      <Group id="shieldmaiden_t1_a" />
-      <Group id="shieldmaiden_t1_b" />
-      <Group id="shieldmaiden_t2_a" />
-      <Group id="shieldmaiden_t2_b" />
-      <Group id="shieldmaiden_t3_a" />
-      <Group id="shieldmaiden_t3_b" />
-    </ChoiceGroups>
-  </Career>
-
-  <Career id="rohirrim_scout"
-          display_name="{=taom_career_rohirrim_scout}Rohirrim Scout"
-          description="{=taom_career_rohirrim_scout_desc}A swift rider of the plains who ranges far ahead, tracking enemy movements and striking with deadly bowfire."
-          portrait_sprite="career_rohirrim_scout_portrait"
-          ability_template_id="rohirrim_scout_ability"
+  <Career id="marksman_of_aldburg"
+          display_name="{=taom_career_marksman_of_aldburg}Marksman of Aldburg"
+          description="{=taom_career_marksman_of_aldburg_desc}A heavy archer of the Aldburg garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter."
+          portrait_sprite="career_marksman_of_aldburg_portrait"
+          ability_template_id="marksman_of_aldburg_ability"
           charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="rohirrim_scout_root">
+          root_choice_id="marksman_of_aldburg_root">
     <EligibleCultures>
       <Culture id="vlandia" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="rohirrim_scout_t1_a" />
-      <Group id="rohirrim_scout_t1_b" />
-      <Group id="rohirrim_scout_t2_a" />
-      <Group id="rohirrim_scout_t2_b" />
-      <Group id="rohirrim_scout_t3_a" />
-      <Group id="rohirrim_scout_t3_b" />
+      <Group id="marksman_of_aldburg_t1_a" />
+      <Group id="marksman_of_aldburg_t1_b" />
+      <Group id="marksman_of_aldburg_t2_a" />
+      <Group id="marksman_of_aldburg_t2_b" />
+      <Group id="marksman_of_aldburg_t3_a" />
+      <Group id="marksman_of_aldburg_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="rider_of_the_mark"
-          display_name="{=taom_career_rider_of_the_mark}Rider of the Mark"
-          description="{=taom_career_rider_of_the_mark_desc}An elite horseman of Rohan whose thunderous charge has broken countless enemy formations on the fields of Pelennor."
-          portrait_sprite="career_rider_of_the_mark_portrait"
-          ability_template_id="rider_of_the_mark_ability"
-          charge_type="Kills"
+  <Career id="eotheod_windrider"
+          display_name="{=taom_career_eotheod_windrider}Eothéod Windrider"
+          description="{=taom_career_eotheod_windrider_desc}A descendant of the ancient Eothéod horsemasters who rides with the thunder of generations of legend, inspiring allies with a warcry that echoes Eorl the Young and scattering enemies under hooves of unstoppable heavy cavalry."
+          portrait_sprite="career_eotheod_windrider_portrait"
+          ability_template_id="eotheod_windrider_ability"
+          charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="rider_of_the_mark_root">
+          root_choice_id="eotheod_windrider_root">
     <EligibleCultures>
       <Culture id="vlandia" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="rider_of_the_mark_t1_a" />
-      <Group id="rider_of_the_mark_t1_b" />
-      <Group id="rider_of_the_mark_t2_a" />
-      <Group id="rider_of_the_mark_t2_b" />
-      <Group id="rider_of_the_mark_t3_a" />
-      <Group id="rider_of_the_mark_t3_b" />
+      <Group id="eotheod_windrider_t1_a" />
+      <Group id="eotheod_windrider_t1_b" />
+      <Group id="eotheod_windrider_t2_a" />
+      <Group id="eotheod_windrider_t2_b" />
+      <Group id="eotheod_windrider_t3_a" />
+      <Group id="eotheod_windrider_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="watchman_of_stangard"
+          display_name="{=taom_career_watchman_of_stangard}Watchman of Stangard"
+          description="{=taom_career_watchman_of_stangard_desc}A grizzled river-warden of Stangard who patrols the Anduin crossings by flatboat and on foot, guarding Rohan's eastern flank through endurance, local knowledge, and a boatswain's tenacious grip on contested ground."
+          portrait_sprite="career_watchman_of_stangard_portrait"
+          ability_template_id="watchman_of_stangard_ability"
+          charge_type="DamageTaken"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="watchman_of_stangard_root">
+    <EligibleCultures>
+      <Culture id="vlandia" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="watchman_of_stangard_t1_a" />
+      <Group id="watchman_of_stangard_t1_b" />
+      <Group id="watchman_of_stangard_t2_a" />
+      <Group id="watchman_of_stangard_t2_b" />
+      <Group id="watchman_of_stangard_t3_a" />
+      <Group id="watchman_of_stangard_t3_b" />
     </ChoiceGroups>
   </Career>
 
@@ -221,69 +244,69 @@
   <!-- DUNLAND (empire)                                           -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="hillman_warrior"
-          display_name="{=taom_career_hillman_warrior}Hillman Warrior"
-          description="{=taom_career_hillman_warrior_desc}A fierce clansman of the hills who fights with savage fury, caring nothing for his own safety."
-          portrait_sprite="career_hillman_warrior_portrait"
-          ability_template_id="hillman_warrior_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
-          min_clan_tier="0"
-          root_choice_id="hillman_warrior_root">
-    <EligibleCultures>
-      <Culture id="empire" />
-    </EligibleCultures>
-    <ChoiceGroups>
-      <Group id="hillman_warrior_t1_a" />
-      <Group id="hillman_warrior_t1_b" />
-      <Group id="hillman_warrior_t2_a" />
-      <Group id="hillman_warrior_t2_b" />
-      <Group id="hillman_warrior_t3_a" />
-      <Group id="hillman_warrior_t3_b" />
-    </ChoiceGroups>
-  </Career>
-
-  <Career id="dunland_stalker"
-          display_name="{=taom_career_dunland_stalker}Dunland Stalker"
-          description="{=taom_career_dunland_stalker_desc}A cunning hunter who prowls the misty hills, ambushing travelers and Rohirrim patrols with deadly accuracy."
-          portrait_sprite="career_dunland_stalker_portrait"
-          ability_template_id="dunland_stalker_ability"
+  <Career id="avanc_luth_raider"
+          display_name="{=taom_career_avanc_luth_raider}Avanc-lúth Raider"
+          description="{=taom_career_avanc_luth_raider_desc}A blood-painted skirmisher of the Avanc-lúth clan who charges into melee with reckless aggression, trading surgical precision for raw savage force that overwhelms opponents through sheer relentless pressure."
+          portrait_sprite="career_avanc_luth_raider_portrait"
+          ability_template_id="avanc_luth_raider_ability"
           charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="dunland_stalker_root">
+          root_choice_id="avanc_luth_raider_root">
     <EligibleCultures>
       <Culture id="empire" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="dunland_stalker_t1_a" />
-      <Group id="dunland_stalker_t1_b" />
-      <Group id="dunland_stalker_t2_a" />
-      <Group id="dunland_stalker_t2_b" />
-      <Group id="dunland_stalker_t3_a" />
-      <Group id="dunland_stalker_t3_b" />
+      <Group id="avanc_luth_raider_t1_a" />
+      <Group id="avanc_luth_raider_t1_b" />
+      <Group id="avanc_luth_raider_t2_a" />
+      <Group id="avanc_luth_raider_t2_b" />
+      <Group id="avanc_luth_raider_t3_a" />
+      <Group id="avanc_luth_raider_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="hillman_raider"
-          display_name="{=taom_career_hillman_raider}Hillman Raider"
-          description="{=taom_career_hillman_raider_desc}A mounted raider who descends from the highlands to pillage the lowlands, striking hard and vanishing into the mists."
-          portrait_sprite="career_hillman_raider_portrait"
-          ability_template_id="hillman_raider_ability"
+  <Career id="wolfskin_hunter"
+          display_name="{=taom_career_wolfskin_hunter}Wolfskin Hunter"
+          description="{=taom_career_wolfskin_hunter_desc}A patient stalker who dresses in wolf-pelts and moves through the Misty Mountain foothills like a ghost, marking prey from concealment before unleashing a precisely aimed shaft that the victim never hears coming."
+          portrait_sprite="career_wolfskin_hunter_portrait"
+          ability_template_id="wolfskin_hunter_ability"
           charge_type="Kills"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="hillman_raider_root">
+          root_choice_id="wolfskin_hunter_root">
     <EligibleCultures>
       <Culture id="empire" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="hillman_raider_t1_a" />
-      <Group id="hillman_raider_t1_b" />
-      <Group id="hillman_raider_t2_a" />
-      <Group id="hillman_raider_t2_b" />
-      <Group id="hillman_raider_t3_a" />
-      <Group id="hillman_raider_t3_b" />
+      <Group id="wolfskin_hunter_t1_a" />
+      <Group id="wolfskin_hunter_t1_b" />
+      <Group id="wolfskin_hunter_t2_a" />
+      <Group id="wolfskin_hunter_t2_b" />
+      <Group id="wolfskin_hunter_t3_a" />
+      <Group id="wolfskin_hunter_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="clanguard_rider"
+          display_name="{=taom_career_clanguard_rider}Clanguard Rider"
+          description="{=taom_career_clanguard_rider_desc}A fast-raiding clan cavalryman who harasses enemy flanks with swift hit-and-run assaults, using superior speed and pack coordination to disrupt formations before the clan's infantry close in for the kill."
+          portrait_sprite="career_clanguard_rider_portrait"
+          ability_template_id="clanguard_rider_ability"
+          charge_type="DamageDone"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="clanguard_rider_root">
+    <EligibleCultures>
+      <Culture id="empire" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="clanguard_rider_t1_a" />
+      <Group id="clanguard_rider_t1_b" />
+      <Group id="clanguard_rider_t2_a" />
+      <Group id="clanguard_rider_t2_b" />
+      <Group id="clanguard_rider_t3_a" />
+      <Group id="clanguard_rider_t3_b" />
     </ChoiceGroups>
   </Career>
 
@@ -291,69 +314,69 @@
   <!-- KHAND (battania)                                           -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="variag_champion"
-          display_name="{=taom_career_variag_champion}Variag Champion"
-          description="{=taom_career_variag_champion_desc}A towering warrior of Khand who wields twin blades with terrifying speed, feared across the eastern lands."
-          portrait_sprite="career_variag_champion_portrait"
-          ability_template_id="variag_champion_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
-          min_clan_tier="0"
-          root_choice_id="variag_champion_root">
-    <EligibleCultures>
-      <Culture id="battania" />
-    </EligibleCultures>
-    <ChoiceGroups>
-      <Group id="variag_champion_t1_a" />
-      <Group id="variag_champion_t1_b" />
-      <Group id="variag_champion_t2_a" />
-      <Group id="variag_champion_t2_b" />
-      <Group id="variag_champion_t3_a" />
-      <Group id="variag_champion_t3_b" />
-    </ChoiceGroups>
-  </Career>
-
-  <Career id="variag_archer"
-          display_name="{=taom_career_variag_archer}Variag Archer"
-          description="{=taom_career_variag_archer_desc}A keen-eyed bowman from the steppes of Khand, trained since youth to loose arrows from impossible distances."
-          portrait_sprite="career_variag_archer_portrait"
-          ability_template_id="variag_archer_ability"
+  <Career id="blademaster_of_ren"
+          display_name="{=taom_career_blademaster_of_ren}Blademaster of Rên"
+          description="{=taom_career_blademaster_of_ren_desc}A precision duelist from the warrior-courts of Rên who dispatches enemies with calculated, lethal blade work."
+          portrait_sprite="career_blademaster_of_ren_portrait"
+          ability_template_id="blademaster_of_ren_ability"
           charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="variag_archer_root">
+          root_choice_id="blademaster_of_ren_root">
     <EligibleCultures>
       <Culture id="battania" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="variag_archer_t1_a" />
-      <Group id="variag_archer_t1_b" />
-      <Group id="variag_archer_t2_a" />
-      <Group id="variag_archer_t2_b" />
-      <Group id="variag_archer_t3_a" />
-      <Group id="variag_archer_t3_b" />
+      <Group id="blademaster_of_ren_t1_a" />
+      <Group id="blademaster_of_ren_t1_b" />
+      <Group id="blademaster_of_ren_t2_a" />
+      <Group id="blademaster_of_ren_t2_b" />
+      <Group id="blademaster_of_ren_t3_a" />
+      <Group id="blademaster_of_ren_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="variag_horseman"
-          display_name="{=taom_career_variag_horseman}Variag Horseman"
-          description="{=taom_career_variag_horseman_desc}A swift rider of the eastern plains whose devastating flank attacks have turned the tide of many battles."
-          portrait_sprite="career_variag_horseman_portrait"
-          ability_template_id="variag_horseman_ability"
-          charge_type="Kills"
+  <Career id="steppe_bowmaster"
+          display_name="{=taom_career_steppe_bowmaster}Steppe Bowmaster"
+          description="{=taom_career_steppe_bowmaster_desc}A mobile archer of the Khand plains who harasses enemy lines with relentless volleys, never standing still long enough to be caught."
+          portrait_sprite="career_steppe_bowmaster_portrait"
+          ability_template_id="steppe_bowmaster_ability"
+          charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="variag_horseman_root">
+          root_choice_id="steppe_bowmaster_root">
     <EligibleCultures>
       <Culture id="battania" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="variag_horseman_t1_a" />
-      <Group id="variag_horseman_t1_b" />
-      <Group id="variag_horseman_t2_a" />
-      <Group id="variag_horseman_t2_b" />
-      <Group id="variag_horseman_t3_a" />
-      <Group id="variag_horseman_t3_b" />
+      <Group id="steppe_bowmaster_t1_a" />
+      <Group id="steppe_bowmaster_t1_b" />
+      <Group id="steppe_bowmaster_t2_a" />
+      <Group id="steppe_bowmaster_t2_b" />
+      <Group id="steppe_bowmaster_t3_a" />
+      <Group id="steppe_bowmaster_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="chariot_warlord"
+          display_name="{=taom_career_chariot_warlord}Chariot Warlord"
+          description="{=taom_career_chariot_warlord_desc}A scythe-chariot commander of Khand whose brutal shock charges shatter formations and scatter survivors to the winds."
+          portrait_sprite="career_chariot_warlord_portrait"
+          ability_template_id="chariot_warlord_ability"
+          charge_type="DamageDone"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="chariot_warlord_root">
+    <EligibleCultures>
+      <Culture id="battania" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="chariot_warlord_t1_a" />
+      <Group id="chariot_warlord_t1_b" />
+      <Group id="chariot_warlord_t2_a" />
+      <Group id="chariot_warlord_t2_b" />
+      <Group id="chariot_warlord_t3_a" />
+      <Group id="chariot_warlord_t3_b" />
     </ChoiceGroups>
   </Career>
 
@@ -361,139 +384,161 @@
   <!-- HARAD (aserai)                                             -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="haradrim_spearman"
-          display_name="{=taom_career_haradrim_spearman}Haradrim Spearman"
-          description="{=taom_career_haradrim_spearman_desc}A disciplined warrior of the Southron legions who forms an impenetrable wall of spears against any foe."
-          portrait_sprite="career_haradrim_spearman_portrait"
-          ability_template_id="haradrim_spearman_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
-          min_clan_tier="0"
-          root_choice_id="haradrim_spearman_root">
-    <EligibleCultures>
-      <Culture id="aserai" />
-    </EligibleCultures>
-    <ChoiceGroups>
-      <Group id="haradrim_spearman_t1_a" />
-      <Group id="haradrim_spearman_t1_b" />
-      <Group id="haradrim_spearman_t2_a" />
-      <Group id="haradrim_spearman_t2_b" />
-      <Group id="haradrim_spearman_t3_a" />
-      <Group id="haradrim_spearman_t3_b" />
-    </ChoiceGroups>
-  </Career>
-
-  <Career id="serpent_archer"
-          display_name="{=taom_career_serpent_archer}Serpent Archer"
-          description="{=taom_career_serpent_archer_desc}An elite marksman of the Serpent Guard who coats arrows in desert venom, felling enemies before they close to melee."
-          portrait_sprite="career_serpent_archer_portrait"
-          ability_template_id="serpent_archer_ability"
+  <Career id="tribesman_of_jelut"
+          display_name="{=taom_career_tribesman_of_jelut}Tribesman of Jelut"
+          description="{=taom_career_tribesman_of_jelut_desc}A warrior of the Jelut desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
+          portrait_sprite="career_tribesman_of_jelut_portrait"
+          ability_template_id="tribesman_of_jelut_ability"
           charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="serpent_archer_root">
+          root_choice_id="tribesman_of_jelut_root">
     <EligibleCultures>
       <Culture id="aserai" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="serpent_archer_t1_a" />
-      <Group id="serpent_archer_t1_b" />
-      <Group id="serpent_archer_t2_a" />
-      <Group id="serpent_archer_t2_b" />
-      <Group id="serpent_archer_t3_a" />
-      <Group id="serpent_archer_t3_b" />
+      <Group id="tribesman_of_jelut_t1_a" />
+      <Group id="tribesman_of_jelut_t1_b" />
+      <Group id="tribesman_of_jelut_t2_a" />
+      <Group id="tribesman_of_jelut_t2_b" />
+      <Group id="tribesman_of_jelut_t3_a" />
+      <Group id="tribesman_of_jelut_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="mumak_commander"
-          display_name="{=taom_career_mumak_commander}Mumak Commander"
-          description="{=taom_career_mumak_commander_desc}A veteran war-leader who commands the great Mumakil of Harad, trampling entire formations beneath thundering feet."
-          portrait_sprite="career_mumak_commander_portrait"
-          ability_template_id="mumak_commander_ability"
-          charge_type="Kills"
+  <Career id="pezarsani_javelineer"
+          display_name="{=taom_career_pezarsani_javelineer}Pezarsani Javelineer"
+          description="{=taom_career_pezarsani_javelineer_desc}A fast-moving skirmisher of Pezarsan who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
+          portrait_sprite="career_pezarsani_javelineer_portrait"
+          ability_template_id="pezarsani_javelineer_ability"
+          charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="mumak_commander_root">
+          root_choice_id="pezarsani_javelineer_root">
     <EligibleCultures>
       <Culture id="aserai" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="mumak_commander_t1_a" />
-      <Group id="mumak_commander_t1_b" />
-      <Group id="mumak_commander_t2_a" />
-      <Group id="mumak_commander_t2_b" />
-      <Group id="mumak_commander_t3_a" />
-      <Group id="mumak_commander_t3_b" />
+      <Group id="pezarsani_javelineer_t1_a" />
+      <Group id="pezarsani_javelineer_t1_b" />
+      <Group id="pezarsani_javelineer_t2_a" />
+      <Group id="pezarsani_javelineer_t2_b" />
+      <Group id="pezarsani_javelineer_t3_a" />
+      <Group id="pezarsani_javelineer_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="mahud_beast_rider"
+          display_name="{=taom_career_mahud_beast_rider}Mahûd Beast Rider"
+          description="{=taom_career_mahud_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
+          portrait_sprite="career_mahud_beast_rider_portrait"
+          ability_template_id="mahud_beast_rider_ability"
+          charge_type="DamageDone"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="mahud_beast_rider_root">
+    <EligibleCultures>
+      <Culture id="aserai" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="mahud_beast_rider_t1_a" />
+      <Group id="mahud_beast_rider_t1_b" />
+      <Group id="mahud_beast_rider_t2_a" />
+      <Group id="mahud_beast_rider_t2_b" />
+      <Group id="mahud_beast_rider_t3_a" />
+      <Group id="mahud_beast_rider_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="far_harad_halftroll"
+          display_name="{=taom_career_far_harad_halftroll}Far Harad Halftroll"
+          description="{=taom_career_far_harad_halftroll_desc}A half-troll berserker of the deepest Far Harad jungles who absorbs punishment that would kill lesser warriors and retaliates with vile brutality."
+          portrait_sprite="career_far_harad_halftroll_portrait"
+          ability_template_id="far_harad_halftroll_ability"
+          charge_type="DamageTaken"
+          max_charge="100"
+          min_clan_tier="0"
+          root_choice_id="far_harad_halftroll_root">
+    <EligibleCultures>
+      <Culture id="aserai" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="far_harad_halftroll_t1_a" />
+      <Group id="far_harad_halftroll_t1_b" />
+      <Group id="far_harad_halftroll_t2_a" />
+      <Group id="far_harad_halftroll_t2_b" />
+      <Group id="far_harad_halftroll_t3_a" />
+      <Group id="far_harad_halftroll_t3_b" />
     </ChoiceGroups>
   </Career>
 
   <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- EASTERLINGS (khuzait)                                      -->
+  <!-- EASTERLINGS / RHÛN (khuzait)                               -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="kataphract"
-          display_name="{=taom_career_kataphract}Kataphract"
-          description="{=taom_career_kataphract_desc}A heavily armored warrior of the East clad head to toe in lacquered plate, an unmovable bulwark on the battlefield."
-          portrait_sprite="career_kataphract_portrait"
-          ability_template_id="kataphract_ability"
+  <Career id="codyan_legionaire"
+          display_name="{=taom_career_codyan_legionaire}Côdyan Legionaire"
+          description="{=taom_career_codyan_legionaire_desc}A disciplined shieldwall soldier of the Côdya formations who excels in defensive cohesion, soaking punishment while the line holds firm."
+          portrait_sprite="career_codyan_legionaire_portrait"
+          ability_template_id="codyan_legionaire_ability"
           charge_type="DamageTaken"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="kataphract_root">
+          root_choice_id="codyan_legionaire_root">
     <EligibleCultures>
       <Culture id="khuzait" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="kataphract_t1_a" />
-      <Group id="kataphract_t1_b" />
-      <Group id="kataphract_t2_a" />
-      <Group id="kataphract_t2_b" />
-      <Group id="kataphract_t3_a" />
-      <Group id="kataphract_t3_b" />
+      <Group id="codyan_legionaire_t1_a" />
+      <Group id="codyan_legionaire_t1_b" />
+      <Group id="codyan_legionaire_t2_a" />
+      <Group id="codyan_legionaire_t2_b" />
+      <Group id="codyan_legionaire_t3_a" />
+      <Group id="codyan_legionaire_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="eastern_bowman"
-          display_name="{=taom_career_eastern_bowman}Eastern Bowman"
-          description="{=taom_career_eastern_bowman_desc}A composite-bow master from the eastern steppes who can loose volleys with terrifying speed and accuracy."
-          portrait_sprite="career_eastern_bowman_portrait"
-          ability_template_id="eastern_bowman_ability"
+  <Career id="lokhas_drus_marksman"
+          display_name="{=taom_career_lokhas_drus_marksman}Lôkhas Drûs Marksman"
+          description="{=taom_career_lokhas_drus_marksman_desc}An armor-piercing specialist of the Lôkhas Drûs corps who trains to drive arrows through the heaviest plate at range."
+          portrait_sprite="career_lokhas_drus_marksman_portrait"
+          ability_template_id="lokhas_drus_marksman_ability"
           charge_type="DamageDone"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="eastern_bowman_root">
+          root_choice_id="lokhas_drus_marksman_root">
     <EligibleCultures>
       <Culture id="khuzait" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="eastern_bowman_t1_a" />
-      <Group id="eastern_bowman_t1_b" />
-      <Group id="eastern_bowman_t2_a" />
-      <Group id="eastern_bowman_t2_b" />
-      <Group id="eastern_bowman_t3_a" />
-      <Group id="eastern_bowman_t3_b" />
+      <Group id="lokhas_drus_marksman_t1_a" />
+      <Group id="lokhas_drus_marksman_t1_b" />
+      <Group id="lokhas_drus_marksman_t2_a" />
+      <Group id="lokhas_drus_marksman_t2_b" />
+      <Group id="lokhas_drus_marksman_t3_a" />
+      <Group id="lokhas_drus_marksman_t3_b" />
     </ChoiceGroups>
   </Career>
 
-  <Career id="wainrider"
-          display_name="{=taom_career_wainrider}Wainrider"
-          description="{=taom_career_wainrider_desc}A chariot-borne warrior of Rhun who crashes into enemy ranks with devastating momentum, scattering all before."
-          portrait_sprite="career_wainrider_portrait"
-          ability_template_id="wainrider_ability"
-          charge_type="Kills"
+  <Career id="balchoth_kan"
+          display_name="{=taom_career_balchoth_kan}Balchoth Kân"
+          description="{=taom_career_balchoth_kan_desc}A heavy cavalry commander of the Balchoth who leads unstoppable mounted charges, maintaining iron morale no matter the odds."
+          portrait_sprite="career_balchoth_kan_portrait"
+          ability_template_id="balchoth_kan_ability"
+          charge_type="DamageTaken"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="wainrider_root">
+          root_choice_id="balchoth_kan_root">
     <EligibleCultures>
       <Culture id="khuzait" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="wainrider_t1_a" />
-      <Group id="wainrider_t1_b" />
-      <Group id="wainrider_t2_a" />
-      <Group id="wainrider_t2_b" />
-      <Group id="wainrider_t3_a" />
-      <Group id="wainrider_t3_b" />
+      <Group id="balchoth_kan_t1_a" />
+      <Group id="balchoth_kan_t1_b" />
+      <Group id="balchoth_kan_t2_a" />
+      <Group id="balchoth_kan_t2_b" />
+      <Group id="balchoth_kan_t3_a" />
+      <Group id="balchoth_kan_t3_b" />
     </ChoiceGroups>
   </Career>
 
