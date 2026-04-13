@@ -26,6 +26,17 @@ public interface ISpecialResourceService
     float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount);
     float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep, string heroId = null);
     IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
+
+    /// <summary>
+    /// Returns the highest <see cref="ResourceTier"/> the hero has reached,
+    /// or <c>null</c> if the resource has no tiers or the hero is below all thresholds.
+    /// </summary>
+    ResourceTier GetCurrentTier(string heroId, string kingdomId, string cultureId);
+
+    /// <summary>
+    /// Returns the current tier level (1-N), or 0 if below all thresholds or no tiers defined.
+    /// </summary>
+    int GetCurrentTierLevel(string heroId, string kingdomId, string cultureId);
 }
 
 public sealed class TroopUpkeepInfo

@@ -94,6 +94,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                         cultureIds.Add(cid);
                 }
 
+                var tiers = ParseTiers(el);
+
                 var resource = new SpecialResource(
                     id: el.Attribute("id")?.Value ?? "",
                     kingdomIds: kingdomIds,
@@ -108,7 +110,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                     perSiegeVictory: ParseFloat(el, "per_siege_victory", 0f),
                     perPrisoner: ParseFloat(el, "per_prisoner", 0f),
                     perTournamentWin: ParseFloat(el, "per_tournament_win", 0f),
-                    perHideoutClear: ParseFloat(el, "per_hideout_clear", 0f));
+                    perHideoutClear: ParseFloat(el, "per_hideout_clear", 0f),
+                    tierThresholds: tiers);
 
                 _resources.Add(resource);
 
@@ -157,6 +160,34 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         {
             _logger.LogError($"SpecialResourceConfigProvider: Failed to parse troop costs: {ex.Message}");
         }
+    }
+
+    private static List<ResourceTier> ParseTiers(XElement resourceEl)
+    {
+        var tiersEl = resourceEl.Element("Tiers");
+        if (tiersEl == null)
+            return new List<ResourceTier>();
+
+        var tiers = new List<ResourceTier>();
+        foreach (var tierEl in tiersEl.Elements("Tier"))
+        {
+            var levelStr = tierEl.Attribute("level")?.Value;
+            var name = tierEl.Attribute("name")?.Value ?? "";
+            var thresholdStr = tierEl.Attribute("threshold")?.Value;
+            var description = tierEl.Attribute("description")?.Value ?? "";
+
+            if (levelStr == null || thresholdStr == null)
+                continue;
+
+            if (!int.TryParse(levelStr, out var level))
+                continue;
+
+            var threshold = float.Parse(thresholdStr, CultureInfo.InvariantCulture);
+            tiers.Add(new ResourceTier(level, name, threshold, description));
+        }
+
+        tiers.Sort((a, b) => a.Level.CompareTo(b.Level));
+        return tiers;
     }
 
     private static float ParseFloat(XElement el, string attr, float defaultValue)
