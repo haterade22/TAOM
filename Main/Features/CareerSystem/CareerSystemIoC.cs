@@ -1,5 +1,7 @@
 using DryIoc;
 using TAOM.Adapters;
+using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Abilities.Executors;
 using TAOM.Features.CareerSystem.Mutations;
 
 namespace TAOM.Features.CareerSystem;
@@ -25,8 +27,20 @@ public static class CareerSystemIoC
         container.Register<Abilities.ICareerAbilityService, Abilities.CareerAbilityService>(Reuse.Singleton);
         container.Register<IMutationService, MutationService>(Reuse.Singleton);
 
+        // Phase 4C: Ability effect execution
+        container.RegisterInstance(BuildAbilityEffectRegistry());
+
         // Phase 5: GameModel support
         container.Register<ICareerHeroAdapterFactory, CareerHeroAdapterFactory>(Reuse.Singleton);
+    }
+
+    private static CareerAbilityEffectRegistry BuildAbilityEffectRegistry()
+    {
+        var registry = new CareerAbilityEffectRegistry();
+        registry.Register(new StealthExecutor());
+        registry.Register(new BloodrageExecutor());
+        registry.Register(new StampedeExecutor());
+        return registry;
     }
 
     public static void InitializeCalculators(IMutationCalculatorRegistry registry)

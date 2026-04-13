@@ -9,4 +9,5 @@ public interface ICareerConfigProvider
     IReadOnlyList<CareerChoiceGroupDefinition> LoadChoiceGroups();
     IReadOnlyList<CareerChoiceDefinition> LoadChoices();
     int GetMaxPerkPoints();
+    AbilityTemplateData GetAbilityTemplate(string templateId);
 }

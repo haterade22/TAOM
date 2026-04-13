@@ -415,6 +415,8 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<ICareerDataService>(),
                 IoC.Resolve<ICareerRegistry>(),
                 careerAbilityService,
+                IoC.Resolve<ICareerConfigProvider>(),
+                IoC.Resolve<Features.CareerSystem.Abilities.CareerAbilityEffectRegistry>(),
                 IoC.Resolve<IModLogger>()));
         }
     }
