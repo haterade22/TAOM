@@ -12,7 +12,7 @@ namespace TAOM.Features.CareerSystem.UI;
 // deactivates map bar input processing (avoids IndexOutOfRangeException
 // in GauntletMapBarGlobalLayer.HandlePanelSwitchingInput).
 [GameStateScreen(typeof(CareerScreenGameState))]
-public class GauntletCareerScreen : ScreenBase
+public class GauntletCareerScreen : ScreenBase, IGameStateListener
 {
     private GauntletLayer _gauntletLayer;
     private GauntletMovieIdentifier _movie;
@@ -90,4 +90,11 @@ public class GauntletCareerScreen : ScreenBase
         _viewModel = null;
         _gauntletLayer = null;
     }
+
+    // IGameStateListener — required by GameStateScreenManager.OnCreateState
+    // which registers null if the screen doesn't implement this interface.
+    void IGameStateListener.OnInitialize() { }
+    void IGameStateListener.OnFinalize() { }
+    void IGameStateListener.OnActivate() { }
+    void IGameStateListener.OnDeactivate() { }
 }
