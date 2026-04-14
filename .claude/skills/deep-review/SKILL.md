@@ -6,7 +6,9 @@ argument-hint: "[feature-name]"
 
 # Deep Review
 
-Launch 5 parallel review agents to audit the current session's work. Run this AFTER completing a feature or fix, BEFORE closing out.
+Launch as many review agents as needed to audit the current session's work. The baseline is 5 core agents (below), but there is NO LIMIT — if the scope demands 10, 20, or 100 agents, launch them. Scale the review to match the risk.
+
+Run this AFTER completing a feature or fix, BEFORE closing out.
 
 The feature or area to review: `$ARGUMENTS` (if empty, review all uncommitted changes).
 
@@ -43,9 +45,11 @@ Determine what to review:
 
 Collect the list of changed files for the agents.
 
-## Step 2: Launch 5 Review Agents in Parallel
+## Step 2: Launch Core Review Agents in Parallel
 
-Launch ALL FIVE agents in a SINGLE message (parallel execution). Pass each agent the list of changed files.
+Launch ALL core agents in a SINGLE message (parallel execution). Pass each agent the list of changed files.
+
+**Minimum: 5 core agents (always launch all 5).** If the changeset spans multiple features, multiple XML config files, multiple Harmony patches, or touches more than 20 files — launch ADDITIONAL focused agents for each distinct subsystem. There is no upper limit on agent count. The cost of missing a bug in production is always higher than the cost of an extra review agent.
 
 ### Agent 1: Standards Compliance
 
@@ -271,6 +275,24 @@ CONFIRMED / DISPUTED for each violation:
 Minimum fix plan (in order of least disruption):
 1. ...
 ```
+
+## Step 2c: Adaptive Expansion (always evaluate)
+
+After the core 5 agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit.
+
+**Launch additional agents when:**
+- Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes
+- Multiple XML config files changed → launch one agent per config file to cross-reference all consumers
+- Multiple Harmony patches changed → launch one agent per patch to verify target method signatures and side effects
+- Multiple GameModel overrides changed → launch one agent to verify all overrides are registered and don't conflict
+- Any agent reports >3 issues → launch a focused agent on just those files to determine root cause
+- Feature spans >3 features/ subdirectories → launch per-feature agents with full context of that feature
+
+**Launch additional Codex passes when:**
+- Any Claude agent and Codex disagree → dispatch a second Codex pass focused on the disputed finding
+- Data Flow agent finds a gap Codex missed → dispatch Codex with the specific gap description to get independent verification
+
+**The review is done when:** All agents have reported, all disagreements are resolved, and no agent's findings suggest an unexplored area.
 
 ## Step 3: Compile Report
 
