@@ -20,8 +20,9 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` first, fall back to `/research` or ILSpy MCP only if not found |
-| **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.3 incompatibilities, missing tests |
+| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts, but **verify signatures via `ilspycmd` on installed DLLs** (decompiled folder is v1.4, installed is v1.3.15) |
+| **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
+| **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.3 incompatibilities, missing tests, data flow gaps |
 
 ## Skills (Slash Commands)
 
@@ -38,8 +39,8 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deslop [path]` | Regression-safe C# AI-slop cleanup: deletion-first, tests-first |
 | `/new-adr [name]` | Scaffold an auto-numbered ADR with context pre-filled from git log + CHANGELOG |
 | `/commit-split` | Group changed files by concern and commit each group atomically |
-| `/deep-review [feature]` | Launch 4 parallel agents: standards, Bannerlord 1.3 compat, efficiency, completeness |
-| `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 4 Claude agents |
+| `/deep-review [feature]` | Launch 5+ agents: standards, compat, efficiency, completeness, data flow (8 trace categories incl. sprite verification + vanilla interaction safety). No agent limit. |
+| `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 5+ Claude agents + adaptive expansion |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
 | `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
 
@@ -56,6 +57,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `gamemodels.md` | `Main/Features/**/*Model.cs` | GameModel override pattern, base class rules, registration |
 | `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
 | `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules |
+| `gui-ui.md` | `*Mixin*.cs`, `*Prefab*.cs`, `*Widget*.cs`, `*VM.cs`, `GUI/**` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
 
 ## Custom Agents
 
@@ -86,6 +88,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Compare multiple approaches | [multi-approach-validation.md](./docs/ai-includes/multi-approach-validation.md) |
 | Understand architecture | [architecture.md](./docs/ai-includes/architecture.md) |
 | Check design patterns | [patterns.md](./docs/ai-includes/patterns.md) |
+| Work with GUI/sprites/UI | [gui-sprite-system.md](./docs/features/gui-sprite-system.md) |
 | Check ADR rules | [docs/adrs/](./docs/adrs/README.md) |
 | Ensure code quality | [code-quality.md](./docs/ai-includes/code-quality.md) |
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |

@@ -26,6 +26,8 @@ Entry Points (thin, <150 lines) → IHookInterface → Service → IAdapter (sea
 4. **No `#region`** — Use class decomposition (ADR-003)
 5. **No `[Obsolete]`** — Migrate all usage in same PR (ADR-004)
 6. **No `#if DEBUG`** — Except IoC.cs registration (ADR-005)
+7. **Verify before reference** — Before writing ANY `Sprite="X"`, read `TAOMSpriteData.xml` to get the exact registered name. Before ANY `IoC.Resolve<T>()` in a per-frame method, use lazy-cached property. Before ANY `PrefabExtension` injection, decompile vanilla code to check child-access assumptions on the target container.
+8. **Verify API signatures** — Before overriding ANY TaleWorlds method, run `ilspycmd` on the INSTALLED DLL (NOT the decompiled folder at `E:\Decompiled_Bannerlord\` which is a different version). The installed DLLs are at `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`.
 
 ## Feature Structure
 ```
