@@ -124,6 +124,17 @@ public class CareerPerkMissionBehavior : MissionBehavior
         var rawTemplate = _configProvider.GetAbilityTemplate(career.AbilityTemplateId);
         var template = MutateTemplate(rawTemplate, heroId);
 
+        // Reconcile max charge: mutations may have changed it since ability was first created.
+        if (template != null && template.MaxCharge > 0f)
+        {
+            var ability = _abilityService.GetOrCreateAbility(heroId, _registry, _dataService);
+            if (ability != null && ability.MaxCharge != template.MaxCharge)
+            {
+                ability.SetMaxCharge(template.MaxCharge);
+                _logger.LogDebug($"CareerSystem: MaxCharge updated to {template.MaxCharge} for hero '{heroId}'");
+            }
+        }
+
         var duration = template?.Duration ?? 8f;
         var radius = template?.Radius ?? 10f;
 
@@ -200,19 +211,52 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _hudVM.Update(true, abilityName, ability.CurrentCharge, ability.MaxCharge, ability.IsReady);
     }
 
+    public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, WeaponComponentData attackerWeapon, bool isBlocked, bool isSiegeEngineHit, in Blow blow, in AttackCollisionData collisionData, float damagedHp, float hitDistance, float shotDifficulty)
+    {
+        if (isBlocked || damagedHp <= 0f) return;
+
+        var hero = Hero.MainHero;
+        if (hero == null) return;
+
+        var mainAgent = Mission.Current?.MainAgent;
+        if (mainAgent == null) return;
+
+        var heroId = hero.StringId;
+        if (affectorAgent == mainAgent)
+        {
+            _abilityService.AddCharge(heroId, damagedHp, ChargeType.DamageDone);
+            _logger.LogDebug($"CareerSystem: DamageDone charge +{damagedHp:F0} for hero '{heroId}'");
+        }
+        else if (affectedAgent == mainAgent)
+        {
+            _abilityService.AddCharge(heroId, damagedHp, ChargeType.DamageTaken);
+            _logger.LogDebug($"CareerSystem: DamageTaken charge +{damagedHp:F0} for hero '{heroId}'");
+        }
+    }
+
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
-        if (affectorAgent == null) return;
         if (agentState != AgentState.Killed && agentState != AgentState.Unconscious) return;
 
         var hero = Hero.MainHero;
         if (hero == null) return;
 
         var mainAgent = Mission.Current?.MainAgent;
-        if (mainAgent == null || affectorAgent != mainAgent) return;
 
-        _abilityService.AddCharge(hero.StringId, 1f, ChargeType.Kills);
-        _logger.LogDebug($"CareerSystem: Kill charge added for hero '{hero.StringId}'");
+        // Kill charge: main agent killed someone
+        if (affectorAgent != null && mainAgent != null && affectorAgent == mainAgent)
+        {
+            _abilityService.AddCharge(hero.StringId, 1f, ChargeType.Kills);
+            _logger.LogDebug($"CareerSystem: Kill charge added for hero '{hero.StringId}'");
+        }
+
+        // Death cleanup: main agent died while buffs were active
+        if (affectedAgent == mainAgent)
+        {
+            CareerAbilityBuffTracker.ClearBuff(hero.StringId);
+            _activeContexts.Clear();
+            _logger.LogDebug($"CareerSystem: Hero '{hero.StringId}' died — cleared active buffs and contexts");
+        }
     }
 
     protected override void OnEndMission()
