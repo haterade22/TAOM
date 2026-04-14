@@ -4,11 +4,15 @@ using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace TAOM.Features.SpecialResources.UI;
 
-// Inject a resource display widget into the MapBar, positioned next to existing info items.
-// Uses bound properties from SpecialResourceMapBarMixin instead of modifying SecondaryInfoItems
-// (which causes IndexOutOfRangeException in vanilla's HandlePanelSwitchingInput).
+// Inject resource display as a sibling of TopInfoBar/BottomInfoBar inside the
+// vertical ListPanel that wraps them. This avoids touching SecondaryInfoItems
+// (vanilla HandlePanelSwitchingInput indexes by position → IndexOutOfRangeException)
+// and avoids appending into a data-bound ListPanel (BottomInfoBar is template-driven).
+//
+// Target: the unnamed ListPanel that is the first child of InfoBarWidget.
+// XPath: InfoBarWidget > Children > ListPanel (first one, vertical stack).
 [PrefabExtension("MapBar",
-    "descendant::ListPanel[@Id='BottomInfoBar']")]
+    "descendant::MapInfoBarWidget[@Id='InfoBarWidget']/Children/ListPanel")]
 internal class SpecialResourceMapBarPrefab : PrefabExtensionInsertPatch
 {
     public override InsertType Type => InsertType.Append;
@@ -18,12 +22,15 @@ internal class SpecialResourceMapBarPrefab : PrefabExtensionInsertPatch
     {
         var doc = new XmlDocument();
         doc.LoadXml(
-            "<Widget " +
+            "<ListPanel " +
             "WidthSizePolicy=\"CoverChildren\" " +
             "HeightSizePolicy=\"Fixed\" " +
-            "SuggestedHeight=\"40\" " +
-            "VerticalAlignment=\"Center\" " +
-            "MarginLeft=\"10\" " +
+            "SuggestedHeight=\"30\" " +
+            "HorizontalAlignment=\"Center\" " +
+            "VerticalAlignment=\"Bottom\" " +
+            "MarginLeft=\"40\" " +
+            "MarginRight=\"35\" " +
+            "MarginBottom=\"-5\" " +
             "IsVisible=\"@IsResourceVisible\">" +
             "<Children>" +
             "<TextWidget " +
@@ -31,9 +38,10 @@ internal class SpecialResourceMapBarPrefab : PrefabExtensionInsertPatch
             "HeightSizePolicy=\"CoverChildren\" " +
             "VerticalAlignment=\"Center\" " +
             "Text=\"@ResourceDisplayText\" " +
-            "Brush=\"MapBar.Right.TupleValue.Text\" />" +
+            "Brush=\"MapTextBrushWithAnim\" " +
+            "Brush.FontSize=\"18\" />" +
             "</Children>" +
-            "</Widget>");
+            "</ListPanel>");
         return doc;
     }
 }
