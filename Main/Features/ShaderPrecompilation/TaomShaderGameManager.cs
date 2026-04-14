@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using TAOM.Core.Logging;
+using TAOM.Features.ShaderPrecompilation.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -19,7 +20,9 @@ namespace TAOM.Features.ShaderPrecompilation;
 // Research: CustomGameManager (TaleWorlds.MountAndBlade.CustomBattle.dll), confirmed v1.3.12
 public class TaomShaderGameManager : CustomGameManager
 {
-    private const int MaxTroopsPerSide = 500;
+    private const int MaxTroopsPerSide = 2000;
+    private const int SoldierCopies = 4;
+    private const int HeroCopies = 1;
     private const string BattleScene = CustomBattleData.CoreContentDefaultSceneName;
 
     // Set when the shader battle begins loading; used by LoadingScreen_ShaderProgress_Patch
@@ -44,6 +47,7 @@ public class TaomShaderGameManager : CustomGameManager
         try
         {
             _logger.LogInfo("[ShaderPrecompilation] Starting shader pre-compilation battle");
+            LoadingScreen_ShaderProgress_Patch.ResetForNewBattle();
             IsShaderBattleActive = true;
             var data = BuildBattleData();
             CustomBattleHelper.StartGame(data);
@@ -97,28 +101,36 @@ public class TaomShaderGameManager : CustomGameManager
 
         int addedToPlayer = 0;
         int addedToEnemy = 0;
+        int charactersLoaded = 0;
 
         foreach (var id in characterIds)
         {
             var obj = MBObjectManager.Instance?.GetObject<BasicCharacterObject>(id);
             if (obj == null) continue;
 
-            if (addedToPlayer <= addedToEnemy && addedToPlayer < MaxTroopsPerSide)
+            int copies = obj.IsSoldier ? SoldierCopies : HeroCopies;
+
+            if (addedToPlayer <= addedToEnemy && addedToPlayer + copies <= MaxTroopsPerSide)
             {
-                playerParty.AddCharacter(obj, 1);
-                addedToPlayer++;
+                playerParty.AddCharacter(obj, copies);
+                addedToPlayer += copies;
+                charactersLoaded++;
             }
-            else if (addedToEnemy < MaxTroopsPerSide)
+            else if (addedToEnemy + copies <= MaxTroopsPerSide)
             {
-                enemyParty.AddCharacter(obj, 1);
-                addedToEnemy++;
+                enemyParty.AddCharacter(obj, copies);
+                addedToEnemy += copies;
+                charactersLoaded++;
             }
         }
 
         if (enemyParty.NumberOfAllMembers == 0)
             enemyParty.AddCharacter(playerChar, 1);
 
-        _logger.LogInfo($"[ShaderPrecompilation] Player side: {addedToPlayer}, Enemy side: {addedToEnemy}");
+        int dropped = characterIds.Count - charactersLoaded;
+        _logger.LogInfo($"[ShaderPrecompilation] Loaded {charactersLoaded} characters — player: {addedToPlayer}, enemy: {addedToEnemy}");
+        if (dropped > 0)
+            _logger.LogWarning($"[ShaderPrecompilation] {dropped} characters skipped (both sides full at {MaxTroopsPerSide} each)");
 
         return new CustomBattleData
         {

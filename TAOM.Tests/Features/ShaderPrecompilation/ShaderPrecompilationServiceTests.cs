@@ -51,9 +51,9 @@ public class ShaderPrecompilationServiceTests
     }
 
     [TestMethod]
-    public void GetCharacterIdsForShaderBattle_WithBanditCultureCharacters_ExcludesThem()
+    public void GetCharacterIdsForShaderBattle_WithBanditCultureCharacters_IncludesThem()
     {
-        // Arrange
+        // Arrange — bandits have unique meshes/equipment, include for full shader coverage
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
         {
             new() { Id = "looters", CanHaveSettlement = false, IsBandit = true }
@@ -67,7 +67,8 @@ public class ShaderPrecompilationServiceTests
         var result = _sut.GetCharacterIdsForShaderBattle();
 
         // Assert
-        Assert.AreEqual(0, result.Count);
+        Assert.AreEqual(1, result.Count);
+        CollectionAssert.Contains((System.Collections.ICollection)result, "looter");
     }
 
     [TestMethod]
@@ -129,9 +130,9 @@ public class ShaderPrecompilationServiceTests
     }
 
     [TestMethod]
-    public void GetCultureIdsForShaderBattle_WithMixedBanditAndNonBandit_ReturnsOnlyNonBandit()
+    public void GetCultureIdsForShaderBattle_WithMixedBanditAndNonBandit_ReturnsAll()
     {
-        // Arrange
+        // Arrange — all cultures included for maximum shader coverage
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
         {
             new() { Id = "gondor",  CanHaveSettlement = true,  IsBandit = false },
@@ -143,8 +144,23 @@ public class ShaderPrecompilationServiceTests
         var result = _sut.GetCultureIdsForShaderBattle();
 
         // Assert
-        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual(3, result.Count);
         CollectionAssert.Contains((System.Collections.ICollection)result, "gondor");
         CollectionAssert.Contains((System.Collections.ICollection)result, "rohan");
+        CollectionAssert.Contains((System.Collections.ICollection)result, "looters");
+    }
+
+    [TestMethod]
+    public void GetCultureIdsForShaderBattle_WhenAdapterThrows_ReturnsEmptyAndLogsError()
+    {
+        // Arrange
+        _objectManager.GetAllCultureInfos().Throws(new Exception("Culture adapter failure"));
+
+        // Act
+        var result = _sut.GetCultureIdsForShaderBattle();
+
+        // Assert
+        Assert.AreEqual(0, result.Count);
+        _logger.Received(1).LogError(Arg.Any<string>());
     }
 }

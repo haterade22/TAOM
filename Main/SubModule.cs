@@ -2,6 +2,7 @@ using Bannerlord.UIExtenderEx;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -65,6 +66,8 @@ public class SubModule : MBSubModuleBase
     private Harmony _harmony;
     private UIExtender? _uiExtender;
     private ITimeAccelerationService? _timeAccelerationService;
+    private static float _shaderTickAccumulator;
+    private static int _lastShaderCount = -1;
 
     protected override void OnSubModuleLoad()
     {
@@ -178,7 +181,15 @@ public class SubModule : MBSubModuleBase
                 id:                  "TaomPrecompileShaders",
                 name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
                 orderIndex:          100,
-                action:              () => MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger)),
+                action:              () => InformationManager.ShowInquiry(new InquiryData(
+                    "Shader Pre-compilation",
+                    "This will load a battle scene with all TAOM troops to pre-compile shaders.\n\n" +
+                    "THIS WILL TAKE A LONG TIME (20-70 minutes).\n\n" +
+                    "This is a one-time process that eliminates in-game stutter and reduces crashes.\n" +
+                    "When you see the deployment phase, the process is complete!",
+                    true, true, "Start", "Cancel",
+                    () => MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger)),
+                    () => InformationManager.HideInquiry())),
                 isDisabledAndReason: () => (false, new TextObject("")),
                 enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM."),
                 isHidden:            null));
@@ -424,6 +435,23 @@ public class SubModule : MBSubModuleBase
     protected override void OnApplicationTick(float dt)
     {
         _timeAccelerationService?.OnTick();
+
+        _shaderTickAccumulator += dt;
+        if (_shaderTickAccumulator >= 1f)
+        {
+            _shaderTickAccumulator = 0f;
+
+            if (!LoadingWindow.IsLoadingWindowActive)
+            {
+                int count = Utilities.GetNumberOfShaderCompilationsInProgress();
+                if (count > 0 && count != _lastShaderCount)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"Shader compilation in progress. Remaining: {count}"));
+                }
+                _lastShaderCount = count;
+            }
+        }
     }
 
     protected override void OnSubModuleUnloaded()

@@ -58,7 +58,7 @@ public class ShaderPrecompilationService : IShaderPrecompilationService
             return _validCultureIdsCache;
 
         _validCultureIdsCache = _objectManager.GetAllCultureInfos()
-            .Where(c => !string.IsNullOrEmpty(c.Id) && !c.IsBandit)
+            .Where(c => !string.IsNullOrEmpty(c.Id))
             .Select(c => c.Id)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 

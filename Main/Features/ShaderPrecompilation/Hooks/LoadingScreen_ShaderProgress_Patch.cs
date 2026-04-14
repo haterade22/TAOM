@@ -35,6 +35,13 @@ public static class LoadingScreen_ShaderProgress_Patch
         _logger = logger;
     }
 
+    public static void ResetForNewBattle()
+    {
+        _lastShaderCount = -1;
+        _stuckSinceMs    = -1;
+        _abortTriggered  = false;
+    }
+
     static MethodBase TargetMethod()
         => AccessTools.Method(typeof(LoadingWindowViewModel), "Update");
 
