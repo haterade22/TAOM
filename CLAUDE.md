@@ -368,12 +368,13 @@ Phase 4: CLOSE OUT
 
 ### TaleWorlds Research — Lookup Order
 
-**ALWAYS check the pre-decompiled source first.** Only fall back to ILSpy MCP for types not found in the decompiled tree.
+**WARNING:** `E:\Decompiled_Bannerlord\` is v1.4 but the installed game is v1.3.15. Use decompiled source for understanding concepts/patterns, but **NEVER trust its method signatures**. For signature verification, ALWAYS use `ilspycmd` on the installed DLLs.
 
 | Step | Action | When |
 |------|--------|------|
-| 1. **Read decompiled source** | `Read` or `Grep` in `E:\Decompiled_Bannerlord\` | Always try first — instant, no tool overhead |
-| 2. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
+| 1. **Read decompiled source** | `Read` or `Grep` in `E:\Decompiled_Bannerlord\` | Understanding patterns, finding classes — but signatures may differ from installed v1.3.15 |
+| 2. **Verify signatures** | `ilspycmd "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/<dll>" -t "<type>"` | **ALWAYS** before overriding methods, creating patches, or calling APIs |
+| 3. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Fallback if type not found via ilspycmd |
 
 **Decompiled source layout** (`E:\Decompiled_Bannerlord\`):
 
@@ -426,8 +427,12 @@ Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (
 
 ## Notes
 
-- Target: Bannerlord v1.3.15
+- Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
+
+- Target: Bannerlord v1.3.15 (installed game version)
+- **WARNING:** `E:\Decompiled_Bannerlord\` is v1.4 — DO NOT use for signature verification. Use `ilspycmd` on installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` instead.
 - Migration from v1.2 requires API changes - see `docs/migration/`
+- Future: Refactor to v1.4 when game installation is updated
 - No git actions unless explicitly asked
 
 ## PowerShell Tool (Windows)
