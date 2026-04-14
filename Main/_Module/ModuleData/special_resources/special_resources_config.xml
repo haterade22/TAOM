@@ -35,9 +35,9 @@
     </Tiers>
   </Resource>
 
-  <!-- Caster (Gondor) — ancient Numenorean lore, scholarly and defensive -->
+  <!-- Castar (Gondor) — ancient Numenorean lore, scholarly and defensive -->
   <!-- Moderate daily (Minas Tirith libraries), moderate battle, high siege (defense) -->
-  <Resource id="caster" display_name="Caster" icon_sprite="SpecialResources\taom_caster_icon"
+  <Resource id="caster" display_name="Castar" icon_sprite="SpecialResources\taom_caster_icon"
     cap="500" starting_amount="25" daily_per_town="0.6"
     per_battle_victory_base="8" per_raid="4" per_siege_victory="18"
     per_prisoner="1" per_tournament_win="6" per_hideout_clear="5">
