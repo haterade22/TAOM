@@ -26,7 +26,7 @@ internal class CareerButtonPrefab : PrefabExtensionInsertPatch
             "IsVisible=\"@HasCareer\" " +
             "Command.Click=\"ExecuteOpenCareerScreen\" " +
             "DoNotPassEventsToChildren=\"true\" " +
-            "Sprite=\"TAOM\\CareerSystem\\career_button_placeholder\">" +
+            "Sprite=\"CareerSystem\\career_button_placeholder\">" +
             "<Children>" +
             "<TextWidget " +
             "WidthSizePolicy=\"StretchToParent\" " +
