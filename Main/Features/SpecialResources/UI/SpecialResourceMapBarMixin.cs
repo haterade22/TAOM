@@ -18,6 +18,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     private string _lastCultureId;
 
     private string _resourceDisplayText;
+    private string _resourceIconSprite;
     private string _resourceTooltipTitle;
     private bool _isResourceVisible;
     private bool _hasResourceWarning;
@@ -68,12 +69,14 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         var intAmount = (int)amount;
         HasResourceWarning = amount <= 0f;
 
+        ResourceIconSprite = resource.IconSpriteName;
+
         if (intAmount != _lastAmount)
         {
             var tier = _service.GetCurrentTier(hero.StringId, kingdomId, cultureId);
             ResourceDisplayText = tier != null
-                ? $"{resource.DisplayName}: {intAmount} ({tier.Name})"
-                : $"{resource.DisplayName}: {intAmount}/{resource.Cap:F0}";
+                ? $"{intAmount} ({tier.Name})"
+                : $"{intAmount}";
             ResourceTooltipTitle = resource.DisplayName;
             _lastAmount = intAmount;
         }
@@ -89,6 +92,20 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             {
                 _resourceDisplayText = value;
                 OnPropertyChanged(nameof(ResourceDisplayText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string ResourceIconSprite
+    {
+        get => _resourceIconSprite;
+        set
+        {
+            if (_resourceIconSprite != value)
+            {
+                _resourceIconSprite = value;
+                OnPropertyChanged(nameof(ResourceIconSprite));
             }
         }
     }

@@ -1,11 +1,17 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
+using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ScreenSystem;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.CareerSystem.UI;
 
+// Uses GameStateScreen attribute so GameStateManager.PushState properly
+// deactivates map bar input processing (avoids IndexOutOfRangeException
+// in GauntletMapBarGlobalLayer.HandlePanelSwitchingInput).
+[GameStateScreen(typeof(CareerScreenGameState))]
 public class GauntletCareerScreen : ScreenBase
 {
     private GauntletLayer _gauntletLayer;
@@ -18,18 +24,14 @@ public class GauntletCareerScreen : ScreenBase
     private readonly string _heroStringId;
     private readonly int _heroLevel;
 
-    public GauntletCareerScreen(
-        ICareerDataService dataService,
-        ICareerRegistry registry,
-        ICareerPassiveService passiveService,
-        string heroStringId,
-        int heroLevel)
+    public GauntletCareerScreen(CareerScreenGameState state)
     {
-        _dataService = dataService;
-        _registry = registry;
-        _passiveService = passiveService;
-        _heroStringId = heroStringId;
-        _heroLevel = heroLevel;
+        var hero = Hero.MainHero;
+        _dataService = IoC.Resolve<ICareerDataService>();
+        _registry = IoC.Resolve<ICareerRegistry>();
+        _passiveService = IoC.Resolve<ICareerPassiveService>();
+        _heroStringId = hero?.StringId ?? "";
+        _heroLevel = hero?.Level ?? 0;
     }
 
     public static void OpenCareerScreen()
@@ -44,18 +46,9 @@ public class GauntletCareerScreen : ScreenBase
             return;
         }
 
-        var dataService = IoC.Resolve<ICareerDataService>();
-        var registry = IoC.Resolve<ICareerRegistry>();
-        var passiveService = IoC.Resolve<ICareerPassiveService>();
-        if (dataService == null || registry == null || passiveService == null)
-        {
-            logger?.LogError($"CareerSystem: OpenCareerScreen — service resolution failed");
-            return;
-        }
-
         logger?.LogInfo($"CareerSystem: Opening career screen for hero '{hero.StringId}' level={hero.Level}");
-        ScreenManager.PushScreen(new GauntletCareerScreen(
-            dataService, registry, passiveService, hero.StringId, hero.Level));
+        var state = Game.Current.GameStateManager.CreateState<CareerScreenGameState>();
+        Game.Current.GameStateManager.PushState(state);
     }
 
     protected override void OnInitialize()
@@ -88,7 +81,7 @@ public class GauntletCareerScreen : ScreenBase
         if (_movie != null)
             _gauntletLayer?.ReleaseMovie(_movie);
         _viewModel?.OnFinalize();
-        ScreenManager.PopScreen();
+        Game.Current.GameStateManager.PopState();
     }
 
     protected override void OnFinalize()
