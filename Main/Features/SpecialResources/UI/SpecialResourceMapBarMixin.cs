@@ -8,7 +8,7 @@ using TaleWorlds.Library;
 
 namespace TAOM.Features.SpecialResources.UI;
 
-[ViewModelMixin("RefreshValues")]
+[ViewModelMixin("Refresh")]
 internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 {
     private readonly ISpecialResourceService _service;
