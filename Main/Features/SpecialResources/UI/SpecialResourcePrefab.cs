@@ -4,30 +4,36 @@ using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace TAOM.Features.SpecialResources.UI;
 
-// Replace the IconBrushWidget inside the BottomInfoBar (SecondaryInfoItems) item template
-// with our SpecialResourceSpriteWidget, which dynamically loads resource sprites.
-// Normal icons fall through to IconBrushWidget base behavior; only "special_resource"
-// triggers the custom sprite lookup.
+// Inject a resource display widget into the MapBar, positioned next to existing info items.
+// Uses bound properties from SpecialResourceMapBarMixin instead of modifying SecondaryInfoItems
+// (which causes IndexOutOfRangeException in vanilla's HandlePanelSwitchingInput).
 [PrefabExtension("MapBar",
-    "descendant::ListPanel[@Id='BottomInfoBar']/ItemTemplate/HintWidget/Children/ListPanel/Children/IconBrushWidget")]
-internal class PrefabBottomInfoBarIcon : PrefabExtensionInsertPatch
+    "descendant::ListPanel[@Id='BottomInfoBar']")]
+internal class SpecialResourceMapBarPrefab : PrefabExtensionInsertPatch
 {
-    public override InsertType Type => InsertType.Replace;
+    public override InsertType Type => InsertType.Append;
 
     [PrefabExtensionXmlDocument]
     public XmlDocument GetDocument()
     {
         var doc = new XmlDocument();
         doc.LoadXml(
-            "<SpecialResourceSpriteWidget" +
-            " WidthSizePolicy=\"Fixed\"" +
-            " HeightSizePolicy=\"Fixed\"" +
-            " SuggestedWidth=\"33\"" +
-            " SuggestedHeight=\"33\"" +
-            " VerticalAlignment=\"Center\"" +
-            " IconBrush=\"MapBar.Right.Icons\"" +
-            " IconID=\"@VisualId\"" +
-            " UseStylesFromSourceIcon=\"true\" />");
+            "<Widget " +
+            "WidthSizePolicy=\"CoverChildren\" " +
+            "HeightSizePolicy=\"Fixed\" " +
+            "SuggestedHeight=\"40\" " +
+            "VerticalAlignment=\"Center\" " +
+            "MarginLeft=\"10\" " +
+            "IsVisible=\"@IsResourceVisible\">" +
+            "<Children>" +
+            "<TextWidget " +
+            "WidthSizePolicy=\"CoverChildren\" " +
+            "HeightSizePolicy=\"CoverChildren\" " +
+            "VerticalAlignment=\"Center\" " +
+            "Text=\"@ResourceDisplayText\" " +
+            "Brush=\"MapBar.Right.TupleValue.Text\" />" +
+            "</Children>" +
+            "</Widget>");
         return doc;
     }
 }

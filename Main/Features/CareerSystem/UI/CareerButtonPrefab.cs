@@ -18,22 +18,23 @@ internal class CareerButtonPrefab : PrefabExtensionInsertPatch
             "<ButtonWidget " +
             "WidthSizePolicy=\"Fixed\" " +
             "HeightSizePolicy=\"Fixed\" " +
-            "SuggestedWidth=\"200\" " +
-            "SuggestedHeight=\"40\" " +
+            "SuggestedWidth=\"233\" " +
+            "SuggestedHeight=\"75\" " +
             "HorizontalAlignment=\"Center\" " +
             "VerticalAlignment=\"Top\" " +
-            "MarginTop=\"155\" " +
+            "MarginTop=\"150\" " +
             "IsVisible=\"@HasCareer\" " +
             "Command.Click=\"ExecuteOpenCareerScreen\" " +
             "DoNotPassEventsToChildren=\"true\" " +
-            "UpdateChildrenStates=\"true\" " +
-            "Brush=\"ButtonBrush1\">" +
+            "Sprite=\"TAOM\\CareerSystem\\career_button_placeholder\">" +
             "<Children>" +
             "<TextWidget " +
             "WidthSizePolicy=\"StretchToParent\" " +
             "HeightSizePolicy=\"StretchToParent\" " +
             "Text=\"Career\" " +
-            "Brush=\"ButtonBrush1.Text\" />" +
+            "Brush=\"ButtonBrush1.Text\" " +
+            "VerticalAlignment=\"Center\" " +
+            "HorizontalAlignment=\"Center\" />" +
             "</Children>" +
             "</ButtonWidget>");
         return doc;
