@@ -182,11 +182,13 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
             if (!int.TryParse(levelStr, out var level))
                 continue;
 
-            var threshold = float.Parse(thresholdStr, CultureInfo.InvariantCulture);
+            if (!float.TryParse(thresholdStr, NumberStyles.Float, CultureInfo.InvariantCulture, out var threshold))
+                continue;
+
             tiers.Add(new ResourceTier(level, name, threshold, description));
         }
 
-        tiers.Sort((a, b) => a.Level.CompareTo(b.Level));
+        tiers.Sort((a, b) => a.Threshold.CompareTo(b.Threshold));
         return tiers;
     }
 

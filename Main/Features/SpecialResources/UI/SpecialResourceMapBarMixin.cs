@@ -15,6 +15,9 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     private MapInfoItemVM _resourceItem;
     private bool _itemAdded;
     private int _lastAmount = -1;
+    private Domain.SpecialResource _lastResource;
+    private string _lastKingdomId;
+    private string _lastCultureId;
 
     public SpecialResourceMapBarMixin(MapInfoVM viewModel) : base(viewModel)
     {
@@ -33,7 +36,15 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         var kingdomId = hero.Clan?.Kingdom?.StringId;
         var cultureId = hero.Culture?.StringId;
-        var resource = _service.ResolveResource(kingdomId, cultureId);
+
+        if (kingdomId != _lastKingdomId || cultureId != _lastCultureId)
+        {
+            _lastResource = _service.ResolveResource(kingdomId, cultureId);
+            _lastKingdomId = kingdomId;
+            _lastCultureId = cultureId;
+        }
+
+        var resource = _lastResource;
 
         if (resource == null)
         {

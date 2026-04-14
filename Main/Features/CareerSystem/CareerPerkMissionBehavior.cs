@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
@@ -5,9 +6,11 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ScreenSystem;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CareerSystem.Mutations;
 using TAOM.Features.CareerSystem.UI;
 
 namespace TAOM.Features.CareerSystem;
@@ -31,7 +34,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private GauntletMovieIdentifier _hudMovie;
     private bool _hudInitialized;
 
-    private MissionAbilityExecutionContext _activeContext;
+    private readonly List<MissionAbilityExecutionContext> _activeContexts = new List<MissionAbilityExecutionContext>();
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -87,8 +90,14 @@ public class CareerPerkMissionBehavior : MissionBehavior
                 "Career ability is ready! Press V to activate.", Colors.Green));
         }
 
-        // Tick active execution context to expire timed buffs
-        _activeContext?.Tick(Mission.Current?.CurrentTime ?? 0f);
+        // Tick all active execution contexts to expire timed buffs; remove finished ones.
+        var currentTime = Mission.Current?.CurrentTime ?? 0f;
+        for (int i = _activeContexts.Count - 1; i >= 0; i--)
+        {
+            _activeContexts[i].Tick(currentTime);
+            if (_activeContexts[i].IsExpired)
+                _activeContexts.RemoveAt(i);
+        }
 
         // Check ability activation input (every frame, once per key press)
         if (Input.IsKeyPressed(InputKey.V))
@@ -111,7 +120,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
         var career = _registry.GetCareer(careerId);
         if (career == null) return;
 
-        var template = _configProvider.GetAbilityTemplate(career.AbilityTemplateId);
+        // Apply hero mutations to the raw template so Duration/Radius/etc reflect choice-tree choices.
+        var rawTemplate = _configProvider.GetAbilityTemplate(career.AbilityTemplateId);
+        var template = MutateTemplate(rawTemplate, heroId);
+
         var duration = template?.Duration ?? 8f;
         var radius = template?.Radius ?? 10f;
 
@@ -119,7 +131,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         var context = new MissionAbilityExecutionContext(
             heroId, duration, radius, mainAgent, Mission.Current, _logger);
 
-        _activeContext = context;
+        _activeContexts.Add(context);
 
         var executor = _effectRegistry.GetExecutor(careerId);
         executor.Execute(context);
@@ -132,6 +144,21 @@ public class CareerPerkMissionBehavior : MissionBehavior
             context.PlaySound(template.SoundEffect);
         if (!string.IsNullOrEmpty(template?.ParticleEffect))
             context.PlayParticle(template.ParticleEffect);
+    }
+
+    private AbilityTemplateData MutateTemplate(AbilityTemplateData rawTemplate, string heroId)
+    {
+        if (rawTemplate == null) return null;
+
+        var mutationService = IoC.Resolve<IMutationService>();
+        var adapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
+        if (mutationService == null || adapterFactory == null) return rawTemplate;
+
+        var hero = Hero.MainHero;
+        if (hero == null || hero.StringId != heroId) return rawTemplate;
+
+        var heroAdapter = adapterFactory.Create(hero);
+        return mutationService.MutateAbility(rawTemplate, heroAdapter, _dataService, _registry);
     }
 
     private void TryInitializeHud()
@@ -194,7 +221,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
         _abilityReadyNotified = false;
-        _activeContext = null;
+        _activeContexts.Clear();
+        CareerAbilityBuffTracker.ClearAll();
         _abilityService.ClearAll();
     }
 
