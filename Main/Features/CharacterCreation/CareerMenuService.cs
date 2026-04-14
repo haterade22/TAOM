@@ -14,7 +14,7 @@ namespace TAOM.Features.CharacterCreation;
 public class CareerMenuService : ICareerMenuService
 {
     private const string CareerMenuId = "narrative_career_menu";
-    private const string AdulthoodMenuId = "narrative_adulthood_menu";
+    private const string AgeSelectionMenuId = "narrative_age_selection_menu";
 
     private readonly ICareerRegistry _registry;
     private readonly ICareerMenuDataProvider _dataProvider;
@@ -80,9 +80,10 @@ public class CareerMenuService : ICareerMenuService
         var isFemale = Hero.MainHero?.IsFemale ?? false;
         characters.Add(new NarrativeMenuCharacter("player_career_character", playerBody, playerRace, isFemale));
 
+        // Chain after age selection: adulthood → age_selection (vanilla) → career → finalize
         var careerMenu = new NarrativeMenu(
             CareerMenuId,
-            AdulthoodMenuId,
+            AgeSelectionMenuId,
             "",
             new TextObject("{=taom_cc_career_title}Career"),
             new TextObject("{=taom_cc_career_desc}Your experiences have set you on a path. Choose the career that will define your legend."),

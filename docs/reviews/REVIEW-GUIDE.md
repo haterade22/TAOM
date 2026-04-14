@@ -356,5 +356,6 @@ After receiving Codex output, Claude must:
 - [ ] Check for convention inconsistencies Codex missed (cross-file patterns)
 - [ ] Check for fail-safe/default value consistency across the feature's patches
 - [ ] Check for no-op code paths (feature that does nothing in all cases)
+- [ ] Cross-config coverage: when feature X reads from config A and config B, verify every entry in A has a corresponding entry in B (e.g., every CC culture in cultures.json has at least one career in taom_careers.xml). Review #24 found a crash from this gap.
 - [ ] Verify any proposed remediation actually fixes the issue
 - [ ] Log results in REVIEW-LOG.md
