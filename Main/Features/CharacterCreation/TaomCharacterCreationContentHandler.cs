@@ -26,6 +26,7 @@ public class TaomCharacterCreationContentHandler : ICharacterCreationContentHand
     {
         _contentService.RegisterCustomCultures(characterCreationManager);
         _contentService.RegisterNarrativeMenus(characterCreationManager);
+        _contentService.RegisterCareerMenu(characterCreationManager);
         _logger.LogInfo("TAOM character creation content initialized");
     }
 

@@ -1,5 +1,21 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-14
+
+### Feature: Career Selection in Character Creation
+
+Added a 6th narrative menu stage to character creation that lets players choose their career from culture-eligible options. Previously the system auto-assigned the first eligible career with no player choice.
+
+- New "Career" stage appears after adulthood — shows 2-4 career options filtered by the player's selected culture
+- Each career grants thematic skill and attribute bonuses during CC (e.g., Ranger of Ithilien gives Bow + Scouting + Cunning)
+- 50 career entries in `career_menu.json` matching all 50 careers in `taom_careers.xml`
+- Fallback "No specialization" option for cultures without careers (shaghana, abanissa) prevents empty-menu crash
+- Backward compatible — legacy saves without career selection still auto-assign first eligible career
+- Uses Bannerlord's `AddNewMenu()` API to insert into the narrative menu chain — no Harmony patches needed
+
+**New files:** CareerMenuService, CareerMenuDataProvider, CareerMenuOptionDefinition, career_menu.json
+**Tests:** 21 tests (CareerMenuServiceTests + CareerMenuDataProviderTests)
+
 ## 2026-04-13
 
 ### Feature: Career System Overhaul + TOR Parity — 23 LOTR Careers + System Upgrades

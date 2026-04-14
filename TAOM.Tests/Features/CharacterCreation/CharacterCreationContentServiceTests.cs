@@ -16,6 +16,7 @@ public class CharacterCreationContentServiceTests
     private IRaceManager _raceManager;
     private IHeroRosterAdapter _heroRosterAdapter;
     private IEquipmentRosterProvider _equipmentRosterProvider;
+    private ICareerMenuService _careerMenuService;
     private IModLogger _logger;
     private CharacterCreationContentService _sut;
 
@@ -27,6 +28,7 @@ public class CharacterCreationContentServiceTests
         _raceManager = Substitute.For<IRaceManager>();
         _heroRosterAdapter = Substitute.For<IHeroRosterAdapter>();
         _equipmentRosterProvider = Substitute.For<IEquipmentRosterProvider>();
+        _careerMenuService = Substitute.For<ICareerMenuService>();
         _logger = Substitute.For<IModLogger>();
 
         _sut = new CharacterCreationContentService(
@@ -35,6 +37,7 @@ public class CharacterCreationContentServiceTests
             _raceManager,
             _heroRosterAdapter,
             _equipmentRosterProvider,
+            _careerMenuService,
             _logger);
     }
 

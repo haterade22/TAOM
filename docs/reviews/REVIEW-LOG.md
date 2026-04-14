@@ -26,9 +26,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 
 ## Metrics
 
-**Codex accuracy rate:** 46 real findings / 59 total findings = 78%
-**Codex miss rate:** 8 missed bugs / 54 total real bugs = 15%
-**False positive rate:** 9 false positives / 59 findings total = 15%
+**Codex accuracy rate:** 48 real findings / 61 total findings = 79%
+**Codex miss rate:** 8 missed bugs / 56 total real bugs = 14%
+**False positive rate:** 9 false positives / 61 findings total = 15%
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
@@ -45,8 +45,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 22 | 2026-04-08 | SettlementGuards | needs-attention | partial-agree | 1 confirmed (spear culture IDs) + 2 self-found (reflection caching, dead attributes) | 1 (spawn-point severity overstated) | 0 | v6 |
 
 | 23 | 2026-04-08 | NamedCompanions + Wanderer Race | needs-attention | agree | 1 confirmed (load teleport) + 1 dead code | 0 | 0 | v6 |
+| 24 | 2026-04-14 | Career CC Selection | needs-attention | agree | 1 confirmed (empty menu crash) + 1 test gap | 0 | 0 | v6-adversarial |
 
-**Post-codebase reviews:** 19 = SpecialResources, 20 = CareerSystem (premature), 21 = CareerSystem adversarial, 22 = SettlementGuards, 23 = NamedCompanions (1 HIGH load-path teleport bug, 1 LOW dead field). 23 Codex reviews total, 53 bugs found across codebase.
+**Post-codebase reviews:** 19-24. 24 Codex reviews total, 55 bugs found across codebase.
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
@@ -304,3 +305,39 @@ Claude found no additional bugs. First review where Codex found everything.
 4. Updated `SubModule.cs` to match new constructor
 5. Added test: `EnsureCompanionsPlaced_RecruitedCompanion_SkipsPlacement`
 6. All 1037 tests pass
+
+---
+
+## Review #24: Career CC Selection
+
+**Date:** 2026-04-14
+**Prompt version:** v6-adversarial (Known Suspects, config cross-ref, lifecycle tracing)
+**Report:** [codex-adversarial-career-cc-2026-04-14.md](codex-adversarial-career-cc-2026-04-14.md)
+
+### Codex Findings (2)
+
+| # | Codex Severity | Claude Severity | Agree? | Reason |
+|---|---------------|----------------|--------|--------|
+| 1 | HIGH | HIGH | Yes | Empty career menu for shaghana/abanissa causes KeyNotFoundException in vanilla TrySwitchToNextMenu. Codex correctly traced the lifecycle through CanAdvanceToNextStage (returns true for empty SelectionList) to SelectedOptions dictionary access. |
+| 2 | MEDIUM | MEDIUM | Yes | RegisterCareerMenu_ClearsStaleSelection test didn't exercise RegisterCareerMenu — only tested a fresh instance starts null. Valid test gap. |
+
+### Bugs Claude Missed (1)
+
+| Bug | Severity | Why missed |
+|-----|----------|-----------|
+| shaghana/abanissa empty menu crash | HIGH | Claude's deep review (5 agents) didn't cross-reference CC selectable cultures against career-eligible cultures. Data Flow agent checked XML/JSON 1:1 match but not cultures.json coverage. |
+
+### Root Cause Analysis
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Empty menu crash for careerless cultures | Lifecycle completeness | Didn't enumerate all selectable CC cultures and verify each has at least one career. Deep review checked XML career count matches JSON count, but not that every CC culture has career coverage. | Added fallback "No specialization" option that's visible only for uncovered cultures. Future: add config validation test that cross-refs cultures.json against career EligibleCultures. |
+| 2 | Test doesn't exercise actual method | Convention inconsistency | Test was written quickly after deep review flagged the singleton leak. Focused on proving the property resets rather than exercising the actual code path. | Replaced test with direct property verification tests. |
+
+### Fixes Implemented
+
+1. Added `SelectedCareerStringId = null` at top of `RegisterCareerMenu()` — clears stale singleton state
+2. Added `BuildFallbackOption()` — "No specialization" option visible only for cultures with no eligible careers (prevents KeyNotFoundException)
+3. Changed equipment roster ID to use `SelectedTitleType` instead of hardcoded "guard"
+4. Updated 3 tests for fallback option count, added 2 new tests (fallback null selection, fresh service state)
+5. All 1129 tests pass

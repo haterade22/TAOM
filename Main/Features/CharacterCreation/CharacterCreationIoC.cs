@@ -10,6 +10,8 @@ public static class CharacterCreationIoC
         container.Register<ICultureCreationDataProvider, CultureCreationDataProvider>(Reuse.Singleton);
         container.Register<INarrativeDataProvider, NarrativeDataProvider>(Reuse.Singleton);
         container.Register<IEquipmentRosterProvider, EquipmentRosterProvider>(Reuse.Singleton);
+        container.Register<ICareerMenuDataProvider, CareerMenuDataProvider>(Reuse.Singleton);
+        container.Register<ICareerMenuService, CareerMenuService>(Reuse.Singleton);
         container.Register<ICharacterCreationContentService, CharacterCreationContentService>(Reuse.Singleton);
         container.Register<IOnGetRaceNames, GetRaceNamesHook>(Reuse.Singleton);
         container.Register<INarrativeHorseGuardService, NarrativeHorseGuardService>(Reuse.Singleton);

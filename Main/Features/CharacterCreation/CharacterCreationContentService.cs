@@ -26,6 +26,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     private readonly IRaceManager _raceManager;
     private readonly IHeroRosterAdapter _heroRosterAdapter;
     private readonly IEquipmentRosterProvider _equipmentRosterProvider;
+    private readonly ICareerMenuService _careerMenuService;
     private readonly IModLogger _logger;
 
     // Vanilla cultures already registered by SandBox handler — skip these
@@ -40,6 +41,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         IRaceManager raceManager,
         IHeroRosterAdapter heroRosterAdapter,
         IEquipmentRosterProvider equipmentRosterProvider,
+        ICareerMenuService careerMenuService,
         IModLogger logger)
     {
         _dataProvider = dataProvider;
@@ -47,6 +49,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         _raceManager = raceManager;
         _heroRosterAdapter = heroRosterAdapter;
         _equipmentRosterProvider = equipmentRosterProvider;
+        _careerMenuService = careerMenuService;
         _logger = logger;
     }
 
@@ -93,6 +96,11 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         ReplaceMenuOptions(manager, builder, EducationMenuId, "education");
         ReplaceMenuOptions(manager, builder, YouthMenuId,     "youth");
         ReplaceMenuOptions(manager, builder, AdulthoodMenuId, "adulthood");
+    }
+
+    public void RegisterCareerMenu(CharacterCreationManager manager)
+    {
+        _careerMenuService.RegisterCareerMenu(manager);
     }
 
     private void ReplaceMenuOptions(
@@ -169,11 +177,27 @@ public class CharacterCreationContentService : ICharacterCreationContentService
 
         try
         {
-            var registry = IoC.Resolve<CareerSystem.ICareerRegistry>();
             var handler = IoC.Resolve<CareerSystem.ICareerCreationHandler>();
-            if (registry == null || handler == null)
+            if (handler == null)
             {
-                _logger.LogWarning("CareerSystem: Cannot assign career at CC — services not resolved");
+                _logger.LogWarning("CareerSystem: Cannot assign career at CC — handler not resolved");
+                return;
+            }
+
+            // Use player's career menu selection if available
+            var selectedCareerId = _careerMenuService?.SelectedCareerStringId;
+            if (!string.IsNullOrEmpty(selectedCareerId))
+            {
+                handler.OnCareerSelected(heroStringId, selectedCareerId);
+                _logger.LogInfo($"CareerSystem: Assigned player-selected career '{selectedCareerId}' during CC");
+                return;
+            }
+
+            // Fallback: auto-assign first eligible career (legacy/backward compat)
+            var registry = IoC.Resolve<CareerSystem.ICareerRegistry>();
+            if (registry == null)
+            {
+                _logger.LogWarning("CareerSystem: Cannot assign career at CC — registry not resolved");
                 return;
             }
 
@@ -184,7 +208,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
                     if (string.Equals(eligibleCulture, cultureId, StringComparison.OrdinalIgnoreCase))
                     {
                         handler.OnCareerSelected(heroStringId, career.Id);
-                        _logger.LogInfo($"CareerSystem: Assigned career '{career.Id}' during CC for culture '{cultureId}'");
+                        _logger.LogInfo($"CareerSystem: Auto-assigned career '{career.Id}' during CC for culture '{cultureId}' (no player selection)");
                         return;
                     }
                 }
