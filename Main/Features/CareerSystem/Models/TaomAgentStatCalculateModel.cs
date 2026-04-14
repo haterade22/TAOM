@@ -1,6 +1,7 @@
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.Models;
@@ -46,5 +47,15 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         var speedBonus = passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
         if (speedBonus != 0f)
             agentDrivenProperties.MaxSpeedMultiplier += speedBonus;
+
+        // Apply active ability buffs AFTER base recalc so they are not overwritten.
+        var buffs = CareerAbilityBuffTracker.GetBuff(heroId);
+        if (buffs != null)
+        {
+            agentDrivenProperties.MaxSpeedMultiplier += buffs.SpeedMultiplier;
+            agentDrivenProperties.CombatMaxSpeedMultiplier += buffs.CombatSpeedMultiplier;
+            agentDrivenProperties.DamageMultiplierBonus += buffs.DamageBonus;
+            agentDrivenProperties.ArmorEncumbrance -= buffs.ArmorReduction;
+        }
     }
 }

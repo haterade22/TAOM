@@ -15,13 +15,16 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     private readonly Mission _mission;
     private readonly IModLogger _logger;
 
-    // Tracks timed buff expiry: (property, originalValue, expiresAt)
-    // Cleared in OnMissionTick via the behavior.
+    // Tracks timed buff expiry; entries cleared when restore fires.
     private readonly List<PendingRestore> _pendingRestores = new List<PendingRestore>();
+    private readonly MBList<Agent> _nearbyAlliesBuffer = new MBList<Agent>();
 
     public string HeroStringId { get; }
     public float Duration { get; }
     public float Radius { get; }
+
+    // True when all timed restores have fired — used by CareerPerkMissionBehavior to prune finished contexts.
+    public bool IsExpired => _pendingRestores.Count == 0;
 
     public MissionAbilityExecutionContext(
         string heroStringId,
@@ -43,19 +46,17 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     {
         if (_agent?.AgentDrivenProperties == null) return;
 
-        var props = _agent.AgentDrivenProperties;
-        float original = props.MaxSpeedMultiplier;
-        props.MaxSpeedMultiplier = original * multiplier;
-        props.CombatMaxSpeedMultiplier = props.CombatMaxSpeedMultiplier * multiplier;
+        var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        buffs.SpeedMultiplier += multiplier - 1f;
+        buffs.CombatSpeedMultiplier += multiplier - 1f;
+        buffs.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
         _agent.UpdateAgentProperties();
 
         ScheduleRestore(() =>
         {
-            if (_agent?.AgentDrivenProperties == null) return;
-            _agent.AgentDrivenProperties.MaxSpeedMultiplier = original;
-            _agent.AgentDrivenProperties.CombatMaxSpeedMultiplier =
-                _agent.AgentDrivenProperties.CombatMaxSpeedMultiplier / multiplier;
-            _agent.UpdateAgentProperties();
+            CareerAbilityBuffTracker.ClearBuff(HeroStringId);
+            _agent?.UpdateAgentProperties();
         }, duration);
 
         _logger.LogDebug($"CareerSystem: SpeedBuff x{multiplier} applied to '{HeroStringId}' for {duration}s");
@@ -65,16 +66,16 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     {
         if (_agent?.AgentDrivenProperties == null) return;
 
-        var props = _agent.AgentDrivenProperties;
-        float original = props.DamageMultiplierBonus;
-        props.DamageMultiplierBonus = original + (multiplier - 1f);
+        var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        buffs.DamageBonus += multiplier - 1f;
+        buffs.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
         _agent.UpdateAgentProperties();
 
         ScheduleRestore(() =>
         {
-            if (_agent?.AgentDrivenProperties == null) return;
-            _agent.AgentDrivenProperties.DamageMultiplierBonus = original;
-            _agent.UpdateAgentProperties();
+            CareerAbilityBuffTracker.ClearBuff(HeroStringId);
+            _agent?.UpdateAgentProperties();
         }, duration);
 
         _logger.LogDebug($"CareerSystem: DamageBuff x{multiplier} applied to '{HeroStringId}' for {duration}s");
@@ -84,17 +85,17 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     {
         if (_agent?.AgentDrivenProperties == null) return;
 
-        var props = _agent.AgentDrivenProperties;
         // Reduce encumbrance as a proxy for resistance (lighter feel = absorbs more)
-        float original = props.ArmorEncumbrance;
-        props.ArmorEncumbrance = original / multiplier;
+        var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        buffs.ArmorReduction += 1f - (1f / multiplier);
+        buffs.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
         _agent.UpdateAgentProperties();
 
         ScheduleRestore(() =>
         {
-            if (_agent?.AgentDrivenProperties == null) return;
-            _agent.AgentDrivenProperties.ArmorEncumbrance = original;
-            _agent.UpdateAgentProperties();
+            CareerAbilityBuffTracker.ClearBuff(HeroStringId);
+            _agent?.UpdateAgentProperties();
         }, duration);
 
         _logger.LogDebug($"CareerSystem: ResistanceBuff x{multiplier} applied to '{HeroStringId}' for {duration}s");
@@ -104,8 +105,9 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     {
         if (_agent == null || _mission == null) return;
 
-        var allies = new MBList<Agent>();
-        _mission.GetNearbyAllyAgents(_agent.Position.AsVec2, radius, _agent.Team, allies);
+        _nearbyAlliesBuffer.Clear();
+        _mission.GetNearbyAllyAgents(_agent.Position.AsVec2, radius, _agent.Team, _nearbyAlliesBuffer);
+        var allies = _nearbyAlliesBuffer;
 
         int boosted = 0;
         foreach (var ally in allies)
@@ -143,20 +145,21 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     // Called by CareerPerkMissionBehavior on each tick to expire timed buffs.
     public void Tick(float currentMissionTime)
     {
-        _pendingRestores.RemoveAll(r =>
+        for (int i = _pendingRestores.Count - 1; i >= 0; i--)
         {
-            if (currentMissionTime >= r.ExpiresAt)
+            if (currentMissionTime >= _pendingRestores[i].ExpiresAt)
             {
-                r.Restore();
-                return true;
+                _pendingRestores[i].Restore();
+                _pendingRestores.RemoveAt(i);
             }
-            return false;
-        });
+        }
     }
+
+    private float CurrentTime() => _mission?.CurrentTime ?? 0f;
 
     private void ScheduleRestore(Action restore, float duration)
     {
-        float expiresAt = _mission?.CurrentTime + duration ?? duration;
+        float expiresAt = CurrentTime() + duration;
         _pendingRestores.Add(new PendingRestore(restore, expiresAt));
     }
 
