@@ -2,7 +2,7 @@
 
 ## Overview
 
-Career/class progression system where each hero can have a career that provides passive bonuses, an active ability, and a 3-tier choice tree. Careers are defined in XML and gated by culture eligibility and hero level. Mordor "Warboss" is the pilot career.
+Career/class progression system where each hero can have a career that provides passive bonuses, an active ability, and a 3-tier choice tree. 50 LOTR-themed careers across 16 factions, fully XML-driven. Each career has 31 choices (1 root + 6 groups x 5 choices) with keystones, passives, and ability mutations.
 
 ## Why This Exists
 
@@ -22,8 +22,9 @@ TOR_Core's career system uses hardcoded C# classes, static singletons, and 6 Har
 - **Persistence:** `CareerPersistenceBehavior` with `SyncData("_taom_careerData")` storing `Dictionary<string, HeroCareerData>`
 - **Passive application:** `ICareerPassiveService` caches per-hero effect magnitudes, `CareerPassiveHelper` wires into 8 existing GameModels
 - **Mutations:** Hybrid XML + C# calculator registry — XML defines target/params, C# provides calculator functions by ID
-- **UI:** `GauntletCareerScreen` (GlobalLayer) with `CareerScreenVM` hierarchy, `CharacterDeveloperCareerMixin` (UIExtenderEx) for career button
-- **Battle:** `CareerPerkMissionBehavior` for per-second tick and kill-based charge, `CareerAbilityService` for ability state
+- **UI:** `GauntletCareerScreen` with `CareerScreenVM` hierarchy (TOR-pattern expandable panels, portraits, ability icons, lock chains), `CharacterDeveloperCareerMixin` (UIExtenderEx) for career button with sprite. See [gui-sprite-system.md](gui-sprite-system.md) for full UI details.
+- **Battle:** `CareerPerkMissionBehavior` for per-second tick, kill/damage charge via `OnScoreHit`, `CareerAbilityService` for ability state
+- **Ability effects:** `CareerAbilityEffectRegistry` dispatches to per-career `ICareerAbilityEffectExecutor` implementations. Buffs applied via `CareerAbilityBuffTracker` (read by `TaomAgentStatCalculateModel` — survives stat recalc). 3 pilot executors: Stealth, Bloodrage, Stampede.
 
 ### Component Diagram
 
@@ -41,12 +42,16 @@ CareerDataService   CareerPassiveService (cache)
   |            CareerPassiveHelper → 8 GameModels
   |
 CareerCampaignBehavior  CareerPerkMissionBehavior
-(session/level/death)   (battle tick/charge)
-  |
-CareerCreationHandler   CareerSwitchService
-(CC integration)        (NPC dialogue switching)
+(session/level/death)   (battle tick/charge/ability effects)
+  |                           |
+CareerCreationHandler   CareerAbilityEffectRegistry
+(CC integration)        → ICareerAbilityEffectExecutor (3 pilots)
+  |                     → CareerAbilityBuffTracker (static, read by stat model)
+CareerSwitchService     → MissionAbilityExecutionContext (boundary adapter)
+(NPC dialogue switching)
   |
 GauntletCareerScreen → CareerScreenVM → CareerChoiceGroupObjectVM → CareerChoiceObjectVM
+                                      → CareerAbilityEffectVM (ability effects list)
 ```
 
 ## Configuration
@@ -74,12 +79,13 @@ Defines career abilities with: id, name, cooldown, duration, radius, cast type, 
 | `Main/Features/CareerSystem/CareerPassiveService.cs` | Session-scoped passive effect cache |
 | `Main/Features/CareerSystem/CareerPassiveHelper.cs` | Static helper wiring passives into GameModels |
 | `Main/Features/CareerSystem/Mutations/` (6 files) | Calculator registry + built-in calculators + mutation service |
-| `Main/Features/CareerSystem/Abilities/` (3 files) | CareerAbility + ability service |
+| `Main/Features/CareerSystem/Abilities/` (10 files) | CareerAbility, ability service, effect registry, 3 executors, buff tracker, execution context |
 | `Main/Features/CareerSystem/CareerCampaignBehavior.cs` | Campaign lifecycle events |
 | `Main/Features/CareerSystem/CareerPerkMissionBehavior.cs` | Battle tick + charge accumulation |
 | `Main/Features/CareerSystem/CareerCreationHandler.cs` | Character creation integration |
 | `Main/Features/CareerSystem/CareerSwitchService.cs` | Career switching with validation |
-| `Main/Features/CareerSystem/UI/` (6 files) | Career screen GameState + VM hierarchy + UIExtenderEx mixin |
+| `Main/Features/CareerSystem/UI/` (7 files) | Career screen + VM hierarchy + UIExtenderEx mixin + ability HUD + prefab. See [gui-sprite-system.md](gui-sprite-system.md) |
+| `Main/Features/CareerSystem/Models/` (3 files) | TaomAgentApplyDamageModel, TaomAgentStatCalculateModel, TaomClanTierModel |
 | `Main/Adapters/ICareerHeroAdapter.cs` | Wraps Hero for service boundary |
 | `Main/Adapters/ICareerHeroAdapterFactory.cs` | Factory for GameModel boundary |
 

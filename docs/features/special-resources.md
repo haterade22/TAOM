@@ -44,6 +44,9 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 - **Desertion:** At 0 balance, 10% of each upkeep-troop type deserts daily (min 1 per type)
 - **Notifications:** Green chat for earnings, yellow warning at <10% cap, center-screen desertion alert
 - **SyncData persistence:** Composite `heroId:resourceId` keys, cap enforcement on load
+- **Career passive integration:** `CustomResourceGain` scales daily earning, `CustomResourceUpkeepModifier` reduces upkeep, `CustomResourceUpgradeCostModifier` reduces upgrade cost — all wired through `ICareerPassiveService`
+- **Resource tiers:** Optional `<Tiers>` XML element defines threshold-based progression (pilot: Gems with 3 tiers). `GetCurrentTier()` resolves highest tier where balance >= threshold. Map bar shows tier name when active.
+- **Map bar display:** Uses `[DataSourceProperty]` bindings on mixin + `PrefabExtensionInsertPatch` — does NOT add to `SecondaryInfoItems` (causes vanilla IndexOutOfRange crash). See [gui-sprite-system.md](gui-sprite-system.md).
 - **Comprehensive logging:** `[SpecRes]` prefix throughout all components
 
 ### Component Diagram
@@ -56,8 +59,11 @@ special_resources_config.xml + troop_resource_costs.xml
   SpecialResourceService (resolve, earn, spend, validate, daily tick, desertion)
        / \         \          \
       /   \         \          \
-Behavior  Patch26    MapBarMixin  SpriteWidget
-(events)  (party UI) (map bar)   (dynamic icon)
+Behavior  Patch26    MapBarMixin  SpriteWidget  ICareerPassiveService
+(events)  (party UI) (map bar)   (dynamic icon) (career modifier)
+                                                      |
+                                              ResourceTier (domain)
+                                              GetCurrentTier (service)
 ```
 
 ## Configuration
@@ -66,15 +72,38 @@ Behavior  Patch26    MapBarMixin  SpriteWidget
 
 ```xml
 <Resource id="war_spoils" display_name="War Spoils" icon_sprite="taom_war_spoils_icon"
-  cap="500" starting_amount="30" daily_per_town="0.5"
-  per_battle_victory_base="10" per_raid="8" per_siege_victory="15"
-  per_prisoner="1" per_tournament_win="5" per_hideout_clear="6">
+  cap="500" starting_amount="30" daily_per_town="0.2"
+  per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
+  per_prisoner="2" per_tournament_win="3" per_hideout_clear="8">
   <Kingdom id="empire_s" />
   <Kingdom id="isengard" />
   <Culture id="mordor" />
   <Culture id="isengard" />
 </Resource>
 ```
+
+Earning rates are now differentiated per faction identity:
+- **Aggressive factions** (Mordor, Harad): high battle/raid, low daily
+- **Mining/trade factions** (Erebor, Dale): high daily, low battle
+- **Honor factions** (Rohan): high tournament, zero raid
+- **Peaceful factions** (Elves): high daily, zero raid, lower cap
+
+### Resource Tiers (Optional): `<Tiers>` element inside `<Resource>`
+
+```xml
+<Resource id="gems" ...>
+  <Tiers>
+    <Tier level="1" name="Apprentice Miner" threshold="100"
+          description="Dwarven mining efficiency improves." />
+    <Tier level="2" name="Journeyman Smith" threshold="250"
+          description="Erebor's forges burn bright." />
+    <Tier level="3" name="Master of the Treasury" threshold="400"
+          description="The wealth of Erebor flows." />
+  </Tiers>
+</Resource>
+```
+
+Tiers are sorted by threshold at parse time. `GetCurrentTier()` reverse-walks to find the highest met threshold. Resources without `<Tiers>` have an empty list (backward compatible).
 
 Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (many-to-one).
 
