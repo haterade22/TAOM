@@ -155,7 +155,7 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return true;
 
-        var totalCost = cost.UpgradeCost * count;
+        var totalCost = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, count);
         var available = _storage.Get(heroId, resource.Id);
         var canAfford = available >= totalCost;
         _logger.LogDebug($"[SpecRes] CanAfford: {troopId} x{count} cost={totalCost} available={available:F0} → {canAfford}");
