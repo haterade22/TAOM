@@ -1,4 +1,5 @@
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.UI;
@@ -17,10 +18,10 @@ public class CareerChoiceObjectVM : ViewModel
     }
 
     [DataSourceProperty]
-    public string Name => _choice.Id;
+    public string Name => new TextObject(_choice.Id).ToString();
 
     [DataSourceProperty]
-    public string Description => _choice.Description;
+    public string Description => new TextObject(_choice.Description).ToString();
 
     [DataSourceProperty]
     public string IconSprite => _choice.IconSprite;

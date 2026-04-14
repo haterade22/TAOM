@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.UI;
@@ -63,7 +64,7 @@ public class CareerChoiceGroupObjectVM : ViewModel
     }
 
     [DataSourceProperty]
-    public string GroupName => _group.Id;
+    public string GroupName => new TextObject(_group.Id).ToString();
 
     [DataSourceProperty]
     public int Tier => _group.Tier;

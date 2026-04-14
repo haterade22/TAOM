@@ -49,7 +49,19 @@
                         </Widget>
 
                         <!-- Career Description -->
-                        <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginLeft="20" MarginRight="20" Text="@CareerDescription" Brush="CharacterDeveloper.DescriptionText" />
+                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginLeft="20" MarginRight="20" ClipRect="CareerDescriptionClip" InnerPanel="CareerDescriptionInner" AutoHideScrollBars="true">
+                          <Children>
+                            <Widget Id="CareerDescriptionClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                              <Children>
+                                <Widget Id="CareerDescriptionInner" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                                  <Children>
+                                    <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@CareerDescription" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </ScrollablePanel>
 
                         <!-- Divider -->
                         <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="4" HorizontalAlignment="Center" Sprite="Clan\divider_mid" />

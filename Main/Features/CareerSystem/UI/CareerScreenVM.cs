@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -88,11 +89,11 @@ public class CareerScreenVM : ViewModel
         }
 
         HasCareer = true;
-        CareerName = career.DisplayName;
-        CareerDescription = career.Description;
+        CareerName = new TextObject(career.DisplayName).ToString();
+        CareerDescription = new TextObject(career.Description).ToString();
         CareerPortraitSprite = career.PortraitSprite;
 
-        AbilityName = career.AbilityTemplateId;
+        AbilityName = new TextObject(career.AbilityTemplateId).ToString();
         AbilitySpriteName = $"CareerSystem\\Abilities\\{career.AbilityTemplateId}";
         HasAbilitySprite = !string.IsNullOrEmpty(career.AbilityTemplateId);
 
