@@ -14,13 +14,10 @@
 		<DependedModule Id="CustomBattle" />
 	</DependedModules>
 	<DependedModuleMetadatas>
-		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Native" order="LoadBeforeThis" version="e1.3.0.*" />
 		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
-		<DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" />
-		<DependedModuleMetadata id="Bannerlord.MBOptionScreen" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
 	<SubModules>
 		<SubModule>
