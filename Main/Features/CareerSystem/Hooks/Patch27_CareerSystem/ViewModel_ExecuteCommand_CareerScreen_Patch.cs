@@ -11,8 +11,11 @@ public static class ViewModel_ExecuteCommand_CareerScreen_Patch
 {
     static void Postfix(ViewModel __instance, string commandName, object[] parameters)
     {
-        if (commandName == "ExecuteOpenCareerScreen" && __instance is CharacterDeveloperVM)
+        if (commandName == "ExecuteOpenCareerScreen" && __instance is CharacterDeveloperVM charDevVM)
         {
+            // Close CharacterDeveloper first (TOR pattern) — prevents
+            // GameState.HandleInitialize NullRef and map bar input crash
+            charDevVM.ExecuteDone();
             GauntletCareerScreen.OpenCareerScreen();
         }
     }
