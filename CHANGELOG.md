@@ -16,6 +16,18 @@ Added a 6th narrative menu stage to character creation that lets players choose 
 **New files:** CareerMenuService, CareerMenuDataProvider, CareerMenuOptionDefinition, career_menu.json
 **Tests:** 21 tests (CareerMenuServiceTests + CareerMenuDataProviderTests)
 
+### Fix: In-Game Testing — Career Screen + Map Bar + Sprite Pipeline
+
+Verified in-game on Gondor campaign. Fixed 6 runtime issues discovered during testing:
+
+- **Career button sprite:** removed extra `TAOM\` prefix from sprite path — now correctly references `CareerSystem\career_button_placeholder` per TAOMSpriteData.xml registration
+- **Career screen crash:** converted from `ScreenManager.PushScreen` to `GameStateManager.PushState` (TOR pattern), and added `ExecuteDone()` to close CharacterDeveloper before pushing career state
+- **Map bar resource display:** fixed mixin hook from `"RefreshValues"` (one-time) to `"Refresh"` (per-frame, TOR pattern); fixed icon_sprite paths with `SpecialResources\` prefix; reverted to `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` (TOR pattern — works with vanilla code)
+- **Map bar tooltip:** rich tooltip now shows resource name/cap, tier status, daily change breakdown (income vs upkeep), and per-event earning rates
+- **Shader precompilation:** confirmed working in-game — shader count decreasing steadily
+
+**Verified working (Gondor):** Career button with sprite, Caster resource on map bar with tooltip, shader precompilation progress
+
 ## 2026-04-13
 
 ### Feature: Career System Overhaul + TOR Parity — 23 LOTR Careers + System Upgrades

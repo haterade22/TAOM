@@ -1,5 +1,7 @@
 # Special Resources
 
+**Status:** Verified in-game (2026-04-14). Gondor Caster resource showing on map bar with rich tooltip (amount, tier, daily breakdown, per-event rates). Icon sprite loading correctly.
+
 ## Overview
 
 Per-kingdom special resource system where all 18 TAOM kingdoms have a unique secondary currency required to recruit and maintain elite troops. 11 unique resources mapped to faction groups — shared balance within each group. Resources are earned through combat, displayed in the map bar, enforced in the party screen with pending transaction support, and trigger troop desertion when depleted.

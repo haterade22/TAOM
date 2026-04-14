@@ -1,5 +1,7 @@
 # GUI & Sprite System
 
+**Status:** Verified in-game (2026-04-14, Gondor campaign). Career button sprite, map bar resource display with tooltip, and shader precompilation all confirmed working.
+
 ## Overview
 
 TAOM's UI layer uses Bannerlord's Gauntlet UI framework with UIExtenderEx for injecting into vanilla screens. Sprites are PNG source images compiled into sprite sheets by the game engine. All UI data binding uses the `@PropertyName` / `{DataSourceName}` pattern from Gauntlet XML prefabs backed by `ViewModel` subclasses with `[DataSourceProperty]` attributes.
@@ -187,7 +189,13 @@ CareerScreenVM
 
 ### Career Button on Character Developer
 
-Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Sprite="TAOM\CareerSystem\career_button_placeholder"` (233x75). Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
+**Status:** Verified in-game (2026-04-14). Dark steel banner sprite with "Career" text overlay.
+
+Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Sprite="CareerSystem\career_button_placeholder"` (233x75). Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
+
+**Opening flow (TOR pattern):** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` → calls `charDevVM.ExecuteDone()` to close Character Developer first → then `Game.Current.GameStateManager.PushState<CareerScreenGameState>()`. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
+
+**Critical:** Must close CharacterDeveloper BEFORE pushing career state. Without `ExecuteDone()`, the map bar global layer continues ticking input with invalid context → `IndexOutOfRangeException`.
 
 ### Ability HUD in Battle
 
@@ -195,24 +203,34 @@ Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `Charac
 
 ## Special Resource Map Bar
 
-### Architecture (Post-Fix)
+**Status:** Verified in-game (2026-04-14). Gondor Caster showing with tooltip on map bar.
 
-The original implementation added items to `SecondaryInfoItems` which caused `IndexOutOfRangeException` in vanilla's `HandlePanelSwitchingInput` (hardcoded positional indexing).
+### Architecture (TOR Pattern)
 
-**Current approach:** ViewModel mixin exposes bound properties, prefab extension injects a widget.
+Uses `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` objects — the same approach TOR uses successfully. A `SpecialResourceSpriteWidget` (extends `IconBrushWidget`) replaces the default icon in the item template to dynamically load the resource's sprite.
 
 ```
-SpecialResourceMapBarMixin (ViewModelMixin on MapInfoVM)
-├── [DataSourceProperty] ResourceDisplayText   → "Gems: 275 (Journeyman Smith)"
-├── [DataSourceProperty] IsResourceVisible     → true/false
-├── [DataSourceProperty] HasResourceWarning    → true when balance ≤ 0
-└── [DataSourceProperty] ResourceTooltipTitle  → "Gems"
+SpecialResourceMapBarMixin (ViewModelMixin on MapInfoVM, hooks "Refresh")
+├── Creates MapInfoItemVM("special_resource", GetTooltipProperties)
+├── Adds to SecondaryInfoItems once (_baseInitialized guard)
+├── Updates Value, IntValue, HasWarning per frame
+└── GetTooltipProperties() → rich tooltip with tier, daily change, earning rates
 
-SpecialResourceMapBarPrefab (PrefabExtension on MapBar)
-└── Appends TextWidget to BottomInfoBar bound to @ResourceDisplayText
+SpecialResourceIconPrefab (PrefabExtension on MapBar)
+└── Replaces IconBrushWidget in BottomInfoBar ItemTemplate
+    with SpecialResourceSpriteWidget (dynamic icon loading)
 ```
 
-**Constraint:** Do NOT add to `SecondaryInfoItems` — vanilla code indexes it by position. Use bound properties + prefab injection instead.
+**Critical:** The mixin MUST hook `"Refresh"` (per-frame), NOT `"RefreshValues"` (one-time init). TOR uses the same pattern.
+
+### Tooltip Content
+
+The hover tooltip shows:
+- Resource name + amount/cap (title)
+- Current tier name + description (if tier active)
+- Next tier threshold (if below all tiers)
+- Daily change breakdown: income (N towns) vs elite upkeep
+- Per-event earning rates: battle, raid, siege, prisoner
 
 ## Sprites Needed (Not Yet Created)
 
