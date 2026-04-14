@@ -1,12 +1,12 @@
 ---
 name: deep-review
-description: Launch parallel deep-dive agents to review completed work for quality, standards, compatibility, and completeness
+description: Launch parallel deep-dive agents to review completed work for quality, standards, compatibility, completeness, and cross-system data flow
 argument-hint: "[feature-name]"
 ---
 
 # Deep Review
 
-Launch 4 parallel review agents to audit the current session's work. Run this AFTER completing a feature or fix, BEFORE closing out.
+Launch 5 parallel review agents to audit the current session's work. Run this AFTER completing a feature or fix, BEFORE closing out.
 
 The feature or area to review: `$ARGUMENTS` (if empty, review all uncommitted changes).
 
@@ -21,11 +21,11 @@ If triggered:
    /codex:review --background
    ```
 3. Continue to Step 1 immediately — do NOT wait for Codex here
-4. After all 4 Claude agents complete (Step 2), retrieve Codex results:
+4. After all 5 Claude agents complete (Step 2), retrieve Codex results:
    ```
    /codex:result
    ```
-5. Include Codex findings in the Step 3 compiled report as a fifth section:
+5. Include Codex findings in the Step 3 compiled report as a sixth section:
    ```
    CODEX REVIEW:  [PASS/ISSUES — N findings]
    [Codex findings grouped by severity]
@@ -43,9 +43,9 @@ Determine what to review:
 
 Collect the list of changed files for the agents.
 
-## Step 2: Launch 4 Review Agents in Parallel
+## Step 2: Launch 5 Review Agents in Parallel
 
-Launch ALL FOUR agents in a SINGLE message (parallel execution). Pass each agent the list of changed files.
+Launch ALL FIVE agents in a SINGLE message (parallel execution). Pass each agent the list of changed files.
 
 ### Agent 1: Standards Compliance
 
@@ -79,7 +79,7 @@ For each violation found:
 If all checks pass, say "ALL STANDARDS CHECKS PASSED" with a brief summary of what was reviewed.
 ```
 
-### Agent 2: Bannerlord 1.3 Compatibility
+### Agent 2: Bannerlord API Compatibility
 
 ```
 subagent_type: taleworlds-researcher
@@ -88,23 +88,27 @@ model: sonnet
 
 **Prompt:**
 ```
-Review these files for Bannerlord v1.3.12 API compatibility. Focus on TaleWorlds API usage.
+Review these files for Bannerlord API compatibility. Focus on TaleWorlds API usage.
+
+CRITICAL: The decompiled source at E:\Decompiled_Bannerlord\ is from a DIFFERENT version than the installed game. ALWAYS verify against the INSTALLED DLLs using ilspycmd:
+  ilspycmd "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/TaleWorlds.CampaignSystem.dll" -t "Full.Type.Name"
+  ilspycmd "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/TaleWorlds.MountAndBlade.dll" -t "Full.Type.Name"
+NEVER trust the decompiled folder for signature verification.
 
 FILES: [list changed files]
 
 FOR EACH FILE that references TaleWorlds APIs:
 1. Identify every TaleWorlds class, method, property, or enum used
-2. Decompile the relevant TaleWorlds type using ilspy MCP to verify:
-   - The method/property EXISTS in v1.3
+2. Decompile the relevant TaleWorlds type from the INSTALLED DLL to verify:
+   - The method/property EXISTS
    - The SIGNATURE matches (parameter types, return type)
    - The method is not marked internal/private
    - For GameModel overrides: the base class method signature is correct
    - For Harmony patches: the target method exists with the expected signature
-3. Check for v1.2 APIs that were removed/renamed in v1.3 (see docs/migration/v1.3-api-changes.md)
 
 OUTPUT FORMAT:
 For each API usage:
-- ✅ Verified: [Type.Method] — exists in v1.3 with matching signature
+- ✅ Verified: [Type.Method] — exists with matching signature
 - ❌ INCOMPATIBLE: [Type.Method] — [reason: removed/renamed/signature changed]
 - ⚠️ UNVERIFIED: [Type.Method] — could not decompile, needs manual check
 
@@ -126,13 +130,15 @@ FILES: [list changed files]
 
 CHECK ALL OF THESE:
 1. **Hot Path Allocations:** Any code in DailyTick, HourlyTick, or OnTick handlers — avoid LINQ, avoid allocating lists/arrays per tick, use cached collections
-2. **LINQ in Loops:** Flag .ToList(), .ToArray(), .Where().Select() chains inside loops or frequent callbacks
-3. **String Concatenation:** Use string interpolation or StringBuilder, not repeated + concatenation
-4. **Dictionary Lookups:** Use TryGetValue instead of ContainsKey + indexer (double lookup)
-5. **Unnecessary Boxing:** Watch for value types passed as object parameters
-6. **Caching Opportunities:** Repeated expensive lookups that could be cached (e.g., race lookups, config reads)
-7. **IEnumerable Multiple Enumeration:** Flag any IEnumerable parameter that's enumerated more than once
-8. **Resource Disposal:** IDisposable types properly disposed or in using blocks
+2. **IoC.Resolve in Hot Paths:** Flag ANY IoC.Resolve<T>() call inside per-frame, per-hit, or per-tick methods. These MUST use lazy-cached properties instead.
+3. **LINQ in Loops:** Flag .ToList(), .ToArray(), .Where().Select() chains inside loops or frequent callbacks
+4. **String Concatenation:** Use string interpolation or StringBuilder, not repeated + concatenation
+5. **Dictionary Lookups:** Use TryGetValue instead of ContainsKey + indexer (double lookup)
+6. **Unnecessary Boxing:** Watch for value types passed as object parameters
+7. **Caching Opportunities:** Repeated expensive lookups that could be cached (e.g., race lookups, config reads)
+8. **IEnumerable Multiple Enumeration:** Flag any IEnumerable parameter that's enumerated more than once
+9. **Closure Allocations in Loops:** Flag lambda/delegate creation inside per-frame loops (RemoveAll with closure, etc.)
+10. **Resource Disposal:** IDisposable types properly disposed or in using blocks
 
 OUTPUT FORMAT:
 For each issue found:
@@ -175,6 +181,59 @@ OUTPUT FORMAT:
 Overall: COMPLETE / INCOMPLETE — [list what's missing]
 ```
 
+### Agent 5: Cross-System Data Flow Tracing
+
+**This agent catches bugs that per-file reviews miss — where data declared in one file is consumed (or NOT consumed) in another.**
+
+```
+subagent_type: Explore
+model: sonnet
+```
+
+**Prompt:**
+```
+CROSS-SYSTEM DATA FLOW REVIEW — trace data declarations through the codebase to find gaps where declared data is never consumed, or where parallel code paths use inconsistent logic.
+
+FILES: [list changed files]
+
+This review exists because per-file reviews consistently miss bugs that span multiple files. Every check below has caught real bugs in this project.
+
+TRACE THESE DATA FLOWS:
+
+1. **XML Config → C# Consumption:** For every configurable value declared in XML (ModuleData/**/*.xml), trace it to the C# code that reads and acts on it. Flag any XML attribute that is parsed but never used at runtime.
+   - Read ALL changed XML files. For each attribute/element, grep the C# codebase for where it's consumed.
+   - Example bug pattern: XML declares `charge_type="DamageDone"` but the only code that emits charges uses `ChargeType.Kills`.
+
+2. **Enum Coverage:** For every enum type referenced in changed files, check that ALL enum values have at least one handler. Flag any enum value with zero callsites.
+   - Example bug pattern: `PassiveEffectType` has 50 values but only 15 are wired into GameModels.
+   - Example bug pattern: `ChargeType` has 5 values but only 1 is emitted by mission behavior.
+
+3. **Mutation/Transform Chain Completeness:** When data is transformed through a pipeline (raw → mutated → applied), verify every stage connects to the next.
+   - Example bug pattern: Mutation service mutates `MaxCharge` on template, but `CareerAbility` reads `MaxCharge` from career definition (unmutated source).
+   - Check: For every `property="X"` in mutation XML, trace X through the mutation service to where the mutated value is consumed.
+
+4. **Parallel Method Consistency:** When multiple methods serve the same purpose (e.g., checking cost, applying cost, displaying cost), verify they ALL use the same calculation.
+   - Example bug pattern: `CanAffordUpgrade` uses `baseCost * count` while `SpendForUpgrade` uses `GetEffectiveUpgradeCost()`.
+   - Check: Find method families (CanAfford/Spend/Clamp/Display) and verify they share the same cost derivation.
+
+5. **Lifecycle Completeness (State Matrix):** For every "set" operation, verify there is a corresponding "clear" for ALL entity lifecycle states.
+   - Entity states to check: alive, killed, unconscious, removed, mission-end, screen-close, session-end.
+   - Example bug pattern: `CareerAbilityBuffTracker.SetBuff()` on activation, but `ClearBuff()` only on timeout — not on hero death.
+   - Check: For every static dictionary, cached field, or session-scoped state, trace all paths that clear it.
+
+6. **Event Hook Coverage:** For behaviors that register campaign/mission events, verify all relevant events are hooked.
+   - Example bug pattern: `OnAgentRemoved` emits kill charges but no hook exists for damage-dealt charges, even though most careers use `DamageDone` charge type.
+   - Check: Read the behavior's RegisterEvents/constructor, cross-reference with the data it needs to provide.
+
+OUTPUT FORMAT:
+For each trace:
+- DATA FLOW: [source] → [transform] → [consumer]
+- STATUS: ✅ CONNECTED / ❌ GAP FOUND / ⚠️ INCONSISTENT
+- If GAP/INCONSISTENT: describe exactly what's missing and which files are involved
+
+Summary: N flows traced, X gaps found, Y inconsistencies found
+```
+
 ## Step 2b: Adversarial Escalation (conditional)
 
 **Only launch this step if Agent 1 (Standards) reports ANY violation rated CRITICAL.**
@@ -184,7 +243,7 @@ A CRITICAL violation is any of:
 - Harmony patch that directly accesses game state without an adapter
 - Entry point over 150 lines that does business logic itself
 
-If triggered, launch a 5th agent targeting ONLY the offending files:
+If triggered, launch a 6th agent targeting ONLY the offending files:
 
 ```
 subagent_type: Explore
@@ -215,7 +274,7 @@ Minimum fix plan (in order of least disruption):
 
 ## Step 3: Compile Report
 
-After all 4 agents complete, compile their results into a single report:
+After all 5 agents complete, compile their results into a single report:
 
 ```
 DEEP REVIEW REPORT
@@ -227,18 +286,21 @@ STANDARDS:     [PASS/FAIL — N violations]
 COMPATIBILITY: [PASS/FAIL — N incompatible, N unverified]
 EFFICIENCY:    [PASS/FAIL — N issues (H high, M medium, L low)]
 COMPLETENESS:  [COMPLETE/INCOMPLETE — list missing items]
+DATA FLOW:     [PASS/FAIL — N gaps, N inconsistencies]
 
 ─────────────────────────
 DETAILS
 ─────────────────────────
 
-[Agent 1 results]
+[Agent 1 results — Standards]
 
-[Agent 2 results]
+[Agent 2 results — Compatibility]
 
-[Agent 3 results]
+[Agent 3 results — Efficiency]
 
-[Agent 4 results]
+[Agent 4 results — Completeness]
+
+[Agent 5 results — Data Flow]
 
 ─────────────────────────
 ACTION ITEMS
@@ -253,5 +315,6 @@ VERDICT: READY FOR COMMIT / NEEDS FIXES
 
 - This is a READ-ONLY review. Do NOT make any code changes.
 - If any agent fails to launch (MCP issues, etc.), note it in the report and run the checks manually.
-- The Bannerlord compatibility agent (Agent 2) is the most critical — API mismatches cause runtime crashes.
+- The Bannerlord compatibility agent (Agent 2) MUST use installed DLLs via ilspycmd, NOT the decompiled folder at E:\Decompiled_Bannerlord\ (it's a different version).
+- Agent 5 (Data Flow) is the highest-value agent — it catches the class of bugs that all other agents consistently miss. Every HIGH bug found by Codex in this project was a data flow gap.
 - If the verdict is NEEDS FIXES, list the fixes needed in priority order.
