@@ -101,62 +101,113 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 
 ## Career Screen UI Sprites
 
+### Sprite Atlas
+
+Career sprites use a **dedicated atlas** `ui_taom_career_system` (registered in `GUI/SpriteParts/Config.xml` with `<AlwaysLoad />`). This prevents large career images from overflowing the main `ui_taom` atlas and corrupting other UI.
+
 ### Sprite Dimensions
 
 | Sprite Type | Widget Size | Generate At | Format | Location |
 |------------|-------------|-------------|--------|----------|
-| Career portrait | 400x200 | 800x400 | Landscape 2:1 | `GUI/SpriteParts/ui_taom/CareerSystem/Portraits/` |
-| Ability icon | 120x120 | 256x256 | Square | `GUI/SpriteParts/ui_taom/CareerSystem/Abilities/` |
+| Career portrait | 400x200 | 800x400 | Landscape 16:9 | `GUI/SpriteParts/ui_taom_career_system/CareerSystem/Portraits/` |
+| Ability icon | 120x120 | 256x256 | Square | `GUI/SpriteParts/ui_taom_career_system/CareerSystem/Abilities/` |
+| Career button | varies | 1024x256 | Wide strip | `GUI/SpriteParts/ui_taom_career_system/CareerSystem/` |
 
 Generate at 2x the widget size for sharpness — the engine downscales at runtime.
+
+**CRITICAL:** Images MUST be resized to the target dimensions BEFORE placing in SpriteParts. Oversized images (1024x1024+) overflow the sprite atlas and corrupt ALL UI.
 
 ### Sprite Naming Convention
 
 | Type | Filename | Registered Name (TAOMSpriteData.xml) |
 |------|----------|--------------------------------------|
 | Portrait | `career_{career_id}_portrait.png` | `CareerSystem\Portraits\career_{career_id}_portrait` |
-| Ability icon | `ability_{career_id}_icon.png` | `CareerSystem\Abilities\ability_{career_id}_icon` |
+| Ability icon | `{ability_template_id}.png` | `CareerSystem\Abilities\{ability_template_id}` |
+| Career button | `career_button_placeholder.png` | `CareerSystem\career_button_placeholder` |
 
 ### How to Add a Career Portrait
 
-1. Generate an 800x400 landscape image matching the gritty painterly LOTR concept art style
-2. Save as `GUI/SpriteParts/ui_taom/CareerSystem/Portraits/career_{career_id}_portrait.png`
-3. Register in `Main/_Module/GUI/TAOMSpriteData.xml` — add a `<GenericSprite>` entry:
+1. Generate a landscape image (Midjourney: `--ar 16:9`, ChatGPT: specify landscape)
+2. Resize to **800x400** using Python: `Image.open(f).resize((800, 400), Image.LANCZOS).save(f)`
+3. Save as `GUI/SpriteParts/ui_taom_career_system/CareerSystem/Portraits/career_{career_id}_portrait.png`
+4. Register in `Main/_Module/GUI/TAOMSpriteData.xml` — add a `<GenericSprite>` entry:
    ```xml
    <GenericSprite>
      <Name>CareerSystem\Portraits\career_{career_id}_portrait</Name>
      <SpritePartName>CareerSystem\Portraits\career_{career_id}_portrait</SpritePartName>
    </GenericSprite>
    ```
-4. The VM auto-prefixes `CareerSystem\Portraits\` to the `portrait_sprite` value from `taom_careers.xml`
-5. Rebuild to compile sprite sheets
+5. Copy to game install: `E:\Steam\...\Modules\TAOM\GUI\SpriteParts\ui_taom_career_system\CareerSystem\Portraits\`
+6. Run sprite generator, then rebuild
+7. The VM auto-prefixes `CareerSystem\Portraits\` to the `portrait_sprite` value from `taom_careers.xml`
 
 ### How to Add an Ability Icon
 
-1. Generate a 256x256 square icon image
-2. Save as `GUI/SpriteParts/ui_taom/CareerSystem/Abilities/ability_{career_id}_icon.png`
-3. Register in `Main/_Module/GUI/TAOMSpriteData.xml` — add a `<GenericSprite>` entry:
+1. Generate a square image (Midjourney: `--ar 1:1`)
+2. Resize to **256x256**
+3. Save as `GUI/SpriteParts/ui_taom_career_system/CareerSystem/Abilities/{ability_template_id}.png`
+4. Register in `Main/_Module/GUI/TAOMSpriteData.xml` — add a `<GenericSprite>` entry:
    ```xml
    <GenericSprite>
-     <Name>CareerSystem\Abilities\ability_{career_id}_icon</Name>
-     <SpritePartName>CareerSystem\Abilities\ability_{career_id}_icon</SpritePartName>
+     <Name>CareerSystem\Abilities\{ability_template_id}</Name>
+     <SpritePartName>CareerSystem\Abilities\{ability_template_id}</SpritePartName>
    </GenericSprite>
    ```
-4. The VM constructs the path as `CareerSystem\Abilities\{ability_template_id}`
-5. Rebuild to compile sprite sheets
+5. Copy to game install and run sprite generator
+6. The VM constructs the path as `CareerSystem\Abilities\{ability_template_id}`
 
-### ChatGPT Prompt Templates
+### Sprite Migration Checklist
 
-**Career Portrait:**
+When moving sprites between atlas categories:
+1. Move PNGs in repo
+2. **Delete old PNGs from game install** (build only copies, doesn't delete)
+3. Update `CategoryName` in TAOMSpriteData.xml `<SpritePart>` entries (or remove — generator recreates them)
+4. Register new category in `GUI/SpriteParts/Config.xml` if it's new
+5. Run sprite generator
+6. Verify no "duplicate key" errors
+
+### AI Art Generation
+
+**Art style:** Gritty painterly oil painting, Alan Lee / John Howe LOTR concept art. Muted battlefield tones, desaturated palette, thick brushstrokes, atmospheric dust and haze.
+
+**Midjourney prompt template (portraits):**
 ```
-Take this image and create a landscape version (wide 16:9 aspect ratio). Keep the exact same warrior, armor design, color palette, and art style. Center the warrior in the frame. Fill the background with [environment]. Keep the same painterly art style and muted color tones as the original. Single warrior only, no other soldiers.
+/imagine [scene description], single warrior, gritty painterly oil painting, classic fantasy concept art, muted [palette] tones, thick brushstrokes, atmospheric haze, wide cinematic landscape composition --ar 16:9 --s 250 --no text, borders, watermark, cartoon, anime, bright colors, multiple soldiers, army, photorealistic, studio lighting, sharp focus
 ```
 
-**Ability Icon:**
+**Midjourney prompt template (ability icons):**
 ```
-Generate a 256x256 square icon image. [Description of the ability visual]. Icon style: painterly fantasy ability icon, muted tones, slight glow effect, suitable for a game UI ability button. Square format, simple composition focused on the central symbol. No text, no borders, no modern elements.
+/imagine [ability visual], painterly fantasy ability icon, muted [palette] tones, dark atmosphere, game UI ability button, square format, centered --ar 1:1 --s 250 --no text, borders, watermark, glowing, magic, bright colors, people, hands
 ```
+
+**ChatGPT/DALL-E prompt template (portraits):**
+```
+Generate a landscape image. [Scene description]. Single warrior only. Art style: gritty painterly oil painting, classic fantasy concept art, muted [palette] tones, thick brushstrokes, atmospheric dust and haze. Wide cinematic landscape composition. No cartoon, no anime, no text, no watermarks.
+```
+
+### Current Portrait Status
+
+| Faction | Career | Portrait | Ability Icon |
+|---------|--------|----------|-------------|
+| Gondor | Ranger of Ithilien | Done | Done (Ambush) |
+| Gondor | Captain of Osgiliath | Done | Done (Hold the Line) |
+| Gondor | Knight of Belfalas | Done | Done (Stampede) |
+| Rohan | Marksman of Aldburg | Done | Done (Light Fletching) |
+| Rohan | Eotheod Windrider | Done | Done (Warcry of Eorl) |
+| Rohan | Watchman of Stangard | Done | Done (Stand Fast) |
+| All others | — | Pending | Pending |
 
 ## Performance
 
 Character creation runs once per new game. All data is loaded and cached on first access. No hot-path concerns.
+
+## GitHub Issues
+
+- **Issue:** #84 — [feat: Career selection in character creation](https://github.com/haterade22/TAOM/issues/84)
+- **Status:** Closed
+
+## Codex Review
+
+- **Review:** `docs/reviews/codex-adversarial-career-cc-2026-04-14.md`
+- **Review Log:** Review #24 in `docs/reviews/REVIEW-LOG.md`
+- **Findings:** 1 HIGH (empty menu crash — fixed), 1 MEDIUM (test gap — fixed)

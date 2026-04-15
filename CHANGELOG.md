@@ -16,6 +16,42 @@ Added a 6th narrative menu stage to character creation that lets players choose 
 **New files:** CareerMenuService, CareerMenuDataProvider, CareerMenuOptionDefinition, career_menu.json
 **Tests:** 21 tests (CareerMenuServiceTests + CareerMenuDataProviderTests)
 
+### Feature: Career Screen UI — Portraits, Ability Icons, and Sprite Atlas
+
+Added AI-generated career portraits and ability icons for Gondor and Rohan (6 portraits, 6 ability icons). Created dedicated `ui_taom_career_system` sprite atlas to prevent career images from overflowing the main `ui_taom` atlas.
+
+- **Gondor portraits:** Ranger of Ithilien, Captain of Osgiliath, Knight of Belfalas
+- **Rohan portraits:** Marksman of Aldburg, Eotheod Windrider, Watchman of Stangard
+- **Ability icons:** Ambush, Hold the Line, Stampede, Light Fletching, Warcry of Eorl, Stand Fast
+- **Sprite atlas:** New `ui_taom_career_system` category registered in Config.xml with `<AlwaysLoad />`
+- **Sprite dimensions:** Portraits 800x400, ability icons 256x256 (2x widget size for sharpness)
+- **ChatGPT/Midjourney prompts:** Documented in `tools/comfyui/chatgpt_career_prompts.md` and feature docs
+
+### Fix: Career Screen Bugs (6 issues)
+
+- **IGameStateListener crash:** `GauntletCareerScreen` didn't implement `IGameStateListener`, causing NRE in `GameState.HandleInitialize()` when opening career screen from character developer
+- **Localization tags not resolved:** Career name, description, ability name, choice descriptions all showed raw `{=key}Text` strings — wrapped in `TextObject().ToString()` across `CareerScreenVM`, `CareerChoiceObjectVM`, `CareerChoiceGroupObjectVM`
+- **Ability name showing template ID:** `AbilityName` displayed `ranger_of_ithilien_ability` instead of "Ambush" — now resolves display name via `ICareerConfigProvider.GetAbilityTemplate()`
+- **Description overlapping portrait:** Added `MarginTop="15"` to career description ScrollablePanel
+- **Choice groups collapsed:** `ExtendablePanel` default width was 80px (collapsed) — changed to 750px (expanded)
+- **Sprite atlas overflow:** Career images (1024x1024) overflowed main `ui_taom` atlas corrupting other UI — moved to dedicated `ui_taom_career_system` atlas
+
+### Rename: Captain of Pelargir → Captain of Osgiliath
+
+Renamed across all XML (careers, ability templates, choice trees), JSON (career_menu), and tests. Updated description from naval/maritime to infantry/urban combat. Ability renamed from "Sailing" to "Hold the Line".
+
+### Fix: Ability Template Standardization
+
+Standardized all Gondor and Rohan ability values to consistent template:
+- **Ranged careers:** +20 ranged damage, radius 50, duration 8s
+- **Infantry careers:** +20 melee damage, radius 50, duration 8s
+- **Cavalry careers:** +20 charge damage (mounted) + 10 melee (troops), radius 50, duration 8s
+- Renamed Watchman ability from "River Navigator" to "Stand Fast"
+
+### Fix: Castar Spelling
+
+Corrected Gondor special resource display name from "Caster" to "Castar" in `special_resources_config.xml`.
+
 ### Fix: In-Game Testing — Career Screen + Map Bar + Sprite Pipeline
 
 Verified in-game on Gondor campaign. Fixed 6 runtime issues discovered during testing:
