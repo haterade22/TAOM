@@ -536,15 +536,6 @@
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
-      <SheetID>4</SheetID>
-      <Name>CareerSystem\career_button_placeholder</Name>
-      <Width>1024</Width>
-      <Height>256</Height>
-      <SheetX>2240</SheetX>
-      <SheetY>2708</SheetY>
-      <CategoryName>ui_taom_career_system</CategoryName>
-    </SpritePart>
-    <SpritePart>
       <SheetID>1</SheetID>
       <Name>CharacterDeveloper\add_attribute_point_button</Name>
       <Width>35</Width>
