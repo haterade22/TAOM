@@ -8,6 +8,9 @@
   <SpriteCategory Name="ui_taom">
 		<AlwaysLoad />
 	</SpriteCategory>
+  <SpriteCategory Name="ui_taom_career_system">
+    <AlwaysLoad />
+  </SpriteCategory>
   <SpriteCategory Name="ui_custom_fonts">
         <PackAllSpritesToUniqueTextures/>
         <SingleChannel/>
