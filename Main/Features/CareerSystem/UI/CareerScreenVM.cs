@@ -91,7 +91,7 @@ public class CareerScreenVM : ViewModel
         HasCareer = true;
         CareerName = new TextObject(career.DisplayName).ToString();
         CareerDescription = new TextObject(career.Description).ToString();
-        CareerPortraitSprite = career.PortraitSprite;
+        CareerPortraitSprite = $"CareerSystem\\Portraits\\{career.PortraitSprite}";
 
         AbilityName = new TextObject(career.AbilityTemplateId).ToString();
         AbilitySpriteName = $"CareerSystem\\Abilities\\{career.AbilityTemplateId}";
