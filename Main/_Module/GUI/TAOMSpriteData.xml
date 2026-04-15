@@ -7328,6 +7328,50 @@
       <SpritePartName>CareerSystem\Portraits\career_ranger_of_ithilien_portrait</SpritePartName>
     </GenericSprite>
     <GenericSprite>
+      <Name>CareerSystem\Portraits\career_captain_of_osgiliath_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_captain_of_osgiliath_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_knight_of_belfalas_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_knight_of_belfalas_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\ranger_of_ithilien_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\ranger_of_ithilien_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\captain_of_osgiliath_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\captain_of_osgiliath_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\knight_of_belfalas_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\knight_of_belfalas_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_marksman_of_aldburg_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_marksman_of_aldburg_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_eotheod_windrider_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_eotheod_windrider_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_watchman_of_stangard_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_watchman_of_stangard_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\marksman_of_aldburg_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\marksman_of_aldburg_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\eotheod_windrider_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\eotheod_windrider_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\watchman_of_stangard_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\watchman_of_stangard_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
       <Name>CharacterDeveloper\add_attribute_point_button</Name>
       <SpritePartName>CharacterDeveloper\add_attribute_point_button</SpritePartName>
     </GenericSprite>
