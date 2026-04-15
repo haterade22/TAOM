@@ -6,11 +6,11 @@
   <AbilityTemplate id="ranger_of_ithilien_ability"
                    display_name="{=taom_ability_ranger_of_ithilien}Ambush"
                    sprite="ability_ranger_of_ithilien_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ranger_of_ithilien_particle"
                    sound_effect="ranger_of_ithilien_activate"
-                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting ranged damage and stealth for a short duration." />
+                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting ranged damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="captain_of_osgiliath_ability"
                    display_name="{=taom_ability_captain_of_osgiliath}Hold the Line"

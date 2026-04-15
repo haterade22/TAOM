@@ -99,6 +99,64 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 3. Add matching entries to `career_menu.json`
 4. The fallback "No specialization" option will stop appearing for that culture once it has at least one career
 
+## Career Screen UI Sprites
+
+### Sprite Dimensions
+
+| Sprite Type | Widget Size | Generate At | Format | Location |
+|------------|-------------|-------------|--------|----------|
+| Career portrait | 400x200 | 800x400 | Landscape 2:1 | `GUI/SpriteParts/ui_taom/CareerSystem/Portraits/` |
+| Ability icon | 120x120 | 256x256 | Square | `GUI/SpriteParts/ui_taom/CareerSystem/Abilities/` |
+
+Generate at 2x the widget size for sharpness — the engine downscales at runtime.
+
+### Sprite Naming Convention
+
+| Type | Filename | Registered Name (TAOMSpriteData.xml) |
+|------|----------|--------------------------------------|
+| Portrait | `career_{career_id}_portrait.png` | `CareerSystem\Portraits\career_{career_id}_portrait` |
+| Ability icon | `ability_{career_id}_icon.png` | `CareerSystem\Abilities\ability_{career_id}_icon` |
+
+### How to Add a Career Portrait
+
+1. Generate an 800x400 landscape image matching the gritty painterly LOTR concept art style
+2. Save as `GUI/SpriteParts/ui_taom/CareerSystem/Portraits/career_{career_id}_portrait.png`
+3. Register in `Main/_Module/GUI/TAOMSpriteData.xml` — add a `<GenericSprite>` entry:
+   ```xml
+   <GenericSprite>
+     <Name>CareerSystem\Portraits\career_{career_id}_portrait</Name>
+     <SpritePartName>CareerSystem\Portraits\career_{career_id}_portrait</SpritePartName>
+   </GenericSprite>
+   ```
+4. The VM auto-prefixes `CareerSystem\Portraits\` to the `portrait_sprite` value from `taom_careers.xml`
+5. Rebuild to compile sprite sheets
+
+### How to Add an Ability Icon
+
+1. Generate a 256x256 square icon image
+2. Save as `GUI/SpriteParts/ui_taom/CareerSystem/Abilities/ability_{career_id}_icon.png`
+3. Register in `Main/_Module/GUI/TAOMSpriteData.xml` — add a `<GenericSprite>` entry:
+   ```xml
+   <GenericSprite>
+     <Name>CareerSystem\Abilities\ability_{career_id}_icon</Name>
+     <SpritePartName>CareerSystem\Abilities\ability_{career_id}_icon</SpritePartName>
+   </GenericSprite>
+   ```
+4. The VM constructs the path as `CareerSystem\Abilities\{ability_template_id}`
+5. Rebuild to compile sprite sheets
+
+### ChatGPT Prompt Templates
+
+**Career Portrait:**
+```
+Take this image and create a landscape version (wide 16:9 aspect ratio). Keep the exact same warrior, armor design, color palette, and art style. Center the warrior in the frame. Fill the background with [environment]. Keep the same painterly art style and muted color tones as the original. Single warrior only, no other soldiers.
+```
+
+**Ability Icon:**
+```
+Generate a 256x256 square icon image. [Description of the ability visual]. Icon style: painterly fantasy ability icon, muted tones, slight glow effect, suitable for a game UI ability button. Square format, simple composition focused on the central symbol. No text, no borders, no modern elements.
+```
+
 ## Performance
 
 Character creation runs once per new game. All data is loaded and cached on first access. No hot-path concerns.
