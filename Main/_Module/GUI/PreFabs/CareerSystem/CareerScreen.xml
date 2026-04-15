@@ -9,7 +9,7 @@
       <VisualState PositionYOffset="-6" State="Default" />
     </VisualDefinition>
     <VisualDefinition Name="ExtendablePanel" EaseIn="true" TransitionDuration="0.2">
-      <VisualState SuggestedWidth="750" SuggestedHeight="220" State="Default" />
+      <VisualState SuggestedWidth="80" SuggestedHeight="220" State="Default" />
       <VisualState SuggestedWidth="750" SuggestedHeight="220" State="Hovered" />
     </VisualDefinition>
   </VisualDefinitions>
@@ -49,7 +49,7 @@
                         </Widget>
 
                         <!-- Career Description -->
-                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginLeft="20" MarginRight="20" MarginTop="15" ClipRect="CareerDescriptionClip" InnerPanel="CareerDescriptionInner" AutoHideScrollBars="true">
+                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginLeft="20" MarginRight="20" ClipRect="CareerDescriptionClip" InnerPanel="CareerDescriptionInner" AutoHideScrollBars="true">
                           <Children>
                             <Widget Id="CareerDescriptionClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
                               <Children>
