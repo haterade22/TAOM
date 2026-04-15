@@ -28,26 +28,26 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="captain_of_pelargir"
-          display_name="{=taom_career_captain_of_pelargir}Captain of Pelargir"
-          description="{=taom_career_captain_of_pelargir_desc}A seasoned mariner who commands Gondor's river fleet from Pelargir, blending naval discipline with fearsome close-quarters combat. Equally at home on a ship's deck or a battlefield, the Captain rallies sailors and soldiers alike."
-          portrait_sprite="career_captain_of_pelargir_portrait"
-          ability_template_id="captain_of_pelargir_ability"
+  <Career id="captain_of_osgiliath"
+          display_name="{=taom_career_captain_of_osgiliath}Captain of Osgiliath"
+          description="{=taom_career_captain_of_osgiliath_desc}A battle-hardened infantry officer who commands Gondor's frontline defense at the ruins of Osgiliath, forging order from chaos in brutal urban combat. The Captain holds the line where others would break, rallying soldiers through sheer force of will."
+          portrait_sprite="career_captain_of_osgiliath_portrait"
+          ability_template_id="captain_of_osgiliath_ability"
           charge_type="DamageTaken"
           max_charge="100"
           min_clan_tier="0"
-          root_choice_id="captain_of_pelargir_root">
+          root_choice_id="captain_of_osgiliath_root">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
     </EligibleCultures>
     <ChoiceGroups>
-      <Group id="captain_of_pelargir_t1_a" />
-      <Group id="captain_of_pelargir_t1_b" />
-      <Group id="captain_of_pelargir_t2_a" />
-      <Group id="captain_of_pelargir_t2_b" />
-      <Group id="captain_of_pelargir_t3_a" />
-      <Group id="captain_of_pelargir_t3_b" />
+      <Group id="captain_of_osgiliath_t1_a" />
+      <Group id="captain_of_osgiliath_t1_b" />
+      <Group id="captain_of_osgiliath_t2_a" />
+      <Group id="captain_of_osgiliath_t2_b" />
+      <Group id="captain_of_osgiliath_t3_a" />
+      <Group id="captain_of_osgiliath_t3_b" />
     </ChoiceGroups>
   </Career>
 

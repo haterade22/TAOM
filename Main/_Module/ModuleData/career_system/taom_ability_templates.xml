@@ -12,14 +12,14 @@
                    sound_effect="ranger_of_ithilien_activate"
                    tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting ranged damage and stealth for a short duration." />
 
-  <AbilityTemplate id="captain_of_pelargir_ability"
-                   display_name="{=taom_ability_captain_of_pelargir}Sailing"
-                   sprite="ability_captain_of_pelargir_icon"
+  <AbilityTemplate id="captain_of_osgiliath_ability"
+                   display_name="{=taom_ability_captain_of_osgiliath}Hold the Line"
+                   sprite="ability_captain_of_osgiliath_icon"
                    cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
-                   particle_effect="captain_of_pelargir_particle"
-                   sound_effect="captain_of_pelargir_activate"
-                   tooltip="{=taom_ability_captain_of_pelargir_tt}Rally your crew with nautical discipline, boosting melee damage and troop morale." />
+                   particle_effect="captain_of_osgiliath_particle"
+                   sound_effect="captain_of_osgiliath_activate"
+                   tooltip="{=taom_ability_captain_of_osgiliath_tt}Rally your soldiers with iron discipline, boosting melee damage and troop morale in the heat of battle." />
 
   <AbilityTemplate id="knight_of_belfalas_ability"
                    display_name="{=taom_ability_knight_of_belfalas}Stampede"

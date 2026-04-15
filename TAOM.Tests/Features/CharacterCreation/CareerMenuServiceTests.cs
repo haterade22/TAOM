@@ -39,10 +39,10 @@ public class CareerMenuServiceTests
     {
         SetupCareers(
             MakeCareer("ranger_of_ithilien", "Ranger of Ithilien", "An elite scout.", "gondor", "empire_w"),
-            MakeCareer("captain_of_pelargir", "Captain of Pelargir", "A mariner.", "gondor", "empire_w"),
+            MakeCareer("captain_of_osgiliath", "Captain of Osgiliath", "A mariner.", "gondor", "empire_w"),
             MakeCareer("black_uruk_captain", "Black Uruk Captain", "An iron champion.", "mordor", "empire_s"));
         SetupOptionData("ranger_of_ithilien", new[] { "Bow", "Scouting" }, "Cunning");
-        SetupOptionData("captain_of_pelargir", new[] { "Leadership", "OneHanded" }, "Social");
+        SetupOptionData("captain_of_osgiliath", new[] { "Leadership", "OneHanded" }, "Social");
         SetupOptionData("black_uruk_captain", new[] { "TwoHanded", "Athletics" }, "Vigor");
 
         var options = _sut.BuildCareerMenuOptions();
@@ -114,9 +114,9 @@ public class CareerMenuServiceTests
     public void OnCareerOptionSelected_OverwritesPreviousSelection()
     {
         _sut.OnCareerOptionSelected("ranger_of_ithilien");
-        _sut.OnCareerOptionSelected("captain_of_pelargir");
+        _sut.OnCareerOptionSelected("captain_of_osgiliath");
 
-        Assert.AreEqual("captain_of_pelargir", _sut.SelectedCareerStringId);
+        Assert.AreEqual("captain_of_osgiliath", _sut.SelectedCareerStringId);
     }
 
     [TestMethod]

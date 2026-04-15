@@ -39,14 +39,14 @@ public class CareerMenuDataProviderTests
     {
         WriteCareerMenuJson(@"[
             { ""career_string_id"": ""ranger_of_ithilien"", ""skills"": [""Bow"", ""Scouting""], ""attribute"": ""Cunning"" },
-            { ""career_string_id"": ""captain_of_pelargir"", ""skills"": [""Leadership"", ""OneHanded""], ""attribute"": ""Social"" }
+            { ""career_string_id"": ""captain_of_osgiliath"", ""skills"": [""Leadership"", ""OneHanded""], ""attribute"": ""Social"" }
         ]");
 
         var result = _sut.LoadCareerMenuOptions();
 
         Assert.AreEqual(2, result.Count);
         Assert.AreEqual("ranger_of_ithilien", result[0].CareerStringId);
-        Assert.AreEqual("captain_of_pelargir", result[1].CareerStringId);
+        Assert.AreEqual("captain_of_osgiliath", result[1].CareerStringId);
     }
 
     [TestMethod]
@@ -121,13 +121,13 @@ public class CareerMenuDataProviderTests
     {
         WriteCareerMenuJson(@"[
             { ""career_string_id"": ""ranger_of_ithilien"", ""skills"": [""Bow""], ""attribute"": ""Cunning"" },
-            { ""career_string_id"": ""captain_of_pelargir"", ""skills"": [""Leadership""], ""attribute"": ""Social"" }
+            { ""career_string_id"": ""captain_of_osgiliath"", ""skills"": [""Leadership""], ""attribute"": ""Social"" }
         ]");
 
-        var result = _sut.GetOptionForCareer("captain_of_pelargir");
+        var result = _sut.GetOptionForCareer("captain_of_osgiliath");
 
         Assert.IsNotNull(result);
-        Assert.AreEqual("captain_of_pelargir", result.CareerStringId);
+        Assert.AreEqual("captain_of_osgiliath", result.CareerStringId);
     }
 
     [TestMethod]
