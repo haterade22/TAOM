@@ -93,7 +93,11 @@ public class CareerScreenVM : ViewModel
         CareerDescription = new TextObject(career.Description).ToString();
         CareerPortraitSprite = $"CareerSystem\\Portraits\\{career.PortraitSprite}";
 
-        AbilityName = new TextObject(career.AbilityTemplateId).ToString();
+        var configProvider = IoC.Resolve<ICareerConfigProvider>();
+        var abilityTemplate = configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
+        AbilityName = abilityTemplate != null
+            ? new TextObject(abilityTemplate.DisplayName).ToString()
+            : new TextObject(career.AbilityTemplateId).ToString();
         AbilitySpriteName = $"CareerSystem\\Abilities\\{career.AbilityTemplateId}";
         HasAbilitySprite = !string.IsNullOrEmpty(career.AbilityTemplateId);
 
