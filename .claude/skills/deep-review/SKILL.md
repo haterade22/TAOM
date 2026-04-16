@@ -143,12 +143,31 @@ CHECK ALL OF THESE:
 8. **IEnumerable Multiple Enumeration:** Flag any IEnumerable parameter that's enumerated more than once
 9. **Closure Allocations in Loops:** Flag lambda/delegate creation inside per-frame loops (RemoveAll with closure, etc.)
 10. **Resource Disposal:** IDisposable types properly disposed or in using blocks
+11. **Harmony Patch Overhead:** For every `[HarmonyPatch]` class in changed files:
+    - Check if the patch target is a hot method (called per-frame, per-tick, per-hit, per-AI-decision)
+    - Flag any `IoC.Resolve` not using lazy-cached `??=` pattern
+    - Flag any `new List<>`, `new Dictionary<>`, or LINQ chain inside the patch method body
+    - Flag any delegate/closure creation that captures local variables
+12. **CampaignBehavior Lifecycle Cleanup:** For every `CampaignBehaviorBase` subclass in changed files:
+    - Check that `RegisterEvents` has a corresponding cleanup path
+    - Flag behaviors that subscribe to events in `OnSessionLaunched` but don't override `OnFinalize` or `OnGameEnd` to unsubscribe
+    - Flag any static fields or `static Dictionary` that are populated at runtime but never cleared on session end
+    - Flag any collection (List, Dictionary, HashSet) used for persistence/sync/tracking that grows with game events but has no pruning, eviction, or size cap — especially SyncData stores, buff trackers, and per-hero caches
+13. **GameModel Override Weight:** For every `GameModel` override in changed files:
+    - Identify the override methods and assess call frequency (per-frame vs per-day vs one-time)
+    - Flag any service resolution that isn't constructor-injected or lazy-cached
+    - Flag any LINQ chain or collection allocation inside override methods called more than once per game tick
+14. **GC Pressure Patterns:** Across all changed C# files:
+    - Flag `string.Format` or `$""` interpolation inside loops (prefer StringBuilder for >3 concatenations)
+    - Flag `params object[]` calls in tight loops (implicit array allocation)
+    - Flag `foreach` over `Dictionary.Keys` or `.Values` when only one is needed and the dictionary is large
+    - Flag `Enum.ToString()` or `Enum.Parse()` in hot paths (both allocate; prefer lookup dictionaries)
 
 OUTPUT FORMAT:
 For each issue found:
 - File path and line number
-- Issue type (allocation, LINQ, caching, etc.)
-- Severity: HIGH (hot path) / MEDIUM (occasional) / LOW (startup only)
+- Issue type (allocation, LINQ, caching, patch overhead, lifecycle leak, GC pressure, etc.)
+- Severity: HIGH (hot path / per-frame) / MEDIUM (per-tick / occasional) / LOW (startup only)
 - Suggested fix
 
 If no issues found, say "NO PERFORMANCE ISSUES FOUND" with a brief summary.
