@@ -10401,5 +10401,17 @@
       <Name>CareerSystem\Portraits\career_watchman_of_stangard_portrait</Name>
       <SpritePartName>CareerSystem\Portraits\career_watchman_of_stangard_portrait</SpritePartName>
     </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_ironguard_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_ironguard_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_silvan_archer_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_silvan_archer_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_blade_dancer_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_blade_dancer_portrait</SpritePartName>
+    </GenericSprite>
   </Sprites>
 </SpriteData>

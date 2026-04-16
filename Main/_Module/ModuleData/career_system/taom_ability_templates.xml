@@ -256,29 +256,29 @@
   <AbilityTemplate id="ironguard_ability"
                    display_name="{=taom_ability_ironguard}Mithril Bastion"
                    sprite="ability_ironguard_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ironguard_particle"
                    sound_effect="ironguard_activate"
-                   tooltip="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft, wreathing yourself in near-impenetrable defense." />
+                   tooltip="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft, boosting melee damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="crossbow_master_ability"
                    display_name="{=taom_ability_crossbow_master}Precision Barrage"
                    sprite="ability_crossbow_master_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="crossbow_master_particle"
                    sound_effect="crossbow_master_activate"
-                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork bolts for devastating damage, each shot piercing through the thickest armor." />
+                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork bolts, boosting ranged damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="ram_rider_ability"
                    display_name="{=taom_ability_ram_rider}Mountain Charge"
                    sprite="ability_ram_rider_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ram_rider_particle"
                    sound_effect="ram_rider_activate"
-                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward with dwarven stubbornness, smashing through shields and armor." />
+                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
 
   <!-- ═══ RIVENDELL ═══ -->
 
@@ -343,29 +343,29 @@
   <AbilityTemplate id="shadow_walker_ability"
                    display_name="{=taom_ability_shadow_walker}Forest Cloak"
                    sprite="ability_shadow_walker_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="shadow_walker_particle"
                    sound_effect="shadow_walker_activate"
-                   tooltip="{=taom_ability_shadow_walker_tt}Blend into the forest shadows, greatly boosting evasion and striking power from concealment." />
+                   tooltip="{=taom_ability_shadow_walker_tt}Blend into the forest shadows, boosting melee damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="silvan_archer_ability"
                    display_name="{=taom_ability_silvan_archer}Canopy Strike"
                    sprite="ability_silvan_archer_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="silvan_archer_particle"
                    sound_effect="silvan_archer_activate"
-                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, increasing ranged damage and penetration against targets below." />
+                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, boosting ranged damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="elk_rider_ability"
                    display_name="{=taom_ability_elk_rider}Antler Crash"
                    sprite="ability_elk_rider_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="elk_rider_particle"
                    sound_effect="elk_rider_activate"
-                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, sending enemies flying with massive impact damage." />
+                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
 
   <!-- ═══ ISENGARD ═══ -->
 
