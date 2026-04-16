@@ -6,11 +6,11 @@
   <AbilityTemplate id="ranger_of_ithilien_ability"
                    display_name="{=taom_ability_ranger_of_ithilien}Ambush"
                    sprite="ability_ranger_of_ithilien_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ranger_of_ithilien_particle"
                    sound_effect="ranger_of_ithilien_activate"
-                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting ranged damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting your ranged damage, draw speed, and movement speed for a short duration." />
 
   <AbilityTemplate id="captain_of_osgiliath_ability"
                    display_name="{=taom_ability_captain_of_osgiliath}Hold the Line"
@@ -24,11 +24,11 @@
   <AbilityTemplate id="knight_of_belfalas_ability"
                    display_name="{=taom_ability_knight_of_belfalas}Stampede"
                    sprite="ability_knight_of_belfalas_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="knight_of_belfalas_particle"
                    sound_effect="knight_of_belfalas_activate"
-                   tooltip="{=taom_ability_knight_of_belfalas_tt}Thunder forward with an unstoppable cavalry charge, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
+                   tooltip="{=taom_ability_knight_of_belfalas_tt}Thunder forward with an unstoppable cavalry charge, boosting your mount speed, charge damage, and melee damage for a short duration." />
 
   <!-- ═══ MORDOR ═══ -->
 
@@ -73,20 +73,20 @@
   <AbilityTemplate id="marksman_of_aldburg_ability"
                    display_name="{=taom_ability_marksman_of_aldburg}Light Fletching"
                    sprite="ability_marksman_of_aldburg_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="marksman_of_aldburg_particle"
                    sound_effect="marksman_of_aldburg_activate"
-                   tooltip="{=taom_ability_marksman_of_aldburg_tt}Nock a flight of swift light-fletch arrows, boosting ranged damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_marksman_of_aldburg_tt}Nock a flight of swift light-fletch arrows, boosting your ranged damage, draw speed, and movement speed for a short duration." />
 
   <AbilityTemplate id="eotheod_windrider_ability"
                    display_name="{=taom_ability_eotheod_windrider}Warcry of Eorl"
                    sprite="ability_eotheod_windrider_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="eotheod_windrider_particle"
                    sound_effect="eotheod_windrider_activate"
-                   tooltip="{=taom_ability_eotheod_windrider_tt}Raise the ancient warcry of Eorl the Young, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
+                   tooltip="{=taom_ability_eotheod_windrider_tt}Raise the ancient warcry of Eorl the Young, boosting your mount speed, charge damage, and melee damage for a short duration." />
 
   <AbilityTemplate id="watchman_of_stangard_ability"
                    display_name="{=taom_ability_watchman_of_stangard}Stand Fast"
@@ -207,20 +207,20 @@
   <AbilityTemplate id="lokhas_drus_marksman_ability"
                    display_name="{=taom_ability_lokhas_drus_marksman}Piercing Volley"
                    sprite="ability_lokhas_drus_marksman_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="lokhas_drus_marksman_particle"
                    sound_effect="lokhas_drus_marksman_activate"
-                   tooltip="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened arrows, boosting ranged damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened arrows, boosting your ranged damage, draw speed, and movement speed for a short duration." />
 
   <AbilityTemplate id="balchoth_kan_ability"
                    display_name="{=taom_ability_balchoth_kan}Unyielding"
                    sprite="ability_balchoth_kan_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="balchoth_kan_particle"
                    sound_effect="balchoth_kan_activate"
-                   tooltip="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
+                   tooltip="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth, boosting your mount speed, charge damage, and melee damage for a short duration." />
 
   <!-- ═══ DALE ═══ -->
 
@@ -265,20 +265,20 @@
   <AbilityTemplate id="crossbow_master_ability"
                    display_name="{=taom_ability_crossbow_master}Precision Barrage"
                    sprite="ability_crossbow_master_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="crossbow_master_particle"
                    sound_effect="crossbow_master_activate"
-                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork bolts, boosting ranged damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork bolts, boosting your ranged damage, draw speed, and movement speed for a short duration." />
 
   <AbilityTemplate id="ram_rider_ability"
                    display_name="{=taom_ability_ram_rider}Mountain Charge"
                    sprite="ability_ram_rider_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ram_rider_particle"
                    sound_effect="ram_rider_activate"
-                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
+                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward, boosting your mount speed, charge damage, and melee damage for a short duration." />
 
   <!-- ═══ RIVENDELL ═══ -->
 
@@ -352,20 +352,20 @@
   <AbilityTemplate id="silvan_archer_ability"
                    display_name="{=taom_ability_silvan_archer}Canopy Strike"
                    sprite="ability_silvan_archer_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="silvan_archer_particle"
                    sound_effect="silvan_archer_activate"
-                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, boosting ranged damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, boosting your ranged damage, draw speed, and movement speed for a short duration." />
 
   <AbilityTemplate id="elk_rider_ability"
                    display_name="{=taom_ability_elk_rider}Antler Crash"
                    sprite="ability_elk_rider_icon"
-                   cooldown="0" duration="8" radius="50"
+                   cooldown="0" duration="8" radius="10"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="elk_rider_particle"
                    sound_effect="elk_rider_activate"
-                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
+                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, boosting your mount speed, charge damage, and melee damage for a short duration." />
 
   <!-- ═══ ISENGARD ═══ -->
 
