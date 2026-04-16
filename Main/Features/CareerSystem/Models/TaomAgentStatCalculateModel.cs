@@ -30,34 +30,50 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     {
         base.UpdateAgentStats(agent, agentDrivenProperties);
 
-        if (!agent.IsHuman || !agent.IsHero) return;
-        var hero = (agent.Character as CharacterObject)?.HeroObject;
-        if (hero == null) return;
+        if (!agent.IsHuman) return;
 
-        if (PassiveService == null) return;
-
-        var heroId = hero.StringId;
-
-        var swingBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.SwingSpeed);
-        if (swingBonus != 0f)
-            agentDrivenProperties.SwingSpeedMultiplier += swingBonus;
-
-        var damageBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Damage);
-        if (damageBonus != 0f)
-            agentDrivenProperties.DamageMultiplierBonus += damageBonus;
-
-        var speedBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
-        if (speedBonus != 0f)
-            agentDrivenProperties.MaxSpeedMultiplier += speedBonus;
-
-        // Apply active ability buffs AFTER base recalc so they are not overwritten.
-        var buffs = CareerAbilityBuffTracker.GetBuff(heroId);
-        if (buffs != null)
+        // Hero-specific: passive service bonuses + active ability buffs
+        if (agent.IsHero)
         {
-            agentDrivenProperties.MaxSpeedMultiplier += buffs.SpeedMultiplier;
-            agentDrivenProperties.CombatMaxSpeedMultiplier += buffs.CombatSpeedMultiplier;
-            agentDrivenProperties.DamageMultiplierBonus += buffs.DamageBonus;
-            agentDrivenProperties.ArmorEncumbrance -= buffs.ArmorReduction;
+            var hero = (agent.Character as CharacterObject)?.HeroObject;
+            if (hero != null && PassiveService != null)
+            {
+                var heroId = hero.StringId;
+
+                var swingBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.SwingSpeed);
+                if (swingBonus != 0f)
+                    agentDrivenProperties.SwingSpeedMultiplier += swingBonus;
+
+                var damageBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Damage);
+                if (damageBonus != 0f)
+                    agentDrivenProperties.DamageMultiplierBonus += damageBonus;
+
+                var speedBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
+                if (speedBonus != 0f)
+                    agentDrivenProperties.MaxSpeedMultiplier += speedBonus;
+
+                // Apply active ability buffs AFTER base recalc so they are not overwritten.
+                var buffs = CareerAbilityBuffTracker.GetBuff(heroId);
+                if (buffs != null)
+                {
+                    agentDrivenProperties.MaxSpeedMultiplier += buffs.SpeedMultiplier;
+                    agentDrivenProperties.CombatMaxSpeedMultiplier += buffs.CombatSpeedMultiplier;
+                    agentDrivenProperties.DamageMultiplierBonus += buffs.DamageBonus;
+                    agentDrivenProperties.ArmorEncumbrance -= buffs.ArmorReduction;
+                    agentDrivenProperties.ThrustOrRangedReadySpeedMultiplier += buffs.DrawSpeedBonus;
+                    // Mount stats: multiplicative scaling — engine values are pre-normalized
+                    if (buffs.MountSpeedBonus != 0f)
+                        agentDrivenProperties.MountSpeed *= (1f + buffs.MountSpeedBonus);
+                    if (buffs.ChargeDamageBonus != 0f)
+                        agentDrivenProperties.MountChargeDamage *= (1f + buffs.ChargeDamageBonus);
+                }
+            }
         }
+
+        // AoE ally buffs — applied to ALL human agents (set by Infantry ability on nearby troops)
+        // AoE ally damage bonus (damage reduction now handled by TaomAgentApplyDamageModel)
+        var allyBuffs = CareerAbilityBuffTracker.GetAllyBuff(agent.Index);
+        if (allyBuffs != null)
+            agentDrivenProperties.DamageMultiplierBonus += allyBuffs.DamageBonus;
     }
 }

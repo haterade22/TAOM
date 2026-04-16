@@ -2,6 +2,7 @@ using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.Models;
@@ -34,17 +35,39 @@ public class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
     {
         var result = base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage);
 
+        // Hero passive resistance
         var heroId = GetVictimHeroId(in attackInformation);
-        if (heroId == null) return result;
+        if (heroId != null)
+        {
+            var svc = PassiveService;
+            if (svc != null)
+            {
+                var resistance = svc.GetPassiveMagnitude(heroId, PassiveEffectType.Resistance);
+                if (resistance != 0f)
+                    result *= (1f - resistance);
+            }
 
-        var svc = PassiveService;
-        if (svc == null) return result;
+            // Hero active ability damage reduction (Infantry self-buff)
+            var heroBuff = CareerAbilityBuffTracker.GetBuff(heroId);
+            if (heroBuff != null && heroBuff.DamageReductionBonus != 0f)
+                result *= (1f - heroBuff.DamageReductionBonus);
+        }
 
-        var resistance = svc.GetPassiveMagnitude(heroId, PassiveEffectType.Resistance);
-        if (resistance != 0f)
-            result *= (1f - resistance);
+        // Ally active ability damage reduction (Infantry AoE buff on non-hero troops)
+        var victimAgent = GetVictimAgent(in attackInformation);
+        if (victimAgent != null)
+        {
+            var allyBuff = CareerAbilityBuffTracker.GetAllyBuff(victimAgent.Index);
+            if (allyBuff != null && allyBuff.DamageReductionBonus != 0f)
+                result *= (1f - allyBuff.DamageReductionBonus);
+        }
 
         return result;
+    }
+
+    private static Agent GetVictimAgent(in AttackInformation info)
+    {
+        return info.IsVictimAgentMount ? info.VictimAgent?.RiderAgent : info.VictimAgent;
     }
 
     public override bool DecideAgentShrugOffBlow(Agent victimAgent, in AttackCollisionData collisionData, in Blow blow)

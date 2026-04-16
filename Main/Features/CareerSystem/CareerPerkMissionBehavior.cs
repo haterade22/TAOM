@@ -22,6 +22,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private readonly ICareerAbilityService _abilityService;
     private readonly ICareerConfigProvider _configProvider;
     private readonly CareerAbilityEffectRegistry _effectRegistry;
+    private readonly IMutationService _mutationService;
+    private readonly ICareerHeroAdapterFactory _adapterFactory;
     private readonly IModLogger _logger;
 
     private float _tickAccumulator;
@@ -44,6 +46,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
         ICareerAbilityService abilityService,
         ICareerConfigProvider configProvider,
         CareerAbilityEffectRegistry effectRegistry,
+        IMutationService mutationService,
+        ICareerHeroAdapterFactory adapterFactory,
         IModLogger logger)
     {
         _dataService = dataService;
@@ -51,6 +55,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _abilityService = abilityService;
         _configProvider = configProvider;
         _effectRegistry = effectRegistry;
+        _mutationService = mutationService;
+        _adapterFactory = adapterFactory;
         _logger = logger;
     }
 
@@ -161,15 +167,11 @@ public class CareerPerkMissionBehavior : MissionBehavior
     {
         if (rawTemplate == null) return null;
 
-        var mutationService = IoC.Resolve<IMutationService>();
-        var adapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
-        if (mutationService == null || adapterFactory == null) return rawTemplate;
-
         var hero = Hero.MainHero;
         if (hero == null || hero.StringId != heroId) return rawTemplate;
 
-        var heroAdapter = adapterFactory.Create(hero);
-        return mutationService.MutateAbility(rawTemplate, heroAdapter, _dataService, _registry);
+        var heroAdapter = _adapterFactory.Create(hero);
+        return _mutationService.MutateAbility(rawTemplate, heroAdapter, _dataService, _registry);
     }
 
     private void TryInitializeHud()
@@ -223,15 +225,9 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         var heroId = hero.StringId;
         if (affectorAgent == mainAgent)
-        {
             _abilityService.AddCharge(heroId, damagedHp, ChargeType.DamageDone);
-            _logger.LogDebug($"CareerSystem: DamageDone charge +{damagedHp:F0} for hero '{heroId}'");
-        }
         else if (affectedAgent == mainAgent)
-        {
             _abilityService.AddCharge(heroId, damagedHp, ChargeType.DamageTaken);
-            _logger.LogDebug($"CareerSystem: DamageTaken charge +{damagedHp:F0} for hero '{heroId}'");
-        }
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
@@ -245,17 +241,14 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         // Kill charge: main agent killed someone
         if (affectorAgent != null && mainAgent != null && affectorAgent == mainAgent)
-        {
             _abilityService.AddCharge(hero.StringId, 1f, ChargeType.Kills);
-            _logger.LogDebug($"CareerSystem: Kill charge added for hero '{hero.StringId}'");
-        }
 
         // Death cleanup: main agent died while buffs were active
         if (affectedAgent == mainAgent)
         {
             CareerAbilityBuffTracker.ClearBuff(hero.StringId);
+            CareerAbilityBuffTracker.ClearAllAllyBuffs();
             _activeContexts.Clear();
-            _logger.LogDebug($"CareerSystem: Hero '{hero.StringId}' died — cleared active buffs and contexts");
         }
     }
 
@@ -268,6 +261,12 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _activeContexts.Clear();
         CareerAbilityBuffTracker.ClearAll();
         _abilityService.ClearAll();
+    }
+
+    public override void OnAgentDeleted(Agent affectedAgent)
+    {
+        // Clean up ally buff entry when any agent is removed from the mission
+        CareerAbilityBuffTracker.ClearAllyBuff(affectedAgent.Index);
     }
 
     private void CleanupHud()

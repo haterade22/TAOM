@@ -10,4 +10,5 @@ public interface ICareerConfigProvider
     IReadOnlyList<CareerChoiceDefinition> LoadChoices();
     int GetMaxPerkPoints();
     AbilityTemplateData GetAbilityTemplate(string templateId);
+    AbilityTuningConfig GetAbilityTuning();
 }

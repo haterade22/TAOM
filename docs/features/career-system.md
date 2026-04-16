@@ -26,7 +26,7 @@ TOR_Core's career system uses hardcoded C# classes, static singletons, and 6 Har
 - **Mutations:** Hybrid XML + C# calculator registry — XML defines target/params, C# provides calculator functions by ID
 - **UI:** `GauntletCareerScreen` with `CareerScreenVM` hierarchy (TOR-pattern expandable panels, portraits, ability icons, lock chains), `CharacterDeveloperCareerMixin` (UIExtenderEx) for career button with sprite. See [gui-sprite-system.md](gui-sprite-system.md) for full UI details.
 - **Battle:** `CareerPerkMissionBehavior` for per-second tick, kill/damage charge via `OnScoreHit`, `CareerAbilityService` for ability state
-- **Ability effects:** `CareerAbilityEffectRegistry` dispatches to per-career `ICareerAbilityEffectExecutor` implementations. Buffs applied via `CareerAbilityBuffTracker` (read by `TaomAgentStatCalculateModel` — survives stat recalc). 3 pilot executors: Stealth, Bloodrage, Stampede.
+- **Ability effects:** `CareerAbilityEffectRegistry` dispatches to per-career `ICareerAbilityEffectExecutor` implementations. 3 role-based archetypes (Infantry/Ranged/Cavalry) serve all 50 careers with XML-tunable values via `taom_ability_tuning.xml`. Infantry buffs all nearby troops (AoE damage + damage reduction), Ranged buffs self (speed + ranged damage + draw speed), Cavalry buffs self + mount (mount speed + charge damage + damage). Buffs applied via `CareerAbilityBuffTracker` with separate hero and ally buff dictionaries (read by `TaomAgentStatCalculateModel` — survives stat recalc).
 
 ### Component Diagram
 
@@ -47,8 +47,10 @@ CareerCampaignBehavior  CareerPerkMissionBehavior
 (session/level/death)   (battle tick/charge/ability effects)
   |                           |
 CareerCreationHandler   CareerAbilityEffectRegistry
-(CC integration)        → ICareerAbilityEffectExecutor (3 pilots)
-  |                     → CareerAbilityBuffTracker (static, read by stat model)
+(CC integration)        → InfantryAbilityExecutor (AoE damage + reduction)
+  |                     → RangedAbilityExecutor (speed + ranged dmg + draw)
+  |                     → CavalryAbilityExecutor (mount speed + charge + dmg)
+  |                     → CareerAbilityBuffTracker (hero + ally buffs, read by stat model)
 CareerSwitchService     → MissionAbilityExecutionContext (boundary adapter)
 (NPC dialogue switching)
   |

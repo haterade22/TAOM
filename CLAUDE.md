@@ -125,7 +125,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
 | SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
-| CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates XML) |
+| CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates + ability tuning XML) |
 | CareerSystem CC config | `Main/_Module/ModuleData/charactercreation/career_menu.json` (50 career CC skill/attribute bonuses) |
 | CareerSystem sprites | `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/` (portraits 800x400, ability icons 256x256, dedicated atlas) |
 | Sprite atlas config | `Main/_Module/GUI/SpriteParts/Config.xml` (sprite category registration with `<AlwaysLoad />`) |
@@ -212,7 +212,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `Patch23_BannerColorPersistence` | UI color persistence + 3D battle + conversation — player clan colors everywhere | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM` |
 | `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` |
 | `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` |
-| `Patch27_CareerSystem` | Career ability charge + battle integration (WIP — Phase 4) | TBD |
+| `Patch27_CareerSystem` | Career screen opening + ability V-key activation (3 archetypes: Infantry/Ranged/Cavalry, 50 careers, XML-tunable) | `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats` |
 | `Patch28_SettlementGuards` | Per-settlement guard troop injection + per-culture spear mapping (manual patches) | `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual) |
 
 ## Codex Integration

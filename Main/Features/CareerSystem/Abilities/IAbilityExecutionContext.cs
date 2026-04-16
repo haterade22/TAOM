@@ -11,6 +11,10 @@ public interface IAbilityExecutionContext
     void ApplyResistanceBuff(float multiplier, float duration);
     void ApplyMoraleBurst(float radius, float magnitude);
     void ApplyStealthMode(float duration);
+    void ApplyAllyBuff(float damageBonusFlat, float damageReductionFlat, float radius, float duration);
+    void ApplyDrawSpeedBuff(float bonus, float duration);
+    void ApplyMountSpeedBuff(float bonus, float duration);
+    void ApplyChargeDamageBuff(float bonus, float duration);
     void PlaySound(string soundId);
     void PlayParticle(string particleId);
 }

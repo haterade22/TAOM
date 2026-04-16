@@ -1,5 +1,24 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-16
+
+### Feature: Career Ability Execution — Phase IV Complete
+
+Replaced 3 pilot ability executors with a complete role-based archetype system covering all 50 careers. Every career now fires a real in-battle effect when pressing V.
+
+- 3 archetype executors: InfantryAbilityExecutor (AoE troop buff), RangedAbilityExecutor (self ranged buff), CavalryAbilityExecutor (self + mount buff)
+- All 50 careers mapped to archetypes in CareerSystemIoC (16 cultures, 3 per culture + 2 extras for Mordor/Harad)
+- XML-driven tuning via `taom_ability_tuning.xml` — all balance values configurable without recompilation
+- Infantry: +damage given, -damage taken for all nearby troops (AoE via ally buff tracker)
+- Ranged: +movement speed, +ranged damage, +bow draw speed (self)
+- Cavalry: +mount speed, +charge damage, +damage given (self + mount)
+- New `ActiveBuffs` fields: DrawSpeedBonus, MountSpeedBonus, ChargeDamageBonus, DamageReductionBonus
+- Ally buff system: agent-index-keyed dictionary in CareerAbilityBuffTracker, read by TaomAgentStatCalculateModel for all human agents
+- SoundEvent.PlaySound2D integration (silently skips unregistered FMOD events)
+- Deleted old pilot executors: BloodrageExecutor, StealthExecutor, StampedeExecutor
+- Constructor-injected IMutationService/ICareerHeroAdapterFactory in CareerPerkMissionBehavior (removed IoC.Resolve from hot path)
+- Removed string interpolation from OnScoreHit/OnAgentRemoved debug logs (per-hit GC pressure)
+
 ## 2026-04-14
 
 ### Feature: Career Selection in Character Creation

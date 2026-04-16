@@ -19,6 +19,7 @@ public class CareerConfigProvider : ICareerConfigProvider
     private List<CareerChoiceDefinition> _choices;
     private int _maxPerkPoints = 30;
     private Dictionary<string, AbilityTemplateData> _abilityTemplates;
+    private AbilityTuningConfig _abilityTuning;
 
     public CareerConfigProvider(IPathService pathService, IModLogger logger)
     {
@@ -57,6 +58,12 @@ public class CareerConfigProvider : ICareerConfigProvider
         return _abilityTemplates.TryGetValue(templateId, out var t) ? t : null;
     }
 
+    public AbilityTuningConfig GetAbilityTuning()
+    {
+        EnsureLoaded();
+        return _abilityTuning;
+    }
+
     private void EnsureLoaded()
     {
         if (_careers != null) return;
@@ -71,6 +78,7 @@ public class CareerConfigProvider : ICareerConfigProvider
         LoadCareersXml();
         LoadChoicesXml();
         LoadAbilityTemplatesXml();
+        LoadAbilityTuningXml();
 
         _logger.LogInfo($"CareerSystem: Loaded {_careers.Count} careers, {_groups.Count} groups, {_choices.Count} choices, maxPerkPoints={_maxPerkPoints}");
     }
@@ -313,6 +321,60 @@ public class CareerConfigProvider : ICareerConfigProvider
         catch (Exception ex)
         {
             _logger.LogError($"CareerConfig: failed to load ability templates XML: {ex.Message}");
+        }
+    }
+
+    private void LoadAbilityTuningXml()
+    {
+        var path = Path.Combine(_pathService.ModuleDataPath, "career_system", "taom_ability_tuning.xml");
+        if (!File.Exists(path))
+        {
+            _logger.LogWarning($"CareerConfig: ability tuning file not found at {path} — using defaults");
+            _abilityTuning = AbilityTuningConfig.Default;
+            return;
+        }
+
+        try
+        {
+            var doc = XDocument.Load(path);
+            var root = doc.Root;
+            if (root == null)
+            {
+                _abilityTuning = AbilityTuningConfig.Default;
+                return;
+            }
+
+            var infEl = root.Element("Infantry");
+            var infantry = infEl != null
+                ? new InfantryTuning(
+                    ParseFloat(infEl, "damage_bonus", 15f),
+                    ParseFloat(infEl, "damage_reduction", 10f),
+                    ParseFloat(infEl, "radius", 50f))
+                : InfantryTuning.Default;
+
+            var rngEl = root.Element("Ranged");
+            var ranged = rngEl != null
+                ? new RangedTuning(
+                    ParseFloat(rngEl, "speed_bonus", 15f),
+                    ParseFloat(rngEl, "ranged_damage_bonus", 20f),
+                    ParseFloat(rngEl, "draw_speed_bonus", 20f))
+                : RangedTuning.Default;
+
+            var cavEl = root.Element("Cavalry");
+            var cavalry = cavEl != null
+                ? new CavalryTuning(
+                    ParseFloat(cavEl, "mount_speed_bonus", 20f),
+                    ParseFloat(cavEl, "charge_damage_bonus", 25f),
+                    ParseFloat(cavEl, "damage_bonus", 10f))
+                : CavalryTuning.Default;
+
+            _abilityTuning = new AbilityTuningConfig(infantry, ranged, cavalry);
+            _logger.LogInfo($"CareerSystem: Loaded ability tuning — Infantry(dmg={infantry.DamageBonus},red={infantry.DamageReduction},r={infantry.Radius}) Ranged(spd={ranged.SpeedBonus},dmg={ranged.RangedDamageBonus},draw={ranged.DrawSpeedBonus}) Cavalry(mspd={cavalry.MountSpeedBonus},chrg={cavalry.ChargeDamageBonus},dmg={cavalry.DamageBonus})");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"CareerConfig: failed to load ability tuning XML: {ex.Message}");
+            _abilityTuning = AbilityTuningConfig.Default;
         }
     }
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbilityTuning>
+
+  <!-- All values are whole-number percentages (15 = 15%). Executors convert to engine scale. -->
+
+  <!-- Infantry: AoE buff to all nearby troops -->
+  <Infantry
+    damage_bonus="15"
+    damage_reduction="10"
+    radius="50"
+    />
+
+  <!-- Ranged: Self buff for ranged combat -->
+  <Ranged
+    speed_bonus="15"
+    ranged_damage_bonus="20"
+    draw_speed_bonus="20"
+    />
+
+  <!-- Cavalry: Self + mount buff for mounted combat -->
+  <Cavalry
+    mount_speed_bonus="20"
+    charge_damage_bonus="25"
+    damage_bonus="10"
+    />
+
+</AbilityTuning>

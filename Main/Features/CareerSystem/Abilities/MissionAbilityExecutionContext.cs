@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -53,13 +54,7 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
         CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
         _agent.UpdateAgentProperties();
 
-        ScheduleRestore(() =>
-        {
-            CareerAbilityBuffTracker.ClearBuff(HeroStringId);
-            _agent?.UpdateAgentProperties();
-        }, duration);
-
-        _logger.LogDebug($"CareerSystem: SpeedBuff x{multiplier} applied to '{HeroStringId}' for {duration}s");
+        ScheduleHeroRestore(duration);
     }
 
     public void ApplyDamageBuff(float multiplier, float duration)
@@ -72,33 +67,20 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
         CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
         _agent.UpdateAgentProperties();
 
-        ScheduleRestore(() =>
-        {
-            CareerAbilityBuffTracker.ClearBuff(HeroStringId);
-            _agent?.UpdateAgentProperties();
-        }, duration);
-
-        _logger.LogDebug($"CareerSystem: DamageBuff x{multiplier} applied to '{HeroStringId}' for {duration}s");
+        ScheduleHeroRestore(duration);
     }
 
     public void ApplyResistanceBuff(float multiplier, float duration)
     {
         if (_agent?.AgentDrivenProperties == null) return;
 
-        // Reduce encumbrance as a proxy for resistance (lighter feel = absorbs more)
         var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
         buffs.ArmorReduction += 1f - (1f / multiplier);
         buffs.ExpiresAt = CurrentTime() + duration;
         CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
         _agent.UpdateAgentProperties();
 
-        ScheduleRestore(() =>
-        {
-            CareerAbilityBuffTracker.ClearBuff(HeroStringId);
-            _agent?.UpdateAgentProperties();
-        }, duration);
-
-        _logger.LogDebug($"CareerSystem: ResistanceBuff x{multiplier} applied to '{HeroStringId}' for {duration}s");
+        ScheduleHeroRestore(duration);
     }
 
     public void ApplyMoraleBurst(float radius, float magnitude)
@@ -107,10 +89,9 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
 
         _nearbyAlliesBuffer.Clear();
         _mission.GetNearbyAllyAgents(_agent.Position.AsVec2, radius, _agent.Team, _nearbyAlliesBuffer);
-        var allies = _nearbyAlliesBuffer;
 
         int boosted = 0;
-        foreach (var ally in allies)
+        foreach (var ally in _nearbyAlliesBuffer)
         {
             var ai = ally?.GetComponent<CommonAIComponent>();
             if (ai == null) continue;
@@ -118,27 +99,117 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
             ai.Morale = Math.Min(100f, ai.Morale + magnitude);
             boosted++;
         }
-
-        _logger.LogDebug($"CareerSystem: MoraleBurst r={radius} +{magnitude} boosted {boosted} allies for '{HeroStringId}'");
     }
 
     public void ApplyStealthMode(float duration)
     {
         // Stealth in Bannerlord is controlled by detection radius on the agent.
-        // We log the intent; full AI detection integration requires a Harmony prefix
-        // on the detection model (out of scope for Phase C, tracked as future work).
-        _logger.LogDebug($"CareerSystem: StealthMode for {duration}s applied to '{HeroStringId}' (visual-only Phase C)");
+        // Full AI detection integration requires a Harmony prefix on the detection model.
+        _logger.LogDebug($"CareerSystem: StealthMode for {duration}s applied to '{HeroStringId}' (visual-only)");
+    }
+
+    public void ApplyAllyBuff(float damageBonusFlat, float damageReductionFlat, float radius, float duration)
+    {
+        if (_agent == null || _mission == null) return;
+
+        _nearbyAlliesBuffer.Clear();
+        _mission.GetNearbyAllyAgents(_agent.Position.AsVec2, radius, _agent.Team, _nearbyAlliesBuffer);
+
+        int buffed = 0;
+        foreach (var ally in _nearbyAlliesBuffer)
+        {
+            if (ally == null || !ally.IsHuman || !ally.IsActive()) continue;
+
+            var allyBuffs = new ActiveBuffs
+            {
+                DamageBonus = damageBonusFlat,
+                DamageReductionBonus = damageReductionFlat,
+                ExpiresAt = CurrentTime() + duration
+            };
+
+            CareerAbilityBuffTracker.SetAllyBuff(ally.Index, allyBuffs);
+            ally.UpdateAgentProperties();
+            buffed++;
+
+            var allyIndex = ally.Index;
+            var allyRef = ally;
+            var expectedExpiry = CurrentTime() + duration;
+            ScheduleRestore(() =>
+            {
+                // Only clear if the buff hasn't been replaced (guards against reactivation/index reuse)
+                var current = CareerAbilityBuffTracker.GetAllyBuff(allyIndex);
+                if (current != null && current.ExpiresAt <= expectedExpiry)
+                {
+                    CareerAbilityBuffTracker.ClearAllyBuff(allyIndex);
+                    if (allyRef.IsActive())
+                        allyRef.UpdateAgentProperties();
+                }
+            }, duration);
+        }
+
+        // Also buff the hero
+        var heroBuff = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        heroBuff.DamageBonus += damageBonusFlat;
+        heroBuff.DamageReductionBonus += damageReductionFlat;
+        heroBuff.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, heroBuff);
+        _agent.UpdateAgentProperties();
+
+        ScheduleHeroRestore(duration);
+    }
+
+    public void ApplyDrawSpeedBuff(float bonus, float duration)
+    {
+        if (_agent?.AgentDrivenProperties == null) return;
+
+        var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        buffs.DrawSpeedBonus += bonus;
+        buffs.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
+        _agent.UpdateAgentProperties();
+
+        ScheduleHeroRestore(duration);
+    }
+
+    public void ApplyMountSpeedBuff(float bonus, float duration)
+    {
+        if (_agent?.AgentDrivenProperties == null) return;
+
+        var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        buffs.MountSpeedBonus += bonus;
+        buffs.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
+        _agent.UpdateAgentProperties();
+
+        ScheduleHeroRestore(duration);
+    }
+
+    public void ApplyChargeDamageBuff(float bonus, float duration)
+    {
+        if (_agent?.AgentDrivenProperties == null) return;
+
+        var buffs = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
+        buffs.ChargeDamageBonus += bonus;
+        buffs.ExpiresAt = CurrentTime() + duration;
+        CareerAbilityBuffTracker.SetBuff(HeroStringId, buffs);
+        _agent.UpdateAgentProperties();
+
+        ScheduleHeroRestore(duration);
     }
 
     public void PlaySound(string soundId)
     {
-        // Sound playback requires SoundEvent.CreateEvent — deferred to Phase D
-        _logger.LogDebug($"CareerSystem: PlaySound '{soundId}' requested for '{HeroStringId}'");
+        if (string.IsNullOrEmpty(soundId)) return;
+        var eventId = SoundEvent.GetEventIdFromString(soundId);
+        if (eventId >= 0)
+            SoundEvent.PlaySound2D(eventId);
     }
 
     public void PlayParticle(string particleId)
     {
-        // Particle playback requires engine particle handle — deferred to Phase D
+        // Particle playback requires registered particle definitions (asset files).
+        // Guard against missing assets gracefully.
+        if (string.IsNullOrEmpty(particleId)) return;
         _logger.LogDebug($"CareerSystem: PlayParticle '{particleId}' requested for '{HeroStringId}'");
     }
 
@@ -156,6 +227,21 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
     }
 
     private float CurrentTime() => _mission?.CurrentTime ?? 0f;
+
+    // Hero buff restore with expiry guard: only clears if buff hasn't been replaced by a reactivation.
+    private void ScheduleHeroRestore(float duration)
+    {
+        var expectedExpiry = CurrentTime() + duration;
+        ScheduleRestore(() =>
+        {
+            var current = CareerAbilityBuffTracker.GetBuff(HeroStringId);
+            if (current != null && current.ExpiresAt <= expectedExpiry)
+            {
+                CareerAbilityBuffTracker.ClearBuff(HeroStringId);
+                _agent?.UpdateAgentProperties();
+            }
+        }, duration);
+    }
 
     private void ScheduleRestore(Action restore, float duration)
     {

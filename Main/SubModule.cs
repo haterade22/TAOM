@@ -428,6 +428,8 @@ public class SubModule : MBSubModuleBase
                 careerAbilityService,
                 IoC.Resolve<ICareerConfigProvider>(),
                 IoC.Resolve<Features.CareerSystem.Abilities.CareerAbilityEffectRegistry>(),
+                IoC.Resolve<Features.CareerSystem.Mutations.IMutationService>(),
+                IoC.Resolve<ICareerHeroAdapterFactory>(),
                 IoC.Resolve<IModLogger>()));
         }
     }
