@@ -10557,5 +10557,65 @@
       <Name>CareerSystem\Portraits\career_watchman_of_stangard_portrait</Name>
       <SpritePartName>CareerSystem\Portraits\career_watchman_of_stangard_portrait</SpritePartName>
     </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_ironguard_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_ironguard_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_silvan_archer_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_silvan_archer_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_blade_dancer_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_blade_dancer_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_elven_archer_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_elven_archer_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_uruk_berserker_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_uruk_berserker_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_uruk_crossbow_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_uruk_crossbow_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_codyan_legionaire_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_codyan_legionaire_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_balchoth_kan_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_balchoth_kan_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_lokhas_drus_marksman_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_lokhas_drus_marksman_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_cave_troll_master_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_cave_troll_master_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_shadow_warrior_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_shadow_warrior_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Portraits\career_black_uruk_captain_portrait</Name>
+      <SpritePartName>CareerSystem\Portraits\career_black_uruk_captain_portrait</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\ironguard_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\ironguard_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\ram_rider_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\ram_rider_ability</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\Abilities\crossbow_master_ability</Name>
+      <SpritePartName>CareerSystem\Abilities\crossbow_master_ability</SpritePartName>
+    </GenericSprite>
   </Sprites>
 </SpriteData>

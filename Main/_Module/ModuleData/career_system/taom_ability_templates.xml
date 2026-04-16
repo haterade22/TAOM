@@ -198,29 +198,29 @@
   <AbilityTemplate id="codyan_legionaire_ability"
                    display_name="{=taom_ability_codyan_legionaire}Shieldwall"
                    sprite="ability_codyan_legionaire_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="codyan_legionaire_particle"
                    sound_effect="codyan_legionaire_activate"
-                   tooltip="{=taom_ability_codyan_legionaire_tt}Lock shields with your formation, greatly increasing resistance and troop resilience in the shieldwall." />
+                   tooltip="{=taom_ability_codyan_legionaire_tt}Lock shields in formation, boosting melee damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="lokhas_drus_marksman_ability"
                    display_name="{=taom_ability_lokhas_drus_marksman}Piercing Volley"
                    sprite="ability_lokhas_drus_marksman_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="lokhas_drus_marksman_particle"
                    sound_effect="lokhas_drus_marksman_activate"
-                   tooltip="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened bolts that pierce through armor at range, boosting armor penetration and ranged damage." />
+                   tooltip="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened arrows, boosting ranged damage by 20 for all nearby allies for a short duration." />
 
   <AbilityTemplate id="balchoth_kan_ability"
                    display_name="{=taom_ability_balchoth_kan}Unyielding"
                    sprite="ability_balchoth_kan_icon"
-                   cooldown="0" duration="8" radius="10"
+                   cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="balchoth_kan_particle"
                    sound_effect="balchoth_kan_activate"
-                   tooltip="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth, suppressing morale loss and boosting your cavalry's charge impact." />
+                   tooltip="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth, boosting charge damage by 20 for mounted allies and melee damage by 10 for all nearby troops for a short duration." />
 
   <!-- ═══ DALE ═══ -->
 
