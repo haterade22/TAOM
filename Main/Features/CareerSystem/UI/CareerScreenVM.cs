@@ -117,10 +117,13 @@ public class CareerScreenVM : ViewModel
     private void RebuildAbilityEffects(CareerDefinition career)
     {
         _abilityEffects.Clear();
-        if (!string.IsNullOrEmpty(career.Description))
+
+        var configProvider = IoC.Resolve<ICareerConfigProvider>();
+        var abilityTemplate = configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
+        if (abilityTemplate != null && !string.IsNullOrEmpty(abilityTemplate.TooltipDescription))
         {
-            // Root choice effects would go here if we had ability effect lines
-            // For now this is a placeholder for the ability effects list
+            var description = new TextObject(abilityTemplate.TooltipDescription).ToString();
+            _abilityEffects.Add(new CareerAbilityEffectVM(description));
         }
     }
 
@@ -143,7 +146,7 @@ public class CareerScreenVM : ViewModel
             {
                 var isTaken = _dataService.GetOrCreateData(_heroStringId).HasChoice(choice.Id);
                 var isFreeToTake = FreeCareerPoints > 0 && !isLocked;
-                groupVM.Choices.Add(new CareerChoiceObjectVM(choice, isTaken, isFreeToTake));
+                groupVM.Choices.Add(new CareerChoiceObjectVM(choice, isTaken, isFreeToTake, TrySelectChoice, TryDeselectChoice));
             }
 
             switch (group.Tier)
@@ -197,6 +200,64 @@ public class CareerScreenVM : ViewModel
             _passiveService.RefreshCache(_dataService, _registry);
             RefreshValues();
         }
+    }
+
+    // Invoked by CareerChoiceObjectVM.SelectChoice via callback (+ button in UI)
+    private bool TrySelectChoice(string choiceId)
+    {
+        if (FreeCareerPoints <= 0) return false;
+
+        var choice = _registry.GetChoice(choiceId);
+        if (choice == null) return false;
+
+        if (!string.IsNullOrEmpty(choice.GroupId))
+        {
+            var group = _registry.GetGroup(choice.GroupId);
+            if (group != null && !_registry.IsTierAvailable(_heroLevel, group.Tier))
+                return false;
+
+            // Enforce one Keystone per tier
+            if (choice.Type == Domain.ChoiceType.Keystone && group != null)
+            {
+                var heroData = _dataService.GetOrCreateData(_heroStringId);
+                var careerId = _dataService.GetCareerStringId(_heroStringId);
+                var career = careerId != null ? _registry.GetCareer(careerId) : null;
+                if (career != null)
+                {
+                    foreach (var gId in career.ChoiceGroupIds)
+                    {
+                        var otherGroup = _registry.GetGroup(gId);
+                        if (otherGroup == null || otherGroup.Tier != group.Tier) continue;
+                        foreach (var oc in _registry.GetChoicesForGroup(gId))
+                        {
+                            if (oc.Type == Domain.ChoiceType.Keystone && heroData.HasChoice(oc.Id))
+                                return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
+        if (_dataService.TryAddChoice(_heroStringId, choiceId, maxChoices))
+        {
+            _passiveService.RefreshCache(_dataService, _registry);
+            RefreshValues();
+            return true;
+        }
+        return false;
+    }
+
+    // Invoked by CareerChoiceObjectVM.DeSelectChoice via callback (- button in UI)
+    private bool TryDeselectChoice(string choiceId)
+    {
+        var heroData = _dataService.GetOrCreateData(_heroStringId);
+        if (!heroData.HasChoice(choiceId)) return false;
+
+        _dataService.RemoveChoice(_heroStringId, choiceId);
+        _passiveService.RefreshCache(_dataService, _registry);
+        RefreshValues();
+        return true;
     }
 
     public void ExecuteClose()

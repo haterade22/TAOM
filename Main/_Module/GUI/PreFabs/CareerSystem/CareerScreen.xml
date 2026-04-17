@@ -138,8 +138,9 @@
                                 </ListPanel>
                               </ItemTemplate>
                             </ListPanel>
-                            <!-- Locked chains overlay -->
-                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_chains" IsVisible="@Tier1Locked" />
+                            <!-- Locked tier overlay: dark tint + chains (chains PNG optional — tint always shows when locked) -->
+                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC" IsVisible="@Tier1Locked" />
+                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_chains" IsVisible="@Tier1Locked" />
                           </Children>
                         </Widget>
 
@@ -179,7 +180,8 @@
                                 </ListPanel>
                               </ItemTemplate>
                             </ListPanel>
-                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_chains" IsVisible="@Tier2Locked" />
+                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC" IsVisible="@Tier2Locked" />
+                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_chains" IsVisible="@Tier2Locked" />
                           </Children>
                         </Widget>
 
@@ -219,7 +221,8 @@
                                 </ListPanel>
                               </ItemTemplate>
                             </ListPanel>
-                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_chains" IsVisible="@Tier3Locked" />
+                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC" IsVisible="@Tier3Locked" />
+                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_chains" IsVisible="@Tier3Locked" />
                           </Children>
                         </Widget>
 

@@ -1,3 +1,4 @@
+using System;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem.Domain;
@@ -7,14 +8,35 @@ namespace TAOM.Features.CareerSystem.UI;
 public class CareerChoiceObjectVM : ViewModel
 {
     private readonly CareerChoiceDefinition _choice;
+    private readonly Func<string, bool> _selectChoice;
+    private readonly Func<string, bool> _deselectChoice;
     private bool _isTaken;
     private bool _isFreeToTake;
 
-    public CareerChoiceObjectVM(CareerChoiceDefinition choice, bool isTaken, bool isFreeToTake)
+    public CareerChoiceObjectVM(
+        CareerChoiceDefinition choice,
+        bool isTaken,
+        bool isFreeToTake,
+        Func<string, bool> selectChoice = null,
+        Func<string, bool> deselectChoice = null)
     {
         _choice = choice;
         _isTaken = isTaken;
         _isFreeToTake = isFreeToTake && !isTaken;
+        _selectChoice = selectChoice;
+        _deselectChoice = deselectChoice;
+    }
+
+    public void SelectChoice()
+    {
+        if (_selectChoice != null && _selectChoice(_choice.Id))
+            IsTaken = true;
+    }
+
+    public void DeSelectChoice()
+    {
+        if (_deselectChoice != null && _deselectChoice(_choice.Id))
+            IsTaken = false;
     }
 
     [DataSourceProperty]

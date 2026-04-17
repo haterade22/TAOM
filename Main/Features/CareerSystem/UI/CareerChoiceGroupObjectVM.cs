@@ -39,10 +39,11 @@ public class CareerChoiceGroupObjectVM : ViewModel
     {
         if (!_isActive) return;
 
-        foreach (var choice in _choices)
+        for (int i = 0; i < _choices.Count; i++)
         {
-            if (choice.IsFreeToTake && !choice.IsTaken)
+            if (!_choices[i].IsTaken)
             {
+                _choices[i].SelectChoice();
                 _choiceChangedAction?.Invoke();
                 return;
             }
@@ -57,6 +58,7 @@ public class CareerChoiceGroupObjectVM : ViewModel
         {
             if (_choices[i].IsTaken)
             {
+                _choices[i].DeSelectChoice();
                 _choiceChangedAction?.Invoke();
                 return;
             }
