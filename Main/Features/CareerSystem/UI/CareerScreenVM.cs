@@ -31,6 +31,9 @@ public class CareerScreenVM : ViewModel
     private bool _tier1Locked;
     private bool _tier2Locked;
     private bool _tier3Locked;
+    private bool _tier2GateBottomHalf;
+    private bool _tier3GateTopHalf;
+    private bool _tier3GateFull;
     private int _freeCareerPoints;
     private bool _hasCareer;
     private bool _hasAbilitySprite;
@@ -103,12 +106,19 @@ public class CareerScreenVM : ViewModel
 
         var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
         var currentChoices = _dataService.GetChoiceCount(_heroStringId);
-        FreeCareerPoints = maxChoices - currentChoices;
+        FreeCareerPoints = System.Math.Max(0, maxChoices - currentChoices);
         FreeCareerPointsText = $"Free Points: {FreeCareerPoints}";
 
         Tier1Locked = !_registry.IsTierAvailable(_heroLevel, 1);
         Tier2Locked = !_registry.IsTierAvailable(_heroLevel, 2);
         Tier3Locked = !_registry.IsTierAvailable(_heroLevel, 3);
+
+        // Gate composition: spikes sit at the top of the highest unlocked tier.
+        // Tier2 locked + Tier3 locked = gate spans Tier2 (bottom half) + Tier3 (top half).
+        // Tier3 locked + Tier2 unlocked = gate fits entirely on Tier3 (full gate sprite).
+        Tier2GateBottomHalf = Tier2Locked;
+        Tier3GateTopHalf = Tier3Locked && Tier2Locked;
+        Tier3GateFull = Tier3Locked && !Tier2Locked;
 
         RebuildAbilityEffects(career);
         RebuildChoiceGroups(career);
@@ -391,6 +401,27 @@ public class CareerScreenVM : ViewModel
     {
         get => _tier3Locked;
         set { if (_tier3Locked != value) { _tier3Locked = value; OnPropertyChangedWithValue(value, nameof(Tier3Locked)); } }
+    }
+
+    [DataSourceProperty]
+    public bool Tier2GateBottomHalf
+    {
+        get => _tier2GateBottomHalf;
+        set { if (_tier2GateBottomHalf != value) { _tier2GateBottomHalf = value; OnPropertyChangedWithValue(value, nameof(Tier2GateBottomHalf)); } }
+    }
+
+    [DataSourceProperty]
+    public bool Tier3GateTopHalf
+    {
+        get => _tier3GateTopHalf;
+        set { if (_tier3GateTopHalf != value) { _tier3GateTopHalf = value; OnPropertyChangedWithValue(value, nameof(Tier3GateTopHalf)); } }
+    }
+
+    [DataSourceProperty]
+    public bool Tier3GateFull
+    {
+        get => _tier3GateFull;
+        set { if (_tier3GateFull != value) { _tier3GateFull = value; OnPropertyChangedWithValue(value, nameof(Tier3GateFull)); } }
     }
 
     [DataSourceProperty]

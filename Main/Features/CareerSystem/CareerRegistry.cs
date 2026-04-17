@@ -109,7 +109,10 @@ public class CareerRegistry : ICareerRegistry
     public int GetMaxChoicesForHero(int heroLevel)
     {
         EnsureLoaded();
-        return Math.Min(heroLevel + 1, _maxPerkPoints + 1);
+        // Budget: 1 root (auto-added at CC) + N free points for level N
+        // Hero starts at level 1 with 1 free point, gains 1 per level.
+        var effectiveLevel = Math.Max(1, heroLevel);
+        return Math.Min(effectiveLevel + 1, _maxPerkPoints + 1);
     }
 
     public bool IsTierAvailable(int heroLevel, int tier)

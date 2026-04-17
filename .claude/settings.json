@@ -2,6 +2,10 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/statusline.sh"
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -10,6 +14,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/session-start.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/detect-docs-gaps.sh"
           }
         ]
       }
@@ -21,6 +29,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-build-before-commit.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/validate-push.sh"
           }
         ]
       },
@@ -94,6 +106,17 @@
         ]
       }
     ],
+    "PostCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-compact.sh"
+          }
+        ]
+      }
+    ],
     "SubagentStart": [
       {
         "matcher": "",
@@ -116,6 +139,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-deep-review.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-stop.sh"
           }
         ]
       }
