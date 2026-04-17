@@ -7,6 +7,7 @@ public class CareerAbilityHudVM : ViewModel
     private bool _isVisible;
     private int _chargePercent;
     private string _abilityName;
+    private string _abilitySprite;
     private bool _isReady;
 
     [DataSourceProperty]
@@ -52,6 +53,20 @@ public class CareerAbilityHudVM : ViewModel
     }
 
     [DataSourceProperty]
+    public string AbilitySprite
+    {
+        get => _abilitySprite;
+        set
+        {
+            if (_abilitySprite != value)
+            {
+                _abilitySprite = value;
+                OnPropertyChangedWithValue(value, nameof(AbilitySprite));
+            }
+        }
+    }
+
+    [DataSourceProperty]
     public bool IsReady
     {
         get => _isReady;
@@ -65,10 +80,11 @@ public class CareerAbilityHudVM : ViewModel
         }
     }
 
-    public void Update(bool hasCareer, string abilityName, float currentCharge, float maxCharge, bool isReady)
+    public void Update(bool hasCareer, string abilityName, string abilitySprite, float currentCharge, float maxCharge, bool isReady)
     {
         IsVisible = hasCareer;
         AbilityName = abilityName ?? "";
+        AbilitySprite = abilitySprite ?? "";
         ChargePercent = maxCharge > 0 ? (int)(currentCharge / maxCharge * 100f) : 0;
         IsReady = isReady;
     }

@@ -195,14 +195,14 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         if (!_dataService.HasCareer(heroId))
         {
-            _hudVM.Update(false, null, 0f, 0f, false);
+            _hudVM.Update(false, null, null, 0f, 0f, false);
             return;
         }
 
         var ability = _abilityService.GetOrCreateAbility(heroId, _registry, _dataService);
         if (ability == null)
         {
-            _hudVM.Update(false, null, 0f, 0f, false);
+            _hudVM.Update(false, null, null, 0f, 0f, false);
             return;
         }
 
@@ -210,8 +210,11 @@ public class CareerPerkMissionBehavior : MissionBehavior
         var career = careerId != null ? _registry.GetCareer(careerId) : null;
         var rawName = career?.DisplayName ?? ability.TemplateId;
         var abilityName = new TaleWorlds.Localization.TextObject(rawName).ToString();
+        var abilitySprite = career != null
+            ? $"CareerSystem\\Abilities\\{career.AbilityTemplateId}"
+            : null;
 
-        _hudVM.Update(true, abilityName, ability.CurrentCharge, ability.MaxCharge, ability.IsReady);
+        _hudVM.Update(true, abilityName, abilitySprite, ability.CurrentCharge, ability.MaxCharge, ability.IsReady);
     }
 
     public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, WeaponComponentData attackerWeapon, bool isBlocked, bool isSiegeEngineHit, in Blow blow, in AttackCollisionData collisionData, float damagedHp, float hitDistance, float shotDifficulty)
