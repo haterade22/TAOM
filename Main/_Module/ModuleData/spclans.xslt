@@ -14,6 +14,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_1}Blaidd-luth</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -22,6 +23,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_2}Turch-luth</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -30,6 +32,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_3}Uch-luth</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -39,6 +42,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_4}Arth-luth</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_EN6</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -48,6 +52,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_5}Cigfran-luth</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_EN5</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -57,6 +62,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_6}Hebog-luth</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_EN4</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -65,6 +71,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_7}Draig-luth</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -73,6 +80,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_8}Caru-luth</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -81,6 +89,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_north_9}Avanc-luth</xsl:attribute>
+      <xsl:attribute name="banner_key">11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -271,6 +280,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_2}House of Bard</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -279,6 +289,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_3}House of Brand</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -287,6 +298,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_4}House of Bain</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -296,6 +308,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_5}House of Esgaroth</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_S7</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -305,6 +318,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_6}House of the River</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_S6</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -313,6 +327,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_7}House of the Archers</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -321,6 +336,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_8}House of Long Lake</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -329,6 +345,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_sturgia_9}House of the Dragon-slayer</xsl:attribute>
+      <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>

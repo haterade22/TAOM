@@ -97,6 +97,8 @@
       <Icon id="14011" material_name="taom_banners_rhun_alpha_01" texture_index="11" />
       <Icon id="14012" material_name="taom_banners_rhun_alpha_01" texture_index="12" />
       <Icon id="14013" material_name="taom_banners_rhun_alpha_01" texture_index="13" />
+      <Icon id="14014" material_name="taom_banners_rhun_alpha_01" texture_index="14" />
+      <Icon id="14015" material_name="taom_banners_rhun_alpha_01" texture_index="15" />
     </BannerIconGroup>
 
     <BannerIconGroup id="145" name="{=!}TAOM Rhûn Ornaments 01" is_pattern="false">
@@ -198,6 +200,7 @@
       <Icon id="21007" material_name="taom_banners_rohan_alpha_01" texture_index="7" />
       <Icon id="21008" material_name="taom_banners_rohan_alpha_01" texture_index="8" />
       <Icon id="21009" material_name="taom_banners_rohan_alpha_01" texture_index="9" />
+      <Icon id="21010" material_name="taom_banners_rohan_alpha_01" texture_index="10" />
     </BannerIconGroup>
 
     <!-- Gundabad Icons -->
@@ -301,6 +304,16 @@
       <Icon id="26008" material_name="taom_banners_dunland_alpha_01" texture_index="8" />
       <Icon id="26009" material_name="taom_banners_dunland_alpha_01" texture_index="9" />
       <Icon id="26010" material_name="taom_banners_dunland_alpha_01" texture_index="10" />
+    </BannerIconGroup>
+
+    <!-- Dale Icons -->
+    <BannerIconGroup id="270" name="{=!}TAOM Dale Alpha 01" is_pattern="false">
+      <Icon id="27000" material_name="taom_banners_dale_alpha_01" texture_index="0" />
+      <Icon id="27001" material_name="taom_banners_dale_alpha_01" texture_index="1" />
+    </BannerIconGroup>
+
+    <BannerIconGroup id="275" name="{=!}TAOM Dale Ornaments 01" is_pattern="false">
+      <Icon id="27500" material_name="taom_banners_dale_ornaments_01" texture_index="0" />
     </BannerIconGroup>
     <BannerColors>
       <!-- New colours element-->
