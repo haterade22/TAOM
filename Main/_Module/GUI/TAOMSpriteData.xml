@@ -60,7 +60,7 @@
       <Name>ui_taom_career_system</Name>
       <AlwaysLoad />
       <SpriteSheetCount>1</SpriteSheetCount>
-      <SpriteSheetSize ID="1" Width="4096" Height="2048" />
+      <SpriteSheetSize ID="1" Width="4096" Height="4096" />
     </SpriteCategory>
   </SpriteCategories>
   <SpriteParts>
@@ -7161,8 +7161,53 @@
       <Name>CareerSystem\career_button_placeholder</Name>
       <Width>1024</Width>
       <Height>256</Height>
-      <SheetX>2428</SheetX>
-      <SheetY>1228</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>2452</SheetY>
+      <CategoryName>ui_taom_career_system</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>CareerSystem\locked_gate_bottom</Name>
+      <Width>2048</Width>
+      <Height>512</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_taom_career_system</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>CareerSystem\locked_gate_full</Name>
+      <Width>2048</Width>
+      <Height>512</Height>
+      <SheetX>4</SheetX>
+      <SheetY>524</SheetY>
+      <CategoryName>ui_taom_career_system</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>CareerSystem\locked_gate_top</Name>
+      <Width>2048</Width>
+      <Height>512</Height>
+      <SheetX>4</SheetX>
+      <SheetY>1044</SheetY>
+      <CategoryName>ui_taom_career_system</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>CareerSystem\minus_sign_icon</Name>
+      <Width>256</Width>
+      <Height>256</Height>
+      <SheetX>2092</SheetX>
+      <SheetY>2452</SheetY>
+      <CategoryName>ui_taom_career_system</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>CareerSystem\plus_sign_icon</Name>
+      <Width>256</Width>
+      <Height>256</Height>
+      <SheetX>1828</SheetX>
+      <SheetY>2452</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7170,8 +7215,8 @@
       <Name>CareerSystem\Abilities\captain_of_osgiliath_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1636</SheetY>
+      <SheetX>1564</SheetX>
+      <SheetY>2452</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7179,8 +7224,8 @@
       <Name>CareerSystem\Abilities\crossbow_master_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>3748</SheetX>
-      <SheetY>1492</SheetY>
+      <SheetX>1300</SheetX>
+      <SheetY>2452</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7188,8 +7233,8 @@
       <Name>CareerSystem\Abilities\eotheod_windrider_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>3484</SheetX>
-      <SheetY>1492</SheetY>
+      <SheetX>1036</SheetX>
+      <SheetY>2452</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7197,8 +7242,8 @@
       <Name>CareerSystem\Abilities\ironguard_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>3220</SheetX>
-      <SheetY>1492</SheetY>
+      <SheetX>3676</SheetX>
+      <SheetY>1324</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7206,8 +7251,8 @@
       <Name>CareerSystem\Abilities\knight_of_belfalas_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>2956</SheetX>
-      <SheetY>1492</SheetY>
+      <SheetX>3676</SheetX>
+      <SheetY>1060</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7215,8 +7260,8 @@
       <Name>CareerSystem\Abilities\marksman_of_aldburg_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>2692</SheetX>
-      <SheetY>1492</SheetY>
+      <SheetX>3676</SheetX>
+      <SheetY>796</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7224,8 +7269,8 @@
       <Name>CareerSystem\Abilities\ram_rider_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>2428</SheetX>
-      <SheetY>1492</SheetY>
+      <SheetX>3676</SheetX>
+      <SheetY>532</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7233,8 +7278,8 @@
       <Name>CareerSystem\Abilities\ranger_of_ithilien_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>3724</SheetX>
-      <SheetY>1228</SheetY>
+      <SheetX>3676</SheetX>
+      <SheetY>268</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7242,8 +7287,8 @@
       <Name>CareerSystem\Abilities\watchman_of_stangard_ability</Name>
       <Width>256</Width>
       <Height>256</Height>
-      <SheetX>3460</SheetX>
-      <SheetY>1228</SheetY>
+      <SheetX>3676</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7251,8 +7296,8 @@
       <Name>CareerSystem\Portraits\career_balchoth_kan_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>812</SheetX>
-      <SheetY>1228</SheetY>
+      <SheetX>2428</SheetX>
+      <SheetY>2044</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7260,8 +7305,8 @@
       <Name>CareerSystem\Portraits\career_black_uruk_captain_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>4</SheetX>
-      <SheetY>1228</SheetY>
+      <SheetX>2060</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7270,7 +7315,7 @@
       <Width>800</Width>
       <Height>400</Height>
       <SheetX>3236</SheetX>
-      <SheetY>820</SheetY>
+      <SheetY>2044</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7279,7 +7324,7 @@
       <Width>800</Width>
       <Height>400</Height>
       <SheetX>4</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>1972</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7287,8 +7332,8 @@
       <Name>CareerSystem\Portraits\career_cave_troll_master_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>1620</SheetX>
-      <SheetY>820</SheetY>
+      <SheetX>2868</SheetX>
+      <SheetY>1228</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7296,8 +7341,8 @@
       <Name>CareerSystem\Portraits\career_codyan_legionaire_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>812</SheetX>
-      <SheetY>820</SheetY>
+      <SheetX>2868</SheetX>
+      <SheetY>4</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7305,8 +7350,8 @@
       <Name>CareerSystem\Portraits\career_elven_archer_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>4</SheetX>
-      <SheetY>820</SheetY>
+      <SheetX>2060</SheetX>
+      <SheetY>412</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7314,7 +7359,7 @@
       <Name>CareerSystem\Portraits\career_eotheod_windrider_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>3236</SheetX>
+      <SheetX>2868</SheetX>
       <SheetY>412</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
@@ -7323,8 +7368,8 @@
       <Name>CareerSystem\Portraits\career_ironguard_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>2428</SheetX>
-      <SheetY>412</SheetY>
+      <SheetX>2060</SheetX>
+      <SheetY>820</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7332,8 +7377,8 @@
       <Name>CareerSystem\Portraits\career_knight_of_belfalas_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>1620</SheetX>
-      <SheetY>412</SheetY>
+      <SheetX>2868</SheetX>
+      <SheetY>820</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7341,8 +7386,8 @@
       <Name>CareerSystem\Portraits\career_lokhas_drus_marksman_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>812</SheetX>
-      <SheetY>412</SheetY>
+      <SheetX>3236</SheetX>
+      <SheetY>1636</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7350,8 +7395,8 @@
       <Name>CareerSystem\Portraits\career_marksman_of_aldburg_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>4</SheetX>
-      <SheetY>412</SheetY>
+      <SheetX>2060</SheetX>
+      <SheetY>1228</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7359,8 +7404,8 @@
       <Name>CareerSystem\Portraits\career_ranger_of_ithilien_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>3236</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>4</SheetX>
+      <SheetY>1564</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7368,8 +7413,8 @@
       <Name>CareerSystem\Portraits\career_shadow_warrior_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>2428</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>812</SheetX>
+      <SheetY>1636</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7378,7 +7423,7 @@
       <Width>800</Width>
       <Height>400</Height>
       <SheetX>1620</SheetX>
-      <SheetY>4</SheetY>
+      <SheetY>1636</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7386,8 +7431,8 @@
       <Name>CareerSystem\Portraits\career_uruk_berserker_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>812</SheetX>
-      <SheetY>4</SheetY>
+      <SheetX>2428</SheetX>
+      <SheetY>1636</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7396,7 +7441,7 @@
       <Width>800</Width>
       <Height>400</Height>
       <SheetX>1620</SheetX>
-      <SheetY>1228</SheetY>
+      <SheetY>2044</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -7404,8 +7449,8 @@
       <Name>CareerSystem\Portraits\career_watchman_of_stangard_portrait</Name>
       <Width>800</Width>
       <Height>400</Height>
-      <SheetX>2428</SheetX>
-      <SheetY>820</SheetY>
+      <SheetX>812</SheetX>
+      <SheetY>2044</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
   </SpriteParts>
@@ -10565,6 +10610,26 @@
     <GenericSprite>
       <Name>CareerSystem\career_button_placeholder</Name>
       <SpritePartName>CareerSystem\career_button_placeholder</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\locked_gate_bottom</Name>
+      <SpritePartName>CareerSystem\locked_gate_bottom</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\locked_gate_full</Name>
+      <SpritePartName>CareerSystem\locked_gate_full</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\locked_gate_top</Name>
+      <SpritePartName>CareerSystem\locked_gate_top</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\minus_sign_icon</Name>
+      <SpritePartName>CareerSystem\minus_sign_icon</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>CareerSystem\plus_sign_icon</Name>
+      <SpritePartName>CareerSystem\plus_sign_icon</SpritePartName>
     </GenericSprite>
     <GenericSprite>
       <Name>CareerSystem\Abilities\captain_of_osgiliath_ability</Name>
