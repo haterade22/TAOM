@@ -7408,33 +7408,6 @@
       <SheetY>820</SheetY>
       <CategoryName>ui_taom_career_system</CategoryName>
     </SpritePart>
-    <SpritePart>
-      <SheetID>26</SheetID>
-      <Name>CareerSystem\locked_chains</Name>
-      <Width>2048</Width>
-      <Height>512</Height>
-      <SheetX>0</SheetX>
-      <SheetY>0</SheetY>
-      <CategoryName>ui_taom_career_system</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>27</SheetID>
-      <Name>CareerSystem\plus_sign_icon</Name>
-      <Width>256</Width>
-      <Height>256</Height>
-      <SheetX>0</SheetX>
-      <SheetY>0</SheetY>
-      <CategoryName>ui_taom_career_system</CategoryName>
-    </SpritePart>
-    <SpritePart>
-      <SheetID>27</SheetID>
-      <Name>CareerSystem\minus_sign_icon</Name>
-      <Width>256</Width>
-      <Height>256</Height>
-      <SheetX>256</SheetX>
-      <SheetY>0</SheetY>
-      <CategoryName>ui_taom_career_system</CategoryName>
-    </SpritePart>
   </SpriteParts>
   <Sprites>
     <GenericSprite>
