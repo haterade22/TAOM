@@ -153,7 +153,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         var executor = _effectRegistry.GetExecutor(careerId);
         executor.Execute(context);
 
-        var abilityName = career.DisplayName;
+        var abilityName = new TaleWorlds.Localization.TextObject(career.DisplayName).ToString();
         InformationManager.DisplayMessage(new InformationMessage(
             $"{abilityName} activated!", Colors.Yellow));
 
@@ -208,7 +208,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         var careerId = _dataService.GetCareerStringId(heroId);
         var career = careerId != null ? _registry.GetCareer(careerId) : null;
-        var abilityName = career?.DisplayName ?? ability.TemplateId;
+        var rawName = career?.DisplayName ?? ability.TemplateId;
+        var abilityName = new TaleWorlds.Localization.TextObject(rawName).ToString();
 
         _hudVM.Update(true, abilityName, ability.CurrentCharge, ability.MaxCharge, ability.IsReady);
     }

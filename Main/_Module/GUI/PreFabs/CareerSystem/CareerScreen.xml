@@ -49,7 +49,7 @@
                         </Widget>
 
                         <!-- Career Description -->
-                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginLeft="20" MarginRight="20" ClipRect="CareerDescriptionClip" InnerPanel="CareerDescriptionInner" AutoHideScrollBars="true">
+                        <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginLeft="20" MarginRight="20" MarginTop="20" ClipRect="CareerDescriptionClip" InnerPanel="CareerDescriptionInner" AutoHideScrollBars="true">
                           <Children>
                             <Widget Id="CareerDescriptionClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
                               <Children>

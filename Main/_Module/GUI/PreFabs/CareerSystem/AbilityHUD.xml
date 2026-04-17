@@ -2,8 +2,8 @@
   <Window>
     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
             SuggestedWidth="200" SuggestedHeight="50"
-            HorizontalAlignment="Right" VerticalAlignment="Bottom"
-            MarginRight="20" MarginBottom="80"
+            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+            MarginLeft="75" MarginBottom="220"
             IsVisible="@IsVisible">
       <Children>
         <!-- Background -->
