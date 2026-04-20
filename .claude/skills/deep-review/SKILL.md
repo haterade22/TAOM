@@ -368,3 +368,14 @@ VERDICT: READY FOR COMMIT / NEEDS FIXES
 - The Bannerlord compatibility agent (Agent 2) MUST use installed DLLs via ilspycmd, NOT the decompiled folder at E:\Decompiled_Bannerlord\ (it's a different version).
 - Agent 5 (Data Flow) is the highest-value agent — it catches the class of bugs that all other agents consistently miss. Every HIGH bug found by Codex in this project was a data flow gap.
 - If the verdict is NEEDS FIXES, list the fixes needed in priority order.
+
+## HIGH findings — no silent deferrals (MANDATORY)
+
+If any agent reports a HIGH-severity finding (or Codex reports P1):
+1. The default action is FIX. Implement the fix in the same session.
+2. If the user explicitly chooses to defer, the deferral MUST be recorded in one of:
+   - A GitHub issue (`gh issue create`) with the finding text
+   - A commit trailer `Deferred: <reason>` on the commit that would have fixed it
+   - A CHANGELOG "Known limitation:" bullet
+
+What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed — Codex independently caught the same bug later. Memory: `feedback_dont_defer_high_review_findings.md`.

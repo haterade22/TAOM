@@ -109,28 +109,30 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
         if (_agent == null || _mission == null) return;
 
         _nearbyAlliesBuffer.Clear();
+        // IMPORTANT: Mission.GetNearbyAllyAgents INCLUDES the caller's own agent in the result.
+        // Vanilla Bannerlord code post-filters the source agent; we must do the same.
+        // See: memory/feedback_collection_api_inclusion.md — Codex caught this as P1 (double-buff).
         _mission.GetNearbyAllyAgents(_agent.Position.AsVec2, radius, _agent.Team, _nearbyAlliesBuffer);
 
-        // Apply to each nearby ally (excluding the caster — caster gets the hero buff path instead)
         foreach (var ally in _nearbyAlliesBuffer)
         {
             if (ally == null || !ally.IsHuman || !ally.IsActive()) continue;
-            if (ally == _agent) continue; // caster is handled below via hero buff
+            if (ally == _agent) continue; // MUST exclude caster — hero buff path handles them
 
             var existing = CareerAbilityBuffTracker.GetAllyBuff(ally.Index) ?? new ActiveBuffs();
-            AccumulateDeltas(existing, buffTemplate);
+            ActiveBuffsAlgebra.Accumulate(existing, buffTemplate);
             existing.ExpiresAt = Math.Max(existing.ExpiresAt, CurrentTime() + duration);
             CareerAbilityBuffTracker.SetAllyBuff(ally.Index, existing);
             ally.UpdateAgentProperties();
 
             var allyIndex = ally.Index;
             var allyRef = ally;
-            var deltasCopy = Clone(buffTemplate);
+            var deltasCopy = ActiveBuffsAlgebra.Clone(buffTemplate);
             ScheduleRestore(() =>
             {
                 var current = CareerAbilityBuffTracker.GetAllyBuff(allyIndex);
                 if (current == null) return;
-                SubtractDeltas(current, deltasCopy);
+                ActiveBuffsAlgebra.Subtract(current, deltasCopy);
                 if (allyRef.IsActive())
                     allyRef.UpdateAgentProperties();
             }, duration);
@@ -138,56 +140,20 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
 
         // Apply to the caster via the hero buff path (also uses accumulate-and-subtract)
         var heroBuff = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
-        AccumulateDeltas(heroBuff, buffTemplate);
+        ActiveBuffsAlgebra.Accumulate(heroBuff, buffTemplate);
         heroBuff.ExpiresAt = Math.Max(heroBuff.ExpiresAt, CurrentTime() + duration);
         CareerAbilityBuffTracker.SetBuff(HeroStringId, heroBuff);
         _agent.UpdateAgentProperties();
 
-        var heroDeltasCopy = Clone(buffTemplate);
+        var heroDeltasCopy = ActiveBuffsAlgebra.Clone(buffTemplate);
         ScheduleRestore(() =>
         {
             var current = CareerAbilityBuffTracker.GetBuff(HeroStringId);
             if (current == null) return;
-            SubtractDeltas(current, heroDeltasCopy);
+            ActiveBuffsAlgebra.Subtract(current, heroDeltasCopy);
             _agent?.UpdateAgentProperties();
         }, duration);
     }
-
-    private static void AccumulateDeltas(ActiveBuffs target, ActiveBuffs deltas)
-    {
-        target.SpeedMultiplier += deltas.SpeedMultiplier;
-        target.CombatSpeedMultiplier += deltas.CombatSpeedMultiplier;
-        target.DamageBonus += deltas.DamageBonus;
-        target.ArmorReduction += deltas.ArmorReduction;
-        target.DrawSpeedBonus += deltas.DrawSpeedBonus;
-        target.MountSpeedBonus += deltas.MountSpeedBonus;
-        target.ChargeDamageBonus += deltas.ChargeDamageBonus;
-        target.DamageReductionBonus += deltas.DamageReductionBonus;
-    }
-
-    private static void SubtractDeltas(ActiveBuffs target, ActiveBuffs deltas)
-    {
-        target.SpeedMultiplier -= deltas.SpeedMultiplier;
-        target.CombatSpeedMultiplier -= deltas.CombatSpeedMultiplier;
-        target.DamageBonus -= deltas.DamageBonus;
-        target.ArmorReduction -= deltas.ArmorReduction;
-        target.DrawSpeedBonus -= deltas.DrawSpeedBonus;
-        target.MountSpeedBonus -= deltas.MountSpeedBonus;
-        target.ChargeDamageBonus -= deltas.ChargeDamageBonus;
-        target.DamageReductionBonus -= deltas.DamageReductionBonus;
-    }
-
-    private static ActiveBuffs Clone(ActiveBuffs source) => new ActiveBuffs
-    {
-        SpeedMultiplier = source.SpeedMultiplier,
-        CombatSpeedMultiplier = source.CombatSpeedMultiplier,
-        DamageBonus = source.DamageBonus,
-        ArmorReduction = source.ArmorReduction,
-        DrawSpeedBonus = source.DrawSpeedBonus,
-        MountSpeedBonus = source.MountSpeedBonus,
-        ChargeDamageBonus = source.ChargeDamageBonus,
-        DamageReductionBonus = source.DamageReductionBonus,
-    };
 
     public void PlaySound(string soundId)
     {
