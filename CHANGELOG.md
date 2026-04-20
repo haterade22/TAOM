@@ -2,6 +2,22 @@
 
 ## 2026-04-20
 
+### Fix: CareerScreenVM Service-Locator Anti-Pattern (8 test failures)
+
+`CareerScreenVM` was resolving `ICareerConfigProvider` inline via `IoC.Resolve<T>()` and guarding `IModLogger` with a `try { IoC.Resolve<IModLogger>() } catch { }`. DryIoc isn't configured in unit tests, so every test that exercised `RefreshValues()` past the "no career set" guard threw `NullReferenceException` — 8 of 9 `CareerScreenVMTests` failing silently as "pre-existing."
+
+- `CareerScreenVM` — added `ICareerConfigProvider` and `IModLogger` as constructor parameters; deleted the two inline `IoC.Resolve<ICareerConfigProvider>()` calls and the try/catch logger resolution
+- `GauntletCareerScreen` — resolves both services at the boundary and passes them down; `CloseScreen()` now uses the cached `_logger` instead of re-resolving
+- `CareerScreenVMTests` — `Setup()` mocks both new deps; `CreateVM()` passes them through
+- Test suite: **1161 passed, 0 failed** (was 1153/8)
+
+### Process: Mechanize No-Service-Locator Rule in Deep Review
+
+Root cause of the above: the rule "Constructor injection only — no service locator in services" existed in `.claude/rules/csharp-architecture.md` but wasn't checked by the deep-review standards agent, so `/deep-review` passed while 8 tests failed.
+
+- `.claude/skills/deep-review/SKILL.md` — Agent 1 (Standards Compliance) now grep-checks for `IoC.Resolve<` outside the six allowed boundary locations (Harmony patches, `ScreenBase` subclasses, `CampaignBehaviorBase` ctors, `GameModel` ctors, `SubModule.cs`, static `OpenXxx()` helpers). A `try { Resolve } catch { }` guard is explicitly called out as still-a-violation.
+- Memory: `feedback_no_service_locator_in_services.md` — prevention rule plus reminder that "pre-existing test failures" are never background noise; investigate or track immediately.
+
 ### Feature: Revolt Tuning
 
 Softens vanilla Bannerlord's revolt mechanic for LOTR's constant settlement flips. Vanilla punishes different-culture ownership at -3/day loyalty and revolts at loyalty ≤ 15 — in TAOM, where Gondor↔Mordor and Rohan↔Isengard towns change hands regularly, this spawned rebel clans every few weeks.
