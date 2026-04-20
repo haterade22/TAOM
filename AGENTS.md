@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (22 reviews, 51 bugs found)
+### Lessons From Prior Reviews (25 reviews, 57 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
@@ -61,8 +61,10 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Comparing TAOM code against decompiled vanilla to find missing gates
 - Tracing lifecycle flows (init → runtime → save/load) to find state bugs
 - Walking through math formulas with concrete numbers to find drift
+- Treating user-editable JSON/XML as *untrusted input* — flagging parse-without-validate gaps where a sane-looking file can silently ship broken values (RevoltTuning review 25)
+- Cross-referencing documentation claims against actual code lifecycle — catching "docs say X but DryIoc singleton means Y" mismatches (RevoltTuning review 25)
 
-This section is updated by Claude after each review cycle. Last updated: 2026-04-08.
+This section is updated by Claude after each review cycle. Last updated: 2026-04-20.
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only

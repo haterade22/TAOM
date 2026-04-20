@@ -46,8 +46,16 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 
 | 23 | 2026-04-08 | NamedCompanions + Wanderer Race | needs-attention | agree | 1 confirmed (load teleport) + 1 dead code | 0 | 0 | v6 |
 | 24 | 2026-04-14 | Career CC Selection | needs-attention | agree | 1 confirmed (empty menu crash) + 1 test gap | 0 | 0 | v6-adversarial |
+| 25 | 2026-04-20 | RevoltTuning | needs-attention | agree | 1 HIGH (no-validation) + 1 MEDIUM (cache-lifetime doc mismatch) | 0 | 0 | v6-adversarial |
 
-**Post-codebase reviews:** 19-24. 24 Codex reviews total, 55 bugs found across codebase.
+**Post-codebase reviews:** 19-25. 25 Codex reviews total, 57 bugs found across codebase.
+
+### Review 25 — RevoltTuning Root Cause Analysis
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Provider accepts any parseable JSON values, no range or sign validation | Missing guard at a system boundary | Treated user-editable JSON as trusted input; the defaults table in docs was mistaken for a validation contract. | Added `Validate` in `RevoltTuningConfigProvider` + 7 new test cases covering out-of-range, inverted ordering, and sign-flipped penalties. Warn + default-fallback per field. |
+| 2 | Singleton cache + model-ctor capture means JSON edits need a full Bannerlord restart, but docs claimed "next game load" | Convention inconsistency (doc vs runtime lifecycle) | Copied "next game load" from the plan without cross-checking against DryIoc `Reuse.Singleton` + `OnSubModuleLoad` lifetime. | Updated `docs/features/revolt-tuning.md` "How to Retune" to state Bannerlord must be quit and relaunched. No code change — Singleton is the intended pattern. |
 
 Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking

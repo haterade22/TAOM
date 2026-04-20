@@ -1,0 +1,6 @@
+{
+  "rebellionStartLoyaltyThreshold": 5,
+  "rebelliousStateStartLoyaltyThreshold": 10,
+  "settlementOwnerDifferentCultureLoyaltyEffect": -1.0,
+  "governorDifferentCultureLoyaltyEffect": -0.5
+}

@@ -57,6 +57,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
+using TAOM.Features.RevoltTuning;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -265,7 +266,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomPartyTroopUpgradeModel());
             campaignStarter.AddModel(new TaomPartySizeModel());
             campaignStarter.AddModel(new TaomFoodConsumptionModel());
-            campaignStarter.AddModel(new TaomSettlementLoyaltyModel());
+            campaignStarter.AddModel(new TaomSettlementLoyaltyModel(IoC.Resolve<IRevoltTuningConfigProvider>()));
             campaignStarter.AddModel(new TaomPartyMoraleModel());
             campaignStarter.AddModel(new TaomSmithingModel());
             campaignStarter.AddModel(new TaomClanFinanceModel());

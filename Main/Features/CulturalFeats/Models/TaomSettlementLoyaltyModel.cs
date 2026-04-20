@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TAOM.Features.RevoltTuning;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -10,6 +11,25 @@ public class TaomSettlementLoyaltyModel : DefaultSettlementLoyaltyModel
 {
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+
+    private readonly RevoltTuningConfig _revoltConfig;
+
+    public TaomSettlementLoyaltyModel(IRevoltTuningConfigProvider revoltTuning)
+    {
+        _revoltConfig = revoltTuning.GetConfig();
+    }
+
+    public override int RebellionStartLoyaltyThreshold =>
+        _revoltConfig.RebellionStartLoyaltyThreshold;
+
+    public override int RebelliousStateStartLoyaltyThreshold =>
+        _revoltConfig.RebelliousStateStartLoyaltyThreshold;
+
+    public override float SettlementOwnerDifferentCultureLoyaltyEffect =>
+        _revoltConfig.SettlementOwnerDifferentCultureLoyaltyEffect;
+
+    public override float GovernorDifferentCultureLoyaltyEffect =>
+        _revoltConfig.GovernorDifferentCultureLoyaltyEffect;
 
     public override ExplainedNumber CalculateLoyaltyChange(Town town, bool includeDescriptions = false)
     {

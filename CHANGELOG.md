@@ -2,6 +2,25 @@
 
 ## 2026-04-20
 
+### Feature: Revolt Tuning
+
+Softens vanilla Bannerlord's revolt mechanic for LOTR's constant settlement flips. Vanilla punishes different-culture ownership at -3/day loyalty and revolts at loyalty ≤ 15 — in TAOM, where Gondor↔Mordor and Rohan↔Isengard towns change hands regularly, this spawned rebel clans every few weeks.
+
+- New `RevoltTuning` feature with `IRevoltTuningConfigProvider` (Newtonsoft JSON, cached singleton, graceful fallback to defaults)
+- JSON config at `Main/_Module/ModuleData/configs/revolt_tuning_config.json` — all four thresholds tunable without recompilation
+- `TaomSettlementLoyaltyModel` extended with four new property overrides driven by the config:
+  - `RebellionStartLoyaltyThreshold`: 15 → 5
+  - `RebelliousStateStartLoyaltyThreshold`: 25 → 10
+  - `SettlementOwnerDifferentCultureLoyaltyEffect`: -3.0 → -1.0
+  - `GovernorDifferentCultureLoyaltyEffect`: -1.0 → -0.5
+- Existing cultural feat bonuses (Gondor, Erebor, Lothlórien, Rivendell, Rohan) preserved
+- Semantic validation in `RevoltTuningConfigProvider.Validate` — rejects out-of-range thresholds, inverted threshold ordering, and sign-flipped penalties; logs warning and falls back to defaults for invalid fields
+- 13 unit tests: JSON parse, missing-file / malformed-JSON / empty-object fallbacks, partial-config merge, caching, default-value spec, plus 7 validation guardrail cases (out-of-range, negative threshold, ordering inversion, positive owner/governor penalty, valid-values-no-warning)
+
+Research: `DefaultSettlementLoyaltyModel` (v1.3.15 via ilspycmd), `RebellionsCampaignBehavior`
+Reviews: `/deep-review` (5 agents, 1 MEDIUM perf + 1 LOW thread-safety fixed), `/codex:adversarial-review` (1 HIGH no-validation + 1 MEDIUM cache-lifetime — both addressed)
+Not-tested: GameModel entry point — verified live per ADR-008
+
 ### Feature: Defender Trebuchets
 
 Siege defenders can now construct trebuchets on the campaign-map siege UI, matching the attacker engine list for parity. Built with Minas Tirith's upcoming siege scene in mind but applies to all defenders.

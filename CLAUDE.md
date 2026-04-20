@@ -117,6 +117,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | CareerSystem | `Main/Features/CareerSystem/` (career/class progression — 50 careers across 16 cultures; XML-driven career defs, mutation calculator registry, passive service with GameModel integration, ability system, career screen UI via UIExtenderEx, level-based tier gating, SyncData persistence, CC career selection stage) |
 | SettlementGuards | `Main/Features/SettlementGuards/` (per-settlement guard customization — XML-driven guard troop pools with settlement→clan→culture fallback, spawn-point filtering, weighted random selection, per-culture spear mapping; Harmony prefixes on private GuardsCampaignBehavior methods) |
 | NamedCompanions | `Main/Features/NamedCompanions/` (18 lore companions as recruitable wanderers — Aragorn/Legolas/Gimli/etc; `is_hero="true"` + `occupation="Wanderer"`, JSON config for spawn settlements, vanilla dialog integration, race persistence via existing HeroRace system) |
+| RevoltTuning | `Main/Features/RevoltTuning/` (JSON-tunable soft-nerf of vanilla revolt mechanic for LOTR's frequent settlement flips; raises loyalty thresholds + dampens different-culture penalties; semantic validation rejects out-of-range / sign-flipped values; consumed by `TaomSettlementLoyaltyModel`) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
@@ -126,6 +127,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
 | SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
 | CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates + ability tuning XML) |
+| RevoltTuning config | `Main/_Module/ModuleData/configs/revolt_tuning_config.json` (4 thresholds/penalties; validated on load) |
 | CareerSystem CC config | `Main/_Module/ModuleData/charactercreation/career_menu.json` (50 career CC skill/attribute bonuses) |
 | CareerSystem sprites | `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/` (portraits 800x400, ability icons 256x256, dedicated atlas) |
 | Sprite atlas config | `Main/_Module/GUI/SpriteParts/Config.xml` (sprite category registration with `<AlwaysLoad />`) |
@@ -164,7 +166,7 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Mounted recruit cost feats (Isengard, Rohan) + career TroopUpgradeCost passive |
 | `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | Party size feats (Mordor, Gundabad, DG, Isengard, Gondor) + career PartySize passive |
 | `TaomFoodConsumptionModel` | `DefaultMobilePartyFoodConsumptionModel` | Food consumption feats (elves, Dol Guldur) |
-| `TaomSettlementLoyaltyModel` | `DefaultSettlementLoyaltyModel` | Settlement loyalty feats (Gondor, Erebor, elves, Rohan) |
+| `TaomSettlementLoyaltyModel` | `DefaultSettlementLoyaltyModel` | Settlement loyalty feats (Gondor, Erebor, elves, Rohan) + JSON-tunable revolt thresholds + dampened different-culture penalties (RevoltTuning feature) |
 | `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | Party morale feats (Gondor, Rohan, Erebor, elves) + career TroopMorale passive |
 | `TaomSmithingModel` | `DefaultSmithingModel` | Smithing energy cost feats (Erebor, Isengard) + career EnchantmentCostReduction passive |
 | `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat (Umbar) |
