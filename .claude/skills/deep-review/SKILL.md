@@ -69,7 +69,7 @@ CHECK ALL OF THESE:
 2. **No #region (ADR-003):** Zero `#region` directives anywhere.
 3. **No [Obsolete] (ADR-004):** Zero `[Obsolete]` attributes.
 4. **No #if DEBUG (ADR-005):** Zero preprocessor directives except in IoC.cs.
-5. **Thin Entry Points (ADR-002):** Behaviors/Models/Patches under 150 lines. They delegate to services.
+5. **Thin Entry Points (ADR-002):** Behaviors/Models/Patches under 150 lines AND they delegate to services. Line count is a ceiling, NOT the test. For each GameModel override in the changeset, inspect the override method body: if it contains `if`, `foreach`, `switch`, `yield return` with branching, or any multi-line decision logic INLINE (not inside a service call), that is a violation — even if the file is under 20 lines. The only acceptable override bodies are (a) a single constant/expression (`=> 10`), or (b) boundary conversion (adapter wrap, perk check) plus a direct delegate to an injected service. Do NOT invent "simple enough to skip the service" carve-outs; they are not in the rules.
 6. **Interface Segregation:** Every service has an interface. Every adapter has an interface.
 7. **IoC Registration:** New services/adapters registered in the feature's IoC.cs or Main/IoC.cs.
 8. **Naming:** Classes match file names. Interfaces prefixed with I.

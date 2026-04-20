@@ -1,5 +1,19 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-20
+
+### Feature: Defender Trebuchets
+
+Siege defenders can now construct trebuchets on the campaign-map siege UI, matching the attacker engine list for parity. Built with Minas Tirith's upcoming siege scene in mind but applies to all defenders.
+
+- New `TaomSiegeEventModel` (extends `DefaultSiegeEventModel`) — adds `Trebuchet` to `GetAvailableDefenderSiegeEngines`
+- Preserves vanilla Engineering perk gating (Stonecutters / SiegeEngineer) for `FireBallista` / `FireCatapult`; `Trebuchet` is ungated for defenders (mirrors attacker availability)
+- `FireTrebuchet` intentionally skipped — v1.3.15 getter bug returns the non-fire Trebuchet field
+- Registered in `SubModule.OnGameStart` alongside the existing `SiegeDefenseBehavior`
+
+Research: `DefaultSiegeEventModel.GetAvailableDefenderSiegeEngines`
+Not-tested: GameModel entry point — verified in-game via siege management UI per ADR-008
+
 ## 2026-04-18
 
 ### Enhancement: Career Ability AoE — Extended to Ranged + Cavalry

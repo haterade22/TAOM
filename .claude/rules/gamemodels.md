@@ -34,7 +34,7 @@ public class TaomFooModel : DefaultFooModel
 1. **Research first** — Always decompile `DefaultXxxModel` with `/research` before overriding. Never guess which base methods to call.
 2. **Inherit from `Default*`** — Never override `GameModel` directly; inherit from the corresponding `Default*` class.
 3. **Call `base.Method()`** — Unless deliberately replacing behavior, fall through to base for unhandled cases.
-4. **Thin model class** — The model class is an entry point (<150 lines). All logic goes in a `Service`.
+4. **Thin model class** — The model class is an entry point (<150 lines). **All logic goes in a `Service`.** Line count is a ceiling, not the test. The override body may contain ONLY one of: (a) a single constant expression (e.g. `MaxCharacterTier => 10`), (b) perk/adapter conversion at the boundary plus a direct delegate to the service. A body that contains `if`, `foreach`, `switch`, `yield` branching, or any multi-line computation is a violation — extract to a service even if the model is under 20 lines. "It's only a few lines" is not a carve-out; the rule is binary. Counter-example: `TaomCharacterStatsModel` (one constant) is legal; a 6-line `yield return` chain with a conditional is not.
 5. **Adapter boundary** — Convert sealed TaleWorlds params to adapters immediately. Never pass `Hero`, `Settlement`, etc. into the service.
 6. **JSON/XML config** — Configurable values live in `Main/_Module/ModuleData/configs/` or feature-specific XML, not hardcoded in the model.
 7. **Register in SubModule.cs** — GameModel overrides must be returned from `CreateGameModels()` in `SubModule.cs`.

@@ -11,5 +11,6 @@ public static class SiegeDefenseIoC
         container.Register<ISiegeDefenseSettingsProvider, SiegeDefenseSettingsProvider>(Reuse.Singleton);
         container.Register<IPlayerContextAdapter, PlayerContextAdapter>(Reuse.Singleton);
         container.Register<ISiegeDefenseService, SiegeDefenseService>(Reuse.Singleton);
+        container.Register<ISiegeEngineAvailabilityService, SiegeEngineAvailabilityService>(Reuse.Singleton);
     }
 }

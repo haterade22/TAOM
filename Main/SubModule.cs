@@ -43,6 +43,7 @@ using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
+using TAOM.Features.Siege.Models;
 using TAOM.Features.ArmyTargeting;
 using TAOM.Features.ArmyTargeting.Models;
 using TAOM.Features.TimeAcceleration;
@@ -246,6 +247,7 @@ public class SubModule : MBSubModuleBase
             var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
             var siegeDefenseLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger));
+            campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
 
             var executionAction = IoC.Resolve<IOnExecutionAction>();
             campaignStarter.AddModel(new TaomExecutionRelationModel(executionAction));
