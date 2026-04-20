@@ -27,6 +27,7 @@ public class CavalryAbilityExecutorTests
 
         _context = Substitute.For<IAbilityExecutionContext>();
         _context.Duration.Returns(8f);
+        _context.Radius.Returns(50f);
     }
 
     [TestMethod]
@@ -36,69 +37,69 @@ public class CavalryAbilityExecutorTests
     }
 
     [TestMethod]
-    public void Execute_CallsApplyMountSpeedBuff()
+    public void Execute_CallsApplyAllyCavalryBuff_Once()
     {
         _sut.Execute(_context);
 
-        _context.Received(1).ApplyMountSpeedBuff(Arg.Any<float>(), Arg.Any<float>());
+        _context.Received(1).ApplyAllyCavalryBuff(
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<float>(), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Execute_CallsApplyChargeDamageBuff()
+    public void Execute_UsesTuningMountSpeedBonus_DividedBy100()
     {
         _sut.Execute(_context);
 
-        _context.Received(1).ApplyChargeDamageBuff(Arg.Any<float>(), Arg.Any<float>());
+        // 20 / 100 = 0.20 multiplier delta
+        _context.Received(1).ApplyAllyCavalryBuff(
+            0.20f, Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<float>(), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Execute_CallsApplyDamageBuff()
+    public void Execute_UsesTuningChargeDamageBonus_DividedBy100()
     {
         _sut.Execute(_context);
 
-        _context.Received(1).ApplyDamageBuff(Arg.Any<float>(), Arg.Any<float>());
+        // 25 / 100 = 0.25 multiplier delta
+        _context.Received(1).ApplyAllyCavalryBuff(
+            Arg.Any<float>(), 0.25f, Arg.Any<float>(),
+            Arg.Any<float>(), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Execute_UsesDurationFromContext()
+    public void Execute_UsesTuningDamageBonus_DividedBy100()
+    {
+        _sut.Execute(_context);
+
+        // 10 / 100 = 0.10 multiplier delta
+        _context.Received(1).ApplyAllyCavalryBuff(
+            Arg.Any<float>(), Arg.Any<float>(), 0.10f,
+            Arg.Any<float>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Execute_UsesContextRadius()
+    {
+        _context.Radius.Returns(65f);
+
+        _sut.Execute(_context);
+
+        _context.Received(1).ApplyAllyCavalryBuff(
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            65f, Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Execute_UsesContextDuration()
     {
         _context.Duration.Returns(12f);
 
         _sut.Execute(_context);
 
-        _context.Received(1).ApplyMountSpeedBuff(Arg.Any<float>(), 12f);
-        _context.Received(1).ApplyChargeDamageBuff(Arg.Any<float>(), 12f);
-        _context.Received(1).ApplyDamageBuff(Arg.Any<float>(), 12f);
-    }
-
-    [TestMethod]
-    public void Execute_UsesTuningMountSpeedBonus_ConvertedToMultiplierDelta()
-    {
-        _sut.Execute(_context);
-
-        // 20 / 100 = 0.20 as multiplier delta
-        _context.Received(1).ApplyMountSpeedBuff(0.20f, Arg.Any<float>());
-    }
-
-    [TestMethod]
-    public void Execute_UsesTuningChargeDamageBonus_ConvertedToMultiplierDelta()
-    {
-        _sut.Execute(_context);
-
-        // 25 / 100 = 0.25 as multiplier delta
-        _context.Received(1).ApplyChargeDamageBuff(0.25f, Arg.Any<float>());
-    }
-
-    [TestMethod]
-    public void Execute_UsesTuningDamageBonus()
-    {
-        float captured = 0f;
-        _context.When(c => c.ApplyDamageBuff(Arg.Any<float>(), Arg.Any<float>()))
-            .Do(ci => captured = (float)ci[0]);
-
-        _sut.Execute(_context);
-
-        // DamageBuff expects multiplier: 1 + damageBonus/100 = 1.10
-        Assert.AreEqual(1.10f, captured, 0.001f);
+        _context.Received(1).ApplyAllyCavalryBuff(
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<float>(), 12f);
     }
 }

@@ -6,15 +6,11 @@ public interface IAbilityExecutionContext
     float Duration { get; }
     float Radius { get; }
 
-    void ApplySpeedBuff(float multiplier, float duration);
-    void ApplyDamageBuff(float multiplier, float duration);
-    void ApplyResistanceBuff(float multiplier, float duration);
     void ApplyMoraleBurst(float radius, float magnitude);
     void ApplyStealthMode(float duration);
     void ApplyAllyBuff(float damageBonusFlat, float damageReductionFlat, float radius, float duration);
-    void ApplyDrawSpeedBuff(float bonus, float duration);
-    void ApplyMountSpeedBuff(float bonus, float duration);
-    void ApplyChargeDamageBuff(float bonus, float duration);
+    void ApplyAllyRangedBuff(float speedBonus, float damageBonus, float drawSpeedBonus, float radius, float duration);
+    void ApplyAllyCavalryBuff(float mountSpeedBonus, float chargeDamageBonus, float damageBonus, float radius, float duration);
     void PlaySound(string soundId);
     void PlayParticle(string particleId);
 }

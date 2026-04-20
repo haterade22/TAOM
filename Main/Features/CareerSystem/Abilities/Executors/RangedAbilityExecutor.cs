@@ -16,15 +16,13 @@ public sealed class RangedAbilityExecutor : ICareerAbilityEffectExecutor
     {
         var tuning = _configProvider.GetAbilityTuning().Ranged;
 
-        // All tuning values are whole-number percentages (15 = 15%), convert to engine scale
-
-        // Speed: percentage → multiplier (15 → 1.15)
-        context.ApplySpeedBuff(1f + tuning.SpeedBonus / 100f, context.Duration);
-
-        // Ranged damage: percentage → multiplier (20 → 1.20)
-        context.ApplyDamageBuff(1f + tuning.RangedDamageBonus / 100f, context.Duration);
-
-        // Draw speed: percentage → multiplier delta (20 → 0.20)
-        context.ApplyDrawSpeedBuff(tuning.DrawSpeedBonus / 100f, context.Duration);
+        // Tuning values are whole-number percentages (15 = 15%); convert to multiplier deltas.
+        // AoE on nearby allies + self: speed, ranged damage, draw speed.
+        context.ApplyAllyRangedBuff(
+            speedBonus: tuning.SpeedBonus / 100f,
+            damageBonus: tuning.RangedDamageBonus / 100f,
+            drawSpeedBonus: tuning.DrawSpeedBonus / 100f,
+            radius: context.Radius,
+            duration: context.Duration);
     }
 }

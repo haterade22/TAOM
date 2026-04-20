@@ -54,7 +54,7 @@ public class CareerAbilityEffectRegistryTests
 
         // Act + Assert (no exception)
         executor.Execute(context);
-        context.DidNotReceiveWithAnyArgs().ApplySpeedBuff(default, default);
+        context.DidNotReceiveWithAnyArgs().ApplyAllyBuff(default, default, default, default);
     }
 
     [TestMethod]

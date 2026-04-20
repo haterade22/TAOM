@@ -71,9 +71,19 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         }
 
         // AoE ally buffs — applied to ALL human agents (set by Infantry ability on nearby troops)
-        // AoE ally damage bonus (damage reduction now handled by TaomAgentApplyDamageModel)
+        // AoE ally buffs — all archetypes can apply these on nearby troops
+        // (damage reduction is handled by TaomAgentApplyDamageModel's damage path)
         var allyBuffs = CareerAbilityBuffTracker.GetAllyBuff(agent.Index);
         if (allyBuffs != null)
+        {
             agentDrivenProperties.DamageMultiplierBonus += allyBuffs.DamageBonus;
+            agentDrivenProperties.MaxSpeedMultiplier += allyBuffs.SpeedMultiplier;
+            agentDrivenProperties.CombatMaxSpeedMultiplier += allyBuffs.CombatSpeedMultiplier;
+            agentDrivenProperties.ThrustOrRangedReadySpeedMultiplier += allyBuffs.DrawSpeedBonus;
+            if (allyBuffs.MountSpeedBonus != 0f)
+                agentDrivenProperties.MountSpeed *= (1f + allyBuffs.MountSpeedBonus);
+            if (allyBuffs.ChargeDamageBonus != 0f)
+                agentDrivenProperties.MountChargeDamage *= (1f + allyBuffs.ChargeDamageBonus);
+        }
     }
 }

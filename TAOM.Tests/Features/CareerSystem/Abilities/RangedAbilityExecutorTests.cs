@@ -27,6 +27,7 @@ public class RangedAbilityExecutorTests
 
         _context = Substitute.For<IAbilityExecutionContext>();
         _context.Duration.Returns(8f);
+        _context.Radius.Returns(50f);
     }
 
     [TestMethod]
@@ -36,73 +37,69 @@ public class RangedAbilityExecutorTests
     }
 
     [TestMethod]
-    public void Execute_CallsApplySpeedBuff()
+    public void Execute_CallsApplyAllyRangedBuff_Once()
     {
         _sut.Execute(_context);
 
-        _context.Received(1).ApplySpeedBuff(Arg.Any<float>(), Arg.Any<float>());
+        _context.Received(1).ApplyAllyRangedBuff(
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<float>(), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Execute_CallsApplyDamageBuff()
+    public void Execute_UsesTuningSpeedBonus_DividedBy100()
     {
         _sut.Execute(_context);
 
-        _context.Received(1).ApplyDamageBuff(Arg.Any<float>(), Arg.Any<float>());
+        // 15 / 100 = 0.15 multiplier delta
+        _context.Received(1).ApplyAllyRangedBuff(
+            0.15f, Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<float>(), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Execute_CallsApplyDrawSpeedBuff()
+    public void Execute_UsesTuningRangedDamageBonus_DividedBy100()
     {
         _sut.Execute(_context);
 
-        _context.Received(1).ApplyDrawSpeedBuff(Arg.Any<float>(), Arg.Any<float>());
+        // 20 / 100 = 0.20 multiplier delta
+        _context.Received(1).ApplyAllyRangedBuff(
+            Arg.Any<float>(), 0.20f, Arg.Any<float>(),
+            Arg.Any<float>(), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Execute_UsesDurationFromContext()
+    public void Execute_UsesTuningDrawSpeedBonus_DividedBy100()
+    {
+        _sut.Execute(_context);
+
+        // 20 / 100 = 0.20 multiplier delta
+        _context.Received(1).ApplyAllyRangedBuff(
+            Arg.Any<float>(), Arg.Any<float>(), 0.20f,
+            Arg.Any<float>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Execute_UsesContextRadius()
+    {
+        _context.Radius.Returns(65f);
+
+        _sut.Execute(_context);
+
+        _context.Received(1).ApplyAllyRangedBuff(
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            65f, Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Execute_UsesContextDuration()
     {
         _context.Duration.Returns(12f);
 
         _sut.Execute(_context);
 
-        _context.Received(1).ApplySpeedBuff(Arg.Any<float>(), 12f);
-        _context.Received(1).ApplyDamageBuff(Arg.Any<float>(), 12f);
-        _context.Received(1).ApplyDrawSpeedBuff(Arg.Any<float>(), 12f);
-    }
-
-    [TestMethod]
-    public void Execute_UsesTuningSpeedBonus_ConvertedToMultiplier()
-    {
-        float captured = 0f;
-        _context.When(c => c.ApplySpeedBuff(Arg.Any<float>(), Arg.Any<float>()))
-            .Do(ci => captured = (float)ci[0]);
-
-        _sut.Execute(_context);
-
-        // 15 / 100 = 0.15; multiplier = 1 + 0.15 = 1.15
-        Assert.AreEqual(1.15f, captured, 0.001f);
-    }
-
-    [TestMethod]
-    public void Execute_UsesTuningRangedDamageBonus_ConvertedToMultiplier()
-    {
-        float captured = 0f;
-        _context.When(c => c.ApplyDamageBuff(Arg.Any<float>(), Arg.Any<float>()))
-            .Do(ci => captured = (float)ci[0]);
-
-        _sut.Execute(_context);
-
-        // 20 / 100 = 0.20; multiplier = 1 + 0.20 = 1.20
-        Assert.AreEqual(1.20f, captured, 0.001f);
-    }
-
-    [TestMethod]
-    public void Execute_UsesTuningDrawSpeedBonus_ConvertedToMultiplierDelta()
-    {
-        _sut.Execute(_context);
-
-        // 20 / 100 = 0.20 as multiplier delta
-        _context.Received(1).ApplyDrawSpeedBuff(0.20f, Arg.Any<float>());
+        _context.Received(1).ApplyAllyRangedBuff(
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<float>(), 12f);
     }
 }

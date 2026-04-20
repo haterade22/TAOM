@@ -1,5 +1,18 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-18
+
+### Enhancement: Career Ability AoE — Extended to Ranged + Cavalry
+
+Previously only Infantry ability buffs applied to nearby friendly troops. Ranged and Cavalry are now AoE too — activating any ability buffs the hero plus all nearby allies within the ability's radius. Every archetype feels like a commander aura now.
+
+- `IAbilityExecutionContext` gained `ApplyAllyRangedBuff` (speed + ranged damage + draw speed) and `ApplyAllyCavalryBuff` (mount speed + charge damage + damage)
+- `MissionAbilityExecutionContext` refactored to a shared `ApplyAoeBuff` helper that gathers nearby allies, clones an ally-buff template, and merges a hero accumulator
+- `TaomAgentStatCalculateModel` now applies all ally buff fields for non-hero agents (previously only `DamageBonus`)
+- All 50 ability templates standardized to `radius="50"` for consistent AoE size (was a mix of 8/10/12/50)
+- Removed 6 dead interface methods: `ApplySpeedBuff`, `ApplyDamageBuff`, `ApplyResistanceBuff`, `ApplyDrawSpeedBuff`, `ApplyMountSpeedBuff`, `ApplyChargeDamageBuff` (no callers remained after the AoE refactor)
+- Tests updated: `RangedAbilityExecutorTests` and `CavalryAbilityExecutorTests` now assert the new `ApplyAllyRangedBuff` / `ApplyAllyCavalryBuff` calls with correct argument ordering
+
 ## 2026-04-16
 
 ### Feature: Career Ability Execution — Phase IV Complete

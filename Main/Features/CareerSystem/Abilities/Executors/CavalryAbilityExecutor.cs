@@ -16,13 +16,13 @@ public sealed class CavalryAbilityExecutor : ICareerAbilityEffectExecutor
     {
         var tuning = _configProvider.GetAbilityTuning().Cavalry;
 
-        // Mount speed: percentage → multiplier delta (20 → 0.20)
-        context.ApplyMountSpeedBuff(tuning.MountSpeedBonus / 100f, context.Duration);
-
-        // Charge damage: percentage → multiplier delta (25 → 0.25)
-        context.ApplyChargeDamageBuff(tuning.ChargeDamageBonus / 100f, context.Duration);
-
-        // Damage: percentage → multiplier (10 → 1.10)
-        context.ApplyDamageBuff(1f + tuning.DamageBonus / 100f, context.Duration);
+        // Tuning values are whole-number percentages (20 = 20%); convert to multiplier deltas.
+        // AoE on nearby allies + self: mount speed (applies only if mounted), charge damage, damage.
+        context.ApplyAllyCavalryBuff(
+            mountSpeedBonus: tuning.MountSpeedBonus / 100f,
+            chargeDamageBonus: tuning.ChargeDamageBonus / 100f,
+            damageBonus: tuning.DamageBonus / 100f,
+            radius: context.Radius,
+            duration: context.Duration);
     }
 }
