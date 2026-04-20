@@ -22,7 +22,8 @@
       "Bash(sed -i 's/argument-hint: \\\\[doc-type\\\\]/argument-hint: \"[doc-type]/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/documentation/update-docs.md\")",
       "Bash(sed -i 's/--sync | --validate$/--sync | --validate\"/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/documentation/update-docs.md\")",
       "Bash(sed -i 's/argument-hint: \\\\[target-area\\\\]/argument-hint: \"[target-area]/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/performance/performance-audit.md\")",
-      "Bash(sed -i 's/--backend | --full$/--backend | --full\"/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/performance/performance-audit.md\")"
+      "Bash(sed -i 's/--backend | --full$/--backend | --full\"/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/performance/performance-audit.md\")",
+      "Read(//c/Users/mikew/**)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
@@ -33,6 +34,9 @@
   },
   "enabledMcpjsonServers": [
     "serena",
-    "github"
+    "github",
+    "filesystem",
+    "git",
+    "ilspy"
   ]
 }

@@ -353,13 +353,13 @@ Phase 4: CLOSE OUT
 
 | Server | Scope | Purpose | Config |
 |--------|-------|---------|--------|
-| **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | Global |
-| **GitHub** | Project | PRs, issues, actions, code search | Global |
-| **sequential-thinking** | Global | Extended reasoning for complex design decisions | Global |
-| **context7** | Global | Library documentation lookup | Global |
-| **filesystem** | Project | File operations across TAOM, Bannerlord Modules, LOTRAOM assets | `.vscode/mcp.json` |
-| **git** | Project | Rich git operations (diff, blame, log, branch management) | `.vscode/mcp.json` |
-| **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.vscode/mcp.json` |
+| **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | `.mcp.json` |
+| **GitHub** | Project | PRs, issues, actions, code search | `.mcp.json` |
+| **filesystem** | Project | File operations across TAOM, Bannerlord Modules, LOTRAOM assets | `.mcp.json` |
+| **git** | Project | Rich git operations (diff, blame, log, branch management) | `.mcp.json` |
+| **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
+| **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
+| **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
 
 ### MCP Usage Guide
 
@@ -413,7 +413,7 @@ ls "E:/Decompiled_Bannerlord/Campaign/TaleWorlds.CampaignSystem/TaleWorlds/Campa
 
 ### Configuration
 
-Project-level MCP servers are configured in `.vscode/mcp.json`. Global servers (Serena, GitHub, sequential-thinking, context7) are configured in VS Code extension settings.
+Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
 
 ## Hooks
 

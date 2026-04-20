@@ -18,6 +18,32 @@
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\mikew\\source\\repos\\TAOM",
+        "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules",
+        "E:\\LOTRAOMAssets\\LOTRAOM_Jan_1_Patreon\\Modules\\LOTRAOM\\ModuleData"
+      ],
+      "env": {}
+    },
+    "git": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-server-git"],
+      "env": {}
+    },
+    "ilspy": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "ilspy_mcp_server"],
+      "env": {
+        "ILSPY_PATH": "ilspycmd"
+      }
     }
   }
 }
