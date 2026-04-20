@@ -68,6 +68,23 @@ Skip any state where mutation would corrupt the entity.
 
 **Idempotent vs destructive:** Before copying a behavior pattern from another feature, ask: "Is this operation idempotent?" Injecting a banner color twice is harmless. Moving a Hero between locations is destructive. Destructive load-path operations need stricter guards than their new-game counterparts.
 
+## Config Providers MUST Validate (MANDATORY for user-editable JSON/XML)
+
+Any provider that loads `Main/_Module/ModuleData/` JSON or XML the player is expected to edit (retuning knobs, enable/disable flags, tunable thresholds) must validate semantic constraints after deserialization, not just syntax. Parse success is NOT validation success.
+
+**Rule:** If the feature doc tells the user "edit this file to retune," the provider's `LoadConfig` (or equivalent) must:
+1. Range-check every numeric field against its engine-valid bounds
+2. Enforce ordering invariants between related fields (e.g., warning-threshold ≥ trigger-threshold)
+3. Reject sign flips on fields whose meaning is directional (penalties must be ≤ 0; bonuses must be ≥ 0)
+4. Log a warning and fall back to the compiled default for any field that fails — never silently apply a bad value
+5. Emit a summary warning when any reversion occurred so the user knows to look at prior warnings
+
+**Why:** Review #25 (RevoltTuning) found a HIGH bug where the provider logged "Loaded" success for any parseable file. A plausible user edit like a sign-flipped penalty `1.0` (should be `-1.0`) would silently flip the feature from "soften revolts" to "accelerate revolts" with no warning. Syntax-error tests (missing file, malformed JSON) did not cover this class of failure.
+
+**Test requirement:** Tests must cover semantically-invalid-but-parseable values for every validated field — not just missing-file and malformed-JSON cases. One test per validation rule.
+
+**Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process — changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime.
+
 ## File Layout
 
 ```

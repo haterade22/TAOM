@@ -287,6 +287,18 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **What happened:** Codex assumed `empire`=Rohan and `vlandia`=Arthedain, then flagged phase-1 war pairs as wrong. Actual mapping: `empire`=Dunland, `vlandia`=Rohan. The config was correct all along. False positive from not having the TAOM kingdom→LOTR mapping.
 **Prevention:** Include "TAOM KINGDOM MAPPING" reference block in every prompt. Prevents ID-to-faction confusion.
 
+### SUCCESS-5: User-editable JSON treated as untrusted input
+**Review:** RevoltTuning (2026-04-20)
+**What worked:** Codex flagged that `RevoltTuningConfigProvider.LoadConfig()` logged "Loaded" success for any parseable file, with no semantic validation. A user edit like `{"rebellionStartLoyaltyThreshold":100}` or a sign-flipped `1.0` penalty would silently ship broken gameplay. Tests only covered syntax failures (missing file, malformed JSON), not semantic failures.
+**Why it works:** Codex reasons about the full trust chain — if the feature advertises "edit this JSON to retune," that file is untrusted input at a system boundary and needs validation, not just parsing.
+**Prevention:** Before shipping any feature with user-editable config, add a `Validate` pass that checks semantic constraints (ranges, sign, ordering) and falls back to defaults with a warning. Tests must cover semantically-invalid-but-parseable values, not just parse failures.
+
+### SUCCESS-6: Doc claims cross-checked against DryIoc lifecycle
+**Review:** RevoltTuning (2026-04-20)
+**What worked:** Feature doc promised JSON edits take effect "on next game load." Codex traced the actual lifecycle (`Reuse.Singleton` + `OnSubModuleLoad` + `Lazy<T>` capture + ctor-side snapshot in the model) and showed the config loads once per Bannerlord process, not per campaign. The docs were wrong, not the code.
+**Why it works:** Codex compares documented behavior against the IoC registration lifetime and the points where the config is first resolved.
+**Prevention:** When writing how-to-retune docs for any JSON/XML-backed feature, state the actual reload scope explicitly (application restart vs new campaign vs per-tick). Don't copy plan language without verifying.
+
 ---
 
 ## Real Bugs Found (by source)
