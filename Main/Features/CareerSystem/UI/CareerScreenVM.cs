@@ -11,6 +11,7 @@ public class CareerScreenVM : ViewModel
     private readonly ICareerDataService _dataService;
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
+    private readonly ICareerConfigProvider _configProvider;
     private readonly IModLogger _logger;
     private readonly string _heroStringId;
     private readonly int _heroLevel;
@@ -46,6 +47,8 @@ public class CareerScreenVM : ViewModel
         ICareerDataService dataService,
         ICareerRegistry registry,
         ICareerPassiveService passiveService,
+        ICareerConfigProvider configProvider,
+        IModLogger logger,
         string heroStringId,
         int heroLevel,
         Action onClose)
@@ -53,7 +56,8 @@ public class CareerScreenVM : ViewModel
         _dataService = dataService;
         _registry = registry;
         _passiveService = passiveService;
-        try { _logger = IoC.Resolve<IModLogger>(); } catch { _logger = null; }
+        _configProvider = configProvider;
+        _logger = logger;
         _heroStringId = heroStringId;
         _heroLevel = heroLevel;
         _onClose = onClose;
@@ -96,8 +100,7 @@ public class CareerScreenVM : ViewModel
         CareerDescription = new TextObject(career.Description).ToString();
         CareerPortraitSprite = $"CareerSystem\\Portraits\\{career.PortraitSprite}";
 
-        var configProvider = IoC.Resolve<ICareerConfigProvider>();
-        var abilityTemplate = configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
+        var abilityTemplate = _configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
         AbilityName = abilityTemplate != null
             ? new TextObject(abilityTemplate.DisplayName).ToString()
             : new TextObject(career.AbilityTemplateId).ToString();
@@ -128,8 +131,7 @@ public class CareerScreenVM : ViewModel
     {
         _abilityEffects.Clear();
 
-        var configProvider = IoC.Resolve<ICareerConfigProvider>();
-        var abilityTemplate = configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
+        var abilityTemplate = _configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
         if (abilityTemplate != null && !string.IsNullOrEmpty(abilityTemplate.TooltipDescription))
         {
             var description = new TextObject(abilityTemplate.TooltipDescription).ToString();

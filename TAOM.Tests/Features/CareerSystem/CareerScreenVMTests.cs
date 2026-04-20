@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CareerSystem.UI;
@@ -14,6 +15,8 @@ public class CareerScreenVMTests
     private CareerDataService _dataService;
     private ICareerRegistry _registry;
     private ICareerPassiveService _passiveService;
+    private ICareerConfigProvider _configProvider;
+    private IModLogger _logger;
     private bool _closeCalled;
 
     private static readonly CareerDefinition WarbossCareer = new CareerDefinition(
@@ -44,6 +47,8 @@ public class CareerScreenVMTests
         _dataService = new CareerDataService();
         _registry = Substitute.For<ICareerRegistry>();
         _passiveService = Substitute.For<ICareerPassiveService>();
+        _configProvider = Substitute.For<ICareerConfigProvider>();
+        _logger = Substitute.For<IModLogger>();
         _closeCalled = false;
 
         _registry.GetCareer("warboss").Returns(WarbossCareer);
@@ -208,6 +213,6 @@ public class CareerScreenVMTests
 
     private CareerScreenVM CreateVM()
     {
-        return new CareerScreenVM(_dataService, _registry, _passiveService, "hero1", 5, () => _closeCalled = true);
+        return new CareerScreenVM(_dataService, _registry, _passiveService, _configProvider, _logger, "hero1", 5, () => _closeCalled = true);
     }
 }
