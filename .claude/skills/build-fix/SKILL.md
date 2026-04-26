@@ -36,12 +36,31 @@ For each error:
 
 ## Step 4: Guardrails
 
-**STOP and ask the user if:**
-- A fix introduces **more errors than it resolves**
-- The **same error persists after 3 attempts** (likely a deeper issue)
-- The fix requires **architectural changes** (not just a build fix)
-- Errors stem from **missing NuGet packages** (need `dotnet restore`)
-- Errors stem from **TaleWorlds API changes** (need `/research` first)
+### Retry budget (HARD STOP)
+
+Track attempts per error. An "attempt" is one Edit + re-build cycle targeting the same error code at the same file location.
+
+| Attempts on the same error | Action |
+|---|---|
+| 1 | Try the most likely fix. |
+| 2 | If first didn't work, re-Read the file (it may be stale) and try a different approach. |
+| 3 | Final attempt — the third fix should look meaningfully different from the first two. |
+| **4+** | **STOP. Do not iterate further.** Report what you tried and ask the user. |
+
+The error code/file location counts as "the same" only when the build output line is identical or near-identical. A genuinely-changed error (different code, different file, or moved line >5 away) resets the counter — but flag if you suspect cascading whack-a-mole.
+
+### Other STOP triggers
+
+**STOP and ask the user (or escalate to a more appropriate skill) if any of these are true:**
+
+| Condition | Escalate to |
+|-----------|-------------|
+| Retry budget triggers (4th attempt on same error) | **`/investigate`** — root-cause workflow with auto-scope-lock |
+| A fix introduces more errors than it resolves | **`/investigate`** — likely a wrong-layer fix |
+| The fix requires architectural changes | Stop. Ask the user. May warrant `/new-adr` or `/scope-check`. |
+| Errors stem from missing NuGet packages | Run `dotnet restore`, then resume. If that doesn't help, report (env failure). |
+| Errors stem from TaleWorlds API changes | **`/research`** first — verify v1.3.15 signatures via `ilspycmd`, NOT the v1.4 decompile |
+| Errors stem from environment problems (path, permissions, missing tools) | **Report, don't fix** — see `.claude/rules/environment-failures.md` |
 
 ## Step 5: Summary
 

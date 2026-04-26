@@ -380,3 +380,11 @@ If any agent reports a HIGH-severity finding (or Codex reports P1):
    - A CHANGELOG "Known limitation:" bullet
 
 What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed — Codex independently caught the same bug later. Memory: `feedback_dont_defer_high_review_findings.md`.
+
+## Fix-loop guidance
+
+When the verdict is NEEDS FIXES and the user chooses to address findings now:
+
+- If fixes are confined to one feature module, **suggest `/freeze`** scoped to that module before starting. Prevents the fix-loop from drifting into adjacent code that wasn't part of the review.
+- If a finding is structural (root cause unclear, multiple symptoms in one area), invoke **`/investigate`** instead of fixing directly — its 6-phase workflow auto-engages `/freeze` and enforces the Iron Law.
+- After fixes land, re-run `/deep-review` (or `/deep-review --codex`) on the changed scope to confirm no new HIGH findings introduced.

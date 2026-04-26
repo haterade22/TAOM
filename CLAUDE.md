@@ -24,6 +24,35 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
 | **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.3 incompatibilities, missing tests, data flow gaps |
 
+## Working Discipline
+
+### Fork discipline (parallel agents)
+
+When you spawn agents in parallel (`Agent` tool, multiple invocations in one message, or implicit forks), each runs in an isolated context you cannot peek at.
+
+- **Don't Read or `tail` an in-progress fork's output file.** The completion signal arrives as a real tool result in a later turn — wait for it.
+- **Don't fabricate or predict fork results.** Saying "the agent probably found X" is hallucinating completion. Either it returned, or you don't know yet.
+- **Don't re-do the fork's work in parallel just because it's slow.** That's two contexts solving the same problem; results will diverge.
+- The completion notification is a user-role tool result, not text you write — wait, then read what came back, then synthesize.
+
+### Autonomous-loop stewardship (`/loop`, `/schedule`, background runs)
+
+When you're invoked autonomously (no fresh user prompt), the trust model is *continue established work, do not initiate new work*.
+
+- Continue what's already in motion: failing CI, open review threads, in-progress feature with clear next step, scheduled cleanup of a flagged TODO.
+- Do not invent new tasks ("I noticed we could also refactor X"). Save that for the next interactive turn.
+- Reversible local actions (edits, tests, builds) are fine. Irreversible / shared-state actions (push, PR open, branch delete, comment post) require explicit prior authorization for this run.
+- If the transcript doesn't make the next step obvious, stop and report — don't guess.
+
+### TodoWrite quality bar
+
+Items are atomic, verb-led, ≤14 words, describe outcomes not steps. No scaffolding entries. One item = one PR-worthy unit of work.
+
+- Good: "Add retry budget rule to feature-builder agent"
+- Bad: "Open feature-builder.md", "Read existing rules", "Think about wording"
+
+If a task has internal sub-steps, those go in your head or as conversation, not as todos. Only add a todo when shipping it would genuinely move the user-visible needle.
+
 ## Skills (Slash Commands)
 
 | Command | Purpose |
@@ -43,6 +72,54 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 5+ Claude agents + adaptive expansion |
 | `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
 | `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
+| `/context-budget [--verbose]` | Audit token consumption across `.claude/` (agents, skills, rules, MCP, CLAUDE.md). Recommend trims. |
+| `/freeze` | Hard-block all Edit/Write outside a chosen directory for the rest of the session. Pair with `/unfreeze` to release. |
+| `/unfreeze` | Release the directory edit lock set by `/freeze`. |
+| `/investigate` | Systematic 6-phase root-cause debugging. Auto-engages `/freeze` to lock debug scope. Iron Law: no fixes without root cause. |
+
+## Skill Routing (when to invoke what)
+
+When the user's message matches one of these patterns, invoke the listed skill via the Skill tool **instead of** answering directly. The skill has structured workflows, gates, and TAOM-specific patterns that produce better results than ad-hoc help. **A false positive is cheaper than a false negative.** When in doubt, invoke the skill.
+
+### Strong auto-invoke triggers
+
+| User intent / phrase | Invoke |
+|----------------------|--------|
+| "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions, `TypeLoadException`, `NullReferenceException` from a TAOM patch or service | **`/investigate`** — never debug ad-hoc; the Iron Law is non-negotiable |
+| "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** (escalates to `/investigate` if retry budget triggers) |
+| "scaffold a feature", "new feature for X", "add a system that does Y" | **`/new-feature`** then `/freeze` to scope-lock during implementation |
+| "review this", "is this ready to merge", "run a deep review", "before commit" on C# changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) |
+| "research X class", "what does TaleWorlds do for Y", before overriding any GameModel | **`/research`** before editing — never guess signatures |
+| "create an issue for", "open a bug", "log this crash" | **`/issue`** |
+| "check XSLT", new `.xslt` edit, "did the transform pass through correctly" | **`/xslt-check`** |
+| "is this in scope", "does this fit our current work", proposed changes that drift from the active feature | **`/scope-check`** |
+| "verify everything", "run build + tests", before claiming done | **`/verify`** |
+| "split these commits", staged changes touching multiple concerns | **`/commit-split`** |
+| "clean up this AI slop", over-engineered code, redundant abstractions | **`/deslop`** |
+| "add an ADR for", architectural decision being made | **`/new-adr`** |
+| "session feels slow", "are we close to context limit", "audit my .claude/", after adding skills/agents/MCP servers | **`/context-budget`** |
+
+### Soft suggest (offer, don't auto-invoke)
+
+| Situation | Suggest |
+|-----------|---------|
+| User says "only fix this", "don't touch X", "stay in this folder", or starting a focused fix on one feature | Offer **`/freeze`**: *"Want me to scope-lock edits to `<dir>` so I can't drift?"* |
+| User starts a long debug session manually (multi-step trace, repro attempts) without invoking `/investigate` | Suggest **`/investigate`**: *"This looks like root-cause debugging — want to use `/investigate`? It auto-locks scope and enforces the Iron Law."* |
+| Done with the focused fix; freeze boundary still active | Offer **`/unfreeze`**: *"Boundary still set to `<dir>`. Release it?"* |
+| About to ship a feature without an adversarial review | Offer **`/codex-verify`** or **`/review-codex`** |
+
+### Never auto-invoke
+
+| Skill | Why |
+|-------|-----|
+| `/codex-verify`, `/review-codex` | Cost real money — explicit user intent only |
+| `/issue` | Creates a public artifact — explicit user intent only |
+| `/migration-status` | Read-only diagnostic — only when user asks |
+| `/context-budget` | Diagnostic — only when user asks or after a major harness change |
+
+### When the user invokes a skill explicitly
+
+Treat the SKILL.md as executable instructions, not reference. Follow the phases in order. Don't shortcut. The phases exist because shortcuts caused the bugs that motivated the skill.
 
 ## Scoped Rules (auto-loaded by file path)
 
@@ -56,8 +133,9 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | `harmony-patches.md` | `Main/**/Hooks/**` | Patch types, thin entry points, thread-local state |
 | `gamemodels.md` | `Main/Features/**/*Model.cs` | GameModel override pattern, base class rules, registration |
 | `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
-| `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules |
+| `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read |
 | `gui-ui.md` | `*Mixin*.cs`, `*Prefab*.cs`, `*Widget*.cs`, `*VM.cs`, `GUI/**` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
+| `environment-failures.md` | always | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
 
 ## Custom Agents
 

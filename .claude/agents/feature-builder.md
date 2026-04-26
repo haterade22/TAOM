@@ -69,8 +69,47 @@ When exploring the codebase for patterns or related code, use progressive refine
 
 Stop when you have enough context. Don't read everything — 3 high-relevance files beats 10 shallow reads.
 
+## Scope-lock during implementation
+
+Before writing the first file, **suggest `/freeze`** to the user with the feature directory as the boundary:
+
+> Want to scope-lock edits to `Main/Features/<FeatureName>/` (and `TAOM.Tests/Features/<FeatureName>/`) for this session? Prevents accidental drift into adjacent code.
+
+If the user agrees, write the boundary state file directly (don't make them context-switch):
+
+```bash
+STATE_DIR="${CLAUDE_PROJECT_DIR}/.claude/tmp/freeze"
+mkdir -p "$STATE_DIR"
+echo "$(pwd)/Main/Features/<FeatureName>" > "$STATE_DIR/freeze-dir.txt"
+```
+
+The `/freeze` PreToolUse hooks will then block any Edit/Write outside the feature dir for the rest of the session. If you genuinely need to touch `Main/IoC.cs` or `Main/SubModule.cs` during integration, ask the user to widen the boundary or run `/unfreeze` for the integration step.
+
 ## Integration
 After building the feature:
-1. Wire IoC into `Main/IoC.cs`
+1. Wire IoC into `Main/IoC.cs` (may require widening freeze scope or temporarily `/unfreeze`)
 2. Register entry points in `Main/SubModule.cs` if needed
 3. Run `./build.ps1 -RunTests` to verify
+4. If build fails, do NOT iterate ad-hoc — invoke `/build-fix` (which has the retry budget) or `/investigate` if the failure looks structural
+
+## Retry budget (HARD STOP)
+
+When a build error, test failure, or runtime issue persists across attempts on the same file or symbol:
+
+| Attempts | Action |
+|---|---|
+| 1 | Try the most likely fix. |
+| 2 | If first didn't work, re-Read the file (cached content may be stale) and try a different approach. |
+| 3 | Final attempt — the third fix should look meaningfully different from attempts 1 and 2. |
+| **4+** | **STOP. Report what you tried and surface to the user.** Do not iterate further. |
+
+Same file + same error type + same line region (±5) counts as "same." A truly-different error resets the counter — but if every fix surfaces a new error in the same area, that's cascading whack-a-mole; stop and ask.
+
+When you stop on the budget, output:
+- What the original problem was
+- The three attempts (one-line each, with file:line)
+- Why each attempt failed
+- Your best guess at the actual root cause if any
+- Concrete question for the user
+
+Environment failures (missing tools, broken paths, permission issues) are reported, not retried.

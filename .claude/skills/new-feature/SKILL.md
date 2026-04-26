@@ -41,10 +41,15 @@ Create under `TAOM.Tests/Features/$ARGUMENTS/`:
 - Naming: `MethodName_StateUnderTest_ExpectedBehavior`
 - Write tests FIRST (RED), then implement (GREEN), then refactor
 
+## Scope-lock recommendation
+
+Before scaffolding, suggest `/freeze` to the user with the new feature dir as the boundary — prevents drift into adjacent code while the feature is taking shape. Widen the boundary (or `/unfreeze`) only when wiring `Main/IoC.cs` or `Main/SubModule.cs` for integration.
+
 ## Checklist
 - [ ] Tests written first (RED state verified)
 - [ ] All services use adapter interfaces, not sealed types
 - [ ] IoC registered in `Main/IoC.cs`
 - [ ] Entry points <150 lines
 - [ ] No `#region`, `[Obsolete]`, or `#if DEBUG`
-- [ ] Build passes: `./build.ps1 -RunTests`
+- [ ] Build passes: `./build.ps1 -RunTests` — if it fails, route to `/build-fix`; if structural, `/investigate`
+- [ ] `/deep-review` clean before commit (per CLAUDE.md Critical Rules)
