@@ -1,5 +1,31 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-26 (later)
+
+### Process: Prevention Infrastructure for Recurring Harness Bugs
+
+Across three Codex/deep-review passes on the Tier 1 productivity-skills adoption (efbde5b, 5df21ea, 4964299), 19 issues clustered into 5 recurring categories. Built mechanical prevention for each so the same class of bug cannot ship again.
+
+**New rules** (auto-loaded into every conversation):
+- `.claude/rules/harness-facts.md` — pinned source-of-truth for Claude Code load semantics (skill descriptions eager, bodies lazy; hooks scoped to skill activation; rules without `paths:` always-load) with doc URLs. Future harness edits check against this file first; if reality disagrees, this file gets updated FIRST.
+- `.claude/rules/external-skill-ports.md` — per-field validation checklist scoped to `.claude/skills/**/SKILL.md`. Catches port-drift bugs (`triggers:` field, lifecycle assumptions, hardcoded values, gitignored bin/ scripts) before they ship. Includes a Tier 1 adoption case study.
+
+**New pre-commit hooks**:
+- `check-changelog-changed.sh` — hard-blocks `git commit` when `.claude/`, `CLAUDE.md`, or `AGENTS.md` is staged but `CHANGELOG.md` is not. Skips amends. The pre-existing `check-changelog-updated.sh` was a Stop-time *reminder* — easy to ignore. This new hook is enforcement.
+- `check-claude-files-tracked.sh` — hard-blocks `git commit` when files exist on disk under `.claude/{skills,agents,rules,hooks}/` but are gitignored or untracked. Catches the `bin/check-freeze.sh` regression class (a generic gitignore pattern silently excluded a load-bearing script).
+
+**New tool**:
+- `tools/audit-review-counter.sh` — recomputes "N reviews, M bugs found" from `REVIEW-LOG.md` and verifies `AGENTS.md` matches. `--fix` flag updates AGENTS.md in place. Catches manual arithmetic errors (we shipped 64 when correct was 65). Counter math is now mechanical, not eyeballed.
+
+**Lints upgraded**:
+- `scan.sh` now flags skill descriptions over 30 words (previously only flagged for agents). Catches description-creep that re-occurred after every fix in the Tier 1 chain.
+
+**Verified**:
+- Counter validator caught the 26→27, 65→71 mismatch from review #27 and auto-fixed AGENTS.md.
+- check-changelog-changed correctly blocks (`.claude/` staged + no CHANGELOG) and allows (CHANGELOG also staged).
+- check-claude-files-tracked correctly blocks on untracked new files; both hooks correctly skip on `git commit --amend`.
+- scan.sh bloat lint runs without false positives on current setup (no skill exceeds 30w).
+
 ## 2026-04-26
 
 ### Process: Adopt Tier 1 Productivity Skills from Claude Code Ecosystem Review

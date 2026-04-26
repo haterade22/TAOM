@@ -33,6 +33,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/validate-push.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-changelog-changed.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-claude-files-tracked.sh"
           }
         ]
       },

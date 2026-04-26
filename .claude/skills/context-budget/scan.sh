@@ -132,28 +132,37 @@ scan_skills() {
     SKILLS_LAZY_TOKENS=0     # lazy (full body) — loaded only when skill is invoked
     SKILLS_COUNT=0
     SKILLS_HEAVY=()
+    SKILLS_BLOATED_DESC=()
     local root="$REPO_ROOT/.claude/skills"
     [[ ! -d "$root" ]] && return
     while IFS= read -r -d '' skilldir; do
         local name=$(basename "$skilldir")
         local skillmd="$skilldir/SKILL.md"
         [[ ! -f "$skillmd" ]] && continue
-        local lines eager lazy
+        local lines eager lazy desc desc_words
         lines=$(wc -l < "$skillmd" | tr -d ' ')
         eager=$(estimate_frontmatter_tokens "$skillmd")
         lazy=$(estimate_prose_tokens "$skillmd")
+        desc=$(extract_description "$skillmd")
+        desc_words=$(count_words "$desc")
         SKILLS_TOKENS=$(( SKILLS_TOKENS + eager ))
         SKILLS_LAZY_TOKENS=$(( SKILLS_LAZY_TOKENS + lazy ))
         SKILLS_COUNT=$(( SKILLS_COUNT + 1 ))
         if [[ $VERBOSE -eq 1 ]]; then
-            printf "  skill %-40s %4d lines  eager=~%4d  lazy=~%5d\n" "$name" "$lines" "$eager" "$lazy"
+            printf "  skill %-40s %4d lines  eager=~%4d  lazy=~%5d  desc=%d words\n" "$name" "$lines" "$eager" "$lazy" "$desc_words"
         fi
         if [[ $lines -gt 400 ]]; then
             SKILLS_HEAVY+=("$name ($lines lines)")
         fi
+        # Skill descriptions load eagerly into every proactive-invoke decision —
+        # bloat tax compounds across all skills. Same 30-word threshold as agents.
+        if [[ $desc_words -gt 30 ]]; then
+            SKILLS_BLOATED_DESC+=("$name (${desc_words}w description)")
+        fi
     done < <(find "$root" -mindepth 1 -maxdepth 1 -type d -print0)
 
     [[ ${#SKILLS_HEAVY[@]} -gt 0 ]] && ISSUES+=("Heavy skill bodies (>400 lines, loaded when skill is invoked): ${SKILLS_HEAVY[*]}")
+    [[ ${#SKILLS_BLOATED_DESC[@]} -gt 0 ]] && ISSUES+=("Bloated skill descriptions (>30 words, loaded eagerly): ${SKILLS_BLOATED_DESC[*]}")
 }
 
 scan_rules() {
