@@ -25,15 +25,21 @@ except Exception:
     pass
 ' 2>/dev/null)
 
+# Detect `git commit` invocations including `git -C <dir> commit` and
+# `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
 case "$COMMAND" in
-    *"git commit"*) ;;
+    *"git commit-"*) echo '{}'; exit 0 ;;       # commit-tree etc — different command
+esac
+case "$COMMAND" in
+    *"git commit"* | *"git -"*" commit"* ) ;;
     *) echo '{}'; exit 0 ;;
 esac
 
-# Skip amends — same rationale as check-changelog-changed.sh.
-case "$COMMAND" in
-    *"--amend"*) echo '{}'; exit 0 ;;
-esac
+# DO NOT skip --amend. This hook checks working-tree state (files on disk
+# vs git tracking), which is not amend-dependent. A gitignored file on disk
+# is just as broken in an amended commit as in a fresh one — that's the
+# bug class this hook catches. Codex review 2026-04-26 caught this as
+# prevention-theater risk in the original implementation.
 
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
 

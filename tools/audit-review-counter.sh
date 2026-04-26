@@ -21,26 +21,42 @@ AGENTS="$REPO_ROOT/AGENTS.md"
 [[ ! -f "$LOG" ]] && { echo "REVIEW-LOG.md not found at $LOG"; exit 1; }
 [[ ! -f "$AGENTS" ]] && { echo "AGENTS.md not found at $AGENTS"; exit 1; }
 
-# Extract the "N Codex reviews total, M bugs found" line from REVIEW-LOG.md.
-LOG_TOTAL=$(grep -oE '[0-9]+ Codex reviews total, [0-9]+ bugs found' "$LOG" | tail -1)
+# Extract the totals line from REVIEW-LOG.md. Tolerate minor wording drift
+# but anchor on a summary keyword (total | so far | conducted | completed)
+# so we don't accidentally match a per-row entry that happens to mention
+# numbers and "review" / "bug".
+# Anchor on the canonical summary line: contains "reviews total" AND
+# "across codebase". This avoids matching narrative paragraphs that quote
+# old totals in code spans (caught during testing where the validator
+# picked up a quoted "27 Codex reviews total, 71 bugs" from a review
+# narrative instead of the current 28/77 summary line).
+LOG_TOTAL=$(grep -iE '[0-9]+[[:space:]]+(codex[[:space:]]+)?reviews?[[:space:]]+(total|so far|conducted|completed).*across codebase' "$LOG" | tail -1)
+if [[ -z "$LOG_TOTAL" ]]; then
+    # Fallback: any summary-keyword match (prior canonical wording).
+    LOG_TOTAL=$(grep -iE '[0-9]+[[:space:]]+(codex[[:space:]]+)?reviews?[[:space:]]+(total|so far|conducted|completed)' "$LOG" | head -1)
+fi
 if [[ -z "$LOG_TOTAL" ]]; then
     echo "[audit-review-counter] Could not find totals line in REVIEW-LOG.md."
-    echo "Expected pattern: 'N Codex reviews total, M bugs found'"
+    echo "Expected pattern: a line with 'N reviews total ... M bugs' (any wording)."
     exit 1
 fi
 
-LOG_REVIEWS=$(echo "$LOG_TOTAL" | grep -oE '^[0-9]+')
-LOG_BUGS=$(echo "$LOG_TOTAL" | grep -oE '[0-9]+ bugs' | grep -oE '^[0-9]+')
+# Extract numbers anchored on their keywords — NOT just first-N numbers from
+# the line, because lines like "19-27. 27 Codex reviews total, 71 bugs" have
+# unrelated numbers (range markers) earlier.
+LOG_REVIEWS=$(echo "$LOG_TOTAL" | grep -oiE '[0-9]+[[:space:]]+(codex[[:space:]]+)?reviews?' | head -1 | grep -oE '^[0-9]+')
+LOG_BUGS=$(echo "$LOG_TOTAL" | grep -oiE '[0-9]+[[:space:]]+bugs?' | head -1 | grep -oE '^[0-9]+')
 
-# Extract the "Lessons From Prior Reviews (N reviews, M bugs found)" header from AGENTS.md.
-AGENTS_HEADER=$(grep -E "^### Lessons From Prior Reviews \([0-9]+ reviews, [0-9]+ bugs found\)" "$AGENTS")
+# Extract the AGENTS.md header. Same flexibility: parens optional, wording loose.
+AGENTS_HEADER=$(grep -iE "^### Lessons.*[0-9]+[[:space:]]+reviews?.*[0-9]+[[:space:]]+bugs?" "$AGENTS")
 if [[ -z "$AGENTS_HEADER" ]]; then
     echo "[audit-review-counter] Could not find counter header in AGENTS.md."
+    echo "Expected: '### Lessons From Prior Reviews (N reviews, M bugs found)' or similar."
     exit 1
 fi
 
-AGENTS_REVIEWS=$(echo "$AGENTS_HEADER" | grep -oE '\([0-9]+ reviews' | grep -oE '[0-9]+')
-AGENTS_BUGS=$(echo "$AGENTS_HEADER" | grep -oE '[0-9]+ bugs' | grep -oE '^[0-9]+')
+AGENTS_REVIEWS=$(echo "$AGENTS_HEADER" | grep -oiE '[0-9]+[[:space:]]+reviews?' | head -1 | grep -oE '^[0-9]+')
+AGENTS_BUGS=$(echo "$AGENTS_HEADER" | grep -oiE '[0-9]+[[:space:]]+bugs?' | head -1 | grep -oE '^[0-9]+')
 
 echo "REVIEW-LOG.md: $LOG_REVIEWS reviews, $LOG_BUGS bugs"
 echo "AGENTS.md:    $AGENTS_REVIEWS reviews, $AGENTS_BUGS bugs"

@@ -1,5 +1,39 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-26 (latest)
+
+### Fix: Codex Adversarial Review of the Prevention Infrastructure (#92)
+
+User asked "we did our review?" — answer was no. Dispatched Codex pass on `b7e7188` with explicit recursion-risk framing: could a bug in the prevention infrastructure defeat the prevention it's supposed to enable?
+
+Verdict: yes. 1 HIGH, 3 MEDIUM, 2 LOW + 1 process gap. Review at `docs/reviews/codex-adversarial-prevention-2026-04-26.md`. All addressed.
+
+**HIGH (real prevention theater):**
+- Both new pre-commit hooks blanket-skipped `git commit --amend`. My "amends modify a prior commit's responsibility" rationale was wrong — amend-as-workflow is common ("oops, forgot a file, amend it in"). The hooks exempted exactly the case they were supposed to catch. Even worse: a two-step bypass (unrelated commit + amend with `.claude/`) would defeat both gates.
+  - **CHANGELOG hook fix:** replaced blanket exemption with logic that evaluates the post-amend file set (staged ∪ HEAD). If `.claude/` files are in the post-amend commit and CHANGELOG.md isn't, block. If CHANGELOG is already in HEAD (carried over from the prior commit), allow.
+  - **Tracked-files hook fix:** removed the exemption entirely. Working-tree state isn't amend-affected — a gitignored file on disk is just as broken in an amended commit as a fresh one.
+
+**MEDIUM:**
+- Both hooks missed `git -C path commit` and `git -c key=val commit` (substring match `*"git commit"*` doesn't match these). Broadened to `*"git commit"* | *"git -"*" commit"*`. Reject `git commit-tree`, `commit-graph` (different commands) explicitly.
+- Bloat lint bypassed by multiline YAML descriptions (`description: |` block). No current skill uses this; deferred.
+
+**LOW:**
+- harness-facts.md said hooks "will warn" but they actually hard-block — corrected to "hard-block" with explanation.
+- harness-facts.md missing `disable-model-invocation: true` exception for skill description loading — added.
+- harness-facts.md presented the project-slug derivation rule as fact — actually empirical (Claude Code docs only say "derived from the git repository"). Relabeled as empirical with derived-then-fallback recommendation.
+- audit-review-counter.sh regex tolerated only the exact wording "N Codex reviews total, M bugs found". Hardened to anchor on summary keywords (`total | so far | conducted | completed`) and extract numbers via keyword anchoring rather than first-N (caught a subtle bug during testing where "19-27. 27 Codex reviews total" yielded `19, 27` instead of `27, 71`).
+
+**Process:**
+- Created retroactive GitHub issue (#92) for the prevention bundle. Original ship of `b7e7188` skipped this — Codex flagged it.
+
+Verified:
+- TEST G: amend on a throwaway branch with HEAD lacking CHANGELOG and amend adding `.claude/` — hook BLOCKS correctly. The HIGH bypass is fixed.
+- `git -C path commit` and `git -c key=val commit` both detected.
+- `git commit-tree` correctly skipped (different command).
+- Counter validator reports `27 reviews, 71 bugs` matching across both files.
+
+REVIEW-LOG row #28 added; counter advanced to 28 reviews / 77 bugs found.
+
 ## 2026-04-26 (later)
 
 ### Process: Prevention Infrastructure for Recurring Harness Bugs

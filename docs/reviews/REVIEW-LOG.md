@@ -49,8 +49,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 25 | 2026-04-20 | RevoltTuning | needs-attention | agree | 1 HIGH (no-validation) + 1 MEDIUM (cache-lifetime doc mismatch) | 0 | 0 | v6-adversarial |
 | 26 | 2026-04-26 | Tier1 productivity skills adoption (`.claude/` infra) | NEEDS-FIXES | agree (2 promotions, 1 demotion) | 7 confirmed (2 HIGH→3, 3 MEDIUM→2, 2 LOW) + 1 missed by Codex (`scan_agents` body-counting) | 0 | 1 (`scan_agents` had same body-count bug as `scan_skills`; Codex flagged only the latter) | v6-adversarial-harness |
 | 27 | 2026-04-26 | Self-review of Tier1 fix commit (5df21ea) | NEEDS-FIXES (0H/1M/3L) | agree | 4 confirmed (1 MED, 3 LOW) + 2 process violations (CHANGELOG, counter math) | 0 | 0 | self-review-v1 |
+| 28 | 2026-04-26 | Prevention infrastructure (b7e7188 — hooks/rules built to catch the failure modes from #26+#27) | NEEDS-FIXES (1H/3M/2L) | agree (1 promotion, 1 demotion) | 6 confirmed (1 HIGH→1, 3 MED→2, 2 LOW + counter regex prep) + 1 process (no GitHub issue at ship time) | 0 | 0 | adversarial-prevention-v1 |
 
-**Post-codebase reviews:** 19-27. 27 Codex reviews total, 71 bugs found across codebase.
+**Post-codebase reviews:** 19-28. 28 Codex reviews total, 77 bugs found across codebase.
 
 ### Review 25 — RevoltTuning Root Cause Analysis
 
@@ -119,6 +120,42 @@ Recursive review: Codex reviewed our fixes from review #26. Verdict NEEDS FIXES 
 - The trimmed descriptions still being 31w (over the ~25w target Codex noted) — fixed both back to ~22w in the same commit.
 
 **Score:** 4/4 confirmed bugs + 2 process gaps → all addressed in third fix commit. Three-commit chain (efbde5b → fbfd25a → 5df21ea → this commit) on Tier 1 adoption is now closed; no further regressions expected. Each commit added findings, each subsequent review found fewer (8 → 7 → 4), suggesting convergence rather than open-ended iteration.
+
+### Review 28 — Adversarial Review of the Prevention Infrastructure (Codex)
+
+User asked: "we did our review?" — honest answer was no. The prevention bundle (b7e7188) shipped with smoke-tests but no formal Codex pass. Dispatched the adversarial review specifically to check **recursion risk**: could a bug in the prevention infrastructure defeat the prevention it's supposed to enable?
+
+**Verdict:** YES. 1 HIGH + 3 MED + 2 LOW + 1 process gap.
+
+| # | Finding | Codex sev | My sev | Disposition |
+|---|---|---|---|---|
+| HIGH | `--amend` blanket exemption in CHANGELOG hook → real bypass | HIGH | HIGH | Confirmed prevention theater — fixed |
+| MED-1 | Same `--amend` exemption in tracked-files hook | MED | **HIGH↑** | Same vulnerability class as the HIGH; fixed |
+| MED-2 | Hooks miss `git -C path commit` (substring match too narrow) | MED | MED | Real but rare; broadened detection |
+| MED-3 | scan.sh bloat lint bypassed by multiline YAML descriptions | MED | **LOW↓** | No current skill uses multiline; deferred |
+| LOW-1 | harness-facts says "will warn" but hooks "hard-block" | LOW | LOW | Doc drift — fixed |
+| LOW-2 | harness-facts missing `disable-model-invocation: true` exception | LOW | LOW | Doc completeness — fixed |
+| LOW-3 | harness-facts project-slug rule presented as fact, actually empirical | LOW | LOW | Doc accuracy — fixed |
+| LOW-4 | counter validator regex brittle to wording drift | LOW | LOW | Hardened with keyword-anchored extraction |
+| Process | No GitHub issue at ship time for b7e7188 | (in B) | MED | Created retroactively (#92) |
+
+**Root Cause for HIGH + MED-1 (the amend bypass):**
+
+I deliberately added the `--amend` exemption with the rationale "amends modify a prior commit, so the prior commit owns CHANGELOG status." Wrong reasoning — `git commit --amend` is commonly used as a workflow ("oops, forgot a file, amend it in"). The hook exempted EXACTLY the case it should catch. Even worse: a developer could split the prevention bypass into two steps — commit some unrelated change first, then amend with `.claude/` files — and the hook would fire on neither.
+
+**Fix:** for CHANGELOG hook, replaced blanket exemption with logic that considers the post-amend file set (staged ∪ HEAD). Verified via TEST G in a throwaway branch where HEAD lacked CHANGELOG and amend added `.claude/` — hook now BLOCKS correctly. For tracked-files hook, removed the exemption entirely (working-tree state isn't amend-affected — a gitignored file is just as broken in an amended commit as a fresh one).
+
+**Codex strengths in this round:**
+- Distinguished CONFIRMED from DISPUTED for each Known Suspect (e.g., agreed JSON output is safe given static heredoc; correctly ruled out the false-positive concerns I asked about for tracked-files hook).
+- Caught the `git -C` / `git -c` substring-match gap that I genuinely hadn't considered.
+- Verified each Claude Code semantic claim with line numbers from the official docs (https://code.claude.com/docs/en/{skills,hooks,memory}).
+- Identified the recursion risk as the framing of the whole review — not just a list of bugs but a structural critique of "does this prevention prevent?"
+- Caught both LOW-2 and LOW-3 inside the harness-facts.md UNVERIFIED bucket, neither of which I'd have noticed unaided.
+
+**What I caught beyond Codex's findings:**
+- The counter-regex hardening that Codex asked for in finding LOW-4 had an even subtler bug: my "tolerant" replacement extracted numbers from anywhere in the matched line, so a line like "19-27. 27 Codex reviews total, 71 bugs found" returned `19, 27` instead of `27, 71`. Fixed during smoke-test by anchoring extraction on the keyword (`grep -oE '[0-9]+ reviews?'` then strip suffix).
+
+**Tier 1 + prevention chain summary:** five commits (efbde5b → fbfd25a → 5df21ea → 4964299 → b7e7188 → THIS), four reviews, 6 of the bugs from the prevention review (this) are exactly the categories the prevention was supposed to make impossible — proving that the prevention itself needed prevention. Convergence is real (8 → 7 → 4 → 6 in this case but the spike at 6 is acceptable because we were testing a more meta layer). Closing the loop.
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 **v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**

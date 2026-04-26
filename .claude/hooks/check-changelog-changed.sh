@@ -25,28 +25,46 @@ except Exception:
     pass
 ' 2>/dev/null)
 
-# Only fire on actual git commit invocations.
+# Detect `git commit` invocations including `git -C <dir> commit` and
+# `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
 case "$COMMAND" in
-    *"git commit"*) ;;  # proceed
-    *) echo '{}'; exit 0 ;;
+    *"git commit-"*) echo '{}'; exit 0 ;;       # commit-tree / commit-graph etc — different command
 esac
-
-# Skip amends — they're meant to update an existing commit; CHANGELOG status
-# is the prior commit's responsibility.
 case "$COMMAND" in
-    *"--amend"*) echo '{}'; exit 0 ;;
+    *"git commit"* | *"git -"*" commit"* ) ;;   # bare or with leading flags
+    *) echo '{}'; exit 0 ;;
 esac
 
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
 
-# Get the staged file list.
+# Detect amend. Critically: do NOT blanket-skip on amend — the amend workflow
+# is commonly used to add forgotten files ("oops, amend"), which is exactly
+# the case this hook needs to catch. Instead, on amend we check the FULL
+# post-amend file set: staged changes plus the files already in the commit
+# being amended (HEAD).
+IS_AMEND=0
+case "$COMMAND" in
+    *"--amend"*) IS_AMEND=1 ;;
+esac
+
+# Get the staged file list (the diff that becomes part of the commit).
 STAGED=$(git diff --cached --name-only 2>/dev/null)
-if [[ -z "$STAGED" ]]; then
-    echo '{}'  # nothing staged — let git produce its own error
+
+# For amends, also include files that are already part of HEAD (the commit
+# being amended). The post-amend commit will contain both sets.
+if [[ $IS_AMEND -eq 1 ]]; then
+    HEAD_FILES=$(git show HEAD --name-only --pretty=format: 2>/dev/null | grep -v '^$' || true)
+    ALL_FILES=$(printf '%s\n%s\n' "$STAGED" "$HEAD_FILES" | sort -u | grep -v '^$')
+else
+    ALL_FILES="$STAGED"
+fi
+
+if [[ -z "$ALL_FILES" ]]; then
+    echo '{}'  # nothing in commit — let git produce its own error / message-only amend
     exit 0
 fi
 
-# Decide whether the staged set requires a CHANGELOG entry.
+# Decide whether the post-amend commit requires a CHANGELOG entry.
 NEEDS_CHANGELOG=0
 while IFS= read -r f; do
     case "$f" in
@@ -55,18 +73,18 @@ while IFS= read -r f; do
             break
             ;;
     esac
-done <<< "$STAGED"
+done <<< "$ALL_FILES"
 
 if [[ $NEEDS_CHANGELOG -eq 0 ]]; then
     echo '{}'  # no documentation-bearing change; skip
     exit 0
 fi
 
-# Is CHANGELOG.md also staged?
+# Is CHANGELOG.md in the post-amend commit (staged or already in HEAD)?
 HAS_CHANGELOG=0
 while IFS= read -r f; do
     [[ "$f" == "CHANGELOG.md" ]] && { HAS_CHANGELOG=1; break; }
-done <<< "$STAGED"
+done <<< "$ALL_FILES"
 
 if [[ $HAS_CHANGELOG -eq 1 ]]; then
     echo '{}'

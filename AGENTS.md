@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (27 reviews, 71 bugs found)
+### Lessons From Prior Reviews (28 reviews, 77 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
