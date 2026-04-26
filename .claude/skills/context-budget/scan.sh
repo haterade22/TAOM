@@ -230,8 +230,17 @@ except Exception as e:
     )
     local total=0
     while IFS= read -r srv; do
-        [[ -z "$srv" ]] && continue
+        # Skip empty AND whitespace-only lines (here-string + tr can leave one).
+        [[ ! "$srv" =~ [^[:space:]] ]] && continue
+        # Strip surrounding whitespace defensively.
+        srv="${srv#"${srv%%[![:space:]]*}"}"
+        srv="${srv%"${srv##*[![:space:]]}"}"
+        # Default to 15 for unknown servers — see "Token estimation" in SKILL.md.
+        # If you see "(unknown server: X)" warnings repeatedly, add X to SERVER_TOOLS above.
         local n=${SERVER_TOOLS[$srv]:-15}
+        if [[ -z "${SERVER_TOOLS[$srv]:-}" && $VERBOSE -eq 1 ]]; then
+            printf "  mcp   %-40s        (unknown server, defaulting to %d tools)\n" "$srv" "$n"
+        fi
         total=$(( total + n ))
         if [[ $VERBOSE -eq 1 ]]; then
             printf "  mcp   %-40s        ~%d tools (est)\n" "$srv" "$n"

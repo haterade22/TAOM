@@ -62,6 +62,23 @@ After porting Phase 2 skills (`/freeze`, `/unfreeze`, `/investigate`) and Phase 
 
 Headroom dropped from 95% to 94% on Opus 4.7 (1M). No concern — the new skills are productive load and the picks #2 / #3 deferral still holds.
 
+## Post-fix snapshot — 2026-04-26 (after deep-review remediation)
+
+After applying deep-review fixes (CLAUDE.md routing-table polish, freeze/investigate frontmatter trims + triggers, scan.sh hardening, environment-failures glob, etc.):
+
+| Component   | Count | Tokens   | Δ from post-adoption |
+|-------------|------:|---------:|---------------------:|
+| CLAUDE.md   |     1 |    7,120 |        +969 (+16%) — Skill Routing expanded with confidence gates |
+| Agents      |     2 |    1,621 |        +180 |
+| Skills      |    18 |   16,231 |        +274 — triggers arrays + retry budget cross-refs added |
+| Rules       |    11 |    5,434 |          +3 |
+| MCP servers |     5 |   45,500 |     +10,500 — see note below (scanner correction) |
+| **Total**   |       | **75,906** | **+11,926 (+19%)** |
+
+Headroom now ~93% on Opus 4.7 (1M). Still abundant — picks #2 / #3 still deferred.
+
+**Note on the MCP delta:** The +10,500 jump is NOT new bloat. The pre-fix scan had a whitespace-line bug in the MCP loop (FIX #9) that silently dropped one server's tool count from the sum (68 tools instead of the actual 89 = serena 25 + github 30 + filesystem 12 + git 14 + ilspy 8). The corrected count is now accurate. Real growth is in CLAUDE.md (routing polish) and skills (triggers + cross-refs).
+
 ## How to re-run
 
 ```bash

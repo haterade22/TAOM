@@ -1,5 +1,43 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-26
+
+### Process: Adopt Tier 1 Productivity Skills from Claude Code Ecosystem Review
+
+Reviewed 8 community Claude Code repos (gstack, everything-claude-code, gsd-build/get-shit-done, learn-claude-code, claude-code-best-practice, awesome-claude-code-subagents, claude-code-system-prompts, x1xhlol/system-prompts) for harness improvements. Productivity-biased; security-flavored picks deferred. Plan file: `~/.claude/plans/review-the-repo-at-fluttering-church.md`.
+
+**New skills:**
+- `/context-budget` — token audit across `.claude/`, MCP, CLAUDE.md (scan.sh + SKILL.md). First baseline at `docs/context-budget-baseline.md`: ~64K tokens, 94% headroom on Opus 4.7 1M.
+- `/freeze` — hard-block Edit/Write outside a chosen directory using inline PreToolUse hooks declared in skill frontmatter. Pair with `/unfreeze`.
+- `/unfreeze` — release the freeze boundary.
+- `/investigate` — six-phase root-cause workflow with TAOM-specific failure patterns (Harmony, MCM, save-load, decompile drift). Auto-engages `/freeze`.
+
+**Retry budget rules** added to `/build-fix` skill and `feature-builder` agent: 4-attempt hard stop on the same error. `/build-fix` escalates to `/investigate` for structural issues, `/research` for TaleWorlds API drift, or surfaces environment failures (don't auto-fix infra).
+
+**Sharpening rules:**
+- New `.claude/rules/environment-failures.md` (always-loaded via `**/*` glob) — report environment failures, never auto-fix infra.
+- `.claude/rules/csharp-architecture.md` — added stale-file re-read rule.
+- `CLAUDE.md` Working Discipline section — fork discipline (no peeking at fork output, no fabricated results), autonomous-loop stewardship (continue work, don't initiate), TodoWrite quality bar.
+- `CLAUDE.md` Skill Routing — phrase-to-skill mapping with strong-proactive / soft-suggest / never-auto tiers, plus confidence gates on `/deslop` and `/deep-review`.
+
+**Cross-references** chain the workflow: feature-builder suggests `/freeze` upfront, `/build-fix` escalates to `/investigate`, `/new-feature` recommends scope-lock, `/deep-review` fix-loop suggests `/freeze` for module-confined fixes.
+
+**Decision gate triggered:** Picks #2 (two-layer skill injection) and #3 (three-layer compression) deferred — 94% headroom means neither addresses a real constraint. Re-evaluate on smaller-context model migration or if skill/MCP counts grow significantly.
+
+### Fix: Deep-Review Findings on the Adoption Itself (commit-on-commit)
+
+Deep-review of `efbde5b` surfaced 4 HIGH findings, all addressed in follow-up:
+- `check-freeze.sh` was excluded by `.gitignore`'s `bin/` pattern (intended for `Main/bin/` .NET output). Moved to `.claude/skills/freeze/check-freeze.sh`; updated SKILL.md hook command paths in both `/freeze` and `/investigate`.
+- `check-freeze.sh` JSON output didn't escape backslashes/quotes — Windows paths with `\` would have produced invalid JSON. Added `_json_escape` helper. Also added absolute-path validation (fail-open if state file is malformed).
+- Skill descriptions were 39w (freeze) and 47w (investigate). Trimmed to ~15w each (loaded into every Task spawn). Added `triggers:` arrays preserved from gstack source for natural-language activation.
+- Skill Routing table added confidence gates to `/deslop` (only if clearly redundant) and `/deep-review` (only for C# changes ≥2 files), added `/migration-status` row, fixed `/unfreeze` trigger phrase, added ship-sequence soft-suggest with `/codex-verify`/`/review-codex`. Renamed "auto-invoke" → "proactively invoke" (clarifies tool permission semantics).
+- `scan.sh` MCP loop hardened (whitespace-only line check + verbose warning when unknown server defaults to 15-tool estimate).
+
+Sources adopted from: garrytan/gstack (freeze, investigate, working discipline rules), affaan-m/everything-claude-code (context-budget), Cursor/Devin/Piebald-AI prompt extracts (retry budget, fork discipline, autonomous-loop, stale-file rules).
+
+Verified: `check-freeze.sh` 4/4 boundary tests pass including raw-Windows-path JSON validity check.
+Not-tested: slash-command invocation in live Claude Code session (boundary script verified directly).
+
 ## 2026-04-20
 
 ### Fix: CareerScreenVM Service-Locator Anti-Pattern (8 test failures)

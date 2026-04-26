@@ -1,4 +1,6 @@
 ---
+paths:
+  - "**/*"
 description: Environment failures are reported, not fixed. The agent works within infra; the user controls infra.
 ---
 

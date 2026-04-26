@@ -79,40 +79,41 @@ If a task has internal sub-steps, those go in your head or as conversation, not 
 
 ## Skill Routing (when to invoke what)
 
-When the user's message matches one of these patterns, invoke the listed skill via the Skill tool **instead of** answering directly. The skill has structured workflows, gates, and TAOM-specific patterns that produce better results than ad-hoc help. **A false positive is cheaper than a false negative.** When in doubt, invoke the skill.
+When the user's message matches one of these patterns, **proactively invoke** the listed skill via the Skill tool. The skill has structured workflows, gates, and TAOM-specific patterns that produce better results than ad-hoc help. (Note: invoking the Skill tool still respects the user's tool-permission settings — the user may see a confirmation prompt unless allowlisted.)
 
-### Strong auto-invoke triggers
+### Strong proactive-invoke triggers
 
-| User intent / phrase | Invoke |
-|----------------------|--------|
-| "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions, `TypeLoadException`, `NullReferenceException` from a TAOM patch or service | **`/investigate`** — never debug ad-hoc; the Iron Law is non-negotiable |
-| "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** (escalates to `/investigate` if retry budget triggers) |
-| "scaffold a feature", "new feature for X", "add a system that does Y" | **`/new-feature`** then `/freeze` to scope-lock during implementation |
-| "review this", "is this ready to merge", "run a deep review", "before commit" on C# changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) |
-| "research X class", "what does TaleWorlds do for Y", before overriding any GameModel | **`/research`** before editing — never guess signatures |
-| "create an issue for", "open a bug", "log this crash" | **`/issue`** |
-| "check XSLT", new `.xslt` edit, "did the transform pass through correctly" | **`/xslt-check`** |
-| "is this in scope", "does this fit our current work", proposed changes that drift from the active feature | **`/scope-check`** |
-| "verify everything", "run build + tests", before claiming done | **`/verify`** |
-| "split these commits", staged changes touching multiple concerns | **`/commit-split`** |
-| "clean up this AI slop", over-engineered code, redundant abstractions | **`/deslop`** |
-| "add an ADR for", architectural decision being made | **`/new-adr`** |
-| "session feels slow", "are we close to context limit", "audit my .claude/", after adding skills/agents/MCP servers | **`/context-budget`** |
+| User intent / phrase | Invoke | Confidence gate |
+|----------------------|--------|-----------------|
+| "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions from a TAOM patch or service | **`/investigate`** — never debug ad-hoc; the Iron Law is non-negotiable | None — always |
+| "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** | None — always. If error mentions a missing/renamed TaleWorlds type, hand off to `/research` first; if `/build-fix` retry budget triggers, hand off to `/investigate`. |
+| "scaffold a feature", "new feature for X", "add a system that does Y" | **`/new-feature`** then offer `/freeze` to scope-lock during implementation | Skip if the user is just sketching aloud — only invoke when they say "do it" |
+| "review this", "is this ready to merge", "before commit" on C# changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) | **Only for C# changes touching ≥2 files OR any feature module.** For one-line fixes, XML/config/docs, skip — running 5+ agents is wasteful. |
+| "I need to override DefaultXxxModel", "what's the signature of", "before touching a TaleWorlds class" | **`/research`** before editing — never guess signatures | None — always |
+| "create an issue for", "open a bug", "log this crash" | **`/issue`** | None — always |
+| "check XSLT", new `.xslt` edit, "did the transform pass through correctly" | **`/xslt-check`** | None — always |
+| "I'm wondering if X is in scope", "is this a side quest", "should I tackle Y in this PR" | **`/scope-check`** | None — always |
+| "verify everything", "run build + tests", before claiming done | **`/verify`** | None — always |
+| "split these commits", staged changes touching multiple concerns | **`/commit-split`** | None — always |
+| "clean up this AI slop", over-engineered code, clearly redundant abstractions | **`/deslop`** | **Only if the code is clearly redundant (multiple similar abstractions, dead helpers).** `/deslop` is deletion-first — could remove code the user wants to keep. Default to asking first. |
+| "add an ADR for", architectural decision being made | **`/new-adr`** | None — always |
+| "session feels slow", "are we close to context limit", "audit my .claude/", after adding skills/agents/MCP servers | **`/context-budget`** | None — but skip when the user is in the middle of an unrelated task |
 
 ### Soft suggest (offer, don't auto-invoke)
 
 | Situation | Suggest |
 |-----------|---------|
-| User says "only fix this", "don't touch X", "stay in this folder", or starting a focused fix on one feature | Offer **`/freeze`**: *"Want me to scope-lock edits to `<dir>` so I can't drift?"* |
+| User says "only fix this", "don't touch X", "stay in this folder", "I'm starting a refactor across many files", or starting a focused fix on one feature | Offer **`/freeze`**: *"Want me to scope-lock edits to `<dir>` so I can't drift?"* |
 | User starts a long debug session manually (multi-step trace, repro attempts) without invoking `/investigate` | Suggest **`/investigate`**: *"This looks like root-cause debugging — want to use `/investigate`? It auto-locks scope and enforces the Iron Law."* |
-| Done with the focused fix; freeze boundary still active | Offer **`/unfreeze`**: *"Boundary still set to `<dir>`. Release it?"* |
-| About to ship a feature without an adversarial review | Offer **`/codex-verify`** or **`/review-codex`** |
+| Done with the focused fix; freeze boundary still active. Triggers: "I'm done with that", "release the boundary", "let me work elsewhere now", "remove the freeze" | Offer **`/unfreeze`**: *"Boundary still set to `<dir>`. Release it?"* |
+| About to ship a feature, "let's get this merged", "ready to PR", "send it" | Offer the ship sequence: **`/verify`** → (`/codex-verify` or `/review-codex`) → close issue → update CHANGELOG |
+| User asks "what's the migration status" or mentions v1.2 → v1.3 work | Offer **`/migration-status`** |
 
 ### Never auto-invoke
 
 | Skill | Why |
 |-------|-----|
-| `/codex-verify`, `/review-codex` | Cost real money — explicit user intent only |
+| `/codex-verify`, `/review-codex` | Cost real money — explicit user intent only (or via the ship-sequence offer above) |
 | `/issue` | Creates a public artifact — explicit user intent only |
 | `/migration-status` | Read-only diagnostic — only when user asks |
 | `/context-budget` | Diagnostic — only when user asks or after a major harness change |
@@ -135,7 +136,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
 | `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read |
 | `gui-ui.md` | `*Mixin*.cs`, `*Prefab*.cs`, `*Widget*.cs`, `*VM.cs`, `GUI/**` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
-| `environment-failures.md` | always | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
+| `environment-failures.md` | `**/*` (always-load) | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
 
 ## Custom Agents
 

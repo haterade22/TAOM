@@ -1,24 +1,30 @@
 ---
 name: freeze
-description: Lock all file edits to a single directory for the rest of the session. Hard-blocks Edit/Write outside the chosen path. Use when fixing one feature and you don't want agents drifting into adjacent code. Pair with /unfreeze to release.
+description: Lock edits to a directory; hard-block Edit/Write outside it. Pair with /unfreeze.
 allowed-tools:
   - Bash
   - Read
   - AskUserQuestion
+triggers:
+  - freeze edits to directory
+  - lock editing scope
+  - restrict file changes
+  - only edit this folder
+  - lock down edits
 hooks:
   PreToolUse:
     - matcher: "Edit"
       hooks:
         - type: command
-          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/bin/check-freeze.sh"
+          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
     - matcher: "Write"
       hooks:
         - type: command
-          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/bin/check-freeze.sh"
+          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
     - matcher: "NotebookEdit"
       hooks:
         - type: command
-          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/bin/check-freeze.sh"
+          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
 ---
 
 # /freeze — Restrict Edits to a Directory

@@ -1,6 +1,6 @@
 ---
 name: investigate
-description: Systematic root-cause debugging for TAOM. Five phases — investigate, scope-lock, pattern-match, hypothesize, fix, verify. Iron Law: no fixes without root cause. Auto-engages /freeze to lock the debug scope. Use for crashes, Harmony patch failures, MCM issues, save-load corruption, GameModel misbehavior, or any "it was working yesterday" report.
+description: Six-phase root-cause debugging. Iron Law: no fixes without root cause. Auto-engages /freeze.
 allowed-tools:
   - Bash
   - Read
@@ -10,16 +10,23 @@ allowed-tools:
   - Write
   - WebSearch
   - AskUserQuestion
+triggers:
+  - debug this
+  - fix this bug
+  - why is this broken
+  - root cause analysis
+  - investigate this error
+  - it was working yesterday
 hooks:
   PreToolUse:
     - matcher: "Edit"
       hooks:
         - type: command
-          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/bin/check-freeze.sh"
+          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
     - matcher: "Write"
       hooks:
         - type: command
-          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/bin/check-freeze.sh"
+          command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
 ---
 
 # /investigate — Systematic Root-Cause Debugging
