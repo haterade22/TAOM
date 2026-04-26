@@ -421,6 +421,12 @@ Phase 3: SELF-REVIEW (review our OWN fixes)
 Phase 4: CLOSE OUT
   10. /verify                       — final build + tests pass
   11. Create/close GitHub issue with full details
+        ↑ Issue must exist BEFORE the closing commit, not after.
+          Codex review #28 caught us creating issue #92 retroactively for
+          b7e7188. The pre-commit hook only enforces CHANGELOG, not issue
+          creation — discipline is on the author. Pattern: open the issue
+          when starting the work, reference it in commit messages, close
+          it with the final commit.
   12. Write/update docs/features/<name>.md
   13. Update CHANGELOG.md
 ```

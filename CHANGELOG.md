@@ -1,5 +1,24 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-26 (latest+1)
+
+### Process: Retroactive Full RCA on Codex Review #28 + Preventives
+
+User caught a process gap: Phase 3e of `/review-codex` ("Root Cause Analysis for EACH confirmed bug") was only run for the HIGH+MED-1 findings on Codex pass 3 (b7e7188 → 5fd9719). The other 6 findings (MED-2, MED-3, LOW-1/2/3/4 + 1 process gap) got fixes but not the systemic "why missed / preventive" analysis. Same conflation I'd just RCA'd: severity ≠ importance for systemic learning.
+
+Retroactive corrections:
+- `docs/reviews/REVIEW-LOG.md` row #28 RCA table extended from 2 grouped roots to 9 individual rows. Each finding now has Bug / Category / Why missed / Preventive action.
+- `.claude/rules/harness-facts.md`: added two new sections capturing the systemic lessons that came out of the full RCA:
+  - **Git invocation forms hooks must handle** — explicit table (bare commit, `-m`, `--amend`, `-F`, `git -C path commit`, `git -c key=val commit`, plus `commit-tree` rejection) with the reference pattern the prevention hooks use. Future hook authors no longer have to discover these by getting them wrong.
+  - **Amend exemptions in pre-commit hooks (recursion-risk pattern)** — codifies the lesson from the HIGH bypass: don't blanket-skip amends; choose either post-amend file-set logic (for diff-based gates) or no exemption at all (for working-tree gates).
+- `.claude/rules/harness-facts.md` "How this rule changes how you work":
+  - Added rule #4 — `/review-codex` Phase 3e applies to EVERY confirmed bug, not just HIGH. The meta-lesson the user surfaced.
+  - Added rule #5 — DOC-BACKED vs EMPIRICAL labeling convention for any fact in this file or any other rule. Vague "verified" claims age into wrong assumptions (caught on the project-slug rule in pass 3).
+- `.claude/skills/context-budget/scan.sh`: comment on `extract_description` documenting the multiline YAML limitation Codex flagged (MED-3, deferred fix).
+- `CLAUDE.md` Completion Workflow Phase 4: explicit note that the GitHub issue must exist BEFORE the closing commit, not after — Codex caught us creating issue #92 retroactively for b7e7188.
+
+No code-behavior changes; this commit is doc + rule additions plus the retroactive RCA. Counter unchanged (28 reviews, 77 bugs).
+
 ## 2026-04-26 (latest)
 
 ### Fix: Codex Adversarial Review of the Prevention Infrastructure (#92)

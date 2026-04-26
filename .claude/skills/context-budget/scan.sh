@@ -67,6 +67,15 @@ count_words() {
 }
 
 # --- frontmatter description extractor (rough but works for our format) ---
+# LIMITATION: only captures single-line `description: text` form. Multiline YAML
+# (`description: |\n  text\n  more text\n`) is NOT handled — the awk picks up
+# only the literal value after the colon (empty for multiline). This means the
+# bloat lint silently bypasses on multiline descriptions. No skill currently
+# uses multiline; if one is added, replace this with a real YAML parser or at
+# minimum extend the awk to fold the block-scalar continuation.
+# Caught by Codex review 2026-04-26 as suspect 6 (downgraded LOW since no
+# current usage; documented here so the next author who writes multiline
+# doesn't silently bypass).
 extract_description() {
     local file="$1"
     awk '/^---$/{f++} f==1 && /^description:/{
