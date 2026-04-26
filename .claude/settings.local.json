@@ -27,7 +27,9 @@
       "Edit(/.claude/skills/context-budget/**)",
       "Edit(/.claude/skills/freeze/**)",
       "Edit(/.claude/skills/build-fix/**)",
-      "Edit(/.claude/skills/new-feature/**)"
+      "Edit(/.claude/skills/new-feature/**)",
+      "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTR_Map/AssetSources/mirkwood/Kitbash/textures//**)",
+      "Edit(/.claude/skills/investigate/**)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
