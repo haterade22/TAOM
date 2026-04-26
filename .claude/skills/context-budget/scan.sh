@@ -182,36 +182,63 @@ scan_rules() {
 
 scan_memory() {
     # MEMORY.md is loaded at conversation start, capped at first ~200 lines
-    # or ~25KB by current Claude Code (whichever is smaller).
+    # or ~25KB by current Claude Code (whichever cap binds first).
     MEMORY_TOKENS=0
     MEMORY_LINES=0
     MEMORY_BYTES=0
-    # Memory lives outside the repo: ~/.claude/projects/<slug>/memory/MEMORY.md
-    # Slug is the project path with separators converted, prefixed with `c--`.
+
     local mem_root="$HOME/.claude/projects"
     [[ ! -d "$mem_root" ]] && return
-    # Find any MEMORY.md under projects/ that resolves to the current repo.
-    # Heuristic: look for a slug containing the repo's basename.
-    local repo_base
-    repo_base=$(basename "$REPO_ROOT")
-    local mem_file
-    mem_file=$(find "$mem_root" -maxdepth 3 -name MEMORY.md -path "*${repo_base}*/MEMORY.md" 2>/dev/null | head -1)
-    [[ -z "$mem_file" || ! -f "$mem_file" ]] && return
+
+    # Derive the EXACT Claude project slug from the full repo path.
+    # Convention: slug is the absolute path with `/` -> `-`, `\` -> `-`, and ':'
+    # stripped, then prefixed by `<drive>--` (e.g., `c--Users-mikew-source-repos-TAOM`).
+    # Substring matching ("anything containing TAOM") is unreliable when the
+    # machine has multiple projects whose paths share a substring (TAOM,
+    # TAOM-Online, taommod). Build the canonical slug instead.
+    local repo_native
+    if command -v cygpath >/dev/null 2>&1; then
+        repo_native=$(cygpath -w "$REPO_ROOT" 2>/dev/null || echo "$REPO_ROOT")
+    else
+        repo_native="$REPO_ROOT"
+    fi
+    # Lowercase the drive letter, strip the colon, replace separators with `-`.
+    local slug
+    slug=$(printf '%s' "$repo_native" \
+        | sed -E 's|^([A-Za-z]):[\\/]|\L\1--|; s|[/\\]|-|g')
+    # On non-Windows the input may not have a drive letter — leave as-is.
+
+    local mem_file="$mem_root/$slug/memory/MEMORY.md"
+    if [[ ! -f "$mem_file" ]]; then
+        # Fallback: substring search (warn in verbose mode that the slug
+        # heuristic missed). This preserves behavior on platforms where the
+        # canonical slug derivation doesn't match Claude Code's actual format.
+        local fallback
+        fallback=$(find "$mem_root" -maxdepth 3 -name MEMORY.md -path "*$(basename "$REPO_ROOT")*/MEMORY.md" 2>/dev/null | head -1)
+        if [[ -n "$fallback" && -f "$fallback" ]]; then
+            mem_file="$fallback"
+            [[ $VERBOSE -eq 1 ]] && printf "  memory (slug %s not found; fell back to %s)\n" "$slug" "$mem_file"
+        else
+            return
+        fi
+    fi
+
     MEMORY_LINES=$(wc -l < "$mem_file" 2>/dev/null | tr -d ' ')
     MEMORY_BYTES=$(wc -c < "$mem_file" 2>/dev/null | tr -d ' ')
-    # Cap at first 200 lines OR 25600 bytes (whichever is smaller).
-    local capped_lines capped_bytes
-    capped_lines=$(( MEMORY_LINES > 200 ? 200 : MEMORY_LINES ))
-    capped_bytes=$(( MEMORY_BYTES > 25600 ? 25600 : MEMORY_BYTES ))
-    # Estimate tokens from the *capped* portion. Read first 200 lines, count words.
+
+    # Estimate tokens from min(first 200 lines, first 25KB) — whichever cap
+    # binds first. Both caps must be enforced together; counting `head -200`
+    # alone overcounts when the byte cap binds before the line cap.
     local words
-    words=$(head -200 "$mem_file" 2>/dev/null | wc -w | tr -d ' ')
-    MEMORY_TOKENS=$(( words * 13 / 10 ))
-    # If 25KB cap is the binding constraint (memory is large), reduce proportionally.
-    if [[ $MEMORY_BYTES -gt 25600 && $capped_lines -eq 200 ]]; then
-        # Both caps active — token estimate is fine since we counted from first 200 lines
-        :
+    if [[ $MEMORY_BYTES -le 25600 ]]; then
+        # Byte cap not binding — just count first 200 lines (or whole file if shorter).
+        words=$(head -200 "$mem_file" 2>/dev/null | wc -w | tr -d ' ')
+    else
+        # Byte cap binding — slice the first 25KB, then take up to 200 lines of that.
+        words=$(head -c 25600 "$mem_file" 2>/dev/null | head -200 | wc -w | tr -d ' ')
     fi
+    MEMORY_TOKENS=$(( words * 13 / 10 ))
+
     if [[ $VERBOSE -eq 1 ]]; then
         printf "  memory %-39s %4d lines  %5d bytes  ~%5d tokens\n" "MEMORY.md ($mem_file)" "$MEMORY_LINES" "$MEMORY_BYTES" "$MEMORY_TOKENS"
     fi
@@ -287,21 +314,23 @@ except Exception as e:
 
     MCP_SERVERS=$(echo "$server_list" | grep -c '[^[:space:]]' 2>/dev/null || echo 0)
 
-    # Tool counts per known server. Heuristic — actual requires connecting.
-    # Counts updated 2026-04-26 from upstream README spot-checks.
-    # Sources:
-    #   serena:   https://github.com/oraios/serena (~25 symbol/edit tools)
-    #   github:   GitHub Copilot MCP (~30 issue/PR/repo tools)
-    #   filesystem: https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem (13 tools)
-    #   git:      mcp-server-git (~14 git operation tools)
-    #   ilspy:    ilspy_mcp_server (~8 decompile tools)
-    # When adding/removing servers, update these and document the source.
+    # Tool counts per known server. Mix of EXACT (counted from source) and
+    # HEURISTIC (estimate from upstream docs). Counts updated 2026-04-26.
+    # When adding/removing servers, update these AND document the source.
+    #
+    #   serena:      HEURISTIC ~25 symbol/edit tools — https://github.com/oraios/serena
+    #   github:      HEURISTIC ~30 issue/PR/repo tools — GitHub Copilot MCP
+    #   filesystem:  EXACT 13 — counted from upstream README:
+    #                https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem
+    #   git:         HEURISTIC ~14 git-operation tools — mcp-server-git
+    #   ilspy:       EXACT 4 — counted from server.py (decompile_assembly,
+    #                list_types, generate_diagrammer, get_assembly_info)
     declare -A SERVER_TOOLS=(
         [serena]=25
         [github]=30
         [filesystem]=13
         [git]=14
-        [ilspy]=8
+        [ilspy]=4
         [sequential-thinking]=1
         [context7]=2
         [playwright]=24
@@ -383,19 +412,22 @@ Baseline as % of window:          ${PCT_USED}%
 Worst-case (all skills + agents invoked): ~${WORST_CASE} tokens (+~${LAZY_DELTA} lazy)
 
 Component breakdown:
-+------------------+--------+-----------+----------+
-| Component        | Count  | Eager tok | Lazy tok |
-+------------------+--------+-----------+----------+
++------------------+--------+-----------+--------------+
+| Component        | Count  | Eager tok | If-invoked   |
++------------------+--------+-----------+--------------+
 EOF
-printf "| %-16s | %6d | %9d | %8s |\n" "CLAUDE.md"     1                    "$CLAUDE_TOKENS" "—"
-printf "| %-16s | %6d | %9d | %8d |\n" "Agents"        "$AGENTS_COUNT"      "$AGENTS_TOKENS" "$AGENTS_LAZY_TOKENS"
-printf "| %-16s | %6d | %9d | %8d |\n" "Skills"        "$SKILLS_COUNT"      "$SKILLS_TOKENS" "$SKILLS_LAZY_TOKENS"
-printf "| %-16s | %6d | %9d | %8s |\n" "Rules"         "$RULES_COUNT"       "$RULES_TOKENS" "—"
-printf "| %-16s | %6d | %9d | %8s |\n" "MCP servers"   "$MCP_SERVERS"       "$MCP_TOKENS" "—"
-printf "| %-16s | %6d | %9d | %8s |\n" "MEMORY.md"     1                    "$MEMORY_TOKENS" "—"
-printf "| %-16s | %6d | %9s | %8s |\n" "Hooks (.sh)"   "$HOOKS_COUNT"       "(not in ctx)" "—"
-echo "+------------------+--------+-----------+----------+"
-echo "Eager = loaded at startup. Lazy = loaded only when invoked (skill or Task spawn)."
+printf "| %-16s | %6d | %9d | %12s |\n" "CLAUDE.md"     1                    "$CLAUDE_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12d |\n" "Agents"        "$AGENTS_COUNT"      "$AGENTS_TOKENS" "$AGENTS_LAZY_TOKENS"
+printf "| %-16s | %6d | %9d | %12d |\n" "Skills"        "$SKILLS_COUNT"      "$SKILLS_TOKENS" "$SKILLS_LAZY_TOKENS"
+printf "| %-16s | %6d | %9d | %12s |\n" "Rules"         "$RULES_COUNT"       "$RULES_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12s |\n" "MCP servers"   "$MCP_SERVERS"       "$MCP_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12s |\n" "MEMORY.md"     1                    "$MEMORY_TOKENS" "—"
+printf "| %-16s | %6d | %9s | %12s |\n" "Hooks (.sh)"   "$HOOKS_COUNT"       "(not in ctx)" "—"
+echo "+------------------+--------+-----------+--------------+"
+echo "Eager = loaded at startup."
+echo "If-invoked = total bytes that load if EVERY agent / skill in that row is invoked"
+echo "  in one session (full body, not delta from eager). The WORST_CASE total above"
+echo "  adds only the delta (if-invoked minus eager) since eager is already counted."
 echo
 
 if [[ ${#ISSUES[@]} -gt 0 ]]; then

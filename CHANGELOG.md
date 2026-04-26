@@ -24,6 +24,18 @@ Reviewed 8 community Claude Code repos (gstack, everything-claude-code, gsd-buil
 
 **Decision gate triggered:** Picks #2 (two-layer skill injection) and #3 (three-layer compression) deferred — 94% headroom means neither addresses a real constraint. Re-evaluate on smaller-context model migration or if skill/MCP counts grow significantly.
 
+### Fix: Self-Review (Codex Pass 2) Findings on Pass-1 Fixes
+
+Second Codex pass on `5df21ea` flagged 0 HIGH, 1 MEDIUM, 3 LOW + 1 process violation. Self-review at `docs/reviews/codex-selfreview-tier1-fixes-2026-04-26.md`. All addressed in this third commit:
+
+- `scan_memory()` locator was substring-matching project basename, which collided on this machine (TAOM, TAOM-Online, taommod). Replaced with exact Claude project slug derivation from full repo path; substring search retained as fallback only when slug derivation misses.
+- 25KB byte cap was computed but never enforced in `scan_memory()` token estimate. Now enforced via `head -c 25600 | head -200` slice.
+- "Lazy tok" column header was misleading (it printed full body, not the lazy delta). Renamed to "If-invoked" with explicit footer note that the WORST_CASE total adds only the delta.
+- `ilspy` MCP server tool count was hardcoded as 8; verified actual is 4 (`decompile_assembly`, `list_types`, `generate_diagrammer`, `get_assembly_info` per `server.py`). Updated count and tagged each `SERVER_TOOLS` entry with EXACT vs HEURISTIC source.
+- `/freeze` and `/investigate` descriptions had crept back to 31w during the prior phrase-into-description move. Trimmed to 21w and 23w respectively.
+- AGENTS.md bug counter said 26 reviews / 64 bugs; correct math is 65 (57 prior + 7 confirmed + 1 bonus from review #26). Reconciled.
+- This CHANGELOG entry covers both `5df21ea` (which was committed without an entry, violating CLAUDE.md "Documentation Requirements" — Codex caught this in self-review) and the present third-fix commit.
+
 ### Fix: Deep-Review Findings on the Adoption Itself (commit-on-commit)
 
 Deep-review of `efbde5b` surfaced 4 HIGH findings, all addressed in follow-up:

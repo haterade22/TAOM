@@ -79,6 +79,25 @@ Headroom now ~93% on Opus 4.7 (1M). Still abundant — picks #2 / #3 still defer
 
 **Note on the MCP delta:** The +10,500 jump is NOT new bloat. The pre-fix scan had a whitespace-line bug in the MCP loop (FIX #9) that silently dropped one server's tool count from the sum (68 tools instead of the actual 89 = serena 25 + github 30 + filesystem 12 + git 14 + ilspy 8). The corrected count is now accurate. Real growth is in CLAUDE.md (routing polish) and skills (triggers + cross-refs).
 
+## Post-self-review snapshot — 2026-04-26 (after second Codex pass)
+
+After applying the Codex self-review fixes (`scan_memory` exact-slug locator, 25KB cap enforcement, ilspy MCP 8→4 correction, "If-invoked" column rename, /freeze + /investigate description trims):
+
+| Component   | Count | Eager | If-invoked | Δ vs prior |
+|-------------|------:|------:|-----------:|-----------:|
+| CLAUDE.md   |     1 |  7,397 |     —     |     0 |
+| Agents      |     2 |     94 |  1,649    |     0 |
+| Skills      |    18 |    627 | 16,265    |   -23 (trimmed descriptions) |
+| Rules       |    11 |  5,503 |     —     |     0 |
+| MCP servers |     5 | 44,000 |     —     | -2,000 (ilspy 8→4 correction) |
+| MEMORY.md   |     1 |  1,222 |     —     |     0 |
+| **Eager total** | | **58,843** |       | -2,023 |
+| **Worst-case (all invoked)** | | **76,036** | | -2,023 |
+
+Headroom: **~95% eager**, **~92% worst-case**.
+
+The drop is split between (a) genuine inaccuracy correction in the ilspy tool count, and (b) tighter skill descriptions per the self-review's bloat note.
+
 ## Post-codex-review snapshot — 2026-04-26 (corrected methodology)
 
 The Codex adversarial review (`docs/reviews/codex-adversarial-tier1-adoption-2026-04-26.md`) flagged a HIGH bug: previous scans counted full SKILL.md bodies as startup overhead, but Claude Code only loads skill descriptions at conversation start — skill bodies load lazily on invocation. Same applies to agents. After fixing `scan.sh` to count frontmatter only for the eager total (and adding a separate "lazy" column for body sizes when invoked), and adding MEMORY.md to the inventory, the corrected baseline is:

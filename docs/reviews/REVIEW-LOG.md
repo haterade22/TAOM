@@ -48,8 +48,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 24 | 2026-04-14 | Career CC Selection | needs-attention | agree | 1 confirmed (empty menu crash) + 1 test gap | 0 | 0 | v6-adversarial |
 | 25 | 2026-04-20 | RevoltTuning | needs-attention | agree | 1 HIGH (no-validation) + 1 MEDIUM (cache-lifetime doc mismatch) | 0 | 0 | v6-adversarial |
 | 26 | 2026-04-26 | Tier1 productivity skills adoption (`.claude/` infra) | NEEDS-FIXES | agree (2 promotions, 1 demotion) | 7 confirmed (2 HIGH→3, 3 MEDIUM→2, 2 LOW) + 1 missed by Codex (`scan_agents` body-counting) | 0 | 1 (`scan_agents` had same body-count bug as `scan_skills`; Codex flagged only the latter) | v6-adversarial-harness |
+| 27 | 2026-04-26 | Self-review of Tier1 fix commit (5df21ea) | NEEDS-FIXES (0H/1M/3L) | agree | 4 confirmed (1 MED, 3 LOW) + 2 process violations (CHANGELOG, counter math) | 0 | 0 | self-review-v1 |
 
-**Post-codebase reviews:** 19-26. 26 Codex reviews total, 65 bugs found across codebase.
+**Post-codebase reviews:** 19-27. 27 Codex reviews total, 71 bugs found across codebase.
 
 ### Review 25 — RevoltTuning Root Cause Analysis
 
@@ -93,6 +94,31 @@ First Codex review of `.claude/` harness changes (no Bannerlord feature, no C# c
 **Tier1 final score:** 8/8 confirmed bugs → all fixed in same session. 0 deferred.
 
 **Big result:** corrected scan baseline went from "75,906 tokens (94% headroom)" to "60,866 tokens eager / 78,059 worst-case (94% / 92% headroom)". Skills are 25× cheaper at startup than the buggy scanner reported. Pick #2 (two-layer skill injection from learn-claude-code) is **moot — Claude Code already does this natively**; dropped from the deferred queue.
+
+### Review 27 — Self-Review of Pass-1 Fixes (Codex Pass 2)
+
+Recursive review: Codex reviewed our fixes from review #26. Verdict NEEDS FIXES (0 HIGH, 1 MEDIUM, 3 LOW + 2 process violations). Self-review file at `docs/reviews/codex-selfreview-tier1-fixes-2026-04-26.md`.
+
+**Findings (all confirmed + fixed in same session):**
+
+| # | Finding | Severity | Root cause | Preventive |
+|---|---|---|---|---|
+| SR-MED | `scan_memory()` locator substring-matched basename, ambiguous on machines with multiple TAOM-named projects | MED | Lazy heuristic; assumed substring match would be unique | Switched to exact Claude project slug (`drive--path-with-dashes`) derived from full repo path; substring search retained as fallback only |
+| SR-LOW1 | 25KB byte cap computed but never enforced | LOW | Code skeleton existed but the conditional path that uses `capped_bytes` was no-op | Token estimate now uses `head -c 25600 \| head -200` slice when the byte cap binds |
+| SR-LOW2 | "Lazy tok" column label misleading — printed full body, not delta | LOW | Sloppy header; the WORST_CASE math was correct but column name implied otherwise | Renamed column to "If-invoked" with explicit footer note |
+| SR-LOW3 | `ilspy` MCP server count hardcoded as 8; actual is 4 | LOW | Carried-forward estimate; not source-checked | Verified by reading `server.py` (4 `@mcp.tool()` decorators); updated count + tagged each `SERVER_TOOLS` entry as EXACT or HEURISTIC |
+| Process #1 | CHANGELOG.md not updated for `5df21ea` despite mandatory rule | — | I had drafted CHANGELOG mentally for the commit message but never wrote it to the file | Caught by Codex's process-compliance check; added retroactive entry |
+| Process #2 | AGENTS.md said "26 reviews, 64 bugs"; actual was 65 (off by 1) | — | Manual arithmetic during the previous fix commit; didn't cross-check against REVIEW-LOG.md | Reconciled to 65; future updates should cross-reference REVIEW-LOG.md totals |
+
+**What Codex did particularly well in this round:**
+- Caught a process violation (missing CHANGELOG) that no internal review process would have surfaced — Codex doesn't trust the commit message, it diffs the file.
+- Did the counter arithmetic and flagged the off-by-one. This is the kind of mechanical check Claude is bad at because the numbers feel right.
+- Distinguished "fix complete" from "regression introduced" in the per-fix verdict table — caught that H1's column label was a regression even though the underlying math was correct.
+
+**What Claude (we) caught beyond Codex's findings:**
+- The trimmed descriptions still being 31w (over the ~25w target Codex noted) — fixed both back to ~22w in the same commit.
+
+**Score:** 4/4 confirmed bugs + 2 process gaps → all addressed in third fix commit. Three-commit chain (efbde5b → fbfd25a → 5df21ea → this commit) on Tier 1 adoption is now closed; no further regressions expected. Each commit added findings, each subsequent review found fewer (8 → 7 → 4), suggesting convergence rather than open-ended iteration.
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 **v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**

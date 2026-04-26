@@ -1,6 +1,6 @@
 ---
 name: investigate
-description: Six-phase root-cause debugging. Use for "debug this", "fix this bug", "why is this broken", root cause analysis, or "it was working yesterday". Iron Law: no fixes without root cause. Auto-engages /freeze.
+description: Six-phase root-cause debugging for crashes, build failures, or "why is this broken" reports. Iron Law - no fixes without root cause. Auto-engages /freeze.
 allowed-tools:
   - Bash
   - Read
