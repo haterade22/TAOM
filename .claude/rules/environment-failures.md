@@ -1,8 +1,15 @@
 ---
-paths:
-  - "**/*"
 description: Environment failures are reported, not fixed. The agent works within infra; the user controls infra.
 ---
+
+<!--
+This rule has NO `paths:` field intentionally. Per Claude Code memory loader:
+  - Rules WITHOUT `paths:` load at conversation start (always-on).
+  - Rules WITH `paths:` (any glob, including `**/*`) load only when a matching
+    file is opened — they are conditional, not unconditional.
+This rule is meant to apply universally, so `paths:` is omitted.
+-->
+
 
 # Environment failures: report, don't fix
 

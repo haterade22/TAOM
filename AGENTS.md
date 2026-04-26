@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (25 reviews, 57 bugs found)
+### Lessons From Prior Reviews (26 reviews, 64 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
@@ -63,8 +63,10 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Walking through math formulas with concrete numbers to find drift
 - Treating user-editable JSON/XML as *untrusted input* — flagging parse-without-validate gaps where a sane-looking file can silently ship broken values (RevoltTuning review 25)
 - Cross-referencing documentation claims against actual code lifecycle — catching "docs say X but DryIoc singleton means Y" mismatches (RevoltTuning review 25)
+- Verifying claims about Claude Code harness behavior (skill load semantics, hook lifecycle, rule loader scoping) against official docs and citing them by URL — caught the scan.sh full-body counting bug and the inline-hook activation conflation in feature-builder (Tier1 adoption review 26).
+- Distinguishing eager-load vs lazy-load context overhead and explicitly recommending the difference be reported separately (Tier1 adoption review 26).
 
-This section is updated by Claude after each review cycle. Last updated: 2026-04-20.
+This section is updated by Claude after each review cycle. Last updated: 2026-04-26.
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only
@@ -72,6 +74,14 @@ This section is updated by Claude after each review cycle. Last updated: 2026-04
 - `base.Method()` in GameModels accepting sealed params — adapter conversion happens inside the method body before calling the service
 - `SubModule.cs` and `IoC.cs` accessing TaleWorlds types directly — these ARE the boundary layer
 - GameModel constructors receiving services via `IoC.Resolve<>()` — registration pattern in `SubModule.cs`
+- `/investigate` SKILL.md re-declaring `/freeze`'s PreToolUse hook in its own frontmatter — intentional hook reuse so debugging auto-engages scope-lock; copying the inline hook block to other skills must be a deliberate choice, not a casual paste
+
+### When reviewing `.claude/` harness changes (not C# features)
+- Check whether claims about Claude Code's load semantics are verified — official docs at https://code.claude.com/docs/en/skills and /docs/en/hooks and /docs/en/memory are authoritative.
+- Skill bodies are NOT in the eager startup context; only frontmatter is. An auditor or linter that counts SKILL.md line-count or full-file tokens as startup overhead is wrong.
+- Hooks declared in skill frontmatter only fire while that skill is invoked. Writing a hook's state file from a non-hook-bearing context does NOT activate the hook.
+- Rules with ANY `paths:` field are conditional. Always-load rules omit `paths:` entirely. `paths: ["**/*"]` is still conditional under the loader.
+- `triggers:` is not in the documented Claude Code skill schema — flag any new skill that uses it as a port-from-other-suite drift.
 
 ---
 

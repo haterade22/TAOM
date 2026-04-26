@@ -53,6 +53,14 @@ Items are atomic, verb-led, ≤14 words, describe outcomes not steps. No scaffol
 
 If a task has internal sub-steps, those go in your head or as conversation, not as todos. Only add a todo when shipping it would genuinely move the user-visible needle.
 
+### Inline-hook activation (skills with `hooks:` frontmatter)
+
+Hooks declared in a SKILL.md `hooks:` block are scoped to that skill's lifecycle — **they only fire while the skill is invoked.** This has three concrete consequences:
+
+1. **State files alone are inert.** Writing `.claude/tmp/freeze/freeze-dir.txt` from a non-`/freeze` agent does nothing — the freeze hook is not active. To engage the boundary, **invoke `/freeze`** (via the Skill tool). Other agents that recommend scope-locking must direct the user to `/freeze`, not simulate it.
+2. **Cross-skill hook reuse is intentional and explicit.** `/investigate` re-declares the freeze hook in its own SKILL.md frontmatter so writing the state file from inside `/investigate` works (its hooks are active). Don't extend this pattern blindly to other skills — copy the hook block deliberately.
+3. **Global enforcement belongs in `.claude/settings.json`.** If you need a hook that fires regardless of which skill is active, declare it there. Inline-frontmatter hooks are the right tool for opt-in / scoped behavior, not unconditional safety nets.
+
 ## Skills (Slash Commands)
 
 | Command | Purpose |
@@ -124,6 +132,8 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Scoped Rules (auto-loaded by file path)
 
+> **Convention:** A rule with a `paths:` array loads **conditionally** when a matching file is opened. A rule **without** `paths:` (omit the field entirely) loads **at conversation start** for every session. `paths: ["**/*"]` is NOT the same as omitting `paths:` — the former is still conditional under the rule loader.
+
 | Rule | Scope | Content |
 |------|-------|---------|
 | `xslt.md` | `**/*.xslt` | XSLT passthrough, SandBoxCore reference |
@@ -136,7 +146,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
 | `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read |
 | `gui-ui.md` | `*Mixin*.cs`, `*Prefab*.cs`, `*Widget*.cs`, `*VM.cs`, `GUI/**` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
-| `environment-failures.md` | `**/*` (always-load) | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
+| `environment-failures.md` | _(no `paths:` — always-load)_ | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
 
 ## Custom Agents
 

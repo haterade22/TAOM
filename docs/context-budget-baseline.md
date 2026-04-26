@@ -79,6 +79,30 @@ Headroom now ~93% on Opus 4.7 (1M). Still abundant — picks #2 / #3 still defer
 
 **Note on the MCP delta:** The +10,500 jump is NOT new bloat. The pre-fix scan had a whitespace-line bug in the MCP loop (FIX #9) that silently dropped one server's tool count from the sum (68 tools instead of the actual 89 = serena 25 + github 30 + filesystem 12 + git 14 + ilspy 8). The corrected count is now accurate. Real growth is in CLAUDE.md (routing polish) and skills (triggers + cross-refs).
 
+## Post-codex-review snapshot — 2026-04-26 (corrected methodology)
+
+The Codex adversarial review (`docs/reviews/codex-adversarial-tier1-adoption-2026-04-26.md`) flagged a HIGH bug: previous scans counted full SKILL.md bodies as startup overhead, but Claude Code only loads skill descriptions at conversation start — skill bodies load lazily on invocation. Same applies to agents. After fixing `scan.sh` to count frontmatter only for the eager total (and adding a separate "lazy" column for body sizes when invoked), and adding MEMORY.md to the inventory, the corrected baseline is:
+
+| Component   | Count | Eager  | Lazy   | Notes |
+|-------------|------:|-------:|-------:|-------|
+| CLAUDE.md   |     1 |  7,397 |   —    | Full file loaded at startup |
+| Agents      |     2 |     94 |  1,649 | Frontmatter eager; body loaded only when Task spawns the agent |
+| Skills      |    18 |    650 | 16,288 | Frontmatter eager; body loaded only when skill invoked |
+| Rules       |    11 |  5,503 |   —    | Worst-case (most are conditional via `paths:`) |
+| MCP servers |     5 | 46,000 |   —    | Schemas always loaded |
+| MEMORY.md   |     1 |  1,222 |   —    | First ~200 lines / ~25KB cap |
+| Hooks (.sh) |    16 |    —   |   —    | Scripts run by harness, never in context |
+| **Eager total** |   | **60,866** | | |
+| **Worst-case (all invoked)** | | **78,059** | | Eager + ~17K lazy delta |
+
+Headroom on Opus 4.7 (1M): **~94% eager** (940K free), **~92% worst-case**.
+
+**Implications for deferred picks:**
+- Pick #2 — Two-layer skill injection (load names eagerly, bodies on demand): **Claude Code already does this natively.** The pre-fix baseline overstated skill cost ~25× by ignoring this. The "pick" is moot — drop from the queue.
+- Pick #3 — Three-layer context compression: still useful for long sessions, but at 6% baseline use we're not pressure-bound. Stays deferred.
+
+**MCP is now obviously the dominant component** (76% of eager total). If we want to trim further, that's where the leverage is — particularly any MCP server that wraps a CLI we could invoke directly (the `gh` MCP overlap with `gh` CLI is the most likely candidate).
+
 ## How to re-run
 
 ```bash

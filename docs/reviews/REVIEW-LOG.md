@@ -47,8 +47,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 23 | 2026-04-08 | NamedCompanions + Wanderer Race | needs-attention | agree | 1 confirmed (load teleport) + 1 dead code | 0 | 0 | v6 |
 | 24 | 2026-04-14 | Career CC Selection | needs-attention | agree | 1 confirmed (empty menu crash) + 1 test gap | 0 | 0 | v6-adversarial |
 | 25 | 2026-04-20 | RevoltTuning | needs-attention | agree | 1 HIGH (no-validation) + 1 MEDIUM (cache-lifetime doc mismatch) | 0 | 0 | v6-adversarial |
+| 26 | 2026-04-26 | Tier1 productivity skills adoption (`.claude/` infra) | NEEDS-FIXES | agree (2 promotions, 1 demotion) | 7 confirmed (2 HIGH→3, 3 MEDIUM→2, 2 LOW) + 1 missed by Codex (`scan_agents` body-counting) | 0 | 1 (`scan_agents` had same body-count bug as `scan_skills`; Codex flagged only the latter) | v6-adversarial-harness |
 
-**Post-codebase reviews:** 19-25. 25 Codex reviews total, 57 bugs found across codebase.
+**Post-codebase reviews:** 19-26. 26 Codex reviews total, 65 bugs found across codebase.
 
 ### Review 25 — RevoltTuning Root Cause Analysis
 
@@ -61,6 +62,37 @@ Deferred items resolved:
 - Siege camp fallback: distributed positions around gate instead of stacking
 - CharacterSelection transpiler: verified correct via decompilation (single AgentVisualsData ctor, no competing ActionSet call)
 - LoadingWindowViewModel: verified `internal void Update()` exists in v1.3.15 GauntletUI.dll
+
+### Review 26 — Tier1 Adoption Root Cause Analysis (first non-C# review)
+
+First Codex review of `.claude/` harness changes (no Bannerlord feature, no C# code). Adapted prompt structure from feature-review template; replaced kingdom/culture cheatsheet with harness cheatsheet (skill load semantics, hook lifecycle, rule loader scoping). Codex returned a sharp, well-cited review citing official Claude Code docs at https://code.claude.com/docs/en/{skills,hooks,memory}.
+
+**Disagreements with Codex severity:**
+- M1 (environment-failures `paths:`) → upgraded to HIGH. Same risk class as the gitignored hook script in deep-review #1: silently inert load-bearing config.
+- M3 (memory file overhead missing from scanner) → downgraded to LOW. MEMORY.md is capped at ~25KB → ~6K tokens, bounded.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| H1 | scan.sh counts full SKILL.md body as startup overhead | API assumption — copied upstream methodology without verifying current Claude Code semantics | Assumed full skill bodies eagerly load (the very motivation for "two-layer skill injection" pick from learn-claude-code). Reality: descriptions load eagerly, bodies lazily. | scan.sh now reports eager (frontmatter) and lazy (body) separately. CLAUDE.md "Inline-hook activation" rule documents the load model. The deferred pick #2 is now moot — Claude Code already does what learn-claude-code's pattern proposed. |
+| H2 | feature-builder claims writing freeze state file activates hooks | Lifecycle assumption | Assumed state-file presence triggers hook regardless of skill activation. Reality: hooks declared in skill frontmatter only fire while that skill is invoked. | Rewrote scope-lock section to explicitly invoke `/freeze` via Skill tool. Added CLAUDE.md "Inline-hook activation" rule + AGENTS.md entry distinguishing `/investigate`'s deliberate hook reuse from blanket pattern copying. |
+| M1 | environment-failures.md `paths: ["**/*"]` makes rule conditional, not always-load | Convention assumption | Followed `paths:` pattern reflexively. Reality: ANY `paths:` field = conditional; omit field entirely for always-load. | Dropped `paths:` from environment-failures.md. Added scoped-rules convention header in CLAUDE.md explaining the omit-vs-glob distinction. |
+| M2 | check-freeze.sh `tr -d '[:space:]'` strips internal whitespace from freeze-dir path | Shell idiom | Wanted to strip trailing newline; used `tr -d` shorthand which destroys all whitespace. Steam install paths contain spaces (`Mount & Blade II Bannerlord`). | Replaced with `IFS= read -r` which preserves the line verbatim. Verified with path-with-spaces freeze test (allow + deny both pass). |
+| M3 | scan.sh missing MEMORY.md from inventory | Completeness | Scanner audited only `.claude/` and `.mcp.json`. MEMORY.md is cap-loaded at conversation start. | Added `scan_memory` function. ~1.2K tokens accounted for. |
+| L1 | `triggers:` field in skill frontmatter undocumented in current Claude Code | API assumption / port drift | gstack uses `triggers:` for its own preamble; assumed it transferred. Codex verified docs only mention `description` and `when_to_use`. | Dropped `triggers:` from /freeze and /investigate; phrases moved into `description`. AGENTS.md harness-review section flags this for future ports. |
+| L2 | filesystem MCP hardcoded count was 12, actual 13 | Stale value | Estimate without source check. | Updated count + added source URL comments to all entries in SERVER_TOOLS map. |
+| Bonus | scan_agents had identical body-count bug as scan_skills | Same as H1 | Codex flagged only the skills case; missed the parallel bug in agents. Caught in our own RCA. | Same fix applied to scan_agents. |
+
+**Codex strengths in this review:**
+- Cited official Claude Code docs (URLs) for every behavioral claim. No "I think it works this way" inference left unmarked.
+- Explicitly distinguished UNVERIFIED vs CONFIRMED vs DISPUTED on each Known Suspect.
+- Verified gitignore claims with `git check-ignore -v` instead of grepping the file (correctly disputing my pre-finding that `.gitignore` only excludes `.claude/logs/` — actually it excludes `bin/` line 2, which had originally caught us, but Codex correctly verified the post-fix state).
+
+**What Claude (we) caught that Codex didn't:**
+- The `scan_agents` body-count bug was a parallel of H1; Codex flagged only the skills case. RCA caught the agents case.
+
+**Tier1 final score:** 8/8 confirmed bugs → all fixed in same session. 0 deferred.
+
+**Big result:** corrected scan baseline went from "75,906 tokens (94% headroom)" to "60,866 tokens eager / 78,059 worst-case (94% / 92% headroom)". Skills are 25× cheaper at startup than the buggy scanner reported. Pick #2 (two-layer skill injection from learn-claude-code) is **moot — Claude Code already does this natively**; dropped from the deferred queue.
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 **v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**

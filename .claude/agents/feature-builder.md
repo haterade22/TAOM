@@ -75,15 +75,9 @@ Before writing the first file, **suggest `/freeze`** to the user with the featur
 
 > Want to scope-lock edits to `Main/Features/<FeatureName>/` (and `TAOM.Tests/Features/<FeatureName>/`) for this session? Prevents accidental drift into adjacent code.
 
-If the user agrees, write the boundary state file directly (don't make them context-switch):
+If the user agrees, **invoke `/freeze` via the Skill tool** and pass the boundary path. Do NOT just write the `freeze-dir.txt` state file directly — `/freeze`'s PreToolUse hooks are declared in its skill frontmatter and only activate while the skill is invoked. Writing the state file without invoking `/freeze` produces a stale file that does nothing (the hooks are inert).
 
-```bash
-STATE_DIR="${CLAUDE_PROJECT_DIR}/.claude/tmp/freeze"
-mkdir -p "$STATE_DIR"
-echo "$(pwd)/Main/Features/<FeatureName>" > "$STATE_DIR/freeze-dir.txt"
-```
-
-The `/freeze` PreToolUse hooks will then block any Edit/Write outside the feature dir for the rest of the session. If you genuinely need to touch `Main/IoC.cs` or `Main/SubModule.cs` during integration, ask the user to widen the boundary or run `/unfreeze` for the integration step.
+When `/freeze` is active and the user wants to widen scope or release the boundary (e.g., to wire `Main/IoC.cs` or `Main/SubModule.cs`), invoke `/unfreeze` (or `/freeze` again with a wider scope).
 
 ## Integration
 After building the feature:

@@ -1,6 +1,6 @@
 ---
 name: investigate
-description: Six-phase root-cause debugging. Iron Law: no fixes without root cause. Auto-engages /freeze.
+description: Six-phase root-cause debugging. Use for "debug this", "fix this bug", "why is this broken", root cause analysis, or "it was working yesterday". Iron Law: no fixes without root cause. Auto-engages /freeze.
 allowed-tools:
   - Bash
   - Read
@@ -10,13 +10,6 @@ allowed-tools:
   - Write
   - WebSearch
   - AskUserQuestion
-triggers:
-  - debug this
-  - fix this bug
-  - why is this broken
-  - root cause analysis
-  - investigate this error
-  - it was working yesterday
 hooks:
   PreToolUse:
     - matcher: "Edit"
@@ -75,10 +68,9 @@ Output: **"Root-cause hypothesis: ..."** — a specific, testable claim about *w
 
 ## Phase 2: Scope Lock (auto-freeze)
 
-Once you have a hypothesis, lock edit scope to the affected directory using the same hook `/freeze` writes to. This prevents drift while debugging.
+Once you have a hypothesis, lock edit scope to the affected directory. Unlike a casual edit-restrict, this skill's own PreToolUse hooks (declared in this SKILL.md's frontmatter) ARE active while `/investigate` is running, so writing the state file here will fire them — that's why this skill can auto-engage freeze without separately invoking `/freeze`.
 
 ```bash
-# Identify narrowest containing directory for the affected files.
 SCOPE="<e.g. Main/Features/CareerSystem/>"
 
 STATE_DIR="${CLAUDE_PROJECT_DIR}/.claude/tmp/freeze"
@@ -89,7 +81,9 @@ echo "Debug scope locked to: $SCOPE"
 
 Tell the user: *"Edits restricted to `<scope>` for this debug session. Outside-scope edits will be hard-blocked. Run `/unfreeze` to release."*
 
-If the bug genuinely spans the whole repo (e.g., a shared adapter contract change), skip the lock and note why. The hooks declared in this skill's frontmatter will still fire — they're a no-op when no state file exists.
+If the bug genuinely spans the whole repo (e.g., a shared adapter contract change), skip the lock and note why.
+
+**Important difference from feature-builder:** Other agents/skills that don't have their own `hooks:` frontmatter cannot auto-engage freeze by writing the state file alone — the file is inert outside an active hook-bearing skill. They must explicitly invoke `/freeze` instead. `/investigate` is special because it declares its own copy of the freeze hook in this SKILL.md.
 
 ---
 

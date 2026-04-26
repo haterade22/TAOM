@@ -25,7 +25,12 @@ if [[ ! -f "$FREEZE_FILE" ]]; then
     exit 0
 fi
 
-FREEZE_DIR=$(tr -d '[:space:]' < "$FREEZE_FILE")
+# Read the boundary path verbatim. Earlier versions used `tr -d '[:space:]'`
+# which destroyed legitimate spaces in paths like
+# `E:/Steam/steamapps/common/Mount & Blade II Bannerlord/...`.
+# IFS= read -r preserves the line as-is; we only strip trailing CR/LF.
+IFS= read -r FREEZE_DIR < "$FREEZE_FILE" || true
+FREEZE_DIR="${FREEZE_DIR%$'\r'}"  # strip trailing CR if file has CRLF endings
 if [[ -z "$FREEZE_DIR" ]]; then
     echo '{}'
     exit 0

@@ -1,16 +1,10 @@
 ---
 name: freeze
-description: Lock edits to a directory; hard-block Edit/Write outside it. Pair with /unfreeze.
+description: Lock edits to a directory; hard-block Edit/Write outside it. Use to scope-lock edits, restrict editing scope, only edit one folder, or lock down edits during a focused fix. Pair with /unfreeze.
 allowed-tools:
   - Bash
   - Read
   - AskUserQuestion
-triggers:
-  - freeze edits to directory
-  - lock editing scope
-  - restrict file changes
-  - only edit this folder
-  - lock down edits
 hooks:
   PreToolUse:
     - matcher: "Edit"
