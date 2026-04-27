@@ -50,8 +50,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 26 | 2026-04-26 | Tier1 productivity skills adoption (`.claude/` infra) | NEEDS-FIXES | agree (2 promotions, 1 demotion) | 7 confirmed (2 HIGH→3, 3 MEDIUM→2, 2 LOW) + 1 missed by Codex (`scan_agents` body-counting) | 0 | 1 (`scan_agents` had same body-count bug as `scan_skills`; Codex flagged only the latter) | v6-adversarial-harness |
 | 27 | 2026-04-26 | Self-review of Tier1 fix commit (5df21ea) | NEEDS-FIXES (0H/1M/3L) | agree | 4 confirmed (1 MED, 3 LOW) + 2 process violations (CHANGELOG, counter math) | 0 | 0 | self-review-v1 |
 | 28 | 2026-04-26 | Prevention infrastructure (b7e7188 — hooks/rules built to catch the failure modes from #26+#27) | NEEDS-FIXES (1H/3M/2L) | agree (1 promotion, 1 demotion) | 6 confirmed (1 HIGH→1, 3 MED→2, 2 LOW + counter regex prep) + 1 process (no GitHub issue at ship time) | 0 | 0 | adversarial-prevention-v1 |
+| 29 | 2026-04-27 | Tier 2/3 adoption (79350f2 — 4 skills + 3 subagents + suggest-compact upgrade) | NEEDS-FIXES (1H/3M/2L) | agree (1 promotion) | 6 confirmed (1 HIGH→1, 2 MED→3, 2 LOW + 1 process settings.local drift) | 0 | 0 | adversarial-tier2-3-v1 |
 
-**Post-codebase reviews:** 19-28. 28 Codex reviews total, 77 bugs found across codebase.
+**Post-codebase reviews:** 19-29. 29 Codex reviews total, 83 bugs found across codebase.
 
 ### Review 25 — RevoltTuning Root Cause Analysis
 
@@ -164,6 +165,39 @@ User asked: "we did our review?" — honest answer was no. The prevention bundle
 - The counter-regex hardening that Codex asked for in finding LOW-4 had an even subtler bug: my "tolerant" replacement extracted numbers from anywhere in the matched line, so a line like "19-27. 27 Codex reviews total, 71 bugs found" returned `19, 27` instead of `27, 71`. Fixed during smoke-test by anchoring extraction on the keyword (`grep -oE '[0-9]+ reviews?'` then strip suffix).
 
 **Tier 1 + prevention chain summary:** five commits (efbde5b → fbfd25a → 5df21ea → 4964299 → b7e7188 → THIS), four reviews, 6 of the bugs from the prevention review (this) are exactly the categories the prevention was supposed to make impossible — proving that the prevention itself needed prevention. Convergence is real (8 → 7 → 4 → 6 in this case but the spike at 6 is acceptable because we were testing a more meta layer). Closing the loop.
+
+### Review 29 — Adversarial Review of Tier 2/3 adoption (Codex Pass 5)
+
+Codex review of `79350f2` (Tier 2 + 3 ecosystem-review adoption: 4 new skills, 3 new subagents, suggest-compact upgrade, effort frontmatter, scope-reduction rule). Verdict: NEEDS FIXES, 1 HIGH + 2 MED + 2 LOW + 1 process gap.
+
+Review file: `docs/reviews/codex-adversarial-tier2-3-2026-04-26.md`. Issue: #94.
+
+**Severity disagreements:**
+- Codex's suspect-2 included a CONFIRMED issue with `/scope-check effort: low` that wasn't in the formal A-E findings list. Promoted to MED-3 in my own analysis since the skill does inline reasoning that gets directly under-powered.
+
+**Recursion risk: REAL.** The HIGH (`suggest-compact.sh` commit-form blind spot) is the same recursion-risk class as review #28 — the prevention rule existed in `harness-facts.md` when this commit was being written, but I didn't apply it. **The prevention infrastructure didn't apply to its own first user.** Same pattern as the prior reviews where the prevention skipped the review's own remediation.
+
+**Full Root Cause Analysis (per `harness-facts.md` rule 4 — every confirmed bug):**
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| HIGH | `suggest-compact.sh` git commit substring matcher misses `git -C` / `git -c` | API surface incompleteness — failure to apply codified rule to NEW code | Wrote ad-hoc; the harness-facts.md "Git invocation forms" rule (added in `2c4d414`) was loaded but I didn't consult it when writing new commit-detection in `79350f2`. **Prevention rule existed but wasn't applied to its own first user.** | Apply the rule's reference pattern (DONE — fixed in this commit). Strengthened harness-facts.md to mark the pattern MANDATORY for new hooks; added grep-before-ship discipline note; added new audit-checklist item to `/skill-stocktake`. |
+| MED-1 | `/scope-check` rule prose-only, not enforceable | Aspirational vs deterministic confusion | Wrote the rule as if prose-in-a-skill = prevention. Without a deterministic verifier, depends on Claude reading and following its own instruction. | Relabeled rule explicitly as GUIDANCE (aspirational). Honest labeling vs aspirational claim. (Building a deterministic plan-vs-delivery verifier would be overkill for current usage.) |
+| MED-2 | `/skill-stocktake` checklist drift (amend-exemption + DOC-BACKED labeling missing) | Audit-baseline drift — checklist not synced when harness-facts.md grew | Added the audit skill in `79350f2`; harness-facts.md post-#28 expansions in `2c4d414`. They didn't cross-reference. The audit was certifying against a stale checklist — same recurrence pattern as the prevention infrastructure not applying to itself. | Added 2 new sections to `/skill-stocktake` checklist: "Hook integrity" (commit-form patterns + amend exemptions) and "Documentation labeling" (DOC-BACKED vs EMPIRICAL). |
+| MED-3 | `/scope-check effort: low` underpowers inline reasoning | API assumption — wrong intuition about which skills have inline reasoning vs subagent dispatch | Assumed `/scope-check` was lightweight reasoning; in reality the new scope-reduction classification work happens inline. `low` directly applies to that path. | Removed `effort: low` (defaults to `inherit`). Added rule to `/skill-stocktake` checklist: `effort: low` should NOT be set on skills doing significant inline reasoning. |
+| LOW-1 | `/context-save` freeze-note logic backwards | Off-by-one in conditional reasoning | Wrote "if you've frozen to .claude/, the write will be blocked" — but `.claude/state/context/` is INSIDE `.claude/`, so freeze-to-.claude/ ALLOWS the write. Note opposite of truth. | Rewrote: only freeze scopes that EXCLUDE `.claude/state/context/` block the write. |
+| LOW-2 | CHANGELOG claim "validator will auto-bump" but tool requires `--fix` | Documentation drift — claim outpaced implementation | Wrote CHANGELOG as if validator was wired automatic; tool only updates with explicit `--fix`. | This CHANGELOG entry corrects the claim. Can't retroactively edit `79350f2` commit message; treat as historical drift. |
+| Process | `settings.local.json` modified but absent from commit-message changed-file summary | Documentation drift — staged file invisible in summary | `git add` staged correctly but my commit-message summary didn't mention it. Codex caught via diff. | Discipline reminder: when writing commit messages, pipe `git diff --cached --stat` into the summary process, not memory. |
+
+**Codex strengths in this round:**
+- Recursion-risk frame explicit in section D — confirmed both the HIGH and 2 of 3 MEDIUMs as productivity/prevention defeats, ruled out the LOWs as runtime-safe.
+- Doc-cited each Claude Code semantic claim with URLs from https://code.claude.com/docs/en/{skills,hooks,memory}.
+- Caught process drift (`settings.local.json` un-summarized) by diffing rather than trusting the commit message.
+
+**What I caught beyond Codex:**
+- Promoted suspect-2 (effort: low underpowering inline reasoning) to a numbered MED finding even though Codex left it inside the suspect verdict. Codex's framing was correct but understated the impact.
+
+**Five-pass Tier 1 + Tier 2/3 chain summary:** 6 reviews so far (deep-review + Codex passes 1-5). Findings per pass: 8 → 7 → 4 → 6 → 6. The convergence isn't monotonic but each round catches a meaningfully smaller class of bug. The big lesson: **prevention infrastructure must apply to its own first user, or the next ship of new code regresses on the codified rule.** Now codified: `harness-facts.md` notes "MANDATORY for any new hook that detects git commits" and `/skill-stocktake` audits for it.
 
 **v4 prompt batch (reviews 4-7):** 10 findings, 9 confirmed, 0 false positives = **90% accuracy**
 **v5 prompt batch (reviews 8-10):** 8 findings, 7 confirmed + 1 FP-adjacent, 0 false positives = **88% accuracy**

@@ -71,7 +71,7 @@ When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate 
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
 
-**Reference pattern** (used by `check-changelog-changed.sh` and `check-claude-files-tracked.sh`):
+**Reference pattern** (used by `check-changelog-changed.sh`, `check-claude-files-tracked.sh`, and `suggest-compact.sh`):
 
 ```bash
 case "$COMMAND" in
@@ -82,6 +82,10 @@ case "$COMMAND" in
     *) echo '{}'; exit 0 ;;
 esac
 ```
+
+**MANDATORY for any new hook that detects git commits.** Codex review #29 caught `suggest-compact.sh` shipping in `79350f2` with a bare `*"git commit"*` substring matcher — the same recursion-risk class codified after review #28. The prevention rule existed but wasn't applied to its own first user.
+
+When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 

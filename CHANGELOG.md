@@ -2,6 +2,28 @@
 
 ## 2026-04-27
 
+### Fix: Codex review #29 on Tier 2/3 adoption (#94)
+
+Codex adversarial pass on `79350f2` (Tier 2/3 adoption from Pass 4 of the ecosystem-review chain) caught **1 HIGH + 2 MED + 2 LOW + 1 process gap**. Review file: `docs/reviews/codex-adversarial-tier2-3-2026-04-26.md`. All addressed.
+
+**HIGH (real prevention theater — same class as review #28):**
+- `.claude/hooks/suggest-compact.sh` shipped with a bare `*"git commit"*` substring matcher. The codified rule against this exact pattern lives in `harness-facts.md` "Git invocation forms" (added in `2c4d414`) and was loaded into every session — but I didn't apply it when writing new commit detection in `79350f2`. **The prevention rule existed but wasn't applied to its own first user.** Replaced the matcher with the canonical two-stage pattern (reject `commit-tree`/`commit-graph`, then match `git commit` and `git -X ... commit`). Smoke-tested 5/5 cases (bare commit, `git -C path commit`, `git -c key=val commit`, `commit-tree` rejection, `git push`). Strengthened `harness-facts.md` to mark the pattern MANDATORY for new hooks; added grep-before-ship discipline; added new audit-checklist item to `/skill-stocktake`.
+
+**MEDIUM:**
+- `/scope-check` scope-reduction "prohibition" rule was prose-only. Codex correctly flagged: without a deterministic verifier, it's aspirational. Relabeled as **GUIDANCE (aspirational)** with explicit note that there's no hook or plan-vs-delivery diff backing it.
+- `/skill-stocktake` checklist drift: missed the post-#28 codified rules for amend-exemption pattern and DOC-BACKED vs EMPIRICAL labeling. The audit was certifying against a stale checklist. Added 2 new sections: "Hook integrity" (commit-form patterns + amend exemptions) and "Documentation labeling" (DOC-BACKED vs EMPIRICAL).
+- (Promoted from suspect 2) `/scope-check effort: low` was directly attenuating the inline reasoning the new scope-reduction classification depends on. Unlike `/deep-review` which dispatches subagents, `/scope-check` thinks inline. Removed `effort: low` (defaults to inherit). Added stocktake checklist item: `effort: low` should NOT be set on skills doing significant inline reasoning.
+
+**LOW:**
+- `/context-save` SKILL.md freeze interaction note had its conditional backwards. Said "if you've frozen to `.claude/`, the write will be blocked" — actually freezing to `.claude/` ALLOWS the write because `.claude/state/context/` is INSIDE `.claude/`. Rewrote correctly: only freeze scopes that EXCLUDE `.claude/state/context/` block.
+- This CHANGELOG entry corrects the prior-commit's "validator will auto-bump" wording. The tool requires explicit `--fix`. Doc drift, not runtime defeat.
+
+**Process:**
+- Created issue #94 retroactively for this fix.
+- Counter validator auto-bumped via `bash tools/audit-review-counter.sh --fix`. AGENTS.md now matches REVIEW-LOG.md at 29 reviews / 83 bugs.
+
+REVIEW-LOG.md row #29 added with full per-finding RCA per harness-facts.md rule 4. Closes #94.
+
 ### Feature: Erebor Runes Texture-Stamping Pipeline
 
 End-to-end pipeline for adding dwarven runes, knot-trims, and heraldic

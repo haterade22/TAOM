@@ -123,4 +123,7 @@ The amend bypass (Codex review #28) was a real prevention-theater finding. Now c
 ## Notes
 
 - This skill writes ONE file. It does not modify your git tree, settings, or memory.
-- If you have an active `/freeze` boundary, the write goes into `.claude/state/context/` which is OUTSIDE most freeze boundaries by default — but if you've frozen to `.claude/`, the write will be blocked. Run `/unfreeze` first or widen the boundary.
+- The write goes into `.claude/state/context/`. Freeze interaction:
+  - If you've frozen to `Main/Features/<X>/`, `TAOM.Tests/`, or any other directory that does NOT contain `.claude/state/context/`, the snapshot write WILL BE BLOCKED by the `/freeze` hook. Run `/unfreeze` first or widen the boundary.
+  - If you've frozen to `.claude/` (or any ancestor of `.claude/state/context/`), the write is INSIDE the freeze boundary and will be ALLOWED.
+  (Codex review #29 caught the prior version of this note for stating the opposite — `.claude/` freeze ALLOWS the write because `check-freeze.sh` permits in-boundary writes.)

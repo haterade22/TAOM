@@ -71,24 +71,40 @@ fi
 
 if [[ $THROTTLE_OK -eq 1 && -n "$COMMAND" ]]; then
   # Detect task-boundary signals in the upcoming Bash command.
+  # Use the canonical commit-detection pattern from .claude/rules/harness-facts.md
+  # "Git invocation forms hooks must handle" — DO NOT regress to a bare
+  # `*"git commit"*` substring match. The pattern catches `git commit`,
+  # `git -C path commit`, `git -c key=val commit`, while rejecting
+  # `git commit-tree` and `git commit-graph` (different commands).
   BOUNDARY_HINT=""
+
+  # Step 1: reject commit-tree / commit-graph (different commands)
+  IS_COMMIT_PLUMBING=0
   case "$COMMAND" in
-    *"git commit"* )
-      # Only fire on real commits, not commit-tree; the existing pre-commit
-      # hooks (check-changelog-changed, check-claude-files-tracked) handle that.
-      case "$COMMAND" in
-        *"git commit-"*) ;;
-        *) BOUNDARY_HINT="just before a git commit" ;;
-      esac
-      ;;
-    *"./build.ps1"* | *"dotnet build"* | *"dotnet test"* )
-      # Build/test invocations often signal a phase boundary
-      [[ "$COUNT" -gt 30 ]] && BOUNDARY_HINT="after build/test (good time to consolidate context)"
-      ;;
-    *"git push"* )
-      BOUNDARY_HINT="after pushing (a fresh start makes sense for the next task)"
-      ;;
+    *"git commit-"*) IS_COMMIT_PLUMBING=1 ;;
   esac
+
+  # Step 2: detect actual git commit invocations
+  if [[ $IS_COMMIT_PLUMBING -eq 0 ]]; then
+    case "$COMMAND" in
+      *"git commit"* | *"git -"*" commit"* )
+        BOUNDARY_HINT="just before a git commit"
+        ;;
+    esac
+  fi
+
+  # Other boundary signals
+  if [[ -z "$BOUNDARY_HINT" ]]; then
+    case "$COMMAND" in
+      *"./build.ps1"* | *"dotnet build"* | *"dotnet test"* )
+        # Build/test invocations often signal a phase boundary
+        [[ "$COUNT" -gt 30 ]] && BOUNDARY_HINT="after build/test (good time to consolidate context)"
+        ;;
+      *"git push"* )
+        BOUNDARY_HINT="after pushing (a fresh start makes sense for the next task)"
+        ;;
+    esac
+  fi
 
   if [[ -n "$BOUNDARY_HINT" ]]; then
     echo "[Compact] Task boundary detected ${BOUNDARY_HINT}. Consider /compact + /context-save here — preserves decisions but trims in-context tokens for the next task." >&2
