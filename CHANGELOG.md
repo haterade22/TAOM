@@ -1,5 +1,52 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-26 (latest+2)
+
+### Feature: Tier 2 + 3 picks from Claude Code ecosystem review (#93)
+
+Following Tier 1 adoption + the prevention infrastructure, implementing the remaining 7 actionable picks from the 8-repo review documented in `~/.claude/plans/review-the-repo-at-fluttering-church.md`. (Picks #2 retired earlier as moot, #8 deferred as overkill for solo dev, #11/#12/#13/#15/#16/#17 already done in fbfd25a.)
+
+**New skills (4):**
+- `/agent-introspection-debugging` — 4-phase self-debug for failing agent runs (looping, drifting, burning tokens). Complements `/investigate` (which is for code bugs). Source: everything-claude-code. Pick #6.
+- `/context-save` — snapshot working state (git, in-flight tasks, decisions, files in flight) to `.claude/state/context/<timestamp>.md` so a future session can resume without re-deriving decisions. Pair with `/context-restore`. Source: gstack. Pick #7.
+- `/context-restore` — load most recent (or named) snapshot. Cross-checks against current git state. Source: gstack. Pick #7.
+- `/skill-stocktake` — periodic quality audit of installed skills + agents. Quick scan (recent only) or `full`. Catches decay (broken refs, stale paths, bloated descriptions) before sessions silently degrade. Source: everything-claude-code. Pick #10.
+
+**New subagents (3):**
+- `debugger` — generic systematic debugging for non-TAOM issues (tooling, scripts, build infra). Use `/investigate` for TAOM C#. Source: VoltAgent/awesome-claude-code-subagents. Pick #19.
+- `error-detective` — cross-system error correlation when one root cause manifests as multiple symptoms. Adapted from microservices framing to TAOM-feature framing (e.g., shared TaleWorlds API, lifecycle phase, culture/race ID). Source: same. Pick #19.
+- `refactoring-specialist` — behavior-preserving structural refactoring with TAOM ADR rules baked in. Iron rule: tests green before AND after. Boundary vs `/deslop` (deletion-first) and `code-architect` (greenfield design) explicit in the agent definition. Source: same. Pick #19.
+
+**Hook upgrade:**
+- `suggest-compact.sh` — added boundary-aware suggestions on top of existing threshold-based ones. Now nudges `/compact + /context-save` at task transitions (`git commit`, `./build.ps1`, `dotnet test`, `git push`) with throttling (≥10 calls between boundary suggestions). Pick #9.
+
+**Frontmatter additions:**
+- `effort: high` added to `/deep-review` (4-6 parallel review agents — needs the compute budget).
+- `effort: low` added to `/scope-check` (lightweight assessment, doesn't need max effort).
+- Verified `effort:` field is documented in current Claude Code skill schema (`https://code.claude.com/docs/en/skills`). Pick #14.
+
+**Scope-reduction prohibition:**
+- Added rule to `/scope-check` SKILL.md: don't silently drop scope. When a proposed change exceeds the current task, list every concern, classify, and present a phase split (do-now vs follow-up) for user decision. The third option — "drop Y silently" — is explicitly NOT on the menu. Source: gsd-build/get-shit-done's planner-source-audit pattern. Pick #18.
+
+**Routing table:**
+- Added 8 new rows to CLAUDE.md Skill Routing covering all of the above (proactive + soft-suggest tiers).
+
+**Already done in prior commits (not part of this issue):**
+- Pick #2 retired (Claude Code already does two-layer skill injection natively).
+- Picks #11, #12, #13, #15, #16, #17 done in fbfd25a (sharpening rules).
+
+**Deferred:**
+- Pick #3 (three-layer compression) — 94% headroom on Opus 4.7, no real constraint.
+- Pick #8 (persistent task DAG with `blockedBy`) — TodoWrite is sufficient for solo dev; the DAG infrastructure is overkill for our scale.
+
+**Verification:**
+- `/context-budget` after additions: eager 58,843 → 63,061 tokens (+4,218, +7%). Worst-case 76,036 → 86,620. Headroom held at 94% / 91% on Opus 4.7 (1M).
+- All new skills/agents have ≤30-word descriptions per `harness-facts.md`.
+- All new files staged and tracked (the new pre-commit hook from b7e7188 will block any gitignored slip-ups).
+- Counter validator will auto-bump REVIEW-LOG → AGENTS.md.
+
+Closes #93.
+
 ## 2026-04-26 (latest+1)
 
 ### Process: Retroactive Full RCA on Codex Review #28 + Preventives

@@ -2,6 +2,7 @@
 name: scope-check
 description: Assess whether a proposed change fits the current work context or represents scope creep
 argument-hint: [description of proposed change]
+effort: low
 ---
 
 # Scope Check Assessment
@@ -50,3 +51,29 @@ Evaluate whether the following proposed change aligns with the current work cont
 ## Important
 
 This is a READ-ONLY assessment. Do not make any code changes. Only analyze and advise.
+
+## Scope-reduction prohibition (Pick #18 from ecosystem-review adoption)
+
+When the proposed change exceeds the current task's scope, **never silently drop part of it.** The recurring failure mode: agent decides "I'll skip Y to keep this manageable" without flagging, and Y is actually load-bearing for the user. The user discovers Y was dropped two commits later when something downstream breaks.
+
+The required pattern:
+
+1. **List every concern in the proposed scope.** Don't pre-edit.
+2. **For each, classify:** in-scope-now, fits-as-follow-up, or genuinely orthogonal-and-deferred.
+3. **If anything would be silently omitted from the in-scope-now bucket, STOP** and present the proposed split:
+
+```
+This change has scope-creep. Two ways to handle it:
+
+(A) Phase split — ship now / defer later:
+    Now (this commit):  X1, X2, X3
+    Follow-up:          Y1, Y2 (open issue + estimate)
+
+(B) Wider scope — do everything in this commit (estimate: <effort>)
+
+Which? (Default: A — split.)
+```
+
+4. **The third option — "drop Y silently" — is not on the menu.** If Y is genuinely garbage, that's a separate "delete Y from the spec" decision that the user makes explicitly.
+
+Source: gsd-build/get-shit-done's planner-source-audit pattern. Catches the class of bug where "I trimmed the scope to fit" silently discards user-stated requirements.

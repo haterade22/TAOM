@@ -84,6 +84,10 @@ Hooks declared in a SKILL.md `hooks:` block are scoped to that skill's lifecycle
 | `/freeze` | Hard-block all Edit/Write outside a chosen directory for the rest of the session. Pair with `/unfreeze` to release. |
 | `/unfreeze` | Release the directory edit lock set by `/freeze`. |
 | `/investigate` | Systematic 6-phase root-cause debugging. Auto-engages `/freeze` to lock debug scope. Iron Law: no fixes without root cause. |
+| `/agent-introspection-debugging` | 4-phase self-debug for failing AGENT runs (looping, drifting, burning tokens). Complements `/investigate` (which is for code bugs). |
+| `/context-save` | Snapshot working context (git, in-flight tasks, decisions, files) to `.claude/state/context/` so a future session can resume without losing progress. |
+| `/context-restore` | Load the most recent (or named) snapshot from `/context-save`. |
+| `/skill-stocktake` | Quality audit of installed skills + agents. Quick scan (recent only) or `full`. Catches decay (broken refs, stale paths, bloated descriptions). |
 
 ## Skill Routing (when to invoke what)
 
@@ -106,6 +110,13 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | "clean up this AI slop", over-engineered code, clearly redundant abstractions | **`/deslop`** | **Only if the code is clearly redundant (multiple similar abstractions, dead helpers).** `/deslop` is deletion-first — could remove code the user wants to keep. Default to asking first. |
 | "add an ADR for", architectural decision being made | **`/new-adr`** | None — always |
 | "session feels slow", "are we close to context limit", "audit my .claude/", after adding skills/agents/MCP servers | **`/context-budget`** | None — but skip when the user is in the middle of an unrelated task |
+| "save my work", "save state", "save progress", "context save", before stepping away or before `/compact` | **`/context-save`** | None — always |
+| "where was I", "resume", "pick up where I left off", "restore context" | **`/context-restore`** | None — always |
+| Bash script bug, build infra issue, MCP server error, hook script crash — anything outside TAOM C# | **`debugger` agent** (Task tool) | None — but route TAOM C# bugs to `/investigate` instead |
+| Agent loop / drift, repeated retries with no progress, context degradation | **`/agent-introspection-debugging`** | None — always |
+| Multiple seemingly-unrelated bugs in same session/save, suspect shared root | **`error-detective` agent** (Task tool) | None — always |
+| "this method is too long", "this class needs to be split", structural cleanup without behavior change | **`refactoring-specialist` agent** (Task tool) | Tests must be green BEFORE invoking. Tests must remain green AFTER. |
+| "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
 
 ### Soft suggest (offer, don't auto-invoke)
 
@@ -156,6 +167,9 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 |-------|---------|
 | `taleworlds-researcher` | Decompile and analyze TaleWorlds DLLs |
 | `feature-builder` | Build features following TAOM architecture |
+| `debugger` | Generic debugging for non-TAOM-specific issues (tooling, scripts, CI). Use `/investigate` for TAOM C# bugs. |
+| `error-detective` | Cross-system error correlation when one root cause manifests as multiple symptoms across features. |
+| `refactoring-specialist` | Behavior-preserving structural refactoring (extract/rename/move). Use `/deslop` for redundant-code deletion. |
 
 ## Model Routing
 

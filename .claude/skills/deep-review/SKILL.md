@@ -2,6 +2,7 @@
 name: deep-review
 description: Launch parallel deep-dive agents to review completed work for quality, standards, compatibility, completeness, and cross-system data flow
 argument-hint: "[feature-name]"
+effort: high
 ---
 
 # Deep Review
