@@ -30,3 +30,5 @@ nul
 
 # Local MCP configuration (contains machine-specific paths)
 .vscode/mcp.json
+tools/runes/raw_ai/
+tools/runes/preview/

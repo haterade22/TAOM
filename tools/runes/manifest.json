@@ -1,0 +1,73 @@
+{
+  "_comment": "Drives `tools/stamp_erebor_runes.py --manifest`. Each entry produces one runic PBR triple. Edit + commit; the resulting `_runic` PNGs are art-pipeline outputs and should be committed alongside.",
+
+  "base_dir": "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM_Map/AssetSources/Scenes/erebor/textures",
+  "out_dir":  "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM_Map/AssetSources/Scenes/erebor/textures",
+  "mask_root": "tools/runes/masks",
+
+  "stamps": [
+    {
+      "_comment": "Carved hex centerpiece on the standard A-family wall. Use for throne-room pillars, gate stones, weathered hero walls.",
+      "base":      "t_dw_wall_block_a1",
+      "mask":      "filler/dwarven_decal_001.png",
+      "mode":      "carved",
+      "out_name":  "t_dw_wall_block_a1_runic_carved",
+      "placement": { "kind": "centered", "scale": 0.55, "center": [0.5, 0.5] },
+      "skip":      true
+    },
+    {
+      "_comment": "Same centerpiece, gold inlay variant — Bandos-Warforge hero look for treasure room.",
+      "base":      "t_dw_wall_block_a1",
+      "mask":      "filler/dwarven_decal_001.png",
+      "mode":      "gold",
+      "out_name":  "t_dw_wall_block_a1_runic_gold",
+      "placement": { "kind": "centered", "scale": 0.55, "center": [0.5, 0.5] },
+      "skip":      true
+    },
+    {
+      "_comment": "Same centerpiece, mithril variant — top-tier hero piece for throne hall.",
+      "base":      "t_dw_wall_block_a1",
+      "mask":      "filler/dwarven_decal_001.png",
+      "mode":      "mithril",
+      "out_name":  "t_dw_wall_block_a1_runic_mithril",
+      "placement": { "kind": "centered", "scale": 0.55, "center": [0.5, 0.5] },
+      "skip":      true
+    },
+    {
+      "_comment": "Celtic interlace trim, carved into the trim_a1 stone. Tiled horizontally across middle band.",
+      "base":      "t_dw_trim_a1",
+      "mask":      "filler/trim_001.png",
+      "mode":      "carved",
+      "out_name":  "t_dw_trim_a1_runic_carved",
+      "placement": { "kind": "band", "band_y_start": 0.4, "band_y_end": 0.6, "tile": true },
+      "skip":      true
+    },
+    {
+      "_comment": "Same trim, bronze inlay — forge / smithy aesthetic.",
+      "base":      "t_dw_trim_a1",
+      "mask":      "filler/trim_001.png",
+      "mode":      "bronze",
+      "out_name":  "t_dw_trim_a1_runic_bronze",
+      "placement": { "kind": "band", "band_y_start": 0.4, "band_y_end": 0.6, "tile": true },
+      "skip":      true
+    },
+    {
+      "_comment": "Same trim, silver inlay — restrained heraldic capitals or formal halls.",
+      "base":      "t_dw_trim_a1",
+      "mask":      "filler/trim_001.png",
+      "mode":      "silver",
+      "out_name":  "t_dw_trim_a1_runic_silver",
+      "placement": { "kind": "band", "band_y_start": 0.4, "band_y_end": 0.6, "tile": true },
+      "skip":      true
+    }
+  ],
+
+  "_notes": [
+    "Set `skip: false` once the corresponding mask PNG exists under tools/runes/masks/.",
+    "Modes: carved | gold | silver | bronze | mithril (defined in stamp_erebor_runes.py METALS dict + CARVED_* constants).",
+    "Placement kinds: 'centered' (scale, center) for hero stamps; 'band' (band_y_start, band_y_end, tile) for trim strips.",
+    "Auto-crop is on by default and removes white margins from AI-generated masks. Set `placement.auto_crop: false` to disable.",
+    "Mode tuning constants live at the top of tools/stamp_erebor_runes.py. Adjust there if a mode reads too subtle / too dramatic in-engine, then re-run the manifest.",
+    "Consider adding overlay-decal entries here later for Tier 2 (alpha-keyed quad meshes), once that authoring path is sorted."
+  ]
+}

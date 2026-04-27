@@ -1,5 +1,63 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-27
+
+### Feature: Erebor Runes Texture-Stamping Pipeline
+
+End-to-end pipeline for adding dwarven runes, knot-trims, and heraldic
+motifs to Erebor architecture by stamping AI-generated black-on-white
+masks onto base PBR textures.
+
+**Stamper** (`tools/stamp_erebor_runes.py`) — 5 modes via `METALS` dict +
+carved-groove constants:
+
+- `carved` — engraved groove. Diffuse darkens, normal indents, specular dampens.
+- `gold` — warm yellow inlay (Bandos-Warforge hero look).
+- `silver` — neutral cool metal inlay.
+- `bronze` — copper-orange inlay (forge / smithy iconography).
+- `mithril` — pale silver-blue Tolkien "true-silver" inlay.
+
+Two placement kinds:
+
+- `centered` — hero stamps at configurable scale + position.
+- `band` — horizontal trim bands with optional tiling and Y-position.
+
+Auto-crop trims white margins from AI-generated masks before scaling, so
+mask aspect maps correctly onto the base texture. Per-channel processing
+respects mixed channel resolutions (Erebor base is 4096 d/n + 2048 s).
+
+**Mask cleaner** (`tools/runes/clean_ai_mask.py`) — threshold + median
+filter + downsample to 1024×1024 grayscale. Handles raw MJ V7 / Recraft
+v4 Pro outputs cleanly.
+
+**Mask library scaffolding:**
+
+- `tools/runes/raw_ai/` (gitignored) — drop point for AI-generated raws
+- `tools/runes/masks/{hero,filler}/` — cleaned mask library
+- `tools/runes/reference/mirkwood_stone_engraved_*.png` — vendored from
+  LOTR_Map as PBR-channel calibration reference
+- `tools/runes/manifest.json` — base × mask × mode catalogue with
+  `placement` block schema
+- `tools/runes/ai_prompt.txt` — Recraft / MJ prompt templates + Erebor
+  motif catalogue + locked web-UI settings
+
+**Documentation:** `docs/kitbash/erebor/runes.md` covers the pipeline,
+naming convention, mode behaviour, and Tier-1 / Tier-2 authoring paths.
+
+**Constraint:** Bannerlord's vanilla `decal_sets.xml` system targets
+ephemeral runtime decals (blood, footsteps) — wrong tool for
+authoring-time architectural detail. We stamp into PBR triples instead.
+
+**Research:** `LOTR_Map\AssetSources\mirkwood\Kitbash\textures\
+mirkwood_stone_engraved_*.png` — proof-of-concept that engraved stone
+PBR sets work with the same naming style (`_d/_n/_s/_h`).
+
+**Save-compat:** None — pure asset-pipeline tooling.
+
+**Not-tested:** In-engine readability of stamps under torchlight on Erebor
+test scene; mesh-variant authoring (Tier 1 — `sm_dw_*_runic_a1.fbx`) not
+yet started.
+
 ## 2026-04-26 (latest+2)
 
 ### Feature: Tier 2 + 3 picks from Claude Code ecosystem review (#93)

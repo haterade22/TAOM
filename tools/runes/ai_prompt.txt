@@ -1,0 +1,91 @@
+Erebor Rune Mask — AI Generation Reference
+============================================
+
+Purpose
+-------
+Produce 1024+ px black-on-white silhouette masks of dwarven runes / heraldic
+motifs, one device per image. These masks feed `tools/stamp_erebor_runes.py`
+which stamps them onto base PBR textures in five blend modes (carved, gold,
+silver, bronze, mithril). Authoring quality at this stage determines final
+look — bad mask in,
+bad rune in-engine.
+
+Recommended Model (in order)
+----------------------------
+1. Recraft v4 Pro    — vector/icon-native, best-in-class for stencil silhouette work
+2. Midjourney V7     — fallback for motifs Recraft mangles
+3. GPT Image 2       — third fallback for unusual compositions
+4. ComfyUI (local)   — last-resort fallback
+
+Pick ONE model per batch. Mid-stream switching causes style drift.
+
+Locked Web-UI Settings
+----------------------
+Image size:        Square 1:1
+Resolution:        4K (highest available)
+Variations:        4 (triage best of 4)
+Prompt Enhancer:   OFF  <-- critical, this adds painterly flourish
+Visibility:        any
+
+Pinned Prompt
+-------------
+dwarven rune, [MOTIF DESCRIPTION], pure black silhouette on pure white background,
+heraldic device, stencil, flat vector style, no shading, no gradient,
+hard edges, symmetrical, centered, single device, thick lines,
+inspired by Cirth and Angerthas runes
+
+
+Per-Motif Catalogue (substitute into [MOTIF DESCRIPTION])
+---------------------------------------------------------
+
+Hero motifs (12) — vectorize after cleanup, save as masks/hero/<id>.svg:
+
+  durin_seal             seven-pointed star surrounded by anvil and hammer crossed beneath
+  erebor_kingdom         lonely mountain peak with crown above, axe and hammer flanking
+  hammer_anvil           crossed warhammer and pickaxe over an anvil
+  mountain_axe           triangular mountain bisected by a vertical battle axe
+  dragon_slain           coiled wyrm pierced by spear, in seal/badge form
+  arkenstone_radiant     cut gem with radiating angular rays, geometric
+  seven_stars            seven six-pointed stars in heraldic configuration
+  iron_hills_chevron     nested chevrons descending, knotwork edges
+  dwarrowdelf_gate       arched doorway with two pillars and keystone, runes on lintel
+  forge_flame            stylised flame inside a triangular forge mouth
+  runic_warding_circle   circular border of angular cirth runes around a central axe
+  treasury_crest         gem-topped chest flanked by raised hammers
+
+Filler motifs (~30-50, batch later) — PNG only, save as masks/filler/<id>.png:
+
+  rune_warding_a         single cirth-style warding rune
+  rune_warding_b/c/d     variants — different angular compositions
+  trim_chevron_a/b/c     chevron border tile (repeats horizontally)
+  trim_knotwork_a/b/c    interlace border tile
+  trim_meander_a/b       greek-key style border tile
+  floor_motif_diamond_a  large diamond floor centerpiece
+  floor_motif_hammer_b   floor stamp with hammer/anvil
+  floor_motif_mountain   floor stamp with mountain device
+  pillar_capital_a/b/c   carved pillar capital decoration
+  lintel_band_a/b        horizontal lintel decoration
+
+Workflow
+--------
+1. Open web UI, pick model, paste pinned prompt with [MOTIF DESCRIPTION] swapped in.
+2. Confirm settings: 1:1, 4K, enhancer OFF, 4 variations.
+3. Generate. Pick best of 4. Download to tools/runes/raw_ai/<motif>.png (gitignored).
+4. Run: python tools/runes/clean_ai_mask.py raw_ai/<motif>.png masks/{hero,filler}/<motif>.png
+5. (Hero only) Open cleaned PNG in Inkscape. File > Import. Path > Trace Bitmap.
+   Mode: Brightness cutoff. Threshold: 0.5. Update. OK. Save As: masks/hero/<motif>.svg.
+6. Verify the rune renders the way you want against base textures by running the stamper:
+   python tools/stamp_erebor_runes.py --base t_dw_wall_block_a1 --mask <motif> --mode carved
+   (or --mode gold | silver | bronze | mithril for metal-inlay variants)
+
+Notes
+-----
+- The mask format is: black pixels (=0) define where the stamp lands; white
+  pixels (=255) leave the base texture untouched. Greyscale mid-values give
+  partial-strength stamping (handy for soft edges).
+- Four-variations triage means you should keep ONE per motif. Discard the rest.
+- If a motif consistently fails (e.g. Recraft cannot do `runic_warding_circle`),
+  fall back to MJ V7 for that single motif but document the fallback in the
+  manifest's `notes` field so the style break is explicit.
+- The exact lore-correctness of cirth/angerthas runes is NOT a blocker. Visual
+  read at gameplay distance matters more than glyph accuracy.
