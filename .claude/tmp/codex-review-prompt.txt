@@ -1,0 +1,103 @@
+You are doing an adversarial review of a Claude Code harness adoption in the TAOM repository (Bannerlord 1.3.15 total-conversion mod). This is NOT a Bannerlord feature -- the changeset is `.claude/` infrastructure (skills, hooks, rules, config) and CLAUDE.md. You will not see C# code. Treat shell scripts, YAML frontmatter, markdown rules, and routing tables as the artifacts under review.
+
+CHANGESET (two commits on branch `bannerlord-1.3.15`, both reviewed):
+- efbde5b feat(.claude): adopt Tier 1 productivity skills from ecosystem review
+- fbfd25a fix(.claude): address deep-review findings on Tier 1 adoption (#91)
+
+What was added or modified:
+- New skill `/context-budget` -- token audit (.claude/skills/context-budget/SKILL.md + scan.sh)
+- New skill `/freeze` -- directory edit-lock (.claude/skills/freeze/SKILL.md + check-freeze.sh) using inline PreToolUse hooks declared in skill frontmatter
+- New skill `/unfreeze` -- release the freeze boundary
+- New skill `/investigate` -- 6-phase root-cause workflow that reuses /freeze's hook script
+- Existing skills modified: /build-fix (retry budget + escalation), /new-feature (suggest /freeze), /deep-review (fix-loop guidance)
+- Existing agent modified: feature-builder (retry budget + scope-lock suggestion)
+- New rule `.claude/rules/environment-failures.md` (always-load via paths: ["**/*"])
+- Modified rule `.claude/rules/csharp-architecture.md` (added stale-file re-read rule)
+- CLAUDE.md additions: "Working Discipline" section (fork discipline, autonomous-loop stewardship, TodoWrite quality bar) and "Skill Routing" section (proactive-invoke / soft-suggest / never-auto tables)
+
+READ FIRST:
+- CLAUDE.md (the project rule book; commit fbfd25a is current)
+- docs/context-budget-baseline.md (reports 75,906 token baseline, 93% headroom)
+- CHANGELOG.md entries for 2026-04-26
+- All four new SKILL.md files
+- .claude/skills/freeze/check-freeze.sh (the only shipping shell hook script)
+- .claude/skills/context-budget/scan.sh (auditor script)
+- .gitignore (the bin/ pattern previously broke /freeze)
+
+CLAUDE CODE HARNESS CHEATSHEET:
+- Skills live at .claude/skills/<name>/SKILL.md
+- Skills can declare hooks: in frontmatter; PreToolUse matchers fire only while the skill is active
+- ${CLAUDE_PROJECT_DIR} is set by Claude Code at hook invocation
+- Hook scripts read tool_input JSON from stdin and emit JSON to stdout: {} to allow, {"permissionDecision":"deny","message":"..."} to block, {"permissionDecision":"ask",...} to prompt
+- Rules at .claude/rules/<name>.md with paths: glob array are loaded conditionally; paths: ["**/*"] is always-load
+- Existing TAOM hooks live in .claude/hooks/*.sh and are wired in .claude/settings.json (see check-build-before-commit.sh as a reference style)
+- `git check-ignore -v <path>` is the authoritative answer for "is this file gitignored" -- do NOT just grep .gitignore
+
+KNOWN SUSPECTS (CONFIRM or DISPUTE each one with file:line evidence):
+
+1. INLINE-HOOK ACTIVATION SEMANTICS. The /freeze and /investigate SKILL.md files declare hooks: PreToolUse blocks in frontmatter. Verify against the Claude Code documentation (or any reference you have) that hooks declared in skill frontmatter actually activate while the skill is invoked, vs being ignored or only honored from .claude/settings.json. If the inline-hooks pattern is unsupported in current Claude Code, /freeze is non-functional and we'll have shipped a broken skill twice.
+
+2. TRIGGERS FIELD UTILITY. /freeze and /investigate include `triggers:` arrays in frontmatter (ported from gstack source). Determine whether Claude Code currently consumes `triggers:` for natural-language phrase activation, or whether this field is gstack-specific scaffolding that's dead weight in our context. If it's dead weight, the field adds tokens for no behavior.
+
+3. JSON ESCAPE COMPLETENESS. .claude/skills/freeze/check-freeze.sh has a _json_escape helper that handles \ and ". Test mentally: a path containing a literal newline (rare, possible on weird filesystems), a tab, a control character, or a backslash sequence like `\n` (literal text). Does the deny-message JSON survive every realistic Windows path that the harness could pass in?
+
+4. GITIGNORE BLAST RADIUS. The original commit lost check-freeze.sh because .gitignore line 2 is `bin/` (intended for Main/bin/ .NET output). Audit the rest of the changeset for files that *might* be gitignored without us realizing -- particularly files inside .claude/, docs/, or anywhere a generic pattern like `tmp/`, `obj/`, `node_modules/`, `*.log`, `*.cache` could match. Run `git check-ignore -v` against any path you suspect. List anything still excluded.
+
+5. CLAUDE.md "PROACTIVE INVOKE" CLAIMS. The Skill Routing section says "proactively invoke" for the strong triggers. In current Claude Code, does the agent actually invoke a skill without the user typing `/skill-name`, or does the routing table only inform the agent's own reasoning while still requiring user confirmation? If the latter, the routing-table framing is misleading and the user should know. Also check whether the confidence gates ("only if clearly redundant", "only for C# changes >=2 files") are written in language the agent can actually evaluate at decision time.
+
+6. ENVIRONMENT-FAILURES PATHS GLOB. .claude/rules/environment-failures.md uses `paths: ["**/*"]`. Verify this glob actually matches every file context (not silently dropped, not matching only certain depths). Compare against TAOM's existing `.claude/rules/` which use scoped globs like `Main/**/*.cs`. If `**/*` doesn't behave as always-load, the rule never fires and the "report, don't fix" guidance is invisible to the agent.
+
+7. SCAN.SH ACCURACY GAPS. .claude/skills/context-budget/scan.sh reports 75,906 tokens for the baseline. Audit the methodology:
+   - Does it count Claude Code's own injected system prompt boilerplate? (No -- but should the baseline doc explain that?)
+   - The MCP tool count uses a hardcoded SERVER_TOOLS map (serena=25, github=30, etc.). What if the user's MCP servers actually expose a different count? Spot-check by counting tool definitions in any one server's docs.
+   - The scanner adds 200 tokens per server overhead -- where does that number come from? Justify or flag.
+   - Does the scan.sh report include (or should it include) memory file overhead from `~/.claude/projects/<project>/memory/MEMORY.md`?
+
+8. SKILL CROSS-REFERENCE COHERENCE. The Skill Routing table tells the agent which skill to invoke. The skill cross-references (feature-builder -> /freeze, /new-feature -> /freeze, /deep-review fix-loop -> /freeze) tell each skill to suggest others. Trace one full workflow scenario (e.g., user says "scaffold a CareerSystem revamp") and verify the chain is coherent: does /new-feature actually suggest /freeze? Does /freeze actually ask the right question? Does /build-fix's escalation to /investigate trigger only in the right cases? Identify any link that is broken or contradictory.
+
+VANILLA / SOURCE COMPARISON:
+The skills /freeze and /investigate were ported from https://github.com/garrytan/gstack. The /context-budget skill was ported from https://github.com/affaan-m/everything-claude-code. Compare TAOM's adapted versions against those upstream sources for material drift -- did we drop anything important during adaptation, or simplify in a way that lost functionality?
+
+CONFIG CROSS-REFERENCE:
+- 18 routing-table skill mentions in CLAUDE.md should each resolve to a real .claude/skills/<name>/SKILL.md. Verify by listing both sets and diffing.
+- Two SKILL.md hook command paths (`${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh`) should resolve to a tracked, executable file. Verify with `git ls-files` and `git check-ignore`.
+- environment-failures.md is referenced once in CLAUDE.md scoped-rules table. Spelling, glob format, description -- all match the file?
+
+REQUIRED SECTIONS in your output:
+
+A. INLINE-HOOK SEMANTICS VERDICT -- the most important question. Either the hooks work or this whole bundle is theater.
+
+B. KNOWN SUSPECTS RESPONSE -- one CONFIRMED/DISPUTED/UNVERIFIED verdict per suspect with file:line evidence.
+
+C. CROSS-REFERENCE AUDIT -- table of references checked vs. resolved.
+
+D. UPSTREAM DRIFT -- material differences between TAOM port and gstack/everything-claude-code originals.
+
+E. FINDINGS OR OBSERVATIONS -- everything else you noticed, with severity (HIGH / MEDIUM / LOW). For each HIGH:
+- File and line
+- What the bug is
+- Why it matters
+- Concrete fix
+
+QUALITY GATES (your review must satisfy all):
+- Every CONFIRMED finding must include a file:line citation.
+- Every claim about Claude Code's runtime behavior (does X work? is Y honored?) must say HOW you verified -- official docs, source, your inference. If inference, mark UNVERIFIED.
+- Do not flag a missing feature unless you've checked the file. The previous deep-review's cross-reference agent missed the gitignored hook script because they grepped .gitignore for the path string instead of running `git check-ignore`.
+- Do not invent issues. If a section has nothing to flag, write "No findings."
+- Do not assume gstack/everything-claude-code's skills work the same way in Claude Code -- those repos may target a different skill schema version.
+
+PRIOR REVIEW LESSONS:
+SUCCESSES (what TAOM's own deep-review caught on this changeset):
+- gitignored hook script via `git check-ignore` (not by reading .gitignore)
+- JSON injection on Windows paths (verified via raw-backslash test)
+- triggers: arrays missing in port (compared against gstack source)
+- description bloat (39w + 47w trimmed to 12w + 13w)
+- routing table coverage gaps and over-eager invocation patterns
+
+FAILURES (what the prior review missed and you should focus on):
+- Whether inline-hooks-in-frontmatter is actually supported by current Claude Code (deep-review assumed yes; never verified)
+- Whether triggers: is consumed (deep-review assumed yes; only knew it worked in gstack)
+- Whether `proactively invoke` actually happens vs being aspirational language
+- Whether the `paths: ["**/*"]` always-load glob actually fires as expected
+
+WRITE YOUR FINAL REPORT TO: docs/reviews/codex-adversarial-tier1-adoption-2026-04-26.md (overwrite if it exists). Use the section headers A through E listed above. Include a one-line summary at the top of the file with overall verdict (PASS / NEEDS FIXES) and a count of HIGH / MEDIUM / LOW findings.

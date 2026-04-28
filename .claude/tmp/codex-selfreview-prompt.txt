@@ -1,0 +1,108 @@
+You are doing an adversarial SELF-REVIEW of fixes that were made in response to a prior Codex review. The prior review is at docs/reviews/codex-adversarial-tier1-adoption-2026-04-26.md. Your job: verify each fix actually addresses the root cause AND did not introduce new bugs.
+
+CHANGESET (one commit on branch `bannerlord-1.3.15`):
+- 5df21ea fix(.claude): address Codex adversarial review on Tier 1 adoption
+
+Commits leading up to this state, for context:
+- efbde5b feat(.claude): adopt Tier 1 productivity skills from ecosystem review
+- fbfd25a fix(.claude): address deep-review findings on Tier 1 adoption (#91)
+- 5df21ea fix(.claude): address Codex adversarial review on Tier 1 adoption  ← REVIEW THIS
+
+Use `git diff fbfd25a..5df21ea` to scope your review to ONLY the fix changes. Do not re-review fbfd25a or efbde5b unless you find a regression that points back into them.
+
+CLAUDE CODE HARNESS CHEATSHEET (from prior review's verified facts):
+- Skill descriptions load eagerly at conversation start; skill bodies load on invocation.
+- Agent descriptions load into Task tool spawn context; agent bodies load when that agent is spawned.
+- Hooks declared in skill frontmatter only fire while that skill is active.
+- Rules without `paths:` load at conversation start (always-on). Rules with `paths:` (any glob) are conditional.
+- MEMORY.md cap-loads first ~200 lines / ~25KB at conversation start.
+- `triggers:` field is not in the documented Claude Code skill schema.
+
+PRIOR FINDINGS AND THE FIXES — verify each:
+
+H1. PRIOR: scan.sh counted full SKILL.md and agent .md bodies as startup overhead.
+    FIX in 5df21ea: scan.sh refactored to count frontmatter only as eager, body separately as lazy. Added `estimate_frontmatter_tokens()` helper. Report now has eager + lazy columns.
+    VERIFY:
+    - Is `estimate_frontmatter_tokens()` correct? Does it actually extract content between the first two `---` lines, no more no less?
+    - Does scan_skills() now use the eager estimate for the running total, AND track lazy separately?
+    - Does scan_agents() apply the same fix (the bonus we caught Codex missed)?
+    - Does the report's TOTAL math include the right components, and does WORST_CASE add the lazy delta correctly?
+    - Edge case: a SKILL.md with no frontmatter at all (no `---` markers). What does estimate_frontmatter_tokens return?
+    - Edge case: a SKILL.md with frontmatter but no body. What gets counted?
+    - Edge case: a SKILL.md with multiple `---` blocks (weird but possible). Does the awk only capture the first?
+
+H2. PRIOR: feature-builder.md instructed Claude to write `freeze-dir.txt` directly and claimed `/freeze`'s hooks would fire — false (hooks scoped to skill activation).
+    FIX in 5df21ea: rewrote scope-lock section to require explicit `/freeze` invocation via Skill tool. Added CLAUDE.md "Inline-hook activation" rule and AGENTS.md "Intentional Patterns" entry distinguishing /investigate's deliberate hook reuse from blanket pattern copying.
+    VERIFY:
+    - Does the new feature-builder text actually instruct invocation rather than file-write? Read .claude/agents/feature-builder.md "Scope-lock during implementation".
+    - Does CLAUDE.md "Inline-hook activation" rule clearly explain the lifecycle scoping?
+    - Does the rule correctly carve out /investigate as an intentional hook re-declaration (not as an exception that defeats the rule)?
+    - Are there any OTHER places in the changeset (any skill, agent, or rule) that still claim writing freeze-dir.txt activates hooks? Grep for "freeze-dir.txt" across .claude/ and report every callsite — confirm only `/freeze` (sets) and `/investigate` (sets, with its own hook) and `/unfreeze` (clears) and `check-freeze.sh` (reads) write/read it.
+
+M1. PRIOR: environment-failures.md had `paths: ["**/*"]` which made it conditional, not always-load.
+    FIX in 5df21ea: dropped `paths:` entirely. Added scoped-rules convention header in CLAUDE.md explaining the omit-vs-glob distinction.
+    VERIFY:
+    - Does environment-failures.md frontmatter now have NO `paths:` field?
+    - Does the explanatory comment in the file accurately describe the loader behavior?
+    - Does the CLAUDE.md scoped-rules table cell now show "(no `paths:` — always-load)" or equivalent?
+    - Does the convention note in CLAUDE.md explicitly call out that `paths: ["**/*"]` is still conditional?
+
+M2. PRIOR: check-freeze.sh used `tr -d '[:space:]'` which destroyed internal spaces in paths.
+    FIX in 5df21ea: replaced with `IFS= read -r FREEZE_DIR < "$FREEZE_FILE"` plus trailing `\r` strip.
+    VERIFY:
+    - Does the new read pattern preserve internal spaces? Trace it on a path like "C:/Users/Test User/repos/TAOM/Main/Features".
+    - What if the state file has multiple lines? `read` only consumes the first. Is that intentional?
+    - What if the state file is missing trailing newline? `read` returns non-zero exit; the `|| true` handles that — but does FREEZE_DIR still capture the content?
+    - The `${FREEZE_DIR%$'\r'}` only strips trailing CR. What if the file has a trailing space? That should never happen given how we write it (echo "$DIR"), but if it did, would the boundary check fail to match?
+
+M3. PRIOR: scan.sh missing MEMORY.md from inventory.
+    FIX in 5df21ea: added `scan_memory()` function that finds the project's memory file and counts its first 200 lines / 25KB.
+    VERIFY:
+    - Does scan_memory correctly locate `~/.claude/projects/<slug>/memory/MEMORY.md` for THIS project? The slug heuristic is `find ... -path "*${repo_base}*/MEMORY.md"` where repo_base is `basename "$REPO_ROOT"` = "TAOM". Will this match the actual slug `c--Users-mikew-source-repos-TAOM`? Check by listing the actual filesystem location.
+    - Edge case: no MEMORY.md exists. Does scan_memory return 0 cleanly?
+    - Edge case: multiple MEMORY.md files match the find pattern (e.g., user has another project with "TAOM" in path). Does `head -1` pick the right one?
+    - The capping logic computes `capped_lines` and `capped_bytes` but only uses the lines for the actual `head -200 | wc -w` count. The bytes cap is computed but unused. Is this a bug or intentional?
+    - The token estimate uses words*1.3 from the head -200. If the file is large enough that the 25KB cap binds before the 200-line cap, are we overcounting?
+
+L1. PRIOR: `triggers:` field undocumented in current Claude Code skill schema.
+    FIX in 5df21ea: dropped `triggers:` from /freeze and /investigate. Phrases moved into `description:` field where Claude Code does consume them.
+    VERIFY:
+    - Are the trigger phrases actually preserved in the descriptions, or did they get lost in the move?
+    - Did the descriptions get bloated again? Count words on each (target was ~25w from the deep-review fix).
+    - Are there any other skills in `.claude/skills/` that still have `triggers:` in their frontmatter?
+
+L2. PRIOR: filesystem MCP hardcoded count was 12, actual is 13 per upstream.
+    FIX in 5df21ea: changed to 13. Added source URL comments to all SERVER_TOOLS entries.
+    VERIFY:
+    - Is the new count 13?
+    - Are the comments accurate? Spot-check serena (https://github.com/oraios/serena), git (mcp-server-git), ilspy (ilspy_mcp_server) by checking their public docs if you can.
+    - Did the comments mention how to update when adding/removing servers?
+
+ADDITIONAL CHECKS (not from prior review — find new bugs in the fixes themselves):
+
+A. Inline hook robustness in /investigate: it now writes `freeze-dir.txt` from inside its own skill where the hooks ARE active. But what happens if /investigate runs and exits without /unfreeze being called? Does the freeze-dir.txt file persist? Does that mean a subsequent (non-/freeze, non-/investigate) edit attempt would be blocked? What's the user-experience impact?
+
+B. scan.sh report formatting: the new column structure is `Eager tok | Lazy tok` but the dash characters used for "no lazy" rows are a literal em-dash "—" inside printf format strings. Will that print correctly in all terminals (Windows cmd, Git Bash, PowerShell)?
+
+C. The CHANGELOG.md was NOT updated for this fix commit (commit message claims it but git log shows no CHANGELOG diff in 5df21ea). Verify with `git diff fbfd25a..5df21ea -- CHANGELOG.md`. If empty, that's a process violation per CLAUDE.md "Documentation Requirements (MANDATORY) — Every session must update CHANGELOG.md".
+
+D. AGENTS.md updated counters from "25 reviews, 57 bugs found" to "26 reviews, 64 bugs found". Verify the math: prior was 57, this review found 7 confirmed (2H+3M+2L) plus 1 bonus = 8 new bugs. 57 + 8 = 65, but AGENTS says 64. Off by one?
+
+REQUIRED OUTPUT SECTIONS:
+
+A. PER-FIX VERDICT TABLE — one row per prior finding (H1, H2, M1, M2, M3, L1, L2):
+| # | Fix complete? | Root cause addressed? | Regression introduced? | Notes |
+
+B. NEW FINDINGS — anything you discover in the fixes themselves, with severity (HIGH/MEDIUM/LOW), file:line, and concrete fix.
+
+C. PROCESS COMPLIANCE — CHANGELOG.md update status, GitHub issue update status (if any), counter-math sanity check.
+
+D. RECOMMENDED FOLLOW-UP — should anything go in a third fix commit, or is this loop closed?
+
+QUALITY GATES (same as before):
+- File:line citations on every claim.
+- Verify against current code, not against the commit message.
+- Mark UNVERIFIED any claim about Claude Code runtime behavior you cannot back with docs.
+- Do not invent new issues. If a section has nothing to flag, write "No findings."
+
+WRITE YOUR FINAL REPORT TO: docs/reviews/codex-selfreview-tier1-fixes-2026-04-26.md (overwrite if it exists). One-line top summary: PASS / NEEDS FIXES + count of new HIGH/MEDIUM/LOW.

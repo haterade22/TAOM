@@ -129,6 +129,111 @@ Sketch for fortifications. Validates the merlon-on-top pattern.
 Unknowns: tower and wall height (3m each? or taller?), exact wall-module
 width (3m assumed, needs confirmation).
 
+## Calibration notes — roof system (from 4x8 house iteration 1)
+
+Findings from studying `dwarf_house_a` / `dwarf_house_b` and building
+`test_erebor_house_4x8.xml`:
+
+### Roof piece roles (corrected)
+
+| Mesh | Actual role | DON'T use it for |
+|---|---|---|
+| `sm_dw_roof_str_a1` | Pitched slope panel, 3m wide × 3m deep. Use along all 4 eaves. | — |
+| `sm_dw_roof_top_a1` | Ridge cap, 3m long. Sits along the apex at Z = WALL_H + 1.5. | — |
+| `sm_dw_roof_side_str_a1` | Under-ridge strip that alternates with `roof_top_a1` to form a continuous ridge. | — |
+| `sm_dw_roof_side_cor_out_a1` | **Eave trim** — placed at Z=WALL_H along the wall-top edges | — |
+| `sm_dw_roof_cor_tri_a1` | **Interior valley fill** — where two roof slopes meet at an inner 90° corner | ❌ NOT for outer hip corners of a simple rectangular roof |
+| `sm_dw_roof_cor_in_*` | **Inside corner** — roof valley fold | — |
+| `sm_dw_roof_cor_out_*` | **Outside corner panel** for L-shaped buildings | — |
+
+### Simple rectangular hip roof (the 4x8 pattern)
+
+For a `W × L` tile rectangle with long axis = Y:
+
+1. **Long-side slopes (E + W)**: `sm_dw_roof_str_a1` at Z=WALL_H, every 3m along Y,
+   placed at X = ±half_w, rotations ±π/2.
+2. **Short-end hip slopes (N + S)**: `sm_dw_roof_str_a1` at Z=WALL_H, every 3m along X,
+   placed at Y = ±half_l, rotations 0 and π.
+3. **Ridge cap** along long axis: `sm_dw_roof_top_a1` at Z=WALL_H+1.5, X=0,
+   spanning the inner length (Y from -(half_l − TILE) to +(half_l − TILE)) —
+   **ridge is shorter than the building by one tile on each end** to leave
+   room for the short-end hip slopes.
+4. **NO `roof_cor_tri_a1` at outer building corners** — this is for interior valley
+   corners (like an L-shaped roof plan), not outer hips.
+5. **Eave trim** (optional): `roof_side_cor_out_a1` along long-side eaves.
+
+### Hip-roof overhang
+
+Placing `roof_str_a1` AT the wall line (X = ±half_w for E/W) produces a
+roughly 1.5m overhang past the wall, because the panel's pivot sits at its
+centre. This matches `dwarf_house_b`'s authored roof and is intentional.
+
+### Decorative conventions from `dwarf_house_b`
+
+- Base beams `_wall_beam_3m_b` at Z=0 along the outside of each wall.
+- Top beams `_wall_beam_3m_c` at Z=3 along the outside of each wall.
+- Column tops (`_wall_clmn_top_*`) with scale `1.1, 1.1, 1.1` or `1.5, 1.5, 1.2`
+  at 0.524 rad (30°) rotations at corners.
+- `_trim_corner_a1` at Z=4.4 is used INSIDE a roof valley, not along outer eaves.
+
+## Calibration notes — corner pieces, trim studs, roof decoration
+
+From close-up interior + exterior + roof shots of `dwarf_house_b`:
+
+### `sm_dw_wall_3m_corn_a` = DIAGONAL bevel wall, not a 90° corner reinforcement
+
+This is a **45°-rotated wall panel** meant to span a **chamfered corner**.
+Using it at a 90° outer corner produces wrong geometry (the diagonal panel
+sticks out past the orthogonal walls).
+
+**Correct usage:** replace the last 1.5m of one wall AND the first 1.5m of
+the perpendicular wall with a single `corn_a` piece at 45°, creating an
+octagonal footprint. The matching floor tile `sm_dw_ground_3m_a1_corner`
+fills the chamfered floor area.
+
+**For a purely rectangular building:** do NOT use `corn_a` at all. Let plain
+`sm_dw_wall_3m_a/b/c` walls butt up directly at the 90° corners. This is
+what the calibration hut used and it worked.
+
+**For an octagonal (chamfered-rectangle) building:** the 4 outer corners
+each get a `corn_a` diagonal wall + a `_ground_3m_a1_corner` floor tile.
+Rotations appear to follow 0 / -π/2 / π / +π/2 going CW (verify per build).
+
+### `sm_dw_ground_trim_corner_a1` = decorative STUD, not an L-corner tile
+
+Small square capstone / nub. Sits at the grid intersection where two trim
+strips cross. **Place at tile-boundary intersections** (at X = multiples of
+TILE and Y = multiples of TILE, starting from the floor centre), NOT at
+outer corners.
+
+Also used on roofs: appears as the capstone where two decorative roof
+strips meet at a roof edge corner. Z should match whatever roof surface
+level you're decorating — e.g., Z=3 for eave-level, Z=4.5 for ridge-level,
+not the fixed 4.4 I was using.
+
+### Roof decoration system (from close-ups of `dwarf_house_b`'s roof)
+
+The roof isn't just `roof_str_*` tiles — it has an overlay decoration:
+
+1. **Base roof**: `sm_dw_roof_str_*` (pitched slate panels) laid over the building.
+2. **Vertical rib strips**: `sm_dw_wall_clmn_3m_*` pieces laid ON the sloped
+   roof, running from eave up to ridge. They divide the slope into bays —
+   3 strips per slope (one per 3m bay if the slope is 9m wide). Rotations
+   follow the slope angle.
+3. **Horizontal edge strips**: `sm_dw_wall_beam_3m_*` along the eave line
+   (wall-top height), and along the ridge.
+4. **Corner capstones**: `sm_dw_ground_trim_corner_a1` studs where strips
+   meet at corners (top of each rib, where eave + rib meet, where ridge +
+   rib meet).
+
+This is what gives the roof its ribbed / framed look in the close-ups.
+
+### `sm_dw_wall_3m_door_a1` = full door wall with built-in arch
+
+The door mesh includes a carved arched doorframe — don't try to compose an
+arch from separate pieces. Just drop the door wall at any wall slot and the
+door geometry is built in.
+
 ## Update rule
 
 Each time a build iteration reveals something new — a pivot quirk, a

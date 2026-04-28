@@ -1,0 +1,102 @@
+You are doing an adversarial review of commit `79350f2` in TAOM (Bannerlord 1.3.15 mod). This commit shipped Tier 2 + Tier 3 picks from a Claude Code ecosystem review: 4 new skills, 3 new subagents, a hook upgrade, frontmatter additions, and a scope-reduction rule.
+
+Your job: verify the bundle actually delivers what it claims, find any prevention-theater bugs, and run the same recursion-risk frame that caught the `--amend` bypass in commit `b7e7188`.
+
+CHANGESET (one commit on `bannerlord-1.3.15`):
+- 79350f2 feat(.claude): adopt Tier 2 + Tier 3 picks from ecosystem review (#93)
+
+Use `git diff 2c4d414..79350f2` to scope your review.
+
+Files changed:
+- NEW skills: .claude/skills/agent-introspection-debugging/SKILL.md, .claude/skills/context-save/SKILL.md, .claude/skills/context-restore/SKILL.md, .claude/skills/skill-stocktake/SKILL.md
+- NEW subagents: .claude/agents/debugger.md, .claude/agents/error-detective.md, .claude/agents/refactoring-specialist.md
+- MODIFIED hook: .claude/hooks/suggest-compact.sh (boundary-aware upgrade)
+- MODIFIED skills: .claude/skills/deep-review/SKILL.md (effort: high), .claude/skills/scope-check/SKILL.md (effort: low + scope-reduction prohibition rule)
+- NEW state dir gitignore: .claude/state/.gitignore
+- MODIFIED docs: CLAUDE.md (8 new routing rows + 2 table rows), CHANGELOG.md
+
+VERIFICATION BASELINE — `harness-facts.md` (always-loaded rule, source of truth on Claude Code load semantics):
+- Skill descriptions load eagerly; bodies lazily on invocation. Frontmatter fields documented as consumed: `name`, `description`, `allowed-tools`, `hooks`, `argument-hint`, `disable-model-invocation`, `when_to_use`. (Plus `effort:` per current docs at https://code.claude.com/docs/en/skills.)
+- Hooks declared in skill frontmatter only fire while that skill is invoked. Writing a hook's state file from a non-hook-bearing skill does NOT activate the hook (this was the original `feature-builder` bug).
+- Rules without `paths:` load at conversation start; ANY `paths:` is conditional.
+- Pre-commit hooks must NOT blanket-skip `git commit --amend`. Must handle `git -C path commit`, `git -c key=val commit`. Must reject `git commit-tree` / `commit-graph`.
+- `triggers:` field is undocumented in Claude Code skill schema.
+
+KNOWN SUSPECTS (CONFIRM/DISPUTE/UNVERIFIED with file:line evidence):
+
+1. **Inline-hook activation claims in new skills.**
+   - `/context-save` writes a snapshot to `.claude/state/context/<slug>.md`. Does it claim any hook will fire as a result of the write? (It shouldn't — but verify the prose body of `.claude/skills/context-save/SKILL.md`.)
+   - `/context-restore` reads from the same dir. Does it claim any hook is required for the read?
+   - `/agent-introspection-debugging` Phase 3 recovery actions reference `/freeze`, `/context-save`. Does it claim writing the freeze state file activates the hook? (Should NOT — only `/freeze` and `/investigate` declare the hook in frontmatter.)
+   - `/skill-stocktake` only reads. No hook claims expected.
+   None of these 4 skills declare `hooks:` in frontmatter. Confirm.
+
+2. **`effort:` field correctness.**
+   - `/deep-review` has `effort: high`. The skill spawns subagents (Task tool calls). Each subagent has its own `model:` directive in the spawn call. Does the `effort: high` on the parent skill actually do anything useful, or is it a no-op because all the actual work happens in child agents? Cite Claude Code docs.
+   - `/scope-check` has `effort: low`. Could a complex scope question (e.g., "is this 5-feature refactor in scope?") get under-powered by `low` effort? Should it be `inherit` instead?
+
+3. **Subagent boundary integrity.**
+   The 3 new subagents claim explicit boundaries with existing tools. Read each agent's body and the tools they're meant to be distinguished from, then judge whether the boundary is decision-trigger-clean OR fuzzy.
+   - `.claude/agents/debugger.md` claims to be for "non-TAOM-specific issues" (tooling, scripts, build infra). Boundary with `/investigate` (TAOM C# code) and `/agent-introspection-debugging` (failing AGENT runs). Read all three. If a user reports "my Python script is failing because of a Bannerlord DLL path", which one fires? Is the routing-table entry in CLAUDE.md unambiguous?
+   - `.claude/agents/refactoring-specialist.md` claims boundary with `/deslop` (deletion-first), `code-architect` (greenfield), `feature-builder` (new code). Read each existing skill briefly and confirm.
+   - `.claude/agents/error-detective.md` claims boundary with `/investigate` (single-bug). Read both. If a user reports "save-load corruption AND mission-init crash AND companion-spawn freeze", does this agent or `/investigate` get invoked first?
+
+4. **`suggest-compact.sh` boundary detection edge cases.**
+   The harness-facts.md "Git invocation forms hooks must handle" table lists the patterns hooks must match. Does `.claude/hooks/suggest-compact.sh` use the same disciplined matching? Specifically:
+   - Does it match `git commit`? `git -C path commit`? `git -c key=val commit`?
+   - Does it correctly REJECT `git commit-tree` / `git commit-graph` (different commands)?
+   - Are the `./build.ps1`, `dotnet build`, `dotnet test`, `git push` patterns substring-matched in a way that has false-positive risk (e.g., does a command containing `git push` in a string argument trigger the boundary)?
+   - The throttle is `≥10 calls between boundary suggestions`. Could a long-running session that has 100 git commands fire 10 boundary suggestions in a row at the right intervals — or is the throttle reset broken?
+
+5. **`/context-save` state file location safety.**
+   The skill writes to `.claude/state/context/<slug>.md`. The dir has `.claude/state/.gitignore` containing `*` and `!.gitignore`.
+   - Run `git check-ignore -v` against a hypothetical state file path. Does it correctly report ignored?
+   - Could a snapshot accidentally end up tracked if the user has the `core.excludesfile` set differently?
+   - The skill's "Notes" section says state file location is "OUTSIDE most freeze boundaries by default — but if you've frozen to .claude/, the write will be blocked." Verify by reading `check-freeze.sh` logic: if FREEZE_DIR is `<repo>/.claude/`, would a write to `<repo>/.claude/state/context/foo.md` be blocked or allowed?
+
+6. **`/skill-stocktake` checklist completeness.**
+   The skill's audit checklist lists items to check. Compare against `harness-facts.md`. Specifically:
+   - Does the checklist include the "Amend exemptions in pre-commit hooks" recursion-risk pattern from review #28?
+   - Does it check `effort:` field validity?
+   - Does it check whether SKILL.md descriptions are documented vs `triggers:`-style port drift?
+   - Does it include the "DOC-BACKED vs EMPIRICAL labeling" convention from harness-facts.md rule 5?
+   List anything missing.
+
+7. **Scope-reduction prohibition rule enforceability.**
+   The rule added to `/scope-check` prose says "the third option — drop Y silently — is explicitly NOT on the menu." Read it. Is the rule:
+   (a) DETERMINISTIC — verifiable against a plan file or scope spec, OR
+   (b) ASPIRATIONAL — depends on Claude reading and following its own instruction.
+   If (b), is there a way to make it (a)? E.g., a hook that compares the commit message's listed concerns against an in-flight plan file. Don't propose code; just flag the level of enforcement.
+
+8. **`/context-restore` discrepancy detection actually works.**
+   The skill claims it cross-checks the snapshot's "files in flight" against current git state and surfaces discrepancies. Read the actual instructions in `.claude/skills/context-restore/SKILL.md`. Does the prose include literal step-by-step instructions for the cross-check, or is it a high-level promise without execution detail?
+
+RECURSION-RISK frame (as in prior reviews): for each finding, ask whether a bug in this commit defeats the productivity/prevention claim it's trying to make. Examples:
+- If `suggest-compact.sh` has the same `git -C` miss as `check-changelog-changed.sh` had, the boundary-aware feature is theater.
+- If `/context-save` lets snapshots accidentally commit, the "local working state" promise is broken.
+- If subagent boundaries are fuzzy, Claude will pick the wrong tool and the new agents are no-better than ad-hoc reasoning.
+- If `/skill-stocktake` checklist drifts from `harness-facts.md`, it audits against an outdated reference.
+
+REQUIRED OUTPUT SECTIONS:
+
+A. KNOWN SUSPECTS RESPONSE — one verdict per suspect with file:line evidence.
+
+B. PROCESS COMPLIANCE
+- CHANGELOG.md updated for `79350f2`? Verify with `git diff 2c4d414..79350f2 -- CHANGELOG.md`.
+- Issue #93 referenced in commit message? Verify.
+- AGENTS.md counter consistent with REVIEW-LOG.md? Run `bash tools/audit-review-counter.sh` if Git Bash is available; manual comparison if not.
+- Was a deep-review run on this commit before shipping? (Per CLAUDE.md, mandatory for C# changes; this commit is .claude/-only — note whether the spirit applies.)
+
+C. NEW FINDINGS — anything else you notice. Severity HIGH/MEDIUM/LOW with file:line and concrete fix.
+
+D. RECURSION RISK — for each confirmed bug, is the prevention/productivity claim defeated? If yes, that's HIGH.
+
+E. RECOMMENDED FOLLOW-UP — should anything go in a fix commit, or is this loop closed?
+
+QUALITY GATES (per harness-facts.md rules 4 + 5):
+- File:line citations on every finding.
+- Mark UNVERIFIED any claim about Claude Code runtime behavior you can't back with the docs at https://code.claude.com/docs/en/{skills,hooks,memory}.
+- Don't invent issues. If a section has nothing to flag, write "No findings."
+- Trace edge cases by reading code, not by inference. The hooks parse JSON from stdin — trace what happens with malformed input, with `git commit-tree`, with paths-with-spaces.
+
+WRITE YOUR FINAL REPORT TO: docs/reviews/codex-adversarial-tier2-3-2026-04-26.md (overwrite if it exists). One-line top summary: PASS / NEEDS FIXES + count of HIGH/MEDIUM/LOW.
