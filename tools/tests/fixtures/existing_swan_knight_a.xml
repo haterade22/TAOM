@@ -1,0 +1,15 @@
+<WeaponManifest>
+  <CraftedWeapon id="wm_swan_knight_sword_a"
+                 name="{=existing}Existing"
+                 weapon_class="OneHandedSword"
+                 culture="gondor"
+                 tier="3">
+    <Blade length="105.06" weight="0.90">
+      <Thrust damage_type="Pierce" damage_factor="3.83" />
+      <Swing  damage_type="Cut"    damage_factor="3.83" />
+    </Blade>
+    <Guard length="9.57" weight="0.15" armor_bonus="5" />
+    <Hilt  length="14.40" weight="0.2" />
+    <Pommel length="9.38" weight="0.3" />
+  </CraftedWeapon>
+</WeaponManifest>

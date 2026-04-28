@@ -2,6 +2,19 @@
 
 ## 2026-04-27
 
+### Tooling: FBX -> 4-XML weapon-build pipeline (#95)
+
+Added `tools/build_weapon_xml.py` and the `tools/weapon_xml/` package to automate the four-file weapon-authoring process the Armory historically did by hand: `LOTRLOME_crafting_pieces.xml`, `LOTRLOME_items/LOTRAOM_weapons.xml`, `crafting_templates.xslt`, `weapon_descriptions.xslt`. Project-agnostic — output target resolved via flag, `weapon_xml.toml`, or interactive prompt. XML manifest format mirrors the output schema; auto-derives piece IDs / mesh refs / `body_name` / culture from FBX mesh names + manifest hints. Idempotent: re-running with the same manifest is zero-diff. Supports both crafted (4-piece) and single-piece (Bow/Javelin/Throwing) weapons.
+
+25 unit tests cover classification, manifest parsing, render shape, idempotency, and end-to-end pipeline. Smoke-tested against the real LOTRLOME_Armory ModuleData: existing weapon = no-op; fresh manifest = clean diffs across all four files. Documented in `docs/features/weapon-xml-pipeline.md`.
+
+**Fixes from in-session deep-review (3 HIGH + 2 MED):**
+- XSLT self-heal: previous design gated XSLT inserts on `new_piece_ids`, so a partial first run (pieces written, XSLTs not) silently orphaned pieces forever. Pipeline now passes ALL piece IDs to the XSLT step and relies on the per-entry idempotency guard already in `render_xslt`. Regression test: `test_xslt_self_heal_after_partial_first_run`.
+- `body_name` auto-derivation: `bo_<mesh>` was wrong for `sm_`-prefixed weapons (Armory drops `sm_` in collision names; keeps `wm_`). Extracted to `classify.derive_collision_name`. Regression tests cover both prefix cases.
+- Atomic writes: `_write_deltas` now writes all four files to `<path>.tmp.<pid>` first, then `os.replace` once all temp writes succeed. A crash mid-flight no longer leaves partial state.
+- Newline preservation: paired `newline=""` on read and write so original CRLF/LF style survives edits (cleaner git diffs).
+- Culture resolution wired: explicit `culture=` -> `classify.detect_culture_from_id` (prefix) -> `config.prompt_culture` (interactive, defaults to `empire`). The `interactive_culture` parameter is no longer dead. Regression test: `test_culture_resolved_from_prefix_when_absent`.
+
 ### Fix: Codex review #29 on Tier 2/3 adoption (#94)
 
 Codex adversarial pass on `79350f2` (Tier 2/3 adoption from Pass 4 of the ecosystem-review chain) caught **1 HIGH + 2 MED + 2 LOW + 1 process gap**. Review file: `docs/reviews/codex-adversarial-tier2-3-2026-04-26.md`. All addressed.

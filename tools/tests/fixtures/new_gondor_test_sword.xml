@@ -1,0 +1,17 @@
+<WeaponManifest>
+  <!-- Synthetic manifest — intended for dry-run only. Demonstrates the 4-file emit. -->
+  <CraftedWeapon id="wm_gondor_pipeline_test_sword"
+                 name="{=aom_pipeline_test_name}[Gondor] Pipeline Test Sword"
+                 weapon_class="OneHandedSword"
+                 culture="gondor"
+                 tier="3"
+                 modifier_group="sword">
+    <Blade length="100" weight="0.9">
+      <Thrust damage_type="Pierce" damage_factor="3.5" />
+      <Swing  damage_type="Cut"    damage_factor="3.5" />
+    </Blade>
+    <Guard length="3" weight="0.15" armor_bonus="5" />
+    <Hilt  length="11" weight="0.2" />
+    <Pommel length="3" weight="0.1" />
+  </CraftedWeapon>
+</WeaponManifest>
