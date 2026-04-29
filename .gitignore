@@ -32,3 +32,6 @@ nul
 .vscode/mcp.json
 tools/runes/raw_ai/
 tools/runes/preview/
+
+# Translator artifacts (backups/exports kept locally, not in repo)
+Main/_Module/ModuleData/Languages/*.zip

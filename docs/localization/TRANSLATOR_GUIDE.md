@@ -4,13 +4,15 @@ This guide is for anyone translating TAOM (Tales From the Age of Men) into anoth
 
 ## Overview
 
-TAOM adds ~1,950 translatable strings across three categories:
+TAOM adds ~4,780 translatable strings across five categories:
 
 | File | What it contains | Entries |
 |------|-----------------|---------|
-| `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels | ~645 |
+| `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~653 |
 | `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,177 |
 | `std_taom_named_companion_strings_{locale}.xml` | Named companion dialog (Aragorn, Legolas, Gimli, etc.) | ~126 |
+| `std_taom_cc_strings_{locale}.xml` | Character creation narratives — parents, childhood, youth, education, adulthood prompts and descriptions | ~772 |
+| `std_taom_career_strings_{locale}.xml` | Career system — career names, descriptions, ability tooltips, choice descriptions | ~2,050 |
 
 Your translation files live in `Main/_Module/ModuleData/Languages/{LANG}/` where `{LANG}` is your language code (e.g., `PL` for Polish, `DE` for German).
 
@@ -167,7 +169,10 @@ Same 7-entry structure as wanderers, but for named Tolkien characters (Aragorn, 
 
 ## Known Limitations
 
-**Character creation narratives** (~386 text+description pairs across 5 JSON files in `ModuleData/charactercreation/`) are not yet translatable. They use a different format that doesn't go through the localization system. This will be addressed in a future update.
+- **Career choice and group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions and is deferred.
+- **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
+
+These gaps are tracked but not blocking — the bulk of in-game text is now translatable.
 
 ## Questions?
 

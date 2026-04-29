@@ -3,4 +3,6 @@
   <LanguageFile xml_path="RU/std_taom_module_strings_rus-RU.xml" />
   <LanguageFile xml_path="RU/std_taom_wanderer_strings_rus-RU.xml" />
   <LanguageFile xml_path="RU/std_taom_named_companion_strings_rus-RU.xml" />
+  <LanguageFile xml_path="RU/std_taom_cc_strings_rus-RU.xml" />
+  <LanguageFile xml_path="RU/std_taom_career_strings_rus-RU.xml" />
 </LanguageData>

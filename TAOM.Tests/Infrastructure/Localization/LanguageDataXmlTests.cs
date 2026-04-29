@@ -107,15 +107,15 @@ public class LanguageDataXmlTests
     }
 
     [TestMethod]
-    public void AllLanguageDirs_HaveExactlyThreeLanguageFiles()
+    public void AllLanguageDirs_HaveExactlyFiveLanguageFiles()
     {
         foreach (var lang in SupportedLanguageDirs)
         {
             var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
             var doc = XDocument.Load(path);
             var count = doc.Descendants("LanguageFile").Count();
-            Assert.AreEqual(3, count,
-                $"Languages/{lang}/language_data.xml should declare exactly 3 LanguageFile entries (module, wanderer, companion)");
+            Assert.AreEqual(5, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 5 LanguageFile entries (module, wanderer, companion, cc, career)");
         }
     }
 
@@ -132,6 +132,38 @@ public class LanguageDataXmlTests
             Assert.IsTrue(
                 paths.Any(p => p.Contains("named_companion_strings")),
                 $"Languages/{lang}/language_data.xml missing named_companion_strings reference");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveCcStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_cc_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_cc_strings reference");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveCareerStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_career_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_career_strings reference");
         }
     }
 

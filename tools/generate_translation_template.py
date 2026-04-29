@@ -31,6 +31,12 @@ SOURCES = [
     (TAOM_BASE / "named_companions" / "named_companion_strings.xml",
      "std_taom_named_companion_strings_{locale}.xml",
      "named companion strings"),
+    (TAOM_BASE / "taom_cc_strings.xml",
+     "std_taom_cc_strings_{locale}.xml",
+     "character creation strings"),
+    (TAOM_BASE / "taom_career_strings.xml",
+     "std_taom_career_strings_{locale}.xml",
+     "career system strings"),
 ]
 
 # lang_dir -> (locale_suffix, language_tag)

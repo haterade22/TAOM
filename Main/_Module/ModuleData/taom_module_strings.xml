@@ -782,4 +782,16 @@
 	<string id="taom_precompile_shaders" text="{=taom_precompile_shaders}Pre-compile Shaders" />
 	<string id="taom_precompile_hint" text="{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM." />
 
+	<!-- Main menu -->
+	<string id="taom_main_menu_new_game" text="{=taom_main_menu_new_game}Enter The Age Of Men" />
+
+	<!-- Career screen UI labels -->
+	<string id="taom_career_screen_title" text="{=taom_career_screen_title}Career" />
+	<string id="taom_career_done" text="{=taom_career_done}Done" />
+	<string id="taom_career_ability_label" text="{=taom_career_ability_label}Career Ability" />
+	<string id="taom_career_tier1" text="{=taom_career_tier1}Tier 1" />
+	<string id="taom_career_tier2" text="{=taom_career_tier2}Tier 2" />
+	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
+	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
+
 </strings>

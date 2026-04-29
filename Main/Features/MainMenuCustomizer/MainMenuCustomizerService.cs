@@ -16,7 +16,7 @@ public class MainMenuCustomizerService : IMainMenuCustomizerService
     public void CustomizeMenu()
     {
         _moduleMenuAdapter.HideOption("StoryModeNewGame");
-        _moduleMenuAdapter.RenameOption("SandBoxNewGame", "Enter The Age Of Men");
+        _moduleMenuAdapter.RenameOption("SandBoxNewGame", "{=taom_main_menu_new_game}Enter The Age Of Men");
         _logger.LogInfo("MainMenuCustomizer: menu customization applied");
     }
 }

@@ -73,8 +73,8 @@ public class NarrativeMenuBuilder
 
         return new NarrativeMenuOption(
             definition.StringId,
-            new TextObject(definition.Text),
-            new TextObject(definition.Description),
+            new TextObject($"{{=taom_cc_{definition.StringId}_text}}{definition.Text}"),
+            new TextObject($"{{=taom_cc_{definition.StringId}_desc}}{definition.Description}"),
             getNarrativeMenuOptionArgs: (NarrativeMenuOptionArgs args) =>
             {
                 if (skills.Length > 0)

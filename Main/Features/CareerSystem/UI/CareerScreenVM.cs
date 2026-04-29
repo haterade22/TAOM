@@ -62,12 +62,12 @@ public class CareerScreenVM : ViewModel
         _heroLevel = heroLevel;
         _onClose = onClose;
 
-        _screenTitle = "Career";
-        _doneLbl = "Done";
-        _abilityLabel = "Career Ability";
-        _tier1Label = "Tier 1";
-        _tier2Label = "Tier 2";
-        _tier3Label = "Tier 3";
+        _screenTitle = new TextObject("{=taom_career_screen_title}Career").ToString();
+        _doneLbl = new TextObject("{=taom_career_done}Done").ToString();
+        _abilityLabel = new TextObject("{=taom_career_ability_label}Career Ability").ToString();
+        _tier1Label = new TextObject("{=taom_career_tier1}Tier 1").ToString();
+        _tier2Label = new TextObject("{=taom_career_tier2}Tier 2").ToString();
+        _tier3Label = new TextObject("{=taom_career_tier3}Tier 3").ToString();
 
         _choiceGroupsTier1 = new MBBindingList<CareerChoiceGroupObjectVM>();
         _choiceGroupsTier2 = new MBBindingList<CareerChoiceGroupObjectVM>();
@@ -110,7 +110,8 @@ public class CareerScreenVM : ViewModel
         var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
         var currentChoices = _dataService.GetChoiceCount(_heroStringId);
         FreeCareerPoints = System.Math.Max(0, maxChoices - currentChoices);
-        FreeCareerPointsText = $"Free Points: {FreeCareerPoints}";
+        FreeCareerPointsText = new TextObject("{=taom_career_free_points}Free Points: {COUNT}")
+            .SetTextVariable("COUNT", FreeCareerPoints).ToString();
 
         Tier1Locked = !_registry.IsTierAvailable(_heroLevel, 1);
         Tier2Locked = !_registry.IsTierAvailable(_heroLevel, 2);

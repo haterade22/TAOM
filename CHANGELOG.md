@@ -1,5 +1,42 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-04-29
+
+### Feature: Code-side string localization — Main Menu + CC Narratives + Career System (#96)
+
+Migrated the last meaningful classes of hardcoded in-game text into the localization XML system after Polish and Spanish translators flagged the gaps. Three change patterns: (1) wrap C# `new TextObject(literal)` calls with `{=KEY}default` syntax, (2) extract two new source loc XMLs (`taom_cc_strings.xml` 772 entries, `taom_career_strings.xml` 2,050 entries), (3) scaffold per-language stubs across all 12 supported languages. Total translatable strings now ~4,780 (was ~1,950).
+
+**C# changes (3 files):**
+- `MainMenuCustomizerService.cs:19` — `"Enter The Age Of Men"` → `{=taom_main_menu_new_game}Enter The Age Of Men`
+- `CareerScreenVM.cs:65-70, 113-114` — 6 hardcoded UI labels (Career, Done, Tier 1/2/3, Career Ability) and the Free Points format string wrapped in `new TextObject("{=KEY}default")`. Free Points uses `SetTextVariable("COUNT", ...)` so translators can reposition the placeholder.
+- `NarrativeMenuBuilder.cs:76-77` — every CC narrative entry wraps text+description with interpolated `{=taom_cc_<string_id>_text/desc}` keys derived from the JSON `string_id` field.
+
+**Generated source XMLs:**
+- `taom_cc_strings.xml` — 772 entries extracted from `charactercreation/{parents,childhood,youth,education,adulthood}_menu.json` (text + description per entry)
+- `taom_career_strings.xml` — 2,050 entries extracted from `career_system/{taom_careers,taom_ability_templates,taom_career_choices}.xml`. The career data files already used inline `{=KEY}default`; this file gives translators a single discoverable list.
+
+**Infrastructure:**
+- 8 new entries in `taom_module_strings.xml` for the C# UI labels (taom_main_menu_new_game, taom_career_screen_title, taom_career_done, taom_career_ability_label, taom_career_tier1/2/3, taom_career_free_points)
+- `SubModule.xml` registers both new XMLs as GameText paths (Campaign/CampaignStoryMode/CustomGame/EditorGame)
+- All 12 `language_data.xml` files updated to declare 5 LanguageFile entries (module + wanderer + companion + cc + career)
+- 24 new stub translation files (12 langs × 2 new files)
+- PL and SP populated with English templates for the 2 new files; PL retains the translator's existing translations on the original 3 files
+
+**Tests:**
+- `LanguageDataXmlTests.cs` — count test renamed `HaveExactlyThreeLanguageFiles` → `HaveExactlyFiveLanguageFiles` (3→5), plus 2 new presence tests `AllLanguageDirs_HaveCcStringsFile` and `AllLanguageDirs_HaveCareerStringsFile`
+
+**Tooling:**
+- `tools/generate_translation_template.py` — `SOURCES` list now covers all 5 file types
+- `docs/localization/TRANSLATOR_GUIDE.md` — counts and tables updated; Known Limitations explicitly lists the remaining gaps (CareerChoice/Group display names, CareerButtonPrefab embedded label)
+
+**Process:**
+- Added `Main/_Module/ModuleData/Languages/SP.zip` to `.gitignore` (translator backup artifact, not a project file)
+
+**Deep review (5 agents):** STANDARDS PASS, COMPATIBILITY PASS (3 verified, 0 incompatible), EFFICIENCY PASS (all changed sites cold-path), DATA FLOW PASS (6 flows traced, 0 gaps, 0 inconsistencies). Closes #96.
+
+Research: TextObject `{=KEY}default` parsing in `MBTextManager.GetLocalizedText` (TaleWorlds.Localization).
+Save-compat: No save format impact — all changes are display-string layer.
+
 ## 2026-04-27
 
 ### Tooling: FBX -> 4-XML weapon-build pipeline (#95)
