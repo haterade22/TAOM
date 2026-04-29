@@ -62,7 +62,8 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
     public override void OnMissionTick(float dt)
     {
-        var hero = Hero.MainHero;
+        if (Campaign.Current == null) return;
+        var hero = CharacterObject.PlayerCharacter?.HeroObject;
         if (hero == null) return;
 
         var heroId = hero.StringId;
@@ -166,8 +167,9 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private AbilityTemplateData MutateTemplate(AbilityTemplateData rawTemplate, string heroId)
     {
         if (rawTemplate == null) return null;
+        if (Campaign.Current == null) return rawTemplate;
 
-        var hero = Hero.MainHero;
+        var hero = CharacterObject.PlayerCharacter?.HeroObject;
         if (hero == null || hero.StringId != heroId) return rawTemplate;
 
         var heroAdapter = _adapterFactory.Create(hero);
@@ -220,8 +222,9 @@ public class CareerPerkMissionBehavior : MissionBehavior
     public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, WeaponComponentData attackerWeapon, bool isBlocked, bool isSiegeEngineHit, in Blow blow, in AttackCollisionData collisionData, float damagedHp, float hitDistance, float shotDifficulty)
     {
         if (isBlocked || damagedHp <= 0f) return;
+        if (Campaign.Current == null) return;
 
-        var hero = Hero.MainHero;
+        var hero = CharacterObject.PlayerCharacter?.HeroObject;
         if (hero == null) return;
 
         var mainAgent = Mission.Current?.MainAgent;
@@ -237,8 +240,9 @@ public class CareerPerkMissionBehavior : MissionBehavior
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
         if (agentState != AgentState.Killed && agentState != AgentState.Unconscious) return;
+        if (Campaign.Current == null) return;
 
-        var hero = Hero.MainHero;
+        var hero = CharacterObject.PlayerCharacter?.HeroObject;
         if (hero == null) return;
 
         var mainAgent = Mission.Current?.MainAgent;

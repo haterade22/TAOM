@@ -4,7 +4,7 @@ model_reasoning_effort = "high"
 project_doc_max_bytes = 65536
 
 sandbox_mode = "workspace-write"
-approval_policy = "unless-allow-listed"
+approval_policy = "on-failure"
 
 [shell_environment_policy]
 inherit = "all"

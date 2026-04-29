@@ -423,7 +423,7 @@ public class SubModule : MBSubModuleBase
             mission.AddMissionBehavior(new AgentColorStoreCleanupBehavior(colorStore));
 
         var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
-        if (careerAbilityService != null)
+        if (careerAbilityService != null && Campaign.Current != null)
         {
             mission.AddMissionBehavior(new Features.CareerSystem.CareerPerkMissionBehavior(
                 IoC.Resolve<ICareerDataService>(),

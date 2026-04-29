@@ -2,6 +2,11 @@
 <CustomBattleScenes>
   <!--Siege Scenes-->
   <Scene
+    id="lotrtaom_minas_tirith_forceatmo"
+    name="{=aom_minas_tirith_name}[Gondor] Minas Tirith"
+    terrain="Plain"
+    is_siege_map="true" />
+  <Scene
     id="HART_ISENGARD"
     name="{=aom_HART_ISENGARD_name}[Isengard] Orthanc"
     terrain="Plain"
