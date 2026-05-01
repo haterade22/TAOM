@@ -121,11 +121,11 @@ public override CharacterObject GetBasicVolunteer(Hero sellerHero)
 | castle_EW5 | Min-Rimmon | gondor_ano_peasant | gondor_ano_peasant |
 | castle_EW6 | Morlad | gondor_har_conscript | gondor_har_conscript |
 | castle_EW7 | Serelond | gondor_anf_levy | gondor_ser_noble |
-| castle_EW8 | Amon Dîn | gondor_loss_lumberman | gondor_loss_noble |
+| castle_EW8 | Amon Dîn | gondor_loss_lumberman | gondor_loss_axebearer |
 | castle_EW9 | Tolfalas | gondor_bel_recruit | gondor_tol_arbalest |
 | castle_EW10 | Castle EW10 | gondor_anf_levy | gondor_lg_noble |
 | castle_EW11 | Castle EW11 | gondor_ano_peasant | gondor_met_noble |
-| castle_EW12 | Castle EW12 | gondor_loss_lumberman | gondor_loss_noble |
+| castle_EW12 | Castle EW12 | gondor_loss_lumberman | gondor_loss_axebearer |
 | castle_EW13 | Castle EW13 | gondor_anf_levy | gondor_anf_levy |
 | castle_EW14 | Castle EW14 | gondor_leb_militia | gondor_lin_noble |
 | castle_EW15 | Castle EW15 | gondor_ano_peasant | gondor_ith_watcher |
@@ -140,7 +140,7 @@ public override CharacterObject GetBasicVolunteer(Hero sellerHero)
 | clan_empire_west_2 | Imrazôrionath | gondor_bel_recruit | gondor_da_noble |
 | clan_empire_west_3 | Eärnurionath | gondor_leb_militia | gondor_pel_skirmisher |
 | clan_empire_west_4 | (Ethring area) | gondor_lam_clansman | gondor_cal_noble |
-| clan_empire_west_5 | (Lossarnach area) | gondor_loss_lumberman | gondor_loss_noble |
+| clan_empire_west_5 | (Lossarnach area) | gondor_loss_lumberman | gondor_loss_axebearer |
 | clan_empire_west_6 | (Pinnath Gelin) | gondor_pg_volunteer | gondor_pg_volunteer |
 | clan_empire_west_7 | (Lamedon) | gondor_lam_clansman | gondor_cal_noble |
 | clan_empire_west_8 | (Morlad/Harondor) | gondor_har_conscript | gondor_har_conscript |
@@ -196,7 +196,7 @@ This ensures any Gondor settlement without a specific mapping still recruits Gon
 **16 Noble lines:**
 | ID | Name | Tier | Level |
 |----|------|------|-------|
-| gondor_loss_noble | Lossarnach Noble | T4 | 21 |
+| gondor_loss_axebearer | Lossarnach Noble | T4 | 21 |
 | gondor_pel_skirmisher | Pelargir Skirmisher | T4 | 21 |
 | gondor_cal_noble | Calembel Noble | T4 | 21 |
 | gondor_ring_peasant | Ringlo Vale Peasant | T1 | 6 |

@@ -101,11 +101,11 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddSettlement("castle_EW5", "gondor_ano_peasant", 8, "gondor_ano_peasant", 2);
         AddSettlement("castle_EW6", "gondor_har_conscript", 8, "gondor_har_conscript", 2);
         AddSettlement("castle_EW7", "gondor_anf_levy", 7, "gondor_ser_noble", 3);
-        AddSettlement("castle_EW8", "gondor_loss_lumberman", 7, "gondor_loss_noble", 3);
+        AddSettlement("castle_EW8", "gondor_loss_lumberman", 7, "gondor_loss_axebearer", 3);
         AddSettlement("castle_EW9", "gondor_bel_recruit", 7, "gondor_tol_arbalest", 3);
         AddSettlement("castle_EW10", "gondor_anf_levy", 7, "gondor_lg_noble", 3);
         AddSettlement("castle_EW11", "gondor_ano_peasant", 7, "gondor_met_noble", 3);
-        AddSettlement("castle_EW12", "gondor_loss_lumberman", 7, "gondor_loss_noble", 3);
+        AddSettlement("castle_EW12", "gondor_loss_lumberman", 7, "gondor_loss_axebearer", 3);
         AddSettlement("castle_EW13", "gondor_anf_levy", 8, "gondor_anf_levy", 2);
         AddSettlement("castle_EW14", "gondor_leb_militia", 7, "gondor_lin_noble", 3);
         AddSettlement("castle_EW15", "gondor_ano_peasant", 7, "gondor_ith_watcher", 3);
@@ -120,7 +120,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddClan("clan_empire_west_2", "gondor_bel_recruit", 7, "gondor_da_noble", 3);
         AddClan("clan_empire_west_3", "gondor_leb_militia", 7, "gondor_pel_skirmisher", 3);
         AddClan("clan_empire_west_4", "gondor_lam_clansman", 7, "gondor_cal_noble", 3);
-        AddClan("clan_empire_west_5", "gondor_loss_lumberman", 7, "gondor_loss_noble", 3);
+        AddClan("clan_empire_west_5", "gondor_loss_lumberman", 7, "gondor_loss_axebearer", 3);
         AddClan("clan_empire_west_6", "gondor_pg_volunteer", 8, "gondor_pg_volunteer", 2);
         AddClan("clan_empire_west_7", "gondor_lam_clansman", 7, "gondor_cal_noble", 3);
         AddClan("clan_empire_west_8", "gondor_har_conscript", 8, "gondor_har_conscript", 2);

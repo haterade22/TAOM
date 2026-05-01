@@ -80,7 +80,7 @@
     <Guards>
       <Guard troop="gondor_loss_vet_guard" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
       <Guard troop="gondor_loss_guard" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
-      <Guard troop="gondor_loss_axeguard" weight="2" spawn_points="sp_guard" />
+      <Guard troop="gondor_loss_vet_axebearer" weight="2" spawn_points="sp_guard" />
     </Guards>
   </Settlement>
 

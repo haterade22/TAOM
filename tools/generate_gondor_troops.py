@@ -918,32 +918,10 @@ def build_all_troops() -> list[Troop]:
     equip_lossarnach(t)
     troops.append(t)
 
-    # =========================================================================
-    # LOSSARNACH NOBLE (T4-T8) — 5 troops
-    # =========================================================================
-    t = Troop("gondor_loss_noble", "Lossarnach Noble", 4, "Infantry", is_basic_troop=True, weapon_spec="axe",
-              upgrades=["gondor_loss_axeman"])
-    equip_lossarnach_noble(t)
-    troops.append(t)
-
-    t = Troop("gondor_loss_axeman", "Lossarnach Axeman", 5, "Infantry", weapon_spec="axe",
-              upgrades=["gondor_loss_axeguard"])
-    equip_lossarnach_noble(t)
-    troops.append(t)
-
-    t = Troop("gondor_loss_axeguard", "Lossarnach Axeguard", 6, "Infantry", weapon_spec="axe",
-              upgrades=["gondor_loss_axewarden"])
-    equip_lossarnach_noble(t)
-    troops.append(t)
-
-    t = Troop("gondor_loss_axewarden", "Lossarnach Axewarden", 7, "Infantry", weapon_spec="axe",
-              upgrades=["gondor_loss_high_axewarden"])
-    equip_lossarnach_noble(t)
-    troops.append(t)
-
-    t = Troop("gondor_loss_high_axewarden", "Lossarnach High Axewarden", 8, "Infantry", weapon_spec="axe")
-    equip_lossarnach_noble(t)
-    troops.append(t)
+    # NOTE: The Lossarnach noble branch (gondor_loss_noble/axeman/axeguard/axewarden/
+    # high_axewarden) was retired in the KEYforce armor revamp (issue #99). The
+    # mainline axebearer line covers the same role; recruitment now upgrades into
+    # gondor_loss_axebearer for the elite slot.
 
     # =========================================================================
     # LEBENNIN REGULAR (T2-T7) — 7 troops
@@ -1875,7 +1853,6 @@ def build_all_troops() -> list[Troop]:
 # =============================================================================
 SECTION_HEADERS = [
     ("gondor_loss_lumberman", "LOSSARNACH REGULAR (T1-T6)"),
-    ("gondor_loss_noble", "LOSSARNACH NOBLE (T4-T8)"),
     ("gondor_leb_militia", "LEBENNIN REGULAR (T2-T7)"),
     ("gondor_pel_skirmisher", "PELARGIR NOBLE (T4-T8)"),
     ("gondor_lam_clansman", "LAMEDON REGULAR (T1-T6)"),

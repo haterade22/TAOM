@@ -1,6 +1,71 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-01
+
+### Feature: KEYforce Gondor armor revamp — 99 new items + 13 regional troop equipment refits (#99)
+
+3D artist KEYforce shipped armor meshes for 8 previously-uncovered Gondor regions (Lossarnach, Pinnath Gelin, Harondor, Anfalas, Serelond, Lebennin, Belfalas, Lamedon). All meshes are now wired into `LOTRLOME_Armory` and 107 Gondor troops across 13 regions have new equipment loadouts following the artist's per-tier armor + weapon guide at `E:\repos\lotraom-assets\tools\gondor_armors_and_troops.txt`.
+
+**Armory additions (Steam install path):**
+- `LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor/head_armors.xml` — 39 helmets (Pinnath Gelin 5, Harondor 6, Anfalas 7, Serelond 4, Lamedon 17 incl. lord-tier hero gear)
+- `body_armors.xml` — 42 chests across all 8 missing families
+- `shoulder_armors.xml` — 9 pauldrons (Lossarnach 3, Serelond 6)
+- `arm_armors.xml` — 5 bracers (Lossarnach 1, Serelond 4)
+- `leg_armors.xml` — 4 Serelond greaves
+- All 99 items use the `STAT_TIERS` table from phase-1 `tools/generate_gondor_armor.py` (consistent with existing Anorien/MT/Osg/Cair/Ith items)
+
+**Troop equipment changes (`Main/_Module/ModuleData/troops/troops_gondor.xml`):**
+- 98 troops: equipment loadouts swapped to new region-specific armor per artist's progression tables
+- 5 troops deleted (Lossarnach noble branch retired): `gondor_loss_noble`, `_axeman`, `_axeguard`, `_axewarden`, `_high_axewarden`. The mainline axebearer line covers the same role.
+- 9 troops: equipment already matched the target loadout (no-op)
+- 6 out-of-scope regions (Arndir, Methir, Blackroot Vale, Ringlo Vale, Tolfalas, Pelargir, Linhir, Calembel, Dol Amroth) untouched — KEYforce will ship gear for them later
+
+**Cross-system updates:**
+- `VolunteerRecruitmentService.cs` — `castle_EW8`, `castle_EW12`, `clan_empire_west_5` recruitment now upgrades into `gondor_loss_axebearer` (was deleted `gondor_loss_noble`)
+- `settlement_guards_config.xml` — Lossarnach castle guard pool swaps `_axeguard` (deleted) for `_vet_axebearer` mainline equivalent
+- `tools/generate_gondor_troops.py` — removed Lossarnach noble line definitions so re-runs don't recreate deleted troops
+
+**New tooling:**
+- `tools/generate_gondor_armor_phase2.py` — sibling to phase-1 generator; idempotent author of the 99 missing items, defaults to Steam install path
+- `tools/apply_gondor_troop_revamp.py` — mechanically applies the 107-troop equipment blueprint produced by 4 parallel planning agents; preserves Horse/HorseHarness on cavalry, deletes orphan blocks, removes upgrade_target references
+- `tools/validate_gondor_refs.py` — gates the underwear bug; cross-checks every `sk_gd_*` reference in `troops_gondor.xml` against Armory IDs (PASS = 155 refs, 0 missing)
+
+**Verification:**
+- Build: 0 errors (703 pre-existing nullable warnings unchanged)
+- Tests: 1162 pass / 1 pre-existing unrelated MainMenuCustomizer localization mismatch from #96 (84/84 VolunteerRecruitment tests pass)
+- Cross-reference: 0 missing item references — no underwear bug
+
+**Decisions:**
+- `sk_dg_ano_grvs_*` in source-of-truth treated as artist typo; mapped to existing `sk_gd_ano_grvs_*`
+- Save-compat skipped (new mod version permits troop deletes/renames per user direction)
+- 4 weapon slots maximum (Item0–Item3) honored — Belfalas/Osgiliath archers drop a quiver to make room for shield+sword
+
+Research: phase-1 `STAT_TIERS` table reused verbatim for stat consistency; LOTRLOME_Armory item XML format matched against existing entries.
+Save-compat: troop IDs deleted (5) — incompatible with v1.2/early-v1.3 saves carrying those IDs; new mod version intentionally breaks compat.
+Not-tested: in-game visual check (manual spot-check pending in custom battle for Anorien T6 Knight, Lossarnach T6 Vet Guard, Serelond T7 Phalanx, Lamedon T6 Hill-Warden, MT T9 Fountain Guard).
+
 ## 2026-04-29
+
+### Fix: NRE in CareerSystem mission behavior on Custom Battle launch (#97)
+
+Launching any non-campaign mission (Custom Battle Minas Tirith repro'd) crashed at `TaleWorlds.CampaignSystem.Hero.get_MainHero()` from `CareerPerkMissionBehavior.OnMissionTick`. Root cause: v1.3.15's `Hero.MainHero` getter is `CharacterObject.PlayerCharacter.HeroObject` with no internal null guard, and `CareerPerkMissionBehavior` was being registered to every mission unconditionally (gated only on service availability, not mission type). The existing `if (hero == null) return;` was unreachable — the throw happened on the line above.
+
+Two-layer fix:
+
+- **Registration gate** in `Main/SubModule.cs:426` — `OnMissionBehaviorInitialize` now requires `Campaign.Current != null` to register the behavior. Custom Battle / Tutorial / Editor / Multiplayer missions skip the entire behavior, including HUD allocation.
+- **Per-method defense in depth** in `Main/Features/CareerSystem/CareerPerkMissionBehavior.cs` (4 methods: `OnMissionTick`, `MutateTemplate`, `OnScoreHit`, `OnAgentRemoved`) — added `if (Campaign.Current == null) return;` semantic gate, and replaced `var hero = Hero.MainHero;` with `var hero = CharacterObject.PlayerCharacter?.HeroObject;` to bypass the unsafe getter. Codex independent review specifically flagged that `Campaign.Current` alone is correlated, not identical, to the actual precondition — both layers are needed.
+
+`Mission.IsCampaignMission` is not available on v1.3.15 (added in v1.4); `Campaign.Current != null` is the canonical idiom.
+
+**Tests:** 153/153 CareerSystem tests pass; full suite unchanged.
+**Deep review (5 agents):** STANDARDS PASS, COMPATIBILITY PASS (4 v1.3.15 APIs verified via `ilspycmd`), EFFICIENCY PASS (net reduction in custom-battle work), DATA FLOW PASS (7 flows traced, 0 gaps).
+**Codex independent review:** APPROVE after second pass.
+
+**Side effect (.codex/config.toml):** `approval_policy = "unless-allow-listed"` → `"on-failure"`. Codex CLI 0.125.0 renamed the variant; the old name throws on load. Picked `on-failure` as the closest semantic equivalent for review/verification workflows.
+
+Research: `Hero.MainHero` getter in `TaleWorlds.CampaignSystem.Hero`; `Campaign.Current` getter; v1.3.15 vs v1.4 API drift on `Mission.IsCampaignMission`.
+Save-compat: No save format impact — registration-time and runtime guards only.
+Constraint: `Hero.MainHero` getter has no internal null guard on v1.3.15.
 
 ### Feature: Code-side string localization — Main Menu + CC Narratives + Career System (#96)
 
