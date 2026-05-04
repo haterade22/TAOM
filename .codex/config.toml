@@ -1,6 +1,6 @@
 # TAOM — Codex acts as independent reviewer/verifier
-model = "o4-mini"
-model_reasoning_effort = "high"
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
 project_doc_max_bytes = 65536
 
 sandbox_mode = "workspace-write"

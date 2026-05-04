@@ -8,9 +8,12 @@ namespace TAOM.Features.CareerSystem.Models;
 
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
-    private ICareerPassiveService _passiveService;
-    private ICareerPassiveService PassiveService =>
-        _passiveService ??= IoC.Resolve<ICareerPassiveService>();
+    private readonly ICareerPassiveService _passiveService;
+
+    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService)
+    {
+        _passiveService = passiveService;
+    }
 
     public override float GetEffectiveMaxHealth(Agent agent)
     {
@@ -19,10 +22,9 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
         var hero = (agent.Character as CharacterObject)?.HeroObject;
         if (hero == null) return baseHealth;
+        if (_passiveService == null) return baseHealth;
 
-        if (PassiveService == null) return baseHealth;
-
-        var healthBonus = PassiveService.GetPassiveMagnitude(hero.StringId, PassiveEffectType.Health);
+        var healthBonus = _passiveService.GetPassiveMagnitude(hero.StringId, PassiveEffectType.Health);
         return baseHealth + healthBonus;
     }
 
@@ -36,19 +38,19 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         if (agent.IsHero)
         {
             var hero = (agent.Character as CharacterObject)?.HeroObject;
-            if (hero != null && PassiveService != null)
+            if (hero != null && _passiveService != null)
             {
                 var heroId = hero.StringId;
 
-                var swingBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.SwingSpeed);
+                var swingBonus = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.SwingSpeed);
                 if (swingBonus != 0f)
                     agentDrivenProperties.SwingSpeedMultiplier += swingBonus;
 
-                var damageBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Damage);
+                var damageBonus = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Damage);
                 if (damageBonus != 0f)
                     agentDrivenProperties.DamageMultiplierBonus += damageBonus;
 
-                var speedBonus = PassiveService.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
+                var speedBonus = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
                 if (speedBonus != 0f)
                     agentDrivenProperties.MaxSpeedMultiplier += speedBonus;
 
@@ -71,7 +73,6 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         }
 
         // AoE ally buffs — applied to ALL human agents (set by Infantry ability on nearby troops)
-        // AoE ally buffs — all archetypes can apply these on nearby troops
         // (damage reduction is handled by TaomAgentApplyDamageModel's damage path)
         var allyBuffs = CareerAbilityBuffTracker.GetAllyBuff(agent.Index);
         if (allyBuffs != null)

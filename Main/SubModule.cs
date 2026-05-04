@@ -309,12 +309,12 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new CareerSwitchDialogueBehavior(
                 careerDataService, careerRegistry, careerSwitchService, careerAdapterFactory, careerLogger));
 
-            // Career system GameModels
+            // Career system GameModels — reuse careerPassiveService resolved above (line 300).
             campaignStarter.AddModel(new TaomMapVisibilityModel());
             campaignStarter.AddModel(new TaomInventoryCapacityModel());
-            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel());
-            campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel());
-            campaignStarter.AddModel(new TaomClanTierModel());
+            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService));
+            campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerPassiveService));
+            campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
 
             var goldService = IoC.Resolve<IStartupGoldService>();
             var influenceService = IoC.Resolve<IStartupInfluenceService>();

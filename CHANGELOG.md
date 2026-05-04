@@ -2,7 +2,36 @@
 
 ## 2026-05-04
 
-### Fix: Custom Battle commander dropdown ignored faction selection — now filters per-culture, capped at 3 (#100)
+### Fix: CareerSystem — wall-clock-precise cooldown tick + reject NaN/Infinity tuning (Codex Review 31)
+
+Two MEDIUM findings from the Codex adversarial pass on the cooldown rework:
+
+1. **Cooldown drained slower than wall clock on long frames.** `OnMissionTick` used a single-bucket accumulator (`if (_acc >= 1f) Tick(1f)`) carried over from the prior charge-based 1Hz scheduler. A 2.5-second frame (alt-tab return, GC pause) drained only 1 second of cooldown, queuing the remaining 1.5 seconds for the next bucket — so a configured 30-second cooldown could take 35-40 seconds to release under load. Even on smooth play, up to ~1 second of quantization delay was possible depending on activation timing relative to the bucket. Replaced the accumulator with per-frame `_abilityService.Tick(heroId, dt)`. `CareerAbility.Tick` already clamps via `Math.Max(0f, CooldownRemaining - dt)` so fractional `dt` is correct. Two regression tests added: `Tick_LargeDt_DrainsFullElapsedTime` (single 2.5s frame) and `Tick_FractionalDt_AccumulatesAcrossFrames` (60×16ms).
+
+2. **`ParseGlobalTuning` admitted `NaN` / `±Infinity`.** `float.TryParse` accepts these IEEE-754 specials. The downstream `<= 0` and `> 3600` range gates BOTH evaluate false for `NaN`, so a NaN cooldown reached `CareerAbility.Activate`, set `CooldownRemaining = NaN`, and made `IsOnCooldown => CooldownRemaining > 0f` permanently false (NaN comparisons always return false) — every V keypress then activated the ability. Added explicit `float.IsNaN(seconds) || float.IsInfinity(seconds)` check ahead of the range gates with warning + default fallback. Three regression tests cover `NaN`, `+Infinity`, `-Infinity`.
+
+Both findings folded into AGENTS.md so future Codex passes target the same blind spots: tick-rate vs wall-clock semantics on user-visible timers, and IEEE-754 special-value enumeration for user-facing float validation.
+
+### Feat: CareerSystem — uniform 30s cooldown timer + "still charging" feedback (#103)
+
+The career ability system shifted from charge-based (`DamageDone` / `Kills` / `DamageTaken` accumulators) to a uniform 30-second cooldown timer. All 50 careers now start ready at battle open, fire on `V`, then lock for 30 seconds. Cooldown duration is configurable via a new `<Global cooldown_seconds="30" />` element in `taom_ability_tuning.xml`, validated `(0, 3600]` with warning + default fallback.
+
+- `CareerAbilityService` injects `ICareerConfigProvider` and forces `ChargeType.CooldownOnly` for every career; reads cooldown duration from tuning XML.
+- New `ICareerAbilityService.GetCooldownRemaining(heroId)`. New `CareerAbility.ReadyProgress01` (0→1 progress for HUD bar).
+- Pressing `V` while still on cooldown emits a throttled gray *"Career ability still charging — Ns remaining"* message instead of a silent no-op (was: silent failure, hard to diagnose).
+- HUD widget refresh: per-mission cache for ability name + sprite path eliminates per-frame `TextObject` construction and string interpolation in `OnMissionTick` (caught by `/deep-review` Agent 3).
+
+**Cleanup pass alongside the rework.** Removed `ChargeType` and `MaxCharge` from `CareerDefinition`, the `charge_type` and `max_charge` attributes from all 50 entries in `taom_careers.xml`, dead `Cooldown` and `SpriteName` fields from `AbilityTemplateData`, the dead `SetMaxCharge` mutation block, and the no-op `AddCharge` calls in `OnScoreHit` / `OnAgentRemoved`. Service-layer `AddCharge` removed from `ICareerAbilityService` (the model-level `CareerAbility.AddCharge` stays — preserved as regression-guard for any future re-introduction).
+
+**Architecture pass.** Three CareerSystem `GameModel` overrides (`TaomClanTierModel`, `TaomAgentStatCalculateModel`, `TaomAgentApplyDamageModel`) converted from lazy-cached `IoC.Resolve` to constructor injection of `ICareerPassiveService`, registered from `SubModule.cs`. `CharacterDeveloperCareerMixin` resolves services once in the constructor (boundary pattern) instead of per-call.
+
+26 new tests across `CareerAbilityTests`, `CareerAbilityServiceTests`, and `CareerConfigProviderTests`. 176 / 176 CareerSystem tests green.
+
+Follow-ups filed: #101 (41 ability-icon PNGs still missing — only 9 of 50 sprites render), #102 (`CareerPerkMissionBehavior.cs` 302 LOC ADR-002 refactor).
+
+Save-compat: no persistent state changed (cooldown state is mission-scoped). Safe on any save.
+
+### Fix: Custom Battle commander dropdown ignored faction selection — now filters per-culture, capped at 3
 
 The Custom Battle commander dropdown listed every TAOM lord across every culture regardless of which faction was picked, making selection impractical and disconnecting the visual faction choice from the available leader pool.
 

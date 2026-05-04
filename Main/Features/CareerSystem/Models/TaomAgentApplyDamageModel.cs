@@ -9,10 +9,12 @@ namespace TAOM.Features.CareerSystem.Models;
 
 public class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
 {
-    private ICareerPassiveService _passiveService;
+    private readonly ICareerPassiveService _passiveService;
 
-    private ICareerPassiveService PassiveService =>
-        _passiveService ??= IoC.Resolve<ICareerPassiveService>();
+    public TaomAgentApplyDamageModel(ICareerPassiveService passiveService)
+    {
+        _passiveService = passiveService;
+    }
 
     public override float ApplyDamageAmplifications(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
     {
@@ -20,11 +22,9 @@ public class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
 
         var heroId = GetAttackerHeroId(in attackInformation);
         if (heroId == null) return result;
+        if (_passiveService == null) return result;
 
-        var svc = PassiveService;
-        if (svc == null) return result;
-
-        var armorPen = svc.GetPassiveMagnitude(heroId, PassiveEffectType.ArmorPenetration);
+        var armorPen = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.ArmorPenetration);
         if (armorPen != 0f)
             result *= (1f + armorPen);
 
@@ -39,10 +39,9 @@ public class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
         var heroId = GetVictimHeroId(in attackInformation);
         if (heroId != null)
         {
-            var svc = PassiveService;
-            if (svc != null)
+            if (_passiveService != null)
             {
-                var resistance = svc.GetPassiveMagnitude(heroId, PassiveEffectType.Resistance);
+                var resistance = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Resistance);
                 if (resistance != 0f)
                     result *= (1f - resistance);
             }
@@ -78,11 +77,9 @@ public class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
         if (!victimAgent.IsHero) return false;
         var hero = (victimAgent.Character as CharacterObject)?.HeroObject;
         if (hero == null) return false;
+        if (_passiveService == null) return false;
 
-        var svc = PassiveService;
-        if (svc == null) return false;
-
-        var shrugOff = svc.GetPassiveMagnitude(hero.StringId, PassiveEffectType.ShruggedOff);
+        var shrugOff = _passiveService.GetPassiveMagnitude(hero.StringId, PassiveEffectType.ShruggedOff);
         return shrugOff > 0f;
     }
 

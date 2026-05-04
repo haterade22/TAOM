@@ -21,8 +21,6 @@ public class CareerRegistryTests
         description: "A brute.",
         portraitSprite: "wb_sprite",
         abilityTemplateId: "rally_horde",
-        chargeType: ChargeType.Kills,
-        maxCharge: 100,
         minClanTier: 1,
         rootChoiceId: "wb_root",
         eligibleCultureIds: new List<string> { "mordor" },

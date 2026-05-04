@@ -135,8 +135,6 @@ public class CareerConfigProvider : ICareerConfigProvider
                         description: el.Attribute("description")?.Value ?? "",
                         portraitSprite: el.Attribute("portrait_sprite")?.Value ?? "",
                         abilityTemplateId: el.Attribute("ability_template_id")?.Value ?? "",
-                        chargeType: ParseEnum<ChargeType>(el, "charge_type", ChargeType.CooldownOnly),
-                        maxCharge: ParseInt(el, "max_charge", 100),
                         minClanTier: ParseInt(el, "min_clan_tier", 0),
                         rootChoiceId: el.Attribute("root_choice_id")?.Value ?? "",
                         eligibleCultureIds: cultureIds,
@@ -298,8 +296,6 @@ public class CareerConfigProvider : ICareerConfigProvider
                     {
                         Id = id,
                         DisplayName = el.Attribute("display_name")?.Value ?? "",
-                        SpriteName = el.Attribute("sprite")?.Value ?? "",
-                        Cooldown = ParseFloat(el, "cooldown", 0f),
                         Duration = ParseFloat(el, "duration", 8f),
                         Radius = ParseFloat(el, "radius", 10f),
                         MaxCharge = ParseFloat(el, "max_charge", 0f),
@@ -344,6 +340,9 @@ public class CareerConfigProvider : ICareerConfigProvider
                 return;
             }
 
+            var globalEl = root.Element("Global");
+            var global = ParseGlobalTuning(globalEl);
+
             var infEl = root.Element("Infantry");
             var infantry = infEl != null
                 ? new InfantryTuning(
@@ -368,14 +367,53 @@ public class CareerConfigProvider : ICareerConfigProvider
                     ParseFloat(cavEl, "damage_bonus", 10f))
                 : CavalryTuning.Default;
 
-            _abilityTuning = new AbilityTuningConfig(infantry, ranged, cavalry);
-            _logger.LogInfo($"CareerSystem: Loaded ability tuning — Infantry(dmg={infantry.DamageBonus},red={infantry.DamageReduction},r={infantry.Radius}) Ranged(spd={ranged.SpeedBonus},dmg={ranged.RangedDamageBonus},draw={ranged.DrawSpeedBonus}) Cavalry(mspd={cavalry.MountSpeedBonus},chrg={cavalry.ChargeDamageBonus},dmg={cavalry.DamageBonus})");
+            _abilityTuning = new AbilityTuningConfig(global, infantry, ranged, cavalry);
+            _logger.LogInfo($"CareerSystem: Loaded ability tuning — Global(cooldown={global.CooldownSeconds}s) Infantry(dmg={infantry.DamageBonus},red={infantry.DamageReduction},r={infantry.Radius}) Ranged(spd={ranged.SpeedBonus},dmg={ranged.RangedDamageBonus},draw={ranged.DrawSpeedBonus}) Cavalry(mspd={cavalry.MountSpeedBonus},chrg={cavalry.ChargeDamageBonus},dmg={cavalry.DamageBonus})");
         }
         catch (Exception ex)
         {
             _logger.LogError($"CareerConfig: failed to load ability tuning XML: {ex.Message}");
             _abilityTuning = AbilityTuningConfig.Default;
         }
+    }
+
+    private const float MaxCooldownSeconds = 3600f;
+
+    private GlobalTuning ParseGlobalTuning(XElement globalEl)
+    {
+        if (globalEl == null) return GlobalTuning.Default;
+
+        var raw = globalEl.Attribute("cooldown_seconds")?.Value;
+        if (raw == null) return GlobalTuning.Default;
+
+        if (!float.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds))
+        {
+            _logger.LogWarning($"CareerConfig: <Global cooldown_seconds=\"{raw}\"> is not a number — falling back to {GlobalTuning.Default.CooldownSeconds}s");
+            return GlobalTuning.Default;
+        }
+
+        // float.TryParse admits NaN, +Infinity, -Infinity. The range checks below evaluate false for NaN
+        // (NaN comparisons always yield false), which would let a NaN cooldown reach CareerAbility and
+        // permanently break the activation gate. Reject non-finite values explicitly.
+        if (float.IsNaN(seconds) || float.IsInfinity(seconds))
+        {
+            _logger.LogWarning($"CareerConfig: <Global cooldown_seconds=\"{raw}\"> is not a finite number — falling back to {GlobalTuning.Default.CooldownSeconds}s");
+            return GlobalTuning.Default;
+        }
+
+        if (seconds <= 0f)
+        {
+            _logger.LogWarning($"CareerConfig: <Global cooldown_seconds=\"{seconds}\"> must be > 0 — falling back to {GlobalTuning.Default.CooldownSeconds}s");
+            return GlobalTuning.Default;
+        }
+
+        if (seconds > MaxCooldownSeconds)
+        {
+            _logger.LogWarning($"CareerConfig: <Global cooldown_seconds=\"{seconds}\"> exceeds maximum of {MaxCooldownSeconds}s — falling back to {GlobalTuning.Default.CooldownSeconds}s");
+            return GlobalTuning.Default;
+        }
+
+        return new GlobalTuning(seconds);
     }
 
     private static int ParseInt(XElement el, string attrName, int defaultValue)

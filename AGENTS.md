@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (30 reviews, 84 bugs found)
+### Lessons From Prior Reviews (31 reviews, 86 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
@@ -69,8 +69,11 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Verifying claims about Claude Code harness behavior (skill load semantics, hook lifecycle, rule loader scoping) against official docs and citing them by URL — caught the scan.sh full-body counting bug and the inline-hook activation conflation in feature-builder (Tier1 adoption review 26).
 - Distinguishing eager-load vs lazy-load context overhead and explicitly recommending the difference be reported separately (Tier1 adoption review 26).
 - Decompiling vanilla data-loading paths to find hidden gates (Spider review 25 — confirmed `BasicCharacterObject.LoadFromXml` parses occupation as a substring check `"soldier"` and `ArmyCompositionGroupVM` filters by `IsSoldier && !IsObsolete`, exposing that `hidden_in_encyclopedia` does NOT hide a character from the Custom Battle picker. This kind of "what does the vanilla data path actually check?" trace is high-value).
+- Decompiling property setters to find no-op early-return guards on TaleWorlds VMs (CustomBattles filter+cap review 29 — caught `SelectorVM<T>.SelectedIndex` setter's `if (value != _selectedIndex)` short-circuit, which made `Clear() + AddItem*N + SelectedIndex = 0` silently leave `SelectedItem` pointing at a stale removed item. Look for this pattern any time TAOM mutates a TaleWorlds collection then re-asserts an index/selection that was likely already at the same value before construction).
+- Tracing tick-rate vs wall-clock semantics on user-visible timers (Career cooldown review 30 — caught `OnMissionTick` single-bucket accumulator where `if (acc >= 1f) Tick(1f)` drops elapsed time on long frames; a 2.5s frame drained only 1s of cooldown. The bucket pattern was inherited from the prior charge-based code where 1Hz was the natural granularity. When a feature's semantics shift from "periodic batch work" to "wall-clock-precise gate", revisit any `_tickAccumulator` patterns and prefer per-frame `Tick(dt)`).
+- Enumerating IEEE-754 special values when validating user-facing float ranges (Career cooldown review 30 — `float.TryParse` admits `NaN`, `Infinity`, `-Infinity`. Range checks like `<= 0` and `> 3600` BOTH evaluate false for NaN, so a NaN cooldown reaches downstream code and `IsOnCooldown => CooldownRemaining > 0f` returns false because NaN comparisons are always false — ability is "always ready", V re-activates indefinitely. Always insert `IsNaN || IsInfinity` (or `IsFinite` on net6+) BEFORE range gates).
 
-This section is updated by Claude after each review cycle. Last updated: 2026-04-23 (Review 25, Spider).
+This section is updated by Claude after each review cycle. Last updated: 2026-05-04 (Review 30, Career cooldown rework).
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only

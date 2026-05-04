@@ -10,10 +10,16 @@ namespace TAOM.Features.CareerSystem.UI;
 [ViewModelMixin("RefreshValues")]
 internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDeveloperVM>
 {
+    // UIExtenderEx constructs mixins with only (parentVM); resolve services once at the boundary.
+    private readonly ICareerDataService _dataService;
+    private readonly IModLogger _logger;
+
     private bool _hasCareer;
 
     public CharacterDeveloperCareerMixin(CharacterDeveloperVM viewModel) : base(viewModel)
     {
+        _dataService = IoC.Resolve<ICareerDataService>();
+        _logger = IoC.Resolve<IModLogger>();
         RefreshCareerState();
     }
 
@@ -31,9 +37,8 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
             return;
         }
 
-        var dataService = IoC.Resolve<ICareerDataService>();
-        HasCareer = dataService?.HasCareer(hero.StringId) ?? false;
-        IoC.Resolve<IModLogger>()?.LogDebug($"CareerSystem: RefreshCareerState — hero='{hero.StringId}' HasCareer={HasCareer}");
+        HasCareer = _dataService?.HasCareer(hero.StringId) ?? false;
+        _logger?.LogDebug($"CareerSystem: RefreshCareerState — hero='{hero.StringId}' HasCareer={HasCareer}");
     }
 
     [DataSourceProperty]
@@ -52,7 +57,7 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
 
     public void ExecuteOpenCareerScreen()
     {
-        IoC.Resolve<IModLogger>()?.LogInfo("CareerSystem: ExecuteOpenCareerScreen triggered from character developer");
+        _logger?.LogInfo("CareerSystem: ExecuteOpenCareerScreen triggered from character developer");
 
         // Close CharacterDeveloper first (TOR pattern) — prevents
         // GauntletMapBarGlobalLayer from ticking with invalid input context

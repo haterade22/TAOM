@@ -9,8 +9,6 @@ public sealed class CareerDefinition
     public string Description { get; }
     public string PortraitSprite { get; }
     public string AbilityTemplateId { get; }
-    public ChargeType ChargeType { get; }
-    public int MaxCharge { get; }
     public int MinClanTier { get; }
     public string RootChoiceId { get; }
     public IReadOnlyList<string> EligibleCultureIds { get; }
@@ -22,8 +20,6 @@ public sealed class CareerDefinition
         string description,
         string portraitSprite,
         string abilityTemplateId,
-        ChargeType chargeType,
-        int maxCharge,
         int minClanTier,
         string rootChoiceId,
         IReadOnlyList<string> eligibleCultureIds,
@@ -34,8 +30,6 @@ public sealed class CareerDefinition
         Description = description;
         PortraitSprite = portraitSprite;
         AbilityTemplateId = abilityTemplateId;
-        ChargeType = chargeType;
-        MaxCharge = maxCharge;
         MinClanTier = minClanTier;
         RootChoiceId = rootChoiceId;
         EligibleCultureIds = eligibleCultureIds ?? new List<string>();

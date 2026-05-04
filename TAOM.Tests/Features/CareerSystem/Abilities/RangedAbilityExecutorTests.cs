@@ -19,6 +19,7 @@ public class RangedAbilityExecutorTests
     {
         _configProvider = Substitute.For<ICareerConfigProvider>();
         _configProvider.GetAbilityTuning().Returns(new AbilityTuningConfig(
+            GlobalTuning.Default,
             InfantryTuning.Default,
             new RangedTuning(15f, 20f, 20f),
             CavalryTuning.Default));

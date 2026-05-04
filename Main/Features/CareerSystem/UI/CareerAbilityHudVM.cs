@@ -80,12 +80,14 @@ public class CareerAbilityHudVM : ViewModel
         }
     }
 
-    public void Update(bool hasCareer, string abilityName, string abilitySprite, float currentCharge, float maxCharge, bool isReady)
+    public void Update(bool hasCareer, string abilityName, string abilitySprite, float progress01, bool isReady)
     {
         IsVisible = hasCareer;
         AbilityName = abilityName ?? "";
         AbilitySprite = abilitySprite ?? "";
-        ChargePercent = maxCharge > 0 ? (int)(currentCharge / maxCharge * 100f) : 0;
+        if (progress01 < 0f) progress01 = 0f;
+        if (progress01 > 1f) progress01 = 1f;
+        ChargePercent = (int)(progress01 * 100f);
         IsReady = isReady;
     }
 }

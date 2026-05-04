@@ -49,7 +49,7 @@ public class MutationServiceTests
     {
         _dataService.SetCareer("hero1", "warboss");
         _registry.GetCareer("warboss").Returns(new CareerDefinition(
-            "warboss", "", "", "", "rally_horde", ChargeType.Kills, 100, 0, "wb_root",
+            "warboss", "", "", "", "rally_horde", 0, "wb_root",
             new List<string>(), new List<string>()));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             "wb_root", "", ChoiceType.Passive, "", "", null, new List<MutationDefinition>()));
@@ -67,7 +67,7 @@ public class MutationServiceTests
         _dataService.TryAddChoice("hero1", "choice1", 10);
 
         _registry.GetCareer("warboss").Returns(new CareerDefinition(
-            "warboss", "", "", "", "rally_horde", ChargeType.Kills, 100, 0, "wb_root",
+            "warboss", "", "", "", "rally_horde", 0, "wb_root",
             new List<string>(), new List<string>()));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             "wb_root", "", ChoiceType.Passive, "", "", null, new List<MutationDefinition>()));
@@ -91,7 +91,7 @@ public class MutationServiceTests
         _dataService.SetCareer("hero1", "warboss");
 
         _registry.GetCareer("warboss").Returns(new CareerDefinition(
-            "warboss", "", "", "", "rally_horde", ChargeType.Kills, 100, 0, "wb_root",
+            "warboss", "", "", "", "rally_horde", 0, "wb_root",
             new List<string>(), new List<string>()));
 
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
@@ -115,7 +115,7 @@ public class MutationServiceTests
         _dataService.TryAddChoice("hero1", "choice1", 10);
 
         _registry.GetCareer("warboss").Returns(new CareerDefinition(
-            "warboss", "", "", "", "rally_horde", ChargeType.Kills, 100, 0, "wb_root",
+            "warboss", "", "", "", "rally_horde", 0, "wb_root",
             new List<string>(), new List<string>()));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             "wb_root", "", ChoiceType.Passive, "", "", null, new List<MutationDefinition>()));

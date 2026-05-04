@@ -3,6 +3,9 @@
 
   <!-- All values are whole-number percentages (15 = 15%). Executors convert to engine scale. -->
 
+  <!-- Global: shared between all 50 careers. Cooldown is a fixed timer (seconds) — abilities start ready, lock for cooldown_seconds after activation. -->
+  <Global cooldown_seconds="30" />
+
   <!-- Infantry: AoE buff to all nearby troops -->
   <Infantry
     damage_bonus="15"

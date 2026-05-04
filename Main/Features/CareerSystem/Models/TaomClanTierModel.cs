@@ -6,10 +6,12 @@ namespace TAOM.Features.CareerSystem.Models;
 
 public class TaomClanTierModel : DefaultClanTierModel
 {
-    private ICareerPassiveService _passiveService;
+    private readonly ICareerPassiveService _passiveService;
 
-    private ICareerPassiveService PassiveService =>
-        _passiveService ??= IoC.Resolve<ICareerPassiveService>();
+    public TaomClanTierModel(ICareerPassiveService passiveService)
+    {
+        _passiveService = passiveService;
+    }
 
     public override int GetCompanionLimit(Clan clan)
     {
@@ -17,11 +19,9 @@ public class TaomClanTierModel : DefaultClanTierModel
 
         var leader = clan?.Leader;
         if (leader == null) return baseLimit;
+        if (_passiveService == null) return baseLimit;
 
-        var svc = PassiveService;
-        if (svc == null) return baseLimit;
-
-        var bonus = svc.GetPassiveMagnitude(leader.StringId, PassiveEffectType.CompanionLimit);
+        var bonus = _passiveService.GetPassiveMagnitude(leader.StringId, PassiveEffectType.CompanionLimit);
         return baseLimit + (int)bonus;
     }
 }

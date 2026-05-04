@@ -4,8 +4,6 @@ public sealed class AbilityTemplateData
 {
     public string Id { get; set; }
     public string DisplayName { get; set; }
-    public string SpriteName { get; set; }
-    public float Cooldown { get; set; }
     public float Duration { get; set; }
     public float Radius { get; set; }
     public float MaxCharge { get; set; }
@@ -19,8 +17,6 @@ public sealed class AbilityTemplateData
     {
         Id = source.Id;
         DisplayName = source.DisplayName;
-        SpriteName = source.SpriteName;
-        Cooldown = source.Cooldown;
         Duration = source.Duration;
         Radius = source.Radius;
         MaxCharge = source.MaxCharge;

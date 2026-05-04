@@ -10,8 +10,6 @@
           description="{=taom_career_ranger_of_ithilien_desc}An elite scout who strikes from the shadows of Ithilien, ambushing enemies of Gondor with deadly precision."
           portrait_sprite="career_ranger_of_ithilien_portrait"
           ability_template_id="ranger_of_ithilien_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="ranger_of_ithilien_root">
     <EligibleCultures>
@@ -33,8 +31,6 @@
           description="{=taom_career_captain_of_osgiliath_desc}A battle-hardened infantry officer who commands Gondor's frontline defense at the ruins of Osgiliath, forging order from chaos in brutal urban combat. The Captain holds the line where others would break, rallying soldiers through sheer force of will."
           portrait_sprite="career_captain_of_osgiliath_portrait"
           ability_template_id="captain_of_osgiliath_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="captain_of_osgiliath_root">
     <EligibleCultures>
@@ -56,8 +52,6 @@
           description="{=taom_career_knight_of_belfalas_desc}An armored champion of the coastal fiefdom of Belfalas, whose thundering charge has broken countless enemy formations. The Knight of Belfalas combines Gondorian discipline with Dol Amroth's proud cavalry tradition, becoming an immovable wall of steel."
           portrait_sprite="career_knight_of_belfalas_portrait"
           ability_template_id="knight_of_belfalas_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="knight_of_belfalas_root">
     <EligibleCultures>
@@ -83,8 +77,6 @@
           description="{=taom_career_black_uruk_captain_desc}An iron-muscled champion of Mordor who leads Black Uruk warbands into the breach, absorbing punishment that would fell lesser warriors and turning the tide through sheer brutish dominance."
           portrait_sprite="career_black_uruk_captain_portrait"
           ability_template_id="black_uruk_captain_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="black_uruk_captain_root">
     <EligibleCultures>
@@ -106,8 +98,6 @@
           description="{=taom_career_mulkerhili_cultist_desc}A fanatical devotee of the One Ring's whispered promises who channels the terror of Sauron's voice to shatter enemy resolve, blending cursed archery with a maddening presence that erodes the will to fight."
           portrait_sprite="career_mulkerhili_cultist_portrait"
           ability_template_id="mulkerhili_cultist_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="mulkerhili_cultist_root">
     <EligibleCultures>
@@ -129,8 +119,6 @@
           description="{=taom_career_snaga_rider_desc}A wiry Snaga cavalry raider who slips behind enemy lines with unnerving silence, striking supply columns and isolated units before vanishing into the smoke of Mordor."
           portrait_sprite="career_snaga_rider_portrait"
           ability_template_id="snaga_rider_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="snaga_rider_root">
     <EligibleCultures>
@@ -152,8 +140,6 @@
           description="{=taom_career_olog_hai_warchief_desc}A towering Olog-Hai war-troll who wades into the thickest fighting as a living battering ram, soaking up tremendous punishment and hammering foes into the ground with devastating overhead blows."
           portrait_sprite="career_olog_hai_warchief_portrait"
           ability_template_id="olog_hai_warchief_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="olog_hai_warchief_root">
     <EligibleCultures>
@@ -179,8 +165,6 @@
           description="{=taom_career_marksman_of_aldburg_desc}A heavy archer of the Aldburg garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter."
           portrait_sprite="career_marksman_of_aldburg_portrait"
           ability_template_id="marksman_of_aldburg_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="marksman_of_aldburg_root">
     <EligibleCultures>
@@ -201,8 +185,6 @@
           description="{=taom_career_eotheod_windrider_desc}A descendant of the ancient Eothéod horsemasters who rides with the thunder of generations of legend, inspiring allies with a warcry that echoes Eorl the Young and scattering enemies under hooves of unstoppable heavy cavalry."
           portrait_sprite="career_eotheod_windrider_portrait"
           ability_template_id="eotheod_windrider_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="eotheod_windrider_root">
     <EligibleCultures>
@@ -223,8 +205,6 @@
           description="{=taom_career_watchman_of_stangard_desc}A grizzled river-warden of Stangard who patrols the Anduin crossings by flatboat and on foot, guarding Rohan's eastern flank through endurance, local knowledge, and a boatswain's tenacious grip on contested ground."
           portrait_sprite="career_watchman_of_stangard_portrait"
           ability_template_id="watchman_of_stangard_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="watchman_of_stangard_root">
     <EligibleCultures>
@@ -249,8 +229,6 @@
           description="{=taom_career_avanc_luth_raider_desc}A blood-painted skirmisher of the Avanc-lúth clan who charges into melee with reckless aggression, trading surgical precision for raw savage force that overwhelms opponents through sheer relentless pressure."
           portrait_sprite="career_avanc_luth_raider_portrait"
           ability_template_id="avanc_luth_raider_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="avanc_luth_raider_root">
     <EligibleCultures>
@@ -271,8 +249,6 @@
           description="{=taom_career_wolfskin_hunter_desc}A patient stalker who dresses in wolf-pelts and moves through the Misty Mountain foothills like a ghost, marking prey from concealment before unleashing a precisely aimed shaft that the victim never hears coming."
           portrait_sprite="career_wolfskin_hunter_portrait"
           ability_template_id="wolfskin_hunter_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="wolfskin_hunter_root">
     <EligibleCultures>
@@ -293,8 +269,6 @@
           description="{=taom_career_clanguard_rider_desc}A fast-raiding clan cavalryman who harasses enemy flanks with swift hit-and-run assaults, using superior speed and pack coordination to disrupt formations before the clan's infantry close in for the kill."
           portrait_sprite="career_clanguard_rider_portrait"
           ability_template_id="clanguard_rider_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="clanguard_rider_root">
     <EligibleCultures>
@@ -319,8 +293,6 @@
           description="{=taom_career_blademaster_of_ren_desc}A precision duelist from the warrior-courts of Rên who dispatches enemies with calculated, lethal blade work."
           portrait_sprite="career_blademaster_of_ren_portrait"
           ability_template_id="blademaster_of_ren_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="blademaster_of_ren_root">
     <EligibleCultures>
@@ -341,8 +313,6 @@
           description="{=taom_career_steppe_bowmaster_desc}A mobile archer of the Khand plains who harasses enemy lines with relentless volleys, never standing still long enough to be caught."
           portrait_sprite="career_steppe_bowmaster_portrait"
           ability_template_id="steppe_bowmaster_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="steppe_bowmaster_root">
     <EligibleCultures>
@@ -363,8 +333,6 @@
           description="{=taom_career_chariot_warlord_desc}A scythe-chariot commander of Khand whose brutal shock charges shatter formations and scatter survivors to the winds."
           portrait_sprite="career_chariot_warlord_portrait"
           ability_template_id="chariot_warlord_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="chariot_warlord_root">
     <EligibleCultures>
@@ -389,8 +357,6 @@
           description="{=taom_career_tribesman_of_jelut_desc}A warrior of the Jelut desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
           portrait_sprite="career_tribesman_of_jelut_portrait"
           ability_template_id="tribesman_of_jelut_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="tribesman_of_jelut_root">
     <EligibleCultures>
@@ -411,8 +377,6 @@
           description="{=taom_career_pezarsani_javelineer_desc}A fast-moving skirmisher of Pezarsan who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
           portrait_sprite="career_pezarsani_javelineer_portrait"
           ability_template_id="pezarsani_javelineer_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="pezarsani_javelineer_root">
     <EligibleCultures>
@@ -433,8 +397,6 @@
           description="{=taom_career_mahud_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
           portrait_sprite="career_mahud_beast_rider_portrait"
           ability_template_id="mahud_beast_rider_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="mahud_beast_rider_root">
     <EligibleCultures>
@@ -455,8 +417,6 @@
           description="{=taom_career_far_harad_halftroll_desc}A half-troll berserker of the deepest Far Harad jungles who absorbs punishment that would kill lesser warriors and retaliates with vile brutality."
           portrait_sprite="career_far_harad_halftroll_portrait"
           ability_template_id="far_harad_halftroll_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="far_harad_halftroll_root">
     <EligibleCultures>
@@ -481,8 +441,6 @@
           description="{=taom_career_codyan_legionaire_desc}A disciplined shieldwall soldier of the Côdya formations who excels in defensive cohesion, soaking punishment while the line holds firm."
           portrait_sprite="career_codyan_legionaire_portrait"
           ability_template_id="codyan_legionaire_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="codyan_legionaire_root">
     <EligibleCultures>
@@ -503,8 +461,6 @@
           description="{=taom_career_lokhas_drus_marksman_desc}An armor-piercing specialist of the Lôkhas Drûs corps who trains to drive arrows through the heaviest plate at range."
           portrait_sprite="career_lokhas_drus_marksman_portrait"
           ability_template_id="lokhas_drus_marksman_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="lokhas_drus_marksman_root">
     <EligibleCultures>
@@ -525,8 +481,6 @@
           description="{=taom_career_balchoth_kan_desc}A heavy cavalry commander of the Balchoth who leads unstoppable mounted charges, maintaining iron morale no matter the odds."
           portrait_sprite="career_balchoth_kan_portrait"
           ability_template_id="balchoth_kan_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="balchoth_kan_root">
     <EligibleCultures>
@@ -551,8 +505,6 @@
           description="{=taom_career_dale_guardsman_desc}A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="dale_guardsman_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="dale_guardsman_root">
     <EligibleCultures>
@@ -573,8 +525,6 @@
           description="{=taom_career_dale_marksman_desc}A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship."
           portrait_sprite="career_dale_marksman_portrait"
           ability_template_id="dale_marksman_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="dale_marksman_root">
     <EligibleCultures>
@@ -595,8 +545,6 @@
           description="{=taom_career_dale_outrider_desc}A mounted patrol of the northern trade roads who safeguards caravans between Dale and the Lonely Mountain."
           portrait_sprite="career_dale_outrider_portrait"
           ability_template_id="dale_outrider_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="dale_outrider_root">
     <EligibleCultures>
@@ -621,8 +569,6 @@
           description="{=taom_career_ironguard_desc}An elite dwarven warrior clad in mithril-forged plate who holds the deeps of Erebor against orc and dragon alike."
           portrait_sprite="career_ironguard_portrait"
           ability_template_id="ironguard_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="ironguard_root">
     <EligibleCultures>
@@ -643,8 +589,6 @@
           description="{=taom_career_crossbow_master_desc}A dwarven engineer-warrior who wields masterwork crossbows of incredible stopping power, each bolt precision-crafted."
           portrait_sprite="career_crossbow_master_portrait"
           ability_template_id="crossbow_master_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="crossbow_master_root">
     <EligibleCultures>
@@ -665,8 +609,6 @@
           description="{=taom_career_ram_rider_desc}A dwarven cavalry warrior mounted on a great war-ram, charging through tight mountain passes where horses cannot tread."
           portrait_sprite="career_ram_rider_portrait"
           ability_template_id="ram_rider_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="ram_rider_root">
     <EligibleCultures>
@@ -691,8 +633,6 @@
           description="{=taom_career_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age."
           portrait_sprite="career_blade_dancer_portrait"
           ability_template_id="blade_dancer_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="blade_dancer_root">
     <EligibleCultures>
@@ -713,8 +653,6 @@
           description="{=taom_career_elven_archer_desc}A peerless marksman of Imladris whose arrows fly true across vast distances, guided by centuries of practice."
           portrait_sprite="career_elven_archer_portrait"
           ability_template_id="elven_archer_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="elven_archer_root">
     <EligibleCultures>
@@ -735,8 +673,6 @@
           description="{=taom_career_rivendell_knight_desc}A mounted warrior of Elrond's household who rides to war on swift elven steeds, a beacon of hope against the shadow."
           portrait_sprite="career_rivendell_knight_portrait"
           ability_template_id="rivendell_knight_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="rivendell_knight_root">
     <EligibleCultures>
@@ -761,8 +697,6 @@
           description="{=taom_career_warden_desc}A silent guardian of the Golden Wood who strikes without warning, defending the borders of Lothlorien with ancient resolve."
           portrait_sprite="career_warden_portrait"
           ability_template_id="warden_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="warden_root">
     <EligibleCultures>
@@ -783,8 +717,6 @@
           description="{=taom_career_galadhrim_archer_desc}An elite bowman of Lothlorien who rains silver arrows from the mallorn canopy, each shot guided by the light of Galadriel."
           portrait_sprite="career_galadhrim_archer_portrait"
           ability_template_id="galadhrim_archer_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="galadhrim_archer_root">
     <EligibleCultures>
@@ -805,8 +737,6 @@
           description="{=taom_career_sentinel_desc}A mounted guardian who patrols the borders of Lorien, riding swift and silent under the golden eaves."
           portrait_sprite="career_sentinel_portrait"
           ability_template_id="sentinel_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="sentinel_root">
     <EligibleCultures>
@@ -831,8 +761,6 @@
           description="{=taom_career_shadow_walker_desc}A woodland elf who moves unseen through the darkened paths of Mirkwood, dispatching spiders and orcs in silence."
           portrait_sprite="career_shadow_walker_portrait"
           ability_template_id="shadow_walker_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="shadow_walker_root">
     <EligibleCultures>
@@ -853,8 +781,6 @@
           description="{=taom_career_silvan_archer_desc}A keen-eyed hunter of the Woodland Realm who strikes from the treetops with lethal precision."
           portrait_sprite="career_silvan_archer_portrait"
           ability_template_id="silvan_archer_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="silvan_archer_root">
     <EligibleCultures>
@@ -875,8 +801,6 @@
           description="{=taom_career_elk_rider_desc}A mounted warrior of Thranduil's guard who rides great forest elk into battle, crashing through underbrush and foe alike."
           portrait_sprite="career_elk_rider_portrait"
           ability_template_id="elk_rider_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="elk_rider_root">
     <EligibleCultures>
@@ -901,8 +825,6 @@
           description="{=taom_career_uruk_berserker_desc}A frenzied Uruk-hai who charges headlong into battle, growing stronger as wounds fuel an unstoppable rage."
           portrait_sprite="career_uruk_berserker_portrait"
           ability_template_id="uruk_berserker_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="uruk_berserker_root">
     <EligibleCultures>
@@ -923,8 +845,6 @@
           description="{=taom_career_uruk_crossbow_desc}A disciplined Uruk marksman wielding Saruman's iron crossbows, delivering devastating volleys from Orthanc's forges."
           portrait_sprite="career_uruk_crossbow_portrait"
           ability_template_id="uruk_crossbow_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="uruk_crossbow_root">
     <EligibleCultures>
@@ -945,8 +865,6 @@
           description="{=taom_career_warg_scout_desc}A cunning Uruk rider mounted on a swift warg, scouting ahead of the armies of Isengard and running down fleeing prey."
           portrait_sprite="career_warg_scout_portrait"
           ability_template_id="warg_scout_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="warg_scout_root">
     <EligibleCultures>
@@ -971,8 +889,6 @@
           description="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="cave_troll_master_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="cave_troll_master_root">
     <EligibleCultures>
@@ -993,8 +909,6 @@
           description="{=taom_career_goblin_sniper_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="goblin_sniper_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="goblin_sniper_root">
     <EligibleCultures>
@@ -1015,8 +929,6 @@
           description="{=taom_career_warg_pack_leader_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="warg_pack_leader_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="warg_pack_leader_root">
     <EligibleCultures>
@@ -1041,8 +953,6 @@
           description="{=taom_career_shadow_warrior_desc}A dark champion of Dol Guldur empowered by the Necromancer's sorcery, draining the life of all who stand before them."
           portrait_sprite="career_shadow_warrior_portrait"
           ability_template_id="shadow_warrior_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="shadow_warrior_root">
     <EligibleCultures>
@@ -1063,8 +973,6 @@
           description="{=taom_career_necromancer_acolyte_desc}A fell sorcerer who channels dark energies to weaken enemies from afar, sowing terror and decay across the battlefield."
           portrait_sprite="career_necromancer_acolyte_portrait"
           ability_template_id="necromancer_acolyte_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="necromancer_acolyte_root">
     <EligibleCultures>
@@ -1085,8 +993,6 @@
           description="{=taom_career_fell_rider_desc}A dread horseman of the shadow host who spreads fear with every charge, their mount wreathed in dark mist."
           portrait_sprite="career_fell_rider_portrait"
           ability_template_id="fell_rider_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="fell_rider_root">
     <EligibleCultures>
@@ -1111,8 +1017,6 @@
           description="{=taom_career_corsair_boarder_desc}A cutlass-wielding sea reaver who storms enemy decks with ruthless ferocity, taking what the Corsairs desire."
           portrait_sprite="career_corsair_boarder_portrait"
           ability_template_id="corsair_boarder_ability"
-          charge_type="DamageTaken"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="corsair_boarder_root">
     <EligibleCultures>
@@ -1133,8 +1037,6 @@
           description="{=taom_career_corsair_crossbow_desc}A sharpshooter of the Corsair fleet who picks off helmsmen and officers from the rigging with deadly accuracy."
           portrait_sprite="career_corsair_crossbow_portrait"
           ability_template_id="corsair_crossbow_ability"
-          charge_type="DamageDone"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="corsair_crossbow_root">
     <EligibleCultures>
@@ -1155,8 +1057,6 @@
           description="{=taom_career_corsair_captain_desc}A seasoned fleet commander who leads from the prow, inspiring crews with promises of plunder and glory on the high seas."
           portrait_sprite="career_corsair_captain_portrait"
           ability_template_id="corsair_captain_ability"
-          charge_type="Kills"
-          max_charge="100"
           min_clan_tier="0"
           root_choice_id="corsair_captain_root">
     <EligibleCultures>

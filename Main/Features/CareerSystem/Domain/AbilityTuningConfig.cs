@@ -2,19 +2,33 @@ namespace TAOM.Features.CareerSystem.Domain;
 
 public sealed class AbilityTuningConfig
 {
+    public GlobalTuning Global { get; }
     public InfantryTuning Infantry { get; }
     public RangedTuning Ranged { get; }
     public CavalryTuning Cavalry { get; }
 
-    public AbilityTuningConfig(InfantryTuning infantry, RangedTuning ranged, CavalryTuning cavalry)
+    public AbilityTuningConfig(GlobalTuning global, InfantryTuning infantry, RangedTuning ranged, CavalryTuning cavalry)
     {
+        Global = global;
         Infantry = infantry;
         Ranged = ranged;
         Cavalry = cavalry;
     }
 
     public static AbilityTuningConfig Default => new AbilityTuningConfig(
-        InfantryTuning.Default, RangedTuning.Default, CavalryTuning.Default);
+        GlobalTuning.Default, InfantryTuning.Default, RangedTuning.Default, CavalryTuning.Default);
+}
+
+public sealed class GlobalTuning
+{
+    public float CooldownSeconds { get; }
+
+    public GlobalTuning(float cooldownSeconds)
+    {
+        CooldownSeconds = cooldownSeconds;
+    }
+
+    public static GlobalTuning Default => new GlobalTuning(30f);
 }
 
 public sealed class InfantryTuning

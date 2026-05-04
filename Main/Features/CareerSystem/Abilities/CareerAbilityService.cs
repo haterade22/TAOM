@@ -6,11 +6,13 @@ namespace TAOM.Features.CareerSystem.Abilities;
 
 public class CareerAbilityService : ICareerAbilityService
 {
+    private readonly ICareerConfigProvider _config;
     private readonly IModLogger _logger;
     private readonly Dictionary<string, CareerAbility> _abilities = new Dictionary<string, CareerAbility>();
 
-    public CareerAbilityService(IModLogger logger)
+    public CareerAbilityService(ICareerConfigProvider config, IModLogger logger)
     {
+        _config = config;
         _logger = logger;
     }
 
@@ -33,21 +35,17 @@ public class CareerAbilityService : ICareerAbilityService
             return null;
         }
 
+        var cooldownSeconds = _config.GetAbilityTuning().Global.CooldownSeconds;
+
         var ability = new CareerAbility(
             career.AbilityTemplateId,
-            career.ChargeType,
-            career.MaxCharge,
-            cooldownDuration: 10f);
+            ChargeType.CooldownOnly,
+            maxCharge: 0f,
+            cooldownDuration: cooldownSeconds);
 
         _abilities[heroStringId] = ability;
-        _logger.LogInfo($"CareerSystem: Created ability for hero '{heroStringId}' — template='{career.AbilityTemplateId}', chargeType={career.ChargeType}, maxCharge={career.MaxCharge}");
+        _logger.LogInfo($"CareerSystem: Created ability for hero '{heroStringId}' — template='{career.AbilityTemplateId}', cooldownSeconds={cooldownSeconds}");
         return ability;
-    }
-
-    public void AddCharge(string heroStringId, float amount, ChargeType sourceType)
-    {
-        if (_abilities.TryGetValue(heroStringId, out var ability))
-            ability.AddCharge(amount, sourceType);
     }
 
     public void Tick(string heroStringId, float dt)
@@ -59,6 +57,11 @@ public class CareerAbilityService : ICareerAbilityService
     public bool IsAbilityReady(string heroStringId)
     {
         return _abilities.TryGetValue(heroStringId, out var ability) && ability.IsReady;
+    }
+
+    public float GetCooldownRemaining(string heroStringId)
+    {
+        return _abilities.TryGetValue(heroStringId, out var ability) ? ability.CooldownRemaining : 0f;
     }
 
     public void ActivateAbility(string heroStringId)

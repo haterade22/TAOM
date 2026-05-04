@@ -43,8 +43,7 @@ public class CareerConfigProviderTests
 <Careers max_perk_points=""25"">
   <Career id=""warboss"" display_name=""Warboss"" description=""A brute.""
           portrait_sprite=""wb_sprite"" ability_template_id=""rally_horde""
-          charge_type=""Kills"" max_charge=""100"" min_clan_tier=""0""
-          root_choice_id=""wb_root"">
+          min_clan_tier=""0"" root_choice_id=""wb_root"">
     <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
     <ChoiceGroups><Group id=""wb_brutality"" /></ChoiceGroups>
   </Career>
@@ -55,8 +54,6 @@ public class CareerConfigProviderTests
         Assert.AreEqual(1, careers.Count);
         Assert.AreEqual("warboss", careers[0].Id);
         Assert.AreEqual("Warboss", careers[0].DisplayName);
-        Assert.AreEqual(ChargeType.Kills, careers[0].ChargeType);
-        Assert.AreEqual(100, careers[0].MaxCharge);
         Assert.AreEqual("wb_root", careers[0].RootChoiceId);
         Assert.AreEqual(1, careers[0].EligibleCultureIds.Count);
         Assert.AreEqual("mordor", careers[0].EligibleCultureIds[0]);
@@ -136,6 +133,139 @@ public class CareerConfigProviderTests
         Assert.AreEqual(AttackTypeMask.Melee, choices[0].Passive.AttackTypeMask);
     }
 
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownInXml_ReturnsConfiguredValue()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""45"" />
+  <Infantry damage_bonus=""15"" damage_reduction=""10"" radius=""50"" />
+  <Ranged speed_bonus=""15"" ranged_damage_bonus=""20"" draw_speed_bonus=""20"" />
+  <Cavalry mount_speed_bonus=""20"" charge_damage_bonus=""25"" damage_bonus=""10"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(45f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalElementMissing_ReturnsDefaultThirtySeconds()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Infantry damage_bonus=""15"" damage_reduction=""10"" radius=""50"" />
+  <Ranged speed_bonus=""15"" ranged_damage_bonus=""20"" draw_speed_bonus=""20"" />
+  <Cavalry mount_speed_bonus=""20"" charge_damage_bonus=""25"" damage_bonus=""10"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_TuningFileMissing_ReturnsDefaultGlobalCooldown()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        // No tuning XML written.
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.IsNotNull(tuning.Global);
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownInvalid_FallsBackToDefault()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""nonsense"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownNegative_FallsBackToDefault()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""-5"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownExceedsMaximum_FallsBackToDefault()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""99999"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownAtMaximum_AcceptsValue()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""3600"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(3600f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownNaN_FallsBackToDefault()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""NaN"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownPositiveInfinity_FallsBackToDefault()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""Infinity"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetAbilityTuning_GlobalCooldownNegativeInfinity_FallsBackToDefault()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteAbilityTuningXml(@"<?xml version='1.0'?>
+<AbilityTuning>
+  <Global cooldown_seconds=""-Infinity"" />
+</AbilityTuning>");
+
+        var tuning = _provider.GetAbilityTuning();
+        Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
+    }
+
     private void WriteCareersXml(string content)
     {
         File.WriteAllText(Path.Combine(_tempDir, "career_system", "taom_careers.xml"), content);
@@ -144,5 +274,10 @@ public class CareerConfigProviderTests
     private void WriteChoicesXml(string content)
     {
         File.WriteAllText(Path.Combine(_tempDir, "career_system", "taom_career_choices.xml"), content);
+    }
+
+    private void WriteAbilityTuningXml(string content)
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "career_system", "taom_ability_tuning.xml"), content);
     }
 }

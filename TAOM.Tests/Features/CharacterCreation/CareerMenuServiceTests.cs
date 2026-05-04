@@ -191,8 +191,6 @@ public class CareerMenuServiceTests
             description,
             $"career_{id}_portrait",
             $"{id}_ability",
-            ChargeType.DamageDone,
-            100,
             0,
             $"{id}_root",
             new List<string>(cultureIds),

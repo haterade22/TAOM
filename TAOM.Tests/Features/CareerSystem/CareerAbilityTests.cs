@@ -123,4 +123,52 @@ public class CareerAbilityTests
         ability.SetMaxCharge(50f);
         Assert.AreEqual(50f, ability.CurrentCharge, 0.001f);
     }
+
+    [TestMethod]
+    public void ReadyProgress01_CooldownOnly_StartsAtOne()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        Assert.AreEqual(1f, ability.ReadyProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void ReadyProgress01_CooldownOnly_ZeroImmediatelyAfterActivate()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.Activate();
+        Assert.AreEqual(0f, ability.ReadyProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void ReadyProgress01_CooldownOnly_HalfWayDuringCooldown()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.Activate();
+        ability.Tick(15f);
+        Assert.AreEqual(0.5f, ability.ReadyProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void ReadyProgress01_CooldownOnly_OneAfterFullCooldown()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.Activate();
+        ability.Tick(30f);
+        Assert.AreEqual(1f, ability.ReadyProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void ReadyProgress01_ChargeBased_TracksChargeRatio()
+    {
+        var ability = new CareerAbility("test", ChargeType.Kills, 10f, 0f);
+        ability.AddCharge(4f, ChargeType.Kills);
+        Assert.AreEqual(0.4f, ability.ReadyProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void ReadyProgress01_CooldownOnly_ZeroDuration_ReturnsOne()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 0f);
+        Assert.AreEqual(1f, ability.ReadyProgress01, 0.001f);
+    }
 }

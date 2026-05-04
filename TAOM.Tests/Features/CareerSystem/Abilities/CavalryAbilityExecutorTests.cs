@@ -19,6 +19,7 @@ public class CavalryAbilityExecutorTests
     {
         _configProvider = Substitute.For<ICareerConfigProvider>();
         _configProvider.GetAbilityTuning().Returns(new AbilityTuningConfig(
+            GlobalTuning.Default,
             InfantryTuning.Default,
             RangedTuning.Default,
             new CavalryTuning(20f, 25f, 10f)));

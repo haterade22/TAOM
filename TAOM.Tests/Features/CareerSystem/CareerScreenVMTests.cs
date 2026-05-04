@@ -22,7 +22,7 @@ public class CareerScreenVMTests
     private static readonly CareerDefinition WarbossCareer = new CareerDefinition(
         id: "warboss", displayName: "Warboss", description: "A brute.",
         portraitSprite: "wb_sprite", abilityTemplateId: "rally_horde",
-        chargeType: ChargeType.Kills, maxCharge: 100, minClanTier: 0,
+        minClanTier: 0,
         rootChoiceId: "wb_root",
         eligibleCultureIds: new List<string> { "mordor" },
         choiceGroupIds: new List<string> { "wb_brutality" });
@@ -164,7 +164,7 @@ public class CareerScreenVMTests
         var expandedCareer = new CareerDefinition(
             id: "warboss", displayName: "Warboss", description: "A brute.",
             portraitSprite: "wb_sprite", abilityTemplateId: "rally_horde",
-            chargeType: ChargeType.Kills, maxCharge: 100, minClanTier: 0,
+            minClanTier: 0,
             rootChoiceId: "wb_root",
             eligibleCultureIds: new List<string> { "mordor" },
             choiceGroupIds: new List<string> { "wb_brutality", "wb_dominion" });

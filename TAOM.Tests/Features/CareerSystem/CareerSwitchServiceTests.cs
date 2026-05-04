@@ -38,14 +38,14 @@ public class CareerSwitchServiceTests
 
         _registry.GetCareer("warboss").Returns(new CareerDefinition(
             id: "warboss", displayName: "Warboss", description: "", portraitSprite: "",
-            abilityTemplateId: "rally", chargeType: ChargeType.Kills, maxCharge: 100,
+            abilityTemplateId: "rally",
             minClanTier: 0, rootChoiceId: "wb_root",
             eligibleCultureIds: new List<string> { "mordor" },
             choiceGroupIds: new List<string>()));
 
         _registry.GetCareer("ranger").Returns(new CareerDefinition(
             id: "ranger", displayName: "Ranger", description: "", portraitSprite: "",
-            abilityTemplateId: "ambush", chargeType: ChargeType.DamageDone, maxCharge: 1200,
+            abilityTemplateId: "ambush",
             minClanTier: 0, rootChoiceId: "ranger_root",
             eligibleCultureIds: new List<string> { "gondor", "mordor" },
             choiceGroupIds: new List<string>()));

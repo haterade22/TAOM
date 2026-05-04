@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -26,15 +27,20 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private readonly ICareerHeroAdapterFactory _adapterFactory;
     private readonly IModLogger _logger;
 
-    private float _tickAccumulator;
-    private const float TickInterval = 1f;
+    private const float ChargingMessageThrottleSeconds = 2f;
     private bool _loggedMissionStart;
     private bool _abilityReadyNotified;
+    private float _lastChargingMessageTime = -ChargingMessageThrottleSeconds;
 
     private GauntletLayer _hudLayer;
     private CareerAbilityHudVM _hudVM;
     private GauntletMovieIdentifier _hudMovie;
     private bool _hudInitialized;
+
+    // HUD metadata cache (avoid per-frame TextObject + string interpolation in UpdateHud).
+    private string _cachedHudHeroId;
+    private string _cachedHudAbilityName;
+    private string _cachedHudAbilitySprite;
 
     private readonly List<MissionAbilityExecutionContext> _activeContexts = new List<MissionAbilityExecutionContext>();
 
@@ -81,13 +87,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         if (!_dataService.HasCareer(heroId)) return;
 
-        // Tick ability cooldowns/timers once per second
-        _tickAccumulator += dt;
-        if (_tickAccumulator >= TickInterval)
-        {
-            _tickAccumulator -= TickInterval;
-            _abilityService.Tick(heroId, TickInterval);
-        }
+        // Tick the ability cooldown with the actual frame dt. Any batching pattern (e.g.
+        // `if (_acc >= 1f) Tick(1f)`) drops elapsed time on long frames -- a 2.5s frame would
+        // drain only 1s of cooldown. CareerAbility.Tick handles fractional dt correctly.
+        _abilityService.Tick(heroId, dt);
 
         // Check ability ready notification (every frame, not gated by tick interval)
         if (_abilityService.IsAbilityReady(heroId) && !_abilityReadyNotified)
@@ -116,7 +119,23 @@ public class CareerPerkMissionBehavior : MissionBehavior
                 _logger.LogInfo($"CareerSystem: Ability activated for hero '{heroId}' via V key");
                 ExecuteAbilityEffect(heroId);
             }
+            else
+            {
+                NotifyStillCharging(heroId);
+            }
         }
+    }
+
+    private void NotifyStillCharging(string heroId)
+    {
+        var now = Mission.Current?.CurrentTime ?? 0f;
+        if (now - _lastChargingMessageTime < ChargingMessageThrottleSeconds) return;
+
+        _lastChargingMessageTime = now;
+        var remaining = (int)System.Math.Ceiling(_abilityService.GetCooldownRemaining(heroId));
+        if (remaining < 1) remaining = 1;
+        InformationManager.DisplayMessage(new InformationMessage(
+            $"Career ability still charging — {remaining}s remaining.", Colors.Gray));
     }
 
     private void ExecuteAbilityEffect(string heroId)
@@ -130,17 +149,6 @@ public class CareerPerkMissionBehavior : MissionBehavior
         // Apply hero mutations to the raw template so Duration/Radius/etc reflect choice-tree choices.
         var rawTemplate = _configProvider.GetAbilityTemplate(career.AbilityTemplateId);
         var template = MutateTemplate(rawTemplate, heroId);
-
-        // Reconcile max charge: mutations may have changed it since ability was first created.
-        if (template != null && template.MaxCharge > 0f)
-        {
-            var ability = _abilityService.GetOrCreateAbility(heroId, _registry, _dataService);
-            if (ability != null && ability.MaxCharge != template.MaxCharge)
-            {
-                ability.SetMaxCharge(template.MaxCharge);
-                _logger.LogDebug($"CareerSystem: MaxCharge updated to {template.MaxCharge} for hero '{heroId}'");
-            }
-        }
 
         var duration = template?.Duration ?? 8f;
         var radius = template?.Radius ?? 10f;
@@ -197,44 +205,34 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         if (!_dataService.HasCareer(heroId))
         {
-            _hudVM.Update(false, null, null, 0f, 0f, false);
+            _hudVM.Update(false, null, null, 0f, false);
             return;
         }
 
         var ability = _abilityService.GetOrCreateAbility(heroId, _registry, _dataService);
         if (ability == null)
         {
-            _hudVM.Update(false, null, null, 0f, 0f, false);
+            _hudVM.Update(false, null, null, 0f, false);
             return;
         }
 
+        if (!string.Equals(heroId, _cachedHudHeroId, StringComparison.Ordinal))
+            RefreshHudCache(heroId, ability);
+
+        _hudVM.Update(true, _cachedHudAbilityName, _cachedHudAbilitySprite, ability.ReadyProgress01, ability.IsReady);
+    }
+
+    private void RefreshHudCache(string heroId, CareerAbility ability)
+    {
         var careerId = _dataService.GetCareerStringId(heroId);
         var career = careerId != null ? _registry.GetCareer(careerId) : null;
         var rawName = career?.DisplayName ?? ability.TemplateId;
-        var abilityName = new TaleWorlds.Localization.TextObject(rawName).ToString();
-        var abilitySprite = career != null
+
+        _cachedHudHeroId = heroId;
+        _cachedHudAbilityName = new TaleWorlds.Localization.TextObject(rawName).ToString();
+        _cachedHudAbilitySprite = career != null
             ? $"CareerSystem\\Abilities\\{career.AbilityTemplateId}"
             : null;
-
-        _hudVM.Update(true, abilityName, abilitySprite, ability.CurrentCharge, ability.MaxCharge, ability.IsReady);
-    }
-
-    public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, WeaponComponentData attackerWeapon, bool isBlocked, bool isSiegeEngineHit, in Blow blow, in AttackCollisionData collisionData, float damagedHp, float hitDistance, float shotDifficulty)
-    {
-        if (isBlocked || damagedHp <= 0f) return;
-        if (Campaign.Current == null) return;
-
-        var hero = CharacterObject.PlayerCharacter?.HeroObject;
-        if (hero == null) return;
-
-        var mainAgent = Mission.Current?.MainAgent;
-        if (mainAgent == null) return;
-
-        var heroId = hero.StringId;
-        if (affectorAgent == mainAgent)
-            _abilityService.AddCharge(heroId, damagedHp, ChargeType.DamageDone);
-        else if (affectedAgent == mainAgent)
-            _abilityService.AddCharge(heroId, damagedHp, ChargeType.DamageTaken);
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
@@ -246,10 +244,6 @@ public class CareerPerkMissionBehavior : MissionBehavior
         if (hero == null) return;
 
         var mainAgent = Mission.Current?.MainAgent;
-
-        // Kill charge: main agent killed someone
-        if (affectorAgent != null && mainAgent != null && affectorAgent == mainAgent)
-            _abilityService.AddCharge(hero.StringId, 1f, ChargeType.Kills);
 
         // Death cleanup: main agent died while buffs were active
         if (affectedAgent == mainAgent)
@@ -266,6 +260,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
         _abilityReadyNotified = false;
+        _lastChargingMessageTime = -ChargingMessageThrottleSeconds;
+        _cachedHudHeroId = null;
+        _cachedHudAbilityName = null;
+        _cachedHudAbilitySprite = null;
         _activeContexts.Clear();
         CareerAbilityBuffTracker.ClearAll();
         _abilityService.ClearAll();

@@ -16,7 +16,7 @@ public class CareerPassiveServiceTests
 
     private static readonly CareerDefinition WarbossCareer = new CareerDefinition(
         id: "warboss", displayName: "Warboss", description: "", portraitSprite: "",
-        abilityTemplateId: "rally", chargeType: ChargeType.Kills, maxCharge: 100,
+        abilityTemplateId: "rally",
         minClanTier: 0, rootChoiceId: "wb_root",
         eligibleCultureIds: new List<string> { "mordor" },
         choiceGroupIds: new List<string>());

@@ -17,6 +17,10 @@ public class CareerAbility
         ? !IsOnCooldown
         : CurrentCharge >= MaxCharge;
 
+    public float ReadyProgress01 => ChargeType == ChargeType.CooldownOnly
+        ? (CooldownDuration > 0f ? (CooldownDuration - CooldownRemaining) / CooldownDuration : 1f)
+        : (MaxCharge > 0f ? CurrentCharge / MaxCharge : 0f);
+
     public CareerAbility(string templateId, ChargeType chargeType, float maxCharge, float cooldownDuration)
     {
         TemplateId = templateId;
