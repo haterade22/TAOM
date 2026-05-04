@@ -614,3 +614,7 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | `tools/rebalance_troops.py` | Balance troop skills | `--dry-run`, `--apply` |
 | `tools/rebalance_armor.py` | Balance armor stats | `--dry-run`, `--apply` |
 | `tools/rebalance_weapons.py` | Balance weapon stats | `--dry-run`, `--apply` |
+| `tools/generate_gondor_armor.py` | Phase-1 Gondor armor item author (Anorien/MT/Osg/Cair/Ith) — writes to `lotraom-assets` | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/generate_gondor_armor_phase2.py` | Phase-2 author for 8 missing Gondor families (Lossarnach/PG/Har/Anf/Sere/Leb/Bel/Lam) — defaults to Steam install (issue #99) | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/apply_gondor_troop_revamp.py` | Mechanical EquipmentRoster swap for 107 Gondor troops + delete orphan blocks (issue #99) | `--dry-run`, `--apply` |
+| `tools/validate_gondor_refs.py` | Underwear-bug gate: cross-checks every `sk_gd_*`/`sk_dg_*` reference in `troops_gondor.xml` against Armory IDs | (no flags) |

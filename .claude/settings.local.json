@@ -31,7 +31,15 @@
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTR_Map/AssetSources/mirkwood/Kitbash/textures//**)",
       "Edit(/.claude/skills/investigate/**)",
       "Edit(/.claude/skills/context-save/**)",
-      "Edit(/.claude/skills/skill-stocktake/**)"
+      "Edit(/.claude/skills/skill-stocktake/**)",
+      "Bash(BANNERLORD_GAME_DIR=\"C:/non/existent/path\" dotnet build TAOM.Tests/TAOM.Tests.csproj --nologo --verbosity quiet)",
+      "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules//**)",
+      "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/**)",
+      "Read(//c/ProgramData/Mount and Blade II Bannerlord/logs/**)",
+      "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/Logs/**)",
+      "Bash(cp \"c:/Users/mikew/source/repos/TAOM/CHANGELOG.md\" \"c:/Users/mikew/source/repos/TAOM/CHANGELOG.md.full\")",
+      "Bash(git checkout *)",
+      "PowerShell(./build.ps1 -RunTests 2>&1)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
