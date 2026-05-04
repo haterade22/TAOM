@@ -31,7 +31,7 @@ public class BannerWidget : ImageWidget
     private bool _textureLoaded;
     private bool _loadFailed;
     private Sprite _loadedSprite;
-    private string _bannerImage = "banner_flag";
+    private string _bannerImage = "";
 
     private float _stampProgress;
     private const float StampSpeed = 6f;
@@ -260,7 +260,11 @@ public class BannerWidget : ImageWidget
             if (!System.IO.File.Exists(file))
             {
                 _loadFailed = true;
-                FactionMapPaths.LogError($"[Banner] File not found: {file}");
+                // DEBUG (not ERROR): missing PNG is a recoverable race against data binding.
+                // The setter resets _loadFailed when BannerImage changes, so a real bound name
+                // gets a second chance to load. ERROR misled log readers into thinking the
+                // map was broken when it wasn't.
+                FactionMapPaths.LogDebug($"[Banner] File not found: {file}");
                 return;
             }
 

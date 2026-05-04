@@ -82,6 +82,10 @@ public class FactionSelectionServiceTests
         Assert.IsFalse(result.Playable);
         Assert.IsFalse(result.HasCulture);
         Assert.AreEqual(-1f, result.BannerPosX, 0.001f);
+        // Empty BannerImage signals "no banner" to the widget; the load short-circuits via
+        // IsNullOrEmpty(_bannerImage) in BannerWidget.TryLoadTexture instead of trying to
+        // resolve a placeholder PNG that doesn't exist on disk.
+        Assert.AreEqual("", result.BannerImage);
     }
 
     [TestMethod]

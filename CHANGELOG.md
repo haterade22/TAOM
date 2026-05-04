@@ -1,5 +1,33 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-04
+
+### Fix: SpecialResources hot-path log spam — dedupe ResolveResource DEBUG by (kingdom, culture)
+
+A 2026-05-04 debug log review found 1,751 of 2,531 lines (69%) were the same `[SpecRes] Resolved resource 'caster' via culture 'gondor' (kingdom '' had no match)` line, firing several times per map-tick from `MapInfoVM.OnRefresh` tooltip rebuilds. The DEBUG line was useful during kingdom-vs-culture resolution development but adds zero diagnostic value once resolution is steady-state.
+
+**Change:** `SpecialResourceService.ResolveResource` now tracks logged `(kingdomId, cultureId)` keys in a `HashSet<string>` and only emits the DEBUG line on first hit per key. Transitions still log; identical repeat calls are silent.
+
+**Tests:** 6 new tests in `SpecialResourceServiceTests.cs` cover first-call logs, second-identical-call suppresses, all three branches (kingdom-hit / culture-fallback / no-match), and independent keys logging independently.
+
+**Net effect:** ~1–6 SpecRes DEBUG lines per session instead of thousands. Real signal stays visible; log files shrink ~70%.
+
+### Fix: FactionMap banner_flag.png ERROR on CC entry — empty defaults + demote LogError
+
+Same 2026-05-04 log review caught `[ERROR] [Banner] File not found: ...banner_flag.png` firing once during the CC culture-stage `BannerWidget` initialization. `"banner_flag"` was a placeholder default with no matching PNG asset, set in 4 places (widget internal, VM, model, service fallback). The widget's `BannerImage` setter resets `_loadFailed` when the value changes, so the real banner loads successfully on data-bind — but the spurious ERROR log misled readers into thinking the FactionMap was broken.
+
+**Change A — empty defaults:** all four `"banner_flag"` defaults → `""`. The existing `IsNullOrEmpty(_bannerImage)` short-circuit at `BannerWidget.TryLoadTexture` line 249 silently skips the load until a real bound value arrives.
+- `Main/Features/FactionMap/Widgets/BannerWidget.cs` — internal default.
+- `Main/Features/FactionMap/ViewModels/FactionSelectionVM.cs` — VM backing field.
+- `Main/Features/FactionMap/Models/FactionSelectionResult.cs` — model property default.
+- `Main/Features/FactionMap/FactionSelectionService.cs:108` — `!hasBanner` fallback (regions without `GameFaction`) now returns `""` instead of a non-existent placeholder name.
+
+**Change B — demote LogError → LogDebug** for the file-not-found case at `BannerWidget.cs:267`. Other ERROR paths in the widget (engine returning null, exceptions) stay at ERROR — those aren't recoverable. Added `FactionMapPaths.LogDebug` helper.
+
+**Test:** existing `FactionSelectionServiceTests.SelectRegion_NonPlayableFaction_HidesBanner` extended with `Assert.AreEqual("", result.BannerImage)` to lock the empty-fallback behavior.
+
+Save-compat: no field changes; pure code/log severity. Safe on any save.
+
 ## 2026-05-01
 
 ### Feature: KEYforce Gondor armor revamp — 99 new items + 13 regional troop equipment refits (#99)

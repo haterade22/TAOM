@@ -23,7 +23,7 @@ public class FactionSelectionVM : ViewModel
     private float _bannerPosX = -1f;
     private float _bannerPosY = -1f;
     private string _bannerColorHex = "#FFFFFFFF";
-    private string _bannerImage = "banner_flag";
+    private string _bannerImage = "";
     private string _bannerSide = "neutral";
     private string _specialUnitName = "";
     private string _specialUnitDesc = "";

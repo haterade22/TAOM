@@ -24,5 +24,5 @@ public class FactionSelectionResult
     public float BannerPosY { get; set; } = -1f;
     public string BannerColorHex { get; set; } = "#FFFFFFFF";
     public string BannerSide { get; set; } = "neutral";
-    public string BannerImage { get; set; } = "banner_flag";
+    public string BannerImage { get; set; } = "";
 }

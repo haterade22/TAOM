@@ -15,5 +15,6 @@ public static class FactionMapPaths
     }
 
     public static void Log(string message) => _logger?.LogInfo(message);
+    public static void LogDebug(string message) => _logger?.LogDebug(message);
     public static void LogError(string message) => _logger?.LogError(message);
 }

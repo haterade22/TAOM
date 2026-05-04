@@ -87,6 +87,67 @@ public class SpecialResourceServiceTests
         Assert.AreSame(MordorResource, result);
     }
 
+    // ── Resolution Logging Dedupe ──
+
+    [TestMethod]
+    public void ResolveResource_KingdomHit_LogsDebugOnce_ForFirstCall()
+    {
+        _service.ResolveResource("empire_s", null);
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("via kingdom 'empire_s'")));
+    }
+
+    [TestMethod]
+    public void ResolveResource_KingdomHit_DoesNotLogDebug_OnSecondIdenticalCall()
+    {
+        _service.ResolveResource("empire_s", null);
+        _logger.ClearReceivedCalls();
+        _service.ResolveResource("empire_s", null);
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResolveResource_CultureFallback_DoesNotLogDebug_OnSecondIdenticalCall()
+    {
+        _service.ResolveResource(null, "mordor");
+        _logger.ClearReceivedCalls();
+        _service.ResolveResource(null, "mordor");
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResolveResource_NoMatch_DoesNotLogDebug_OnSecondIdenticalCall()
+    {
+        _config.GetByKingdomId("unknown_kingdom").Returns((SpecialResource)null);
+        _config.GetByCultureId("unknown_culture").Returns((SpecialResource)null);
+
+        _service.ResolveResource("unknown_kingdom", "unknown_culture");
+        _logger.ClearReceivedCalls();
+        _service.ResolveResource("unknown_kingdom", "unknown_culture");
+
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResolveResource_DifferentKeys_LogIndependently()
+    {
+        _service.ResolveResource("empire_s", null);
+        _service.ResolveResource("isengard", null);
+
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("via kingdom 'empire_s'")));
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("via kingdom 'isengard'")));
+    }
+
+    [TestMethod]
+    public void ResolveResource_SameKingdomDifferentCulture_LogsAgain()
+    {
+        // (kingdomId, cultureId) is the dedupe key; switching either side counts as a new context.
+        _service.ResolveResource(null, "mordor");
+        _service.ResolveResource(null, "isengard");
+
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("via culture 'mordor'")));
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("via culture 'isengard'")));
+    }
+
     // ── Earning ──
 
     [TestMethod]

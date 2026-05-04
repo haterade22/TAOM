@@ -105,7 +105,7 @@ public class FactionSelectionService : IFactionSelectionService
             BannerPosY = hasBanner ? region!.CapitalY : -1f,
             BannerColorHex = hasBanner ? faction.Color ?? "#FFFFFFFF" : "#FFFFFFFF",
             BannerSide = hasBanner ? faction.Side ?? "neutral" : "neutral",
-            BannerImage = hasBanner ? "banner_" + region!.FactionId : "banner_flag",
+            BannerImage = hasBanner ? "banner_" + region!.FactionId : "",
         };
     }
 

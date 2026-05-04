@@ -13,6 +13,7 @@ public class SpecialResourceService : ISpecialResourceService
     private readonly ISpecialResourceStorageService _storage;
     private readonly IModLogger _logger;
     private readonly ICareerPassiveService _passiveService;
+    private readonly HashSet<string> _loggedResolveKeys = new();
     private float _pendingSpend;
     private bool _inSession;
 
@@ -26,12 +27,19 @@ public class SpecialResourceService : ISpecialResourceService
 
     public SpecialResource ResolveResource(string kingdomId, string cultureId)
     {
+        // Resolve is hot-path (called from MapInfoVM.OnRefresh tooltip rebuild several times per tick).
+        // Dedupe DEBUG logging by (kingdomId, cultureId) so we keep diagnostics on transitions
+        // without flooding the log with thousands of identical lines per session.
+        var key = (kingdomId ?? "") + "|" + (cultureId ?? "");
+        var firstSeen = _loggedResolveKeys.Add(key);
+
         if (kingdomId != null)
         {
             var byKingdom = _config.GetByKingdomId(kingdomId);
             if (byKingdom != null)
             {
-                _logger.LogDebug($"[SpecRes] Resolved resource '{byKingdom.Id}' via kingdom '{kingdomId}'");
+                if (firstSeen)
+                    _logger.LogDebug($"[SpecRes] Resolved resource '{byKingdom.Id}' via kingdom '{kingdomId}'");
                 return byKingdom;
             }
         }
@@ -40,11 +48,13 @@ public class SpecialResourceService : ISpecialResourceService
             var byCulture = _config.GetByCultureId(cultureId);
             if (byCulture != null)
             {
-                _logger.LogDebug($"[SpecRes] Resolved resource '{byCulture.Id}' via culture '{cultureId}' (kingdom '{kingdomId}' had no match)");
+                if (firstSeen)
+                    _logger.LogDebug($"[SpecRes] Resolved resource '{byCulture.Id}' via culture '{cultureId}' (kingdom '{kingdomId}' had no match)");
                 return byCulture;
             }
         }
-        _logger.LogDebug($"[SpecRes] No resource resolved for kingdom='{kingdomId}', culture='{cultureId}'");
+        if (firstSeen)
+            _logger.LogDebug($"[SpecRes] No resource resolved for kingdom='{kingdomId}', culture='{cultureId}'");
         return null;
     }
 
