@@ -57,7 +57,12 @@ public class CustomBattleService : ICustomBattleService
 
     public IReadOnlyList<string> GetCommanderIdsForFaction(string factionId)
     {
-        if (string.IsNullOrEmpty(factionId))
+        return GetCommanderIdsForFaction(factionId, int.MaxValue);
+    }
+
+    public IReadOnlyList<string> GetCommanderIdsForFaction(string factionId, int takeMax)
+    {
+        if (string.IsNullOrEmpty(factionId) || takeMax <= 0)
             return new List<string>();
 
         try
@@ -65,6 +70,8 @@ public class CustomBattleService : ICustomBattleService
             return GetCharacterCache()
                 .Where(c => IsValidCommander(c) &&
                             string.Equals(c.CultureId, factionId, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(c => c.Id, StringComparer.OrdinalIgnoreCase)
+                .Take(takeMax)
                 .Select(c => c.Id)
                 .ToList();
         }

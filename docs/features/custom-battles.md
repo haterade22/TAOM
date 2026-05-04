@@ -18,15 +18,26 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 
 ### Solution Approach
 
-5 Harmony patches (category `Patch19_CustomBattles`) applied in `OnSubModuleLoad()` — before any CustomGame type loads:
+8 Harmony patches (category `Patch19_CustomBattles`) applied in `OnSubModuleLoad()` — before any CustomGame type loads:
 
 1. **Prefix** on `CustomBattleData.Characters` getter — replaces vanilla commanders with TAOM lords
 2. **Prefix** on `CustomBattleData.Factions` getter — replaces vanilla cultures with TAOM cultures
 3. **Postfix** on `CustomBattleHelper.GetDefaultTroopOfFormationForFaction` — fills TAOM troops when vanilla returns null
 4. **Postfix** on `BannerlordMissions.OpenCustomBattleMission` — injects team-fix behavior
 5. **Postfix** on `BannerlordMissions.OpenSiegeMissionWithDeployment` — injects team-fix for siege (only for non-campaign missions)
+6. **Postfix** on `CustomBattleSideVM` constructor — replaces `FactionSelectionGroup` with `TaomFactionSelectionVM` and explicitly fires the `OnCultureSelection` callback so the initial commander dropdown aligns with the visible faction (vanilla `SelectFaction(0)` doesn't fire the callback)
+7. **Postfix** on `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` (private method, patched by name) — rebuilds `CharacterSelectionGroup.ItemList` filtered to the selected faction, capped at 3 commanders
+8. **Postfix** on `CustomBattleSideVM.RefreshValues()` — defensive re-filter for refresh events (language/resolution change)
 
 No UI patches needed — TAOM's `CustomBattleScreen.xml` GUI prefab automatically overrides vanilla via Gauntlet module load order (TAOM loads after the CustomBattle module).
+
+### Commander filter+cap (per faction)
+
+Vanilla `CustomBattleSideVM.RefreshValues()` adds every entry from `CustomBattleData.Characters` to `CharacterSelectionGroup.ItemList`. With TAOM's expanded lord pool, this means picking "Dunland" still showed every culture's commanders. Vanilla `OnCultureSelection` only updates banner colors — it does NOT re-filter the dropdown.
+
+The fix is a singleton hook (`ISideCommanderFilter` / `SideCommanderFilter`) that resolves a culture's commanders via `CustomBattleService.GetCommanderIdsForFaction(factionId, takeMax)`. The service applies `OrderBy(Id, OrdinalIgnoreCase).Take(takeMax)` so the cap is deterministic across launches. Cap is `SideCommanderFilter.MaxCommandersPerCulture = 3`.
+
+Both side-VM postfixes log a `LogWarning` to `rgl_log.txt` if a culture has zero matching commanders, so future `lords.xml` culture-tag misalignment surfaces in logs instead of silently regressing the dropdown to the unfiltered list.
 
 ### Component Diagram
 
@@ -87,6 +98,13 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 | `Main/Features/CustomBattles/Hooks/CustomBattleHelper_Troop_Patch.cs` | Harmony postfix — fills TAOM troops |
 | `Main/Features/CustomBattles/Hooks/BannerlordMissions_CustomBattle_Patch.cs` | Harmony postfix — injects team fix |
 | `Main/Features/CustomBattles/Hooks/BannerlordMissions_Siege_Patch.cs` | Harmony postfix — injects team fix for siege |
+| `Main/Features/CustomBattles/TaomFactionSelectionVM.cs` | Custom faction-selection VM with prev/next navigation |
+| `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_Constructor_Patch.cs` | Harmony postfix — swaps FactionSelectionGroup; fires initial OnCultureSelection callback |
+| `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCultureSelection_Patch.cs` | Harmony postfix — filters commander dropdown on faction click (cap=3) |
+| `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_RefreshValues_Patch.cs` | Harmony postfix — defensive re-filter for refresh events |
+| `Main/Features/CustomBattles/Hooks/ISideCommanderFilter.cs` | Hook interface — resolves commanders for a culture |
+| `Main/Features/CustomBattles/Hooks/SideCommanderFilter.cs` | Hook impl — calls service with `MaxCommandersPerCulture = 3` |
+| `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` | Static helper — Clear + AddItem + reset `_selectedIndex = -1` (cached `FieldInfo`) + set `SelectedIndex = 0`. Mirrors vanilla `SelectorVM.Refresh()`'s setter-bypass trick so post-rebuild selection actually fires `OnCharacterSelection` (Codex review #30 P1). |
 | `Main/Adapters/IObjectManagerAdapter.cs` | Adapter interface + CultureInfo/CharacterInfo DTOs |
 | `Main/Adapters/ObjectManagerAdapter.cs` | ObjectManager bridge implementation |
 | `Main/_Module/GUI/Prefabs/CustomBattle/` | 5 Gauntlet UI prefab XMLs (pre-existing) |
@@ -102,10 +120,11 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 
 | Test File | Methods | Coverage |
 |-----------|---------|----------|
-| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 18 | Faction filtering, commander filtering, formation mapping, null/empty edge cases |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 22 | Faction filtering, commander filtering, formation mapping, takeMax cap (4 dedicated tests: cap, deterministic order, fewer-than-cap, zero-cap), null/empty edge cases |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleFactionsHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleTroopHookTests.cs` | 5 | Vanilla passthrough, TAOM resolution, null service/adapter results |
+| `TAOM.Tests/Features/CustomBattles/SideCommanderFilterTests.cs` | 6 | Null/empty culture, cap=3 propagation, ID resolution, null-resolution filtering, empty result |
 
 Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indirectly via in-game smoke tests per ADR-002.
 

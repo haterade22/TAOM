@@ -51,8 +51,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 27 | 2026-04-26 | Self-review of Tier1 fix commit (5df21ea) | NEEDS-FIXES (0H/1M/3L) | agree | 4 confirmed (1 MED, 3 LOW) + 2 process violations (CHANGELOG, counter math) | 0 | 0 | self-review-v1 |
 | 28 | 2026-04-26 | Prevention infrastructure (b7e7188 — hooks/rules built to catch the failure modes from #26+#27) | NEEDS-FIXES (1H/3M/2L) | agree (1 promotion, 1 demotion) | 6 confirmed (1 HIGH→1, 3 MED→2, 2 LOW + counter regex prep) + 1 process (no GitHub issue at ship time) | 0 | 0 | adversarial-prevention-v1 |
 | 29 | 2026-04-27 | Tier 2/3 adoption (79350f2 — 4 skills + 3 subagents + suggest-compact upgrade) | NEEDS-FIXES (1H/3M/2L) | agree (1 promotion) | 6 confirmed (1 HIGH→1, 2 MED→3, 2 LOW + 1 process settings.local drift) | 0 | 0 | adversarial-tier2-3-v1 |
+| 30 | 2026-05-04 | CustomBattles filter+cap (commander dropdown faction filter + 3-per-culture cap) | NEEDS-FIXES (1 P1) | agree | 1 confirmed (P1 stale `SelectedItem` after Clear+Rebuild — `SelectorVM<T>.SelectedIndex` setter early-returns on no-op) | 0 | 0 | v6-focused-enhancement |
 
-**Post-codebase reviews:** 19-29. 29 Codex reviews total, 83 bugs found across codebase.
+**Post-codebase reviews:** 19-30. 30 Codex reviews total, 84 bugs found across codebase.
 
 ### Review 25 — RevoltTuning Root Cause Analysis
 
@@ -552,3 +553,23 @@ Codex reported `MEDIUM/LOW: 0 — no additional confirmed findings beyond the su
 ### Build & Test
 - `./build.ps1` — clean, no errors, no new warnings.
 - `dotnet test --filter Spider` — 20/20 passing (14 SpiderAttackService + 6 SpiderSpawnerService).
+
+### Review 30 — CustomBattles Filter+Cap Root Cause Analysis
+
+Focused review of today's enhancement to the existing CustomBattles feature (commander dropdown filter by faction + 3-per-culture cap). Codex returned ONE P1 finding and got it right.
+
+**The bug.** Both filter postfixes did `ItemList.Clear()` → `AddItem(...)` × N → `SelectedIndex = 0`. In v1.3.15, `SelectorVM<T>.SelectedIndex` setter has a `if (value != _selectedIndex)` guard. Since vanilla initializes `_selectedIndex = 0` for the player side and most users never deselect before clicking another faction, the setter short-circuits. Result: `SelectedItem` keeps pointing at the previously-selected `CharacterItemVM` — which we just removed from `ItemList` — and `CustomBattleSideVM.SelectedCharacter` (set via the `_onChange` callback that also doesn't fire) stays stale. Battle would launch with the wrong commander, with no visible UI signal that the picker and the actual selection had diverged.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | `Clear() + AddItem(*N) + SelectedIndex = 0` is a no-op when `_selectedIndex` was already `0` — leaves stale `SelectedItem` and stale `SelectedCharacter` | Missing vanilla gate / convention inconsistency | Mirrored vanilla `CustomBattleSideVM.RefreshValues()` literally (which uses the same Clear+AddItem+SelectedIndex=0 sequence). RefreshValues works at construction because `_selectedIndex == -1` by default — the setter naturally fires. The same pattern fails post-construction when `_selectedIndex` is already 0. Did not decompile `SelectorVM<T>.SelectedIndex` setter. The deep-review Known Suspect #2 explicitly asked about this (asked Codex, not myself); my self-pass missed the trap. | Added the canonical pattern to `.claude/rules/gui-ui.md` under "TaleWorlds VM property setters: verify no-op early returns". Created `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` codifying the correct mutation pattern (mirrors vanilla `SelectorVM.Refresh()`'s `_selectedIndex = -1` reset trick). New memory entry `feedback_taleworlds_vm_setter_decompile.md` captures the deeper systemic lesson (decompile the setter BODY, not just verify the property exists). |
+
+### Fixes Implemented (Review 30)
+
+1. **P1 (Codex):** `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` (new) — extracts the Clear+AddItem+reset+SetSelectedIndex sequence into one place. Cached `FieldInfo` for `SelectorVM<T>._selectedIndex` via `AccessTools.Field` at `Initialize`. Both `CustomBattleSideVM_OnCultureSelection_Patch` and `CustomBattleSideVM_RefreshValues_Patch` now delegate to it. The `_selectedIndex = -1` reset before `SelectedIndex = 0` ensures the setter's guard sees a state change and fires `_onChange` → `OnCharacterSelection` → propagates to `SelectedCharacter`.
+2. **Rule update:** `.claude/rules/gui-ui.md` — added "TaleWorlds VM property setters: verify no-op early returns" with the concrete `SelectorVM<T>.SelectedIndex` example and the three correct patterns (use built-in `Refresh()` / mirror reset trick / avoid same-value assignment).
+3. **Memory entry:** `feedback_taleworlds_vm_setter_decompile.md` — codifies the systemic lesson for future sessions.
+
+### Build & Test (Review 30)
+- `dotnet build Main/TAOM.csproj` — clean, 0 errors, 2 unrelated warnings (MCMv5 arch mismatch, `ex` unused — both pre-existing).
+- `dotnet test --filter CustomBattles` — 38/38 passing (no test changes needed; the rebuilder helper is entry-point-tier per ADR-008).

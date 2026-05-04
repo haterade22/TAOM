@@ -192,6 +192,83 @@ public class CustomBattleServiceTests
     }
 
     [TestMethod]
+    public void GetCommanderIdsForFaction_TakeMaxThree_CapsResults()
+    {
+        // Arrange — 5 empire lords; cap should return only 3
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_emp_1", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_2", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_3", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_4", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_5", IsHero = true, CultureId = "empire" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("empire", 3);
+
+        // Assert
+        Assert.AreEqual(3, result.Count);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_TakeMax_OrderIsDeterministic()
+    {
+        // Arrange — same input set, queried twice, should yield same sequence
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_emp_5", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_2", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_4", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_1", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_3", IsHero = true, CultureId = "empire" }
+        });
+
+        // Act
+        var first = _sut.GetCommanderIdsForFaction("empire", 3);
+        var second = _sut.GetCommanderIdsForFaction("empire", 3);
+
+        // Assert — same sequence, alphabetical by Id
+        CollectionAssert.AreEqual((System.Collections.ICollection)first, (System.Collections.ICollection)second);
+        Assert.AreEqual("lord_emp_1", first[0]);
+        Assert.AreEqual("lord_emp_2", first[1]);
+        Assert.AreEqual("lord_emp_3", first[2]);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_TakeMax_FewerLordsThanCap_ReturnsAll()
+    {
+        // Arrange
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_emp_1", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_2", IsHero = true, CultureId = "empire" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("empire", 3);
+
+        // Assert
+        Assert.AreEqual(2, result.Count);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_TakeMaxZero_ReturnsEmpty()
+    {
+        // Arrange
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_emp_1", IsHero = true, CultureId = "empire" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("empire", 0);
+
+        // Assert
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
     public void GetDefaultTroopIdForFormation_Infantry_ReturnsMeleeMilitia()
     {
         // Arrange

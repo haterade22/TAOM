@@ -134,6 +134,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnGetCustomBattleCommanders>(),
             IoC.Resolve<IOnGetCustomBattleFactions>(),
             IoC.Resolve<IOnGetDefaultTroopOfFormation>(),
+            IoC.Resolve<ISideCommanderFilter>(),
             logger);
 
         _harmony.PatchCategory("Patch21_ShaderPrecompilation");

@@ -2,6 +2,27 @@
 
 ## 2026-05-04
 
+### Fix: Custom Battle commander dropdown ignored faction selection — now filters per-culture, capped at 3 (#100)
+
+The Custom Battle commander dropdown listed every TAOM lord across every culture regardless of which faction was picked, making selection impractical and disconnecting the visual faction choice from the available leader pool.
+
+**Root cause.** Vanilla `CustomBattleSideVM.RefreshValues()` iterates `CustomBattleData.Characters` and adds every entry to `CharacterSelectionGroup.ItemList`. TAOM's `CustomBattleData_Characters_Patch` returned the full TAOM lord pool (matched by `^lord_[A-Za-z0-9]+_[A-Za-z0-9]+$` regex) without per-faction filtering, and vanilla's `OnCultureSelection` callback only updates banner colors — it never re-filters the dropdown. Net effect: full unfiltered list at all times.
+
+**Fix.** New singleton `ISideCommanderFilter` resolves a culture's commanders via the existing `CustomBattleService.GetCommanderIdsForFaction(factionId, takeMax)` (extended with `OrderBy(Id)` for deterministic ordering and a `takeMax` cap). Two new Harmony postfixes on `CustomBattleSideVM` rebuild `CharacterSelectionGroup.ItemList` from the filter:
+
+- `Patch19_CustomBattles / CustomBattleSideVM_OnCultureSelection_Patch` — postfix on the private `OnCultureSelection(BasicCultureObject)`; rebuilds the dropdown when the user clicks a faction.
+- `Patch19_CustomBattles / CustomBattleSideVM_RefreshValues_Patch` — postfix on `RefreshValues()`; defensive layer for refresh events triggered by language/resolution changes.
+
+`CustomBattleSideVM_Constructor_Patch` was extended to invoke the `OnCultureSelection` callback explicitly with `TaomFactionSelectionVM.SelectedItem.Faction` after the FactionSelectionGroup swap, so the initial-paint dropdown aligns with the actually-visible faction (vanilla `SelectFaction(0)` doesn't fire the callback).
+
+Cap is `SideCommanderFilter.MaxCommandersPerCulture = 3`. Both patches log a `LogWarning` if a culture has zero matching commanders so future lords.xml culture-tag mismatches surface in `rgl_log.txt` instead of silently regressing to the unfiltered list.
+
+11 new unit tests across `CustomBattleServiceTests` (cap, deterministic order, fewer-than-cap, zero-cap) and `SideCommanderFilterTests` (null/empty culture, cap propagation, null-resolution filtering, empty result).
+
+**Codex Review 30 fix (P1).** The first version of the rebuild did `ItemList.Clear() + AddItem(*N) + SelectedIndex = 0`, but `SelectorVM<T>.SelectedIndex` setter early-returns when `value == _selectedIndex`. Vanilla initializes `_selectedIndex = 0` and most users click another faction without first deselecting, so the post-rebuild assignment was a no-op — `SelectedItem` (and downstream `CustomBattleSideVM.SelectedCharacter`) kept pointing at a `CharacterItemVM` that had just been removed from `ItemList`, and the battle would launch with the wrong commander. Fixed by extracting the rebuild into `Hooks/CommanderSelectorRebuilder.Apply`, which mirrors vanilla `SelectorVM.Refresh()`'s pattern: reset `_selectedIndex = -1` (cached `FieldInfo` via `AccessTools.Field`) before assigning the real index. Both filter postfixes now go through this helper. New rule under `.claude/rules/gui-ui.md` codifies the pattern for any future TaleWorlds VM mutation.
+
+Save-compat: no campaign state involved; UI-only behavior. Safe on any save.
+
 ### Fix: CC parent agents not rendering for custom-race cultures (Erebor, Mordor, Mirkwood, etc.)
 
 When playing as a custom-race culture, the "You were born into a family of..." parents stage rendered a broken visual — single sideways/T-pose figure with bare feet — instead of the two upright parents. Bug surfaced across every dwarf/uruk/orc/elf-race culture.

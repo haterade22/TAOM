@@ -15,10 +15,14 @@ namespace TAOM.Features.CustomBattles.Hooks;
 public static class CustomBattleSideVM_Constructor_Patch
 {
     private static IModLogger _logger;
+    private static MethodInfo _onCultureSelectionMethod;
 
     public static void Initialize(IModLogger logger)
     {
         _logger = logger;
+        _onCultureSelectionMethod = AccessTools.Method(typeof(CustomBattleSideVM), "OnCultureSelection");
+        if (_onCultureSelectionMethod == null)
+            _logger?.LogWarning("[CustomBattles] Could not resolve CustomBattleSideVM.OnCultureSelection MethodInfo at Initialize");
     }
 
     [HarmonyPostfix]
@@ -26,21 +30,18 @@ public static class CustomBattleSideVM_Constructor_Patch
     {
         try
         {
-            var method = typeof(CustomBattleSideVM).GetMethod(
-                "OnCultureSelection",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (method == null)
-            {
-                _logger?.LogWarning("[CustomBattles] Could not find OnCultureSelection method");
+            if (_onCultureSelectionMethod == null)
                 return;
-            }
 
             var callback = (Action<BasicCultureObject>)Delegate.CreateDelegate(
-                typeof(Action<BasicCultureObject>), __instance, method);
+                typeof(Action<BasicCultureObject>), __instance, _onCultureSelectionMethod);
 
             __instance.FactionSelectionGroup = new TaomFactionSelectionVM(callback);
             _logger?.LogInfo($"[CustomBattles] Injected TaomFactionSelectionVM with {__instance.FactionSelectionGroup.Factions.Count} factions");
+
+            var initialFaction = __instance.FactionSelectionGroup.SelectedItem?.Faction;
+            if (initialFaction != null)
+                callback(initialFaction);
         }
         catch (Exception ex)
         {
