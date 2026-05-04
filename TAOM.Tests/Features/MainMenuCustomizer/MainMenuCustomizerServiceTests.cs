@@ -49,7 +49,7 @@ public class MainMenuCustomizerServiceTests
     {
         _sut.CustomizeMenu();
 
-        _moduleMenuAdapter.Received(1).RenameOption("SandBoxNewGame", "Enter The Age Of Men");
+        _moduleMenuAdapter.Received(1).RenameOption("SandBoxNewGame", "{=taom_main_menu_new_game}Enter The Age Of Men");
     }
 
     [TestMethod]
