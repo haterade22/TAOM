@@ -486,3 +486,69 @@ Claude found no additional bugs. First review where Codex found everything.
 3. Changed equipment roster ID to use `SelectedTitleType` instead of hardcoded "guard"
 4. Updated 3 tests for fallback option count, added 2 new tests (fallback null selection, fresh service state)
 5. All 1129 tests pass
+
+---
+
+## Review #25: Spider — C# Mission API spawner for non-humanoid creature
+
+**Date:** 2026-04-23
+**Prompt version:** v6 + 6-Known-Suspects
+**Report:** [codex-adversarial-spider-2026-04-23.md](codex-adversarial-spider-2026-04-23.md)
+**Codex model:** gpt-5.5 (ChatGPT-account auth — o4-mini and gpt-5 rejected with "model not supported")
+
+### Feature scope
+Spider hostile mob via `Mission.SpawnAgent` + `AgentBuildData.Monster()`, bypassing the troop system because Bannerlord's NPCCharacter race resolution is hardcoded humanoid-only. Anchor `taom_spider_creature` (race=dg_uruk) satisfies AgentBuildData's `BasicCharacterObject` requirement; visual is overridden at spawn time. Custom-Battle-only gating via `CustomBattleAgentLogic` presence check. 12 C# files + 4 XML files (3 in LOTRLOME_Armory) + 20 unit tests. Mirrors `Main/Features/Warg/` but corrects ADR-007 by exposing `IAgentAdapter` instead of raw `Agent` at the service boundary.
+
+### Codex Findings
+
+| # | Codex Severity | Claude Severity | Agree? | Reason |
+|---|---|---|---|---|
+| 1 | HIGH | HIGH | ✓ | Anchor `occupation="Soldier"` makes `IsSoldier=true`, exposes anchor in Custom Battle troop picker. Decompiled `BasicCharacterObject.LoadFromXml` confirms `IsSoldier = occupation.IndexOf("soldier", IgnoreCase)>=0`. Decompiled `ArmyCompositionGroupVM` ctor confirms `c.IsSoldier && !c.IsObsolete` is the only filter; `hidden_in_encyclopedia` and `is_basic_troop="false"` are ignored by this picker. |
+
+### Known Suspects verdicts
+
+| # | Suspect | Codex Verdict | Notes |
+|---|---|---|---|
+| 1 | `AgentBuildData.Monster()` ignored at spawn | DISPUTED | `Mission.SpawnAgent` uses `agentBuildData.AgentMonster` directly in `CreateAgent(...)`. The override is honored. **The whole feature works.** |
+| 2 | Custom Battle gate bleeds into campaign | DISPUTED | Decompiled `BannerlordMissions.OpenCustomBattleMission`/`OpenSiegeMission`/`OpenLordsHallMission` add `CustomBattleAgentLogic`; campaign openers don't. Gate is reliable. |
+| 3 | Anchor character bleed-through | **CONFIRMED** | See HIGH finding above. |
+| 4 | Bone collision indices placeholder | **CONFIRMED FUNCTIONAL** | Codex upgraded this from cosmetic-only to functional: `BoneCheckDuringAnimation` only registers hits when the indexed spider bones come within `0.3-0.4f` of target bones. Wrong indices = miss/wrong-bone hits. Documented in CHANGELOG/feature-doc as known v1 limitation; runtime probe needed before promoting to v2. |
+| 5 | `CustomBattleAgentLogic` reference fragility | OBSERVATION only | Future TaleWorlds rename would be a compile-time break, not a silent false return. Not actionable now. |
+| 6 | Spawn timing race (MainAgent null at t=1s) | OBSERVATION only | No vanilla evidence found that MainAgent is null at t=1s in Custom Battle. Fallback to `Vec3.Zero` exists but unobserved. |
+
+### Bugs Codex Missed (vs deep-review)
+
+| # | Bug | Severity | Source |
+|---|---|---|---|
+| 1 | `_loggedErrors` HashSet not cleared in `OnRemoveBehavior` — stale error keys carry across Custom Battle relaunches, suppressing genuine new errors with same `ExceptionType:MethodName` key | MEDIUM | Deep-review Agent 5 (Data Flow) Flow 10 |
+| 2 | `SpiderConfig.SpiderAttackRange = 1.2f` declared but never consumed (dead field) | LOW | Deep-review Agent 5 Flow 11 |
+| 3 | `act_spider_attack_top` / `act_spider_attack_bottom` declared+bound+have `_geo.tpac` but absent from `<monster_usage_strikes>` — animations unreachable dead bindings | LOW | Deep-review Agent 5 Flow 12 |
+| 4 | Per-attack `new List<sbyte>` allocation in `SpiderAttackService.SpiderAttack` (every BT tick on every spider) | MEDIUM | Deep-review Agent 3 (Efficiency) |
+
+Codex reported `MEDIUM/LOW: 0 — no additional confirmed findings beyond the suspects.` In practice, Codex relied on the Known Suspects list to scope its analysis and didn't run an independent lifecycle/dead-config trace the way Agent 5 did. Useful pattern for future reviews: ALWAYS run Agent 5 (Data Flow Tracing) regardless of Codex's verdict — it consistently catches a different class of bugs.
+
+### Root Cause Analysis
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Anchor `occupation="Soldier"` exposes anchor in Custom Battle picker | Convention inconsistency / missing vanilla gate | Claude assumed `hidden_in_encyclopedia="true"` + `is_basic_troop="false"` were sufficient to hide the troop. Did not decompile `ArmyCompositionGroupVM` to verify what actually filters the Custom Battle picker. | Add to REVIEW-GUIDE.md: "When creating any anchor/placeholder NPCCharacter, verify it doesn't appear in Custom Battle troop picker, Encyclopedia, Recruitment, Conversation pools — by decompiling each consumer's filter logic." Avoid `occupation="Soldier"` for non-troop characters; use `occupation="Wanderer"` or other non-soldier value. |
+| 2 | `_loggedErrors` HashSet not cleared on mission end | Stale state / lifecycle | Followed Warg pattern verbatim. Warg has the same gap; both behaviors carry stale error keys across CB relaunches. | Add `_loggedErrors.Clear()` to Warg's `OnRemoveBehavior` in a separate cleanup pass. New rule for any service holding deduplication state across mission lifecycle: clear on `OnRemoveBehavior`. |
+| 3 | Dead `SpiderAttackRange` field | Dead/no-op code | Field added during config drafting and never wired. Deep-review Flow 11 catches this; Codex doesn't unless prompted. | Already in REVIEW-GUIDE: "Dead config detection". Reinforce in Codex prompt's CONFIG CROSS-REFERENCE section. |
+| 4 | Per-attack list allocation | Performance | Mirrored Warg pattern verbatim, didn't question it. | Move shared static-readonly bone arrays to Config; ban `new List<>` allocations in BT-tick hot paths in `.claude/rules/csharp-architecture.md`. |
+| 5 | Bone indices are placeholders mapping to wrong bones | Reflection target wrong / convention inconsistency | Used Warg's bone indices (23/37/43) without verifying they map to spider's actual fang bones. The indices are valid (in-range on 62-bone skeleton) but resolve to wrong bones. | Add to feature workflow: "Before placeholder bone indices land in Config, write a one-shot logging hook that dumps bone names at runtime. Replace before promoting feature to v2." Documented in CHANGELOG as known limitation. |
+
+### Fixes Implemented
+
+1. **HIGH (Codex):** `Main/_Module/ModuleData/characters/spider_creature.xml` — `occupation="Soldier"` → `occupation="Wanderer"`. Engine `IsSoldier` substring check (case-insensitive "soldier") now returns false; anchor will not appear in Custom Battle picker. Comment block expanded to document this constraint.
+2. **MED (Deep-review Flow 10):** `SpiderMissionBehavior.OnRemoveBehavior` — added `_loggedErrors.Clear()` to prevent stale error dedup across CB relaunches.
+3. **LOW (Deep-review Flow 11):** `SpiderConfig.cs` — removed dead `SpiderAttackRange` field.
+4. **MED (Deep-review Efficiency):** `SpiderConfig.cs` — added `static readonly List<sbyte> ChargeAttackBones` and `StandAttackBones`; `SpiderAttackService.SpiderAttack` now reuses them instead of allocating per call.
+
+**Deferred:**
+- Bone-index placeholders (Codex finding #4 + Deep-review Flow 8) — needs runtime probe to identify correct fang bones. Documented in CHANGELOG and `docs/features/spider.md` as v1 limitation. Bites currently land via leg/body bones rather than fangs; visual will be off but mechanics still register hits.
+- Top/bottom attack `<monster_usage_strikes>` (Deep-review Flow 12) — animation files exist but have no AI trigger. Cosmetic; left as-is for v1.
+- Per-tick `IoC.Resolve` in BT tasks (Deep-review Efficiency HIGH) — mirrors Warg pattern. Refactor scoped to a future cross-feature cleanup pass that addresses both Warg and Spider together. Tracked as deferred.
+
+### Build & Test
+- `./build.ps1` — clean, no errors, no new warnings.
+- `dotnet test --filter Spider` — 20/20 passing (14 SpiderAttackService + 6 SpiderSpawnerService).

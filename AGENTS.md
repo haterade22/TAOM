@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (29 reviews, 83 bugs found)
+### Lessons From Prior Reviews (30 reviews, 84 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
@@ -47,6 +47,9 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Convention inconsistency across files: e.g., one file uses `EffectBonus` as a direct multiplier (0.75) while all others use it as an additive factor (-0.25). Compare against sibling files.
 - No-op code paths: features that run but produce no effect in all cases (e.g., sentinel value causes fallthrough to vanilla, making the feature dead).
 - Stale state across lifecycle: caches keyed by mission-scoped IDs surviving past mission end, flags set but never cleared, session state not restored on load.
+- Dead config fields: `internal static SomeRange = 1.2f` declared in Config but never read by any service code — Spider review 25 found `SpiderAttackRange` was a dead field. When Codex relies on the Known Suspects list for scope, it can miss independent traces. Always verify each Config field has at least one C# consumer.
+- Per-tick allocations in BT-tick hot paths: `new List<sbyte>{...}` allocated every BT Execute() across N spiders × 60 fps. Spider review 25 missed this in the Known Suspects list — lists Codex doesn't independently profile. Look for `new List<>`, `new Dictionary<>`, LINQ chains, or closure allocations inside any BT Execute() / OnMissionTick() body.
+- Lifecycle dedup state not cleared on `OnRemoveBehavior`: a `HashSet<string>` used for error-log dedup carries stale keys across Custom Battle relaunches in the same process, suppressing genuine new errors. Always trace Mission lifecycle: what state is set, when is it cleared? Spider review 25 caught this; Warg has the same gap.
 
 **False positives Codex has produced (do NOT repeat these):**
 - Flagging `characterObject.IsMounted` as wrong when vanilla uses the same check. ALWAYS decompile vanilla before claiming divergence.
@@ -65,8 +68,9 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 - Cross-referencing documentation claims against actual code lifecycle — catching "docs say X but DryIoc singleton means Y" mismatches (RevoltTuning review 25)
 - Verifying claims about Claude Code harness behavior (skill load semantics, hook lifecycle, rule loader scoping) against official docs and citing them by URL — caught the scan.sh full-body counting bug and the inline-hook activation conflation in feature-builder (Tier1 adoption review 26).
 - Distinguishing eager-load vs lazy-load context overhead and explicitly recommending the difference be reported separately (Tier1 adoption review 26).
+- Decompiling vanilla data-loading paths to find hidden gates (Spider review 25 — confirmed `BasicCharacterObject.LoadFromXml` parses occupation as a substring check `"soldier"` and `ArmyCompositionGroupVM` filters by `IsSoldier && !IsObsolete`, exposing that `hidden_in_encyclopedia` does NOT hide a character from the Custom Battle picker. This kind of "what does the vanilla data path actually check?" trace is high-value).
 
-This section is updated by Claude after each review cycle. Last updated: 2026-04-26.
+This section is updated by Claude after each review cycle. Last updated: 2026-04-23 (Review 25, Spider).
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only

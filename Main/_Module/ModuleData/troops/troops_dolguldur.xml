@@ -8106,4 +8106,140 @@
         </Equipments>
     </NPCCharacter>
 
+    <!-- ==================== GIANT SPIDER RIDER ==================== -->
+    <!-- Dol Guldur elite cavalry mounted on a giant spider. The rider is an uruk
+         (humanoid race=dg_uruk required by engine); the spider is provided as a
+         HorseItem in the Horse equipment slot. Pattern mirrors dg_fell_warg_rider.
+         Spider mount items: spider_mount_a1/a2/a3 in LOTRLOME_Armory (Item.spider_mount_a*).
+         Spider Monster: spider (LOTRLOME_Armory monsters.xml). -->
+    <NPCCharacter
+        id="dg_giant_spider_rider"
+        race="dg_uruk"
+        default_group="Cavalry"
+        level="32"
+        name="{=aom_dg_giant_spider_rider_name}[Dol Guldur] Giant Spider Rider"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="210" />
+            <skill
+                id="OneHanded"
+                value="235" />
+            <skill
+                id="TwoHanded"
+                value="110" />
+            <skill
+                id="Polearm"
+                value="250" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a04" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.spider_mount_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a04" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.spider_mount_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a04" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.spider_mount_a3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

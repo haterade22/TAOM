@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+  <!-- ==================== SPIDER CREATURE ANCHOR ==================== -->
+  <!-- Minimal NPCCharacter used solely as a BasicCharacterObject anchor for
+       AgentBuildData when SpiderSpawnerService spawns spider agents at runtime.
+
+       The race attribute is humanoid (dg_uruk) because Bannerlord's NPCCharacter
+       schema requires a race that resolves through skins.xml — non-humanoid races
+       (spider) are NOT valid here. The actual visual is overridden at spawn time
+       by AgentBuildData.Monster(spider) which swaps in the spider Monster +
+       skeleton, making the race here cosmetically irrelevant.
+
+       This troop should NEVER appear in party templates, custom-battle pickers,
+       or recruitment menus — it exists only to satisfy AgentBuildData and is
+       spawned exclusively via SpiderMissionBehavior. Equipment is intentionally
+       empty + NoWeapons/NoHorses on AgentBuildData ensure no items render.
+
+       occupation="Wanderer" is critical: the engine sets IsSoldier=true if the
+       occupation string contains "soldier" (case-insensitive, see
+       BasicCharacterObject.cs). Custom Battle's troop picker iterates
+       BasicCharacterObjects where IsSoldier && !IsObsolete (see
+       ArmyCompositionGroupVM) — hidden_in_encyclopedia and is_basic_troop="false"
+       do NOT exclude from this picker. Anything containing "soldier" puts this
+       anchor in the player's troop selection menu. Codex review #spider-2026-04-23
+       caught this. Use "Wanderer" or similar non-soldier occupation. -->
+  <NPCCharacter id="taom_spider_creature"
+                race="dg_uruk"
+                default_group="Infantry"
+                is_hero="false"
+                is_basic_troop="false"
+                hidden_in_encyclopedia="true"
+                occupation="Wanderer"
+                culture="Culture.dolguldur"
+                name="{=taom_spider_creature_name}Giant Spider">
+    <face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+    <skills></skills>
+    <Equipments>
+      <EquipmentRoster />
+    </Equipments>
+  </NPCCharacter>
+
+</NPCCharacters>

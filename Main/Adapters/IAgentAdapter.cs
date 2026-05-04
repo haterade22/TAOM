@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -23,10 +24,15 @@ public interface IAgentAdapter
     ActionIndexCache GetCurrentAction(int actionChannelNo);
     float GetCurrentActionProgress(int actionChannelNo);
     bool IsWarg();
+    bool IsSpider();
     bool IsHorse();
     bool IsCamel();
     bool IsActive();
     bool IsFadingOut();
+    int Health { get; }
+    AgentState State { get; }
+    bool IsSameTeam(IAgentAdapter other);
+    int GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType bodyPart);
     void ProjectAgent(Vec3 position, DamageAnimation animation);
     bool IsAttackLikelyToHit(IAgentAdapter attacker, float coneAngle, float attackDistance);
     void CustomAttack(

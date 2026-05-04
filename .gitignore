@@ -35,3 +35,6 @@ tools/runes/preview/
 
 # Translator artifacts (backups/exports kept locally, not in repo)
 Main/_Module/ModuleData/Languages/*.zip
+
+# Node tool dependencies (FBX/TPAC analysis tools — install via npm)
+tools/node_modules/

@@ -19,6 +19,7 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.Warg;
+using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
@@ -60,6 +61,7 @@ public static class IoC
         TroopWeightIoC.RegisterTroopWeightFeature(container);
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
+        SpiderIoC.RegisterSpiderFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);

@@ -28,6 +28,64 @@ Same 2026-05-04 log review caught `[ERROR] [Banner] File not found: ...banner_fl
 
 Save-compat: no field changes; pure code/log severity. Safe on any save.
 
+## 2026-04-23
+
+### Feature: Spider Mount — orc rider on giant spider (warg-pattern mount path)
+
+Spider is now a fully-mountable creature equipped via the standard Bannerlord HorseItem system, in addition to the C# spawner path (below). An uruk Dol Guldur trooper rides a giant spider into battle exactly like Isengard wargs work.
+
+**Changes:**
+- `LOTRLOME_Armory/ModuleData/monsters.xml` — added `rider_sit_bone="chest_m"` and `Mountable="true"` to the spider Monster.
+- `LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` — 3 spider mount HorseItems (`spider_mount_a1`/`a2`/`a3`, mapping to material variants `m_mordor_spider_a1/a2/a3_mtl`). Cosmetic variants only — `a3` (Brood Mother) has higher stats (HP+100, charge_damage 7 vs 5).
+- `Main/_Module/ModuleData/troops/troops_dolguldur.xml` — `dg_giant_spider_rider` (level 32, race=dg_uruk, default_group=Cavalry, occupation=Soldier, culture=dolguldur). Three EquipmentRoster entries randomly select between the 3 spider variants. Equipped with halberd + shield + mace + full elite armor, mirroring `dg_fell_warg_rider` skill profile.
+
+**What works:**
+- Custom Battle: select Dol Guldur → "Giant Spider Rider" appears in Cavalry slot. Troop spawns as uruk on a real spider (Monster.spider correctly applied because vanilla HorseItem spawn path resolves through `Monster.spider` not race resolution).
+- Party templates: NOT yet wired (deferred for this v1). Spider riders won't appear in AI Dol Guldur lord armies until added to `taom_partyTemplates.xml`.
+- Recruitment / VolunteerRecruitmentService: NOT yet wired (deferred). Cannot recruit spider riders from settlements yet.
+
+**Architecture notes:**
+- The orc rider is the soldier (occupation="Soldier", race="dg_uruk"). The spider is their MOUNT in the equipment slot. This is the warg pattern.
+- Bannerlord cannot host non-humanoid creatures as direct troops; the mount-with-rider approach is the engine-native way to get a spider in player-controllable battle.
+- The C# spawner path (below) is independent and complementary — it spawns rider-less standalone hostile spiders for ambient encounters.
+
+**Known limitation:** No spider saddle/harness item exists yet. The HorseHarness slot is empty in all 3 EquipmentRoster entries. Visual will show the orc directly on the spider's back without saddle geometry. Future: author a `spider_saddle` HorseHarness item.
+
+Constraint: rider_sit_bone="chest_m" is a best-guess on cephalothorax. Visual bobbing/clipping may need tuning after first in-game test.
+
+Save-compat: New troop entry only — no field changes to existing entities. Safe load on any save.
+
+Research: Decompiled `Mission.SpawnAgent` confirms `agentBuildData.AgentMonster` (resolved from HorseItem.Monster) is honored at spawn time; mount-path bypass of race resolution works correctly.
+
+### Feature: Spider — AI hostile mob via direct Mission.SpawnAgent
+
+Wires Erkam's `LOTRLOME_Armory` spider Monster + skeleton + 23 animations into actual gameplay. Custom Battle missions now spawn 5 hostile giant spiders on the enemy team 1 second after start, each driven by a behavior tree that attacks player agents in melee with bone-collision-detected fang bites.
+
+**Architecture (mirrors `Main/Features/Warg/`):**
+- `Main/Features/Spider/SpiderSpawnerService.cs` — `Mission.Current.SpawnAgent(AgentBuildData.Monster(spider))` with anchor character `taom_spider_creature` (humanoid race for engine compatibility, visual overridden by `Monster()`)
+- `Main/Features/Spider/SpiderAttackService.cs` — bite damage formula + `CustomAttack` with fang bone indices
+- `Main/Features/Spider/SpiderMissionBehavior.cs` — Custom-Battle-gated lifecycle, attaches `SpiderTree` BT to each spider
+- `Main/Features/Spider/SpiderBehaviorTree.cs` — minimal: idle if no enemy near, otherwise bite + sleep
+- 4 BT element files in `Main/Features/Spider/BehaviorTreeElements/`
+- `Main/Adapters/IAgentAdapter.cs` — added `IsSpider()`, `IsSameTeam()`, `Health`, `State`, `GetBaseArmorEffectivenessForBodyPart()`
+- `Main/_Module/SubModule.xml` — added optional `<DependedModule Id="LOTRLOME_Armory" />` and registered `characters/spider_creature.xml`
+
+**ADR-007 fix:** Unlike `IWargAttackService`, `ISpiderAttackService` exposes `IAgentAdapter` (not raw `Agent`) — the attack/hit/spawn service is fully mockable without a live engine.
+
+**Tests:** 20 new tests in `TAOM.Tests/Features/Spider/` — all green. Damage formula, skip-guard exhaustion, spawn validation, position math.
+
+**Open items (v2):** Fang bone indices (`SpiderConfig.FangBoneIndex*`) are placeholders copied from warg — needs runtime probe to identify the actual spider skeleton bones for `joint5_l`, `joint5_r`, `joint12_m`. Campaign integration (Mirkwood scene triggers, Dol Guldur party templates) deferred until Custom Battle smoke test passes.
+
+Constraint: Bannerlord's NPCCharacter race resolution is hardcoded humanoid-only — non-humanoid creatures cannot be direct troops. C# spawner via Mission API was the only viable path. The anchor `taom_spider_creature` exists solely to satisfy `AgentBuildData`'s `BasicCharacterObject` requirement; it never appears in party templates or troop pickers (`hidden_in_encyclopedia="true"`, `is_basic_troop="false"`).
+
+Research: `tools/extract_fbx_bones.js` Node.js extractor confirmed 62-bone parity between updated `sk_spider_forest_c.fbx` and the 23 animation FBX files (Erkam's commits ca6f4cc5 + later strip). Engine lowercases bone names on import, so the skeleton's lowercase suffixes vs the animations' uppercase suffixes resolve correctly.
+
+Save-compat: new troop entry only — no field changes to existing entities. Safe load on any save.
+
+Not-tested: `Mission.SpawnAgent`, `BehaviorTreeAgentComponent` attachment, BT tick — engine-coupled, covered by in-game smoke test.
+
+Research: `Mission.SpawnAgent(AgentBuildData, bool)`, `AgentBuildData.Monster(Monster)`, `AgentControllerType.AI` — verified via `ilspycmd` on installed `TaleWorlds.MountAndBlade.dll` (v1.3.15).
+
 ## 2026-05-01
 
 ### Feature: KEYforce Gondor armor revamp — 99 new items + 13 regional troop equipment refits (#99)

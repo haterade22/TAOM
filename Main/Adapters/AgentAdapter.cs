@@ -4,6 +4,7 @@ using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.Services;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -52,10 +53,24 @@ public class AgentAdapter : IAgentAdapter
     internal Agent GetUnderlyingAgent() => _agent;
 
     public bool IsWarg() => _agent.Monster.StringId == "warg";
+    public bool IsSpider() => _agent.Monster.StringId == "spider";
     public bool IsHorse() => _agent.Monster.StringId == "horse";
     public bool IsCamel() => _agent.Monster.StringId == "camel";
     public bool IsActive() => _agent?.IsActive() ?? false;
     public bool IsFadingOut() => _agent?.IsFadingOut() ?? false;
+    public int Health => (int)(_agent?.Health ?? 0f);
+    public AgentState State => _agent?.State ?? AgentState.Killed;
+
+    public bool IsSameTeam(IAgentAdapter other)
+    {
+        if (other is not AgentAdapter otherImpl) return false;
+        var otherAgent = otherImpl.GetUnderlyingAgent();
+        if (_agent == null || otherAgent == null) return false;
+        return _agent.Team != null && otherAgent.Team != null && _agent.Team == otherAgent.Team;
+    }
+
+    public int GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType bodyPart) =>
+        (int)(_agent?.GetBaseArmorEffectivenessForBodyPart(bodyPart) ?? 0f);
 
     public void ProjectAgent(Vec3 position, DamageAnimation animation)
     {

@@ -36,6 +36,7 @@ using TAOM.Features.CulturalFeats.Models;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
+using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
@@ -417,6 +418,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
+        mission.AddMissionBehavior(new SpiderMissionBehavior());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
