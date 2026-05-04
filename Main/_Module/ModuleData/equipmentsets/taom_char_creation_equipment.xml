@@ -2321,7 +2321,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2336,7 +2336,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2349,7 +2349,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2367,7 +2367,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_b" />
@@ -2383,7 +2383,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2395,7 +2395,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_b" />
@@ -2411,7 +2411,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2423,7 +2423,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_b" />
@@ -2436,7 +2436,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2451,7 +2451,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_b" />
@@ -2464,7 +2464,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2476,7 +2476,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_b" />
@@ -2495,7 +2495,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_a" />
@@ -2507,7 +2507,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_dwarf_erebor_boots_light_b" />

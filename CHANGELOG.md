@@ -2,6 +2,36 @@
 
 ## 2026-05-04
 
+### Fix: CC parent agents not rendering for custom-race cultures (Erebor, Mordor, Mirkwood, etc.)
+
+When playing as a custom-race culture, the "You were born into a family of..." parents stage rendered a broken visual — single sideways/T-pose figure with bare feet — instead of the two upright parents. Bug surfaced across every dwarf/uruk/orc/elf-race culture.
+
+**Root cause (two layered):**
+
+1. **Race mismatch at action-set lookup.** Vanilla `AddParentsMenu` captures `CharacterObject.PlayerCharacter.Race` at menu-construction time (when it's still 0=human). `CharacterCreationNarrativeStageView.CreateAgentVisual` then uses that captured `character.Race` to compute the action-set name (`as_<race>_facegen`), but separately uses the *current* `PlayerCharacter.Race` to set the agent's body skeleton. After the player picks dwarf at FaceGen, the agent renders with a dwarf skeleton trying to play animations from `as_human_facegen` → broken pose.
+2. **Stale 1.2 action-type names in LOTRLOME_Armory.** `LOTRLOME_Armory/ModuleData/action_sets.xml` was authored against Bannerlord 1.2 which used `act_character_creation_male_default_0..6` and `_female_default_0..6`. Bannerlord 1.3 renamed those to `_default_standing`, `_side_to_side_1`, `_mother_front`, `_father_sitting`, `_side_to_side_2`, `_side_to_side_3`, `_hugging`. Even with the race lookup fixed to `as_dwarf_facegen`, none of the new 1.3 action types exist in that action_set → animation lookup fails.
+
+**Change A — race-sync prefix.** Harmony `[HarmonyPrefix]` on `CharacterCreationNarrativeStageView.RefreshAgentVisuals` (added under `Patch20_NarrativeHorseGuard` category in `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`) iterates the current menu's `NarrativeMenuCharacter` list and calls `UpdateBodyProperties(bodyProperties, currentPlayerRace, isFemale)` on each before vanilla spawns the agent visuals. Now the action-set lookup resolves to `as_<race>_facegen` matching the agent's body skeleton.
+
+**Change B — 1.3 action-type aliases in LOTRLOME_Armory.** Added 7 male + 7 female alias actions to every facegen action_set in `LOTRLOME_Armory/ModuleData/action_sets.xml` (dwarf, dwarf_female, orc, orc_female, uruk, uruk_female, uruk_hai, uruk_hai_female, berserker, nazghul, dg_uruk, etc. — 12 sets total). New names map to the same `anim_father_0..6` / `anim_mother_0..6` files the existing `_default_0..6` actions already use. NOTE: this lives outside the TAOM repo; future LOTRLOME_Armory updates will overwrite it.
+
+**Change C — Erebor parent equipment.** Updated all 14 Erebor parent rosters (`mother/father_char_creation_<occupation>_erebor` × 7 occupations) in `Main/_Module/ModuleData/equipmentsets/taom_char_creation_equipment.xml` so mothers wear `sk_dwarf_dress_normal_a` and fathers wear `sk_dwarf_tunic_noble_a` instead of identical leather chest pieces.
+
+**Cleanup — removed 5 dead duplicate XMLs from TAOM repo:**
+- `Main/_Module/ModuleData/action_sets.xml` (~105K lines)
+- `Main/_Module/ModuleData/monsters.xml` (~1.7K lines)
+- `Main/_Module/ModuleData/Races/action_sets.xml` (~353K lines)
+- `Main/_Module/ModuleData/Races/monsters.xml` (~1.8K lines)
+- `Main/_Module/ModuleData/Races/skins.xml` (~200K lines)
+
+Bannerlord auto-loads root-level `action_sets.xml` / `monsters.xml` / `skins.xml` from each module, but the `Races/` subdirectory copies were never registered and never loaded. The root-level copies were stale duplicates of the LOTRLOME_Armory versions (no TAOM-unique monster IDs; `comm -23` set diff was empty). Cleaning removes ~660K lines of unused XML.
+
+Save-compat: no field changes; pure rendering + animation lookup + asset cleanup. Safe on any save.
+
+Not-tested: visual rendering of CC parents — verified live by player testing.
+
+Research: `E:/Decompiled_Bannerlord/Modules/SandBox.GauntletUI/.../CharacterCreationNarrativeStageView.cs` (`CreateAgentVisual` line 290–293), `Core/TaleWorlds.Core/.../ActionSetCode.cs` (`GenerateActionSetNameWithSuffix`), `Core/TaleWorlds.Core/.../NarrativeMenuCharacter.cs` (`UpdateBodyProperties` API).
+
 ### Fix: SpecialResources hot-path log spam — dedupe ResolveResource DEBUG by (kingdom, culture)
 
 A 2026-05-04 debug log review found 1,751 of 2,531 lines (69%) were the same `[SpecRes] Resolved resource 'caster' via culture 'gondor' (kingdom '' had no match)` line, firing several times per map-tick from `MapInfoVM.OnRefresh` tooltip rebuilds. The DEBUG line was useful during kingdom-vs-culture resolution development but adds zero diagnostic value once resolution is steady-state.

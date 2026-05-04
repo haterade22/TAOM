@@ -156,6 +156,55 @@ public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
     }
 }
 
+/// <summary>
+/// Syncs each NarrativeMenuCharacter's Race with the current PlayerCharacter.Race before each
+/// agent-visual refresh. Vanilla AddParentsMenu captures Race once at construction time (when
+/// PlayerCharacter.Race is still 0=human), but CreateAgentVisual uses character.Race for the
+/// action_set lookup ("as_<race>_facegen") while applying PlayerCharacter.Race to the agent's
+/// body skeleton. For TAOM custom races (dwarf/elf/orc), this mismatch produced broken poses
+/// (dwarf skeleton playing human-rigged anim_father_0). Updating Race here makes the lookup
+/// resolve to "as_dwarf_facegen" so the dwarf-skeleton-compatible animations play.
+/// </summary>
+[HarmonyPatch]
+[HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
+public static class CharacterCreationNarrativeStageView_RefreshAgentVisuals_Patch
+{
+    static MethodBase TargetMethod()
+    {
+        var type = AccessTools.TypeByName(
+            "SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView");
+        return type == null ? null : AccessTools.DeclaredMethod(type, "RefreshAgentVisuals");
+    }
+
+    [HarmonyPrefix]
+    static void Prefix(object __instance)
+    {
+        try
+        {
+            var managerField = __instance?.GetType().GetField("_characterCreationManager",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            var manager = managerField?.GetValue(__instance) as CharacterCreationManager;
+            var menu = manager?.CurrentMenu;
+            if (menu?.Characters == null) return;
+
+            int playerRace = CharacterObject.PlayerCharacter?.Race
+                ?? Hero.MainHero?.CharacterObject?.Race
+                ?? 0;
+            foreach (var character in menu.Characters)
+            {
+                if (character != null && character.IsHuman && character.Race != playerRace)
+                {
+                    character.UpdateBodyProperties(character.BodyProperties, playerRace, character.IsFemale);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            try { IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning($"[Patch20-RaceSync] failed: {ex.Message}"); } catch { }
+        }
+    }
+}
+
 internal static class NarrativeMenuCharacterArgsList
 {
     internal static List<NarrativeMenuCharacterArgs> FromGuardArgs(Models.NarrativeHorseGuardArgs args) =>
