@@ -2,6 +2,30 @@
 
 ## 2026-05-04
 
+### Fix: Dunland Custom Battle commanders rendered naked — 7 broken item IDs in equipment_sets (#105 Phase 2C)
+
+The naked-commander diagnostic shipped in `587e784` made the root cause obvious: 7 `Item.dunland_caerdh_*` IDs in `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_dunland.xml` referenced items that don't exist in `LOTRLOME_Armory/ModuleData/LOTRLOME_items/dunland/`. Verified by cross-referencing every referenced ID against the actual files. Other cultures rendered correctly; Dunland was the only one with broken refs.
+
+The `medium_c` template (used by `lord_NE7_u`, the alphabetically-first Dunland commander) was the worst — head, body, AND cape slots all referenced missing items, so the lord rendered fully naked. `medium_b` (used by `lord_NE8_s`) only missed the cape. `medium_a` (used by `lord_NE8_l`) had all valid refs.
+
+| Broken reference | Replacement (verified to exist) |
+|---|---|
+| `dunland_caerdh_helmet_medium_a/b` | `dunland_caerdh_helmet_heavy_a/b` (no medium helmets exist) |
+| `dunland_caerdh_chainmail_medium_a/b` | `dunland_caerdh_chainmail_heavy_a/b` (no medium chainmail exists) |
+| `dunland_caerdh_pauldron__heavy_a` | `dunland_caerdh_pauldron_heavy_cape_a` (typo'd double underscore + no `pauldron__heavy` variant) |
+| `dunland_caerdh_pauldron__medium_a` | `dunland_caerdh_pauldron_heavy_fur_a` (typo'd double underscore + no medium pauldrons exist) |
+| `dunland_caerdh_bracer_elite_a` | `dunland_caerdh_bracer_heavy_a` (no elite bracer exists) |
+
+Each fix applies to BOTH the battle template (`dunland_bat_template_medium_*`) and the matching civilian template (`dunland_civ_template_default_*`) since they share the same broken refs.
+
+Note that `pauldron__elite_a` (with the double-underscore typo) is preserved — that specific item DOES exist in `LOTRLOME_Armory` with the typo. It's the only `pauldron__` form that's real; `pauldron__heavy/medium` were typo references that never had matching items.
+
+A broader sweep across all `taom_equipment_sets_*.xml` files surfaced a small number of other broken refs (warg_brown/saddle in dolguldur/gundabad/isengard, sk_gd_osg_inf_chest_elite_a in gondor, rhun_round_shield_c in rhun) that don't currently impact any of the alphabetically-first 3 commanders per culture. Tracked for follow-up.
+
+This is the Phase 2C fix promised in commit `a9e0bba`. The temporary diagnostic in `SideCommanderFilter.LogEquipmentDiagnosticOnce` should be reverted in the next commit now that the data issue is resolved — but keeping it in for one more in-game pass to confirm no remaining INVALID slots before removal.
+
+Save-compat: data-only XML edit. Equipment refs change at character load. Safe on any save.
+
 ### Fix: ShaderPrecompilation — eliminate silent character drop + relax premature stuck-abort (#106, follow-up to #57)
 
 Multiple users reported the main-menu "Pre-compile Shaders" button "doesn't work" — they ran the 20–70 minute process, saw it complete, then still hit mid-game stutter on the same character types it was supposed to cover. Root cause was three tuning bugs flagged but under-rated by Codex Review 2026-04-14:

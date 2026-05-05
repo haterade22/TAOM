@@ -20,7 +20,7 @@
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__heavy_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_heavy_cape_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_sword_2h_a" />
         <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
         <Equipment slot="Horse" id="Item.charger" />
@@ -28,11 +28,11 @@
     </EquipmentRoster>
     <EquipmentRoster id="dunland_bat_template_medium_c" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_medium_a" />
-            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_medium_a" />
+            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__medium_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_heavy_fur_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_heavy_a" />
         <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -41,8 +41,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="dunland_bat_template_medium_d" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_medium_b" />
-            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_medium_b" />
+            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_b" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
@@ -55,7 +55,7 @@
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_elite_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
-            <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_elite_a" />
+            <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_lord_a" />
@@ -83,7 +83,7 @@
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__heavy_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_heavy_cape_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_sword_2h_a" />
             <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
             <Equipment slot="Horse" id="Item.charger" />
@@ -91,11 +91,11 @@
     </EquipmentRoster>
     <EquipmentRoster id="dunland_civ_template_default_c" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_medium_a" />
-            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_medium_a" />
+            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__medium_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_heavy_fur_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_heavy_a" />
             <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -104,8 +104,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="dunland_civ_template_default_d" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_medium_b" />
-            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_medium_b" />
+            <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_medium_b" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
@@ -118,7 +118,7 @@
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_elite_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
-            <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_elite_a" />
+            <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_lord_a" />
