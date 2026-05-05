@@ -21,7 +21,7 @@ public static class CustomBattlesIoC
         ISideCommanderFilter sideCommanderFilter,
         Core.Logging.IModLogger logger)
     {
-        CommanderSelectorRebuilder.Initialize();
+        CommanderSelectorRebuilder.Initialize(logger);
         CustomBattleData_Characters_Patch.Initialize(commandersHook, logger);
         CustomBattleData_Factions_Patch.Initialize(factionsHook, logger);
         CustomBattleHelper_Troop_Patch.Initialize(troopHook, logger);
