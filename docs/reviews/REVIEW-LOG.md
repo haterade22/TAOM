@@ -53,8 +53,9 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 29 | 2026-04-27 | Tier 2/3 adoption (79350f2 — 4 skills + 3 subagents + suggest-compact upgrade) | NEEDS-FIXES (1H/3M/2L) | agree (1 promotion) | 6 confirmed (1 HIGH→1, 2 MED→3, 2 LOW + 1 process settings.local drift) | 0 | 0 | adversarial-tier2-3-v1 |
 | 30 | 2026-05-04 | CustomBattles filter+cap (commander dropdown faction filter + 3-per-culture cap) | NEEDS-FIXES (1 P1) | agree | 1 confirmed (P1 stale `SelectedItem` after Clear+Rebuild — `SelectorVM<T>.SelectedIndex` setter early-returns on no-op) | 0 | 0 | v6-focused-enhancement |
 | 31 | 2026-05-04 | Career cooldown rework (uniform 30s timer + charging feedback + cleanup pass + 3-GameModel ctor injection) | ISSUES FOUND (0H / 2M / 0L) | agree | 2 confirmed (M: single-bucket tick accumulator drops elapsed time; M: ParseGlobalTuning admits NaN/±Infinity) | 0 | 0 | v7-rework-plus-cleanup |
+| 32 | 2026-05-04 | CustomBattles NRE+diagnostic (Prefix guard + Refresh-based rebuilder + Phase 2A equipment-slot diagnostic + LOW fix-loop) | NEEDS-FIXES (1 P2 / 1 P3) | agree | 2 confirmed (P2: vanilla `RefreshValues` calls `UpdateCharacterVisual` after our Prefix skipped OnCharacterSelection — sister NRE; P3: diagnostic catch logged `ex.Message` only, lost type+stack) | 0 | 0 | v6-focused-enhancement |
 
-**Post-codebase reviews:** 19-31. 31 Codex reviews total, 86 bugs found across codebase.
+**Post-codebase reviews:** 19-32. 32 Codex reviews total, 88 bugs found across codebase.
 
 ### Review 31 — Career Cooldown Rework Root Cause Analysis
 
@@ -581,4 +582,28 @@ Focused review of today's enhancement to the existing CustomBattles feature (com
 ### Build & Test (Review 30)
 - `dotnet build Main/TAOM.csproj` — clean, 0 errors, 2 unrelated warnings (MCMv5 arch mismatch, `ex` unused — both pre-existing).
 - `dotnet test --filter CustomBattles` — 38/38 passing (no test changes needed; the rebuilder helper is entry-point-tier per ADR-008).
+
+### Review 32 — CustomBattles NRE+Diagnostic Root Cause Analysis
+
+Adversarial review of two commits (`a9e0bba` NRE+diagnostic, `25415b1` deep-review LOW fix-loop). Codex returned 2 findings, both confirmed.
+
+**The bugs.**
+
+P2 (HIGH): The previous commit added a Prefix on `CustomBattleSideVM.OnCharacterSelection` returning `false` when `selector.SelectedItem == null`. The Prefix skipped the vanilla body — but vanilla `RefreshValues()` calls `UpdateCharacterVisual()` UNCONDITIONALLY immediately after the SelectedIndex assignment that fired the now-skipped OnCharacterSelection. `UpdateCharacterVisual` derefs `SelectedCharacter.Equipment[(EquipmentIndex)5]` directly. Since the OnCharacterSelection Prefix skipped the body, `SelectedCharacter` was never set — it remained null at construction. NRE moved one method down the call chain, exactly when the Prefix was supposed to prevent it.
+
+P3 (LOW): The Phase 2A equipment-slot diagnostic wrapped per-commander reads in `try/catch` but logged only `ex.Message`. For a diagnostic specifically meant to identify equipment-resolution failures, the exception type and stack frame are as valuable as the slot-by-slot output.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | OnCharacterSelection Prefix skips body, but vanilla RefreshValues continues into UpdateCharacterVisual which derefs SelectedCharacter | Missing vanilla gate / partial blast-radius mitigation | When patching a callback to skip on bad state, I traced the callback's body but did NOT trace what the caller does AFTER the callback returns. Vanilla RefreshValues has SelectedIndex setter call -> OnCharacterSelection (Prefix skipped) -> UpdateCharacterVisual (still runs, NREs). Defensive guards must cover the full call chain a callback participates in, not just the callback itself. | Added new `AGENTS.md` "What Codex does well" entry codifying this pattern. Future defensive Prefixes that target callback methods must enumerate ALL methods the caller invokes (in vanilla source) using the same state, and patch each that derefs the now-unset state. The new sister Prefix on `UpdateCharacterVisual` extends the guard to cover the full RefreshValues call chain. |
+| 2 | Diagnostic catch logged `ex.Message` only; lost type and stack | Logic error / convention inconsistency | Mirrored the existing pattern from other TAOM catch blocks (most use `ex.Message`). For PRODUCTION error handling, message-only is fine; for DIAGNOSTIC code that exists specifically to identify failures, full `ex.ToString()` is required. The two have different needs but I copied the wrong template. | Code-level fix: switched to `ex.ToString()` for the diagnostic-specific catch. Generalizable rule: when wrapping a try/catch around code whose ENTIRE PURPOSE is producing diagnostic output, log full exception, not just message. |
+
+### Fixes Implemented (Review 32)
+
+1. **P2 (Codex):** New `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_UpdateCharacterVisual_Patch.cs` — Prefix returns `false` when `__instance.SelectedCharacter == null`. Patch count rises to 10. The OnCharacterSelection Prefix from `a9e0bba` is preserved (kills the OnCharacterSelection NRE); the new sister Prefix kills the cascading UpdateCharacterVisual NRE that vanilla RefreshValues triggers regardless.
+2. **P3 (Codex):** `Main/Features/CustomBattles/Hooks/SideCommanderFilter.cs` LogEquipmentDiagnosticOnce catch — switched `{ex.Message}` to `{ex}` (full ToString). Comment explains why this is intentional for diagnostic-only catch.
+
+### Build & Test (Review 32)
+- `dotnet build Main/TAOM.csproj` — clean.
+- `dotnet test --filter CustomBattles` — 38/38 passing (no test changes; defensive Prefixes are entry-point-tier per ADR-008).
 

@@ -88,7 +88,10 @@ public class SideCommanderFilter : ISideCommanderFilter
             }
             catch (System.Exception ex)
             {
-                _logger.LogWarning($"[CustomBattles diag] Equipment slot read threw for {c?.StringId ?? "<null>"} in {cultureId}: {ex.Message}");
+                // Log the full ex.ToString() (type + message + stack) — this diagnostic exists
+                // specifically to identify equipment-resolution failures, so the exception type
+                // and stack frame are as valuable as the slot-by-slot output.
+                _logger.LogWarning($"[CustomBattles diag] Equipment slot read threw for {c?.StringId ?? "<null>"} in {cultureId}: {ex}");
             }
         }
     }

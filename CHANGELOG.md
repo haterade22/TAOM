@@ -2,6 +2,18 @@
 
 ## 2026-05-04
 
+### Fix: Custom Battle NRE follow-up — sister Prefix on UpdateCharacterVisual + diagnostic refinements (#105, Codex Review 32)
+
+Two findings from Codex's adversarial pass on the NRE+diagnostic commit (`a9e0bba`) and its deep-review fix-loop (`25415b1`):
+
+**P2 (HIGH) — sister NRE in `UpdateCharacterVisual`.** The Prefix on `CustomBattleSideVM.OnCharacterSelection` correctly skipped the vanilla body when `selector.SelectedItem == null`, but vanilla `RefreshValues()` calls `UpdateCharacterVisual()` *unconditionally* immediately after the SelectedIndex assignment. `UpdateCharacterVisual` derefs `SelectedCharacter.Equipment[(EquipmentIndex)5]` — and when our OnCharacterSelection Prefix skipped the body, `SelectedCharacter` was never set, so it remains null at construction. NRE on the equipment indexer.
+
+Fixed with a sister Prefix in new file `CustomBattleSideVM_UpdateCharacterVisual_Patch.cs` that returns `false` when `__instance.SelectedCharacter == null`. UpdateCharacterVisual aborts cleanly; RefreshValues continues past it without crashing. The fix was found by Codex decompiling the vanilla `RefreshValues` body — Claude's prior decompile dump had been read line-by-line for the SelectedIndex/SelectedItem flow but missed the unconditional call chain into UpdateCharacterVisual.
+
+**P3 (LOW) — diagnostic catch lost stack trace.** The Phase 2A equipment-slot diagnostic wrapped per-commander reads in `try/catch`, but logged only `ex.Message`. Since this diagnostic exists specifically to identify equipment-resolution failures, the exception type and stack frame are as valuable as the slot-by-slot output. Switched to `ex.ToString()`.
+
+Patch count is now **10** for `Patch19_CustomBattles`. Tests: 38/38 still green.
+
 ### Fix: Custom Battle NRE on faction click + diagnostic for naked commander preview (#105)
 
 In-game test of the filter+cap commit (`0cf50ed`) surfaced two bugs:

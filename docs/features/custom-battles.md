@@ -18,7 +18,7 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 
 ### Solution Approach
 
-9 Harmony patches (category `Patch19_CustomBattles`) applied in `OnSubModuleLoad()` — before any CustomGame type loads:
+10 Harmony patches (category `Patch19_CustomBattles`) applied in `OnSubModuleLoad()` — before any CustomGame type loads:
 
 1. **Prefix** on `CustomBattleData.Characters` getter — replaces vanilla commanders with TAOM lords
 2. **Prefix** on `CustomBattleData.Factions` getter — replaces vanilla cultures with TAOM cultures
@@ -29,6 +29,7 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 7. **Postfix** on `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` (private method, patched by name) — rebuilds `CharacterSelectionGroup.ItemList` filtered to the selected faction, capped at 3 commanders
 8. **Postfix** on `CustomBattleSideVM.RefreshValues()` — defensive re-filter for refresh events (language/resolution change)
 9. **Prefix** on `CustomBattleSideVM.OnCharacterSelection(SelectorVM<CharacterItemVM>)` — defensive null-guard on `selector.SelectedItem`. Vanilla derefs `selector.SelectedItem.Character` without a null check, but `SelectorVM<T>.SelectedIndex` setter fires `_onChange.Invoke(this)` even when `GetCurrentItem()` returns null (empty `ItemList` or out-of-range index). The Prefix returns `false` to skip the vanilla body when `SelectedItem == null`, eliminating an NRE that surfaced during in-game testing. ([CustomBattleSideVM_OnCharacterSelection_Patch.cs](../../Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCharacterSelection_Patch.cs))
+10. **Prefix** on `CustomBattleSideVM.UpdateCharacterVisual()` — sister null-guard for the OnCharacterSelection Prefix. Vanilla `RefreshValues()` calls `UpdateCharacterVisual()` unconditionally after `SelectedIndex = 1` (enemy side default), and `UpdateCharacterVisual` derefs `SelectedCharacter.Equipment[(EquipmentIndex)5]`. When the OnCharacterSelection Prefix skipped the body (preventing vanilla from setting `SelectedCharacter`), the next line in `RefreshValues` would NRE. The Prefix returns `false` when `__instance.SelectedCharacter == null`, letting `RefreshValues` continue past the visual update without crashing. (Codex Review 32 P2 — `UpdateCharacterVisual` was outside the OnCharacterSelection Prefix's blast radius despite being the same call chain.) ([CustomBattleSideVM_UpdateCharacterVisual_Patch.cs](../../Main/Features/CustomBattles/Hooks/CustomBattleSideVM_UpdateCharacterVisual_Patch.cs))
 
 No UI patches needed — TAOM's `CustomBattleScreen.xml` GUI prefab automatically overrides vanilla via Gauntlet module load order (TAOM loads after the CustomBattle module).
 
