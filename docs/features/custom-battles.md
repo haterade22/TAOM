@@ -18,7 +18,7 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 
 ### Solution Approach
 
-8 Harmony patches (category `Patch19_CustomBattles`) applied in `OnSubModuleLoad()` — before any CustomGame type loads:
+9 Harmony patches (category `Patch19_CustomBattles`) applied in `OnSubModuleLoad()` — before any CustomGame type loads:
 
 1. **Prefix** on `CustomBattleData.Characters` getter — replaces vanilla commanders with TAOM lords
 2. **Prefix** on `CustomBattleData.Factions` getter — replaces vanilla cultures with TAOM cultures
@@ -28,6 +28,7 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 6. **Postfix** on `CustomBattleSideVM` constructor — replaces `FactionSelectionGroup` with `TaomFactionSelectionVM` and explicitly fires the `OnCultureSelection` callback so the initial commander dropdown aligns with the visible faction (vanilla `SelectFaction(0)` doesn't fire the callback)
 7. **Postfix** on `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` (private method, patched by name) — rebuilds `CharacterSelectionGroup.ItemList` filtered to the selected faction, capped at 3 commanders
 8. **Postfix** on `CustomBattleSideVM.RefreshValues()` — defensive re-filter for refresh events (language/resolution change)
+9. **Prefix** on `CustomBattleSideVM.OnCharacterSelection(SelectorVM<CharacterItemVM>)` — defensive null-guard on `selector.SelectedItem`. Vanilla derefs `selector.SelectedItem.Character` without a null check, but `SelectorVM<T>.SelectedIndex` setter fires `_onChange.Invoke(this)` even when `GetCurrentItem()` returns null (empty `ItemList` or out-of-range index). The Prefix returns `false` to skip the vanilla body when `SelectedItem == null`, eliminating an NRE that surfaced during in-game testing. ([CustomBattleSideVM_OnCharacterSelection_Patch.cs](../../Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCharacterSelection_Patch.cs))
 
 No UI patches needed — TAOM's `CustomBattleScreen.xml` GUI prefab automatically overrides vanilla via Gauntlet module load order (TAOM loads after the CustomBattle module).
 
@@ -104,7 +105,8 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 | `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_RefreshValues_Patch.cs` | Harmony postfix — defensive re-filter for refresh events |
 | `Main/Features/CustomBattles/Hooks/ISideCommanderFilter.cs` | Hook interface — resolves commanders for a culture |
 | `Main/Features/CustomBattles/Hooks/SideCommanderFilter.cs` | Hook impl — calls service with `MaxCommandersPerCulture = 3` |
-| `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` | Static helper — Clear + AddItem + reset `_selectedIndex = -1` (cached `FieldInfo`) + set `SelectedIndex = 0`. Mirrors vanilla `SelectorVM.Refresh()`'s setter-bypass trick so post-rebuild selection actually fires `OnCharacterSelection` (Codex review #30 P1). |
+| `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` | Static helper — calls vanilla `SelectorVM<T>.Refresh(items, 0, onChange)` to safely rebuild the selector. Reads existing `_onChange` via cached `FieldInfo` so Refresh's overwrite preserves the wiring. (Issue #105 — replaced manual `Clear() + AddItem(*N) + reflection-on-_selectedIndex` approach to match the canonical safe rebuild pattern.) |
+| `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCharacterSelection_Patch.cs` | Defensive Prefix on the private `OnCharacterSelection(SelectorVM<CharacterItemVM>)` — returns `false` when `selector?.SelectedItem == null`. Stops vanilla NRE that surfaced when `SelectedIndex` setter fires `_onChange.Invoke` with an empty `ItemList` (Issue #105 Bug 1). |
 | `Main/Adapters/IObjectManagerAdapter.cs` | Adapter interface + CultureInfo/CharacterInfo DTOs |
 | `Main/Adapters/ObjectManagerAdapter.cs` | ObjectManager bridge implementation |
 | `Main/_Module/GUI/Prefabs/CustomBattle/` | 5 Gauntlet UI prefab XMLs (pre-existing) |

@@ -2,6 +2,20 @@
 
 ## 2026-05-04
 
+### Fix: Custom Battle NRE on faction click + diagnostic for naked commander preview (#105)
+
+In-game test of the filter+cap commit (`0cf50ed`) surfaced two bugs:
+
+**Bug 1 (fixed in this commit) — NRE in `CustomBattleSideVM.OnCharacterSelection`.** Vanilla derefs `selector.SelectedItem.Character` without a null guard, but `SelectorVM<T>.SelectedIndex` setter fires `_onChange.Invoke(this)` even when `SelectedItem` is null (empty `ItemList` or out-of-range index). Two paths produce that state: (a) vanilla `RefreshValues` populates an empty list when `CustomBattleData.Characters` enumeration yields zero usable items, then `SelectedIndex = 1` (enemy side default) crashes; (b) re-entrancy from `_onCharacterSelected` retriggers `RefreshValues` mid-rebuild.
+
+Two-prong defense:
+- **`CustomBattleSideVM_OnCharacterSelection_Patch`** (new) — Prefix returns `false` when `selector?.SelectedItem == null`, skipping the vanilla body. Eliminates the NRE regardless of cause.
+- **`CommanderSelectorRebuilder`** (refactor) — replaced manual `Clear() + AddItem(*N) + reflection-on-_selectedIndex + SelectedIndex = 0` with vanilla `SelectorVM<T>.Refresh(items, 0, onChange)`. Vanilla Refresh is the canonical safe rebuild path (Clear → reset `_selectedIndex = -1` directly → AddItem loop → `SelectedIndex = selectedIndex`). Reads existing `_onChange` via reflection so Refresh's overwrite is a no-op on the wiring.
+
+**Bug 2 (diagnostic only — fix lands in follow-up commit) — Commander preview renders naked.** Body, head, leg, gloves, weapon slots all empty; horse loads correctly. Verified `LOTRLOME_Armory` items and TAOM `EquipmentRosters` are both registered for `CustomGame`. Code-level cause: in Campaign mode `CharacterObject.Equipment` overrides for heroes to return `HeroObject.BattleEquipment` (populated by campaign init), but in CustomGame mode lords are plain `BasicCharacterObject` reading raw `_equipmentRoster.DefaultEquipment` — any slot whose item ID failed to resolve at deserialize time stays `EquipmentElement.Invalid`. Added a one-shot equipment-slot diagnostic to `SideCommanderFilter` that logs each commander's slot resolution to `rgl_log.txt` once per culture-switch. The diagnostic output identifies the exact failing item IDs so the follow-up commit can apply a targeted fix (item ID correction / vanilla fallback equipment roster / load-order adjustment).
+
+Save-compat: UI/preview only. Safe on any save.
+
 ### Fix: CareerSystem — wall-clock-precise cooldown tick + reject NaN/Infinity tuning (Codex Review 31)
 
 Two MEDIUM findings from the Codex adversarial pass on the cooldown rework:
