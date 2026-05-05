@@ -20,8 +20,12 @@ namespace TAOM.Features.ShaderPrecompilation;
 // Research: CustomGameManager (TaleWorlds.MountAndBlade.CustomBattle.dll), confirmed v1.3.12
 public class TaomShaderGameManager : CustomGameManager
 {
-    private const int MaxTroopsPerSide = 2000;
-    private const int SoldierCopies = 4;
+    // Sized to fit all TAOM + vanilla characters with no silent drops.
+    // ~1601 TAOM NPCCharacter entries + vanilla characters across all included cultures.
+    // 3000/side × 2 sides = 6000 slots. SoldierCopies=2 keeps statistical variant coverage
+    // (BattleEquipments randomization) while halving slot consumption.
+    private const int MaxTroopsPerSide = 3000;
+    private const int SoldierCopies = 2;
     private const int HeroCopies = 1;
     private const string BattleScene = CustomBattleData.CoreContentDefaultSceneName;
 

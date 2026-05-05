@@ -42,7 +42,7 @@ TaomShaderGameManager : CustomGameManager
                     └── IShaderPrecompilationService.GetCharacterIdsForShaderBattle()
                     └── IShaderPrecompilationService.GetCultureIdsForShaderBattle()
                     └── MBObjectManager.Instance.GetObject<>() per character ID
-                    └── CustomBattleCombatant × 2 (≤500 troops each side)
+                    └── CustomBattleCombatant × 2 (≤3000 troops each side)
 
 Patch21_ShaderPrecompilation:
     └── LoadingScreen_ShaderProgress_Patch
@@ -53,19 +53,28 @@ Patch21_ShaderPrecompilation:
 
 ## Configuration
 
-No configuration file. The feature has two tunable constants in `TaomShaderGameManager.cs`:
+No configuration file. The feature has tunable constants in `TaomShaderGameManager.cs` and `Hooks/LoadingScreen_ShaderProgress_Patch.cs`:
 
 | Constant | Value | Description |
 |----------|-------|-------------|
-| `MaxTroopsPerSide` | `500` | Cap on characters spawned per side — prevents battle setup crashes on very large rosters |
-| `BattleScene` | `"battle_terrain_029"` | `CustomBattleData.CoreContentDefaultSceneName` — the default custom battle scene, always present |
+| `MaxTroopsPerSide` | `3000` | Cap on troop slots per side. 6000 total slots, sized to fit ~1600 TAOM characters + vanilla characters with no silent drops. |
+| `SoldierCopies` | `2` | How many instances of each soldier-occupation troop are spawned. Each copy lets Bannerlord pick a random `BattleEquipments` variant, so 2 gives reasonable statistical variant coverage without exploding slot use. |
+| `HeroCopies` | `1` | Heroes have one equipment loadout — single render covers their shaders. |
+| `BattleScene` | `"battle_terrain_029"` | `CustomBattleData.CoreContentDefaultSceneName` — the default custom battle scene, always present. |
+| `StuckWarnSeconds` (patch) | `300` | Show a "stuck Ns" warning after 5 min of no count change, but only when in the tail (`remaining <= 5`). |
+| `StuckAbortSeconds` (patch) | `600` | Auto-abort via `MBGameManager.EndGame()` after 10 min of tail-end stall. Large-count pauses are not treated as stuck — Bannerlord's shader compiler is single-threaded and a single heavy material can legitimately hold for several minutes. |
+| `StuckTailRemainingMax` (patch) | `5` | Stuck-detection only fires when `remaining <= 5`; higher counts can pause without aborting. |
+
+### Why the constants were tuned (2026-05-04)
+
+The original values (`MaxTroopsPerSide=2000`, `SoldierCopies=4`, `StuckAbortSeconds=120`) silently dropped roughly 1,000–1,400 characters when the slot budget filled before all characters were added — users ran the 20–70 minute process, saw the loading screen finish, and still hit mid-game stutter on the dropped characters. They reported "Pre-compile Shaders doesn't work." The old 120 s abort also fired prematurely on slower hardware, terminating compilation a few shaders short of completion. The current values close both gaps.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
 | `Main/Features/ShaderPrecompilation/IShaderPrecompilationService.cs` | Service interface |
-| `Main/Features/ShaderPrecompilation/ShaderPrecompilationService.cs` | Queries `IObjectManagerAdapter`, filters non-bandit cultures, deduplicates character IDs, caches culture set |
+| `Main/Features/ShaderPrecompilation/ShaderPrecompilationService.cs` | Queries `IObjectManagerAdapter` for all cultures (bandits included — they have unique meshes/equipment that need shader coverage too), deduplicates character IDs, caches culture set |
 | `Main/Features/ShaderPrecompilation/ShaderPrecompilationIoC.cs` | DryIoc singleton registration + hook init |
 | `Main/Features/ShaderPrecompilation/TaomShaderGameManager.cs` | Extends `CustomGameManager`, builds `CustomBattleData` from service output |
 | `Main/Features/ShaderPrecompilation/Hooks/LoadingScreen_ShaderProgress_Patch.cs` | `Patch21_ShaderPrecompilation` — loading screen progress text |
@@ -82,31 +91,32 @@ No configuration file. The feature has two tunable constants in `TaomShaderGameM
 
 ## Tests
 
-- `TAOM.Tests/Features/ShaderPrecompilation/ShaderPrecompilationServiceTests.cs` — 6 tests covering:
-  - Happy path: returns character IDs from all non-bandit cultures
-  - Bandit culture exclusion
-  - Adapter exception → empty result + logged error
+- `TAOM.Tests/Features/ShaderPrecompilation/ShaderPrecompilationServiceTests.cs` — 7 tests covering:
+  - Happy path: returns character IDs from all included cultures
+  - Bandit culture **inclusion** (bandits have unique meshes/equipment that need shader coverage too)
+  - `GetCharacterIdsForShaderBattle` adapter exception → empty result + logged error
   - Deduplication of character IDs
   - Null/empty ID exclusion
-  - Culture ID filtering
+  - Mixed bandit + non-bandit culture handling
+  - `GetCultureIdsForShaderBattle` adapter exception → empty result + logged error
 
 `TaomShaderGameManager` and `LoadingScreen_ShaderProgress_Patch` are not unit-tested — they are entry points that directly call TaleWorlds APIs (no logic to test).
 
 ## How to Add Coverage for a New Culture
 
-When a new TAOM culture is added, its characters are automatically included — no changes needed here. The service queries `IObjectManagerAdapter.GetAllCultureInfos()` and `GetAllCharacterInfos()` at runtime, picking up all non-bandit cultures and their characters.
+When a new TAOM culture is added, its characters are automatically included — no changes needed here. The service queries `IObjectManagerAdapter.GetAllCultureInfos()` and `GetAllCharacterInfos()` at runtime, picking up every loaded culture (vanilla, TAOM custom, and bandit) and all of its characters.
 
 If a culture's characters are not getting compiled, verify:
-1. The culture's `IsBandit` field is `false` in the culture XML
-2. The culture's character XML files are loaded and the characters have a valid `culture` attribute matching the culture ID
-3. The `IObjectManagerAdapter` implementation's `GetAllCharacterInfos()` returns them (check `ObjectManagerAdapter.cs`)
+1. The culture's character XML files are loaded and the characters have a valid `culture` attribute matching the culture ID
+2. The `IObjectManagerAdapter` implementation's `GetAllCharacterInfos()` returns them (check `ObjectManagerAdapter.cs`)
+3. The slot budget hasn't filled — the manager logs `[ShaderPrecompilation] N characters skipped` to `rgl_log` if the cap is hit. If you see that line with a non-zero count, raise `MaxTroopsPerSide` or lower `SoldierCopies` in `TaomShaderGameManager.cs`.
 
 ## Performance
 
 - **LoadingScreen patch:** Runs every frame during loading screens. Calls `Utilities.GetNumberOfShaderCompilationsInProgress()` (a native engine call) then early-exits if the count hasn't changed. String allocation (`$"Compiling shaders... {n} remaining"`) only occurs when the count changes — typically once per second during active compilation.
 - **Service:** `GetValidCultureIds()` builds the culture `HashSet` once and caches it for the service's lifetime. `GetAllCharacterInfos()` is only called once per shader battle initiation.
 
-## GitHub Issue
+## GitHub Issues
 
-- **Issue:** [#57 — feat: Shader Pre-compilation at Main Menu](https://github.com/haterade22/TAOM/issues/57)
-- **Status:** Open
+- [#57 — feat: Shader Pre-compilation at Main Menu](https://github.com/haterade22/TAOM/issues/57) — original feature, OPEN
+- [#106 — fix: silent character drop + premature 120s abort + stale latch on retry/abort](https://github.com/haterade22/TAOM/issues/106) — 2026-05-04 stability fix, OPEN until in-game verification

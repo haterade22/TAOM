@@ -192,7 +192,12 @@ public class SubModule : MBSubModuleBase
                     "This is a one-time process that eliminates in-game stutter and reduces crashes.\n" +
                     "When you see the deployment phase, the process is complete!",
                     true, true, "Start", "Cancel",
-                    () => MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger)),
+                    () =>
+                    {
+                        _shaderTickAccumulator = 0f;
+                        _lastShaderCount = -1;
+                        MBGameManager.StartNewGame(new TaomShaderGameManager(shaderService, shaderLogger));
+                    },
                     () => InformationManager.HideInquiry())),
                 isDisabledAndReason: () => (false, new TextObject("")),
                 enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM."),

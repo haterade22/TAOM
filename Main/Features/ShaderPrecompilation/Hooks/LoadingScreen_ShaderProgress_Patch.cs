@@ -22,8 +22,13 @@ namespace TAOM.Features.ShaderPrecompilation.Hooks;
 [HarmonyPatchCategory("Patch21_ShaderPrecompilation")]
 public static class LoadingScreen_ShaderProgress_Patch
 {
-    private const int StuckWarnSeconds   = 30;
-    private const int StuckAbortSeconds  = 120;
+    // Bannerlord's shader compiler is single-threaded native; a single heavy material
+    // can hold the count at one value for several minutes on slower hardware. Only
+    // treat as "stuck" when remaining is small (tail end) — large-count pauses are
+    // normal and recover. Raise warn/abort to give compilation room to finish.
+    private const int StuckWarnSeconds      = 300;
+    private const int StuckAbortSeconds     = 600;
+    private const int StuckTailRemainingMax = 5;
 
     private static IModLogger _logger;
     private static int  _lastShaderCount  = -1;
@@ -78,8 +83,11 @@ public static class LoadingScreen_ShaderProgress_Patch
                 return;
             }
 
-            // Count unchanged — check for stuck condition
+            // Count unchanged — check for stuck condition.
+            // Only treat as stuck when we're in the tail (remaining <= StuckTailRemainingMax);
+            // large-count pauses are normal during heavy material compilation and recover.
             if (remaining <= 0 || _stuckSinceMs < 0) return;
+            if (remaining > StuckTailRemainingMax) return;
 
             int stuckSeconds = (int)((DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - _stuckSinceMs) / 1000);
 
@@ -88,6 +96,10 @@ public static class LoadingScreen_ShaderProgress_Patch
                 _abortTriggered = true;
                 _logger?.LogWarning($"[ShaderPrecompilation] Shader stuck for {stuckSeconds}s — aborting");
                 __instance.DescriptionText = $"Compiling shaders... {remaining} remaining — stuck {stuckSeconds}s, aborting...";
+                // Clear the latch so any later loading screen (new campaign etc.) doesn't
+                // inherit our shader-progress text override while the engine continues
+                // compiling stragglers in the background.
+                TaomShaderGameManager.ResetShaderBattleActive();
                 MBGameManager.EndGame();
                 return;
             }

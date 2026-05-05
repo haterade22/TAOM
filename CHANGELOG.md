@@ -2,31 +2,23 @@
 
 ## 2026-05-04
 
-### Fix: Custom Battle NRE follow-up — sister Prefix on UpdateCharacterVisual + diagnostic refinements (#105, Codex Review 32)
+### Fix: ShaderPrecompilation — eliminate silent character drop + relax premature stuck-abort (#106, follow-up to #57)
 
-Two findings from Codex's adversarial pass on the NRE+diagnostic commit (`a9e0bba`) and its deep-review fix-loop (`25415b1`):
+Multiple users reported the main-menu "Pre-compile Shaders" button "doesn't work" — they ran the 20–70 minute process, saw it complete, then still hit mid-game stutter on the same character types it was supposed to cover. Root cause was three tuning bugs flagged but under-rated by Codex Review 2026-04-14:
 
-**P2 (HIGH) — sister NRE in `UpdateCharacterVisual`.** The Prefix on `CustomBattleSideVM.OnCharacterSelection` correctly skipped the vanilla body when `selector.SelectedItem == null`, but vanilla `RefreshValues()` calls `UpdateCharacterVisual()` *unconditionally* immediately after the SelectedIndex assignment. `UpdateCharacterVisual` derefs `SelectedCharacter.Equipment[(EquipmentIndex)5]` — and when our OnCharacterSelection Prefix skipped the body, `SelectedCharacter` was never set, so it remains null at construction. NRE on the equipment indexer.
+1. **Silent character drop (primary cause).** `MaxTroopsPerSide=2000` × 2 sides = 4000 slots, with `SoldierCopies=4` capping at ~1000 unique soldiers. The service feeds in ~1600 TAOM characters + vanilla characters across all loaded cultures (the cultureId filter accepts every culture), so the tail of the character list was silently skipped. The skip count was logged at `LogWarning` to `rgl_log` only — invisible to users. Raised `MaxTroopsPerSide` 2000 → 3000 (6000 total slots) and `SoldierCopies` 4 → 2; fits the full TAOM + vanilla character set. The `2` keeps statistical equipment-variant coverage (each `AddCharacter(troop, count)` randomises across the troop's `BattleEquipments` list).
+2. **Premature 120 s auto-abort.** `LoadingScreen_ShaderProgress_Patch` called `MBGameManager.EndGame()` whenever the count held steady for 120 s. Bannerlord's shader compiler is single-threaded native code; one heavy material can legitimately hold for several minutes on slower CPUs, so the abort fired moments before completion on a meaningful slice of the user base. Raised `StuckAbortSeconds` 120 → 600 and `StuckWarnSeconds` 30 → 300, and added a new `StuckTailRemainingMax = 5` guard so stuck-detection only fires when the engine is genuinely stalled on the last few shaders — large-count pauses no longer auto-abort.
+3. **Static state not reset between runs.** `SubModule._shaderTickAccumulator` and `_lastShaderCount` were never reset; clicking "Pre-compile Shaders" a second time in the same Bannerlord process could suppress the first toast. Added explicit reset in the `InitialStateOption` Start callback before `MBGameManager.StartNewGame`.
 
-Fixed with a sister Prefix in new file `CustomBattleSideVM_UpdateCharacterVisual_Patch.cs` that returns `false` when `__instance.SelectedCharacter == null`. UpdateCharacterVisual aborts cleanly; RefreshValues continues past it without crashing. The fix was found by Codex decompiling the vanilla `RefreshValues` body — Claude's prior decompile dump had been read line-by-line for the SelectedIndex/SelectedItem flow but missed the unconditional call chain into UpdateCharacterVisual.
+**Deep-review follow-up.** Cross-system data-flow agent caught a fourth gap missed by the initial pass: when the auto-abort branch fires `MBGameManager.EndGame()`, `TaomShaderGameManager.IsShaderBattleActive` was never cleared. Any shaders still in flight when the user next opened a loading screen (new campaign, custom battle) would have inherited TAOM's "Compiling shaders... N remaining" text override on that unrelated screen. Fixed in the same change by calling `ResetShaderBattleActive()` immediately before `EndGame()`.
 
-**P3 (LOW) — diagnostic catch lost stack trace.** The Phase 2A equipment-slot diagnostic wrapped per-commander reads in `try/catch`, but logged only `ex.Message`. Since this diagnostic exists specifically to identify equipment-resolution failures, the exception type and stack frame are as valuable as the slot-by-slot output. Switched to `ex.ToString()`.
+Doc consolidation: `docs/features/shader-precompilation.md` Configuration table updated with all six tunable constants and a "Why the constants were tuned" subsection. The component diagram, key-files table, tests list, and "How to Add Coverage" section were also de-staled (the doc was carrying a `MaxTroopsPerSide=500` figure from before the 2026-04-14 TOR-inspired rework, and a "filters non-bandit cultures" claim that contradicted the actual code, which intentionally includes bandits for full mesh coverage).
 
-Patch count is now **10** for `Patch19_CustomBattles`. Tests: 38/38 still green.
+ShaderPrecompilation tests: 7/7 green. No new tests required — the changed code is in entry-point classes (`TaomShaderGameManager`, the Harmony patch) which are not unit-testable per ADR-008. The service-layer tests already cover the data path that feeds them.
 
-### Fix: Custom Battle NRE on faction click + diagnostic for naked commander preview (#105)
+Not-tested: live in-game verification that the new constants compile all characters within the slot budget on a real install (requires running the full 20–70 min process and inspecting `rgl_log` for `[ShaderPrecompilation] Loaded N characters` with zero `M characters skipped`).
 
-In-game test of the filter+cap commit (`0cf50ed`) surfaced two bugs:
-
-**Bug 1 (fixed in this commit) — NRE in `CustomBattleSideVM.OnCharacterSelection`.** Vanilla derefs `selector.SelectedItem.Character` without a null guard, but `SelectorVM<T>.SelectedIndex` setter fires `_onChange.Invoke(this)` even when `SelectedItem` is null (empty `ItemList` or out-of-range index). Two paths produce that state: (a) vanilla `RefreshValues` populates an empty list when `CustomBattleData.Characters` enumeration yields zero usable items, then `SelectedIndex = 1` (enemy side default) crashes; (b) re-entrancy from `_onCharacterSelected` retriggers `RefreshValues` mid-rebuild.
-
-Two-prong defense:
-- **`CustomBattleSideVM_OnCharacterSelection_Patch`** (new) — Prefix returns `false` when `selector?.SelectedItem == null`, skipping the vanilla body. Eliminates the NRE regardless of cause.
-- **`CommanderSelectorRebuilder`** (refactor) — replaced manual `Clear() + AddItem(*N) + reflection-on-_selectedIndex + SelectedIndex = 0` with vanilla `SelectorVM<T>.Refresh(items, 0, onChange)`. Vanilla Refresh is the canonical safe rebuild path (Clear → reset `_selectedIndex = -1` directly → AddItem loop → `SelectedIndex = selectedIndex`). Reads existing `_onChange` via reflection so Refresh's overwrite is a no-op on the wiring.
-
-**Bug 2 (diagnostic only — fix lands in follow-up commit) — Commander preview renders naked.** Body, head, leg, gloves, weapon slots all empty; horse loads correctly. Verified `LOTRLOME_Armory` items and TAOM `EquipmentRosters` are both registered for `CustomGame`. Code-level cause: in Campaign mode `CharacterObject.Equipment` overrides for heroes to return `HeroObject.BattleEquipment` (populated by campaign init), but in CustomGame mode lords are plain `BasicCharacterObject` reading raw `_equipmentRoster.DefaultEquipment` — any slot whose item ID failed to resolve at deserialize time stays `EquipmentElement.Invalid`. Added a one-shot equipment-slot diagnostic to `SideCommanderFilter` that logs each commander's slot resolution to `rgl_log.txt` once per culture-switch. The diagnostic output identifies the exact failing item IDs so the follow-up commit can apply a targeted fix (item ID correction / vanilla fallback equipment roster / load-order adjustment).
-
-Save-compat: UI/preview only. Safe on any save.
+Save-compat: no persistent state involved. Safe on any save. Users who previously ran the old precompilation should re-run it once after this update to pick up the previously-dropped characters.
 
 ### Fix: CareerSystem — wall-clock-precise cooldown tick + reject NaN/Infinity tuning (Codex Review 31)
 
