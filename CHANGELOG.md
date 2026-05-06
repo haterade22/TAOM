@@ -2,29 +2,27 @@
 
 ## 2026-05-04
 
-### Fix: Dunland Custom Battle commanders rendered naked — 7 broken item IDs in equipment_sets (#105 Phase 2C)
+### Fix: ShaderPrecompilation — visible per-second progress UI + initial-zero latch race (#106 follow-up)
 
-The naked-commander diagnostic shipped in `587e784` made the root cause obvious: 7 `Item.dunland_caerdh_*` IDs in `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_dunland.xml` referenced items that don't exist in `LOTRLOME_Armory/ModuleData/LOTRLOME_items/dunland/`. Verified by cross-referencing every referenced ID against the actual files. Other cultures rendered correctly; Dunland was the only one with broken refs.
+In-game test of the prior tuning fix surfaced a separate, pre-existing bug: the loading screen showed no shader-progress text at all on warm-cache machines. Tracing the patch logic against the user's `taom_debug_*.log` showed why:
 
-The `medium_c` template (used by `lord_NE7_u`, the alphabetically-first Dunland commander) was the worst — head, body, AND cape slots all referenced missing items, so the lord rendered fully naked. `medium_b` (used by `lord_NE8_s`) only missed the cape. `medium_a` (used by `lord_NE8_l`) had all valid refs.
+`LoadingScreen_ShaderProgress_Patch._lastShaderCount` is initialised to `-1` by `ResetForNewBattle()`. On the first frame the postfix runs after `IsShaderBattleActive` flips on, the engine has often not started queuing shaders yet (warm cache, fast load) — `Utilities.GetNumberOfShaderCompilationsInProgress()` returns 0. The patch then took `0 != -1` as a "change" and entered the count-zero branch, which calls `TaomShaderGameManager.ResetShaderBattleActive()` — disabling the patch before any real work arrived. Subsequent frames where the count actually rose hit the `!IsShaderBattleActive` early-return and never wrote anything to the loading screen. Net result: blank loading text for the entire compile, then the deployment phase opened. From the user's view, "all I see is a loading screen and that is it."
 
-| Broken reference | Replacement (verified to exist) |
-|---|---|
-| `dunland_caerdh_helmet_medium_a/b` | `dunland_caerdh_helmet_heavy_a/b` (no medium helmets exist) |
-| `dunland_caerdh_chainmail_medium_a/b` | `dunland_caerdh_chainmail_heavy_a/b` (no medium chainmail exists) |
-| `dunland_caerdh_pauldron__heavy_a` | `dunland_caerdh_pauldron_heavy_cape_a` (typo'd double underscore + no `pauldron__heavy` variant) |
-| `dunland_caerdh_pauldron__medium_a` | `dunland_caerdh_pauldron_heavy_fur_a` (typo'd double underscore + no medium pauldrons exist) |
-| `dunland_caerdh_bracer_elite_a` | `dunland_caerdh_bracer_heavy_a` (no elite bracer exists) |
+Added a `_hasObservedWork` flag set the first time `remaining > 0`. `ResetShaderBattleActive` is now only called when transitioning from positive to zero (true completion), not when zero is observed before any work has queued. Deep-review's data-flow agent traced the "dropped to zero after positive" path but didn't trace "starts at zero, goes positive" — same class of off-by-one as the abort-latch leak fixed earlier in this session.
 
-Each fix applies to BOTH the battle template (`dunland_bat_template_medium_*`) and the matching civilian template (`dunland_civ_template_default_*`) since they share the same broken refs.
+Also reworked the progress display so users can actually see the work happening:
 
-Note that `pauldron__elite_a` (with the double-underscore typo) is preserved — that specific item DOES exist in `LOTRLOME_Armory` with the typo. It's the only `pauldron__` form that's real; `pauldron__heavy/medium` were typo references that never had matching items.
+- Loading screen text now reads `Compiling shaders... 1234 remaining (elapsed: 2m 15s) ...` and re-writes once per second whether the count moved or not. The trailing dots cycle 1–4 each second so liveness is visible even when the compiler holds steady on a heavy material. Vanilla loading text is left intact during the pre-queue window; we only stamp ours once shaders are actually queued.
+- New `taom_debug_*.log` markers: `First shaders queued: N remaining` (when the queue first goes positive), `Progress: N remaining (elapsed: ...)` every 30 s during the run, `Compilation complete after Xm Ys` when the count returns to zero. Post-mortem grep for these confirms the precompile actually finished without needing to watch the loading screen live.
+- Throttling: text update gated to 1 Hz, file log gated to 30 s. No per-frame string allocation; constant-bounded GC pressure.
 
-A broader sweep across all `taom_equipment_sets_*.xml` files surfaced a small number of other broken refs (warg_brown/saddle in dolguldur/gundabad/isengard, sk_gd_osg_inf_chest_elite_a in gondor, rhun_round_shield_c in rhun) that don't currently impact any of the alphabetically-first 3 commanders per culture. Tracked for follow-up.
+Stuck detection unchanged — still fires only when `remaining <= StuckTailRemainingMax` and the count has held steady past `StuckAbortSeconds` (600 s). The 1 Hz update means the "stuck Ns, aborting in Ms" warning text stays current to within one second.
 
-This is the Phase 2C fix promised in commit `a9e0bba`. The temporary diagnostic in `SideCommanderFilter.LogEquipmentDiagnosticOnce` should be reverted in the next commit now that the data issue is resolved — but keeping it in for one more in-game pass to confirm no remaining INVALID slots before removal.
+Single-file change, [LoadingScreen_ShaderProgress_Patch.cs](Main/Features/ShaderPrecompilation/Hooks/LoadingScreen_ShaderProgress_Patch.cs); no service-layer impact, no new tests required (entry-point per ADR-008).
 
-Save-compat: data-only XML edit. Equipment refs change at character load. Safe on any save.
+Not-tested: live in-game verification of the new text appearing during a precompile run (next launch).
+
+Save-compat: no persistent state. Safe on any save.
 
 ### Fix: ShaderPrecompilation — eliminate silent character drop + relax premature stuck-abort (#106, follow-up to #57)
 
