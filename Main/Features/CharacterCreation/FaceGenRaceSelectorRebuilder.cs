@@ -33,6 +33,18 @@ public static class FaceGenRaceSelectorRebuilder
     private static FieldInfo _selectorVmSelectedItemField;
     private static FieldInfo _selectorVmOnChangeField;
 
+    // Per-VM session state. Lets us detect "first Apply for this culture" so we can default
+    // to cultures.json Races[0] instead of preserving the engine-default _selectedRace
+    // (which is 0/human regardless of culture). Subsequent Refresh(true) calls within the
+    // same culture preserve the player's actual choice.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<FaceGenVM, RaceFilterSession> _sessions
+        = new System.Runtime.CompilerServices.ConditionalWeakTable<FaceGenVM, RaceFilterSession>();
+
+    private class RaceFilterSession
+    {
+        public string LastAppliedCultureId;
+    }
+
     public static void Apply(FaceGenVM faceGenVM, ICultureRaceFilterService filterService)
     {
         if (faceGenVM == null || filterService == null) return;
@@ -57,9 +69,14 @@ public static class FaceGenRaceSelectorRebuilder
         var currentSelector = faceGenVM.RaceSelector;
         if (currentSelector == null) return;
 
+        var session = _sessions.GetOrCreateValue(faceGenVM);
+        bool firstApplyForThisCulture = !string.Equals(
+            session.LastAppliedCultureId, cultureId, StringComparison.OrdinalIgnoreCase);
+        session.LastAppliedCultureId = cultureId;
+
         int currentGlobalRace = (int)_selectedRaceField.GetValue(faceGenVM);
         int filteredSelected = MapGlobalIndexToFiltered(currentGlobalRace, globalIndices);
-        bool needToSwitchRace = filteredSelected < 0;
+        bool needToSwitchRace = ShouldForceSwitchToDefault(filteredSelected, firstApplyForThisCulture);
         if (needToSwitchRace) filteredSelected = 0;
 
         var vanillaOnChange = (Action<SelectorVM<SelectorItemVM>>)_selectorVmOnChangeField.GetValue(currentSelector);
@@ -80,6 +97,23 @@ public static class FaceGenRaceSelectorRebuilder
             try { wrapped(newSelector); }
             finally { _inForceSwitch = false; }
         }
+    }
+
+    /// <summary>
+    /// Pure helper: decides whether the dropdown should snap to filtered position 0 (Races[0])
+    /// rather than preserving the player's current race selection. Force-switch happens when:
+    /// (a) the current race is not in the culture's allow-list (e.g., player switched culture
+    /// from Mordor to Erebor with uruk still selected), OR
+    /// (b) this is the first Apply for the active culture AND the player's current race is not
+    /// already at filtered position 0 (i.e., the engine-default `_selectedRace = 0` lands the
+    /// player on a non-canonical race because human happens to be in the allow-list).
+    /// Subsequent Apply calls on the same culture preserve the player's choice.
+    /// </summary>
+    public static bool ShouldForceSwitchToDefault(int currentFilteredIdx, bool firstApplyForThisCulture)
+    {
+        bool currentRaceNotAllowed = currentFilteredIdx < 0;
+        bool currentRaceNotDefault = currentFilteredIdx != 0;
+        return currentRaceNotAllowed || (firstApplyForThisCulture && currentRaceNotDefault);
     }
 
     /// <summary>

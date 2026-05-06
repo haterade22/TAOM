@@ -155,6 +155,51 @@ public class FaceGenRaceSelectorRebuilderTests
     }
 
     [TestMethod]
+    public void ShouldForceSwitchToDefault_CurrentRaceNotAllowed_AlwaysSwitches()
+    {
+        // filteredIdx == -1 means the player's current global race isn't in the allow-list
+        // (e.g., switched culture from Mordor[uruk] to Erebor[dwarf] with uruk still selected)
+        Assert.IsTrue(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(-1, firstApplyForThisCulture: false));
+        Assert.IsTrue(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(-1, firstApplyForThisCulture: true));
+    }
+
+    [TestMethod]
+    public void ShouldForceSwitchToDefault_FirstApply_NonDefaultRace_Switches()
+    {
+        // Regression: Isengard opens with _selectedRace = 0 (engine default = human).
+        // Allow-list = [uruk_hai, berserker, human]. MapGlobalIndexToFiltered returns 2
+        // (human's filtered position). On the first Apply for Isengard we want to snap
+        // to filtered position 0 (uruk_hai), not preserve human.
+        Assert.IsTrue(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(
+            currentFilteredIdx: 2, firstApplyForThisCulture: true));
+        Assert.IsTrue(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(
+            currentFilteredIdx: 1, firstApplyForThisCulture: true));
+    }
+
+    [TestMethod]
+    public void ShouldForceSwitchToDefault_FirstApply_AlreadyDefault_NoSwitch()
+    {
+        // First Apply but the player is already on filtered position 0 (Races[0]).
+        // No switch needed — avoids a wasteful recursive Refresh.
+        Assert.IsFalse(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(
+            currentFilteredIdx: 0, firstApplyForThisCulture: true));
+    }
+
+    [TestMethod]
+    public void ShouldForceSwitchToDefault_SubsequentApply_PreservesPlayerChoice()
+    {
+        // After the first Apply, the player has explicitly engaged the dropdown (or it
+        // was force-switched). Subsequent Apply calls (e.g., gender change → Refresh(true))
+        // must NOT override the player's selected race.
+        Assert.IsFalse(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(
+            currentFilteredIdx: 0, firstApplyForThisCulture: false));
+        Assert.IsFalse(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(
+            currentFilteredIdx: 1, firstApplyForThisCulture: false));
+        Assert.IsFalse(FaceGenRaceSelectorRebuilder.ShouldForceSwitchToDefault(
+            currentFilteredIdx: 2, firstApplyForThisCulture: false));
+    }
+
+    [TestMethod]
     public void RoundTrip_FilteredToGlobalAndBack_IsIdentity()
     {
         var allRaces = new[] { "human", "dwarf", "uruk", "elf", "orc" };
