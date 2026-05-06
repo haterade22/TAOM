@@ -2,6 +2,41 @@
 
 ## 2026-05-06
 
+### Fix: CCBodyProperties — body never visible in-game (regression from review fix #2)
+
+In-game testing showed the configured culture body never reached the FaceGen preview — the player saw the vanilla starting silhouette regardless of which culture they selected. Logs confirmed the patch fired correctly (`Faction confirmed: Kingdom of Rohan -> Rohirrim` followed immediately by `CCBodyPropertiesProvider: Loaded 1 culture body-property entries` and `CCBodyPropertiesService: applied culture body for 'vlandia'`), so the chain Provider → Service → Adapter was intact. The break was at the engine boundary: `CharacterObject.UpdatePlayerCharacterBodyProperties` is fully no-op'd when its internal guard (`if (IsPlayerCharacter && IsHero)`) does not pass.
+
+Per `ilspycmd` against installed v1.3.15 `TaleWorlds.CampaignSystem.dll`, the `CharacterObject` override is:
+
+```csharp
+public override void UpdatePlayerCharacterBodyProperties(BodyProperties properties, int race, bool isFemale)
+{
+    if (IsPlayerCharacter && IsHero)   // ← entire body wrapped
+    {
+        HeroObject.StaticBodyProperties = properties.StaticProperties;
+        HeroObject.Weight = properties.Weight;
+        HeroObject.Build = properties.Build;
+        base.Race = race;
+        HeroObject.IsFemale = isFemale;
+        CampaignEventDispatcher.Instance.OnPlayerBodyPropertiesChanged();
+    }
+}
+```
+
+Note the override does NOT call base, so when the guard fails, `BodyPropertyRange.Init(properties, properties)` from `BasicCharacterObject` also does not run. Result: nothing changes anywhere.
+
+The original adapter wrote `Hero.MainHero.StaticBodyProperties / Weight / Build` directly AS WELL as calling `UpdatePlayerCharacterBodyProperties` — those direct writes were the safety net that made the feature work in scenarios where the guard fails. Review fix #2 removed them as "redundant" based on a deep-review Agent 2 finding that quoted the override's body without the wrapping guard. The 3 lines were not redundant — they were the actual mechanism.
+
+Restored the 3 direct Hero scalar writes in [PlayerBodyPropertiesAdapter.cs](Main/Adapters/PlayerBodyPropertiesAdapter.cs), with a comment explaining why: "CharacterObject.UpdatePlayerCharacterBodyProperties is gated by `if (IsPlayerCharacter && IsHero)` … the override no-ops silently. Always write Hero.MainHero scalars directly so Hero.BodyProperties returns the configured key regardless of guard state. Calling the override second gives us OnPlayerBodyPropertiesChanged when the guard does pass." Two-step pattern: direct writes first (always work), then `UpdatePlayerCharacterBodyProperties` (fires event when guard passes).
+
+`Hero.BodyProperties` is computed: `new BodyProperties(new DynamicBodyProperties(Age, Weight, Build), StaticBodyProperties)`. `CharacterObject` (when `IsHero == true`) overrides `GetBodyPropertiesMin / Max` to return `HeroObject.BodyProperties`, so FaceGen reads through to our written scalars. No reliance on `BodyPropertyRange.Init` having fired.
+
+This is the **same systemic pattern** as `feedback_taleworlds_vm_setter_decompile.md` (decompile the SETTER BODY, not just signature; vanilla guards mask call-site assumptions). The memory file has been updated with this case as a method-level analogue of the property-setter case it already documents. The deep-review skill quoted only the body content, not the wrapping guard — Agent 2's verification was incomplete in a way that survived the human-readable review.
+
+Build green, 1294/1294 tests pass. The adapter is intentionally untested (thin engine wrapper); verification for this fix is in-game only — start a new CC, pick the culture configured in `cc_body_properties.xml`, advance to FaceGen, confirm the silhouette matches the body key.
+
+Constraint: TaleWorlds engine guards are invisible at the API surface. Decompile-body discipline is the only defense.
+
 ### Feat: CharacterCreation — per-culture default BodyProperties on the CC screen (XML-driven)
 
 When the player picks a culture during Character Creation, the player-character preview now adopts a TAOM-defined `BodyProperties` key string for that culture instead of the vanilla random-within-min/max default. The body re-applies on every culture change, mirroring vanilla's "switch culture resets body" mental model. Cultures not configured fall back to vanilla behavior with no errors.
