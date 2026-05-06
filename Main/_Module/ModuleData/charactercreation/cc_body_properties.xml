@@ -10,7 +10,7 @@
   - Paste the BodyProperties XML element exactly as produced by the in-game
     BodyProperties.ToString() (or copied from a save / face-customizer export).
   - The key must be exactly 128 hex characters; otherwise the entry is skipped
-    with a warning in rgl_log.txt.
+    with a warning in taom_debug_*.log.
   - Optional weight / build attributes on <BodyProperties .../> are honoured if
     present; absent values default to weight=0 build=0 (vanilla parser default).
   - The `age` attribute is parsed by vanilla but NOT applied to the player —
@@ -21,17 +21,120 @@
     not just reloading a save.
 
   TAOM culture-id reference (see spcultures.xslt + taom_spcultures.xml):
-    vlandia    → Rohan (XSLT-modified vanilla Vlandia)
-    empire     → Dunland (XSLT-modified vanilla Empire)
-    battania   → Khand (XSLT-modified vanilla Battania)
-    aserai     → Harad
-    sturgia    → Barding
-    khuzait    → Rhun
+    vlandia    → Rohan        (XSLT-modified vanilla Vlandia)
+    empire     → Dunland      (XSLT-modified vanilla Empire)
+    battania   → Khand        (XSLT-modified vanilla Battania)
+    aserai     → Harad        (XSLT-modified vanilla Aserai)
+    sturgia    → Barding      (XSLT-modified vanilla Sturgia)
+    khuzait   → Rhun         (XSLT-modified vanilla Khuzait)
     mordor, gondor, erebor, mirkwood, lothlorien, rivendell,
-    dol_guldur, gundabad, isengard, umbar, dale     → TAOM custom cultures
+    dolguldur, gundabad, isengard, umbar, dale     → TAOM custom cultures
 -->
 <CCBodyProperties>
+
+  <!-- ============================================================ -->
+  <!-- Free Peoples — Human kingdoms                                -->
+  <!-- ============================================================ -->
+
+  <!-- Rohan (XSLT culture id: vlandia) -->
   <Culture id="vlandia">
-    <BodyProperties version="4" key="0005280140001242947E068A709500460C7250703EB70F135C85021887733A070089B6030822BA9000000000000000000000000000000000000000003F1C7002" />
+    <BodyProperties version="4" age="24" weight="0.5139" build="0.6435" key="0005280140001242947E068A709500460C7250703EB70F135C85021887733A070089B6030822BA9000000000000000000000000000000000000000003F1C7002" />
   </Culture>
+
+  <!-- Gondor (TAOM custom) -->
+  <Culture id="gondor">
+    <BodyProperties version="4" age="30.16" weight="0" build="0.7222" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002" />
+  </Culture>
+
+  <!-- Dale (TAOM custom — generic human silhouette) -->
+  <Culture id="dale">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+
+  <!-- Barding / Dale-XSLT (XSLT culture id: sturgia) — generic human silhouette -->
+  <Culture id="sturgia">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+
+  <!-- ============================================================ -->
+  <!-- Free Peoples — Elves (all elves use the same ElfBodyProp)    -->
+  <!-- ============================================================ -->
+
+  <!-- Rivendell (TAOM custom) -->
+  <Culture id="rivendell">
+    <BodyProperties version="4" age="252.01" weight="0.0232" build="0.5347" key="0000000000001002A176D4898E738CA650877795A7F87E8818080FEE8677771800F806030FE10EFE000000000000000000000000000000000000000045F40144" />
+  </Culture>
+
+  <!-- Lothlorien (TAOM custom) -->
+  <Culture id="lothlorien">
+    <BodyProperties version="4" age="252.01" weight="0.0232" build="0.5347" key="0000000000001002A176D4898E738CA650877795A7F87E8818080FEE8677771800F806030FE10EFE000000000000000000000000000000000000000045F40144" />
+  </Culture>
+
+  <!-- Mirkwood (TAOM custom) -->
+  <Culture id="mirkwood">
+    <BodyProperties version="4" age="252.01" weight="0.0232" build="0.5347" key="0000000000001002A176D4898E738CA650877795A7F87E8818080FEE8677771800F806030FE10EFE000000000000000000000000000000000000000045F40144" />
+  </Culture>
+
+  <!-- ============================================================ -->
+  <!-- Free Peoples — Dwarves                                       -->
+  <!-- ============================================================ -->
+
+  <!-- Erebor (TAOM custom) -->
+  <Culture id="erebor">
+    <BodyProperties version="4" age="26.01" weight="0.5648" build="0.5347" key="000004000000300008801FFEFF8F0FF0109588878FF88067888878888D3010F30088860308FFF0AE000000000000000000000000000000000000000043040140" />
+  </Culture>
+
+  <!-- ============================================================ -->
+  <!-- Men of the East / South                                      -->
+  <!-- ============================================================ -->
+
+  <!-- Harad (XSLT culture id: aserai) -->
+  <Culture id="aserai">
+    <BodyProperties version="4" age="28.09" weight="0.7425" build="0.7299" key="0034FC0FC0003A5ADFEEEFEFEEEEFFFFEFF8FFEEFF88FFFFFFFFFFEF8EFEFFFE07BB90780BEEEFFF00000000000000000000000000000000000000006F809105" />
+  </Culture>
+
+  <!-- Rhun (XSLT culture id: khuzait) -->
+  <Culture id="khuzait">
+    <BodyProperties version="4" age="26.01" weight="0.2709" build="0.2384" key="001BD80D80FC34028771188F38770F887CE7887788888888888888888388E66800844603088888880000000000000000000000000000000000000000430C9142" />
+  </Culture>
+
+  <!-- Khand (XSLT culture id: battania) — generic human silhouette -->
+  <Culture id="battania">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+
+  <!-- Umbar (TAOM custom) — generic human silhouette -->
+  <Culture id="umbar">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+
+  <!-- Dunland (XSLT culture id: empire) -->
+  <Culture id="empire">
+    <BodyProperties version="4" age="24.01" weight="0.5139" build="0.6435" key="0008F006CAFC1A54878F1FFF4F9F1EEE7F018877888888888888888F7718F5F5008A8603088888880000000000000000000000000000000000000000431C4142" />
+  </Culture>
+
+  <!-- ============================================================ -->
+  <!-- Servants of the Enemy                                        -->
+  <!-- ============================================================ -->
+
+  <!-- Mordor (TAOM custom) — generic human silhouette (orcs/uruks/humans share base) -->
+  <Culture id="mordor">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+
+  <!-- Isengard (TAOM custom) — generic human silhouette -->
+  <Culture id="isengard">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+
+  <!-- Gundabad (TAOM custom) -->
+  <Culture id="gundabad">
+    <BodyProperties version="4" age="30.01" weight="0.7109" build="0.543" key="00003C08C0441000EF8819F83BEFEFFFFFFE86877F87EFFFFEFFFEFF7FFFFEFF00F8B6030FFFEFFF00000000000000000000000000000000000000001BFC0000" />
+  </Culture>
+
+  <!-- Dol Guldur (TAOM custom) -->
+  <Culture id="dolguldur">
+    <BodyProperties version="4" age="25.01" weight="0.3426" build="0.3125" key="0009F00FC00000008777887188868877777788778888888888888888888878880085560308888888000000000000000000000000000000000000000043040140" />
+  </Culture>
+
 </CCBodyProperties>

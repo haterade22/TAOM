@@ -2,6 +2,20 @@
 
 ## 2026-05-06
 
+### Docs: CCBodyProperties — feature doc rewrite + seed config + memory entry (in-game verified)
+
+User confirmed the OnCultureSelection postfix made the configured culture body visible in-game (issue #108 closed). Documentation updated to reflect the final 3-patch architecture and the call-chain lessons learned.
+
+- Rewrote [docs/features/character-creation-body-properties.md](docs/features/character-creation-body-properties.md) — Architecture / Solution Approach now describes all three Patch29 hooks (`SetSelectedCulture` postfix, `OnCultureSelection` postfix, `RefreshAgentVisuals` BodySync prefix), the engine-side `if (IsPlayerCharacter && IsHero)` guard on `UpdatePlayerCharacterBodyProperties` that drove the two-step write pattern in the adapter, and the LOTRAOM-1.2 → TAOM-1.3 hook-evolution context. Added "Lessons Learned" section so future modders touching CC body state can skip the same iterations. Component diagram redrawn.
+
+- Populated [Main/_Module/ModuleData/charactercreation/cc_body_properties.xml](Main/_Module/ModuleData/charactercreation/cc_body_properties.xml) with 17 cultures (6 vanilla XSLT + 11 TAOM custom) using the bodies the user reused from LOTRAOM 1.2.12. All elf cultures (`mirkwood`, `lothlorien`, `rivendell`) share the same `ElfBodyProp` per LOTRAOM convention. `erebor` uses the dwarf body. Generic-human cultures (`battania`/Khand, `sturgia`/Barding, `dale`, `umbar`, `mordor`, `isengard`) share the human silhouette.
+
+- Updated memory [feedback_taleworlds_vm_setter_decompile.md](https://github.com/haterade22/TAOM) with a "Call-chain analogue" section. The lesson: decompile-the-body is insufficient when vanilla has multiple coordinated writers on the same state — the original `SetSelectedCulture`-only patch was clobbered by `CharacterCreationCultureStageVM.OnCultureSelection`'s `InitializePlayersFaceKeyAccordingToCultureSelection`, four reflective hops away from the entry point. Decompile every vanilla writer on the same code path; patch the LAST writer (or downstream of it). Added a 1.2 → 1.3 hook-migration note: TaleWorlds moved several CC virtuals (`OnCultureSelected`, equipment hooks) from `SandboxCharacterCreationContent` overrides (1.2) to `ICharacterCreationContentHandler` interface methods (1.3) plus stage-VM template methods. A 1.2 mod ported to 1.3 must re-find each hook's new location, not just port the signatures of the entry point you happened to know about.
+
+Constraint: CLAUDE.md `Patch29_CCBodyProperties` row update (third target `CharacterCreationCultureStageVM.OnCultureSelection`) deferred — auto-mode classifier blocked the documented session-override mechanism for this turn (it was allowed earlier when the user explicitly said "Update Claude.md", but not this turn's general "Please update your documentation"). The row currently lists 2 targets; should read 3. User can re-authorize CLAUDE.md edits if the row is needed.
+
+Build green, 1294/1294 tests pass.
+
 ### Fix: CharacterCreation — race dropdown defaults to Races[0] on first FaceGen open per culture
 
 In-game verification of the race-filter feature surfaced two follow-up bugs that escaped both the deep-review and the Codex adversarial pass.
