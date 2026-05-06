@@ -106,16 +106,27 @@ public static class FaceGenRaceSelectorRebuilder
     }
 
     /// <summary>
-    /// Pure helper: builds the filtered → global index map by intersecting the engine's
-    /// race list with the allow-list (case-insensitive).
+    /// Pure helper: builds the filtered → global index map. Iterates the allow-list (config order)
+    /// and resolves each name to the engine's global race index. Result preserves the order in
+    /// cultures.json `races[]` so the dropdown shows the culture-canonical race first
+    /// (e.g., Mordor → uruk, then orc, then human — not human first because the engine puts
+    /// human at index 0). Names not present in the engine's race list are skipped silently.
+    /// Comparison is case-insensitive.
     /// </summary>
     public static IReadOnlyList<int> BuildGlobalIndexMap(string[] allRaces, IReadOnlyList<string> allowed)
     {
         var map = new List<int>(allowed?.Count ?? 0);
         if (allRaces == null || allowed == null || allowed.Count == 0) return map;
-        var allowedSet = new HashSet<string>(allowed, StringComparer.OrdinalIgnoreCase);
+
+        var engineLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         for (int i = 0; i < allRaces.Length; i++)
-            if (allowedSet.Contains(allRaces[i])) map.Add(i);
+            engineLookup[allRaces[i]] = i;
+
+        for (int i = 0; i < allowed.Count; i++)
+        {
+            if (engineLookup.TryGetValue(allowed[i], out int globalIdx))
+                map.Add(globalIdx);
+        }
         return map;
     }
 

@@ -8,25 +8,59 @@ namespace TAOM.Tests.Features.CharacterCreation;
 public class FaceGenRaceSelectorRebuilderTests
 {
     [TestMethod]
-    public void BuildGlobalIndexMap_AllowedSubset_ReturnsCorrectGlobalIndices()
+    public void BuildGlobalIndexMap_AllowedSubset_PreservesAllowedOrder()
     {
         var allRaces = new[] { "human", "dwarf", "uruk", "elf", "orc" };
         var allowed = new[] { "elf", "human" };
 
         var result = FaceGenRaceSelectorRebuilder.BuildGlobalIndexMap(allRaces, allowed);
 
-        CollectionAssert.AreEqual(new[] { 0, 3 }, (System.Collections.ICollection)result);
+        // elf (engine idx 3) first, human (engine idx 0) second — matches cultures.json order,
+        // NOT engine order (which would put human at index 0 first).
+        CollectionAssert.AreEqual(new[] { 3, 0 }, (System.Collections.ICollection)result);
     }
 
     [TestMethod]
-    public void BuildGlobalIndexMap_PreservesEngineOrder_NotAllowedOrder()
+    public void BuildGlobalIndexMap_PreservesAllowedOrder_NotEngineOrder()
     {
         var allRaces = new[] { "human", "dwarf", "uruk", "elf" };
         var allowed = new[] { "elf", "human", "dwarf" };
 
         var result = FaceGenRaceSelectorRebuilder.BuildGlobalIndexMap(allRaces, allowed);
 
-        CollectionAssert.AreEqual(new[] { 0, 1, 3 }, (System.Collections.ICollection)result);
+        // Result follows the allow-list (config) order, not engine order
+        CollectionAssert.AreEqual(new[] { 3, 0, 1 }, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void BuildGlobalIndexMap_Mordor_UrukFirstNotHuman()
+    {
+        // Regression: in the first shipped version, BuildGlobalIndexMap iterated allRaces and
+        // added entries when present in `allowed`. Engine puts `human` at index 0, so the result
+        // was `[0, ...]` and the dropdown showed human FIRST despite cultures.json listing uruk
+        // first. The fix iterates the allow-list (config order) and resolves each name to its
+        // engine index, preserving the user's intended default-race-per-culture.
+        var allRaces = new[] { "human", "dwarf", "uruk", "orc", "elf", "goblin" };
+        var allowed = new[] { "uruk", "orc", "human" };
+
+        var result = FaceGenRaceSelectorRebuilder.BuildGlobalIndexMap(allRaces, allowed);
+
+        CollectionAssert.AreEqual(new[] { 2, 3, 0 }, (System.Collections.ICollection)result);
+        Assert.AreEqual(2, result[0],
+            "First filtered position must be uruk (engine idx 2), not human (idx 0)");
+    }
+
+    [TestMethod]
+    public void BuildGlobalIndexMap_Isengard_UrukHaiBerserkerHumanInThatOrder()
+    {
+        // Sister regression: Isengard's allow-list is ["uruk_hai", "berserker", "human"].
+        // Engine ordering puts human at 0; a naive intersect would surface human first.
+        var allRaces = new[] { "human", "dwarf", "uruk", "uruk_hai", "berserker", "orc" };
+        var allowed = new[] { "uruk_hai", "berserker", "human" };
+
+        var result = FaceGenRaceSelectorRebuilder.BuildGlobalIndexMap(allRaces, allowed);
+
+        CollectionAssert.AreEqual(new[] { 3, 4, 0 }, (System.Collections.ICollection)result);
     }
 
     [TestMethod]
