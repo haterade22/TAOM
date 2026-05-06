@@ -179,14 +179,43 @@ User clicks filtered position N
       restore s._selectedIndex = saved
 ```
 
-### Force-switch on culture mismatch
-If `_selectedRace` is not in the allowed set for the active culture (e.g., dice-roll defaulted to human but the player picked Erebor), the postfix invokes the wrapped onChange once with the new SelectorVM to force a switch to the first allowed race. A `[ThreadStatic]` recursion guard prevents the downstream `Refresh(true)` from looping.
+### Dropdown order follows cultures.json, not engine order
+
+`BuildGlobalIndexMap` iterates the **allow-list** (config order) and resolves each race name to its position in the engine's `FaceGen.GetRaceNames()` array. The result is a `globalIndices: List<int>` whose order matches the user's `races[]` config — `[uruk, orc, human]` → `[engineIdxOfUruk, engineIdxOfOrc, engineIdxOfHuman]`. This is what makes the dropdown show `uruk` in position 1 for Mordor instead of `human` (engine puts human at index 0).
+
+### Force-switch logic ([`ShouldForceSwitchToDefault`](../../Main/Features/CharacterCreation/FaceGenRaceSelectorRebuilder.cs))
+
+The rebuilder force-switches the dropdown to filtered position 0 (`Races[0]`) under two conditions:
+
+| Trigger | Behavior | Example |
+|---------|----------|---------|
+| `_selectedRace` is **not in** the culture's allow-list | Always switch | Player switched culture from Mordor (uruk) to Erebor (dwarf only) — uruk no longer allowed → switch to dwarf |
+| **First Apply for a culture** AND `_selectedRace` is in the allow-list but NOT at position 0 | Switch to Races[0] | Player picks Isengard culture in narrative menus; vanilla initializes `_selectedRace = 0` (human, the engine default); human IS in Isengard's allow-list at filtered position 2; dropdown would otherwise default to human → switch to uruk_hai |
+| Subsequent Apply (gender/age refresh) on the same culture | Preserve player's selection | Player chose berserker for Isengard; gender change triggers `Refresh(true)` → no switch, berserker stays |
+
+Per-`FaceGenVM`-instance session tracking via `ConditionalWeakTable<FaceGenVM, RaceFilterSession>` records the last applied culture id. Switching culture mid-CC re-triggers "first Apply for this culture" → resets to the new Races[0]. A `[ThreadStatic]` recursion guard on the force-switch path prevents the downstream `Refresh(true)` from looping.
+
+### Index-translation flow
+```
+User clicks filtered position N
+  → SelectorVM.SelectedIndex setter fires (= N)
+  → wrapped _onChange (our wrapper):
+      saved = N
+      mutate s._selectedIndex = globalIndices[N]   (via reflection, bypassing setter)
+      call vanilla OnSelectRace(s):
+          _selectedRace = s.SelectedIndex          (= globalIndices[N], correct global race ID)
+          UpdateRaceAndGenderBasedResources()
+              → UpdateFace(-20, _selectedRace) → SetRaceGenderAndAdjustParams updates _faceGenerationParams.CurrentRace
+          Refresh(true) → rebuilds vanilla RaceSelector at line 1925 → our Postfix re-applies filter
+      restore s._selectedIndex = saved
+```
 
 ### Configuration
 - File: [`Main/_Module/ModuleData/charactercreation/cultures.json`](../../Main/_Module/ModuleData/charactercreation/cultures.json)
 - Per-culture entry: `"races": ["race_id_1", "race_id_2", ...]`
+- **Order matters:** the first race in the array is the canonical default for that culture. Mordor's `["uruk", "orc", "human"]` defaults to uruk on first FaceGen open; Isengard's `["uruk_hai", "berserker", "human"]` defaults to uruk_hai.
 - Reload scope: read once at the first `LoadCultures()` call by `CultureCreationDataProvider` (`Reuse.Singleton`). **Edits to cultures.json require a full Bannerlord restart**, not a save-load.
-- Adding a new race: add the race ID to the `races` array of every culture that should permit it.
+- Adding a new race: add the race ID to the `races` array of every culture that should permit it. Position determines whether it becomes the new default.
 - Adding a new culture: add a culture entry with `culture_id` and `races` array. If `races` is empty or the culture is unknown, the filter falls back to showing all races (with a one-time warning per culture in the log).
 
 ### Current allow-lists (as of 2026-05-06)

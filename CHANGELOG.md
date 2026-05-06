@@ -2,6 +2,24 @@
 
 ## 2026-05-06
 
+### Fix: CharacterCreation — race dropdown defaults to Races[0] on first FaceGen open per culture
+
+In-game verification of the race-filter feature surfaced two follow-up bugs that escaped both the deep-review and the Codex adversarial pass.
+
+**Bug 1: dropdown order followed engine order, not config order.** [`FaceGenRaceSelectorRebuilder.BuildGlobalIndexMap`](Main/Features/CharacterCreation/FaceGenRaceSelectorRebuilder.cs) iterated `allRaces` (the engine's `FaceGen.GetRaceNames()` array) and added entries when present in the allow-list. Engine ordering puts `human` at index 0, so for cultures whose allow-list also contains `human` (Mordor, Isengard, Gundabad, Dol Guldur, the elven cultures), the resulting `globalIndices` map started with the engine's first match — `human` — even though `cultures.json` listed the lore-canonical race first. The dropdown surfaced human in position 1 of the visible list.
+
+**Bug 2: dropdown defaulted to human even after the order was fixed.** Vanilla `FaceGenVM.Refresh(bool)` line 1779 sets `_selectedRace = _faceGenerationParams.CurrentRace`, which the engine initializes to `0` (human) regardless of culture. For Isengard's allow-list `[uruk_hai, berserker, human]`, `MapGlobalIndexToFiltered(0, [...])` correctly resolved to filtered position 2 (human). The original force-switch logic only fired when the current race was *not* in the allow-list — but human IS in Isengard's allow-list, so no switch happened, and the dropdown header showed human even though the user expected uruk_hai (Races[0]) as the default.
+
+**Fix 1 (commit `2ccbdfc`):** `BuildGlobalIndexMap` now iterates the **allow-list** (config order) and resolves each name to its engine index via a name → index dictionary. Result preserves cultures.json order. Two existing rebuilder tests had their expectations flipped from engine-order to allowed-order; two new regression tests pin Mordor and Isengard specifically.
+
+**Fix 2 (commit `896ace5`):** Per-`FaceGenVM`-instance session tracking via `ConditionalWeakTable<FaceGenVM, RaceFilterSession>` records the last applied culture id. On the first Apply for a given culture, force-switch to filtered position 0 (Races[0]) when the current race isn't already there. Subsequent Apply calls (gender/age changes that trigger `Refresh(true)`) preserve the player's selection. Decision logic extracted into pure helper [`ShouldForceSwitchToDefault(currentFilteredIdx, firstApplyForThisCulture)`](Main/Features/CharacterCreation/FaceGenRaceSelectorRebuilder.cs) for testability — four new tests cover not-allowed-always-switch, first-apply-non-default-switches, first-apply-already-default-no-op, subsequent-apply-preserves.
+
+In-game verified: Isengard now defaults to `uruk_hai`, Mordor to `uruk`, Gundabad to `pale_uruk`, Dol Guldur to `dg_uruk`, the elven cultures to `elf`. Player race choice persists across mid-CC navigation; switching culture resets to the new culture's Races[0].
+
+1294 / 1294 tests passing (was 1288 before these two fixes).
+
+Why review missed it: data-flow agent traced `_selectedRace` through `Refresh → 1779 → MapGlobalIndexToFiltered` and saw the human value resolve cleanly to a valid filtered position — that's the success path. The agent did not enumerate "what does the player *expect* the default to be?" against "what does the engine initialize to?". Codex did decompile `FaceGenVM.Refresh` but flagged a different issue (the OnPropertyChangedWithValue reflection bug). Both reviewers verified mechanical correctness; neither traced default-state expectations to UX outcome. Memory entry [feedback_filter_order_and_default.md](../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_filter_order_and_default.md) codifies the lesson for future sessions.
+
 ### Fix: CCBodyProperties — body never visible in-game (regression from review fix #2)
 
 In-game testing showed the configured culture body never reached the FaceGen preview — the player saw the vanilla starting silhouette regardless of which culture they selected. Logs confirmed the patch fired correctly (`Faction confirmed: Kingdom of Rohan -> Rohirrim` followed immediately by `CCBodyPropertiesProvider: Loaded 1 culture body-property entries` and `CCBodyPropertiesService: applied culture body for 'vlandia'`), so the chain Provider → Service → Adapter was intact. The break was at the engine boundary: `CharacterObject.UpdatePlayerCharacterBodyProperties` is fully no-op'd when its internal guard (`if (IsPlayerCharacter && IsHero)`) does not pass.
