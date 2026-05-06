@@ -239,6 +239,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | SettlementGuards config | `Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml` (per-settlement guard pools, clan/culture fallbacks, spear mappings) |
 | NamedCompanions config | `Main/_Module/ModuleData/named_companions/` (companion defs XML, spawn config JSON, backstory strings XML) |
 | StartupResources config | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` |
+| CCBodyProperties config | `Main/_Module/ModuleData/charactercreation/cc_body_properties.xml` (per-culture default BodyProperties for CC preview; 128-hex key per culture) |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | Decompiled source | `E:\Decompiled_Bannerlord\` (pre-decompiled, organized by category) |
 | CI/CD | `.github/workflows/build.yml` |
@@ -304,7 +305,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `Patch6_BannerEditor` | Banner editor | Various |
 | `Patch7_FactionMap` | Faction map | Various |
 | `Patch8_SiegeCampGuard` | Siege camp guard | Various |
-| `Patch9_RaceFilter` | Race filter | Various |
+| `Patch9_RaceFilter` | Culture-restricted race dropdown on CC | `FaceGenVM.Refresh` |
 | `Patch10_WeatherBoundsGuard` | Weather bounds clamping | `DefaultMapWeatherModel` |
 | `Patch11_Diplomacy` | Diplomacy system | Various |
 | `Patch12_WarOfTheRing` | War of the Ring | Various |
@@ -322,6 +323,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` |
 | `Patch27_CareerSystem` | Career screen opening + ability V-key activation (3 archetypes: Infantry/Ranged/Cavalry, 50 careers, XML-tunable) | `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats` |
 | `Patch28_SettlementGuards` | Per-settlement guard troop injection + per-culture spear mapping (manual patches) | `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual) |
+| `Patch29_CCBodyProperties` | Per-culture default BodyProperties on CC screen + career menu player body sync | `CharacterCreationContent.SetSelectedCulture`, `CharacterCreationNarrativeStageView.RefreshAgentVisuals` |
 
 ## Codex Integration
 

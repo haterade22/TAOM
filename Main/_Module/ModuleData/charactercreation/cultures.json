@@ -11,7 +11,7 @@
   },
   {
     "culture_id": "mordor",
-    "races": ["uruk", "goblin", "orc", "human"],
+    "races": ["uruk", "orc", "human"],
     "starting_settlement": "town_ES1",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -61,7 +61,7 @@
   },
   {
     "culture_id": "isengard",
-    "races": ["uruk_hai", "berserker", "human", "saruman"],
+    "races": ["uruk_hai", "berserker", "human"],
     "starting_settlement": "town_isengard",
     "default_age": 20.0,
     "default_weight": 0.5417,

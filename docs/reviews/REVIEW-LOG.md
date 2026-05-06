@@ -607,3 +607,28 @@ P3 (LOW): The Phase 2A equipment-slot diagnostic wrapped per-commander reads in 
 - `dotnet build Main/TAOM.csproj` — clean.
 - `dotnet test --filter CustomBattles` — 38/38 passing (no test changes; defensive Prefixes are entry-point-tier per ADR-008).
 
+
+### Review 33 — CharacterCreation Race Filter (Patch9_RaceFilter re-implementation)
+
+Adversarial review of the new culture-restricted race-dropdown feature: filter service, FaceGenVM rebuilder (reflection-heavy), and `SetPlayerRace` finalize logic. Codex returned 2 findings; both confirmed.
+
+**The bugs.**
+
+F1 (HIGH): `FaceGenRaceSelectorRebuilder.Apply` mutated the private `_raceSelector` field via reflection, then attempted to fire the property-change notification by reflectively invoking `OnPropertyChangedWithValue(object, string)` on `FaceGenVM`. The actual method on the `ViewModel` base is generic `OnPropertyChangedWithValue<T>(T, string) where T : class`. `AccessTools.Method` looking up by `(typeof(object), typeof(string))` returns `null` (verified by Codex: `AccessTools.Method(FaceGenVM, "OnPropertyChangedWithValue", object, string) => NULL`). The notification never fires; Gauntlet's `GauntletView` does not call `RefreshBindingWithChildren()`; the dropdown UI stays bound to the prior unfiltered selector. First-construction can mask this because `BodyGeneratorView.LoadMovie("FaceGen", DataSource)` reads the field directly after construction — but any subsequent `Refresh(true)` (every race change, every FaceGen reopen) silently rebinds to vanilla's full selector.
+
+F2 (MEDIUM): `RaceManager.GetRaceNameFromId` falls back to `"human"` for unknown IDs (a documented warning-and-default). `SetPlayerRace` accepted that fallback name, checked it against the culture's allow-list, and — for cultures that allow `human` — preserved the original invalid integer. `Hero.CharacterObject.Race` accepts arbitrary integers; downstream engine calls (`FaceGen.GetBaseMonsterFromRace`, body property generation) would receive a junk race ID for cultures like Mordor (allow-list = `[uruk, orc, human]`).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| F1 | Reflected generic method without `MakeGenericMethod` produces unusable MethodInfo (returns `null`); UI rebinding silently no-ops | Reflection target wrong | Reached for reflection because `_raceSelector` is private — but the corresponding public property setter `RaceSelector { set; }` was right there, would fire the notification correctly, and was simpler. Pattern: when a private field has a public property wrapping it, the property is the right knob; only reflect if the property doesn't exist. | Code-level fix: `faceGenVM.RaceSelector = newSelector` replaces the field-mutation + reflection-notify pair. Removed `_raceSelectorField` and `_onPropertyChangedWithValueMethod` static caches. Generalizable rule (added to AGENTS.md): before reflecting on a private field-setter operation, search for a public property that already wraps it. |
+| F2 | Validator-fallback masks invalid input as a "valid" choice for cultures that allow the fallback | Missing null/invalid guard | Trusted `GetRaceNameFromId` to return a meaningful string per ID. Did not read `RaceManager.cs` carefully enough to notice the silent "human" fallback. Pattern: when state from an entity feeds an allow-list comparison, validate the state's validity *before* using it as the comparison key. | Code-level fix: gate on `_raceManager.IsValidRaceId(faceGenRaceId)` before resolving the name. Added regression test `SetPlayerRace_InvalidFaceGenRaceId_DoesNotPreserve_FallsBackToCultureDefault`. Generalizable rule (added to AGENTS.md): when a lookup function returns a fallback value for invalid input, the caller MUST validate before the lookup; the fallback is for logging-and-survival, not for security decisions. |
+
+### Fixes Implemented (Review 33)
+
+1. **F1 (Codex):** `FaceGenRaceSelectorRebuilder.Apply` now uses `faceGenVM.RaceSelector = newSelector` instead of `_raceSelectorField.SetValue + _onPropertyChangedWithValueMethod.Invoke`. The cached `_raceSelectorField` and `_onPropertyChangedWithValueMethod` static fields removed.
+2. **F2 (Codex):** `CharacterCreationContentService.SetPlayerRace` now gates `faceGenChoiceAllowed` on `_raceManager.IsValidRaceId(faceGenRaceId)`. Three existing `SetPlayerRace` tests updated to stub `IsValidRaceId(...).Returns(true)`. New regression test added.
+3. **Process note:** Codex went off-scope mid-review and started implementing a separate `Patch29_CCBodyProperties` feature (per-culture default body properties, applied on culture-select). Those changes were preserved (not part of the race-filter scope but functional and tested). One build error in Codex's new patch (`CultureObject` namespace missing) was fixed.
+
+### Build & Test (Review 33)
+- `./build.ps1 -RunTests` — clean.
+- 1288/1288 tests passing (was 1287 before the regression test addition). 52 directly cover the race-filter feature (24 filter service + 12 rebuilder helpers + 16 SetPlayerRace).

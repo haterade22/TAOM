@@ -1,5 +1,104 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-06
+
+### Feat: CharacterCreation — per-culture default BodyProperties on the CC screen (XML-driven)
+
+When the player picks a culture during Character Creation, the player-character preview now adopts a TAOM-defined `BodyProperties` key string for that culture instead of the vanilla random-within-min/max default. The body re-applies on every culture change, mirroring vanilla's "switch culture resets body" mental model. Cultures not configured fall back to vanilla behavior with no errors.
+
+Configuration lives in a single XML file under `Main/_Module/ModuleData/charactercreation/cc_body_properties.xml` — paste the `<BodyProperties version="4" key="..."/>` element exactly as produced by the in-game `BodyProperties.ToString()` (or copied from a save/face-customizer export). The provider validates the key length (must be 128 hex chars), warns on duplicate culture ids (last-wins), and skips entries with missing/empty/malformed data while logging structured warnings to `rgl_log.txt`.
+
+Architecture follows the SettlementGuards/RevoltTuning template — `IPathService` + `IModLogger` constructor injection, IoC singleton, null-safe lookup. The hook is a thin Harmony postfix on `TaleWorlds.CampaignSystem.CharacterCreationContent.CharacterCreationContent.SetSelectedCulture` (verified via `ilspycmd` against installed v1.3.15) that delegates to `ICCBodyPropertiesService`. The service orchestrates lookup → adapter; the adapter wraps `BodyProperties.FromString` parsing and applies via `CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties` — which (per v1.3.15 ilspycmd verification) internally writes `HeroObject.StaticBodyProperties / Weight / Build` AND fires `CampaignEventDispatcher.OnPlayerBodyPropertiesChanged`, so a single call covers all required state mutations.
+
+A sibling Patch29 hook on `CharacterCreationNarrativeStageView.RefreshAgentVisuals` per-frame syncs the career-menu player `NarrativeMenuCharacter`'s body from `Hero.MainHero.BodyProperties` (because that menu's character is constructed with a captured body at CC initialization, before any culture selection fires Patch29).
+
+21 new unit tests cover the provider (14 — file-missing, malformed XML, missing id, missing/empty/short key, duplicate id last-wins, case-insensitive lookup, age/weight/build attribute preservation, caching) and the service (7 — orchestration, no-op when not configured, parse-failure warning, null/empty cultureId guards, exception swallowing). All 1288 repo tests pass.
+
+Seed config covers `vlandia` (which is Rohan in TAOM's XSLT mapping) with the user-provided body key. Adding new cultures is a pure-XML edit — no rebuild required, but a Bannerlord restart is needed because the provider is `Reuse.Singleton` (cached for the process lifetime, not per-save).
+
+Research: `ilspycmd` on installed v1.3.15 `TaleWorlds.CampaignSystem.dll` — `CharacterCreationContent.SetSelectedCulture(CultureObject, CharacterCreationManager)` confirmed. `TaleWorlds.Core.dll` — `BodyProperties.FromString(string, out BodyProperties)` returns bool; accepts both `<BodyProperties .../>` and `<BodyPropertiesMax .../>` element forms. `BasicCharacterObject.UpdatePlayerCharacterBodyProperties(BodyProperties, int race, bool isFemale)` calls `BodyPropertyRange.Init(properties, properties)` (min == max) plus sets Race/IsFemale.
+
+Save-compat: no persistent state. The override only affects the live CC preview; once CC finalizes, the body is persisted to the save normally. Existing saves are unaffected.
+
+Not-tested: live in-game verification of the body silhouette per culture (next launch).
+
+GitHub: #108. Deep-review verdict NEEDS-FIXES — all in-session findings (3 of 4) implemented before this entry was finalized; details in the "Fix: CCBodyProperties — review-driven hardening" entry below. The 4th finding (race-stomp during FaceGen) was dismissed-as-not-applicable because `SetPlayerRace` at CC finalize is authoritative.
+
+Constraint: CLAUDE.md `Patch29_CCBodyProperties` row update deferred — `config-protection.sh` hook blocks CLAUDE.md edits without explicit user authorization at the hook layer.
+
+### Fix: CCBodyProperties — review-driven hardening (issue #108)
+
+`/deep-review` Agent 5 (Data Flow) flagged 4 findings on the body-properties feature; 3 fixed in same session, 1 dismissed-as-not-applicable.
+
+1. **Doc/code mismatch on `age=` attribute (MEDIUM):** XML comment claimed age was "honoured if present" but `parsed.Age` was silently dropped — `Hero.Age` is computed from `BirthDay`, which we do not touch. Fix: removed the misleading claim from [cc_body_properties.xml](Main/_Module/ModuleData/charactercreation/cc_body_properties.xml) header; documented that `age=` is parsed by vanilla but not applied.
+
+2. **Redundant `Hero.MainHero` writes (LOW):** Adapter wrote `StaticBodyProperties`, `Weight`, `Build` to `Hero.MainHero` after calling `playerChar.UpdatePlayerCharacterBodyProperties(...)`. Per ilspycmd verification of v1.3.15 `CharacterObject.UpdatePlayerCharacterBodyProperties`, that override already writes the same three properties to `HeroObject` AND fires `CampaignEventDispatcher.OnPlayerBodyPropertiesChanged` — which our duplicate writes silently bypassed. Fix: dropped the 3 redundant assignments from [PlayerBodyPropertiesAdapter.cs](Main/Adapters/PlayerBodyPropertiesAdapter.cs); the event now fires correctly.
+
+3. **Career menu preview body stale after culture change (LOW-MEDIUM):** `CareerMenuService.RegisterCareerMenu` constructs the player `NarrativeMenuCharacter` once at CC initialization (before any culture is selected). Patch29 wrote the new body to `Hero.MainHero` and `CharacterObject.PlayerCharacter` but did not propagate to that captured snapshot — Patch20's existing `RefreshAgentVisuals_Patch` only syncs `Race`, not body. Fix: added sibling Patch29 hook [CharacterCreationNarrativeStageView_RefreshAgentVisuals_BodySync_Patch.cs](Main/Features/CharacterCreation/Hooks/CharacterCreationNarrativeStageView_RefreshAgentVisuals_BodySync_Patch.cs) — per-frame prefix that finds `NarrativeMenuCharacter.StringId == "player_career_character"` and syncs its body from `Hero.MainHero.BodyProperties` when it differs. Reflection lookup of `_characterCreationManager` cached in static field per `harmony-patches.md`.
+
+4. **Race=0 stomp during FaceGen (LOW, dismissed):** Adapter passes `playerChar.Race` to `UpdatePlayerCharacterBodyProperties`, which writes it back into `playerChar.Race`. On first culture-pick this is read-then-write-same-value (no-op). On re-entry, it preserves whatever race was set before. `SetPlayerRace` at CC finalize is authoritative and runs last, so any transient stale value during FaceGen is overwritten. No change needed.
+
+### Feat: CharacterCreation — culture-restricted race dropdown (re-implemented Patch9_RaceFilter)
+
+The Character Customization screen now filters the **Race** dropdown to the races permitted by the selected culture. Erebor → `[dwarf]` only. Mordor → `[uruk, orc, human]`. Mirkwood / Lothlorien / Rivendell → `[elf, human]`. Isengard → `[uruk_hai, berserker, human]`. Gundabad → `[pale_uruk, goblin, orc, human]`. Dol Guldur → `[dg_uruk, goblin, orc, human]`. Vanilla, Umbar, Gondor, Shaghana, Abanissa → `[human]`.
+
+The previous Patch9 attempt patched `FaceGen.GetRaceNames()` directly and broke `FaceGenVM` because the VM uses the array index of `GetRaceNames()` as the engine's global race ID — filtering shifted indices and decoupled the dropdown from the race table. That patch shipped as a no-op (file note at `FaceGen_GetRaceNames_Patch.cs:7-8`) and the dropdown stayed unfiltered.
+
+The new patch ([FaceGenVM_Refresh_RaceFilter_Patch.cs](Main/Features/CharacterCreation/Hooks/FaceGenVM_Refresh_RaceFilter_Patch.cs)) postfixes `FaceGenVM.Refresh(bool clearProperties)`. After the vanilla code at line 1925 has built `RaceSelector = new SelectorVM(GetRaceNames(), _selectedRace, OnSelectRace)`, the postfix:
+
+1. Reads the active `CharacterCreationManager.CharacterCreationContent.SelectedCulture.StringId` via `Game.Current.GameStateManager.ActiveState as CharacterCreationState`.
+2. Resolves `ICultureRaceFilterService` from IoC and gets the allow-list for that culture.
+3. Builds a parallel `globalIndices: List<int>` mapping filtered position → engine race index.
+4. Constructs a fresh `SelectorVM<SelectorItemVM>` containing only allowed races, with its `_selectedIndex` set via reflection (bypassing the public setter to avoid firing `_onChange` during construction).
+5. Wires a wrapped `_onChange` callback. When the user picks a filtered position, the wrapper looks up the global index, mutates `s._selectedIndex` to that global value via reflection (bypassing the public setter to avoid recursion), invokes vanilla `OnSelectRace`, then restores the field. Vanilla `OnSelectRace`'s body — `_selectedRace = s.SelectedIndex` — therefore reads the correct global index, and its downstream `UpdateRaceAndGenderBasedResources` → `UpdateFace(-20, _selectedRace)` chain updates `_faceGenerationParams.CurrentRace` correctly via `SetRaceGenderAndAdjustParams` (line 2130).
+6. If the player's pre-existing `_selectedRace` isn't in the allowed set (e.g., culture changed mid-CC), forces a single switch to the first allowed race, guarded by a `[ThreadStatic]` flag so the recursive `Refresh(true)` triggered downstream cannot loop.
+
+The race-filter mapping is **not** a separate config file — it reuses the existing `Main/_Module/ModuleData/charactercreation/cultures.json` `races` arrays (already loaded by `CultureCreationDataProvider`). To retune, edit `cultures.json` directly. To add a new race to a culture, add the race ID to that culture's `races` array. No code change required.
+
+Two cultures had their `races` arrays trimmed to match the user's spec: Mordor lost `goblin`, Isengard lost `saruman`. Those races still exist in `monsters.xml` and remain available for NPCs and existing saves — only the player-facing CC dropdown is restricted.
+
+Removed dead code from the prior failed attempt: `FaceGen_GetRaceNames_Patch.cs`, `IOnGetRaceNames` (empty marker interface), `GetRaceNamesHook` (empty class), `GetRaceNamesHookTests.cs` (asserted nothing useful), and the `IOnGetRaceNames → GetRaceNamesHook` IoC registration.
+
+24 new tests cover the filter service: per-culture allow-lists, case-insensitive matching, fallback for unknown cultures, fallback for empty `Races` arrays, single-warning-per-culture deduplication. Service is fully unit-testable via `ICultureCreationDataProvider` substitution.
+
+Research: ilspycmd on installed v1.3.15 `TaleWorlds.MountAndBlade.ViewModelCollection.dll` — `FaceGenVM.Refresh`, `OnSelectRace`, `_raceSelector`, `_selectedRace`; `TaleWorlds.Core.dll` SelectorVM/SelectorItemVM (verified against decompiled v1.4 since ilspycmd 9.1 cannot resolve generic type names against v1.3.15).
+
+Constraint: `FaceGenVM` is sealed; the patch uses `AccessTools.Field` reflection to mutate private state, cached in static fields per `harmony-patches.md`.
+
+Not-tested: live in-game verification of the dropdown contents per culture (next launch).
+
+Save-compat: no persistent state. Pure UI filter applied during character creation only.
+
+### Fix: CharacterCreation — `SetPlayerRace` honors player's FaceGen race choice (review-driven, same session)
+
+`/deep-review` Agent 5 (Data Flow) caught a HIGH gap: [`CharacterCreationContentService.SetPlayerRace`](Main/Features/CharacterCreation/CharacterCreationContentService.cs) unconditionally assigned `cultureData.Races[0]` at finalization, ignoring the player's FaceGen race selection. Pre-existing bug (not introduced by the new filter) but elevated in user impact: now that the filter exposes meaningful choices like Mordor `[uruk, orc, human]`, a player who picks "human" would still get `uruk` applied at game start. Fix: `SetPlayerRace` now reads the hero's current race (Bannerlord assigns `Hero.CharacterObject.Race` from FaceGen output before finalize runs), accepts it if it's in the culture's allowed list, and only falls back to `Races[0]` otherwise. `IHeroRosterAdapter` gained a `GetHeroRace(string heroStringId)` method. Three new unit tests: preserves-allowed-choice, falls-back-when-disallowed, case-insensitive matching.
+
+### Refactor: CharacterCreation — DI cleanup + extracted pure helpers (review-driven)
+
+`/deep-review` Agent 1 (Standards) flagged `IoC.Resolve` inside `FaceGenRaceSelectorRebuilder`, one step removed from the patch boundary. Refactored: the patch ([FaceGenVM_Refresh_RaceFilter_Patch.cs](Main/Features/CharacterCreation/Hooks/FaceGenVM_Refresh_RaceFilter_Patch.cs)) now resolves `ICultureRaceFilterService` and `IModLogger` via lazy-cached statics at the boundary and passes the service to `FaceGenRaceSelectorRebuilder.Apply(faceGenVM, filterService)` as a parameter. The rebuilder no longer references `IoC` at all. This also addresses Agent 3's MEDIUM perf finding (one IoC.Resolve per session vs one per click).
+
+Agent 5 LOW finding: extracted three pure static helpers from the rebuilder — `BuildGlobalIndexMap(string[], IReadOnlyList<string>)`, `MapFilteredIndexToGlobal(int, IReadOnlyList<int>)`, `MapGlobalIndexToFiltered(int, IReadOnlyList<int>)` — covering the index-translation logic that was previously trapped in a closure. Added [FaceGenRaceSelectorRebuilderTests.cs](TAOM.Tests/Features/CharacterCreation/FaceGenRaceSelectorRebuilderTests.cs) with 12 tests including a round-trip property test (filtered → global → filtered = identity) and case-insensitive intersection coverage.
+
+Net test count for the feature: 52 (24 filter service + 12 rebuilder helpers + 16 SetPlayerRace + existing). All 1266 repo tests pass.
+
+Constraint: cannot update [CLAUDE.md](CLAUDE.md) line 307 (Patch9_RaceFilter target should change "Various" → "FaceGenVM.Refresh") — `config-protection.sh` hook blocks edits without explicit user request. Deferred to user.
+
+Deferred: GitHub issue creation deferred — user has standing "no git actions unless explicitly asked" instruction; CLAUDE.md mandates an issue per feature. Awaiting user authorization to run `gh issue create`.
+
+### Fix: CharacterCreation — Codex Review 33 confirmed bugs (HIGH + MEDIUM)
+
+Adversarial Codex review of the race-filter feature returned 2 confirmed findings; both fixed in this session.
+
+**F1 (HIGH) — RaceSelector replacement did not notify Gauntlet.** [FaceGenRaceSelectorRebuilder.cs:71-72](Main/Features/CharacterCreation/FaceGenRaceSelectorRebuilder.cs) (pre-fix) mutated the private `_raceSelector` field via reflection, then attempted to fire the property-change notification by reflectively invoking `OnPropertyChangedWithValue(object, string)` on `FaceGenVM`. The actual method on the `ViewModel` base is generic `OnPropertyChangedWithValue<T>(T, string) where T : class`. `AccessTools.Method` looking up by `(typeof(object), typeof(string))` returns `null` (Codex verified empirically against installed v1.3.15 + Harmony 2.4.2). The notification never fires; Gauntlet's `GauntletView.OnViewModelPropertyChangedWithValue` is never called; the dropdown UI stays bound to the prior unfiltered selector. Initial construction can mask this because `BodyGeneratorView.LoadMovie("FaceGen", DataSource)` reads the field directly after construction — but any subsequent `Refresh(true)` (every race change, every FaceGen reopen) silently rebinds the UI to vanilla's full selector. Fix: replaced the field-mutation + reflection-notify pair with `faceGenVM.RaceSelector = newSelector`. The vanilla setter (FaceGenVM.cs:986-990) handles both the field assignment AND the correctly-typed property-change notification. Removed `_raceSelectorField` and `_onPropertyChangedWithValueMethod` static caches and corresponding `EnsureFields` lookups.
+
+**F2 (MEDIUM) — invalid race ID could be silently coerced to "human" and accepted.** [CharacterCreationContentService.cs:243](Main/Features/CharacterCreation/CharacterCreationContentService.cs) (pre-fix) called `_raceManager.GetRaceNameFromId(faceGenRaceId)` without validating the ID first. `RaceManager.GetRaceNameFromId` (RaceManager.cs:126-131) silently returns `"human"` as fallback for unknown IDs with only a warning log. `SetPlayerRace` accepted that fallback name, checked it against the culture's allow-list, and for cultures that allow `"human"` (Mordor, Gundabad, DolGuldur, Isengard, vanilla cultures, etc.) preserved the original invalid integer. `Hero.CharacterObject.Race` accepts arbitrary integers; downstream engine calls (`FaceGen.GetBaseMonsterFromRace`, body property generation) would receive a junk race ID. Fix: gate `faceGenChoiceAllowed` on `_raceManager.IsValidRaceId(faceGenRaceId)` BEFORE resolving the name. Three existing `SetPlayerRace` tests updated to stub `IsValidRaceId(...).Returns(true)`. New regression test `SetPlayerRace_InvalidFaceGenRaceId_DoesNotPreserve_FallsBackToCultureDefault` asserts an invalid ID falls back to the culture default even when the fallback name is allowed.
+
+Build green. 1288/1288 tests passing.
+
+Reviews captured: [docs/reviews/codex-adversarial-charactercreation-racefilter-2026-05-06.md](docs/reviews/codex-adversarial-charactercreation-racefilter-2026-05-06.md), [docs/reviews/REVIEW-LOG.md](docs/reviews/REVIEW-LOG.md) Review 33 (with full Phase 3e root-cause analysis), [AGENTS.md](AGENTS.md) (added 2 lessons + Codex run-mode caveat).
+
+Process note: Codex went off-scope mid-review and started implementing a separate `Patch29_CCBodyProperties` feature unrelated to the race-filter scope. Those changes were preserved (functional and tested). One build error in Codex's new patch (`CultureObject` namespace missing) was fixed. The scope drift is documented in REVIEW-LOG and AGENTS.md to keep Codex's review focus from silently expanding in future runs.
+
 ## 2026-05-04
 
 ### Process: RCA + prevention for the shader-precompilation initial-zero latch miss

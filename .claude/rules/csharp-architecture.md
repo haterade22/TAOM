@@ -85,6 +85,38 @@ Any provider that loads `Main/_Module/ModuleData/` JSON or XML the player is exp
 
 **Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process — changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime.
 
+## Lookup Functions With Fallbacks: Validate Before Lookup (MANDATORY)
+
+When a lookup function MAY return a "default" or "fallback" value for invalid input (with a warning log, sentinel value, or coerced default), the caller MUST validate the input's validity BEFORE the lookup whenever the result is used as a comparison key in a security/correctness decision. The fallback exists for *logging-and-survival*, NOT for *acceptance*.
+
+**The trap:** the fallback masks invalid input as a "valid-looking" value that happens to match the allow-list, causing silent acceptance of state the caller would have rejected if it had known the input was invalid.
+
+**The rule:** if a lookup function can return a fallback, treat that lookup as "best-effort name resolution for diagnostic output" and add an explicit validity gate before any decision logic depends on the result.
+
+```csharp
+// ❌ WRONG — invalid IDs silently coerced to "human" sneak past allow-list when culture allows "human"
+var raceName = _raceManager.GetRaceNameFromId(faceGenRaceId);  // returns "human" for unknown IDs
+bool allowed = cultureData.Races.Any(r => r == raceName);
+if (allowed) {
+    PreserveValue(faceGenRaceId);  // ← invalid integer preserved
+}
+
+// ✅ RIGHT — validate the input BEFORE the lookup, treat invalid as "not allowed"
+bool valid = _raceManager.IsValidRaceId(faceGenRaceId);
+var raceName = valid ? _raceManager.GetRaceNameFromId(faceGenRaceId) : null;
+bool allowed = valid && cultureData.Races.Any(r => r == raceName);
+```
+
+**Why this rule exists:** Codex Review #33 (CharacterCreation race-filter, 2026-05-06). `RaceManager.GetRaceNameFromId` (RaceManager.cs:126-131) returns `"human"` as fallback for unknown IDs. `SetPlayerRace` accepted that fallback name, checked it against the culture's allow-list, and for cultures that allow `human` (Mordor, vanilla cultures, Isengard, Gundabad, Dol Guldur — i.e., most cultures) preserved the original junk integer. `Hero.CharacterObject.Race` accepts arbitrary integers; downstream engine calls would silently receive a corrupt race ID for a Mordor save.
+
+**Applies to:** any lookup function whose XML doc, log line, or implementation says "defaults to X for unknown input" (`GetRaceNameFromId`, `GetCultureData` returning a default culture, `GetItemFromId` returning a default item, `MBObjectManager.GetObject<T>` for missing IDs, etc.). When in doubt, read the function body — if it logs a warning and returns a value, that value is fallback, not validation.
+
+**How to apply:** every `GetXxxFromId` / `LookupXxx` style function should be paired with an `IsValidXxxId` / `ContainsXxx` validator on the same interface. If the validator doesn't exist, the lookup function is effectively unsafe for security decisions and the caller must add validation by some other means (e.g., comparing the returned name against a sentinel default).
+
+**Test requirement:** when fixing a finding of this class, add a regression test where the lookup returns the fallback value and assert the caller rejects the input. Example: `SetPlayerRace_InvalidFaceGenRaceId_DoesNotPreserve_FallsBackToCultureDefault` ([CharacterCreationContentServiceTests.cs](../../TAOM.Tests/Features/CharacterCreation/CharacterCreationContentServiceTests.cs)).
+
+**Sibling rule:** see "Config Providers MUST Validate" above for the input-validation rule at the LOADER side; this rule is the input-validation rule at the CONSUMER side. Both are needed because the loader's validation may be downstream of mid-process state mutation (e.g., a save-load that brought in junk race IDs from a prior mod version).
+
 ## File Layout
 
 ```

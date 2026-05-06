@@ -13,6 +13,12 @@ public class HeroRosterAdapter : IHeroRosterAdapter
             .ToList();
     }
 
+    public int GetHeroRace(string heroStringId)
+    {
+        var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == heroStringId);
+        return hero?.CharacterObject?.Race ?? 0;
+    }
+
     public void SetHeroRace(string heroStringId, int race)
     {
         var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == heroStringId);

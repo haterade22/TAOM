@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Per-culture default BodyProperties for the Character Creation screen.
+
+  Format:
+    <Culture id="<culture_string_id>">
+      <BodyProperties version="4" key="<128-hex-char-key>" />
+    </Culture>
+
+  - Paste the BodyProperties XML element exactly as produced by the in-game
+    BodyProperties.ToString() (or copied from a save / face-customizer export).
+  - The key must be exactly 128 hex characters; otherwise the entry is skipped
+    with a warning in rgl_log.txt.
+  - Optional weight / build attributes on <BodyProperties .../> are honoured if
+    present; absent values default to weight=0 build=0 (vanilla parser default).
+  - The `age` attribute is parsed by vanilla but NOT applied to the player —
+    Hero.Age is computed from BirthDay, which we do not touch. Including age=
+    has no visible effect.
+  - Cultures not listed here fall back to the vanilla per-culture random body.
+  - The provider is a Singleton: edits to this file require restarting Bannerlord,
+    not just reloading a save.
+
+  TAOM culture-id reference (see spcultures.xslt + taom_spcultures.xml):
+    vlandia    → Rohan (XSLT-modified vanilla Vlandia)
+    empire     → Dunland (XSLT-modified vanilla Empire)
+    battania   → Khand (XSLT-modified vanilla Battania)
+    aserai     → Harad
+    sturgia    → Barding
+    khuzait    → Rhun
+    mordor, gondor, erebor, mirkwood, lothlorien, rivendell,
+    dol_guldur, gundabad, isengard, umbar, dale     → TAOM custom cultures
+-->
+<CCBodyProperties>
+  <Culture id="vlandia">
+    <BodyProperties version="4" key="0005280140001242947E068A709500460C7250703EB70F135C85021887733A070089B6030822BA9000000000000000000000000000000000000000003F1C7002" />
+  </Culture>
+</CCBodyProperties>

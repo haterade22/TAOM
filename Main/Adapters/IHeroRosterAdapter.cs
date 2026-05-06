@@ -17,5 +17,6 @@ public readonly struct HeroRaceInfo
 public interface IHeroRosterAdapter
 {
     IReadOnlyList<HeroRaceInfo> GetAllAliveHeroRaces();
+    int GetHeroRace(string heroStringId);
     void SetHeroRace(string heroStringId, int race);
 }

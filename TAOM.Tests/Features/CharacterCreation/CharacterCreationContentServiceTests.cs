@@ -152,4 +152,82 @@ public class CharacterCreationContentServiceTests
         _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("null")));
     }
+
+    [TestMethod]
+    public void SetPlayerRace_FaceGenChoiceInAllowedList_PreservesChoice()
+    {
+        var cultureData = new CultureCreationData
+        {
+            CultureId = "mordor",
+            Races = new[] { "uruk", "orc", "human" }
+        };
+        _heroRosterAdapter.GetHeroRace("main_hero").Returns(7);
+        _raceManager.IsValidRaceId(7).Returns(true);
+        _raceManager.GetRaceNameFromId(7).Returns("orc");
+
+        _sut.SetPlayerRace(cultureData, "main_hero");
+
+        _heroRosterAdapter.Received(1).SetHeroRace("main_hero", 7);
+        _raceManager.DidNotReceive().GetRaceIdFromName(Arg.Any<string>());
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("preserved FaceGen selection")));
+    }
+
+    [TestMethod]
+    public void SetPlayerRace_FaceGenChoiceNotAllowed_FallsBackToCultureDefault()
+    {
+        var cultureData = new CultureCreationData
+        {
+            CultureId = "erebor",
+            Races = new[] { "dwarf" }
+        };
+        _heroRosterAdapter.GetHeroRace("main_hero").Returns(0);
+        _raceManager.IsValidRaceId(0).Returns(true);
+        _raceManager.GetRaceNameFromId(0).Returns("human");
+        _raceManager.GetRaceIdFromName("dwarf").Returns(5);
+
+        _sut.SetPlayerRace(cultureData, "main_hero");
+
+        _heroRosterAdapter.Received(1).SetHeroRace("main_hero", 5);
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("fell back to culture default")));
+    }
+
+    [TestMethod]
+    public void SetPlayerRace_FaceGenChoiceCaseInsensitive_PreservesChoice()
+    {
+        var cultureData = new CultureCreationData
+        {
+            CultureId = "mirkwood",
+            Races = new[] { "elf", "human" }
+        };
+        _heroRosterAdapter.GetHeroRace("h").Returns(11);
+        _raceManager.IsValidRaceId(11).Returns(true);
+        _raceManager.GetRaceNameFromId(11).Returns("ELF");
+
+        _sut.SetPlayerRace(cultureData, "h");
+
+        _heroRosterAdapter.Received(1).SetHeroRace("h", 11);
+    }
+
+    [TestMethod]
+    public void SetPlayerRace_InvalidFaceGenRaceId_DoesNotPreserve_FallsBackToCultureDefault()
+    {
+        // Codex review #N (2026-05-06) regression: an invalid race ID would be silently coerced
+        // by GetRaceNameFromId to "human", and if the culture allowed "human", the system would
+        // preserve a value the player never picked. IsValidRaceId must gate the FaceGen branch.
+        var cultureData = new CultureCreationData
+        {
+            CultureId = "mordor",
+            Races = new[] { "uruk", "orc", "human" }
+        };
+        _heroRosterAdapter.GetHeroRace("h").Returns(9999);
+        _raceManager.IsValidRaceId(9999).Returns(false);
+        _raceManager.GetRaceIdFromName("uruk").Returns(3);
+
+        _sut.SetPlayerRace(cultureData, "h");
+
+        // Must fall back to Races[0] = "uruk" (id 3), NOT preserve the coerced "human".
+        _heroRosterAdapter.Received(1).SetHeroRace("h", 3);
+        _raceManager.DidNotReceive().GetRaceNameFromId(9999);
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("fell back to culture default")));
+    }
 }

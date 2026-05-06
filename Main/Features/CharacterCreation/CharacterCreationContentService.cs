@@ -230,19 +230,52 @@ public class CharacterCreationContentService : ICharacterCreationContentService
             return;
         }
 
-        var raceName = cultureData.Races != null && cultureData.Races.Length > 0
+        var fallbackRaceName = cultureData.Races != null && cultureData.Races.Length > 0
             ? cultureData.Races[0]
             : "human";
 
         try
         {
-            var raceId = _raceManager.GetRaceIdFromName(raceName);
+            // Bannerlord assigns Hero.CharacterObject.Race from FaceGen output before finalize runs.
+            // Preserve the player's actual choice when it's in the culture's allowed list; otherwise
+            // fall back to the culture default. Without this check, a Mordor player who picks "human"
+            // in the FaceGen dropdown would be overridden to "uruk" (Races[0]) at finalize.
+            //
+            // Codex review #N (2026-05-06) caught: GetRaceNameFromId silently returns "human" for
+            // unknown IDs (RaceManager.cs:126-130). Without IsValidRaceId gating, an invalid ID
+            // would be coerced to "human", and if the culture allows "human", we would preserve
+            // a value the player never picked. Validate the ID before accepting the FaceGen choice.
+            var faceGenRaceId = _heroRosterAdapter.GetHeroRace(heroStringId);
+            var faceGenRaceIdValid = _raceManager.IsValidRaceId(faceGenRaceId);
+            var faceGenRaceName = faceGenRaceIdValid ? _raceManager.GetRaceNameFromId(faceGenRaceId) : null;
+
+            bool faceGenChoiceAllowed = faceGenRaceIdValid
+                && cultureData.Races != null
+                && cultureData.Races.Length > 0
+                && cultureData.Races.Any(r => string.Equals(r, faceGenRaceName, StringComparison.OrdinalIgnoreCase));
+
+            string raceName;
+            int raceId;
+            if (faceGenChoiceAllowed)
+            {
+                raceName = faceGenRaceName;
+                raceId = faceGenRaceId;
+            }
+            else
+            {
+                raceName = fallbackRaceName;
+                raceId = _raceManager.GetRaceIdFromName(raceName);
+            }
+
             _heroRosterAdapter.SetHeroRace(heroStringId, raceId);
-            _logger.LogInfo($"Set player race to '{raceName}' (id: {raceId})");
+            if (faceGenChoiceAllowed)
+                _logger.LogInfo($"Set player race to '{raceName}' (id: {raceId}) — preserved FaceGen selection");
+            else
+                _logger.LogInfo($"Set player race to '{raceName}' (id: {raceId}) — fell back to culture default (FaceGen was '{faceGenRaceName}')");
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Failed to set player race to '{raceName}': {ex.Message}");
+            _logger.LogError($"Failed to set player race: {ex.Message}");
         }
     }
 

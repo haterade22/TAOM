@@ -365,6 +365,7 @@ public class SubModule : MBSubModuleBase
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
         _harmony.PatchCategory("Patch26_SpecialResources");
         _harmony.PatchCategory("Patch27_CareerSystem");
+        _harmony.PatchCategory("Patch29_CCBodyProperties");
 
         var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
         GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
