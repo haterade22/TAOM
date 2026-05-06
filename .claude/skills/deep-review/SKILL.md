@@ -246,6 +246,23 @@ TRACE THESE DATA FLOWS:
    - Example bug pattern: `CareerAbilityBuffTracker.SetBuff()` on activation, but `ClearBuff()` only on timeout — not on hero death.
    - Check: For every static dictionary, cached field, or session-scoped state, trace all paths that clear it.
 
+5b. **Observation State Machines (BOUNDARY ENUMERATION):** For every static field that participates in polling or change-detection of EXTERNAL state (engine counts, file sizes, network responses, MBObjectManager queries), enumerate ALL four boundary states and classify every transition between adjacent states.
+   - **Why this is separate from rule 5:** Lifecycle matrix asks *"when does this entity die?"* Observation matrix asks *"what values can this poll return, in what order, and which transitions mean what?"* Both are needed for state machines driven by external polling. Rule 5 alone is insufficient (RCA: shader-precompilation initial-zero latch, 2026-05-04).
+   - **Boundary states to enumerate:**
+     1. **Sentinel / uninitialized** — value set by reset/init (often `-1`, `null`, `default(T)`)
+     2. **First real observation** — what the poll returns BEFORE any work has happened (often `0`, `false`, empty collection)
+     3. **In-progress values** — the range during normal operation
+     4. **Terminal value** — the value indicating completion (often `0`, `null`, `false`)
+   - **Critical: sentinel-to-first-observation collision check.** If the sentinel value (state 1) is distinguishable from the terminal value (state 4) ONLY because state 1 has a different sentinel encoding, the change-detection logic must verify it observed at least one in-progress value (state 3) before treating a return-to-terminal as completion. A separate boolean flag (`_hasObservedWork`) is the standard fix.
+   - **Example bug pattern (RCA shader-precompilation):** `_lastShaderCount = -1` (sentinel) → first frame after reset, engine returns `count = 0` (first observation, but the engine hasn't started compiling yet) → patch enters "completion" branch, calls `ResetShaderBattleActive()` → patch is dead before any real work arrives.
+   - **Example bug pattern (general):** A polling loop initialised to `_lastSize = -1`, polling a file size. First poll returns `0` because the file isn't created yet. Loop fires the "file shrank to zero / vanished" branch and exits. File then grows to real size; loop is gone.
+   - **Check (apply for every static state field that participates in polling):**
+     - Find the field's reset/init location. What value does it start at? (state 1)
+     - Find the polling source. What's the lowest possible value the poll can return? (often `0`, distinct from sentinel only by sentinel encoding) — this is state 2.
+     - Walk the change-detection logic for the transition state-1 → state-2. Does it incorrectly classify this as a state-3 → state-4 (completion) transition?
+     - Walk the same logic for state-3 → state-4. Confirm it IS classified as completion.
+     - If both transitions fire the same code path, that's a sentinel collision — flag it. The fix is a `_hasObservedWork`-style flag that distinguishes "we're past the sentinel" from "we're at the terminal."
+
 6. **Event Hook Coverage:** For behaviors that register campaign/mission events, verify all relevant events are hooked.
    - Example bug pattern: `OnAgentRemoved` emits kill charges but no hook exists for damage-dealt charges, even though most careers use `DamageDone` charge type.
    - Check: Read the behavior's RegisterEvents/constructor, cross-reference with the data it needs to provide.

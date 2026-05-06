@@ -2,6 +2,22 @@
 
 ## 2026-05-04
 
+### Process: RCA + prevention for the shader-precompilation initial-zero latch miss
+
+The visible-progress fix shipped one commit ago corrected a bug that should have been caught by `/deep-review` Agent 5 (Data Flow Tracing) and the prior Codex 2026-04-14 review — both walked happy-path examples starting from `count=100` and never enumerated the `count=0` first-frame state where the bug fires. The pattern is a **state-machine sentinel collision** — the "uninitialized" sentinel value (`_lastShaderCount = -1`) was indistinguishable from the real terminal value (`0`) when compared against the first poll observation.
+
+Three artifacts so the next observation-driven static-state machine doesn't ship the same class of bug:
+
+1. **RCA document** — [docs/reviews/rca-shader-precompilation-initial-zero-latch-2026-05-04.md](docs/reviews/rca-shader-precompilation-initial-zero-latch-2026-05-04.md). Full timeline, why each layer of review missed it, the fix, lessons captured, and prevention items (taken vs deferred).
+
+2. **Mandatory rule** in [.claude/rules/harmony-patches.md](.claude/rules/harmony-patches.md) — new "Static State Machines: Sentinel-Collision Check" section. When a patch holds static state across frames AND drives that state from polling external values (engine counts, file sizes, MBObjectManager queries, vanilla VM properties), the four boundary states must be enumerated before writing change-detection logic: sentinel (state 1) / first observation (state 2) / in-progress (state 3) / terminal (state 4). When state 2 and state 4 share an encoding (the typical case), require an additional `_hasObservedWork`-style flag set the first time state-3 is observed, and only fire terminal-state actions when `current == terminal && _hasObservedWork`.
+
+3. **Deep-review Agent 5 prompt** in [.claude/skills/deep-review/SKILL.md](.claude/skills/deep-review/SKILL.md) — new "5b. Observation State Machines (BOUNDARY ENUMERATION)" trace category. Sibling to the existing rule 5 (Lifecycle Completeness), explicitly distinct: lifecycle asks *when does this entity die?*, observation asks *what values can the poll return, in what order, and which transitions mean what?*. Both are needed; one is not a substitute for the other. Includes the shader-precompilation case as the worked example.
+
+Memory file `feedback_observation_state_matrix.md` (in user-scoped memory, not in this repo) captures the lesson for future sessions.
+
+This entry intentionally precedes the visibility-fix entry below — the prevention work belongs at the head of the day in case anyone walks the log forward in time.
+
 ### Fix: ShaderPrecompilation — visible per-second progress UI + initial-zero latch race (#106 follow-up)
 
 In-game test of the prior tuning fix surfaced a separate, pre-existing bug: the loading screen showed no shader-progress text at all on warm-cache machines. Tracing the patch logic against the user's `taom_debug_*.log` showed why:
