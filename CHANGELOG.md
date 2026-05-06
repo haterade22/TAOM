@@ -20,6 +20,42 @@ In-game verified: Isengard now defaults to `uruk_hai`, Mordor to `uruk`, Gundaba
 
 Why review missed it: data-flow agent traced `_selectedRace` through `Refresh → 1779 → MapGlobalIndexToFiltered` and saw the human value resolve cleanly to a valid filtered position — that's the success path. The agent did not enumerate "what does the player *expect* the default to be?" against "what does the engine initialize to?". Codex did decompile `FaceGenVM.Refresh` but flagged a different issue (the OnPropertyChangedWithValue reflection bug). Both reviewers verified mechanical correctness; neither traced default-state expectations to UX outcome. Memory entry [feedback_filter_order_and_default.md](../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_filter_order_and_default.md) codifies the lesson for future sessions.
 
+### Fix: CCBodyProperties — vanilla overwrites our body AFTER our SetSelectedCulture postfix
+
+In-game testing after the previous fix still showed vanilla silhouette. Tracing in `taom_debug_*.log` confirmed our service applied `vlandia` body successfully, but the visible character was still vanilla. Decompile of `CharacterCreationCultureStageVM.OnCultureSelection(CharacterCreationCultureVM)` in installed v1.3.15 reveals:
+
+```csharp
+public void OnCultureSelection(CharacterCreationCultureVM selectedCulture)
+{
+    InitializePlayersFaceKeyAccordingToCultureSelection(selectedCulture);   // ← writes culture default body
+    ...
+}
+
+private void InitializePlayersFaceKeyAccordingToCultureSelection(CharacterCreationCultureVM selectedCulture)
+{
+    if (selectedCulture.Culture.DefaultCharacterCreationBodyProperty != null)
+    {
+        CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties(
+            selectedCulture.Culture.DefaultCharacterCreationBodyProperty.BodyPropertyMax,
+            CharacterObject.PlayerCharacter.Race,
+            CharacterObject.PlayerCharacter.IsFemale);
+        Hero.MainHero.Culture = selectedCulture.Culture;
+    }
+}
+```
+
+TAOM's `FactionMap.CultureSettingService.SetCultureOnCharacterCreation` invokes:
+1. `content.SetSelectedCulture(culture, charCreation)` reflectively → our SetSelectedCulture postfix applies our body
+2. `cultureVM.ExecuteSelectCulture()` reflectively → routes through `OnCultureSelection` → vanilla `InitializePlayersFaceKeyAccordingToCultureSelection` writes the culture XML default body OVER ours
+
+The body we just wrote is clobbered moments later, before any visual refresh. This is invisible at the API surface — it only emerges by tracing the call chain from `ExecuteSelectCulture` through the per-culture-VM's `_onSelection` delegate back into the stage VM's `OnCultureSelection` template method.
+
+Fix: added sibling Patch29 hook [CharacterCreationCultureStageVM_OnCultureSelection_Patch.cs](Main/Features/CharacterCreation/Hooks/CharacterCreationCultureStageVM_OnCultureSelection_Patch.cs) — Harmony postfix on `CharacterCreationCultureStageVM.OnCultureSelection(CharacterCreationCultureVM)`. Runs AFTER vanilla overwrites the body with the culture XML default, re-applies our configured body via the same `ICCBodyPropertiesService.ApplyForCulture(stringId)`. The original SetSelectedCulture postfix stays in place as a safety net for any code path that bypasses `OnCultureSelection`.
+
+Reference: this is the same approach LOTRAOM (Bannerlord 1.2.12) used by overriding `SandboxCharacterCreationContent.OnCultureSelected` — that virtual hook was refactored out of `CharacterCreationContent` (which is now sealed) and replaced by `ICharacterCreationContentHandler.OnStageCompleted` plus the stage-VM-side `OnCultureSelection` template method. Patching the new location is the v1.3 equivalent of LOTRAOM's 1.2 override. Pointer was provided by user — `C:\Users\mikew\Source\Repos\LOTRAOM\Main\Features\CampaignStart\CampaignStartGlobals.cs` and surrounding files.
+
+Build green, 1294/1294 tests pass. Adapter intentionally untested (engine-boundary code); verification is in-game only.
+
 ### Fix: CCBodyProperties — body never visible in-game (regression from review fix #2)
 
 In-game testing showed the configured culture body never reached the FaceGen preview — the player saw the vanilla starting silhouette regardless of which culture they selected. Logs confirmed the patch fired correctly (`Faction confirmed: Kingdom of Rohan -> Rohirrim` followed immediately by `CCBodyPropertiesProvider: Loaded 1 culture body-property entries` and `CCBodyPropertiesService: applied culture body for 'vlandia'`), so the chain Provider → Service → Adapter was intact. The break was at the engine boundary: `CharacterObject.UpdatePlayerCharacterBodyProperties` is fully no-op'd when its internal guard (`if (IsPlayerCharacter && IsHero)`) does not pass.
