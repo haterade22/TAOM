@@ -18,7 +18,10 @@ namespace TAOM.Features.SmartCavalryAI.Hooks;
 /// integer casts against values 4 and 5, which silently mismatch on v1.3.15.</para>
 /// </summary>
 [HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder))]
-[HarmonyPatchCategory("Patch31_SmartCavalryAI")]
+// Shared with Patch35_Formation_SetMovementOrder. The category is applied from
+// OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
+// Mission.Current.CurrentTime — null during OnSubModuleLoad / OnGameInitializationFinished.
+[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
 public static class Patch31_FormationSetMovementOrder
 {
     // Cached IoC singletons. Each `??=` performs a single dictionary lookup on first

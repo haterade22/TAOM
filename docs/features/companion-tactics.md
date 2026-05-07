@@ -63,7 +63,7 @@ TAOM.Features.CompanionTactics/
     ├── UI/{BattleActionBarVM, ActionButtonVM}
     └── Hooks/
         BattleActionBarMissionView                        (MissionView NOT Harmony; field battles only)
-        Patch35_Formation_SetMovementOrder                (clears stance on move when CancelStanceOnMove)
+        Patch35_Formation_SetMovementOrder                (clears stance on move when CancelStanceOnMove; lives in shared Patch_MissionTime_SetMovementOrder category — see below)
 ```
 
 Adapters added/extended:
@@ -131,7 +131,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — degrades to empty on BaseId collision |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_Mission_OnTick.cs` | **HOT PATH** — toggle check + lazy-cached service call, zero allocations |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | MissionView; field-battle-only `GauntletLayer` attach + 0.5s refresh + 1–9 hotkey input |
-| `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove` |
+| `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
 | `Main/Adapters/{I,}HeroCombatAdapter.cs` | Campaign-time `Hero` wrapper |
 | `Main/Adapters/{I,}AgentCombatAdapter.cs` | Mission-time `Agent` wrapper |

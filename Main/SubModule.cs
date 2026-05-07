@@ -77,6 +77,7 @@ public class SubModule : MBSubModuleBase
     private ITimeAccelerationService? _timeAccelerationService;
     private static float _shaderTickAccumulator;
     private static int _lastShaderCount = -1;
+    private static bool _missionTimePatchesApplied;
 
     protected override void OnSubModuleLoad()
     {
@@ -148,7 +149,10 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
         _harmony.PatchCategory("Patch30_MixedFormations");
-        _harmony.PatchCategory("Patch31_SmartCavalryAI");
+        // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
+        // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
+        // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,
+        // which is null during OnSubModuleLoad and would crash JIT prep with NRE.
 
         var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
         var bannerColorService = IoC.Resolve<IBannerColorService>();
@@ -465,6 +469,17 @@ public class SubModule : MBSubModuleBase
     public override void OnMissionBehaviorInitialize(Mission mission)
     {
         base.OnMissionBehaviorInitialize(mission);
+
+        // Apply Formation.SetMovementOrder patches (Patch31_SmartCavalryAI + Patch35
+        // CancelStanceOnMove) only once Mission.Current is non-null — MovementOrder's
+        // type initializer constructs static fields whose ctor reads
+        // Mission.Current.CurrentTime. Applying earlier crashes JIT prep with NRE.
+        if (!_missionTimePatchesApplied)
+        {
+            _missionTimePatchesApplied = true;
+            _harmony.PatchCategory("Patch_MissionTime_SetMovementOrder");
+        }
+
         mission.AddMissionBehavior(new AdvancedCombatBehavior());
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());

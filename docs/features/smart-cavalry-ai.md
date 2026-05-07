@@ -22,7 +22,7 @@ Three things make this non-trivial:
 
 ### Solution Approach
 
-Single Harmony Postfix on `Formation.SetMovementOrder` (`Patch31_SmartCavalryAI`). Postfix bails on:
+Single Harmony Postfix on `Formation.SetMovementOrder`. The patch attribute lives in the shared `Patch_MissionTime_SetMovementOrder` category — applied once from `SubModule.OnMissionBehaviorInitialize` (behind a static one-shot guard) rather than in `OnSubModuleLoad`. Reason: v1.3.15 `MovementOrder.cctor` constructs static instances whose ctor reads `Mission.Current.CurrentTime`; applying the patch any earlier crashes JIT prep with NRE. Postfix bails on:
 - Recursion-guard set
 - Non-cavalry formation (via `formation.QuerySystem.IsCavalryFormation`)
 - Non-Charge / non-ChargeToTarget order

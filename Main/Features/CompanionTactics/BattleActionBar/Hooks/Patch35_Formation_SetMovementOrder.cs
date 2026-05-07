@@ -12,7 +12,10 @@ namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 ///   public void SetMovementOrder(MovementOrder input)
 /// </summary>
 [HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder), new[] { typeof(MovementOrder) })]
-[HarmonyPatchCategory("Patch35_CompanionTactics")]
+// Shared with Patch31_FormationSetMovementOrder. The category is applied from
+// OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
+// Mission.Current.CurrentTime — null during OnSubModuleLoad / OnGameInitializationFinished.
+[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
 public static class Patch35_Formation_SetMovementOrder
 {
     private static ICompanionTacticsSettingsProvider _settings;
