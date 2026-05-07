@@ -2,6 +2,10 @@
 
 ## 2026-05-06
 
+### Docs: CLAUDE.md — Patch29_CCBodyProperties row updated to list third target
+
+User explicitly authorized CLAUDE.md edit. Added `CharacterCreationCultureStageVM.OnCultureSelection` to the Patch29 row's target list and updated the Feature column to mention "culture-stage-VM body re-apply" alongside the existing two intercepts. The row now accurately reflects the 3-patch architecture deployed in `efb2eaa` and finalized in `e5d8fc3` — the OnCultureSelection postfix is the canonical hook (LOTRAOM-1.2 `OnCultureSelected` equivalent for v1.3) that re-applies the configured body after vanilla `InitializePlayersFaceKeyAccordingToCultureSelection` overwrites it with the culture XML default.
+
 ### Cleanup: remove Phase 2A equipment-slot diagnostic from SideCommanderFilter (#105 closed)
 
 In-game testing confirmed all Custom Battle commanders — including Dunland's three after the data fix in `1f98886` — now render with full armor. The temporary one-shot diagnostic in `SideCommanderFilter.LogEquipmentDiagnosticOnce` (introduced in `a9e0bba` as Phase 2A) served its purpose: it identified seven broken `Item.dunland_caerdh_*` IDs that didn't exist in `LOTRLOME_Armory`, which led directly to the Phase 2C data-only fix.

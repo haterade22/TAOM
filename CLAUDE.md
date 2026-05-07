@@ -223,6 +223,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | SettlementGuards | `Main/Features/SettlementGuards/` (per-settlement guard customization — XML-driven guard troop pools with settlement→clan→culture fallback, spawn-point filtering, weighted random selection, per-culture spear mapping; Harmony prefixes on private GuardsCampaignBehavior methods) |
 | NamedCompanions | `Main/Features/NamedCompanions/` (18 lore companions as recruitable wanderers — Aragorn/Legolas/Gimli/etc; `is_hero="true"` + `occupation="Wanderer"`, JSON config for spawn settlements, vanilla dialog integration, race persistence via existing HeroRace system) |
 | RevoltTuning | `Main/Features/RevoltTuning/` (JSON-tunable soft-nerf of vanilla revolt mechanic for LOTR's frequent settlement flips; raises loyalty thresholds + dampens different-culture penalties; semantic validation rejects out-of-range / sign-flipped values; consumed by `TaomSettlementLoyaltyModel`) |
+| Messengers | `Main/Features/Messengers/` (paid messenger dispatch from encyclopedia + dialog hook; travels for N days, arrival inquiry opens conversation mission with settlement-vs-field routing and player-position restore; random ambush rolls; primitive-dict SyncData; UIExtenderEx prefab extension on `EncyclopediaHeroPage`; ported from LOTRAOM 1.2.12 with 1.3.15 API drift applied; TAOM-owned `MapCoord` keeps service free of TaleWorlds types per ADR-007) |
 | Warg Combat | `Main/Features/Warg/` (BT elements, WargAttackService, WargMissionBehavior) |
 | BT DLLs | `Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll`, `BehaviorTreeWrapper.dll` |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
@@ -233,6 +234,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
 | CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates + ability tuning XML) |
 | RevoltTuning config | `Main/_Module/ModuleData/configs/revolt_tuning_config.json` (4 thresholds/penalties; validated on load) |
+| Messengers config | `Main/_Module/ModuleData/messengers/messenger_config.json` (advanced tuning — `accidentChancePerHour` + `travelSpeedMultiplier`; rejects NaN/Infinity/out-of-range; player-facing knobs in MCM `TaomSettings.Messengers`) |
 | CareerSystem CC config | `Main/_Module/ModuleData/charactercreation/career_menu.json` (50 career CC skill/attribute bonuses) |
 | CareerSystem sprites | `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/` (portraits 800x400, ability icons 256x256, dedicated atlas) |
 | Sprite atlas config | `Main/_Module/GUI/SpriteParts/Config.xml` (sprite category registration with `<AlwaysLoad />`) |
@@ -323,7 +325,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` |
 | `Patch27_CareerSystem` | Career screen opening + ability V-key activation (3 archetypes: Infantry/Ranged/Cavalry, 50 careers, XML-tunable) | `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats` |
 | `Patch28_SettlementGuards` | Per-settlement guard troop injection + per-culture spear mapping (manual patches) | `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual) |
-| `Patch29_CCBodyProperties` | Per-culture default BodyProperties on CC screen + career menu player body sync | `CharacterCreationContent.SetSelectedCulture`, `CharacterCreationNarrativeStageView.RefreshAgentVisuals` |
+| `Patch29_CCBodyProperties` | Per-culture default BodyProperties on CC screen + culture-stage-VM body re-apply + career menu player body sync | `CharacterCreationContent.SetSelectedCulture`, `CharacterCreationCultureStageVM.OnCultureSelection`, `CharacterCreationNarrativeStageView.RefreshAgentVisuals` |
 
 ## Codex Integration
 
