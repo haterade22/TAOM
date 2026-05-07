@@ -2,6 +2,16 @@
 
 ## 2026-05-06
 
+### Cleanup: remove Phase 2A equipment-slot diagnostic from SideCommanderFilter (#105 closed)
+
+In-game testing confirmed all Custom Battle commanders — including Dunland's three after the data fix in `1f98886` — now render with full armor. The temporary one-shot diagnostic in `SideCommanderFilter.LogEquipmentDiagnosticOnce` (introduced in `a9e0bba` as Phase 2A) served its purpose: it identified seven broken `Item.dunland_caerdh_*` IDs that didn't exist in `LOTRLOME_Armory`, which led directly to the Phase 2C data-only fix.
+
+Removed: `_diagnosedCultures` HashSet, `_resetHintLogged` bool, the diagnostic call site in `ResolveCommandersForCulture`, and the entire `LogEquipmentDiagnosticOnce` private method. `SideCommanderFilter` is back to its lean production form (constructor + single resolver method, ~38 lines).
+
+Issue #105 closed. Four-commit fix arc: `a9e0bba` (NRE Prefix + Refresh-based rebuilder + diagnostic) → `25415b1` (deep-review LOWs) → `587e784` (Codex Review 32 sister Prefix on `UpdateCharacterVisual`) → `1f98886` (Dunland data fix).
+
+Save-compat: code-deletion only. Safe on any save.
+
 ### Docs: CCBodyProperties — feature doc rewrite + seed config + memory entry (in-game verified)
 
 User confirmed the OnCultureSelection postfix made the configured culture body visible in-game (issue #108 closed). Documentation updated to reflect the final 3-patch architecture and the call-chain lessons learned.
