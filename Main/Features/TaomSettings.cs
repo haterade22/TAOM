@@ -232,4 +232,25 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3,
         HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
     public bool MixedFormationsDebug { get; set; } = false;
+    // --- Battle Tactics / Mixed Formations ---
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations", GroupOrder = 21)]
+    [SettingPropertyBool("Enable Mixed Formations", Order = 0,
+        HintText = "Master toggle. When off, formations use vanilla positioning. When on, formations with mixed melee + ranged units are reordered per the chosen layout while holding position.")]
+    public bool EnableMixedFormations { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
+    [SettingPropertyInteger("Default Layout (0=InfFront, 1=RngFront, 2=Wings, 3=Checkerboard)", 0, 3, Order = 1,
+        HintText = "Default layout auto-applied to mixed-class formations (>=5 minority units AND >=20% minority share AND >=10 total units). 0=Infantry front + Ranged back. 1=Ranged front + Infantry back. 2=Ranged on the wings, Infantry in the center. 3=Checkerboard. Default: 0.")]
+    public int MixedFormationsDefaultLayout { get; set; } = 0;
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
+    [SettingPropertyText("Cycle Layout Hotkey", Order = 2,
+        HintText = "Bannerlord InputKey name. Pressing this while a formation is selected cycles its layout to the next; pressing while no formation is selected cycles all formations. Default: L.")]
+    public string MixedFormationsCycleHotkey { get; set; } = "L";
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
+    [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3,
+        HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
+    public bool MixedFormationsDebug { get; set; } = false;
 }

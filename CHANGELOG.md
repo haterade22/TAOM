@@ -1,6 +1,56 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
 ## 2026-05-06
+### Fix: MixedFormations — Codex adversarial review findings (navmesh validation + thread safety)
+
+After `/deep-review MixedFormations` (5-agent core, returned PASS on standards/compatibility/completeness/data-flow), `/review-codex MixedFormations` (Codex CLI 0.128.0, run 2026-05-06) produced TWO additional findings the deep-review missed — 1 HIGH + 1 MEDIUM. Both confirmed via `ilspycmd` against installed v1.3.15 and fixed in same session per the "no silent deferrals" rule. Codex review file preserved at [docs/reviews/codex-adversarial-mixedformations-2026-05-06.md](docs/reviews/codex-adversarial-mixedformations-2026-05-06.md) (reconstructed from stdout because Codex's `apply_patch` was rejected by the read-only sandbox).
+
+**FINDING 1 (HIGH) — Patch30 bypassed vanilla navmesh availability check.** [`Patch30_FormationGetOrderPositionOfUnit.Prefix`](Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs) returned false to skip vanilla after building a `WorldPosition` from layout math + `Scene.GetGroundHeightAtPosition`. The vanilla Hold branch delegates to `GetOrderPositionOfUnitAux`, which validates the candidate via `Mission.IsFormationUnitPositionAvailable` and falls back to `unit.GetWorldPosition()` if unavailable. Our skip dropped that gate — custom layout positions could land on cliffs, walls, siege props, or non-navigable terrain. **Fix:** patch now calls `mission.IsFormationUnitPositionAvailable(ref candidate, team)` before setting `__result`. If unavailable → returns true (vanilla handles via its own fallback).
+
+**FINDING 2 (MEDIUM) — Cache + assignment mutations on the hot Prefix path were not thread-safe.** [`FormationLayoutService`](Main/Features/MixedFormations/FormationLayoutService.cs) used regular `Dictionary` for `_layoutByFormation` and `_assignmentCache`, plus mutated `SlotAssignment.ByAgentIndex` for new agents — all from the worker-thread Patch30 hot path. Vanilla shows clear multi-threading markers via `ilspycmd`: `Formation.OrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `using (new TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock))`, `_MT` suffix on positioning helpers. **Fix:** added `private readonly object _lock = new();` and wrapped all dict mutations + reads on the hot path. Two regression tests added.
+
+**RCA + durable lessons codified** (per the cross-session memory contract from SiegeDismount review #34):
+
+1. New feedback memory `feedback_replicate_vanilla_safety_gates_in_prefix.md` — when a Harmony Prefix returns false to skip vanilla, decompile the FULL call chain (entry method + every helper it delegates to) and replicate every safety gate.
+2. New feedback memory `feedback_detect_engine_threading_via_mt_suffix.md` — Bannerlord names multi-threaded helpers with `_MT` suffix; before patching `Formation`/`Mission`/`Scene`/positioning methods, grep for these markers and lock or use immutable state if present.
+
+Both memories indexed in `MEMORY.md`; auto-loaded every future Claude session.
+
+Net: 38 MixedFormations tests pass (+2 thread-safety regression tests).
+
+### Fix: MixedFormations — deep-review findings (hot-path service caching + future-proof switch)
+
+After the initial port, `/deep-review MixedFormations` (5-agent parallel review) returned PASS on standards/compatibility/completeness/data-flow but flagged 1 MEDIUM and 1 LOW efficiency/quality finding. Both fixed in same session.
+
+**MEDIUM — `IoC.Resolve<IFormationLayoutService>()` in Patch30 hot path.** Fires per-unit-per-formation-position-recalculation — up to 40,000× per frame in worst-case 200-unit formations. **Fix:** [`Patch30_FormationGetOrderPositionOfUnit`](Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs) now stores the service in a `private static IFormationLayoutService? _service` and uses `_service ??= IoC.Resolve<>()`.
+
+**LOW — `LayoutPositioner.BuildInitialAssignment` switch had no `default:`.** A future 6th `FormationLayoutType` value would silently produce an empty assignment. **Fix:** added `default: throw new ArgumentOutOfRangeException(...)`.
+
+Two known-limitations documented in [docs/features/mixed-formations.md](docs/features/mixed-formations.md): layout persists for the entire mission once assigned (composition-change immune); cycle hotkey within first ~1 second silently does nothing.
+
+### Feat: MixedFormations — port external sibling module into Main/Features/ (Patch30)
+
+Refactored the developer-built `MixedFormations` module (#2 of 7 dropped at `Downloads/Features_fixed/`) into TAOM's adapter/service/IoC pattern.
+
+**What it does:** when a formation contains both melee and ranged units AND it's holding position (`MovementOrder.MovementStateEnum.Hold`), reorder the units per the chosen layout: Infantry-front-Ranged-back (default), Ranged-front-Infantry-back, Ranged-on-the-wings (Infantry center), or Checkerboard. Auto-applies a default layout to "mixed" formations every 1s; player can cycle layouts via configurable hotkey (default `L`).
+
+**Architecture:**
+- [`LayoutPositioner`](Main/Features/MixedFormations/LayoutPositioner.cs) — pure-function slot-assignment math (4 layout algorithms); fully unit-testable
+- [`FormationLayoutService`](Main/Features/MixedFormations/FormationLayoutService.cs) — singleton; owns per-formation layout dict + assignment cache + cycle/auto-apply
+- [`MixedFormationsMissionBehavior`](Main/Features/MixedFormations/Hooks/MixedFormationsMissionBehavior.cs) — engine bridge; per-frame tick, 1s default-apply, every-frame hotkey poll
+- [`Patch30_FormationGetOrderPositionOfUnit`](Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs) — Harmony Prefix
+- [`IFormationAdapter`](Main/Adapters/IFormationAdapter.cs) — NEW; load-bearing for SmartCavalryAI (feature #3) and CompanionTactics (feature #7). Wraps `Formation` properties; service never sees `Formation` directly (ADR-007)
+- MCM: 4 settings under `Battle Tactics / Mixed Formations` group folded into [`TaomSettings.cs`](Main/Features/TaomSettings.cs)
+
+**Two dead settings dropped on port** — per the `feedback_user_facing_promise_must_match_code.md` memory rule: the original module exposed `InfantryRowDepth` (1–10, default 3) and `RangedRowDepth` (1–10, default 2) settings with HintText promising to control row depth, but tracing through decompiled code showed they were never read. `filesPerRow` is computed from formation `Width / (Interval + 1)`. Both settings removed on port.
+
+**Tests:** 36 unit tests in `LayoutPositionerTests` (11 tests) and `FormationLayoutServiceTests` (25 tests).
+
+Source material: `Downloads/Features_fixed/_decompiled/MixedFormations/MixedFormations.decompiled.cs`. Mathematical layout algorithms preserved verbatim; developer's threshold values (≥10 total, ≥5 minority, ≥20% minority share) preserved.
+
+Closes #112.
+
+
 
 ### Feat: MixedFormations — port external sibling module into Main/Features/ (Patch30)
 

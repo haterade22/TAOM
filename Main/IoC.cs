@@ -31,6 +31,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
+using TAOM.Features.MixedFormations;
 
 namespace TAOM;
 
@@ -74,6 +75,7 @@ public static class IoC
         SettlementGuardsIoC.RegisterSettlementGuardsFeature(container);
         NamedCompanionIoC.RegisterNamedCompanionsFeature(container);
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
+        MixedFormationsIoC.RegisterMixedFormationsFeature(container);
 
         _container = container;
 

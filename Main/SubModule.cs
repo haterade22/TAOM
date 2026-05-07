@@ -59,6 +59,7 @@ using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
+using TAOM.Features.MixedFormations.Hooks;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -141,6 +142,7 @@ public class SubModule : MBSubModuleBase
         ShaderPrecompilationIoC.InitializeHooks(logger);
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
+        _harmony.PatchCategory("Patch30_MixedFormations");
 
         var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
         var bannerColorService = IoC.Resolve<IBannerColorService>();
@@ -426,6 +428,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
         mission.AddMissionBehavior(new SpiderMissionBehavior());
+        mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
