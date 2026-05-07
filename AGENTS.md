@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (35 reviews, 96 bugs found)
+### Lessons From Prior Reviews (36 reviews, 98 bugs found)
 
 These are patterns Codex has missed or gotten wrong. Check for these BEFORE submitting findings.
 
@@ -86,7 +86,11 @@ These are patterns Codex has missed or gotten wrong. Check for these BEFORE subm
 **Codex run-mode caveats:**
 - Codex sometimes drifts into adjacent feature work mid-review (CharacterCreation race-filter review 33 — Codex started implementing a separate `Patch29_CCBodyProperties` feature unrelated to the race-filter scope being reviewed). When this happens, preserve any well-tested useful additions but explicitly call out the scope drift in the review log so the codepath remains intentional and documented. Codex's review focus should not be silently expanded.
 
-This section is updated by Claude after each review cycle. Last updated: 2026-05-06 (Review 35, player startup gold + CC equipment persistence — Phases 1/2/3a/3b ran; 9 bugs caught, of which Phase 3b Codex self-review caught 2 that all prior phases missed including the HIGH narrative-menu dead-end).
+- Catching missing vanilla safety gates buried in helper methods (MixedFormations review 36 — Codex flagged that Patch30 returned false to skip `Formation.GetOrderPositionOfUnit` without replicating the navmesh availability check that vanilla performs in `GetOrderPositionOfUnitAux`, the helper the Hold-state branch delegates to. Claude's prior /deep-review Agent 5 traced the entry method and concluded "vanilla path is read-only — safe to skip" but did not walk into the helper. Pattern: when a Prefix returns false, decompile EVERY method the entry calls and replicate every safety gate. The entry method's body is just routing; the helpers contain the load-bearing logic).
+- Detecting engine multi-threading from `_MT` suffix and `TWSharedMutexReadLock` (MixedFormations review 36 — Codex flagged that the FormationLayoutService's dict + assignment cache mutations on the hot Prefix path could race against `OnMissionTick` writes from the main thread, because vanilla code shows clear multi-threading markers: `Formation.OrderPositionLock`, `IsFormationUnitPositionAvailableMT`, `using TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`. Pure-static-read inference produced the right hypothesis without needing runtime instrumentation. Pattern: before patching `Formation`/`Mission`/`Scene`/positioning methods, grep the vanilla type for `_MT` suffix and `TWSharedMutexReadLock` patterns. If present, the patch fires from worker threads — the service must be thread-safe via lock or immutable state).
+
+
+This section is updated by Claude after each review cycle. Last updated: 2026-05-06 (Review 36, MixedFormations port — Codex caught 2 findings that the prior /deep-review missed: navmesh-gate buried in vanilla helper, and worker-thread cache race detected via _MT suffix patterns).
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only

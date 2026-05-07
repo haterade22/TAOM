@@ -753,3 +753,31 @@ Pipeline: `/deep-review` (5-agent core) → 2 HIGH gaps caught and fixed in same
 - In-game smoke test: deferred to user.
 - Commits: `ab0910f` (feature), `6d1d668` (Phase 3 doc gap + comment).
 - Closes: [#110](https://github.com/haterade22/TAOM/issues/110). Follow-up: [#111](https://github.com/haterade22/TAOM/issues/111).
+
+
+### Review 36 — MixedFormations (port from external developer, Codex follow-up to /deep-review)
+
+Pipeline: `/deep-review` (5-agent core) returned PASS on standards/compatibility/completeness/data-flow with 1 MEDIUM + 1 LOW efficiency finding (fixed in same session) → `/review-codex` produced 2 ADDITIONAL findings (1 HIGH + 1 MEDIUM) the deep-review missed. All confirmed and fixed in same session.
+
+**Source brief:** [docs/reviews/codex-prompt-mixedformations-2026-05-06.md](codex-prompt-mixedformations-2026-05-06.md). 9 Known Suspects (2 confirming /deep-review fixes, 7 new attack lines).
+
+**Codex findings file:** [docs/reviews/codex-adversarial-mixedformations-2026-05-06.md](codex-adversarial-mixedformations-2026-05-06.md). Reconstructed from stdout because Codex's `apply_patch` was rejected by read-only sandbox; `ilspycmd` also blocked by shell policy, so vanilla decompilation code blocks were verified separately by Claude outside the sandbox.
+
+**Verdict from Codex:** needs-attention (no-ship).
+
+| # | Severity | Codex Finding | Claude Verdict | Fix |
+|---|----------|---------------|----------------|-----|
+| 1 | HIGH | Patch30 bypasses vanilla `Mission.IsFormationUnitPositionAvailable` check buried in `GetOrderPositionOfUnitAux`. Custom layout positions can land on cliffs/walls/siege props/non-navigable terrain. | CONFIRMED via `ilspycmd` against installed v1.3.15 — vanilla Hold path delegates to `GetOrderPositionOfUnitAux` which validates the candidate then falls back to `unit.GetWorldPosition()` if unavailable. /deep-review Agent 5 traced only the entry method and missed the gate. | [Patch30_FormationGetOrderPositionOfUnit.Prefix](../../Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs) now calls `mission.IsFormationUnitPositionAvailable(ref candidate, team)` before setting `__result`. If unavailable → returns true (vanilla handles via `unit.GetWorldPosition()` fallback). |
+| 2 | MEDIUM | `FormationLayoutService` mutates `Dictionary` caches and `SlotAssignment.ByAgentIndex` from the hot Prefix path without synchronization. Vanilla shows `_MT`-suffix multi-threaded helpers + `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)` + `Formation.OrderPositionLock` — clear engine threading markers. | CONFIRMED via `ilspycmd` — `Formation.OrderPositionLock` exists; `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock`. Engine threads positioning queries; our patch fires from those threads; cache writes can race against `OnMissionTick`-driven writes. | Added `private readonly object _lock = new();` to [FormationLayoutService](../../Main/Features/MixedFormations/FormationLayoutService.cs). All dict + `SlotAssignment.ByAgentIndex` mutations now lock. Reads on the hot path lock briefly (~25ns uncontended); pure math runs outside the lock. Two regression tests added: `ConcurrentTaskBattery_SetLayoutAndCompute_DoesNotThrowOrCorruptCache` (8 tasks × 100 ops) and `ComputeAndCycle_RapidSequentialAlternation_RemainsCoherent`. |
+
+### Root Cause Analysis (Review 36)
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Patch30 bypassed vanilla navmesh availability check | Missing vanilla gate / incomplete call-chain trace | /deep-review Agent 5 traced `Formation.GetOrderPositionOfUnit` itself but not the helper `GetOrderPositionOfUnitAux` it delegates to in the Hold branch. Verdict "vanilla path is read-only" was based on entry method only; the safety gate (`Mission.IsFormationUnitPositionAvailable`) lives one frame deeper. | Codified in `feedback_replicate_vanilla_safety_gates_in_prefix.md` — when a Prefix returns false, decompile EVERY method the entry calls and replicate every safety gate. The entry's body is routing; the helpers contain load-bearing logic. Auto-loaded every Claude session for this repo. |
+| 2 | Cache + assignment mutations from worker-thread Prefix without synchronization | Missing concurrency awareness / engine-threading inference | Did not notice the `_MT` suffix on Bannerlord positioning helpers (`CreateNewOrderWorldPositionMT`, `IsFormationUnitPositionAvailableMT`, `GetNavMeshMT`) which is the engine's convention for multi-threaded helpers. Did not search for `TWSharedMutexReadLock` or `Formation.OrderPositionLock` in the vanilla source. | Codified in `feedback_detect_engine_threading_via_mt_suffix.md` — before patching Formation/Mission/Scene methods, grep the vanilla type for `_MT` suffix and lock patterns. If present, patch fires from worker threads; service must be thread-safe via lock or immutable state. Auto-loaded every Claude session. |
+
+### Build & Test (Review 36)
+- `dotnet build TAOM.Tests/TAOM.Tests.csproj -c Debug -p:DisableModuleCopy=true` — clean (the `DisableModuleCopy` flag bypasses a post-build deploy step that fails when Bannerlord is running and locks the `.rdc` file).
+- 38 MixedFormations tests pass (was 36 before this review; +2 thread-safety regression tests).
+- In-game verification: deferred to user. Pre-commit gate.
