@@ -1,0 +1,51 @@
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
+using TAOM.Features.FiefManagement.Models;
+
+namespace TAOM.Adapters;
+
+public class SettlementOwnershipAdapter : ISettlementOwnershipAdapter
+{
+    public IReadOnlyList<FiefSummary> GetPlayerOwnedFiefs()
+    {
+        var clan = Clan.PlayerClan;
+        if (clan == null) return System.Array.Empty<FiefSummary>();
+
+        var result = new List<FiefSummary>();
+        foreach (var s in Settlement.All)
+        {
+            if (s == null) continue;
+            if (!(s.IsTown || s.IsCastle)) continue;
+            if (s.OwnerClan != clan) continue;
+            var name = s.Name?.ToString() ?? string.Empty;
+            result.Add(new FiefSummary(s.StringId, name, s.IsTown, s.IsCastle));
+        }
+        return result;
+    }
+
+    public bool IsPlayerCurrentlyAt(string settlementId)
+    {
+        if (string.IsNullOrEmpty(settlementId)) return false;
+        var current = MobileParty.MainParty?.CurrentSettlement;
+        return current?.StringId == settlementId;
+    }
+
+    public Settlement Resolve(string settlementId)
+    {
+        if (string.IsNullOrEmpty(settlementId)) return null;
+        var clan = Clan.PlayerClan;
+        if (clan == null) return null;
+        foreach (var s in Settlement.All)
+        {
+            if (s == null) continue;
+            if (s.StringId != settlementId) continue;
+            // Re-verify ownership at resolution time — the player may have lost the fief
+            // between FiefSummary creation and consequence callback execution.
+            if (s.OwnerClan != clan) return null;
+            return s;
+        }
+        return null;
+    }
+}
