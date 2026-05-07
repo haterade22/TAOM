@@ -171,4 +171,65 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("Turbo Multiplier (Ctrl+Space)", 1, 128, Order = 2,
         HintText = "Speed multiplier while holding Ctrl+Space. Releases back to prior speed on key-up. Default: 16.")]
     public int CtrlSpaceMultiplier { get; set; } = 16;
+
+    // --- Battle Tactics / Siege Dismount ---
+
+    [SettingPropertyGroup("Battle Tactics/Siege Dismount", GroupOrder = 20)]
+    [SettingPropertyBool("Enable Siege Dismount", Order = 0,
+        HintText = "Master toggle for the siege auto-dismount feature. When off, sieges behave vanilla (mount stays equipped).")]
+    public bool EnableSiegeDismount { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Siege Dismount")]
+    [SettingPropertyInteger("Siege Mount Behavior (0=Vanilla, 1=Reserved, 2=ToInventory, 3=AutoRemount)", 0, 3, Order = 1,
+        HintText = "0 = Vanilla (no change). 1 = RESERVED (currently equivalent to Vanilla — full implementation deferred; would spawn the horse on the map separately). 2 = Mount moves to inventory for siege duration; player must re-equip manually after. 3 = Mount moves to inventory and is auto-restored after siege ends. Default: 3.")]
+    public int SiegeMountBehavior { get; set; } = 3;
+
+    [SettingPropertyGroup("Battle Tactics/Siege Dismount")]
+    [SettingPropertyBool("Siege Dismount Debug Mode", Order = 2,
+        HintText = "Show diagnostic [SiegeDismount] messages on the in-game HUD. Off = file log only.")]
+    public bool SiegeDismountDebug { get; set; } = false;
+
+    // --- Messengers ---
+
+    [SettingPropertyGroup("Messengers", GroupOrder = 25)]
+    [SettingPropertyBool("Enable Messengers", Order = 0,
+        HintText = "Send paid messengers to heroes you have already met. They travel for several days and trigger a conversation on arrival. Disable to remove the encyclopedia button and dialog hook.")]
+    public bool EnableMessengers { get; set; } = true;
+
+    [SettingPropertyGroup("Messengers")]
+    [SettingPropertyInteger("Gold Cost", 10, 500, Order = 1,
+        HintText = "Denar cost to dispatch one messenger.")]
+    public int MessengerGoldCost { get; set; } = 50;
+
+    [SettingPropertyGroup("Messengers")]
+    [SettingPropertyInteger("Travel Days", 1, 10, Order = 2,
+        HintText = "In-game days a messenger spends in transit before arriving at the target. Speed scales to map size.")]
+    public int MessengerTravelDays { get; set; } = 3;
+
+    [SettingPropertyGroup("Messengers")]
+    [SettingPropertyBool("Enable Accidents", Order = 3,
+        HintText = "Random ambush chance during travel. The base hourly probability lives in messenger_config.json (default 0.2%).")]
+    public bool MessengerAccidents { get; set; } = true;
+
+    // --- Battle Tactics / Mixed Formations ---
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations", GroupOrder = 21)]
+    [SettingPropertyBool("Enable Mixed Formations", Order = 0,
+        HintText = "Master toggle. When off, formations use vanilla positioning. When on, formations with mixed melee + ranged units are reordered per the chosen layout while holding position.")]
+    public bool EnableMixedFormations { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
+    [SettingPropertyInteger("Default Layout (0=InfFront, 1=RngFront, 2=Wings, 3=Checkerboard)", 0, 3, Order = 1,
+        HintText = "Default layout auto-applied to mixed-class formations (>=5 minority units AND >=20% minority share AND >=10 total units). 0=Infantry front + Ranged back. 1=Ranged front + Infantry back. 2=Ranged on the wings, Infantry in the center. 3=Checkerboard. Default: 0.")]
+    public int MixedFormationsDefaultLayout { get; set; } = 0;
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
+    [SettingPropertyText("Cycle Layout Hotkey", Order = 2,
+        HintText = "Bannerlord InputKey name. Pressing this while a formation is selected cycles its layout to the next; pressing while no formation is selected cycles all formations. Default: L.")]
+    public string MixedFormationsCycleHotkey { get; set; } = "L";
+
+    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
+    [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3,
+        HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
+    public bool MixedFormationsDebug { get; set; } = false;
 }

@@ -712,6 +712,15 @@
 			</IncludedGameTypes>
 		</XmlNode>
 		<XmlNode>
+			<XmlName id="GameText" path="taom_messenger_strings"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+				<GameType value="EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
 			<XmlName id="BannerIcons" path="banner_icons"/>
 		</XmlNode>
 		<XmlNode>
