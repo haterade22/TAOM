@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prefab>
+  <Window>
+    <Widget DataSource="{..}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+            IsVisible="@IsVisible">
+      <Children>
+        <!-- Action Bar Container - Bottom Center -->
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                MarginBottom="120">
+          <Children>
+            <!-- Background Panel -->
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                    Sprite="BlankWhiteSquare_9" Color="#00000099"
+                    MarginLeft="-10" MarginRight="-10" MarginTop="-8" MarginBottom="-8" />
+            
+            <!-- Formation Name Header -->
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                        MarginTop="-25"
+                        Brush="Popup.Text.Small" Brush.FontSize="12"
+                        Brush.FontColor="#FFD700FF" Text="@FormationName" />
+            
+            <!-- Action Buttons Container -->
+            <ListPanel DataSource="{ActionButtons}" 
+                       WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed"
+                       SuggestedHeight="50"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <ItemTemplate>
+                <ButtonWidget DoNotPassEventsToChildren="true"
+                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="80" SuggestedHeight="45"
+                              MarginLeft="3" MarginRight="3"
+                              Command.Click="ExecuteAction"
+                              Brush="ButtonBrush1">
+                  <Children>
+                    <!-- Active indicator -->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                            Sprite="BlankWhiteSquare_9" Color="@CategoryColor"
+                            AlphaFactor="0.3" IsVisible="@IsActive" />
+                    
+                    <!-- Button Text -->
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Brush="Popup.Text.Small" Brush.FontSize="10"
+                                Brush.FontColor="#FFFFFFFF" Text="@DisplayText" />
+                    
+                    <!-- Hotkey Badge -->
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                            SuggestedWidth="16" SuggestedHeight="16"
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            MarginTop="-4" MarginRight="-4"
+                            Sprite="BlankWhiteSquare_9" Color="#444444FF">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Brush="Popup.Text.Small" Brush.FontSize="9"
+                                    Brush.FontColor="#FFFFFFCC" Text="@Hotkey" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ButtonWidget>
+              </ItemTemplate>
+            </ListPanel>
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

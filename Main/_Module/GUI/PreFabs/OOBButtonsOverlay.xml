@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Constants>
+    <Constant Name="AutoDeployButton.Width" BrushLayer="Default" BrushName="ButtonBrush2" BrushValueType="Width" />
+    <Constant Name="AutoDeployButton.Height" BrushLayer="Default" BrushName="ButtonBrush2" BrushValueType="Height" />
+	<Constant Name="DoneButton.Width" BrushLayer="Default" BrushName="ButtonBrush1" BrushValueType="Width" />
+    <Constant Name="DoneButton.Height" BrushLayer="Default" BrushName="ButtonBrush1" BrushValueType="Height" />
+  </Constants>
+  <Window>
+     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" IsVisible="@IsVisible">
+      <Children>
+        <!-- Buttons positioned at bottom, to the LEFT of existing Ready button -->
+        <ListPanel Id="NewActionButtons" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="500" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="65" StackLayout.LayoutMethod="HorizontalSpaced">
+          <Children>
+            <!-- Assign Characters Button -->
+            <ButtonWidget 
+                DoNotPassEventsToChildren="true"
+                WidthSizePolicy="Fixed" 
+                HeightSizePolicy="Fixed" 
+                SuggestedWidth="!AutoDeployButton.Width" 
+                SuggestedHeight="!AutoDeployButton.Height"
+                MarginRight="10"
+                Brush="ButtonBrush2"
+                Command.Click="ExecuteAssignCharacters"
+                IsEnabled="true"
+                AcceptEvents="true">
+              <Children>
+                <TextWidget 
+                    WidthSizePolicy="StretchToParent" 
+                    HeightSizePolicy="StretchToParent"
+                    Brush="Order.Siege.MainButton.Text"
+                    Text="Assign Heroes" />
+              </Children>
+            </ButtonWidget>
+            
+            <!-- Save/Load Presets Button -->
+            <ButtonWidget 
+                DoNotPassEventsToChildren="true"
+                WidthSizePolicy="Fixed" 
+                HeightSizePolicy="Fixed" 
+                SuggestedWidth="!DoneButton.Width" 
+                SuggestedHeight="!DoneButton.Height"
+                Brush="ButtonBrush1"
+                Command.Click="ExecuteManagePresets"
+                IsEnabled="true"
+                AcceptEvents="true">
+              <Children>
+                <TextWidget 
+                    WidthSizePolicy="StretchToParent" 
+                    HeightSizePolicy="StretchToParent"
+                    Brush="Order.Siege.MainButton.Text"
+                    Text="@PresetsButtonText" />
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </ListPanel>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
