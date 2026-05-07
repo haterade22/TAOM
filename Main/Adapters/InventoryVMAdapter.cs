@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.Roster;
@@ -123,10 +123,19 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
 
     public int TryUnequipAllPlayerSlots()
     {
-        // Codex review #36 fix: when an inventory screen is open, route unequip through
-        // InventoryLogic.TransferCommand. Vanilla AfterTransfer rebuilds RightItemListVM and
-        // the equipment-slot SPItemVMs in response. Without this, direct mutation of
-        // Hero.BattleEquipment + ItemRoster.AddToCounts left the UI showing stale empty rows.
+        // When an inventory screen is open, route unequip through InventoryLogic.TransferCommand.
+        // Vanilla AfterTransfer rebuilds RightItemListVM and the equipment-slot SPItemVMs in
+        // response. Without this, direct mutation of Hero.BattleEquipment + ItemRoster.AddToCounts
+        // left the UI showing stale empty rows.
+        //
+        // Codex review #37 first pass used reflection on SPInventoryVM._inventoryLogic /
+        // _currentCharacter — which BUTR.Harmony.Analyzer (BHA0001) flagged because it scans
+        // typeof(X).GetField(name) calls. Replaced with the documented public path:
+        //   InventoryScreenHelper.GetActiveInventoryState()?.InventoryLogic
+        // and Hero.MainHero.CharacterObject for the active character. The "active character" in
+        // QuickActions' Unequip All is always the player main hero per the menu's user-visible
+        // promise, so reading SPInventoryVM._currentCharacter (which can roam to other party
+        // heroes) was actually wrong — the public path is also semantically more correct.
         if (_active != null && TryUnequipViaInventoryLogic(out var unitsTransferred))
             return unitsTransferred;
 
@@ -136,29 +145,22 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
         return _playerEquipment.TryUnequipAllPlayerSlots();
     }
 
-    // Cached reflection -- SPInventoryVM stores its InventoryLogic and the active character
-    // as private fields. Resolved once on first use.
-    private static readonly FieldInfo? _inventoryLogicField =
-        AccessToolsLite.GetPrivateField(typeof(SPInventoryVM), "_inventoryLogic");
-    private static readonly FieldInfo? _currentCharacterField =
-        AccessToolsLite.GetPrivateField(typeof(SPInventoryVM), "_currentCharacter");
-
     private bool TryUnequipViaInventoryLogic(out int unitsTransferred)
     {
         unitsTransferred = 0;
         if (_active == null) return false;
-        if (_inventoryLogicField == null || _currentCharacterField == null)
+
+        var logic = InventoryScreenHelper.GetActiveInventoryState()?.InventoryLogic;
+        if (logic == null)
         {
-            _logger.LogWarning("[QuickActions] SPInventoryVM private field reflection failed — falling back to direct mutation");
+            _logger.LogWarning("[QuickActions] InventoryScreenHelper.GetActiveInventoryState returned null logic — falling back to direct mutation");
             return false;
         }
 
-        if (_inventoryLogicField.GetValue(_active) is not InventoryLogic logic) return false;
-        var character = _currentCharacterField.GetValue(_active) as CharacterObject;
-        if (character == null) return false;
-
         var hero = Hero.MainHero;
         if (hero == null) return false;
+        var character = hero.CharacterObject;
+        if (character == null) return false;
 
         unitsTransferred += BuildAndApplyUnequipCommands(
             logic, character, hero.BattleEquipment, InventoryLogic.InventorySide.BattleEquipment,
@@ -190,13 +192,5 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
         if (commands.Count == 0) return 0;
         logic.AddTransferCommands(commands);
         return commands.Count;
-    }
-}
-
-internal static class AccessToolsLite
-{
-    public static FieldInfo? GetPrivateField(Type type, string name)
-    {
-        return type?.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
     }
 }
