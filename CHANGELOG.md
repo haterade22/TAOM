@@ -2,6 +2,10 @@
 
 ## 2026-05-07
 
+### Docs: backfilled 5 missing feature docs
+
+Closed the four `Main/Features/<X>` directories the `detect-docs-gaps.sh` SessionStart hook had been flagging on every boot (`Arena`, `BattleBalance`, `BattleScenes`, `WeatherBoundsGuard`) plus one the hook missed but that was nonetheless undocumented (`LocalizationOverride` — the existing `localization.md` covers TAOM's added translation strings, not the `MBTextManager.GetLocalizedText` Harmony override). Each new doc fills the `docs/features/TEMPLATE.md` skeleton with verified-from-source detail (file inventories, exact patch targets, config schemas, test paths + counts) so future sessions don't re-derive architecture from scratch. `BattleScenes` doc clearly marks the feature as **DISABLED** (gated on `TAOM_Map` integration; `_harmony.PatchCategory("Patch0_BattleScenes")` is commented out at SubModule.cs:115-116) so the next session investigating "why isn't this loading" can stop in 30 seconds. New files: `docs/features/arena.md`, `battle-balance.md`, `battle-scenes.md`, `localization-override.md`, `weather-bounds-guard.md`. Hook now reports a single residual gap (`Execution`), which is a false positive — `alignment-aware-execution.md` already covers it; teaching the hook that alias is optional follow-up.
+
 ### Fix: EquipPresets — Codex review #2026-05-07 fix pass (Patch33)
 
 Codex adversarial review of the EquipPresets port returned 9 findings: 2 CRITICAL, 3 HIGH, 3 MEDIUM, 1 LOW. All confirmed findings fixed; the 6 Known Suspects all addressed (3 disputed by Codex with vanilla-source evidence — no code change needed).
