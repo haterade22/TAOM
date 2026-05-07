@@ -38,3 +38,8 @@ Main/_Module/ModuleData/Languages/*.zip
 
 # Node tool dependencies (FBX/TPAC analysis tools — install via npm)
 tools/node_modules/
+
+# Claude Code / Codex transient runtime state
+.claude/scheduled_tasks.lock
+.codex-temp/
+.dotnet-cli-home/

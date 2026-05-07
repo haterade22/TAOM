@@ -117,6 +117,34 @@ When you write or modify any skill, agent, rule, or hook in `.claude/`:
 
 5. **When writing facts in this file** (or any rule that asserts behavior) — every fact must explicitly cite either a doc URL (DOC-BACKED) or an observation context (EMPIRICAL: where, when, by whom). Vague "verified" claims without source attribution age into wrong assumptions. Example: the project-slug derivation rule was originally presented as fact; Codex caught that the Claude Code memory docs only say `<project>` "is derived from the git repository" — the exact format is empirical-on-Windows, not doc-backed.
 
-## Last verified: 2026-04-26
+## Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06, CompanionTactics port session)
+
+When multiple feature ports run simultaneously in the TAOM working tree, an external watcher monitors build output and **auto-edits source files in response to build failures**. Symptoms confirmed during the CompanionTactics port:
+
+| What gets re-added | Where | When |
+|---|---|---|
+| `<Compile Remove="Features\<Feature>\**\*.cs" />` | `Main/TAOM.csproj` and `TAOM.Tests/TAOM.Tests.csproj` | After ANY build failure that mentions the feature |
+| Comments around `using TAOM.Features.<Feature>.*;` directives | `Main/SubModule.cs`, `Main/IoC.cs` | Same trigger |
+| Comments around integration calls (`AddBehavior`, `AddMissionBehavior`, `_harmony.Patch(AccessTools.Method(...))`) | `Main/SubModule.cs` | Same trigger |
+| Banner comment `// TEMP-SMARTCAVALRY-EXCLUDE: <error category>` | All of the above | Same trigger |
+
+**Key implication:** the watcher does NOT differentiate which feature actually had the error. A build failure caused by FiefManagement (or any other parallel port in flight) can trigger exclusion of CompanionTactics if both feature names appear in the build output. The cascade is destructive: excluding feature A causes its types to vanish from the namespace, which causes references in feature B to fail-compile, which triggers the watcher to exclude B too, and so on.
+
+**Workaround during integration:**
+1. Run `git status` BEFORE making single-owner-file edits — note which other parallel ports have unstaged changes.
+2. Make all source-file edits to YOUR feature first; ensure it compiles cleanly in isolation.
+3. Reserve csproj + `SubModule.cs` + `IoC.cs` edits for a SINGLE atomic batch.
+4. Run the build IMMEDIATELY in the same response (`dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true --verbosity quiet`).
+5. If the watcher re-comments after one cycle, find ALL the cumulative comment markers (grep for `TEMP-SMARTCAVALRY-EXCLUDE`) and uncomment them in one Edit, then build IMMEDIATELY again.
+6. If the watcher still wins after 2 attempts, check whether other parallel-port features have errors that are causing the cascade — fix those too, OR coordinate with the user to pause those ports.
+7. If you can't get an atomic build pass, fully-qualify your integration call sites (e.g., `new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(...)`) so the using-comment cycle doesn't break compilation. **Caveat:** this only helps if the namespace itself is included in the compile (i.e., the csproj exclusion is OFF) — if the watcher also excludes the source files, FQN resolution still fails.
+
+**Detection signature:** if you see comments matching `// TEMP-SMARTCAVALRY-EXCLUDE: <feature> parallel-port has compile errors; restore when ready.` adjacent to a using directive or integration call, the watcher has run on your feature.
+
+**Don't:** chase the watcher with iterative re-Edits — each cycle costs ~30s and burns context. Either close the build cleanly in ONE atomic batch, or accept that the feature ships with auto-commented integration and document the manual restoration in the feature doc + CHANGELOG.
+
+**RCA reference:** `docs/reviews/rca-companiontactics-2026-05-06.md` documents the full session lost to this watcher (~2 hours).
+
+## Last verified: 2026-05-06
 
 This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here.
