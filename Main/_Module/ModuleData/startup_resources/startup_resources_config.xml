@@ -3,8 +3,10 @@
   StartupResources config — values applied at new-game start.
 
   Attributes:
-    gold        = denars granted to NPC lords of this culture (NOT player). Default 0.
-    influence   = influence granted to NPC lords of this culture. Default 0.
+    gold        = denars granted to each alive Lord hero of this culture at new-game start
+                  (player clan is skipped; see playerGold for the player). Default 0.
+    influence   = influence granted to each eligible CLAN of this culture at new-game start
+                  (StartupInfluenceService applies to clans, not lords). Default 0.
     playerGold  = denars granted to the PLAYER hero at CC finalize, by selected culture.
                   Range [0, 10_000_000]. Out-of-range or non-numeric values revert to 0
                   with a logged warning. Default 0 (no warning when missing).
@@ -32,6 +34,12 @@
   <Culture id="khuzait"     gold="50000"  influence="1000" playerGold="4000"  />
 
   <!-- Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana 9 lords, Abanissa 8 lords) -->
+  <!-- KNOWN GAP: as of 2026-05-06, neither culture has narrative menu options in
+       parents/childhood/education/youth/adulthood JSON. A player picking these at the CC culture step
+       would hit an empty narrative page and crash on advance (see issue #111 for the full menu-coverage port).
+       The NPC `gold`/`influence` rows below are still valid (NPC lords + clans use them at new-game start);
+       the `playerGold` rows are functionally dead until narrative coverage lands. Codex Phase 3 review
+       2026-05-06 caught this gap. -->
   <Culture id="shaghana"    gold="50000"  influence="100"  playerGold="4000"  />
   <Culture id="abanissa"    gold="50000"  influence="100"  playerGold="4000"  />
 

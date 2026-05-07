@@ -211,14 +211,59 @@ Bug G was applied under user-prompted time pressure ("ensure you execute command
 
 ---
 
+## Bug I — `shaghana`/`abanissa` narrative menu coverage missing [HIGH, found Phase 3 self-review]
+
+**Symptom:** Both cultures are CC-selectable per `cultures.json` but have zero entries across all 5 narrative menu JSONs (`parents_menu`, `childhood_menu`, `education_menu`, `youth_menu`, `adulthood_menu`). A player picking them at the culture step would render an empty Family/Childhood/Education/Youth/Adulthood page; vanilla CC crashes on advance from an empty `SelectionList`. The `playerGold` rows I added in fix F are functionally dead because finalize is unreachable for these cultures.
+
+**Found by:** Codex Phase 3 self-review of session fixes (2026-05-06).
+
+**What I did wrong:** When fixing Bug F (adding shaghana/abanissa to startup_resources_config.xml), I verified they were full kingdoms with NPC clans + lords (Bug G correction) and that they were CC-selectable per cultures.json. I did NOT verify whether their CC selection actually leads to a working finalize — I only checked the existence of the row in the upstream source-of-truth file (`cultures.json`), not the existence of culture-keyed content across the downstream narrative menu JSONs.
+
+**Why it slipped through:**
+1. **Same root cause as Bug A/F (Class 1):** I cross-referenced one upstream file but stopped there. I didn't trace the full CC pipeline (cultures.json → SetSelectedCulture → narrative menus → finalize) to confirm each step works for the new cultures.
+2. **Phase 2 Codex review didn't run this trace either.** It checked startup_resources_config.xml for missing rows; it didn't trace the player-flow pipeline. Phase 3 (this self-review) is the one that asked "what does a player see when they pick shaghana?" — that question wasn't asked in Phase 2.
+3. **`playerGold` for these cultures looks like a feature.** The XML row says "shaghana player gets 4000 gold." If finalize is unreachable, that row is dead config. Today's review treats dead config rows like "no bug here, just unused" — but the `cultures.json` registration makes them visible at CC, creating an implicit user promise that doesn't pay off.
+
+**Lesson (systemic, extends Class 1):** **Source-of-truth enumeration must extend to the FULL pipeline a feature touches, not just the entry point.** For shaghana/abanissa player flow:
+- Entry point: `cultures.json` (selectable) ✓
+- Stage 1: `parents_menu.json` (parent options) ✗ (missing)
+- Stage 2: `childhood_menu.json` (childhood) ✗
+- Stage 3: `education_menu.json` (education) ✗
+- Stage 4: `youth_menu.json` (youth) ✗
+- Stage 5: `adulthood_menu.json` (adulthood) ✗
+- Finalize: `startup_resources_config.xml` (gold/equipment) ✓ (added this session)
+
+A 30-second grep across the 5 menu JSONs would have caught the dead-end. Same shape as the cross-file cross-reference for Bug B (sturgia retainer roster missing).
+
+**Resolution this session:**
+- Added a defensive XML comment in startup_resources_config.xml flagging the gap explicitly
+- Filed follow-up issue [#111](https://github.com/haterade22/TAOM/issues/111) with three remediation options (A: author full menu coverage, B: hide from CC, C: safe fallback)
+- This issue is OUT OF SCOPE for #110 (gold/equipment port, not narrative menu authoring)
+- Per "no silent deferrals" rule, the deferral is recorded in: GitHub issue #111, RCA bug I, CHANGELOG, and an in-line XML comment
+
+## Bug J — XML header comment misattributes `influence` to NPC lords [LOW]
+
+**Symptom:** XML config header comment said "influence is granted to NPC lords." Actually `StartupInfluenceService` applies to eligible CLANS (not lords). Wrong audience for future tuners reading the config to understand what to change.
+
+**Found by:** Codex Phase 3 self-review.
+
+**What I did wrong:** I wrote the XML header comment by paraphrasing my mental model of the feature. I didn't re-read `StartupInfluenceService.cs` to confirm the actual target.
+
+**Lesson (Class 4 — new):** **Doc/comment text near config files must be verified against the consuming code, not paraphrased from memory.** Especially for retuning knobs where the user reads the comment to know what to change.
+
+**Resolution this session:** Comment corrected. Now says "influence granted to each eligible CLAN of this culture (StartupInfluenceService applies to clans, not lords)."
+
 ## Bug count summary
 
-| Phase | Source | HIGH/P1 | MEDIUM/P2 | Total caught |
-|-------|--------|---------|-----------|--------------|
-| Phase 1 (Claude `/deep-review`) | 5 parallel agents | 2 | 2 | 4 |
-| Phase 2 (Codex `/codex:review`) | independent verifier | 1 | 1 | 2 |
-| Phase 3 (user feedback) | direct correction | 1 | 0 | 1 |
-| **Total this session** | | **4** | **3** | **7** |
+| Phase | Source | HIGH/P1 | MEDIUM/P2 | LOW | Total caught |
+|-------|--------|---------|-----------|-----|--------------|
+| Phase 1 (Claude `/deep-review`) | 5 parallel agents | 2 | 2 | 0 | 4 |
+| Phase 2 (Codex `/codex:review` first pass) | independent verifier | 1 | 1 | 0 | 2 |
+| Phase 3a (user feedback) | direct correction | 1 | 0 | 0 | 1 |
+| Phase 3b (Codex self-review of fixes) | independent re-verifier | 1 | 0 | 1 | 2 |
+| **Total this session** | | **5** | **3** | **1** | **9** |
+
+Phase 3b (self-review of fixes) caught 2 more bugs that Phase 1 + Phase 2 missed. The pattern from earlier this session (each phase catches what the previous missed) holds. **Phase 3 paid for itself again** — the HIGH finding (shaghana/abanissa dead-end) would have shipped as silent player crash without it.
 
 Each phase caught bugs the previous phase missed. Each phase pays for itself.
 
