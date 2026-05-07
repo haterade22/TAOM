@@ -13,5 +13,6 @@ public static class StartupResourcesIoC
         container.Register<IStartupResourcesConfigProvider, StartupResourcesConfigProvider>(Reuse.Singleton);
         container.Register<IStartupGoldService, StartupGoldService>(Reuse.Singleton);
         container.Register<IStartupInfluenceService, StartupInfluenceService>(Reuse.Singleton);
+        container.Register<IPlayerStartupGoldService, PlayerStartupGoldService>(Reuse.Singleton);
     }
 }

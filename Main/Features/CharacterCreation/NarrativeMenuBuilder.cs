@@ -56,9 +56,7 @@ public class NarrativeMenuBuilder
     }
 
     internal static string BuildEquipmentRosterId(string cultureId, string titleType, bool isFemale)
-    {
-        return $"player_char_creation_{cultureId}_{titleType}_{(isFemale ? "f" : "m")}";
-    }
+        => PlayerEquipmentRosterIds.Build(cultureId, titleType, isFemale);
 
     public NarrativeMenuOption BuildOption(NarrativeOptionDefinition definition)
     {

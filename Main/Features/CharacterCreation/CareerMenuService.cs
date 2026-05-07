@@ -224,7 +224,7 @@ public class CareerMenuService : ICareerMenuService
         var cultureId = culture?.StringId ?? "gondor";
         var isFemale = Hero.MainHero?.IsFemale ?? false;
         var titleType = manager.CharacterCreationContent?.SelectedTitleType ?? "guard";
-        var equipmentId = $"player_char_creation_{cultureId}_{titleType}_{(isFemale ? "f" : "m")}";
+        var equipmentId = PlayerEquipmentRosterIds.Build(cultureId, titleType, isFemale);
 
         return new List<NarrativeMenuCharacterArgs>
         {

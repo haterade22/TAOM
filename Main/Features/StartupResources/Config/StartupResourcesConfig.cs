@@ -12,4 +12,5 @@ public class CultureResourceEntry
     public string CultureId { get; set; }
     public int Gold { get; set; }
     public float Influence { get; set; }
+    public int PlayerGold { get; set; }
 }

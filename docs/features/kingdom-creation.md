@@ -517,8 +517,8 @@ Umbar, Shaghana, and Abanissa all inherit aserai-base resources this way.
 | Kingdom | Culture ID | File type | Lord prefix | Notes |
 |---------|------------|-----------|-------------|-------|
 | Umbar | `umbar` | Custom XML | `U` | Full implementation; reference for all 13 files |
-| Shaghana | `shaghana` | Custom XML | `SH` | Harad sub-kingdom; reuses aserai militia and crowd NPCs |
-| Abanissa | `abanissa` | Custom XML | `AB` | Far Harad sub-kingdom; same inheritance pattern as Shaghana |
+| Shaghana | `shaghana` | Custom XML | `SH` | Independent kingdom in the eastern reach of Harad. 9 NPC lords, own ruler title (Taskral). Reuses aserai militia and crowd NPCs. |
+| Abanissa | `abanissa` | Custom XML | `AB` | Independent kingdom in the deep south of Harad. 8 NPC lords, own ruler title (Châjaphân). Same inheritance pattern as Shaghana. |
 | Gondor | `gondor` | Custom XML | varies | Fully custom troops and equipment sets |
 | Harwan | n/a | XSLT | — | Stays on `Kingdom.aserai`; clans defined in `spclans.xslt` |
 

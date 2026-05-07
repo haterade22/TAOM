@@ -5,6 +5,7 @@ using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.CharacterCreation.Models;
+using TAOM.Features.StartupResources;
 
 namespace TAOM.Tests.Features.CharacterCreation;
 
@@ -17,6 +18,8 @@ public class CharacterCreationContentServiceTests
     private IHeroRosterAdapter _heroRosterAdapter;
     private IEquipmentRosterProvider _equipmentRosterProvider;
     private ICareerMenuService _careerMenuService;
+    private IPlayerStartupGoldService _playerStartupGoldService;
+    private IPlayerEquipmentService _playerEquipmentService;
     private IModLogger _logger;
     private CharacterCreationContentService _sut;
 
@@ -29,6 +32,8 @@ public class CharacterCreationContentServiceTests
         _heroRosterAdapter = Substitute.For<IHeroRosterAdapter>();
         _equipmentRosterProvider = Substitute.For<IEquipmentRosterProvider>();
         _careerMenuService = Substitute.For<ICareerMenuService>();
+        _playerStartupGoldService = Substitute.For<IPlayerStartupGoldService>();
+        _playerEquipmentService = Substitute.For<IPlayerEquipmentService>();
         _logger = Substitute.For<IModLogger>();
 
         _sut = new CharacterCreationContentService(
@@ -38,6 +43,8 @@ public class CharacterCreationContentServiceTests
             _heroRosterAdapter,
             _equipmentRosterProvider,
             _careerMenuService,
+            _playerStartupGoldService,
+            _playerEquipmentService,
             _logger);
     }
 

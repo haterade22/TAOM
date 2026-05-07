@@ -18,5 +18,7 @@ public static class CharacterCreationIoC
         container.Register<ICCBodyPropertiesProvider, CCBodyPropertiesProvider>(Reuse.Singleton);
         container.Register<IPlayerBodyPropertiesAdapter, PlayerBodyPropertiesAdapter>(Reuse.Singleton);
         container.Register<ICCBodyPropertiesService, CCBodyPropertiesService>(Reuse.Singleton);
+        container.Register<IPlayerEquipmentAdapter, PlayerEquipmentAdapter>(Reuse.Singleton);
+        container.Register<IPlayerEquipmentService, PlayerEquipmentService>(Reuse.Singleton);
     }
 }

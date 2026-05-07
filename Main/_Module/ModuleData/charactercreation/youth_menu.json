@@ -818,7 +818,7 @@
     {
         "string_id": "taom_youth_sturgia_1",
         "culture_id": "sturgia",
-        "title_type": "retainer",
+        "title_type": "guard",
         "text": "Served in the Royal Guard of Dale.",
         "description": "You pledged your loyalty to the King of Dale, serving in the Royal Guard and learning the martial traditions of the Men of the North.",
         "skills": ["Riding", "Polearm"],

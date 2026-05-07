@@ -10,6 +10,7 @@ using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation.Models;
+using TAOM.Features.StartupResources;
 
 namespace TAOM.Features.CharacterCreation;
 
@@ -27,6 +28,8 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     private readonly IHeroRosterAdapter _heroRosterAdapter;
     private readonly IEquipmentRosterProvider _equipmentRosterProvider;
     private readonly ICareerMenuService _careerMenuService;
+    private readonly IPlayerStartupGoldService _playerStartupGoldService;
+    private readonly IPlayerEquipmentService _playerEquipmentService;
     private readonly IModLogger _logger;
 
     // Vanilla cultures already registered by SandBox handler — skip these
@@ -42,6 +45,8 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         IHeroRosterAdapter heroRosterAdapter,
         IEquipmentRosterProvider equipmentRosterProvider,
         ICareerMenuService careerMenuService,
+        IPlayerStartupGoldService playerStartupGoldService,
+        IPlayerEquipmentService playerEquipmentService,
         IModLogger logger)
     {
         _dataProvider = dataProvider;
@@ -50,6 +55,8 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         _heroRosterAdapter = heroRosterAdapter;
         _equipmentRosterProvider = equipmentRosterProvider;
         _careerMenuService = careerMenuService;
+        _playerStartupGoldService = playerStartupGoldService;
+        _playerEquipmentService = playerEquipmentService;
         _logger = logger;
     }
 
@@ -168,6 +175,37 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         TeleportToStartingSettlement(cultureData);
         SetPlayerRace(cultureData, Hero.MainHero?.StringId);
         AssignCareer(selectedCulture.StringId, Hero.MainHero?.StringId);
+        GrantPlayerStartupResources(selectedCulture.StringId, manager);
+    }
+
+    private void GrantPlayerStartupResources(string cultureId, CharacterCreationManager manager)
+    {
+        var heroId = Hero.MainHero?.StringId;
+        if (string.IsNullOrEmpty(heroId))
+        {
+            _logger.LogWarning("CC Finalize: Hero.MainHero is null — skipping player startup gold + equipment");
+            return;
+        }
+
+        try
+        {
+            _playerStartupGoldService.GrantPlayerStartupGold(cultureId, heroId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"CC Finalize: player startup gold failed: {ex.Message}");
+        }
+
+        try
+        {
+            var titleType = manager.CharacterCreationContent?.SelectedTitleType;
+            var isFemale = Hero.MainHero?.IsFemale ?? false;
+            _playerEquipmentService.ApplyPlayerStartingEquipment(cultureId, titleType, isFemale, heroId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"CC Finalize: player starting equipment failed: {ex.Message}");
+        }
     }
 
     private void AssignCareer(string cultureId, string heroStringId)

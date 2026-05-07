@@ -117,6 +117,76 @@ public class StartupResourcesConfigProviderTests
         Assert.AreEqual("gondor", config.CultureEntries[0].CultureId);
         Assert.AreEqual(0, config.CultureEntries[0].Gold);
         Assert.AreEqual(0f, config.CultureEntries[0].Influence);
+        Assert.AreEqual(0, config.CultureEntries[0].PlayerGold);
+    }
+
+    [TestMethod]
+    public void LoadConfig_PlayerGoldAttribute_Parsed()
+    {
+        WriteConfig(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<StartupResources>
+  <Culture id=""gondor"" gold=""500000"" influence=""100"" playerGold=""5000"" />
+</StartupResources>");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(5000, config.CultureEntries[0].PlayerGold);
+    }
+
+    [TestMethod]
+    public void LoadConfig_NegativePlayerGold_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<StartupResources>
+  <Culture id=""gondor"" gold=""500000"" playerGold=""-500"" />
+</StartupResources>");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(0, config.CultureEntries[0].PlayerGold);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("playerGold") && s.Contains("gondor")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_PlayerGoldExceedsUpperBound_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<StartupResources>
+  <Culture id=""gondor"" gold=""500000"" playerGold=""99999999"" />
+</StartupResources>");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(0, config.CultureEntries[0].PlayerGold);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("playerGold") && s.Contains("gondor")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_NonNumericPlayerGold_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<StartupResources>
+  <Culture id=""gondor"" gold=""500000"" playerGold=""abc"" />
+</StartupResources>");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(0, config.CultureEntries[0].PlayerGold);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("playerGold") && s.Contains("gondor")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_MissingPlayerGoldAttribute_DefaultsToZeroNoWarning()
+    {
+        WriteConfig(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<StartupResources>
+  <Culture id=""gondor"" gold=""500000"" influence=""100"" />
+</StartupResources>");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(0, config.CultureEntries[0].PlayerGold);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("playerGold")));
     }
 
     private void WriteConfig(string content)

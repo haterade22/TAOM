@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  StartupResources config — values applied at new-game start.
+
+  Attributes:
+    gold        = denars granted to NPC lords of this culture (NOT player). Default 0.
+    influence   = influence granted to NPC lords of this culture. Default 0.
+    playerGold  = denars granted to the PLAYER hero at CC finalize, by selected culture.
+                  Range [0, 10_000_000]. Out-of-range or non-numeric values revert to 0
+                  with a logged warning. Default 0 (no warning when missing).
+
+  Edits to this file take effect on the next Bannerlord process restart, not save reload.
+-->
 <StartupResources>
   <!-- Elven cultures -->
-  <Culture id="rivendell"   gold="600000" influence="1000" />
-  <Culture id="lothlorien"  gold="600000" influence="1000" />
-  <Culture id="mirkwood"    gold="600000" influence="1000"   />
+  <Culture id="rivendell"   gold="600000" influence="1000" playerGold="10000" />
+  <Culture id="lothlorien"  gold="600000" influence="1000" playerGold="10000" />
+  <Culture id="mirkwood"    gold="600000" influence="1000" playerGold="8000"  />
 
   <!-- Dwarven cultures -->
-  <Culture id="erebor"      gold="50000" influence="150"   />
+  <Culture id="erebor"      gold="50000"  influence="150"  playerGold="7500"  />
 
   <!-- Human Good cultures -->
-  <Culture id="gondor"      gold="50000"  influence="500"  />
-  <Culture id="vlandia"     gold="50000"  influence="50"   />
-  <Culture id="sturgia"     gold="50000"  influence="50"   />
+  <Culture id="gondor"      gold="50000"  influence="500"  playerGold="5000"  />
+  <Culture id="vlandia"     gold="50000"  influence="50"   playerGold="5000"  />
+  <Culture id="sturgia"     gold="50000"  influence="50"   playerGold="5000"  />
 
   <!-- Human Evil / Eastern cultures -->
-  <Culture id="battania"    gold="50000"  influence="100"  />
-  <Culture id="aserai"      gold="50000"  influence="100"  />
-  <Culture id="khuzait"     gold="50000"  influence="1000" />
+  <Culture id="empire"      gold="50000"  influence="100"  playerGold="4000"  />
+  <Culture id="battania"    gold="50000"  influence="100"  playerGold="4000"  />
+  <Culture id="aserai"      gold="50000"  influence="100"  playerGold="4000"  />
+  <Culture id="khuzait"     gold="50000"  influence="1000" playerGold="4000"  />
+
+  <!-- Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana 9 lords, Abanissa 8 lords) -->
+  <Culture id="shaghana"    gold="50000"  influence="100"  playerGold="4000"  />
+  <Culture id="abanissa"    gold="50000"  influence="100"  playerGold="4000"  />
 
   <!-- Orcish / Dark cultures -->
-  <Culture id="mordor"      gold="50000"  influence="500"  />
-  <Culture id="isengard"    gold="200000" influence="2000" />
-  <Culture id="gundabad"    gold="200000" influence="2000" />
-  <Culture id="dolguldur"   gold="200000" influence="2000" />
-  <Culture id="umbar"       gold="200000" influence="500"  />
+  <Culture id="mordor"      gold="50000"  influence="500"  playerGold="6000"  />
+  <Culture id="isengard"    gold="200000" influence="2000" playerGold="6000"  />
+  <Culture id="gundabad"    gold="200000" influence="2000" playerGold="6000"  />
+  <Culture id="dolguldur"   gold="200000" influence="2000" playerGold="6000"  />
+  <Culture id="umbar"       gold="200000" influence="500"  playerGold="6000"  />
 </StartupResources>

@@ -2,19 +2,195 @@
 
 ## 2026-05-06
 
+### Feat: MixedFormations — port external sibling module into Main/Features/ (Patch30)
+
+Refactored the developer-built `MixedFormations` module (#2 of 7 dropped at `Downloads/Features_fixed/`) into TAOM's adapter / service / IoC pattern. Replaces a standalone Bannerlord module with `Main/Features/MixedFormations/` so it ships as part of the TAOM DLL.
+
+**What it does:** when a formation contains both melee and ranged units AND it's holding position (`MovementOrder.MovementStateEnum.Hold`), reorder the units per the chosen layout: Infantry-front-Ranged-back (default), Ranged-front-Infantry-back, Ranged-on-the-wings (Infantry center), or Checkerboard. Auto-applies a default layout to "mixed" formations every 1s; player can cycle layouts on the selected formations (or all if none selected) via configurable hotkey (default `L`).
+
+**Architecture:**
+- [`LayoutPositioner`](Main/Features/MixedFormations/LayoutPositioner.cs) — pure-function slot-assignment math (4 layout algorithms + mid-mission newcomer assignment); fully unit-testable
+- [`FormationLayoutService`](Main/Features/MixedFormations/FormationLayoutService.cs) — singleton; owns per-formation layout dict + assignment cache + cycle/auto-apply orchestration; cleared on `OnEndMission`
+- [`MixedFormationsMissionBehavior`](Main/Features/MixedFormations/Hooks/MixedFormationsMissionBehavior.cs) — engine bridge; per-frame tick, accumulates 1s for default-apply, every-frame hotkey poll
+- [`Patch30_FormationGetOrderPositionOfUnit`](Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs) — Harmony Prefix on `Formation.GetOrderPositionOfUnit`; queries service for plane position; if non-null, builds `WorldPosition` via `Mission.Current.Scene.GetGroundHeightAtPosition` and skips vanilla
+- [`IFormationAdapter`](Main/Adapters/IFormationAdapter.cs) — NEW; load-bearing for SmartCavalryAI (feature #3) and CompanionTactics (feature #7). Wraps `Formation.{CountOfUnits, OrderPosition, OrderPositionIsValid, Direction, Width, Interval, IsHolding, Units}`. Service never sees `Formation` directly (ADR-007)
+- MCM: 4 settings under `Battle Tactics / Mixed Formations` group — Enable, DefaultLayout (0..3), CycleHotkey, Debug. Folded into [`TaomSettings.cs`](Main/Features/TaomSettings.cs) per the consolidation rule.
+
+**Two dead settings dropped on port** — per the [`feedback_user_facing_promise_must_match_code.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_user_facing_promise_must_match_code.md) memory rule (codified after SiegeDismount Codex review #34): the original module exposed `InfantryRowDepth` (1–10, default 3) and `RangedRowDepth` (1–10, default 2) settings with HintText promising to control row depth. Tracing them through the decompiled code showed they are never read anywhere — `filesPerRow` is computed from formation `Width / (Interval + 1)`. Rather than ship the user-facing-promise mismatch, both settings were removed on port. If row-depth control is desired later, that's a Phase 2 enhancement with a real implementation.
+
+**No keyword-based scene detection** — per the [`feedback_substring_keyword_matches_external_data.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_substring_keyword_matches_external_data.md) memory rule, this feature uses no string substring matching against engine state; layouts are gated purely by `MovementOrder.MovementStateEnum.Hold` (an authoritative engine flag).
+
+**Tests:** 36 unit tests in [`LayoutPositionerTests`](TAOM.Tests/Features/MixedFormations/LayoutPositionerTests.cs) (11 tests covering all 4 layouts, slot non-overlap, narrow-formation sqrt fallback, mid-mission newcomer assignment) and [`FormationLayoutServiceTests`](TAOM.Tests/Features/MixedFormations/FormationLayoutServiceTests.cs) (25 tests covering: 5 gating paths, layout get/set/cycle full wraparound, 5 mixed-detection threshold cases, default-applier paths, mission-end cleanup). Build green, 1447/1447 total tests pass.
+
+Source material: [`Downloads/Features_fixed/_decompiled/MixedFormations/MixedFormations.decompiled.cs`](Downloads/Features_fixed/_decompiled/MixedFormations/MixedFormations.decompiled.cs). Mathematical layout algorithms preserved verbatim (block placement, wing splitting, checkerboard parity); developer's threshold values (≥10 total, ≥5 minority, ≥20% minority share) preserved.
+
+Not-tested: `FormationAdapter` and `Patch30` (require live `Formation` and `Scene`); covered by in-game golden-path verification per [docs/features/mixed-formations.md](docs/features/mixed-formations.md#verification).
+
 ### Docs: CLAUDE.md — Patch29_CCBodyProperties row updated to list third target
 
 User explicitly authorized CLAUDE.md edit. Added `CharacterCreationCultureStageVM.OnCultureSelection` to the Patch29 row's target list and updated the Feature column to mention "culture-stage-VM body re-apply" alongside the existing two intercepts. The row now accurately reflects the 3-patch architecture deployed in `efb2eaa` and finalized in `e5d8fc3` — the OnCultureSelection postfix is the canonical hook (LOTRAOM-1.2 `OnCultureSelected` equivalent for v1.3) that re-applies the configured body after vanilla `InitializePlayersFaceKeyAccordingToCultureSelection` overwrites it with the culture XML default.
 
-### Cleanup: remove Phase 2A equipment-slot diagnostic from SideCommanderFilter (#105 closed)
+### Feat: Messengers — port LOTRAOM messenger system to TAOM (1.3.15)
 
-In-game testing confirmed all Custom Battle commanders — including Dunland's three after the data fix in `1f98886` — now render with full armor. The temporary one-shot diagnostic in `SideCommanderFilter.LogEquipmentDiagnosticOnce` (introduced in `a9e0bba` as Phase 2A) served its purpose: it identified seven broken `Item.dunland_caerdh_*` IDs that didn't exist in `LOTRLOME_Armory`, which led directly to the Phase 2C data-only fix.
+Adds a hero-to-hero messenger system: dispatch a paid messenger from the encyclopedia hero page (or in-person dialog), the messenger travels for N in-game days at a speed scaled to map size, and on arrival the player gets a "Speak / Dismiss" inquiry that opens a real conversation mission (settlement-aware: enters the settlement scene if the target is in one, otherwise opens a field conversation; restores player position on mission end). Random ambush "messenger lost" rolls during travel. Public hooks `IMessengerService.SendMessenger(Hero)` / `CanSendMessenger(Hero, out TextObject)` for future cross-feature integration.
 
-Removed: `_diagnosedCultures` HashSet, `_resetHintLogged` bool, the diagnostic call site in `ResolveCommandersForCulture`, and the entire `LogEquipmentDiagnosticOnce` private method. `SideCommanderFilter` is back to its lean production form (constructor + single resolver method, ~38 lines).
+Ported from LOTRAOM (Bannerlord 1.2.12) with TAOM conventions: adapter discipline (service uses `HeroSnapshot` POCO, never sealed `Hero`), primitive-dict `SyncData` (no `SaveableTypeDefiner`), MCM via `TaomSettings.Messengers`, JSON advanced tunables in `messenger_config.json` validated per the "Config Providers MUST Validate" rule, all 12 TAOM-supported localization languages.
 
-Issue #105 closed. Four-commit fix arc: `a9e0bba` (NRE Prefix + Refresh-based rebuilder + diagnostic) → `25415b1` (deep-review LOWs) → `587e784` (Codex Review 32 sister Prefix on `UpdateCharacterVisual`) → `1f98886` (Dunland data fix).
+**1.3.15 API drift caught and applied:**
+- `IMissionListener.OnInitialDeploymentPlanMade(BattleSideEnum, bool)` removed → replaced by `OnDeploymentPlanMade(Team, bool)`
+- `TextObject.Empty` removed → `TextObject.GetEmpty()`
+- `MobileParty.Position2D` setter removed → `MobileParty.Position = new CampaignVec2(vec, isOnLand: true)`
+- `IMapPoint.Position2D` (Vec2) renamed → `IMapPoint.Position` (CampaignVec2 — `.ToVec2()` to convert) — **caught at compile time, not in initial research**
+- `CampaignTime` ctor became internal → use `CampaignTime.Now.ToDays` for elapsed-time math (store dispatch time as `double` days, not ticks)
+- `OpenConversationMission` gained 5th optional `isMultiAgentConversation` param (default false; existing 4-arg call still compiles, no change required)
 
-Save-compat: code-deletion only. Safe on any save.
+**Architecture (15 files, ~370-line behavior + 100-line service + 5 supporting types):**
+- `MessengerCampaignBehavior` (boundary) — registers events, implements `IMissionListener`, registers 6-line dialog tree, orchestrates settlement-vs-field encounter routing, restores player position via one-shot `TickEvent` after `OnEndMission`. Touches sealed types directly.
+- `MessengerService` (Reuse.Singleton, pure logic) — `CanSendMessenger`, `RollAccident`, `AdvancePosition`, `CalculateMessengerSpeed`. Tests injected with NSubstitute mocks.
+- `MessengerStateStore` — `Dictionary<heroId, PendingMessenger>`, `Serialize` → `Dictionary<string,string>` (`"days|x|y|arrived"`), `TryDeserialize` drops malformed entries with logged warning.
+- `MessengerConfigProvider` (validates) — range-checks `accidentChancePerHour` ∈ [0,1] and `travelSpeedMultiplier` ∈ [0.1, 10], reverts + warns on invalid.
+- `MessengerSettingsProvider` — wraps the 4 new MCM properties (`EnableMessengers`, `MessengerGoldCost`, `MessengerTravelDays`, `MessengerAccidents`).
+- UIExtenderEx: prefab extension appends a `<ListPanel>` containing a "Send Messenger" button after `RichTextWidget[@Text='@InformationText']` in `EncyclopediaHeroPage`; mixin exposes `IsMessengerAvailable` / `SendMessengerCost` / `SendMessengerHint` / `SendMessengerActionName` data sources and `ExecuteSendMessenger` click command.
+
+**Deep-review fixes applied in-session (2 HIGH, 2 MEDIUM):**
+1. **HIGH (latent bug):** `Hero.FindFirst` iterates `Campaign.Current.Characters` (incl. dead/disabled), not `AllAliveHeroes`. If a target died after dispatch, `HandleArrivedMessenger`→`IsTargetAvailableNow` would return false → `WaitForNextTick` indefinitely (messenger pile-up). Added a permanent-unavailability branch (`!target.IsAlive || HeroState.Disabled`) that fires `NotifyMessengerLost` + new `taom_messenger_recipient_gone` localization key + `RemoveFromList`. Distinct from the temporary "in MapEvent" path which still defers.
+2. **HIGH (perf):** `OnHourlyTick` allocated `new List<string>()` every campaign hour. Replaced with reusable `_toRemoveScratch` field cleared per tick.
+3. **MEDIUM (perf):** `IMessengerStateStore.GetAll()` allocated a new `List<>` per call. Returns `_messengers.Values` (live `Dictionary.ValueCollection`) — zero allocation, `IReadOnlyCollection<>` surface preserved.
+4. **MEDIUM (perf):** `MessengerEncyclopediaMixin.OnRefresh` allocated `HintViewModel`+`TextObject` every encyclopedia refresh. Cached the four state-independent hints at construction; rejection-reason hint keyed by `MessengerValidationResult` enum so it only re-allocates on rejection-class transition.
+
+**Codex review round 1 (1 CRITICAL disputed, 3 HIGH fixed, 3 MEDIUM):**
+- HIGH: `MessengerCampaignBehavior` is `Reuse.Singleton`, so a single instance survives across campaigns within the same Bannerlord process. `_dialogsRegistered=true` set by campaign 1 would have suppressed `AddDialogOptions` in campaign 2. Added `_lastSessionStarter` tracking + `_justLoadedFromSave` flag — when starter changes, reset all per-campaign instance state; clear `_store` only on fresh new game (loaded games already have correct state via SyncData).
+- HIGH: arrival-time validation only screened dead/disabled, but send-time validation rejected fugitive + several inactive states. A target that became fugitive mid-flight could pass through and trigger `StartMessengerConversation` with no settlement / no party. Permanent-loss check now covers `!IsAlive`, `Disabled`, `IsFugitive`, `!IsActive && !IsWanderer`, `!IsActive && IsWanderer && HeroState != NotSpawned`.
+- HIGH: `Vec2` (TaleWorlds.Library) leaked across the service boundary. Replaced with TAOM-owned `MapCoord` struct (X/Y/Invalid/Zero/IsValid/Length/Normalized/+/-/*); behavior converts `Vec2 → MapCoord` at the boundary. Tests + service + domain are now free of TaleWorlds types.
+- MEDIUM: `<` and `>` range checks both fail for NaN, so `accidentChancePerHour: NaN` would propagate NaN through accident roll and speed calc. Validate now rejects `IsNaN || IsInfinity` before range check.
+- MEDIUM: `EnableMessengers` was only checked at registration. Mid-game disable left dialog hook + tick loop active. Added gates to `SendMessenger`, `CanSendMessenger`, `OnHourlyTick`, `DialogCondition_CanSend`.
+- DISPUTED (CRITICAL "fat behavior"): the behavior IS the TaleWorlds boundary per ADR-002/ADR-007; pure logic delegates to service; line count is genuine engine-coupled orchestration. Deep-review's standards agent independently confirmed compliance. Documented inline.
+- DISPUTED (MEDIUM "Append-as-child"): UIExtenderEx 2.12.0 enum is `{Prepend, ReplaceKeepChildren, Replace, Child, Append, Remove}` — `Child` is into-as-last-child; `Append` is sibling-after. Codex round-2 self-review confirmed the dispute by citing the official UIExtenderEx docs.
+
+**Codex review round 2 — self-review of round-1 fixes (1 HIGH regression caught + 3 MEDIUM):**
+- HIGH (regression): conditional registration in `SubModule.cs` (`if (Settings.EnableMessengers) AddBehavior`) caused saves with pending messengers to lose state when loaded with the toggle off — vanilla `CampaignBehaviorManager` only persists registered behaviors. Fix: register unconditionally; runtime gates already enforce "frozen when disabled" semantics.
+- MEDIUM: a player-edited negative `MessengerGoldCost` would pass validation (gold check is `playerGold < cost`) and `GiveGoldAction.ApplyBetweenCharacters(player, null, -100)` would GRANT the player 100 gold while still queuing a messenger. Same with non-positive travel days forcing instant arrival. Fix: `MessengerSettingsProvider` now clamps `MessengerGoldCost` (10–500) and `MessengerTravelDays` (1–10) — out-of-range reverts to default.
+- MEDIUM: `EnableMessengers` flipping OFF between the initial dialog line (`DialogCondition_CanSend`) and the cost line (`DialogCondition_HasGold`) let the player click "Send" → silently no-op → dialog still advanced to the success line. Fix: `DialogCondition_HasGold` now re-checks `EnableMessengers`.
+- MEDIUM: `double.TryParse(NumberStyles.Float)` accepts `NaN` / `Infinity` / `-Infinity`. Tampered save with `NaN|0|0|0` would parse cleanly, then `current - NaN` never reaches `>= travelDays` → hero stuck as already-pending forever. Also `MapCoord.IsValid` only rejected NaN, while `Vec2.IsValid` rejects both NaN and Infinity (parity gap). Fix: `PendingMessenger.TryDeserialize` rejects non-finite for all three numeric fields; `MapCoord.IsValid` matches `Vec2.IsValid` semantics.
+
+**Tests:** 61 new unit tests across 3 files (55 initial + 3 NaN/Infinity config + 3 non-finite deserialize). 1411/1411 total tests pass. Coverage: every `MessengerValidationResult` rejection path, every accident-roll boundary, every position-math edge case, every config-validation rule (incl. NaN/Infinity for both fields), every non-finite save-format input.
+
+**Localization:** 13 string files (1 EN base in `taom_messenger_strings.xml` + 12 language variants matching TAOM's existing language coverage convention). 29 keys with prefix `taom_messenger_*`. 12 `language_data.xml` files updated.
+
+**Test infrastructure update:** existing `AllLanguageDirs_HaveExactlyFiveLanguageFiles` test renamed to `*Six*` (now 6 entries: module + wanderer + companion + cc + career + messenger); new test enforces every language declares the messenger entry.
+
+**GitHub Issue:** #109 — feat(messengers): port LOTRAOM messenger system to TAOM (1.3.15)
+
+### Feat: Player starting gold + CC equipment persistence (port from LOTRAOM `StartingEquipmentGold`)
+
+Adds two adjacent capabilities the LOTRAOM 1.2.12 `StartingEquipmentGold/` module provided that TAOM had only half-built: configurable per-culture **player starting funds** at character-creation finalize, and **persistence** of the youth option's equipment roster onto `Hero.MainHero.BattleEquipment` / `CivilianEquipment` (previously the CC preview was visual-only — the player exited CC with vanilla default equipment regardless of the option chosen).
+
+**Why this exists:** The existing `StartupResources` feature explicitly skipped the player clan (`StartupGoldService.cs:40 if (hero.IsPlayerClan) continue;`) — only NPC lords got gold. And `NarrativeMenuBuilder.UpdateYouthEquipment` mutated the CC preview character but never wrote to the player's persistent equipment slots. New campaigns started with vanilla default 1000 denars and vanilla default starting equipment regardless of culture or youth option.
+
+**Architecture (XML/JSON-driven, not LOTRAOM's hard-coded C# dictionary):**
+
+- **Gold:** new `playerGold="…"` attribute on `<Culture>` rows in [`startup_resources_config.xml`](Main/_Module/ModuleData/startup_resources/startup_resources_config.xml). Per-culture only (per the user's scope choice this session). Range-validated `[0, 10_000_000]` per the "Config Providers MUST Validate" rule — out-of-range, non-numeric, or sign-flipped values revert to 0 with a logged warning. Missing attribute defaults to 0 silently. New service [`PlayerStartupGoldService`](Main/Features/StartupResources/PlayerStartupGoldService.cs) reuses the existing `IGoldGiftAdapter` (which already wraps `GiveGoldAction.ApplyBetweenCharacters(null, hero, amount, true)`).
+- **Equipment:** new ADR-007 adapter [`IPlayerEquipmentAdapter`](Main/Adapters/IPlayerEquipmentAdapter.cs) wraps `MBEquipmentRoster.AllEquipments` filter by `IsBattle`/`IsCivilian` and `Equipment.FillFrom` mutate-in-place. Service [`PlayerEquipmentService`](Main/Features/CharacterCreation/PlayerEquipmentService.cs) builds the roster ID via the existing TAOM convention `player_char_creation_{culture}_{titleType}_{m|f}` (promoted from `NarrativeMenuBuilder.BuildEquipmentRosterId` to a shared helper [`PlayerEquipmentRosterIds`](Main/Features/CharacterCreation/PlayerEquipmentRosterIds.cs)). Adapter returns an enum `PlayerEquipmentApplyResult` so the service surface stays free of sealed TaleWorlds types.
+- **Wiring:** both services injected into `CharacterCreationContentService` and called from `OnCharacterCreationFinalize` after `AssignCareer`. Reads `selectedCulture.StringId` and `manager.CharacterCreationContent.SelectedTitleType` directly (not via `Hero.MainHero.Culture` — see plan risk note about the in-flight finalize-order culture override).
+
+**API verification (v1.3.15 vs v1.2.12 LOTRAOM source):**
+
+Run `ilspycmd` on installed v1.3.15 DLLs before writing the adapter. Two drifts caught:
+1. `MBEquipmentRoster.GetBattleEquipments()` / `GetCivilianEquipments()` (LOTRAOM 1.2 surface) **don't exist** in v1.3.15 — the public surface is `AllEquipments` + filter by `Equipment.IsBattle` / `IsCivilian` properties.
+2. LOTRAOM wrote to `CharacterObject.PlayerCharacter.FirstBattleEquipment.FillFrom(...)`. In v1.3.15 the same backing object is exposed cleaner via `Hero.MainHero.BattleEquipment.FillFrom(...)` (the `CharacterObject.FirstBattleEquipment` getter on a Hero just delegates to `HeroObject.BattleEquipment` — same Equipment instance, cleaner v1.3 surface).
+
+The `GiveGoldAction.ApplyBetweenCharacters(Hero giverHero, Hero recipientHero, int amount, bool disableNotification = false)` signature matches LOTRAOM's call exactly — already in production use via the existing `GoldGiftAdapter`.
+
+**Tests:** 28 new + extended unit tests, all green. 1340/1340 total tests pass.
+- 5 new `StartupResourcesConfigProviderTests` cases — `playerGold` parsed, negative rejected, over-cap rejected, non-numeric rejected, missing attribute silent
+- 8 new `PlayerStartupGoldServiceTests` — culture match (case-insensitive), unknown culture warn, zero-gold skip, null/empty culture/hero no-ops, info-log content
+- 9 new `PlayerEquipmentServiceTests` — male/female roster suffix, null/empty input no-ops, all four `PlayerEquipmentApplyResult` branches mapped to correct log levels
+- 6 existing `CharacterCreationContentServiceTests` — updated for the new constructor signature (added `IPlayerStartupGoldService` and `IPlayerEquipmentService` dependencies)
+
+**Initial culture seeds for `playerGold`:** Elven 8,000–10,000 (Rivendell/Lothlorien wealthiest), Dwarf 7,500, Dark factions 6,000, Human Good kingdoms 5,000, Tribal/Eastern 4,000. Tunable in [`startup_resources_config.xml`](Main/_Module/ModuleData/startup_resources/startup_resources_config.xml) — edits require Bannerlord process restart (singleton config cache), not save-load.
+
+**Codex adversarial-review fixes (2026-05-06, post-deep-review):**
+- **[P1] Civilian-equipment guard targeted the wrong dead singleton.** The deep-review fix in `PlayerEquipmentAdapter.cs` compared `hero.CivilianEquipment` against `Campaign.Current.DeadBattleEquipment` — but in v1.3.15 `Hero.CivilianEquipment` falls through to `Campaign.Current.DeadCivilianEquipment` (a separate singleton, re-verified via `ilspycmd`). The civilian guard never tripped, so calling `FillFrom` on an uninitialized-civilian hero would have corrupted the shared `DeadCivilianEquipment` for the rest of the session. Fixed by tracking `deadBattle` and `deadCivilian` separately and checking each slot against its own singleton.
+- **[P2] `shaghana` and `abanissa` kingdoms missing from startup_resources_config.xml.** Both are full **independent kingdoms** in the Harad region (Shaghâna = "the eastern reach of Harad", 9 NPC lords; Âbanissa = "the deep south of Harad", 8 NPC lords) — registered in [`taom_spkingdoms.xml`](Main/_Module/ModuleData/taom_spkingdoms.xml) with their own rulers (Taskral / Châjaphân), banner keys, settlements, and CC-selectable cultures. They were missing from startup config — meaning every Shaghana/Abanissa lord NPC was getting 0 startup gold and 0 influence on a new game, and any player picking those cultures got 0 starting funds. Added rows with `gold="50000" influence="100" playerGold="4000"` matching the Harad tier (`aserai`). The first version of this fix incorrectly described them as "Aserai-region cultures with no NPC clans" — corrected after user pointed out they are full peer kingdoms.
+- **Documented Claude/Codex disagreement worth a memory entry:** the Claude `taleworlds-researcher` agent reported earlier that BOTH `BattleEquipment` and `CivilianEquipment` getters fall back to `DeadBattleEquipment`. That was wrong — Codex re-decompiled and found the correct `DeadCivilianEquipment` separate fallback. Lesson: when one agent's API claim contradicts another, re-run `ilspycmd` rather than trusting the more confident agent. The Claude data-flow agent also flagged shaghana/abanissa but dismissed them as "may be intentional zero-gold cultures" — Codex was right to push back.
+
+**Deep-review fixes (Agent 5 data-flow trace, 2026-05-06):**
+- Added `<Culture id="empire" .../>` with `playerGold="4000"` to startup config — Dunland (CC-selectable per `cultures.json`) was missing from the seed XML and would have silently granted 0 gold.
+- Changed `taom_youth_sturgia_1` (Royal Guard of Dale) `title_type` from `"retainer"` to `"guard"` — vanilla SandBox `sandbox_equipment_sets.xml` has no `sturgia_retainer` roster pair, so the first sturgia youth option would have shipped with no equipment applied. `guard` matches both the option's text ("Royal Guard of Dale") and an existing roster.
+- Routed `CareerMenuService.GetCareerMenuCharacterArgs` (the career-screen visual preview) through the new shared `PlayerEquipmentRosterIds.Build` helper instead of inlining the roster-ID format string. Eliminates the third independent construction of the `player_char_creation_*` convention.
+- Added `Campaign.Current.DeadBattleEquipment` guard to `PlayerEquipmentAdapter.ApplyRosterToPlayer`. `Hero.BattleEquipment` falls through to a process-wide shared `DeadBattleEquipment` singleton when the hero's `_battleEquipment` is null; calling `FillFrom` on that singleton would corrupt equipment for every dead/uninitialized hero in the session. MainHero at CC finalize is always initialized so this is defensive — but the adapter accepts any `heroId` and shouldn't expose the foot-gun to future callers.
+
+**Out of scope (deliberate):** per-youth-option gold (per-culture only this session), starting items / starting troops (LOTRAOM had this; CareerSystem covers troop starts in TAOM), MCM live retuning. The visual `UpdateYouthEquipment` preview is preserved unchanged — it's orthogonal to persistence.
+
+**Pre-existing tech debt noted by deep-review (NOT fixed this session, separate cleanup):** `CharacterCreationContentService.AssignCareer` resolves `ICareerCreationHandler` and `ICareerRegistry` via `IoC.Resolve<>` (lines ~218, 235) — service-locator anti-pattern flagged by Standards agent. Pre-dates this session. Should be lifted to constructor injection in a follow-up.
+
+Plan: [`C:\Users\mikew\.claude\plans\please-investigate-this-that-lovely-pine.md`](../../.claude/plans/please-investigate-this-that-lovely-pine.md)
+GitHub issue: [#110](https://github.com/haterade22/TAOM/issues/110)
+Root cause analysis: [docs/reviews/rca-player-startup-2026-05-06.md](docs/reviews/rca-player-startup-2026-05-06.md) — 7 bugs in 1 session across 3 systemic root cause classes (enumeration from existing-config-rows-not-source-of-truth; insufficient decompilation of property bodies; ID classification by assumption instead of grep). Two new memory entries created: `feedback_enumerate_from_source_of_truth.md`, `feedback_classify_by_grep_not_by_assumption.md`.
+
+Constraint: youth-option title_type strings (`retainer`, `warrior`, etc.) must match between `youth_menu.json` and the equipment XML roster IDs — typos surface as a "roster not found" warning at finalize and the player gets vanilla equipment. No crash.
+
+Research: `GiveGoldAction.ApplyBetweenCharacters` (TaleWorlds.CampaignSystem.Actions), `MBEquipmentRoster.AllEquipments` (TaleWorlds.Core), `Equipment.FillFrom` (TaleWorlds.Core), `Hero.BattleEquipment` / `CivilianEquipment` (TaleWorlds.CampaignSystem), `CharacterCreationContent.SelectedTitleType` (TaleWorlds.CampaignSystem.CharacterCreationContent).
+
+Save-compat: Player gold + equipment writes happen at CC finalize on new-game start only — no save-format changes, no impact on existing saves.
+
+
+
+### Fix: SiegeDismount — Codex adversarial review HIGH findings
+
+After `/deep-review` produced a passing verdict and we fixed two HIGH findings on the data-flow path, `/review-codex` (Codex CLI 0.128.0, run 2026-05-06) produced THREE additional findings — two HIGH, one MEDIUM. All three confirmed and fixed in the same session per the "no silent deferrals" rule. The Codex review file is preserved at [docs/reviews/codex-adversarial-siegedismount-2026-05-06.md](docs/reviews/codex-adversarial-siegedismount-2026-05-06.md) (reconstructed from stdout because Codex's `apply_patch` was rejected by the read-only sandbox).
+
+**FINDING 1 (HIGH) — scene-name keyword fallback still matched 24 vanilla siege center scenes.** The `/deep-review` pass narrowed `SceneSiegeKeywords` from `[siege, wall, gate, assault, breach]` to `[siege, assault, breach]`. Codex grep found that `siege` still matches 24 vanilla `Location id="center"` entries in [settlements.xml](Main/_Module/ModuleData/settlements.xml) — `empire_siege_001`, `khuzait_castle_siege_001`, `sturgia_castle_siege_001` etc. Those scenes can be loaded as non-combat Missions (settlement-center cinematics, story events) where `IsSiegeBattle=false`, falsely clobbering the player's mount. **Fix:** removed the keyword fallback entirely. [`SiegeDismountService.IsSiegeMission`](Main/Features/SiegeDismount/SiegeDismountService.cs) now returns `isSiegeBattle` directly. Modded siege scenes that don't set the engine flag won't trigger the feature — documented requirement. Tests rewritten: 9-row data-test pinning the new contract against vanilla and TAOM scene names.
+
+**FINDING 2 (HIGH) — `ItemModifier` was dropped on auto-remount.** I documented this as a "known limitation" in the deep-review pass. Codex pointed out that the modifier-preserving [`ItemRoster.AddToCounts(EquipmentElement, int)`](Main/Adapters/PartyMountInventoryAdapter.cs) overload exists in v1.3.15 (verified via `ilspycmd`); the bare `(ItemObject, int)` overload internally drops the modifier. **Fix:** [`MountSnapshot`](Main/Features/SiegeDismount/Models/MountSnapshot.cs) now carries the full `EquipmentElement` (internal — TaleWorlds types stay inside the implementation; `IMountSnapshot` interface unchanged). [`PlayerMountAdapter.Capture`](Main/Adapters/PlayerMountAdapter.cs) uses the full-data constructor; [`PartyMountInventoryAdapter.Deposit/Withdraw`](Main/Adapters/PartyMountInventoryAdapter.cs) and [`PlayerMountAdapter.Restore`](Main/Adapters/PlayerMountAdapter.cs) use the `EquipmentElement` overload via concrete-type cast. A "Sharp" or "Damaged" horse now round-trips correctly.
+
+**FINDING 3 (MEDIUM) — `DismountKeepOnMap` was a silent no-op despite MCM hint promising "horse on map, player on foot".** Inherited bug — the original developer's decompiled module had the same pre-existing no-op. Full implementation requires `Mission.SpawnAgent` plumbing not in Phase 1 scope. **Fix:** documented honestly. Mode 1 logs a `LogWarning` explaining it's "Reserved / equivalent to Vanilla until somebody implements the actual map-side horse spawn." MCM dropdown label and hint text updated to "(currently equivalent to Vanilla — full implementation deferred)" so the user-facing promise matches reality. Enum value retained for save-compat.
+
+**RCA / Preventive actions** (per `/review-codex` Phase 3e — three Why-We-Missed analyses recorded in the review file):
+
+1. Future feature ports interpreting scene names: grep across ALL `ModuleData/*.xml` for substring overlap, not just feature-specific custom XML.
+2. When an adapter touches an inventory or equipment slot that vanilla treats as `EquipmentElement`-shaped, prefer the `EquipmentElement`-overload of the inventory API. Search the API surface for both before settling on the simpler `ItemObject` overload.
+3. When porting a feature with multiple modes: read the user-facing strings (MCM hints, dropdown labels) and trace them to the implementation. If the promise doesn't match the code, either fix the code or fix the promise — never ship the mismatch.
+
+Net: 33 SiegeDismount tests pass (same count — replaced false-positive scene-name tests with new IsSiegeBattle-only tests; added KeepOnMap warning test; otherwise behavior preserved). 1405/1405 total tests green.
+
+### Fix: SiegeDismount — deep-review HIGH findings (false-positive dismount + config validation)
+
+Two HIGH findings from `/deep-review` Agent 5 (Data Flow), fixed in the same session per the "no silent deferrals" rule:
+
+**GAP 1 — out-of-range MountBehavior int silently captured mount with no action.** A user manually editing `ModuleData/MCM/Global/TAOM.json` to set `SiegeMountBehavior` outside `[0, 3]` produced an undefined enum value. The switch had no `default:` case, so `_capturedSnapshot` got set but no clear/deposit/restore fired — the player's mount data was read but no effect occurred. Fix: added `default:` case to the switch in [`SiegeDismountService.OnMissionStart`](Main/Features/SiegeDismount/SiegeDismountService.cs) that logs `LogWarning` and treats unknown values as a full no-op. Two regression tests cover the path. Per `csharp-architecture.md` "Config Providers MUST Validate" rule.
+
+**GAP 2 — false-positive siege detection on real TAOM castle scenes.** The keyword fallback `IsSiegeMission` matched substrings `gate` and `wall`, falsely firing for [`castle_orthanc_gate`](Main/_Module/ModuleData/custom_settlements.xml#L74) (Isengard's Orthanc Gate castle) and [`castle_gundabad_wall`](Main/_Module/ModuleData/custom_settlements.xml#L344) (Gundabad Wall castle) — both real TAOM `Location id="center"` scenes used during normal castle visits. With `DismountKeepOnMap` or `DismountToInventory` modes, the player's mount would have been incorrectly removed during a non-siege visit. Fix: narrowed `SceneSiegeKeywords` to `siege`, `assault`, `breach` only — removed `gate` and `wall`. Real sieges hit `Mission.IsSiegeBattle = true` directly; the keyword fallback is only for modded/custom siege scenes that fail to set that flag. Four data-row regression tests cover the false-positive scenes.
+
+**KL 1, KL 3 — state hygiene.** `OnMissionEnd`'s early-return path now clears the stale `_capturedSnapshot` so the singleton doesn't carry mount-id strings between missions. Added a guard in `OnMissionStart` for the theoretical case where `HasMount()` returns true but `Capture()` returns an empty snapshot. Three regression tests.
+
+Net: 33 SiegeDismount tests pass (+9 from this fix). 1404/1404 total tests green. Saving the deep-review findings cost less than 30 minutes; in-game discovery would have cost a player having their mount silently disappear when visiting Orthanc Gate.
+
+### Feat: SiegeDismount — port external sibling module into Main/Features/
+
+Refactored the developer-built `SiegeDismount` module (one of seven dropped at `Downloads/Features_fixed/`) into TAOM's adapter / service / IoC pattern. The original was a standalone Bannerlord module with its own `SubModule.xml`, `MissionBehavior`, and MCM settings; this commit replaces it with `Main/Features/SiegeDismount/` so it ships as part of the TAOM DLL with the same MCM, logging, and toggle conventions as the rest of TAOM.
+
+**What it does:** when a siege mission begins, the player's mount + harness are auto-handled per the user's MCM choice — Vanilla (no change), KeepOnMap, ToInventory, or AutoRemount-after-siege (default). Eliminates the on-horseback-in-fortress-courtyard immersion break for LOTR sieges (Helm's Deep, Minas Tirith, Erebor's gates).
+
+**Architecture:**
+- [`SiegeDismountService`](Main/Features/SiegeDismount/SiegeDismountService.cs) — pure state machine, fully unit-testable
+- [`SiegeDismountMissionBehavior`](Main/Features/SiegeDismount/Hooks/SiegeDismountMissionBehavior.cs) — thin engine bridge; reads `Mission.Current.IsSiegeBattle` + `SceneName` and delegates
+- [`IPlayerMountAdapter`](Main/Adapters/IPlayerMountAdapter.cs) + [`IPartyMountInventoryAdapter`](Main/Adapters/IPartyMountInventoryAdapter.cs) — ADR-007 wrappers over `Hero.MainHero.BattleEquipment` and `MobileParty.MainParty.ItemRoster`. Service never sees `EquipmentElement` or `ItemObject`
+- [`IMountSnapshot`](Main/Features/SiegeDismount/Models/IMountSnapshot.cs) — opaque token between adapter and service
+- MCM settings folded into [`TaomSettings.cs`](Main/Features/TaomSettings.cs) under group `Battle Tactics / Siege Dismount` (3 settings: Enable, Behavior dropdown 0-3, Debug)
+- No Harmony patches — pure `MissionBehavior` integration
+
+**Logging:** every lifecycle event hits `IModLogger` per the mandatory cross-cutting logging contract from the integration plan. `LogInfo` on enable/disable + siege detection + restore. `LogDebug` (gated by `SiegeDismountDebug` MCM toggle) for per-mode decisions. `LogError` for all caught exceptions on adapter calls — never silent.
+
+**Tests:** 24 unit tests in [`SiegeDismountServiceTests`](TAOM.Tests/Features/SiegeDismount/SiegeDismountServiceTests.cs) covering disable paths, all four behavior modes, scene-name siege detection (5 keyword variants), idempotent end, and four logging contracts. Build green, 1340/1340 tests pass.
+
+Source material: [`Downloads/Features_fixed/_decompiled/SiegeDismount/SiegeDismount.decompiled.cs`](Downloads/Features_fixed/_decompiled/SiegeDismount/SiegeDismount.decompiled.cs). Original developer's behavior preserved verbatim — same modes, same defaults, same scene-name keywords.
+
+Not-tested: `PlayerMountAdapter` and `PartyMountInventoryAdapter` (require live `Hero.MainHero` and `MobileParty.MainParty`); covered by in-game golden-path verification per [docs/features/siege-dismount.md](docs/features/siege-dismount.md#verification).
+
+Constraint: mount/harness `ItemModifier` (durability/quality bonus) is dropped on auto-remount because Phase 1 stores only `StringId`. Documented as known limitation — upgrade to a modifier-preserving snapshot is a follow-up if any player reports it.
+
+
 
 ### Docs: CCBodyProperties — feature doc rewrite + seed config + memory entry (in-game verified)
 

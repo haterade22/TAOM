@@ -11,6 +11,8 @@ namespace TAOM.Features.StartupResources;
 
 public class StartupResourcesConfigProvider : IStartupResourcesConfigProvider
 {
+    private const int PlayerGoldMaxValue = 10_000_000;
+
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
     private StartupResourcesConfig _cached;
@@ -50,7 +52,8 @@ public class StartupResourcesConfigProvider : IStartupResourcesConfigProvider
                 {
                     CultureId = id,
                     Gold = int.Parse(el.Attribute("gold")?.Value ?? "0", CultureInfo.InvariantCulture),
-                    Influence = float.Parse(el.Attribute("influence")?.Value ?? "0", CultureInfo.InvariantCulture)
+                    Influence = float.Parse(el.Attribute("influence")?.Value ?? "0", CultureInfo.InvariantCulture),
+                    PlayerGold = ParsePlayerGold(el.Attribute("playerGold")?.Value, id)
                 });
             }
 
@@ -63,5 +66,25 @@ public class StartupResourcesConfigProvider : IStartupResourcesConfigProvider
             _cached = new StartupResourcesConfig();
             return _cached;
         }
+    }
+
+    private int ParsePlayerGold(string raw, string cultureId)
+    {
+        if (string.IsNullOrEmpty(raw))
+            return 0;
+
+        if (!int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+        {
+            _logger.LogWarning($"StartupResourcesConfigProvider: invalid playerGold='{raw}' for culture '{cultureId}' — reverting to 0");
+            return 0;
+        }
+
+        if (value < 0 || value > PlayerGoldMaxValue)
+        {
+            _logger.LogWarning($"StartupResourcesConfigProvider: playerGold={value} for culture '{cultureId}' out of range [0, {PlayerGoldMaxValue}] — reverting to 0");
+            return 0;
+        }
+
+        return value;
     }
 }

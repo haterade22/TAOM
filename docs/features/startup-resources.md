@@ -1,8 +1,8 @@
-# Startup Resources — Culture-Based Gold & Influence Distribution
+# Startup Resources — Culture-Based Gold & Influence + Player Starting Gold + CC Equipment
 
 ## Overview
 
-Distributes starting gold to individual Lord heroes and starting influence to clans at new game creation, with amounts configured per culture via XML. This establishes faction-appropriate economic baselines reflecting Middle-earth power dynamics.
+Distributes starting gold to individual Lord heroes and starting influence to clans at new game creation, with amounts configured per culture via XML. The same config file also drives the player's culture-based starting funds, granted at character-creation finalize. A sister feature in `Main/Features/CharacterCreation/` persists each youth option's equipment roster onto the player hero so the equipment shown in the CC preview is what the player actually walks into the campaign with. Together these establish faction-appropriate economic and equipment baselines reflecting Middle-earth power dynamics.
 
 ## Why This Exists
 
@@ -48,28 +48,23 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `id` | string | Culture string ID (case-insensitive match) |
-| `gold` | int | Gold given to each alive Lord hero in this culture (0 = skip) |
+| `gold` | int | Gold given to each alive Lord hero in this culture (0 = skip). Player clan is excluded — see `playerGold`. |
 | `influence` | float | Influence added to each eligible clan in this culture (0 = skip) |
+| `playerGold` | int | Gold given to the **player hero** at CC finalize. Range `[0, 10_000_000]`; out-of-range or non-numeric values revert to 0 with a logged warning. Missing attribute defaults to 0 (no warning). |
 
 ### Current Values
 
-| Culture | Gold | Influence | Rationale |
-|---------|------|-----------|-----------|
-| rivendell | 6,000,000 | 2,000 | Ancient Elven wealth, major diplomatic power |
-| lothlorien | 6,000,000 | 2,000 | Ancient Elven wealth, major diplomatic power |
-| mirkwood | 6,000,000 | 50 | Wealthy but isolated, low political influence |
-| erebor | 1,000,000 | 50 | Dwarven treasure hoard, isolationist |
-| gondor | 500,000 | 100 | Fading kingdom, moderate resources |
-| vlandia (Rohan) | 500,000 | 50 | Horse-lords, modest economy |
-| sturgia (Dale) | 500,000 | 50 | Frontier kingdom, modest economy |
-| battania (Khand/Dunland) | 500,000 | 100 | Eastern/tribal cultures |
-| aserai (Harad) | 500,000 | 100 | Southern kingdom |
-| khuzait (Rhun) | 500,000 | 1,000 | Eastern empire, significant political power |
-| mordor | 500,000 | 100 | Economy driven by conquest, not wealth |
-| isengard | 2,000,000 | 2,000 | Saruman's war machine, high mobilization |
-| gundabad | 2,000,000 | 2,000 | Orcish warchest |
-| dolguldur | 2,000,000 | 2,000 | Shadow fortress resources |
-| umbar | 2,000,000 | 100 | Corsair wealth, low inland influence |
+NPC-lord gold/influence values are tuning knobs and may drift; consult `startup_resources_config.xml` for the live values. The table below reflects the playerGold seeds added with this feature.
+
+| Culture | playerGold | Rationale |
+|---------|-----------|-----------|
+| rivendell, lothlorien | 10,000 | Elven wealth, generous to descendants of the houses |
+| mirkwood | 8,000 | Elven, but more austere woodland realm |
+| erebor | 7,500 | Dwarven hoard culture rewards new heroes |
+| mordor, isengard, gundabad, dolguldur, umbar | 6,000 | Dark factions arm their recruits well |
+| gondor, vlandia (Rohan), sturgia (Dale) | 5,000 | Standard human good kingdoms |
+| empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun) | 4,000 | Tribal / eastern cultures, modest start |
+| shaghana (eastern Harad reach), abanissa (deep south Harad) | 4,000 | Independent Harad-region kingdoms — full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân), not sub-cultures |
 
 ## Key Files
 
@@ -84,6 +79,14 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 | `Main/Features/StartupResources/IStartupResourcesConfigProvider.cs` | Config provider interface |
 | `Main/Features/StartupResources/Config/StartupResourcesConfig.cs` | Config POCOs |
 | `Main/Features/StartupResources/StartupResourcesIoC.cs` | DryIoc registration |
+| `Main/Features/StartupResources/IPlayerStartupGoldService.cs` | Interface — `GrantPlayerStartupGold(cultureId, playerHeroId)` |
+| `Main/Features/StartupResources/PlayerStartupGoldService.cs` | Looks up `PlayerGold` from config; calls `IGoldGiftAdapter.GiveGoldToHero` |
+| `Main/Adapters/IPlayerEquipmentAdapter.cs` | Interface — `ApplyRosterToPlayer(rosterId, playerHeroId)` returning a `PlayerEquipmentApplyResult` |
+| `Main/Adapters/PlayerEquipmentAdapter.cs` | Wraps `MBEquipmentRoster.AllEquipments` filter + `Hero.BattleEquipment.FillFrom` / `CivilianEquipment.FillFrom` |
+| `Main/Features/CharacterCreation/IPlayerEquipmentService.cs` | Interface — `ApplyPlayerStartingEquipment(cultureId, titleType, isFemale, playerHeroId)` |
+| `Main/Features/CharacterCreation/PlayerEquipmentService.cs` | Builds roster ID, delegates to adapter, logs each result |
+| `Main/Features/CharacterCreation/PlayerEquipmentRosterIds.cs` | Shared roster-ID helper: `player_char_creation_{culture}_{titleType}_{m\|f}` (consumed by NarrativeMenuBuilder + PlayerEquipmentService) |
+| `Main/Features/CharacterCreation/CharacterCreationContentService.cs` | Calls both new services from `OnCharacterCreationFinalize` after `AssignCareer` |
 | `Main/Adapters/IStartupHeroAdapter.cs` | Interface — `GetAliveLordHeroes()` |
 | `Main/Adapters/StartupHeroAdapter.cs` | Wraps `Hero.AllAliveHeroes`, filters `Occupation.Lord` |
 | `Main/Adapters/IGoldGiftAdapter.cs` | Interface — `GiveGoldToHero(heroId, amount)` |
@@ -102,18 +105,33 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 
 ## Tests
 
-- `TAOM.Tests/Features/StartupResources/StartupResourcesConfigProviderTests.cs` — 6 tests: valid XML parsing, missing file, malformed XML, caching, decimal influence, missing attributes
+- `TAOM.Tests/Features/StartupResources/StartupResourcesConfigProviderTests.cs` — 11 tests: valid XML parsing, missing file, malformed XML, caching, decimal influence, missing attributes, `playerGold` happy-path parse, negative `playerGold` rejected, over-cap rejected, non-numeric rejected, missing-attribute defaults to 0 silently
 - `TAOM.Tests/Features/StartupResources/StartupGoldServiceTests.cs` — 8 tests: culture match, player skip, missing culture, multiple lords, zero gold, case-insensitive, no heroes, logging
+- `TAOM.Tests/Features/StartupResources/PlayerStartupGoldServiceTests.cs` — 8 tests: configured culture grant, case-insensitive culture match, unknown culture warns, zero `playerGold` skip, null/empty culture no-op, null hero ID no-op, info-log includes amount + culture
 - `TAOM.Tests/Features/StartupResources/StartupInfluenceServiceTests.cs` — 6 tests: culture match, missing culture, multiple clans, zero influence, no clans, logging
 - `TAOM.Tests/Features/StartupResources/StartupResourcesBehaviorTests.cs` — 4 tests: index 1 triggers, index 0/2 skip, idempotency guard
+- `TAOM.Tests/Features/CharacterCreation/PlayerEquipmentServiceTests.cs` — 9 tests: male/female roster-ID format, null/empty input no-ops, RosterNotFound / NoSuitableEquipment / HeroNotFound result handling, success info-log
 
 ## How to Add or Adjust a Culture's Starting Resources
 
 1. Open `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml`
-2. Add or edit a `<Culture>` element: `<Culture id="culture_id" gold="AMOUNT" influence="AMOUNT" />`
+2. Add or edit a `<Culture>` element: `<Culture id="culture_id" gold="LORD_AMOUNT" influence="AMOUNT" playerGold="PLAYER_AMOUNT" />`
 3. No code changes needed — the config provider loads all entries dynamically
-4. Set `gold="0"` or `influence="0"` to skip distribution for that dimension
-5. Cultures not listed in the config receive nothing (no fallback/default)
+4. Set any attribute to `"0"` to skip that dimension. Omitting `playerGold` also defaults to 0.
+5. Cultures not listed in the config receive nothing (no fallback/default).
+6. `playerGold` is range-validated `[0, 10_000_000]`. Out-of-range or non-numeric values revert to 0 with a warning in `rgl_log.txt` — check the log if an edit doesn't take effect.
+7. Reload scope: edits take effect on the next **Bannerlord process restart**, not save-load. The config provider is registered as `Reuse.Singleton` and caches for the entire process lifetime.
+
+## Player Starting Equipment (Per-Youth-Option)
+
+In addition to gold, the player's youth-option choice determines starting equipment via existing equipment rosters under the naming convention `player_char_creation_{culture}_{titleType}_{m|f}`. The same rosters were already wired for the CC preview (`NarrativeMenuBuilder.UpdateYouthEquipment`) — this feature persists them onto `Hero.MainHero.BattleEquipment` and `CivilianEquipment` at finalize, so the equipment shown in CC is what the player actually carries into the campaign.
+
+The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleType` (set by the youth menu's `onSelect` callback in `NarrativeMenuBuilder.BuildOption`). To add a new youth option:
+
+1. Add the option entry to `Main/_Module/ModuleData/charactercreation/youth_menu.json` with a `title_type` field.
+2. Add four matching `<EquipmentRoster id="player_char_creation_{culture}_{titleType}_{m|f}">` elements (male battle, male civilian, female battle, female civilian) to whichever equipment XML covers that culture.
+3. No code changes needed — `PlayerEquipmentService` builds the roster ID at runtime and `PlayerEquipmentAdapter.ApplyRosterToPlayer` looks it up via `MBObjectManager`.
+4. Missing rosters log a warning and the player keeps the vanilla default equipment (no crash).
 
 ## TaleWorlds API Notes
 
