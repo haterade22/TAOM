@@ -858,7 +858,7 @@ Added `tools/build_weapon_xml.py` and the `tools/weapon_xml/` package to automat
 
 ### Fix: Codex review #29 on Tier 2/3 adoption (#94)
 
-Codex adversarial pass on `79350f2` (Tier 2/3 adoption from Pass 4 of the ecosystem-review chain) caught **1 HIGH + 2 MED + 2 LOW + 1 process gap**. Review file: `docs/reviews/codex-adversarial-tier2-3-2026-04-26.md`. All addressed.
+Codex adversarial pass on `79350f2` (Tier 2/3 adoption from Pass 4 of the ecosystem-review chain) caught **1 HIGH + 2 MED + 2 LOW + 1 process gap**. Review file: `docs/archive/codex-reviews-2026-04/codex-adversarial-tier2-3-2026-04-26.md`. All addressed.
 
 **HIGH (real prevention theater — same class as review #28):**
 - `.claude/hooks/suggest-compact.sh` shipped with a bare `*"git commit"*` substring matcher. The codified rule against this exact pattern lives in `harness-facts.md` "Git invocation forms" (added in `2c4d414`) and was loaded into every session — but I didn't apply it when writing new commit detection in `79350f2`. **The prevention rule existed but wasn't applied to its own first user.** Replaced the matcher with the canonical two-stage pattern (reject `commit-tree`/`commit-graph`, then match `git commit` and `git -X ... commit`). Smoke-tested 5/5 cases (bare commit, `git -C path commit`, `git -c key=val commit`, `commit-tree` rejection, `git push`). Strengthened `harness-facts.md` to mark the pattern MANDATORY for new hooks; added grep-before-ship discipline; added new audit-checklist item to `/skill-stocktake`.
@@ -1006,7 +1006,7 @@ No code-behavior changes; this commit is doc + rule additions plus the retroacti
 
 User asked "we did our review?" — answer was no. Dispatched Codex pass on `b7e7188` with explicit recursion-risk framing: could a bug in the prevention infrastructure defeat the prevention it's supposed to enable?
 
-Verdict: yes. 1 HIGH, 3 MEDIUM, 2 LOW + 1 process gap. Review at `docs/reviews/codex-adversarial-prevention-2026-04-26.md`. All addressed.
+Verdict: yes. 1 HIGH, 3 MEDIUM, 2 LOW + 1 process gap. Review at `docs/archive/codex-reviews-2026-04/codex-adversarial-prevention-2026-04-26.md`. All addressed.
 
 **HIGH (real prevention theater):**
 - Both new pre-commit hooks blanket-skipped `git commit --amend`. My "amends modify a prior commit's responsibility" rationale was wrong — amend-as-workflow is common ("oops, forgot a file, amend it in"). The hooks exempted exactly the case they were supposed to catch. Even worse: a two-step bypass (unrelated commit + amend with `.claude/`) would defeat both gates.
@@ -1067,7 +1067,7 @@ Across three Codex/deep-review passes on the Tier 1 productivity-skills adoption
 Reviewed 8 community Claude Code repos (gstack, everything-claude-code, gsd-build/get-shit-done, learn-claude-code, claude-code-best-practice, awesome-claude-code-subagents, claude-code-system-prompts, x1xhlol/system-prompts) for harness improvements. Productivity-biased; security-flavored picks deferred. Plan file: `~/.claude/plans/review-the-repo-at-fluttering-church.md`.
 
 **New skills:**
-- `/context-budget` — token audit across `.claude/`, MCP, CLAUDE.md (scan.sh + SKILL.md). First baseline at `docs/context-budget-baseline.md`: ~64K tokens, 94% headroom on Opus 4.7 1M.
+- `/context-budget` — token audit across `.claude/`, MCP, CLAUDE.md (scan.sh + SKILL.md). First baseline at `docs/archive/research-prompts-2026-04/context-budget-baseline.md`: ~64K tokens, 94% headroom on Opus 4.7 1M.
 - `/freeze` — hard-block Edit/Write outside a chosen directory using inline PreToolUse hooks declared in skill frontmatter. Pair with `/unfreeze`.
 - `/unfreeze` — release the freeze boundary.
 - `/investigate` — six-phase root-cause workflow with TAOM-specific failure patterns (Harmony, MCM, save-load, decompile drift). Auto-engages `/freeze`.
@@ -1086,7 +1086,7 @@ Reviewed 8 community Claude Code repos (gstack, everything-claude-code, gsd-buil
 
 ### Fix: Self-Review (Codex Pass 2) Findings on Pass-1 Fixes
 
-Second Codex pass on `5df21ea` flagged 0 HIGH, 1 MEDIUM, 3 LOW + 1 process violation. Self-review at `docs/reviews/codex-selfreview-tier1-fixes-2026-04-26.md`. All addressed in this third commit:
+Second Codex pass on `5df21ea` flagged 0 HIGH, 1 MEDIUM, 3 LOW + 1 process violation. Self-review at `docs/archive/codex-reviews-2026-04/codex-selfreview-tier1-fixes-2026-04-26.md`. All addressed in this third commit:
 
 - `scan_memory()` locator was substring-matching project basename, which collided on this machine (TAOM, TAOM-Online, taommod). Replaced with exact Claude project slug derivation from full repo path; substring search retained as fallback only when slug derivation misses.
 - 25KB byte cap was computed but never enforced in `scan_memory()` token estimate. Now enforced via `head -c 25600 | head -200` slice.

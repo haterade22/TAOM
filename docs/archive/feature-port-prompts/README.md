@@ -1,3 +1,9 @@
+# Feature Port Session Prompts (ARCHIVED 2026-05-07)
+
+> **Status:** All 7 features in this drop have been ported and merged on `bannerlord-1.3.15`. These prompts are kept here as a record of the planning shape used to drive parallel sessions. New work should not link them — see commits `bc15949..eac295d` and `eed8e7b..2949f3a` for the per-feature implementations.
+
+---
+
 # Feature Port Session Prompts
 
 Five self-contained session prompts for porting features 3–7 of the external-developer drop at `Downloads/Features_fixed/` into `Main/Features/`. Each prompt is pasted into a fresh Claude Code session; the session does one feature end-to-end (implement + tests + doc + CHANGELOG + `/deep-review` + `/review-codex` + fixes).

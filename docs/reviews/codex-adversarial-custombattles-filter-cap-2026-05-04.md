@@ -6,7 +6,7 @@
 
 ## Scope
 
-This is a focused review of a SMALL ENHANCEMENT to the existing CustomBattles feature, NOT a full feature review. The original feature was reviewed on 2026-04-05 (see `docs/reviews/codex-adversarial-custombattles-2026-04-05.md`). Today's enhancement adds:
+This is a focused review of a SMALL ENHANCEMENT to the existing CustomBattles feature, NOT a full feature review. The original feature was reviewed on 2026-04-05 (see `docs/archive/codex-reviews-2026-04/codex-adversarial-custombattles-2026-04-05.md`). Today's enhancement adds:
 
 - A per-faction commander dropdown filter in the Custom Battle UI (was unfiltered, showing every culture's lords for every faction)
 - A 3-commander cap per culture (deterministic, ordered by Id)
@@ -32,7 +32,7 @@ NOTE: "rohan" is NOT a valid ID — Rohan uses "vlandia". "dol_guldur" is NOT va
 
 - `docs/features/custom-battles.md` (just updated — describes the new filter+cap behavior under "Commander filter+cap (per faction)")
 - `Main/_Module/ModuleData/characters/lords.xml` — TAOM lord IDs and their `culture="..."` attribute (specifically the Dunland section: `lord_1_1_*`, `lord_NE7_u`, `lord_NE8_l` should all be `culture="Culture.empire"`)
-- The previous Codex review at `docs/reviews/codex-adversarial-custombattles-2026-04-05.md` if you need the original feature's design context
+- The previous Codex review at `docs/archive/codex-reviews-2026-04/codex-adversarial-custombattles-2026-04-05.md` if you need the original feature's design context
 
 ---
 

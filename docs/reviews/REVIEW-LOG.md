@@ -109,7 +109,7 @@ First Codex review of `.claude/` harness changes (no Bannerlord feature, no C# c
 
 ### Review 27 — Self-Review of Pass-1 Fixes (Codex Pass 2)
 
-Recursive review: Codex reviewed our fixes from review #26. Verdict NEEDS FIXES (0 HIGH, 1 MEDIUM, 3 LOW + 2 process violations). Self-review file at `docs/reviews/codex-selfreview-tier1-fixes-2026-04-26.md`.
+Recursive review: Codex reviewed our fixes from review #26. Verdict NEEDS FIXES (0 HIGH, 1 MEDIUM, 3 LOW + 2 process violations). Self-review file at `docs/archive/codex-reviews-2026-04/codex-selfreview-tier1-fixes-2026-04-26.md`.
 
 **Findings (all confirmed + fixed in same session):**
 
@@ -180,7 +180,7 @@ User asked: "we did our review?" — honest answer was no. The prevention bundle
 
 Codex review of `79350f2` (Tier 2 + 3 ecosystem-review adoption: 4 new skills, 3 new subagents, suggest-compact upgrade, effort frontmatter, scope-reduction rule). Verdict: NEEDS FIXES, 1 HIGH + 2 MED + 2 LOW + 1 process gap.
 
-Review file: `docs/reviews/codex-adversarial-tier2-3-2026-04-26.md`. Issue: #94.
+Review file: `docs/archive/codex-reviews-2026-04/codex-adversarial-tier2-3-2026-04-26.md`. Issue: #94.
 
 **Severity disagreements:**
 - Codex's suspect-2 included a CONFIRMED issue with `/scope-check effort: low` that wasn't in the formal A-E findings list. Promoted to MED-3 in my own analysis since the skill does inline reasoning that gets directly under-powered.

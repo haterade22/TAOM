@@ -90,7 +90,7 @@ Several of these were already addressed during /deep-review (5-agent pass on thi
    - VERIFY: trace `OnEndMission` to confirm the dicts ARE cleared, OR document this as a known leak (small -- one entry per formation in the prior mission, ~4 entries -- not catastrophic).
 
 9. NEW SUSPECT -- TaomSettings PROPERTIES INSERTED BY MIXEDFORMATIONS SESSION FOR PARALLEL WIP. `TaomSettings.cs` was extended with `Battle Tactics/Smart Cavalry` group (6 properties) and `Fief Management` group (3 properties) to unblock parallel SmartCavalryAI and FiefManagement sessions. CONFIRM:
-   - The added settings exactly match the prompts at `docs/feature-port-prompts/feature-3-smartcavalryai.md` and `docs/feature-port-prompts/feature-4-fiefmanagement.md`.
+   - The added settings exactly match the prompts at `docs/archive/feature-port-prompts/feature-3-smartcavalryai.md` and `docs/archive/feature-port-prompts/feature-4-fiefmanagement.md`.
    - The `GroupOrder` values (22 for Smart Cavalry, 25 for Fief Management) don't collide with other groups.
    - The defaults are reasonable.
    This is NOT MixedFormations functionality -- it's cross-session coordination. Flag any deviation from the prompt specs but rate at LOW severity since these settings aren't consumed by MixedFormations.
@@ -188,7 +188,7 @@ Walk through one frame of `Patch30_FormationGetOrderPositionOfUnit.Prefix` for a
 
 - Verify `EnableMixedFormations` (bool, default true), `MixedFormationsDefaultLayout` (int 0-3, default 0), `MixedFormationsCycleHotkey` (string, default "L"), `MixedFormationsDebug` (bool, default false) are present in TaomSettings.cs with correct attributes (SettingPropertyBool, SettingPropertyInteger, SettingPropertyText, SettingPropertyGroup with GroupOrder=21).
 - Verify the dropped settings (`InfantryRowDepth`, `RangedRowDepth`) are NOT in TaomSettings -- the original developer's module had them as dead config; per `feedback_user_facing_promise_must_match_code.md` they were removed on port. Confirm the audit was thorough.
-- Verify the SmartCavalryAI and FiefManagement settings added by THIS session for cross-coordination match the prompts at `docs/feature-port-prompts/feature-3-smartcavalryai.md` and `docs/feature-port-prompts/feature-4-fiefmanagement.md`.
+- Verify the SmartCavalryAI and FiefManagement settings added by THIS session for cross-coordination match the prompts at `docs/archive/feature-port-prompts/feature-3-smartcavalryai.md` and `docs/archive/feature-port-prompts/feature-4-fiefmanagement.md`.
 
 ### FINDINGS OR OBSERVATIONS
 

@@ -24,7 +24,7 @@ NB: this feature is ID-agnostic -- it uses no kingdom or culture identifiers. Th
 
 ## READ FIRST
 
-- `docs/feature-port-prompts/feature-7-companiontactics.md` -- the original port spec the human gave Claude
+- `docs/archive/feature-port-prompts/feature-7-companiontactics.md` -- the original port spec the human gave Claude
 - `C:/Users/mikew/.claude/plans/feature-port-session-tidy-diffie.md` -- the approved plan file
 - `Main/_Module/GUI/Prefabs/BattleActionBar.xml` and `OOBButtonsOverlay.xml` -- copied verbatim from source mod
 

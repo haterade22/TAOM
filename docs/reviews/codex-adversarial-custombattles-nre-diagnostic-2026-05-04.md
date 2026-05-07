@@ -9,7 +9,7 @@ Focused review of TWO commits that landed today after the filter+cap fix (commit
 - `a9e0bba` — NRE fix (Prefix guard on `OnCharacterSelection`) + rebuilder refactor (use vanilla `SelectorVM<T>.Refresh`) + Phase 2A equipment-slot diagnostic (TEMP)
 - `25415b1` — Deep-review LOW fix-loop: log + null-guard if `_onChangeField` reflection fails; log re-entry hint when diagnostic state persists across XML edits; null-safe Equipment slot reads
 
-This is a focused review of the SECOND change to CustomBattles in this session. The original feature (custom battle TAOM factions/commanders/troops) was reviewed at length in `docs/reviews/codex-adversarial-custombattles-2026-04-05.md`; the filter+cap was reviewed at `docs/reviews/codex-adversarial-custombattles-filter-cap-2026-05-04.md`. Do NOT re-review unrelated CustomBattles surface.
+This is a focused review of the SECOND change to CustomBattles in this session. The original feature (custom battle TAOM factions/commanders/troops) was reviewed at length in `docs/archive/codex-reviews-2026-04/codex-adversarial-custombattles-2026-04-05.md`; the filter+cap was reviewed at `docs/reviews/codex-adversarial-custombattles-filter-cap-2026-05-04.md`. Do NOT re-review unrelated CustomBattles surface.
 
 ## TAOM ID CHEATSHEET
 
@@ -25,7 +25,7 @@ NOTE: "rohan" is NOT a valid ID — Rohan uses "vlandia". "dol_guldur" is NOT va
 
 - `docs/features/custom-battles.md` — describes the 9-patch architecture
 - `docs/reviews/codex-adversarial-custombattles-filter-cap-2026-05-04.md` — prior review for context
-- `docs/reviews/codex-adversarial-custombattles-2026-04-05.md` — even earlier original-feature review
+- `docs/archive/codex-reviews-2026-04/codex-adversarial-custombattles-2026-04-05.md` — even earlier original-feature review
 - The two commits in scope: `git show a9e0bba` and `git show 25415b1`
 
 ## Files in scope (review ONLY these)
