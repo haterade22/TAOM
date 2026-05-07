@@ -367,4 +367,62 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Smart Cavalry Debug Mode", Order = 5,
         HintText = "Show diagnostic [SmartCavalryAI] state-transition messages on the in-game HUD. Off = file log only.")]
     public bool SmartCavalryDebug { get; set; } = false;
+
+    // --- Battle Tactics / Companion Roles ---
+    // GroupOrder 22 was originally planned but SmartCavalryAI parallel port consumed it.
+    // CompanionTactics settings live at GroupOrder 27/28/29.
+
+    [SettingPropertyGroup("Battle Tactics/Companion Roles", GroupOrder = 27)]
+    [SettingPropertyBool("Enable Companion Role Tooltips", Order = 0,
+        HintText = "Append detected combat role (e.g., [BOW], [INF]) to companion/troop tooltips on the party screen.")]
+    public bool EnableCompanionRoleTooltips { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Companion Roles")]
+    [SettingPropertyBool("Enable OOB Role Display", Order = 1,
+        HintText = "Show role indicators on hero items in the Order of Battle screen.")]
+    public bool EnableOOBRoleDisplay { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Companion Roles")]
+    [SettingPropertyBool("Companion Roles Debug Mode", Order = 2,
+        HintText = "Show diagnostic [CompanionRoles] messages on the in-game HUD.")]
+    public bool CompanionRolesDebug { get; set; } = false;
+
+    // --- Battle Tactics / Formation Presets ---
+
+    [SettingPropertyGroup("Battle Tactics/Formation Presets", GroupOrder = 28)]
+    [SettingPropertyBool("Enable Formation Presets", Order = 0,
+        HintText = "Save/load named OOB hero-to-formation assignments per campaign.")]
+    public bool EnableFormationPresets { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Formation Presets")]
+    [SettingPropertyInteger("Max Formation Presets", 1, 20, Order = 1,
+        HintText = "Maximum saved formation presets per campaign. Save attempts beyond this limit are refused with a warning. Default: 10.")]
+    public int MaxFormationPresets { get; set; } = 10;
+
+    [SettingPropertyGroup("Battle Tactics/Formation Presets")]
+    [SettingPropertyBool("Formation Presets Debug Mode", Order = 2,
+        HintText = "Show diagnostic [FormationPresets] messages.")]
+    public bool FormationPresetsDebug { get; set; } = false;
+
+    // --- Battle Tactics / Battle Action Bar ---
+
+    [SettingPropertyGroup("Battle Tactics/Battle Action Bar", GroupOrder = 29)]
+    [SettingPropertyBool("Enable Battle Action Bar", Order = 0,
+        HintText = "Show contextual action bar during field battles (1-9 hotkeys for stance toggles). Stances are display-only — they record state but do not change formation behavior.")]
+    public bool EnableBattleActionBar { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Battle Action Bar")]
+    [SettingPropertyBool("Cancel Stance On Move", Order = 1,
+        HintText = "Auto-clear stance when the formation receives a movement order.")]
+    public bool CancelStanceOnMove { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Battle Action Bar")]
+    [SettingPropertyBool("Enable Volley Fire", Order = 2,
+        HintText = "Include 'Volley Fire' as a ranged action option.")]
+    public bool EnableVolleyFire { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Battle Action Bar")]
+    [SettingPropertyBool("Battle Action Bar Debug Mode", Order = 3,
+        HintText = "Show diagnostic [BattleActionBar] messages.")]
+    public bool BattleActionBarDebug { get; set; } = false;
 }

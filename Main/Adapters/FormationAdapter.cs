@@ -58,6 +58,68 @@ public sealed class FormationAdapter : IFormationAdapter
 
     public Vec2 CurrentPosition => _formation?.CurrentPosition ?? Vec2.Zero;
 
+    // -- CompanionTactics extensions (Patch35) -----------------------------------
+
+    public int FormationIndex => _formation == null ? -1 : (int)_formation.FormationIndex;
+
+    public int RangedUnitCount =>
+        _formation?.QuerySystem == null ? 0
+            : (int)((_formation.QuerySystem.RangedUnitRatio) * _formation.CountOfUnits + 1e-5f);
+
+    public int CavalryUnitCount =>
+        _formation?.QuerySystem == null ? 0
+            : (int)((_formation.QuerySystem.CavalryUnitRatio) * _formation.CountOfUnits + 1e-5f);
+
+    // Polearm/shield require per-unit equipment scan. TTL-cached: action bar refreshes
+    // ≤ twice/sec so 500ms is plenty.
+    private float _lastCompositionScanMs = -1000f;
+    private int _cachedPolearmCount;
+    private int _cachedShieldCount;
+    private const float CompositionTtlMs = 500f;
+
+    public int PolearmUnitCount { get { EnsureCompositionFresh(); return _cachedPolearmCount; } }
+    public int ShieldUnitCount  { get { EnsureCompositionFresh(); return _cachedShieldCount;  } }
+
+    private void EnsureCompositionFresh()
+    {
+        if (_formation == null) { _cachedPolearmCount = 0; _cachedShieldCount = 0; return; }
+        var nowMs = (float)System.Environment.TickCount;
+        if (nowMs - _lastCompositionScanMs < CompositionTtlMs && _lastCompositionScanMs > 0f) return;
+        _lastCompositionScanMs = nowMs;
+
+        var polearm = 0;
+        var shield = 0;
+        foreach (var unit in _formation.UnitsWithoutLooseDetachedOnes)
+        {
+            if (unit is not Agent agent) continue;
+            var equipment = agent.SpawnEquipment;
+            if (equipment.IsEmpty()) continue;
+            var sawPolearm = false;
+            var sawShield = false;
+            for (var slot = 0; slot < 4 && !(sawPolearm && sawShield); slot++)
+            {
+                var element = equipment[(TaleWorlds.Core.EquipmentIndex)slot];
+                var item = element.Item;
+                if (item == null) continue;
+                if (!sawShield && item.ItemType == TaleWorlds.Core.ItemObject.ItemTypeEnum.Shield)
+                    sawShield = true;
+                var primary = item.PrimaryWeapon;
+                if (!sawPolearm && primary != null)
+                {
+                    var wc = primary.WeaponClass;
+                    if (wc == TaleWorlds.Core.WeaponClass.OneHandedPolearm
+                        || wc == TaleWorlds.Core.WeaponClass.TwoHandedPolearm
+                        || wc == TaleWorlds.Core.WeaponClass.LowGripPolearm)
+                        sawPolearm = true;
+                }
+            }
+            if (sawPolearm) polearm++;
+            if (sawShield) shield++;
+        }
+        _cachedPolearmCount = polearm;
+        _cachedShieldCount = shield;
+    }
+
     public bool IsAligned(float strictness)
     {
         if (_formation == null || _formation.CountOfUnits < 2) return true;

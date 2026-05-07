@@ -59,4 +59,23 @@ public interface IFormationAdapter
     /// <paramref name="strictness"/> (0..1 — higher means tighter alignment required).
     /// Used by the cavalry state machine to gate Forming→Charging and Reforming→Idle.</summary>
     bool IsAligned(float strictness);
+
+    // -- CompanionTactics extensions (Patch35) -----------------------------------
+    // BattleActionBar's composition analyzer reads these; the action bar refreshes
+    // ≤ twice/sec so the implementation may cache polearm/shield with a short TTL.
+
+    /// <summary>(int)Formation.FormationIndex — stable dict key for stance state.</summary>
+    int FormationIndex { get; }
+
+    /// <summary>Approximate ranged unit count via <c>QuerySystem.RangedUnitRatio * CountOfUnits</c>.</summary>
+    int RangedUnitCount { get; }
+
+    /// <summary>Approximate cavalry unit count via <c>QuerySystem.CavalryUnitRatio * CountOfUnits</c>.</summary>
+    int CavalryUnitCount { get; }
+
+    /// <summary>Polearm-armed unit count, computed by per-unit equipment scan (cached by impl).</summary>
+    int PolearmUnitCount { get; }
+
+    /// <summary>Shield-bearing unit count, computed by per-unit equipment scan (cached by impl).</summary>
+    int ShieldUnitCount { get; }
 }

@@ -64,9 +64,7 @@
 		<Compile Remove="_Module\bin\**" />
 		<EmbeddedResource Remove="_Module\bin\**" />
 		<None Remove="_Module\bin\**" />
-		<!-- Sibling parallel-ports with stripped TaomSettings entries. Owning sessions must restore.
-		     SmartCavalryAI restored 2026-05-07 by SmartCavalryAI session: TaomSettings MCM block re-added; IoC + SubModule wiring re-added. -->
-		<Compile Remove="Features\CompanionTactics\**\*.cs" />
+		<!-- Sibling parallel-ports restored 2026-05-07: SmartCavalryAI, CompanionTactics. -->
 	</ItemGroup>
 
 	<ItemGroup>

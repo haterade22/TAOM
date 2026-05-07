@@ -352,8 +352,11 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<IFiefHubMenuPresenter>(),
                 IoC.Resolve<IFiefManagementSettingsProvider>()));
 
-            // CompanionTactics (Patch35) registration TEMP-LOCKED-OUT (parallel-port still has
-            // compile errors). Restore when CompanionTactics source files compile clean.
+            // CompanionTactics (Patch35) — FormationPresets persistence behavior. Registered
+            // unconditionally so SyncData round-trips even when EnableFormationPresets is OFF.
+            campaignStarter.AddBehavior(new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(
+                IoC.Resolve<Features.CompanionTactics.FormationPresets.IFormationPresetService>(),
+                IoC.Resolve<IModLogger>()));
         }
     }
 
@@ -394,13 +397,19 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch29_CCBodyProperties");
         _harmony.PatchCategory("Patch33_EquipPresets");
         _harmony.PatchCategory("Patch34_QuickActions");
-        // _harmony.PatchCategory("Patch35_CompanionTactics"); // TEMP-LOCKOUT
+        _harmony.PatchCategory("Patch35_CompanionTactics");
         _harmony.PatchCategory("Patch36_FiefManagement");
 
-        // CompanionTactics manual patch TEMP-LOCKED-OUT
-        /*
-        // OrderOfBattleHeroItemVM.GetCaptainTooltip manual patch TEMP-LOCKED-OUT.
-        */
+        // CompanionTactics — manual patch for the PRIVATE method
+        // OrderOfBattleHeroItemVM.GetCaptainTooltip (private in v1.3.15, can't use
+        // [HarmonyPatch] attribute binding).
+        var captainTooltipTarget = AccessTools.Method(typeof(OrderOfBattleHeroItemVM), "GetCaptainTooltip");
+        if (captainTooltipTarget != null)
+            _harmony.Patch(captainTooltipTarget, postfix: new HarmonyMethod(
+                typeof(Features.CompanionTactics.Roles.Hooks.Patch35_OOBHeroItem_GetCaptainTooltip),
+                nameof(Features.CompanionTactics.Roles.Hooks.Patch35_OOBHeroItem_GetCaptainTooltip.Postfix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[CompanionTactics] OrderOfBattleHeroItemVM.GetCaptainTooltip not found — captain tooltip role hint will not appear");
 
         var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
         GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
@@ -464,7 +473,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
         mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());
-        // mission.AddMissionBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView()); // TEMP-LOCKOUT
+        mission.AddMissionBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)

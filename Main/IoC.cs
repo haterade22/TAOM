@@ -35,7 +35,7 @@ using TAOM.Features.SiegeDismount;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Features.QuickActions;
-// using TAOM.Features.CompanionTactics; // TEMP-LOCKOUT
+using TAOM.Features.CompanionTactics;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.EquipPresets;
 
@@ -86,7 +86,7 @@ public static class IoC
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);
-        // CompanionTacticsIoC.RegisterCompanionTacticsFeature(container); // TEMP-LOCKOUT
+        CompanionTacticsIoC.RegisterCompanionTacticsFeature(container);
         FiefManagementIoC.RegisterFiefManagementFeature(container);
 
         _container = container;
