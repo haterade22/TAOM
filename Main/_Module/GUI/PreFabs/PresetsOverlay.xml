@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+        <!-- Button positioned at bottom center, below the swap button area -->
+        <ButtonWidget
+            Id="PresetsButton"
+            WidthSizePolicy="Fixed"
+            HeightSizePolicy="Fixed"
+            SuggestedWidth="90"
+            SuggestedHeight="40"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            MarginBottom="100"
+            Brush="ButtonBrush1"
+            Command.Click="ExecuteOpenPresets"
+            IsEnabled="true"
+            DoNotPassEventsToChildren="true"
+            AcceptEvents="true">
+          <Children>
+            <TextWidget
+                WidthSizePolicy="StretchToParent"
+                HeightSizePolicy="StretchToParent"
+                Brush="ButtonBrush1.Text"
+                Text="@ButtonText"
+                DoNotAcceptEvents="true"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
