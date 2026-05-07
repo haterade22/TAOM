@@ -119,6 +119,8 @@ When you write or modify any skill, agent, rule, or hook in `.claude/`:
 
 ## Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06, CompanionTactics port session)
 
+> **Prevention rule:** when spawning multiple `Agent` calls that may edit overlapping single-owner files, pass `isolation: "worktree"` on each. The cascade documented below is the symptom of NOT doing that. See **Worktree isolation for parallel agent runs** further down for the rule and rationale.
+
 When multiple feature ports run simultaneously in the TAOM working tree, an external watcher monitors build output and **auto-edits source files in response to build failures**. Symptoms confirmed during the CompanionTactics port:
 
 | What gets re-added | Where | When |
@@ -145,6 +147,38 @@ When multiple feature ports run simultaneously in the TAOM working tree, an exte
 
 **RCA reference:** `docs/reviews/rca-companiontactics-2026-05-06.md` documents the full session lost to this watcher (~2 hours).
 
-## Last verified: 2026-05-06
+## Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
+
+**Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call. Each agent then operates in its own git worktree on a temporary branch — the shared TAOM working tree is never touched in parallel, and the build watcher cascade above cannot fire.
+
+| Source | What it tells us |
+|---|---|
+| Claude Code Agent tool docs (DOC-BACKED) | The Agent tool accepts `isolation: "worktree"`; the worktree is auto-cleaned if the agent makes no changes, otherwise its path + branch are returned in the result. |
+| `feedback_parallel_port_build_watcher.md` (EMPIRICAL: TAOM 2026-05-06) | The cascade exists; the workaround is heroic Edit-cycles that burn ~30s each. The RCA documents ~2 hours lost. |
+| karpathy/autoresearch `.gitignore` (DOC-BACKED, March 2026) | Lists `worktrees/`, `queue/`, plus `CLAUDE.md`/`AGENTS.md` as "Agent prompt files (generated per-session by launchers)". The launcher fans agents into worktrees — confirming the same prevention from a second independent codebase. |
+
+**When to apply:**
+- Always, when the Agent calls will edit any of the files listed above.
+- Always, when the user asks for "parallel ports" or "multiple features in flight".
+- Always, when the prompt to the agent involves new feature scaffolding (`feature-builder`, `/new-feature`).
+
+**When NOT needed:**
+- Read-only Agent calls (`Explore`, research-only `Plan` agents). They never write — no contention possible.
+- Single Agent call (no parallelism — no overlap).
+- Agents touching disjoint feature folders only (`Main/Features/A/...` vs `Main/Features/B/...`) AND not editing csproj/IoC/SubModule. This is rare in practice for new feature work; assume worktrees are needed unless you've audited the file set.
+
+**How to invoke:**
+```
+Agent({
+  description: "...",
+  subagent_type: "feature-builder",
+  prompt: "...",
+  isolation: "worktree"
+})
+```
+
+If two parallel Agent calls in the same message both need to edit a single-owner file, BOTH must use `isolation: "worktree"`. After they return, the user/orchestrator is responsible for sequentially merging the diffs from each worktree branch back into the main tree — the watcher cascade only triggers on simultaneous edits to the same working tree, not on sequential merges.
+
+## Last verified: 2026-05-07
 
 This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here.

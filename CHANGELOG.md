@@ -2,6 +2,16 @@
 
 ## 2026-05-07
 
+### Process: import three workflow disciplines from karpathy/autoresearch
+
+Reviewed [karpathy/autoresearch](https://github.com/karpathy/autoresearch) (autonomous LLM-pretraining experiment loop, March 2026) and adopted three rule sharpenings — skipped a new `/experiment` skill because TAOM iteration has no single numeric fitness metric to drive a research loop. Files: `CLAUDE.md`, `.claude/rules/simplicity-criterion.md` (new), `.claude/rules/harness-facts.md`.
+
+- **NEVER STOP + crash judgment** in CLAUDE.md "Autonomous-loop stewardship". Adds an explicit prohibition on the "should I keep going?" interruption (autoresearch's `program.md` framing — "the human might be asleep") and a trivial-vs-fundamental crash heuristic. The existing trust model said "continue established work" but didn't forbid the interruption.
+- **`simplicity-criterion.md`** as a new always-load rule (no `paths:` field per the loader docs in `harness-facts.md`). Turns "no over-engineering" into a Yes/No matrix: tiny win + complexity = reject; equal + simpler = keep; deletion that holds parity = always keep. Closes a recurring `/deep-review` failure mode where agents preserve scaffolding "just in case" — flagged across multiple Codex review cycles, most recently EquipPresets review #5 on 2026-05-06.
+- **Worktree-isolation prevention rule** in `harness-facts.md` tied to the existing parallel-port build-watcher RCA (2026-05-06). Codifies `isolation: "worktree"` on parallel `Agent` calls that may edit overlapping single-owner files (csproj, IoC.cs, SubModule.cs). autoresearch's `.gitignore` independently confirms the same pattern (`worktrees/`, `queue/`, per-session `CLAUDE.md`/`AGENTS.md` "generated per-session by launchers"). Cross-linked from the parallel-port section so anyone reading the RCA finds the prevention.
+
+
+
 ### Fix: SubModule load NRE — defer Formation.SetMovementOrder patches to mission start
 
 Bannerlord crashed during mod load with `NullReferenceException` inside `MovementOrder..ctor(MovementOrderEnum)` while Harmony was applying `Patch31_SmartCavalryAI` in `OnSubModuleLoad`. Root cause: the v1.3.15 `MovementOrder` struct's type initializer (`.cctor`) constructs static instances (`MovementOrderNull`, `MovementOrderCharge`, …) whose ctor reads `Mission.Current.CurrentTime`. JIT prep on a Harmony patch whose postfix takes a `MovementOrder` parameter forces the type to load — but `Mission.Current` is null in `OnSubModuleLoad` (and in `OnGameInitializationFinished`, which is where `Patch35_CompanionTactics`' sibling `Formation.SetMovementOrder` postfix would have crashed identically once Patch31 was fixed). Solution: a new shared category `Patch_MissionTime_SetMovementOrder` collects both postfixes (`Patch31_FormationSetMovementOrder`, `Patch35_Formation_SetMovementOrder`) and is applied once from `OnMissionBehaviorInitialize` behind a static `_missionTimePatchesApplied` guard — by which time `Mission.Current` is set and the cctor succeeds. Files: `Main/Features/SmartCavalryAI/Hooks/Patch31_FormationSetMovementOrder.cs`, `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs`, `Main/SubModule.cs`. Build clean, all 1704 tests pass.
