@@ -55,7 +55,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 31 | 2026-05-04 | Career cooldown rework (uniform 30s timer + charging feedback + cleanup pass + 3-GameModel ctor injection) | ISSUES FOUND (0H / 2M / 0L) | agree | 2 confirmed (M: single-bucket tick accumulator drops elapsed time; M: ParseGlobalTuning admits NaN/±Infinity) | 0 | 0 | v7-rework-plus-cleanup |
 | 32 | 2026-05-04 | CustomBattles NRE+diagnostic (Prefix guard + Refresh-based rebuilder + Phase 2A equipment-slot diagnostic + LOW fix-loop) | NEEDS-FIXES (1 P2 / 1 P3) | agree | 2 confirmed (P2: vanilla `RefreshValues` calls `UpdateCharacterVisual` after our Prefix skipped OnCharacterSelection — sister NRE; P3: diagnostic catch logged `ex.Message` only, lost type+stack) | 0 | 0 | v6-focused-enhancement |
 
-**Post-codebase reviews:** 19-32. 32 Codex reviews total, 88 bugs found across codebase.
+**Post-codebase reviews:** 19-35. 35 Codex reviews total, 96 bugs found across codebase.
 
 ### Review 31 — Career Cooldown Rework Root Cause Analysis
 
@@ -650,3 +650,106 @@ After landing the Codex Review 33 fixes, in-game verification surfaced two furth
 - `./build.ps1 -RunTests` — clean.
 - 1294/1294 tests passing (was 1288 after the initial Review 33 fixes; +2 for Trap A, +4 for Trap B).
 - In-game verified by the user: Mordor → uruk, Isengard → uruk_hai, Gundabad → pale_uruk, Dol Guldur → dg_uruk, elven cultures → elf, Erebor → dwarf. Player race choice persists across mid-CC navigation; switching culture resets to the new culture's Races[0].
+
+### Review 34 — SiegeDismount (port from external developer, Codex follow-up to /deep-review)
+
+Pipeline: `/deep-review` (5-agent core) → 2 HIGH gaps caught and fixed in same session → `/review-codex` produced 3 ADDITIONAL findings (2 HIGH + 1 MEDIUM) the deep-review missed. All confirmed and fixed in same session per "no silent deferrals."
+
+**Source brief:** [docs/reviews/codex-prompt-siegedismount-2026-05-06.md](codex-prompt-siegedismount-2026-05-06.md). 8 Known Suspects (4 confirming /deep-review fixes, 4 new attack lines).
+
+**Codex findings file:** [docs/reviews/codex-adversarial-siegedismount-2026-05-06.md](codex-adversarial-siegedismount-2026-05-06.md). Reconstructed from stdout because Codex's `apply_patch` was rejected by read-only sandbox; `ilspycmd`/`dotnet` also rejected by shell policy, so vanilla decompilation code blocks were verified separately by Claude.
+
+**Verdict from Codex:** needs-attention (no-ship).
+
+| # | Severity | Codex Finding | Claude Verdict | Fix |
+|---|----------|---------------|----------------|-----|
+| 1 | HIGH | `SceneSiegeKeywords` still includes `siege`, matches 24 vanilla `Location id="center"` scene names like `empire_siege_001`. False-positive dismount during non-siege settlement-center missions. | CONFIRMED via grep — 24 occurrences in [settlements.xml](../../Main/_Module/ModuleData/settlements.xml). | Removed keyword fallback entirely. `IsSiegeMission` now returns `isSiegeBattle` directly. Modded sieges that don't set the engine flag won't trigger — documented requirement. 9-row data-test pins the new contract. |
+| 2 | HIGH | `MountSnapshot` stores only `StringId`, deposit uses `AddToCounts(ItemObject, int)` which drops `ItemModifier`. Persistent equipment data loss. | CONFIRMED via `ilspycmd` — `ItemRoster.AddToCounts(EquipmentElement, int)` overload exists and preserves modifier. The `(ItemObject, int)` overload internally calls the former with `new EquipmentElement(item)`, dropping modifier. | `MountSnapshot` carries full `EquipmentElement` (internal — TaleWorlds types stay inside). New `(EquipmentElement, EquipmentElement)` constructor for adapter; old `(string, string)` retained for tests. `PartyMountInventoryAdapter.Deposit/Withdraw` and `PlayerMountAdapter.Restore` switched to the modifier-preserving overload via concrete-type cast. |
+| 3 | MEDIUM | `DismountKeepOnMap` is silent no-op despite MCM hint promising "horse on map, player on foot." | CONFIRMED — original developer's decompiled module had the same pre-existing bug; ported verbatim. Full implementation requires `Mission.SpawnAgent` plumbing not in Phase 1. | Mode 1 retained for save-compat, logs `LogWarning` explaining mode is "Reserved / equivalent to Vanilla until somebody implements the actual map-side horse spawn." MCM hint and dropdown label updated to "(currently equivalent to Vanilla — full implementation deferred)." |
+
+### Root Cause Analysis (Review 34)
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Scene-name keyword fallback matched 24 vanilla siege center scenes | Logic error / convention inconsistency | Narrowed list during /deep-review but didn't remove the keyword fallback entirely. Assumed center scenes only loaded during real sieges without verifying. | Future feature ports interpreting scene names: grep across ALL `ModuleData/*.xml` for substring overlap. Codified in [AGENTS.md](../../AGENTS.md) "Catching incomplete narrowing of substring-keyword fallback lists" lesson. |
+| 2 | ItemModifier loss on capture/deposit/restore round trip | Missing modifier-aware API | Used `AddToCounts(ItemObject, int)` overload which drops modifier. Documented as "known limitation" instead of fixing. | When adapter touches inventory/equipment slots that vanilla treats as `EquipmentElement`-shaped, prefer the `EquipmentElement`-overload. Audit API surface for both before settling on the simpler `ItemObject` overload. Codified in [AGENTS.md](../../AGENTS.md) "Catching modifier-loss-on-roundtrip via API-overload audit" lesson. |
+| 3 | `DismountKeepOnMap` silent no-op despite MCM hint | Convention inconsistency / inherited bug | Ported original developer's tested behavior verbatim. Did not challenge whether user-visible promise (MCM hint) matched implementation. | Read user-facing strings (MCM hints, dropdown labels, tooltips) and trace each to implementation. If promise doesn't match code, fix one or the other — never ship the mismatch. Codified in [AGENTS.md](../../AGENTS.md) "Catching user-facing-promise-mismatch from inherited dev code" lesson. |
+
+### Things Codex did particularly well (Review 34)
+
+- Caught the scene-name false-positive that the prior /deep-review Agent 5 (Data Flow) missed. Agent 5 caught two TAOM-specific castles (`gate`/`wall`); Codex extended the same class to 24 vanilla settlements (`siege` substring).
+- Verified the modifier-aware `AddToCounts(EquipmentElement, int)` overload exists, turning a "deferred to follow-up" doc-only limitation into an immediate fix.
+- Flagged the inherited-bug pattern (mode 1 promise mismatch) — the kind of bug Claude is trained to overlook ("the original developer tested it, must be intentional").
+
+### Things Codex did less well (Review 34)
+
+- Could not write the output review file due to sandbox `apply_patch` rejection; required Claude to reconstruct from stdout.
+- Could not run `ilspycmd` due to shell policy — vanilla decompilation code blocks not produced inline. Claude verified separately.
+- Did not engage with the Known Suspects section's confirm/dispute format — reported its own findings instead. Findings 1 and 3 were related to /deep-review's incomplete fixes; Known Suspects framing would have caught them faster.
+
+### Fixes Implemented (Review 34)
+
+1. **Finding 1 (Codex):** Removed keyword fallback from [`SiegeDismountService.IsSiegeMission`](../../Main/Features/SiegeDismount/SiegeDismountService.cs). Tests rewritten — replaced 5-row scene-keyword data test and 4-row TAOM-castle false-positive regression with 9-row `OnMissionStart_NotIsSiegeBattle_DoesNotTriggerRegardlessOfSceneName` pinning the new IsSiegeBattle-only contract.
+2. **Finding 2 (Codex):** [`MountSnapshot`](../../Main/Features/SiegeDismount/Models/MountSnapshot.cs) now carries full `EquipmentElement`; production constructor `(EquipmentElement, EquipmentElement)`. [`PlayerMountAdapter.Capture`](../../Main/Adapters/PlayerMountAdapter.cs) and [`Restore`](../../Main/Adapters/PlayerMountAdapter.cs) preserve modifier. [`PartyMountInventoryAdapter.Deposit/Withdraw`](../../Main/Adapters/PartyMountInventoryAdapter.cs) use the modifier-aware overload via concrete-type cast.
+3. **Finding 3 (Codex):** [`SiegeDismountService` switch](../../Main/Features/SiegeDismount/SiegeDismountService.cs) — `DismountKeepOnMap` case logs warning and is a full no-op. MCM dropdown label and hint updated in [`TaomSettings.cs`](../../Main/Features/TaomSettings.cs). Tests added: `OnMissionStart_DismountKeepOnMap_FullNoOp`, `OnMissionStart_DismountKeepOnMap_LogsWarningAboutDeferredImplementation`.
+
+### Build & Test (Review 34)
+- `./build.ps1 -RunTests` — clean (architecture mismatch warnings unchanged from baseline).
+- 1405/1405 tests passing. 33 SiegeDismount tests (same count as before review — replaced false-positive scene-name tests with new IsSiegeBattle-only tests; added KeepOnMap warning test; otherwise behavior preserved).
+- In-game verification: deferred to user. Pre-commit gate.
+
+### Review 35 — Player Startup Gold + CC Equipment Persistence (port from LOTRAOM `StartingEquipmentGold`)
+
+| Phase | Source | Verdict | Findings |
+|-------|--------|---------|----------|
+| 35a | `/codex:review` first pass | ISSUES FOUND (1 P1 / 1 P2) | civilian guard wrong singleton (P1); shaghana/abanissa missing from XML (P2); + 3 unrelated Messengers findings flagged for separate owner |
+| 35b | `/codex:review` Phase 3 self-review of fixes | ISSUES FOUND (1 HIGH / 1 LOW) | shaghana/abanissa narrative menu coverage missing → player flow dead-ends (HIGH); XML header comment misattributes influence to NPC lords (LOW) |
+
+| | Date | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
+|---|------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 35 | 2026-05-06 | ISSUES FOUND (Phase 1: 1 P1 / 1 P2; Phase 3b: 1 HIGH / 1 LOW) | agree (all confirmed) | 4 confirmed (1 P1: civilian guard singleton; 1 P2: shaghana/abanissa missing config rows; 1 HIGH: shaghana/abanissa narrative menu dead-end; 1 LOW: XML header wording) | 0 | 0 | adversarial-self-review-v1 |
+
+### Root Cause Analysis (Review 35)
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | PlayerEquipmentAdapter civilian guard targeted DeadBattleEquipment instead of DeadCivilianEquipment | Reflection target wrong (sealed-type fallback path) / agent-paraphrase-of-decompilation accepted | Claude `taleworlds-researcher` deep-review agent's API-fact summary table reported BOTH equipment getters fall back to `DeadBattleEquipment` (incorrect symmetry). Claude trusted the paraphrase without re-running ilspycmd. | When two reviews disagree on an API or an agent's "symmetric" parallel-API summary looks too clean, re-run ilspycmd against the installed v1.3.15 DLL. Codified in [AGENTS.md](../../AGENTS.md) "Re-decompiling property-getter bodies when an agent's paraphrase contradicts another agent's" lesson. New memory entry: `feedback_codex_caught_api_misread.md`. |
+| 2 | shaghana/abanissa missing from startup_resources_config.xml | Missing config row / enumeration from existing rows not source-of-truth | Claude copied existing 15-row culture list and added new attribute to each. Source-of-truth (`cultures.json`) had additional cultures not present in the existing config. Claude `/deep-review` Agent 5 flagged but dismissed as "may be intentional." | When extending config with new attribute, enumerate from upstream source-of-truth (cultures.json), not from existing config rows. New memory entry: `feedback_enumerate_from_source_of_truth.md`. Pushback rule for hedge language codified in [AGENTS.md](../../AGENTS.md) "Pushing back on 'may be intentional' hedge from prior agent" lesson. |
+| 3 | shaghana/abanissa misclassified as "Aserai-region cultures with no NPC clans" when applying Codex fix #2 | Other (ID classification by single-source assumption) | Claude read `cultures.json` and saw `town_A6`/`town_A14` starting settlements, classified as Aserai-region. Did not grep `taom_spkingdoms.xml`, `clans.xml`, or `lords.xml` to verify. Existing memory `kingdom-culture-mapping.md` had the correct classification but wasn't loaded before classifying. | When classifying unfamiliar TAOM IDs, exhaustive grep across kingdom/clan/lord XML AND memory directory FIRST. New memory entry: `feedback_classify_by_grep_not_by_assumption.md`. Process improvement: load relevant memory entries at task START, not after correction. |
+| 4 | shaghana/abanissa narrative menu coverage missing → player flow dead-ends | Missing pipeline-stage coverage / enumeration not extended through full pipeline | Claude verified shaghana/abanissa exist in `cultures.json` but did not trace forward through the 5 narrative menu JSONs (parents/childhood/education/youth/adulthood). The cultures register at the entry point but have ZERO entries in any narrative menu — vanilla CC crashes on advance from empty SelectionList. | Enumeration from source-of-truth must extend through the FULL pipeline a feature touches. For new culture entries: grep all 5 menu JSONs + youth equipment XML + finalize config in one pass. Codified in [AGENTS.md](../../AGENTS.md) "Tracing the FULL player pipeline for new culture entries, not just the entry point" lesson. Filed follow-up issue [#111](https://github.com/haterade22/TAOM/issues/111). |
+| 5 | XML header comment misattributed `influence` to NPC lords | Convention inconsistency / paraphrase from memory | Claude wrote XML header comment by paraphrasing mental model of feature. Did not re-read `StartupInfluenceService.cs` to confirm consumer (it applies to clans, not lords). | Doc/comment text near user-editable config files must be verified against consuming code, not paraphrased. Codified in [AGENTS.md](../../AGENTS.md) "Comment-vs-consumer mismatch in user-editable config docs" lesson. |
+
+### Things Codex did particularly well (Review 35)
+
+- **Caught what 5 parallel Claude agents and a first-pass Codex review all missed.** The Phase 3 self-review trace-through-pipeline approach (`shaghana picks at culture step → what happens at parents_menu? childhood_menu? ...`) found the HIGH dead-end that no prior review traced. This validates the mandatory Phase 3 self-review-of-fixes step.
+- **Re-decompiled instead of trusting prior agent paraphrase.** When the Claude API agent reported both equipment getters fall back to `DeadBattleEquipment`, Codex re-ran ilspycmd and got the correct `DeadCivilianEquipment` separate fallback — a P1 bug Claude's deep-review built into its own fix.
+- **Pushed back on hedge language from prior agent.** Where Claude's data-flow agent said shaghana/abanissa "may be intentional zero-gold cultures," Codex correctly treated the hedge as an open question and verified intent via kingdom XML grep.
+- **Suspect-by-suspect CONFIRMED/DISPUTED structure produced concrete verdicts.** The prompt's per-suspect format with required CONFIRMED/DISPUTED tag forced Codex to either verify or refute each known-risk area. No vague "looks fine" passes.
+- **End-to-end pipeline tracing.** The shaghana player-flow trace (cultures.json → SetSelectedCulture → parents → childhood → ... → finalize) is the canonical "what does the user actually experience?" question that surfaced the dead-end.
+
+### Things Codex did less well (Review 35)
+
+- The first-pass review (35a) flagged shaghana/abanissa as missing from XML but did not extend the trace into the narrative menu JSONs — the Phase 3 self-review (35b) did. The first pass treated "row missing from one config" as the full bug; the second pass treated it as one symptom of "culture coverage incomplete across the feature pipeline."
+- First-pass review surfaced 3 unrelated Messengers findings (P1+P2+P2) that Claude deferred as "out of scope, separate owner." Useful but distracted from the player-startup-gold review focus.
+
+### Fixes Implemented (Review 35)
+
+**From 35a (first pass):**
+1. **Finding 1 (P1):** [`PlayerEquipmentAdapter.cs`](../../Main/Adapters/PlayerEquipmentAdapter.cs) — track `deadBattle` and `deadCivilian` separately; check each slot against its OWN dead-equipment singleton.
+2. **Finding 2 (P2):** [`startup_resources_config.xml`](../../Main/_Module/ModuleData/startup_resources/startup_resources_config.xml) — added shaghana/abanissa rows with `gold="50000" influence="100" playerGold="4000"`.
+
+**From user feedback (Phase 3a):**
+3. **shaghana/abanissa misclassification:** corrected XML comment from "Aserai-region cultures with no NPC clans" to "Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana 9 lords, Abanissa 8 lords)". Updated `gold`/`influence` values from `0`/`0` to actual Harad-tier values so 17 NPC lords get their startup resources.
+
+**From 35b (Phase 3 self-review):**
+4. **HIGH:** Out of scope for #110 (narrative menu authoring is a separate feature). Filed follow-up issue [#111](https://github.com/haterade22/TAOM/issues/111). Added defensive XML comment on the shaghana/abanissa rows flagging the dependency on narrative coverage so future tuners don't think the rows are functional.
+5. **LOW:** Corrected XML header comment — `influence` is granted to "each eligible CLAN of this culture" (not "NPC lords").
+
+### Build & Test (Review 35)
+
+- `./build.ps1` — clean (only LF/CRLF warnings).
+- 85/85 session-targeted tests passing. 1340/1340 total project tests passing.
+- v1.3.15 API verification: 9 calls verified via ilspycmd against installed DLL — `GiveGoldAction.ApplyBetweenCharacters`, `MBObjectManager.GetObject<MBEquipmentRoster>`, `MBEquipmentRoster.AllEquipments`, `Equipment.IsBattle`/`IsCivilian`/`FillFrom`, `Hero.FindFirst`, `Hero.BattleEquipment`/`CivilianEquipment` (with separate dead-equipment fallback singletons), `CharacterCreationContent.SelectedTitleType`/`SelectedCulture`.
+- In-game smoke test: deferred to user.
+- Commits: `ab0910f` (feature), `6d1d668` (Phase 3 doc gap + comment).
+- Closes: [#110](https://github.com/haterade22/TAOM/issues/110). Follow-up: [#111](https://github.com/haterade22/TAOM/issues/111).
