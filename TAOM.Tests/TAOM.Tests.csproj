@@ -27,4 +27,10 @@
 		</Reference>
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- Sibling parallel-port test exclusions — sources locked out in Main/TAOM.csproj. -->
+		<Compile Remove="Features\CompanionTactics\**\*.cs" />
+		<Compile Remove="Features\SmartCavalryAI\**\*.cs" />
+	</ItemGroup>
+
 </Project>

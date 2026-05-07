@@ -233,27 +233,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3,
         HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
     public bool MixedFormationsDebug { get; set; } = false;
-    // --- Battle Tactics / Mixed Formations ---
 
-    [SettingPropertyGroup("Battle Tactics/Mixed Formations", GroupOrder = 21)]
-    [SettingPropertyBool("Enable Mixed Formations", Order = 0,
-        HintText = "Master toggle. When off, formations use vanilla positioning. When on, formations with mixed melee + ranged units are reordered per the chosen layout while holding position.")]
-    public bool EnableMixedFormations { get; set; } = true;
+    // --- Fief Management ---
 
-    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
-    [SettingPropertyInteger("Default Layout (0=InfFront, 1=RngFront, 2=Wings, 3=Checkerboard)", 0, 3, Order = 1,
-        HintText = "Default layout auto-applied to mixed-class formations (>=5 minority units AND >=20% minority share AND >=10 total units). 0=Infantry front + Ranged back. 1=Ranged front + Infantry back. 2=Ranged on the wings, Infantry in the center. 3=Checkerboard. Default: 0.")]
-    public int MixedFormationsDefaultLayout { get; set; } = 0;
+    [SettingPropertyGroup("Fief Management", GroupOrder = 26)]
+    [SettingPropertyBool("Enable Fief Management", Order = 0,
+        HintText = "Master toggle. When off, the F6 hotkey is inert and the carousel options are disabled. Effective immediately at runtime. Default: true.")]
+    public bool EnableFiefManagement { get; set; } = true;
 
-    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
-    [SettingPropertyText("Cycle Layout Hotkey", Order = 2,
-        HintText = "Bannerlord InputKey name. Pressing this while a formation is selected cycles its layout to the next; pressing while no formation is selected cycles all formations. Default: L.")]
-    public string MixedFormationsCycleHotkey { get; set; } = "L";
+    [SettingPropertyGroup("Fief Management")]
+    [SettingPropertyBool("Allow Remote Building Queue", Order = 1,
+        HintText = "When on, you can manage any owned fief from anywhere via F6. When off, the Manage option is disabled unless you are physically at the selected fief. Default: true.")]
+    public bool AllowRemoteBuildingQueue { get; set; } = true;
 
-    [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
-    [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3,
-        HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
-    public bool MixedFormationsDebug { get; set; } = false;
+    [SettingPropertyGroup("Fief Management")]
+    [SettingPropertyBool("Fief Management Debug Mode", Order = 2,
+        HintText = "Write diagnostic [FiefManagement] messages to the TAOM file log. Off = silent.")]
+    public bool FiefManagementDebug { get; set; } = false;
 
     // --- Inventory / Quick Actions ---
 
@@ -322,4 +318,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyGroup("Inventory/Quick Actions/Misc")]
     [SettingPropertyBool("Quick Actions Debug Mode", Order = 2, HintText = "Show diagnostic [QuickActions] HUD messages. Off = file log only.")]
     public bool QuickActionsDebug { get; set; } = false;
+
+    // --- Inventory / Equipment Presets ---
+
+    [SettingPropertyGroup("Inventory/Equipment Presets", GroupOrder = 33)]
+    [SettingPropertyBool("Enable Equipment Presets", Order = 0,
+        HintText = "Master toggle. When off, the Presets overlay is not added to the inventory screen and existing presets are inert (preserved in save).")]
+    public bool EnableEquipmentPresets { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Equipment Presets")]
+    [SettingPropertyInteger("Max Presets Per Character", 1, 20, Order = 1,
+        HintText = "Maximum saved presets per hero. Default: 10.")]
+    public int MaxPresetsPerCharacter { get; set; } = 10;
+
+    [SettingPropertyGroup("Inventory/Equipment Presets")]
+    [SettingPropertyBool("Equipment Presets Debug Mode", Order = 2,
+        HintText = "Show diagnostic [EquipPresets] messages on the in-game HUD. Off = file log only.")]
+    public bool EquipPresetsDebug { get; set; } = false;
 }

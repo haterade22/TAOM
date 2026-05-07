@@ -31,9 +31,12 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
+using TAOM.Features.SiegeDismount;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.QuickActions;
+// using TAOM.Features.CompanionTactics; // TEMP-LOCKOUT
 using TAOM.Features.FiefManagement;
+using TAOM.Features.EquipPresets;
 
 namespace TAOM;
 
@@ -77,8 +80,11 @@ public static class IoC
         SettlementGuardsIoC.RegisterSettlementGuardsFeature(container);
         NamedCompanionIoC.RegisterNamedCompanionsFeature(container);
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
+        SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
+        EquipPresetsIoC.RegisterEquipPresetsFeature(container);
+        // CompanionTacticsIoC.RegisterCompanionTacticsFeature(container); // TEMP-LOCKOUT
         FiefManagementIoC.RegisterFiefManagementFeature(container);
 
         _container = container;

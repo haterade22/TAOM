@@ -64,6 +64,13 @@
 		<Compile Remove="_Module\bin\**" />
 		<EmbeddedResource Remove="_Module\bin\**" />
 		<None Remove="_Module\bin\**" />
+		<!-- Sibling parallel-ports with stripped TaomSettings entries. Owning sessions must restore. -->
+		<Compile Remove="Features\CompanionTactics\**\*.cs" />
+		<Compile Remove="Features\SmartCavalryAI\**\*.cs" />
+		<Compile Remove="Adapters\BattlefieldQueryAdapter.cs" />
+		<Compile Remove="Adapters\IBattlefieldQueryAdapter.cs" />
+		<Compile Remove="Adapters\CavalryCommandAdapter.cs" />
+		<Compile Remove="Adapters\ICavalryCommandAdapter.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

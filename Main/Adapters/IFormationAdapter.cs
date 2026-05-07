@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using TaleWorlds.Library;
 using TAOM.Adapters.Models;
+using TAOM.Features.MixedFormations.Models;
 
 namespace TAOM.Adapters;
 
@@ -17,6 +19,11 @@ public interface IFormationAdapter
     Vec2 Direction { get; }
     float Width { get; }
     float Interval { get; }
+
+    /// <summary>Snapshot of every live unit in the formation as <c>(Index, IsRanged)</c>.
+    /// Consumers may iterate freely without retaining engine references. Used by
+    /// MixedFormations layout assignment and IsMixedFormation classification.</summary>
+    IReadOnlyList<FormationUnit> Units { get; }
 
     /// <summary>True when the formation's movement state is <c>Hold</c>.</summary>
     bool IsHolding { get; }

@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Adapters.Models;
+using TAOM.Features.MixedFormations.Models;
 
 namespace TAOM.Adapters;
 
@@ -20,6 +22,13 @@ public sealed class FormationAdapter : IFormationAdapter
     public Vec2 Direction => _formation.Direction;
     public float Width => _formation.Width;
     public float Interval => _formation.Interval;
+
+    public IReadOnlyList<FormationUnit> Units =>
+        _formation.UnitsWithoutLooseDetachedOnes
+            .OfType<Agent>()
+            .OrderBy(a => a.Index)
+            .Select(a => new FormationUnit(a.Index, a.Character?.IsRanged ?? false))
+            .ToList();
 
     public bool IsHolding =>
         _formation.GetMovementState() == MovementOrder.MovementStateEnum.Hold;

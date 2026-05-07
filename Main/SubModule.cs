@@ -59,9 +59,11 @@ using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
+using TAOM.Features.SiegeDismount.Hooks;
 using TAOM.Features.MixedFormations.Hooks;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
+using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -336,6 +338,20 @@ public class SubModule : MBSubModuleBase
             // QuickActions: per-save inventory-search-box persistence (SyncData round-trips
             // even when EnableInventorySearch is OFF — disabled = inert, not absent).
             campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.QuickActions.Hooks.InventorySearchCampaignBehavior>());
+
+            // EquipPresets: per-save preset persistence + orphan pruning. Unconditional registration
+            // so the SyncData round-trip preserves presets even when EnableEquipmentPresets is OFF
+            // (the MCM hint promises "existing presets are inert (preserved in save)").
+            campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.EquipPresets.Hooks.EquipmentPresetCampaignBehavior>());
+
+            // FiefManagement (Patch36) — register UNCONDITIONALLY so the menu is always present
+            // and the EnableFiefManagement MCM toggle takes effect immediately at runtime.
+            campaignStarter.AddBehavior(new FiefHubCampaignBehavior(
+                IoC.Resolve<IFiefHubMenuPresenter>(),
+                IoC.Resolve<IFiefManagementSettingsProvider>()));
+
+            // CompanionTactics (Patch35) registration TEMP-LOCKED-OUT (parallel-port still has
+            // compile errors). Restore when CompanionTactics source files compile clean.
         }
     }
 
@@ -374,7 +390,15 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch26_SpecialResources");
         _harmony.PatchCategory("Patch27_CareerSystem");
         _harmony.PatchCategory("Patch29_CCBodyProperties");
+        _harmony.PatchCategory("Patch33_EquipPresets");
         _harmony.PatchCategory("Patch34_QuickActions");
+        // _harmony.PatchCategory("Patch35_CompanionTactics"); // TEMP-LOCKOUT
+        _harmony.PatchCategory("Patch36_FiefManagement");
+
+        // CompanionTactics manual patch TEMP-LOCKED-OUT
+        /*
+        // OrderOfBattleHeroItemVM.GetCaptainTooltip manual patch TEMP-LOCKED-OUT.
+        */
 
         var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
         GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
@@ -435,7 +459,9 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
         mission.AddMissionBehavior(new SpiderMissionBehavior());
+        mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
+        // mission.AddMissionBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView()); // TEMP-LOCKOUT
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
