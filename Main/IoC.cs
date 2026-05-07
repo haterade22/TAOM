@@ -33,6 +33,7 @@ using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.SiegeDismount;
 using TAOM.Features.MixedFormations;
+using TAOM.Features.SmartCavalryAI;
 using TAOM.Features.QuickActions;
 // using TAOM.Features.CompanionTactics; // TEMP-LOCKOUT
 using TAOM.Features.FiefManagement;
@@ -82,6 +83,7 @@ public static class IoC
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
+        SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);
         // CompanionTacticsIoC.RegisterCompanionTacticsFeature(container); // TEMP-LOCKOUT

@@ -335,4 +335,36 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Equipment Presets Debug Mode", Order = 2,
         HintText = "Show diagnostic [EquipPresets] messages on the in-game HUD. Off = file log only.")]
     public bool EquipPresetsDebug { get; set; } = false;
+
+    // --- Battle Tactics / Smart Cavalry ---
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry", GroupOrder = 22)]
+    [SettingPropertyBool("Enable Smart Cavalry AI", Order = 0,
+        HintText = "Master toggle. When off, cavalry uses vanilla charge logic. When on, the player's cavalry formations execute coordinated line charges with passthrough + reform behavior.")]
+    public bool EnableSmartCavalryAI { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
+    [SettingPropertyBool("Enable Friendly Collision Avoidance", Order = 1,
+        HintText = "When charging, cavalry will reroute around friendly infantry on the charge line. Off = vanilla collision behavior (cavalry trample friendly).")]
+    public bool SmartCavalryAvoidFriendlies { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
+    [SettingPropertyFloatingInteger("Charge Formation Strictness", 0.0f, 1.0f, "#0.00", Order = 2,
+        HintText = "How tightly the cavalry line must form before charging AND before reform completes. 0 = launch immediately; 1 = wait until every unit is in perfect line. Default 0.7.")]
+    public float SmartCavalryChargeStrictness { get; set; } = 0.7f;
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
+    [SettingPropertyFloatingInteger("Reform Distance After Charge", 10f, 80f, "#0", Order = 3,
+        HintText = "Meters past the target before cavalry reforms a new line. Larger = wider passthrough sweep. Default 25.")]
+    public float SmartCavalryReformDistance { get; set; } = 25f;
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
+    [SettingPropertyFloatingInteger("Charge Line Spacing Multiplier", 0.8f, 3.0f, "#0.0", Order = 4,
+        HintText = "Multiplier on default unit spacing during line formation. 1.0 = vanilla. 1.2 (default) = slightly wider line for cleaner charge.")]
+    public float SmartCavalryLineSpacing { get; set; } = 1.2f;
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
+    [SettingPropertyBool("Smart Cavalry Debug Mode", Order = 5,
+        HintText = "Show diagnostic [SmartCavalryAI] state-transition messages on the in-game HUD. Off = file log only.")]
+    public bool SmartCavalryDebug { get; set; } = false;
 }

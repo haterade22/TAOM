@@ -61,6 +61,7 @@ using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.SiegeDismount.Hooks;
 using TAOM.Features.MixedFormations.Hooks;
+using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
 using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
@@ -147,6 +148,7 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
         _harmony.PatchCategory("Patch30_MixedFormations");
+        _harmony.PatchCategory("Patch31_SmartCavalryAI");
 
         var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
         var bannerColorService = IoC.Resolve<IBannerColorService>();
@@ -461,6 +463,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new SpiderMissionBehavior());
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
+        mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());
         // mission.AddMissionBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView()); // TEMP-LOCKOUT
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

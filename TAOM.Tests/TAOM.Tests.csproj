@@ -28,9 +28,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Sibling parallel-port test exclusions — sources locked out in Main/TAOM.csproj. -->
+		<!-- Sibling parallel-port test exclusions — sources locked out in Main/TAOM.csproj.
+		     SmartCavalryAI restored 2026-05-07 by SmartCavalryAI session. -->
 		<Compile Remove="Features\CompanionTactics\**\*.cs" />
-		<Compile Remove="Features\SmartCavalryAI\**\*.cs" />
 	</ItemGroup>
 
 </Project>
