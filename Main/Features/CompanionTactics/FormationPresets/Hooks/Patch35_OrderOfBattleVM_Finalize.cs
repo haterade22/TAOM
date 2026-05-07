@@ -7,8 +7,8 @@ namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 /// Prefix on <c>OrderOfBattleVM.OnFinalize</c>. Clears the tracker reference so post-finalize
 /// queries don't hold a stale VM.
 /// </summary>
-[HarmonyPatchCategory("Patch35_CompanionTactics")]
 [HarmonyPatch(typeof(OrderOfBattleVM), nameof(OrderOfBattleVM.OnFinalize))]
+[HarmonyPatchCategory("Patch35_CompanionTactics")]
 public static class Patch35_OrderOfBattleVM_Finalize
 {
     private static IOrderOfBattleVMTracker _tracker;

@@ -8,8 +8,8 @@ namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 /// to <see cref="IOOBOverlayService"/>, which handles the false→true→false attach/detach
 /// cycle for the buttons overlay.
 /// </summary>
-[HarmonyPatchCategory("Patch35_CompanionTactics")]
 [HarmonyPatch(typeof(MissionGauntletOrderOfBattleUIHandler), nameof(MissionGauntletOrderOfBattleUIHandler.OnMissionScreenTick))]
+[HarmonyPatchCategory("Patch35_CompanionTactics")]
 public static class Patch35_OOBUIHandler_Tick
 {
     private static IOOBOverlayService _overlay;

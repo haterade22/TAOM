@@ -7,8 +7,8 @@ namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 /// Postfix on <c>MissionGauntletOrderOfBattleUIHandler.OnMissionScreenFinalize</c>. Detaches
 /// the overlay layer cleanly when the OOB UI shuts down.
 /// </summary>
-[HarmonyPatchCategory("Patch35_CompanionTactics")]
 [HarmonyPatch(typeof(MissionGauntletOrderOfBattleUIHandler), "OnMissionScreenFinalize")]
+[HarmonyPatchCategory("Patch35_CompanionTactics")]
 public static class Patch35_OOBUIHandler_Finalize
 {
     private static IOOBOverlayService _overlay;

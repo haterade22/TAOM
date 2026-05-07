@@ -11,8 +11,8 @@ namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 /// v1.3.15 verified signature (ilspycmd):
 ///   public void SetMovementOrder(MovementOrder input)
 /// </summary>
+[HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder), new[] { typeof(MovementOrder) })]
 [HarmonyPatchCategory("Patch35_CompanionTactics")]
-[HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder), typeof(MovementOrder))]
 public static class Patch35_Formation_SetMovementOrder
 {
     private static ICompanionTacticsSettingsProvider _settings;

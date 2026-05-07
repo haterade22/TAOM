@@ -12,8 +12,8 @@ namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 /// Hot-path discipline: zero allocations. Toggle check + early return only — no LINQ,
 /// no closures, no foreach over enumerables.
 /// </summary>
+[HarmonyPatch(typeof(Mission), nameof(Mission.OnTick), new[] { typeof(float), typeof(float), typeof(bool), typeof(bool) })]
 [HarmonyPatchCategory("Patch35_CompanionTactics")]
-[HarmonyPatch(typeof(Mission), nameof(Mission.OnTick))]
 public static class Patch35_Mission_OnTick
 {
     private static ICompanionTacticsSettingsProvider _settings;
