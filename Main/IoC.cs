@@ -32,6 +32,8 @@ using TAOM.Features.SettlementGuards;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.MixedFormations;
+using TAOM.Features.QuickActions;
+using TAOM.Features.FiefManagement;
 
 namespace TAOM;
 
@@ -76,6 +78,8 @@ public static class IoC
         NamedCompanionIoC.RegisterNamedCompanionsFeature(container);
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
+        QuickActionsIoC.RegisterQuickActionsFeature(container);
+        FiefManagementIoC.RegisterFiefManagementFeature(container);
 
         _container = container;
 

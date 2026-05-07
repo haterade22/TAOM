@@ -60,6 +60,8 @@ using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.MixedFormations.Hooks;
+using TAOM.Features.FiefManagement;
+using TAOM.Features.FiefManagement.Hooks;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
@@ -330,6 +332,10 @@ public class SubModule : MBSubModuleBase
 
             var namedCompanionService = IoC.Resolve<INamedCompanionService>();
             campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
+
+            // QuickActions: per-save inventory-search-box persistence (SyncData round-trips
+            // even when EnableInventorySearch is OFF — disabled = inert, not absent).
+            campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.QuickActions.Hooks.InventorySearchCampaignBehavior>());
         }
     }
 
@@ -368,6 +374,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch26_SpecialResources");
         _harmony.PatchCategory("Patch27_CareerSystem");
         _harmony.PatchCategory("Patch29_CCBodyProperties");
+        _harmony.PatchCategory("Patch34_QuickActions");
 
         var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
         GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);

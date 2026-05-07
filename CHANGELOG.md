@@ -1,6 +1,42 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
 ## 2026-05-06
+
+### Feat: QuickActions — port external sibling module into Main/Features/ (Patch34)
+
+Inventory "Sell All" replaced with a 4-option multi-action inquiry (Sell Damaged / Sell Low Value / Unequip All / vanilla) plus per-save inventory-search-box toggle. Issue: [#114](https://github.com/haterade22/TAOM/issues/114).
+
+**Four Harmony patches under `Patch34_QuickActions`:**
+- `Patch34_SellAllItemsMenu` (Prefix on `SPInventoryVM.ExecuteSellAllItems`) — opens `MultiSelectionInquiryData`. The "Sell All (Vanilla)" callback uses a thread-static `_bypassQuickActions` flag and re-enters `ExecuteSellAllItems()` so vanilla `TransferAll` runs unmodified — preserves capacity-budget, settlement-mode (`TransferAllForSettlement`), full-stack, sort, zero-count cleanup.
+- `Patch34_SPInventoryVMCapture` (Postfix on ctor) — captures active VM into `InventoryVMAdapter`.
+- `Patch34_SPInventoryVMSearchApply` (Postfix on `RefreshCallbacks`) — applies per-save `IsSearchAvailable` on inventory open.
+- `Patch34_SPInventoryVMFinalize` (Postfix on `OnFinalize`) — clears active-VM reference defensively.
+
+**v1.3.15 verification removed the original module's reflection layer.** The 1.2.x source used 8-probe + 5-probe reflection chains for the right-pane item list and `SPItemVM.ProcessSellItem`. `ilspycmd` against installed v1.3.15 confirmed both are public vanilla — direct property access only.
+
+**`IInventoryVMAdapter` introduced as load-bearing for feature 6 EquipPresets.** Both features access `SPInventoryVM`; consolidating active-VM capture in one adapter prevents duplicate-reflection drift.
+
+**`IPlayerEquipmentAdapter` extended** with `TryUnequipAllPlayerSlots()` iterating 12 `EquipmentIndex` slots × battle + civilian. The inventory adapter routes through `InventoryLogic.TransferCommand` per slot when active (vanilla `AfterTransfer` rebuilds rows + slot VMs); falls back to direct mutation via `ItemRoster.AddToCounts(EquipmentElement, int)` (modifier-preserving overload) when no inventory active.
+
+**`IInventoryItemAdapter.StackAmount`** added. `TrySellItem` sets `spItem.TransactionCount = StackAmount` before invoke so a stack of 50 sells 50 units.
+
+**Audio:** `IQuickActionsAudioPlayer` wraps `SoundEvent.PlaySound2D("event:/ui/transfer")`.
+
+**`InventorySearchCampaignBehavior`** holds per-save bool via `SyncData("TAOM_IsInventorySearchAvailable")`. Seeds from MCM on `OnNewGameCreatedEvent` / `OnGameLoadedEvent`; reconciled per campaign frame via `CampaignEvents.TickEvent`. Apply happens on inventory-open via `Patch34_SPInventoryVMSearchApply`, not on tick.
+
+**15 MCM settings** under `Inventory/Quick Actions` (GroupOrder 30/31/32) — all consumed.
+
+**Tests:** 53/53 QuickActions tests across 3 files (34 service + 7 behavior + 9 preset). Coverage: skip-guard exhaustion for every filter flag, threshold matrix, modifier-preservation, audio invocation, confirmation flow, null-adapter graceful degrade, SyncData seed/reconcile, stack-amount regression coverage.
+
+**Two-stage review pipeline:**
+- `/deep-review` (5 parallel Claude agents) caught and fixed: CRITICAL IoC/SubModule wiring (parallel-port lockout reverted edits), HIGH `IsFiltered` filter gap, MEDIUM stale-VM lifecycle, MEDIUM Horse/HorseHarness slots skipped.
+- `/review-codex` (Codex CLI 17m28s — [docs/reviews/codex-adversarial-quickactions-2026-05-06.md](docs/reviews/codex-adversarial-quickactions-2026-05-06.md)) caught 3 additional bugs (full RCA at [docs/reviews/rca-quickactions-2026-05-06.md](docs/reviews/rca-quickactions-2026-05-06.md)):
+  - HIGH — "Sell All (Vanilla)" hand-rolled the loop, dropped capacity/settlement/full-stack/sort/cleanup. Fix: thread-static bypass flag.
+  - HIGH — `TrySellItem` sold 1 unit per stack (`TransactionCount` default 1). Fix: adapter exposes `StackAmount`, sets before invoke.
+  - MEDIUM — `UnequipAll` bypassed `InventoryLogic.AfterTransfer`. Fix: route through `TransferCommand`.
+
+**Three feedback memories codified for future sessions:** `feedback_vanilla_reentry_via_bypass_flag.md`, `feedback_static_delegate_reads_param_state.md`, `feedback_route_via_engine_command_when_ui_active.md`. Unifying root cause: "engine-bypass anti-pattern" — code mutating engine state via paths that bypass vanilla's UI/refresh/update contract.
+
 ### Fix: MixedFormations — Codex adversarial review findings (navmesh validation + thread safety)
 
 After `/deep-review MixedFormations` (5-agent core, returned PASS on standards/compatibility/completeness/data-flow), `/review-codex MixedFormations` (Codex CLI 0.128.0, run 2026-05-06) produced TWO additional findings the deep-review missed — 1 HIGH + 1 MEDIUM. Both confirmed via `ilspycmd` against installed v1.3.15 and fixed in same session per the "no silent deferrals" rule. Codex review file preserved at [docs/reviews/codex-adversarial-mixedformations-2026-05-06.md](docs/reviews/codex-adversarial-mixedformations-2026-05-06.md) (reconstructed from stdout because Codex's `apply_patch` was rejected by the read-only sandbox).

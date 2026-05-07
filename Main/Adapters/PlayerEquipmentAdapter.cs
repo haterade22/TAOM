@@ -1,5 +1,7 @@
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
@@ -7,6 +9,43 @@ namespace TAOM.Adapters;
 
 public sealed class PlayerEquipmentAdapter : IPlayerEquipmentAdapter
 {
+    public int TryUnequipAllPlayerSlots()
+    {
+        var hero = Hero.MainHero;
+        if (hero == null) return 0;
+        var party = PartyBase.MainParty;
+        var roster = party?.ItemRoster;
+        if (roster == null) return 0;
+
+        var deadBattle = Campaign.Current?.DeadBattleEquipment;
+        var deadCivilian = Campaign.Current?.DeadCivilianEquipment;
+
+        int count = 0;
+        count += StripEquipment(hero.BattleEquipment, deadBattle, roster);
+        count += StripEquipment(hero.CivilianEquipment, deadCivilian, roster);
+        return count;
+    }
+
+    private static int StripEquipment(Equipment equipment, Equipment deadSingleton, ItemRoster roster)
+    {
+        if (equipment == null || equipment == deadSingleton) return 0;
+        int count = 0;
+        // Iterate every meaningful slot 0..11: Weapon0..3 + ExtraWeaponSlot (0..4),
+        // Head/Body/Leg/Gloves/Cape (5..9), Horse (10), HorseHarness (11).
+        // Deep-review #36 caught earlier version stopping at ArmorItemEndSlot=10 (exclusive)
+        // which left Horse + HorseHarness equipped — UI promise "Unequip All" must match code.
+        for (var i = EquipmentIndex.WeaponItemBeginSlot; i < EquipmentIndex.NumEquipmentSetSlots; i++)
+        {
+            var element = equipment[i];
+            if (element.IsEmpty) continue;
+            // Modifier-preserving overload — keeps ItemModifier on quality/durability variants.
+            roster.AddToCounts(element, 1);
+            equipment[i] = EquipmentElement.Invalid;
+            count++;
+        }
+        return count;
+    }
+
     public PlayerEquipmentApplyResult ApplyRosterToPlayer(string rosterId, string playerHeroId)
     {
         var roster = MBObjectManager.Instance?.GetObject<MBEquipmentRoster>(rosterId);

@@ -1,6 +1,7 @@
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
+using MCM.Common;
 
 namespace TAOM.Features;
 
@@ -253,4 +254,72 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3,
         HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
     public bool MixedFormationsDebug { get; set; } = false;
+
+    // --- Inventory / Quick Actions ---
+
+    [SettingPropertyGroup("Inventory/Quick Actions", GroupOrder = 30)]
+    [SettingPropertyBool("Enable Quick Actions", Order = 0,
+        HintText = "Master toggle. When off, inventory 'Sell All' uses vanilla. When on, it opens a 4-option menu.")]
+    public bool EnableQuickActions { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions")]
+    [SettingPropertyBool("Enable Inventory Search", Order = 1,
+        HintText = "Inventory search box visibility; persists per save and reconciles to MCM each campaign frame.")]
+    public bool EnableInventorySearch { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged", GroupOrder = 30)]
+    [SettingPropertyDropdown("Damage Threshold Preset", Order = 0,
+        HintText = "Items at or below this damage level are sold. Pristine = unused (sentinel). Default: Moderate (-20%).")]
+    public Dropdown<string> DamagedQualityDropdown { get; set; } = new Dropdown<string>(
+        new[] { "Pristine", "Slight (-10%)", "Moderate (-20%)", "Heavy (-40%)" }, 2);
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
+    [SettingPropertyFloatingInteger("Custom Damage Threshold", -1.0f, 0.0f, "#0.00", Order = 1,
+        HintText = "Custom threshold. Only used when 'Use Custom Threshold' is on. Default: -0.20.")]
+    public float DamagedThreshold { get; set; } = -0.2f;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
+    [SettingPropertyBool("Use Custom Threshold", Order = 2, HintText = "Toggle dropdown vs custom value above.")]
+    public bool UseCustomThreshold { get; set; } = false;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
+    [SettingPropertyBool("Sell Damaged Equipped", Order = 3, HintText = "Include items currently equipped on heroes.")]
+    public bool SellDamagedEquipped { get; set; } = false;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
+    [SettingPropertyBool("Exclude Damaged Horses", Order = 4, HintText = "Skip horses/mounts when selling damaged. Default: true.")]
+    public bool ExcludeDamagedHorses { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value", GroupOrder = 31)]
+    [SettingPropertyInteger("Low Value Threshold (denars)", 1, 10000, Order = 0,
+        HintText = "Items at or below this denars value are sold. Default: 100.")]
+    public int LowValueThreshold { get; set; } = 100;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
+    [SettingPropertyBool("Sell Low Value Equipped", Order = 1, HintText = "Include items currently equipped. Default: false.")]
+    public bool SellLowValueEquipped { get; set; } = false;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
+    [SettingPropertyBool("Exclude Low Value Food", Order = 2, HintText = "Skip food items. Default: true.")]
+    public bool ExcludeLowValueFood { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
+    [SettingPropertyBool("Exclude Low Value Horses", Order = 3, HintText = "Skip horses/mounts. Default: true.")]
+    public bool ExcludeLowValueHorses { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
+    [SettingPropertyBool("Exclude Low Value Trade Goods", Order = 4, HintText = "Skip trade goods. Default: false.")]
+    public bool ExcludeLowValueTradeGoods { get; set; } = false;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Misc", GroupOrder = 32)]
+    [SettingPropertyBool("Show Confirmation Dialog", Order = 0, HintText = "Ask for confirmation before bulk-selling. Default: true.")]
+    public bool QuickActionsShowConfirmation { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Misc")]
+    [SettingPropertyBool("Play Sounds", Order = 1, HintText = "Play 'event:/ui/transfer' chime after each batch action. Default: true.")]
+    public bool QuickActionsPlaySounds { get; set; } = true;
+
+    [SettingPropertyGroup("Inventory/Quick Actions/Misc")]
+    [SettingPropertyBool("Quick Actions Debug Mode", Order = 2, HintText = "Show diagnostic [QuickActions] HUD messages. Off = file log only.")]
+    public bool QuickActionsDebug { get; set; } = false;
 }
