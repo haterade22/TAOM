@@ -1,5 +1,40 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-07
+
+### Fix: EquipPresets — Codex review #2026-05-07 fix pass (Patch33)
+
+Codex adversarial review of the EquipPresets port returned 9 findings: 2 CRITICAL, 3 HIGH, 3 MEDIUM, 1 LOW. All confirmed findings fixed; the 6 Known Suspects all addressed (3 disputed by Codex with vanilla-source evidence — no code change needed).
+
+**CRITICAL fixes:**
+- **Load path now goes through vanilla `InventoryLogic.AddTransferCommands`.** The original-module port (and Claude's first deep-review) shipped a direct `equipment[slot] = element` mutation. Codex's vanilla decompile of `SPInventoryVM.EquipEquipment` showed the correct path: `TransferCommand.Transfer(...)` factory + batch submit. Vanilla auto-deposits the displaced equipped item to inventory, consumes inventory items, fires `AfterTransfer` to refresh slot VMs, and applies the slot-fit / mount-harness gates. Without this, equipping from inventory duplicated items (no roster consumption) and overwriting an equipped slot lost the previous gear (no deposit). The new flow lives in `InventoryScreenAdapter.LoadEquipment` — the service now builds a list of `PresetSlotRequest`s and delegates; all TaleWorlds types stay inside the adapter per ADR-007.
+- **`TaomSettings` 3 EquipPresets properties restored.** Coordination hook had stripped them between sessions; provider was dereferencing absent properties. Now: `EnableEquipmentPresets` (default true), `MaxPresetsPerCharacter` (1–20, default 10), `EquipPresetsDebug` (default false) under group `Inventory/Equipment Presets`, `GroupOrder = 33`.
+
+**HIGH fixes:**
+- **EquipPresets fully wired.** `IoC.cs` registers `EquipPresetsIoC.RegisterEquipPresetsFeature(container)`; `SubModule.cs` calls `_harmony.PatchCategory("Patch33_EquipPresets")` in `OnGameInitializationFinished` and `campaignStarter.AddBehavior(IoC.Resolve<EquipmentPresetCampaignBehavior>())` unconditionally in `OnGameStart` so SyncData round-trips when the toggle is OFF (matches the MCM "presets are inert (preserved in save)" promise).
+- **Empty-slot clearing on Load.** `EquipmentSlotAdapter.Capture` now emits one snapshot per slot (0..11) including empty-itemId sentinels for empty slots. `LoadEquipment` translates an empty `ItemStringId` request into an unequip `TransferCommand` (slot → PlayerInventory). A "no shield" preset can now actually clear a shield from a hero who has one.
+- **Save-from-civilian-view now captures both sets.** Previously, `IncludesCivilianEquipment` was set from `_screen.IsViewingCivilianEquipment` — if the player saved while viewing the civilian tab, the snapshot also bundled hidden battle equipment, and Load mutated both sets. Now: `PromptSaveName` always saves the full hero loadout (battle + civilian + mount). The MCM hint copy and the dialog text agree on this.
+
+**MEDIUM fixes:**
+- **`Hero.BattleEquipment` / `CivilianEquipment` dead-equipment guard.** Vanilla returns `Campaign.Current.DeadBattleEquipment` / `DeadCivilianEquipment` shared singletons when the hero's backing equipment is null. `EquipmentSlotAdapter.Capture` now reference-checks against those singletons and refuses to read from them — otherwise a captured "preset" would mirror dead-character defaults rather than the live hero's loadout.
+- **`Equipment.IsItemFitsToSlot` enforcement.** Vanilla's `Equipment[index]` setter calls `IsItemFitsToSlot` but ignores the return — a tampered save or item-XML drift could put a helmet in a weapon slot. `InventoryScreenAdapter.LoadEquipment` now invokes `Equipment.IsItemFitsToSlot(slot, item)` before issuing a `TransferCommand` and reports `LoadEquipmentResult.InvalidSlots` for rejections.
+- **Dead `SetItemLocked` API removed.** `IInventoryScreenAdapter.SetItemLocked` was leftover from the SlotLocked plumbing Codex flagged in the prior pass; documentation still claimed "Used by Load" but no consumer existed. Deleted from interface and concrete; if a future feature wants pre-existing-lock awareness it can be reintroduced with a proper consumer.
+
+**LOW fix:**
+- **`RestoreFromSerializableState` null-normalizes.** Drops null hero keys, drops null preset entries, replaces null `Items` / `CivilianItems` with empty lists. Robust against future save-format migration edge cases.
+
+**6 Known Suspects from the Codex prompt:**
+1. `PromptSaveName` includeMount=true hardcode — addressed by docs + the new "save complete loadout" semantic.
+2. `TextObject.SetTextVariable(string, string)` chainability — DISPUTED (Codex confirmed it returns `this`).
+3. `ActiveHeroStringId` null-leak — DISPUTED (vanilla `SPInventoryVM` only assigns `_currentCharacter` for hero characters).
+4. `OnGameLoaded` orphan pruning empty live-set — DISPUTED (existing guard correctly returns 0).
+5. Modifier preservation chain — CONFIRMED (validation pre-pass kept; race-path documented).
+6. GauntletLayer z-order 1000 — CONFIRMED (no TAOM/vanilla collisions; vanilla layer is 15).
+
+**Tests:** 56 EquipPresets tests in TAOM.Tests/Features/EquipPresets/ (4 files), all green. Full suite 1542/1542. Behavioral tests for the new InventoryScreenAdapter contract (`LoadEquipment`) including: pre-validate-modifier path, request-pass-through, empty-itemId clearing, includeMount filtering, invalid-slot aggregation, both-equipment-set application. Plus 5 new normalization tests for `RestoreFromSerializableState` (null keys, null presets, null Items lists, all-null pruning).
+
+**Coordination caveat:** ported in parallel with QuickActions, FiefManagement, SmartCavalryAI, CompanionTactics, MixedFormations. The coordination hook auto-applied `<Compile Remove>` lockouts on the csproj when sibling sessions had transient build errors; lockouts removed once each owning session verified its module compiles clean. EquipPresets restored in `Main/TAOM.csproj` and `TAOM.Tests/TAOM.Tests.csproj`.
+
 ## 2026-05-06
 
 ### Feat: QuickActions — port external sibling module into Main/Features/ (Patch34)
