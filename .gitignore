@@ -43,3 +43,11 @@ tools/node_modules/
 .claude/scheduled_tasks.lock
 .codex-temp/
 .dotnet-cli-home/
+
+# Python bytecode caches (anywhere under tools/)
+tools/**/__pycache__/
+tools/**/*.pyc
+
+# Serena MCP code-indexing cache
+.serena/cache/
+.serena/project.local.yml
