@@ -1,5 +1,17 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-11
+
+### Process: port `think-before-coding` rule from karpathy-skills; sharpen `surgical-changes` + `goal-driven-execution` wording in CLAUDE.md
+
+Reviewed [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills) (124k★ — packages Karpathy's four behavioral principles for Claude Code / Cursor distribution). Three of the four were already absorbed in the 2026-05-07 autoresearch port (`simplicity-criterion.md`, autonomous-loop stewardship, worktree isolation). One genuine gap remained — assumption-surfacing before the first Edit — plus two principles where the upstream phrasing was sharper than ours.
+
+- **`.claude/rules/think-before-coding.md`** (new, always-load, no `paths:` per harness-facts loader rules). Fires when a non-trivial request admits multiple reasonable interpretations and Claude cannot infer the right one from files/commits/CLAUDE.md/sibling files. Includes a TAOM-specific "when NOT to ask" guard (trivial/mechanical work, routing decisions, conventions already in ADRs) — the upstream rule does not address the opposite failure mode of over-questioning, which we've hit in past sessions.
+- **CLAUDE.md "Edit scope discipline"** subsection added under Working Discipline. Two paragraphs: traceability rule ("every changed line should trace directly to the user's request — don't 'improve' adjacent code") and vague-to-testable rule ("convert vague asks into testable objectives BEFORE the first Edit"). Cross-references `/investigate` Phase 1 and `/verify`.
+- **CLAUDE.md Scoped Rules table** — added rows for `think-before-coding.md` and the previously-undocumented `simplicity-criterion.md` (pre-existing docs gap caught by this audit).
+
+Skipped: bundled `/karpathy-principles` skill, three-file Cursor/CLAUDE.md/SKILL.md sync convention, TSV experiment logging, 5-minute training window — none map onto TAOM's workflow per the simplicity criterion.
+
 ## 2026-05-07
 
 ### Process: import three workflow disciplines from karpathy/autoresearch
