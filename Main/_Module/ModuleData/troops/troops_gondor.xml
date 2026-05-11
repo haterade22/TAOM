@@ -5170,7 +5170,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.gondor_steel_bow_b" />
+        <equipment slot="Item0" id="Item.gondor_steel_bow" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
