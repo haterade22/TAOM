@@ -159,8 +159,13 @@ def parse_definition(data: bytes):
 def classify_bone(name: str) -> dict:
     """Map a spider bone name to its joint group and physics defaults.
 
-    Defaults per group are heuristic — picked from anatomy of an 8-legged spider
-    rig. Tunable; if visual results need refining, edit values here.
+    Handles BOTH naming conventions:
+    - Old (spider_skeleton, 62 bones): lowercase 'root_m', 'joint40_l', 'joint5_r'
+    - New (erkamspider_skeleton, 58 bones): mixed 'Root_M', 'spine1_M', 'joint40_L', 'joint5_R'
+
+    Classification is case-insensitive and prefix-based. Defaults per group are
+    heuristic — picked from anatomy of an 8-legged spider rig. Tunable; if visual
+    results need refining, edit values here.
 
     Returns dict with: group, body_type, mass, swing1_limit, swing2_limit.
     """
@@ -170,7 +175,7 @@ def classify_bone(name: str) -> dict:
     if n in ('root_m', 'spine1_m', 'spine2_m', 'chest_m'):
         return {'group': 'body_axis',  'body_type': 'abdomen', 'mass': 8.0, 'swing1': 0.30, 'swing2': 0.50}
 
-    # Head + mouth: look-around freedom
+    # Head + mouth: look-around freedom (joint12_m only present in old 62-bone skeleton)
     if n in ('head_m', 'joint12_m'):
         return {'group': 'head',       'body_type': 'abdomen', 'mass': 3.0, 'swing1': 0.70, 'swing2': 1.20}
 
@@ -178,11 +183,11 @@ def classify_bone(name: str) -> dict:
     if n in ('joint5_l', 'joint5_r'):
         return {'group': 'fang',       'body_type': 'abdomen', 'mass': 0.5, 'swing1': 0.40, 'swing2': 0.60}
 
-    # Abdomen + stinger: tail-like bend
+    # Abdomen + stinger: tail-like bend (joint16_m only in old skeleton)
     if n in ('joint13_m', 'joint14_m', 'joint15_m', 'joint16_m'):
         return {'group': 'abdomen',    'body_type': 'abdomen', 'mass': 4.0, 'swing1': 0.30, 'swing2': 0.50}
 
-    # Pedipalps: held near mouth, articulate freely
+    # Pedipalps: held near mouth, articulate freely (joint21 only in old skeleton)
     if n.startswith('joint17_') or n.startswith('joint18_') or n.startswith('joint19_') \
        or n.startswith('joint20_') or n.startswith('joint21_'):
         return {'group': 'pedipalp',   'body_type': 'abdomen', 'mass': 0.3, 'swing1': 0.80, 'swing2': 1.40}
