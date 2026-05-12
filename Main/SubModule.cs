@@ -149,6 +149,7 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
         _harmony.PatchCategory("Patch30_MixedFormations");
+        _harmony.PatchCategory("Patch37_EditorCacheRebuild");
         // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
         // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
         // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,

@@ -76,8 +76,9 @@ Any provider that loads `Main/_Module/ModuleData/` JSON or XML the player is exp
 1. Range-check every numeric field against its engine-valid bounds
 2. Enforce ordering invariants between related fields (e.g., warning-threshold ≥ trigger-threshold)
 3. Reject sign flips on fields whose meaning is directional (penalties must be ≤ 0; bonuses must be ≥ 0)
-4. Log a warning and fall back to the compiled default for any field that fails — never silently apply a bad value
-5. Emit a summary warning when any reversion occurred so the user knows to look at prior warnings
+4. **For every `float`/`double` field: reject `NaN` and `±Infinity` BEFORE the range check.** IEEE-754 NaN comparisons always return `false`, so `value < min || value > max` evaluates `false` for NaN and the bad value sneaks through. Use `TAOM.Core.Validation.FiniteFloatValidator.IsFinite[InRange|AtMost|AtLeast]` — never write bare `< min || > max` checks on floats. This bug has shipped twice (Career cooldown review #31 — NaN cooldown made ability "always ready"; EditorCacheRebuild review #38 — NaN smoke-test tolerance silently disabled the parallel-safety gate).
+5. Log a warning and fall back to the compiled default for any field that fails — never silently apply a bad value
+6. Emit a summary warning when any reversion occurred so the user knows to look at prior warnings
 
 **Why:** Review #25 (RevoltTuning) found a HIGH bug where the provider logged "Loaded" success for any parseable file. A plausible user edit like a sign-flipped penalty `1.0` (should be `-1.0`) would silently flip the feature from "soften revolts" to "accelerate revolts" with no warning. Syntax-error tests (missing file, malformed JSON) did not cover this class of failure.
 

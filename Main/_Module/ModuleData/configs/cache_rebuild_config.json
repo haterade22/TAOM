@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "forceVanilla": false,
+  "parallelism": 4,
+  "checkpointEvery": 20,
+  "enablePathReuse": true,
+  "enablePersistentPathCache": true,
+  "enableIncremental": true,
+  "incrementalMaxChanged": 30,
+  "incrementalSpatialRadius": 5.0,
+  "enableDebugQualityCheck": false,
+  "enableUiOverlay": true,
+  "smokeTestPairs": 10,
+  "smokeTestDistanceTolerance": 0.0001,
+  "phase1SkipReversePathfind": false,
+  "validationReportRelativePath": "TAOM_Map/ModuleData/DistanceCaches/last_rebuild_report.json",
+  "enableCheckpoint": true,
+  "checkpointRelativeDirectory": "TAOM_Map/ModuleData/DistanceCaches",
+  "settlementSnapshotRelativePath": "TAOM_Map/ModuleData/DistanceCaches/settlements_snapshot.json",
+  "logVerbosity": "info"
+}

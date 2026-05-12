@@ -3,6 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 
 namespace TAOM.Features.RevoltTuning;
 
@@ -81,16 +82,16 @@ public class RevoltTuningConfigProvider : IRevoltTuningConfigProvider
             rejected = true;
         }
 
-        if (sanitized.SettlementOwnerDifferentCultureLoyaltyEffect > 0f)
+        if (!FiniteFloatValidator.IsFiniteAtMost(sanitized.SettlementOwnerDifferentCultureLoyaltyEffect, 0f))
         {
-            _logger.LogWarning($"RevoltTuningConfigProvider: settlementOwnerDifferentCultureLoyaltyEffect={sanitized.SettlementOwnerDifferentCultureLoyaltyEffect} must be <= 0 (this is a daily penalty, not a bonus), reverting to default {defaults.SettlementOwnerDifferentCultureLoyaltyEffect}");
+            _logger.LogWarning($"RevoltTuningConfigProvider: settlementOwnerDifferentCultureLoyaltyEffect={sanitized.SettlementOwnerDifferentCultureLoyaltyEffect} must be a finite value <= 0 (this is a daily penalty, not a bonus), reverting to default {defaults.SettlementOwnerDifferentCultureLoyaltyEffect}");
             sanitized.SettlementOwnerDifferentCultureLoyaltyEffect = defaults.SettlementOwnerDifferentCultureLoyaltyEffect;
             rejected = true;
         }
 
-        if (sanitized.GovernorDifferentCultureLoyaltyEffect > 0f)
+        if (!FiniteFloatValidator.IsFiniteAtMost(sanitized.GovernorDifferentCultureLoyaltyEffect, 0f))
         {
-            _logger.LogWarning($"RevoltTuningConfigProvider: governorDifferentCultureLoyaltyEffect={sanitized.GovernorDifferentCultureLoyaltyEffect} must be <= 0 (this is a daily penalty, not a bonus), reverting to default {defaults.GovernorDifferentCultureLoyaltyEffect}");
+            _logger.LogWarning($"RevoltTuningConfigProvider: governorDifferentCultureLoyaltyEffect={sanitized.GovernorDifferentCultureLoyaltyEffect} must be a finite value <= 0 (this is a daily penalty, not a bonus), reverting to default {defaults.GovernorDifferentCultureLoyaltyEffect}");
             sanitized.GovernorDifferentCultureLoyaltyEffect = defaults.GovernorDifferentCultureLoyaltyEffect;
             rejected = true;
         }

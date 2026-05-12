@@ -38,6 +38,7 @@ using TAOM.Features.QuickActions;
 using TAOM.Features.CompanionTactics;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.EquipPresets;
+using TAOM.Features.EditorCacheRebuild;
 
 namespace TAOM;
 
@@ -88,6 +89,7 @@ public static class IoC
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);
         CompanionTacticsIoC.RegisterCompanionTacticsFeature(container);
         FiefManagementIoC.RegisterFiefManagementFeature(container);
+        EditorCacheRebuildIoC.RegisterEditorCacheRebuildFeature(container);
 
         _container = container;
 
