@@ -380,6 +380,30 @@ ACTION ITEMS
 VERDICT: READY FOR COMMIT / NEEDS FIXES
 ```
 
+## Step 3e: Root Cause Analysis (MANDATORY — BLOCKING GATE before commit)
+
+If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. Per `.claude/rules/harness-facts.md` and `feedback_root_cause_mandatory.md` — this is not optional, not severity-gated, not "only HIGH." The literal text: *"Do NOT skip this step. The point is not just to fix bugs — it's to make the same category of bug impossible in future features."*
+
+The recurring failure is conflating severity with importance for RCA: we patch LOW symptoms but never extract the systemic lesson, and the same category of bug ships again. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
+
+**For EVERY confirmed finding (not just HIGH/MED):**
+
+1. Write the finding text + severity.
+2. **Why missed:** what assumption, scope gap, or pattern blindness let it through? Be specific — name the rule that should have caught it, name the file/line that exhibits the pattern.
+3. **Preventive action:** generalizable rule, feedback-memory entry, or scope extension to an existing rule? Or one-off?
+4. If the pattern has shipped before (grep `docs/reviews/rca-*.md` + `~/.claude/projects/.../memory/feedback_*.md` for it), call that out — repeat-offender bugs need stronger preventive action than first-time bugs.
+
+**Write the result to `docs/reviews/rca-<feature>-<YYYY-MM-DD>.md`** following the format of `docs/reviews/rca-quickactions-2026-05-06.md` or `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md`:
+- Top-line summary
+- Findings table: # | Sev | Bug | Category | Why Missed | Preventive Action
+- Root-cause pattern section (if 2+ findings share a theme)
+- "Why each agent missed these" section — for each of the 5 deep-review agents that didn't catch the finding, state why their rule set didn't apply or why the agent's scope was too narrow
+- "Feedback memories to codify" section — only if there's a genuine systemic pattern; don't manufacture rules
+
+**This file MUST exist BEFORE the closing commit.** The commit message should reference the RCA path.
+
+If the RCA reveals a rule that's already documented but wasn't followed (scope gap or agent prompt missing the rule), update the rule file or agent prompt in a follow-up commit. Commit graph: review → fixes → RCA → preventive-rule update.
+
 ## Important
 
 - This is a READ-ONLY review. Do NOT make any code changes.

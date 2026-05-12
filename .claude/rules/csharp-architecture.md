@@ -68,15 +68,19 @@ Skip any state where mutation would corrupt the entity.
 
 **Idempotent vs destructive:** Before copying a behavior pattern from another feature, ask: "Is this operation idempotent?" Injecting a banner color twice is harmless. Moving a Hero between locations is destructive. Destructive load-path operations need stricter guards than their new-game counterparts.
 
-## Config Providers MUST Validate (MANDATORY for user-editable JSON/XML)
+## Config Providers MUST Validate (MANDATORY for user-editable JSON/XML, MCM settings, AND editor-visible fields on engine-discovered classes)
 
-Any provider that loads `Main/_Module/ModuleData/` JSON or XML the player is expected to edit (retuning knobs, enable/disable flags, tunable thresholds) must validate semantic constraints after deserialization, not just syntax. Parse success is NOT validation success.
+Any provider or boundary class that exposes user-editable values must validate semantic constraints after deserialization or before consumption, not just syntax. Parse success is NOT validation success. This rule covers **three** source categories, all functionally identical (user-editable, untrusted, flow into comparisons + native engine calls):
 
-**Rule:** If the feature doc tells the user "edit this file to retune," the provider's `LoadConfig` (or equivalent) must:
+1. **JSON/XML config files** under `Main/_Module/ModuleData/` (the original case — RevoltTuning, EditorCacheRebuild config).
+2. **MCM settings** exposed via the in-game settings UI (e.g., `TaomSettings.RebuildDistanceCacheAction` lambda parameters).
+3. **Editor-visible fields** on engine-discovered classes — public instance fields with `[EditableScriptComponentVariable]` on `ScriptComponentBehavior` subclasses, public fields on `GameModel` subclasses that the editor surfaces, equivalent attributes on `CampaignBehaviorBase` that the engine reads. **The map author / player edits these directly in the scene/campaign editor — they're config in every functional sense even though there's no JSON file.**
+
+**Rule:** Before any comparison, range check, or pass-through to a native engine call, the consumer (loader for category 1, boundary class for categories 2 and 3) must:
 1. Range-check every numeric field against its engine-valid bounds
 2. Enforce ordering invariants between related fields (e.g., warning-threshold ≥ trigger-threshold)
 3. Reject sign flips on fields whose meaning is directional (penalties must be ≤ 0; bonuses must be ≥ 0)
-4. **For every `float`/`double` field: reject `NaN` and `±Infinity` BEFORE the range check.** IEEE-754 NaN comparisons always return `false`, so `value < min || value > max` evaluates `false` for NaN and the bad value sneaks through. Use `TAOM.Core.Validation.FiniteFloatValidator.IsFinite[InRange|AtMost|AtLeast]` — never write bare `< min || > max` checks on floats. This bug has shipped twice (Career cooldown review #31 — NaN cooldown made ability "always ready"; EditorCacheRebuild review #38 — NaN smoke-test tolerance silently disabled the parallel-safety gate).
+4. **For every `float`/`double` field: reject `NaN` and `±Infinity` BEFORE the range check.** IEEE-754 NaN comparisons always return `false`, so `value < min || value > max` evaluates `false` for NaN and the bad value sneaks through. Use `TAOM.Core.Validation.FiniteFloatValidator.IsFinite[InRange|AtMost|AtLeast]` — never write bare `< min || > max` checks on floats. **This bug has shipped three times** (Career cooldown review #31 — NaN cooldown made ability "always ready"; EditorCacheRebuild review #38 — NaN smoke-test tolerance silently disabled the parallel-safety gate; scene-scripts CS_Road 2026-05-13 — NaN `Width` / `ElevationOffset` / `RepeatU`/`RepeatV` flowed through to native `Mesh.AddTriangle` because the rule was only documented for category 1 and the script-author didn't classify editor fields as config).
 5. Log a warning and fall back to the compiled default for any field that fails — never silently apply a bad value
 6. Emit a summary warning when any reversion occurred so the user knows to look at prior warnings
 

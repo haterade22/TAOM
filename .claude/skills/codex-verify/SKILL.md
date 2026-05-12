@@ -85,9 +85,32 @@ LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
+## Step 6: Root Cause Analysis (MANDATORY — BLOCKING GATE before commit)
+
+If Codex returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. Per `.claude/rules/harness-facts.md` and `feedback_root_cause_mandatory.md` — this is not optional, not severity-gated, not "only HIGH." Conflating severity with importance for RCA means we patch LOW symptoms but never extract the systemic lesson — and the same category of bug ships again. The recurring failure: it's already happened repeatedly (Career cooldown review #31, EditorCacheRebuild review #38, scene-scripts CS_Road 2026-05-13 — all the same NaN-gate scope miss).
+
+**For EVERY confirmed finding (not just HIGH):**
+
+1. Write the finding text + severity.
+2. **Why missed:** what assumption, scope gap, or pattern blindness let it through? Be specific — name the rule that should have caught it, name the file/line that exhibits the pattern.
+3. **Preventive action:** is there a generalizable rule, a feedback-memory entry, or a scope extension to an existing rule? Or is this a one-off?
+4. If the pattern has shipped before (grep `docs/reviews/rca-*.md` and `~/.claude/projects/.../memory/feedback_*.md` for it), call that out — repeat-offender bugs need stronger preventive action than first-time bugs.
+
+**Write the result to `docs/reviews/rca-<feature>-<YYYY-MM-DD>.md`** following the format of `docs/reviews/rca-quickactions-2026-05-06.md`:
+- Top-line summary
+- Findings table with columns: # | Sev | Bug | Category | Why Missed | Preventive Action
+- Root-cause pattern section (if 2+ findings share a theme)
+- "Why deep-review missed these" section (if deep-review ran before Codex)
+- "Feedback memories to codify" section (only if there's a genuine systemic pattern; don't manufacture rules)
+
+**This file MUST exist BEFORE the closing commit.** The commit message should reference the RCA path.
+
+If the RCA reveals a rule that's already documented but wasn't followed (scope gap or skill body missing prompt), update the rule file or skill body in a follow-up commit. The commit graph should show: review → fixes → RCA → preventive-rule update.
+
 ## Important
 
 - This is independent verification — Codex has its own understanding via AGENTS.md
 - If Codex and Claude disagree on a finding, that disagreement is valuable signal — flag it
 - Codex does NOT run builds or tests — it does static analysis and API signature verification
 - If `/codex:review` fails (plugin not installed, Codex not authenticated), inform the user and suggest running `/codex:setup`
+- **DO NOT SKIP STEP 6.** The harness-facts rule + the feedback memory both label this as a BLOCKING GATE. Past sessions have shipped without it; the meta-RCA in `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md` documents that case and why this step now exists in this skill.

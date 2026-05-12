@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Preventive measures from scene-scripts CS_Road RCA (commit 75ccd57)
+
+Three rule/skill updates to prevent the systemic patterns surfaced by `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md` from shipping again:
+
+- **`.claude/skills/codex-verify/SKILL.md` + `.claude/skills/deep-review/SKILL.md`** — added Step 6 / Step 3e "Root Cause Analysis (MANDATORY — BLOCKING GATE before commit)" with explicit instructions to write `docs/reviews/rca-<feature>-<date>.md` BEFORE the closing commit. The harness-facts rule + `feedback_root_cause_mandatory.md` both label RCA as a blocking gate, but neither skill body prompted the action — that's why I shipped scene-scripts without RCA. Skill bodies now make the mandate explicit, with cross-references to the meta-RCA that documents the previous miss.
+- **`.claude/rules/csharp-architecture.md` "Config Providers MUST Validate"** — extended scope from "user-editable JSON/XML" to also cover MCM settings AND editor-visible `[EditableScriptComponentVariable]` fields on engine-discovered classes (`ScriptComponentBehavior`, `GameModel`, `CampaignBehaviorBase` subclasses). All three categories are functionally identical (user-editable, untrusted, flow into comparisons + native engine calls), but the rule's documented scope was only category 1. The `FiniteFloatValidator` countermeasure has now shipped THREE times (Career cooldown #31, EditorCacheRebuild #38, scene-scripts CS_Road 2026-05-13) — the third occurrence was the scene-scripts NaN-gate miss that this update specifically closes.
+
 ### Feature: scene scripts library — `CS_Road` procedural mesh generator (clean-room port)
 
 Map authors now have a procedural road/river mesh generator they can attach to scene entities in Bannerlord's built-in scene editor. Drop a `CS_Road` script onto an entity, point it at a named scene Path, set width/material/UV options, click GENERATE — the engine builds a quad-strip mesh along the path with adaptive sample spacing. Live mode auto-regenerates every 0.5s while you tweak path control points.
