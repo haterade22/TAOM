@@ -108,6 +108,7 @@ public static class IoC
         container.Register<IVolunteerContextAdapter, VolunteerContextAdapter>(Reuse.Singleton);
         container.Register<IMissionAdapterFactory, MissionAdapterFactory>(Reuse.Singleton);
         container.Register<IObjectManagerAdapter, ObjectManagerAdapter>(Reuse.Singleton);
+        container.Register<ICampaignSessionAdapter, CampaignSessionAdapter>(Reuse.Singleton);
     }
 
     private static void RegisterLoggingServices(IContainer container)

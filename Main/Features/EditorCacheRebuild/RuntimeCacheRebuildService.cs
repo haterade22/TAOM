@@ -4,10 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Map.DistanceCache;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TAOM.Adapters;
@@ -17,11 +13,12 @@ using TAOM.Features.EditorCacheRebuild.Progress;
 
 namespace TAOM.Features.EditorCacheRebuild;
 
-public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
+public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
 {
     private readonly IDistanceCacheBuilderService _builderService;
     private readonly ICacheRebuildConfigProvider _configProvider;
     private readonly IPathService _pathService;
+    private readonly ICampaignSessionAdapter _sessionAdapter;
     private readonly IModLogger _logger;
 
     private int _runningFlag;
@@ -30,11 +27,13 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
         IDistanceCacheBuilderService builderService,
         ICacheRebuildConfigProvider configProvider,
         IPathService pathService,
+        ICampaignSessionAdapter sessionAdapter,
         IModLogger logger)
     {
         _builderService = builderService;
         _configProvider = configProvider;
         _pathService = pathService;
+        _sessionAdapter = sessionAdapter;
         _logger = logger;
     }
 
@@ -48,17 +47,10 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
         _logger.LogInfo($"{tag} ====================== TRIGGER REQUEST ======================");
         LogEnvironment(tag);
 
-        if (Campaign.Current == null)
+        if (!_sessionAdapter.IsReadyForRebuild(out var reason))
         {
-            Notify("Cache rebuild requires an active campaign — load a save first.");
-            _logger.LogWarning($"{tag} REJECTED: Campaign.Current is null. The button must be pressed while a campaign is active.");
-            return false;
-        }
-
-        if (Campaign.Current.MapSceneWrapper == null)
-        {
-            Notify("Cache rebuild requires a loaded map scene — wait until the campaign is fully initialized.");
-            _logger.LogWarning($"{tag} REJECTED: Campaign.Current.MapSceneWrapper is null (campaign loading not yet complete).");
+            Notify($"Cache rebuild not ready: {reason}");
+            _logger.LogWarning($"{tag} REJECTED: {reason}");
             return false;
         }
 
@@ -81,8 +73,17 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
         Notify("TAOM cache rebuild starting in background. This may take 10-30 minutes. Game stays playable but pathfinding queries during the rebuild may be inconsistent.");
         _logger.LogInfo($"{tag} ACCEPTED — spawning background task on threadpool. Watch this log for phase progress.");
 
-        Task.Run(() => RunBuild(buildId, tag));
+        SpawnBuild(buildId, tag);
         return true;
+    }
+
+    /// <summary>
+    /// Virtual so unit tests can override and run the build synchronously on the caller's thread,
+    /// avoiding flaky timing around <see cref="Task.Run"/>.
+    /// </summary>
+    internal virtual void SpawnBuild(string buildId, string tag)
+    {
+        Task.Run(() => RunBuild(buildId, tag));
     }
 
     private void RunBuild(string buildId, string tag)
@@ -104,17 +105,11 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
                 return;
             }
 
-            _logger.LogInfo($"{tag} step 1/5: constructing SandBoxNavigationCache (NavigationType.Default)");
+            _logger.LogInfo($"{tag} step 1/5: constructing runtime distance cache via ICampaignSessionAdapter");
             var ctorSw = Stopwatch.StartNew();
-            var cache = new SandBoxNavigationCache(MobileParty.NavigationType.Default);
+            var adapter = _sessionAdapter.CreateDefaultRuntimeCacheAdapter(_logger);
             ctorSw.Stop();
-            _logger.LogInfo($"{tag} step 1/5 OK: cache constructed in {ctorSw.ElapsedMilliseconds}ms, type={cache.GetType().FullName}");
-
-            _logger.LogInfo($"{tag} step 2/5: binding NavigationCacheAdapter (reflection probe of vanilla NavigationCache<Settlement>)");
-            var adapterSw = Stopwatch.StartNew();
-            var adapter = new NavigationCacheAdapter(cache, _logger);
-            adapterSw.Stop();
-            _logger.LogInfo($"{tag} step 2/5 OK: adapter bound in {adapterSw.ElapsedMilliseconds}ms, NavigationType={adapter.NavigationType}");
+            _logger.LogInfo($"{tag} step 1/5 OK: cache + adapter constructed in {ctorSw.ElapsedMilliseconds}ms, NavigationType={adapter.NavigationType}");
 
             try
             {
@@ -141,11 +136,11 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
             var outputPath = ResolveCacheOutputPath(adapter.NavigationType.ToString());
             LogOutputDiagnostics(tag, outputPath);
 
-            _logger.LogInfo($"{tag} step 3/5: handing off to CacheBuilderService.Build (Phase 0 + Phase 1 + Phase 2). Watch [CacheRebuild] tagged lines for per-phase progress.");
+            _logger.LogInfo($"{tag} step 2/5: handing off to CacheBuilderService.Build (Phase 0 + Phase 1 + Phase 2). Watch [CacheRebuild] tagged lines for per-phase progress.");
             var buildSw = Stopwatch.StartNew();
             var result = _builderService.Build(adapter, CancellationToken.None);
             buildSw.Stop();
-            _logger.LogInfo($"{tag} step 3/5 OK: Build returned in {ProgressLogger.FormatDuration(buildSw.Elapsed)} (cancelled={result.Cancelled})");
+            _logger.LogInfo($"{tag} step 2/5 OK: Build returned in {ProgressLogger.FormatDuration(buildSw.Elapsed)} (cancelled={result.Cancelled})");
 
             if (result.Cancelled)
             {
@@ -154,13 +149,13 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
                 return;
             }
 
-            _logger.LogInfo($"{tag} step 4/5: serializing cache to disk (atomic write via .tmp + rename)");
+            _logger.LogInfo($"{tag} step 3/5: serializing cache to disk (atomic write via .tmp + rename)");
             var serializeSw = Stopwatch.StartNew();
             WriteOutputAtomically(adapter, outputPath, tag);
             serializeSw.Stop();
-            _logger.LogInfo($"{tag} step 4/5 OK: serialize completed in {serializeSw.ElapsedMilliseconds}ms");
+            _logger.LogInfo($"{tag} step 3/5 OK: serialize completed in {serializeSw.ElapsedMilliseconds}ms");
 
-            _logger.LogInfo($"{tag} step 5/5: post-write verification (re-deserialize round-trip)");
+            _logger.LogInfo($"{tag} step 4/5: post-write verification (re-deserialize round-trip)");
             VerifyOutputRoundTrip(outputPath, result.Phase1.PairsComputed, result.Phase2.NeighborPairsAdded, tag);
 
             overallSw.Stop();
@@ -172,7 +167,7 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
                 result.SmokeTest.Outcome,
                 ProgressLogger.FormatDuration(overallSw.Elapsed),
                 Path.GetFileName(outputPath));
-            _logger.LogInfo($"{tag} ====================== BUILD COMPLETE ======================");
+            _logger.LogInfo($"{tag} step 5/5: ====================== BUILD COMPLETE ======================");
             _logger.LogInfo($"{tag} {summary}");
             _logger.LogInfo($"{tag} memory delta: before={FormatBytes(memBefore)}, after={FormatBytes(memAfter)}, peak-during={FormatBytes(memAfter - memBefore)}+");
             NotifyOnMainThread(summary + " Load the next save to use it.");
@@ -203,24 +198,13 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
 
     private void LogCampaignSnapshot(string tag)
     {
-        var campaign = Campaign.Current;
-        var settlementCount = Settlement.All?.Count ?? -1;
-        var fortifications = Settlement.All?.Count(s => s.IsFortification) ?? -1;
-        var towns = Settlement.All?.Count(s => s.IsTown) ?? -1;
-        var castles = Settlement.All?.Count(s => s.IsCastle) ?? -1;
-        var villages = Settlement.All?.Count(s => s.IsVillage) ?? -1;
-        var startTime = campaign.Models?.CampaignTimeModel?.CampaignStartTime ?? CampaignTime.Zero;
-        _logger.LogInfo($"{tag} campaign snapshot: gameId={campaign.UniqueGameId}, started={startTime}, current={CampaignTime.Now}, settlements={settlementCount}, fortifications={fortifications}, towns={towns}, castles={castles}, villages={villages}");
-
-        try
-        {
-            var mapSceneType = campaign.MapSceneWrapper.GetType();
-            _logger.LogInfo($"{tag} map scene wrapper: type={mapSceneType.FullName}");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning($"{tag} could not introspect map scene wrapper: {ex.GetType().Name}: {ex.Message}");
-        }
+        var snap = _sessionAdapter.GetSnapshot();
+        _logger.LogInfo(
+            $"{tag} campaign snapshot: gameId={snap.GameId}, started={snap.StartTime}, current={snap.CurrentTime}, " +
+            $"settlements={snap.SettlementCount}, fortifications={snap.FortificationCount}, " +
+            $"towns={snap.TownCount}, castles={snap.CastleCount}, villages={snap.VillageCount}");
+        if (!string.IsNullOrEmpty(snap.MapSceneWrapperType))
+            _logger.LogInfo($"{tag} map scene wrapper: type={snap.MapSceneWrapperType}");
     }
 
     private void LogOutputDiagnostics(string tag, string outputPath)
@@ -291,7 +275,7 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
         }
     }
 
-    private string ResolveCacheOutputPath(string navTypeName)
+    internal string ResolveCacheOutputPath(string navTypeName)
     {
         // _pathService.ModuleRootPath is .../Modules/TAOM. Distance cache lives in sibling
         // module TAOM_Map. Walk up one level then into TAOM_Map/ModuleData/DistanceCaches.
@@ -349,33 +333,43 @@ public sealed class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
     // mid-stream — a real corruption signal.
     private const double VerificationTolerance = 0.9;
 
+    // Vanilla AddNeighbor(s1, s2) inserts the relation in BOTH directions
+    // (`_fortificationNeighbors[s1] += s2` AND `_fortificationNeighbors[s2] += s1`) so symmetric
+    // lookups are O(1). EnumerateExistingNeighbors walks the dict and yields each direction, so
+    // the deserialized count is 2× the unique pair count we report in Phase2Result.
+    private const int NeighborDictDirectionsPerPair = 2;
+
     private void VerifyOutputRoundTrip(string outputPath, int expectedDistancePairs, int expectedNeighborPairs, string tag)
     {
         try
         {
-            // Construct a fresh SandBoxNavigationCache and call Deserialize on the file we just wrote.
-            // If the file is corrupt or format-invalid, vanilla Deserialize throws — we surface that.
-            var verifyCache = new SandBoxNavigationCache(MobileParty.NavigationType.Default);
-            var verifyAdapter = new NavigationCacheAdapter(verifyCache, logger: null);
+            // Construct a fresh runtime cache via the adapter and call Deserialize on the file we
+            // just wrote. If the file is corrupt or format-invalid, vanilla Deserialize throws —
+            // we surface that.
+            var verifyAdapter = _sessionAdapter.CreateDefaultRuntimeCacheAdapter(logger: null);
             verifyAdapter.DeserializeCache(outputPath);
             var distanceCount = verifyAdapter.EnumerateExistingDistances().Count();
             var neighborCount = verifyAdapter.EnumerateExistingNeighbors().Count();
 
+            // Account for vanilla's symmetric storage when comparing against PairsAdded.
+            var expectedNeighborEntries = expectedNeighborPairs * NeighborDictDirectionsPerPair;
             var distanceMin = (int)(expectedDistancePairs * VerificationTolerance);
-            var neighborMin = (int)(expectedNeighborPairs * VerificationTolerance);
+            var neighborMin = (int)(expectedNeighborEntries * VerificationTolerance);
             var distanceOk = expectedDistancePairs == 0 || distanceCount >= distanceMin;
             var neighborOk = expectedNeighborPairs == 0 || neighborCount >= neighborMin;
 
             if (distanceOk && neighborOk)
             {
-                _logger.LogInfo($"{tag} round-trip OK: deserialized {distanceCount:N0} distance entries (expected ~{expectedDistancePairs:N0}) and {neighborCount:N0} neighbor entries (expected ~{expectedNeighborPairs:N0})");
+                _logger.LogInfo(
+                    $"{tag} round-trip OK: deserialized {distanceCount:N0} distance entries (expected ~{expectedDistancePairs:N0}) " +
+                    $"and {neighborCount:N0} neighbor entries (expected ~{expectedNeighborEntries:N0} = {expectedNeighborPairs:N0} pairs × 2 directions)");
             }
             else
             {
                 _logger.LogError(
                     $"{tag} POST-WRITE VERIFICATION SHORTFALL: " +
                     $"distance={distanceCount:N0}/{expectedDistancePairs:N0} (min {distanceMin:N0}, ok={distanceOk}); " +
-                    $"neighbor={neighborCount:N0}/{expectedNeighborPairs:N0} (min {neighborMin:N0}, ok={neighborOk}). " +
+                    $"neighbor={neighborCount:N0}/{expectedNeighborEntries:N0} entries (= {expectedNeighborPairs:N0} pairs × 2; min {neighborMin:N0}, ok={neighborOk}). " +
                     $"File MAY be truncated — consider restoring the .prev backup: '{outputPath}.prev' → '{outputPath}'.");
             }
         }
