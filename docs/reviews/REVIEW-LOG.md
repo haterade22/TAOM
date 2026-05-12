@@ -832,3 +832,48 @@ Pipeline: `/deep-review` (5-agent core) caught 1 CRITICAL (`_navigationType` fie
 
 - Test run blocked by sandbox: first attempt to write `C:\Users\CodexSandboxOffline\.dotnet` failed, retry with workspace `DOTNET_CLI_HOME` blocked by `Microsoft SDKs` ACL. Codex noted this in Quality Gates but could not independently verify the test suite was green. Acceptable given the sandbox is enforced for safety, but a `--no-build` `dotnet test` should be in the sandbox allowlist for review workflows.
 - Did not catch that `phase1SkipReversePathfind` config field is orphaned (Codex listed it as "reserved" without challenging whether the reservation is intentional). Minor — already documented as reserved in feature doc.
+
+
+## Review 39 — EditorCacheRebuild MCM-Trigger Pivot (Codex follow-up to /codex-verify on the in-game runtime path)
+
+**Scope:** 3 commits since `a502ade`: `646484b` (MCM trigger + comprehensive logging), `024e9e9` (Patch37 try/catch in singleplayer), `6230c0c` (ICampaignSessionAdapter refactor + 11 new tests). Built on top of the original Review 38 work — same feature, different entry point.
+
+**Verdict:** 0 P1 + 2 P2 + 2 P3. All confirmed, all fixed in same session.
+
+### Findings (Review 39)
+
+| # | Severity | Title | Status |
+|---|---|---|---|
+| 1 | P2 | Round-trip verification can fail or be blind while user gets success popup | CONFIRMED, fixed |
+| 2 | P2 | Final cache replacement is not crash-atomic across two rename steps | CONFIRMED, fixed |
+| 3 | P3 | `cache_rebuild_config.json` exposes reserved/dead knobs as if they're active | CONFIRMED, fixed |
+| 4 | P3 | New tests stop at `SpawnBuild` and miss the production background path | CONFIRMED, partially fixed (7 added; full RunBuild orchestration test deferred) |
+
+Plus 8 Known Suspects walked: 4 DISPUTED with citations, 4 CONFIRMED (matched the 2 P2 + 2 P3 above).
+
+### Root Cause Analysis (Review 39)
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Void-returning verification, popup runs unconditionally | Logic error / consumer-side blindspot | When verification logic was refactored from "throw on failure" to "log and continue" during comprehensive-logging work, the caller wasn't updated to gate the success popup. Original logic threw → caller's catch handled it. New logic just logs → caller never saw the signal. | Pattern added to AGENTS.md. Made `VerifyOutputRoundTrip` return `VerificationResult { Ok, Reason, ActualDistanceCount, ActualNeighborCount }`. Caller branches on `Ok` and surfaces red popup with `.prev` restoration instructions on failure. |
+| 2 | Multi-step `File.Move` masquerading as atomic | Missing API knowledge / inherited pattern | 3-step rename is the standard Linux-derived approach (no atomic File.Replace there). Windows .NET Framework has `File.Replace` calling `ReplaceFile` Win32 — single atomic transaction. The implementer wasn't aware of `File.Replace`. | Pattern added to AGENTS.md. Replaced 3-step sequence with `File.Replace(temp, final, backup, ignoreMetadataErrors: true)` when final exists. Kept `File.Move` for first-build case. Crash window eliminated. |
+| 3 | 8 dead config fields shipped in JSON | Convention inconsistency / scope creep | Original design had 19 fields. Phases 9 (spatial index), 12 (path reuse), 13 (multi-pass quality check), and UI overlay were dropped, but config fields remained in shipped JSON to "preserve test coverage and future hook points" per Review 38. Codex correctly argued that's user-facing debt. | Stripped 8 fields from `cache_rebuild_config.json`. Kept in `CacheRebuildConfig.cs` with `<summary>Reserved...</summary>` doc comments. Pattern added to AGENTS.md: every field in shipped JSON must have at least one production consumer. |
+| 4 | Test seam intercepts production path | Insufficient test extraction | The `SpawnBuild` no-op override was correct for testing gate logic but also skipped `RunBuild`, `VerifyOutputRoundTrip`, `WriteOutputAtomically`, and the `finally` cleanup. None were unit-tested. | Made `VerifyOutputRoundTrip` and `WriteOutputAtomically` `internal virtual`. Added 7 tests: 3 atomic-write scenarios + 4 verification scenarios. Future work: synthetic test driving `RunBuild` end-to-end (deferred — bigger refactor). |
+
+### Build & Test (Review 39)
+
+- `dotnet build Main/TAOM.csproj -p:BuildForWindows=false -p:BuildForWindowsStore=false -p:ModuleId=` — clean.
+- 1850/1850 tests pass (was 1829 — added 7 new RuntimeCacheRebuildServiceTests; total RuntimeCacheRebuildServiceTests count now 18, was 11).
+- In-game verification: PASSED. Phase 1 (1m 27s) + checkpoint resume + Phase 2 (5m 37s) = 7m total; round-trip "OK"; output written atomically. Also verified navmesh-change CRC detection (`C98EA790 → F8E047D8`) correctly forced full rebuild over stale incremental snapshot.
+
+### Codex Quality Notes (Review 39)
+
+- **Decompilation thoroughness**: Re-ran `ilspycmd` for `NavigationCache<T>.AddNeighbor`, `Deserialize`, and `SandBoxNavigationCache` constructor. Pasted full bodies — the Deserialize trace led directly to P2-1.
+- **Memory-model claim verification**: Disputed Suspect 1 (`_runningFlag` race) with explicit ECMA-335 reasoning. Right depth for a memory-ordering claim.
+- **MCMv5 deep-decompile**: Decompiled `BaseSettingsJsonConverter.WriteJson`/`ReadJson` to verify MCMv5 doesn't persist Action-typed properties. Right answer for Suspect 7b.
+- **Sandbox limitation**: Couldn't run `dotnet test` due to ACL on `Microsoft SDKs` directory. Same as Review 38.
+- **Drift detection**: Stayed in scope (no adjacent-feature drift this run).
+
+### Tracking issues opened from Review 39
+
+- [#120 — Extend NavigationType iteration for NavalDLC / port support](https://github.com/haterade22/TAOM/issues/120) — orthogonal to Codex findings; surfaced during the "vanilla parity audit" follow-up. Filed because TAOM currently has 0 ports and `Default`-only rebuild is correct today, but a future map with coastal settlements would need 3-way rebuild.

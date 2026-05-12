@@ -78,27 +78,25 @@ Vanilla SaveSettlementDistanceCacheEditor calls cache.Serialize(filePath)
 
 ### Config file: `Main/_Module/ModuleData/configs/cache_rebuild_config.json`
 
+Only fields that actually affect runtime behavior are shipped in the JSON. Reserved/scaffolding fields (for dropped or future-phase features) remain in `CacheRebuildConfig.cs` with defaults so the C# API stays stable — they're not exposed in JSON to avoid misleading users with knobs that silently do nothing.
+
 | Field | Type | Description |
 |---|---|---|
 | `enabled` | bool | Master toggle (default `true`). Disabling routes back to vanilla. |
 | `forceVanilla` | bool | Force vanilla path even with feature enabled (debug switch). |
 | `parallelism` | int | `Parallel.For` max degree of parallelism. Range [1, ProcessorCount]. Default `4`. |
-| `checkpointEvery` | int | Reserved for future intra-phase checkpointing. Range [1, 1000]. |
-| `enablePathReuse` | bool | Reserved for future Phase-1→Phase-2 path memoization. |
-| `enablePersistentPathCache` | bool | Reserved for `.paths.bin` sidecar. |
 | `enableIncremental` | bool | Enable settlement-diff incremental Phase 1. Default `true`. |
 | `incrementalMaxChanged` | int | Above this many added+moved+removed → force full rebuild. Range [0, 200]. Default `30`. |
-| `incrementalSpatialRadius` | float | Reserved for Phase 9 spatial-index Phase 2. |
 | `enableCheckpoint` | bool | Save state after Phase 1, resume on crash. Default `true`. |
 | `checkpointRelativeDirectory` | string | Where to put `.ckpt.bin`/`.ckpt.meta`. Default `TAOM_Map/ModuleData/DistanceCaches`. |
 | `settlementSnapshotRelativePath` | string | Path to settlement snapshot for incremental. Default in TAOM_Map. |
 | `validationReportRelativePath` | string | JSON report destination. Empty disables. |
 | `smokeTestPairs` | int | Number of pairs to test at gate. Range [1, 100]. Default `10`. |
 | `smokeTestDistanceTolerance` | float | Max acceptable serial-vs-parallel delta. Range [1e-8, 1e-2]. Default `1e-4`. |
-| `phase1SkipReversePathfind` | bool | Reserved (vanilla averages forward + reverse). |
-| `logVerbosity` | string | One of `error`/`warn`/`info`/`debug`. Default `info`. |
 
-All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invalid values revert to default with logged warning.
+All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invalid values revert to default with logged warning. NaN/Infinity rejected via `FiniteFloatValidator`.
+
+**Reserved fields (in `CacheRebuildConfig.cs`, not in shipped JSON):** `checkpointEvery`, `enablePathReuse`, `enablePersistentPathCache`, `incrementalSpatialRadius`, `enableDebugQualityCheck`, `enableUiOverlay`, `phase1SkipReversePathfind`, `logVerbosity` — all correspond to dropped phases (Phase 9 spatial index, Phase 12 path reuse, Phase 13 multi-pass quality check, UI overlay) or features whose scope is mod-wide rather than per-feature. They'll be wired into JSON when a future phase actually consumes them.
 
 ## Key Files
 

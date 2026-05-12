@@ -149,17 +149,33 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
                 return;
             }
 
-            _logger.LogInfo($"{tag} step 3/5: serializing cache to disk (atomic write via .tmp + rename)");
+            // Capture the live distance count BEFORE serialization. In resume mode `result.Phase1.PairsComputed`
+            // is 0 (Phase 1 came from checkpoint), so we'd have nothing to compare against. The live
+            // adapter holds the merged state (deserialized + this run), which is what's about to go to disk.
+            // Codex finding P2-1 (2026-05-12).
+            var liveDistanceCount = adapter.EnumerateExistingDistances().Count();
+            _logger.LogInfo($"{tag} live state pre-serialize: distance entries = {liveDistanceCount:N0}");
+
+            _logger.LogInfo($"{tag} step 3/5: serializing cache to disk (atomic write via .tmp + File.Replace)");
             var serializeSw = Stopwatch.StartNew();
             WriteOutputAtomically(adapter, outputPath, tag);
             serializeSw.Stop();
             _logger.LogInfo($"{tag} step 3/5 OK: serialize completed in {serializeSw.ElapsedMilliseconds}ms");
 
             _logger.LogInfo($"{tag} step 4/5: post-write verification (re-deserialize round-trip)");
-            VerifyOutputRoundTrip(outputPath, result.Phase1.PairsComputed, result.Phase2.NeighborPairsAdded, tag);
+            var verification = VerifyOutputRoundTrip(outputPath, liveDistanceCount, result.Phase2.NeighborPairsAdded, tag);
 
             overallSw.Stop();
             var memAfter = GC.GetTotalMemory(forceFullCollection: false);
+
+            if (!verification.Ok)
+            {
+                _logger.LogError($"{tag} ====================== BUILD FAILED (verification) ======================");
+                _logger.LogError($"{tag} round-trip verification FAILED: {verification.Reason}. Output may be corrupt — restore '{outputPath}.prev' → '{outputPath}' if pathfinding breaks.");
+                NotifyFailure($"Cache rebuild verification FAILED: {verification.Reason}. The .prev backup is intact — see rgl_log_*.txt for restoration instructions.");
+                return;
+            }
+
             var summary = string.Format(
                 "TAOM cache rebuild COMPLETE. Phase 1: {0} pairs in {1:F1}s. Phase 2: {2} neighbors in {3:F1}s. Smoke: {4}. Total wall: {5}. Output: {6}.",
                 result.Phase1.PairsComputed, result.Phase1.ElapsedSeconds,
@@ -283,7 +299,7 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
         return Path.Combine(modulesDir, "TAOM_Map", "ModuleData", "DistanceCaches", $"settlements_distance_cache_{navTypeName}.bin");
     }
 
-    private void WriteOutputAtomically(INavigationCacheAdapter adapter, string finalPath, string tag)
+    internal virtual void WriteOutputAtomically(INavigationCacheAdapter adapter, string finalPath, string tag)
     {
         var directory = Path.GetDirectoryName(finalPath);
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
@@ -308,18 +324,20 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
 
         if (File.Exists(finalPath))
         {
+            // Codex P2-2 (2026-05-12): the old `Delete(.prev); Move(final → .prev); Move(.tmp → final)`
+            // sequence was three separate filesystem operations — a kill between steps 2 and 3 could
+            // leave the final cache file missing entirely. `File.Replace` is a single atomic Win32
+            // ReplaceFile call on NTFS: it swaps `final` for `.tmp` in one operation and writes the
+            // previous final contents into `backup` atomically. No window where `final` doesn't exist.
             var backupPath = finalPath + ".prev";
-            if (File.Exists(backupPath))
-            {
-                _logger.LogInfo($"{tag} removing prior .prev backup: {backupPath}");
-                File.Delete(backupPath);
-            }
-            _logger.LogInfo($"{tag} renaming existing cache → .prev backup: {finalPath} → {backupPath}");
-            File.Move(finalPath, backupPath);
+            _logger.LogInfo($"{tag} atomic replace: {tempPath} → {finalPath} (previous final → {backupPath})");
+            File.Replace(tempPath, finalPath, backupPath, ignoreMetadataErrors: true);
         }
-
-        _logger.LogInfo($"{tag} promoting temp file → final: {tempPath} → {finalPath}");
-        File.Move(tempPath, finalPath);
+        else
+        {
+            _logger.LogInfo($"{tag} no existing final file — promoting temp file directly: {tempPath} → {finalPath}");
+            File.Move(tempPath, finalPath);
+        }
 
         var finalSize = new FileInfo(finalPath).Length;
         _logger.LogInfo($"{tag} ATOMIC WRITE OK: {FormatBytes(finalSize)} live at {finalPath}");
@@ -339,7 +357,7 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
     // the deserialized count is 2× the unique pair count we report in Phase2Result.
     private const int NeighborDictDirectionsPerPair = 2;
 
-    private void VerifyOutputRoundTrip(string outputPath, int expectedDistancePairs, int expectedNeighborPairs, string tag)
+    internal virtual VerificationResult VerifyOutputRoundTrip(string outputPath, int expectedDistanceEntries, int expectedNeighborPairs, string tag)
     {
         try
         {
@@ -353,30 +371,59 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
 
             // Account for vanilla's symmetric storage when comparing against PairsAdded.
             var expectedNeighborEntries = expectedNeighborPairs * NeighborDictDirectionsPerPair;
-            var distanceMin = (int)(expectedDistancePairs * VerificationTolerance);
+            var distanceMin = (int)(expectedDistanceEntries * VerificationTolerance);
             var neighborMin = (int)(expectedNeighborEntries * VerificationTolerance);
-            var distanceOk = expectedDistancePairs == 0 || distanceCount >= distanceMin;
+            var distanceOk = expectedDistanceEntries == 0 || distanceCount >= distanceMin;
             var neighborOk = expectedNeighborPairs == 0 || neighborCount >= neighborMin;
 
             if (distanceOk && neighborOk)
             {
                 _logger.LogInfo(
-                    $"{tag} round-trip OK: deserialized {distanceCount:N0} distance entries (expected ~{expectedDistancePairs:N0}) " +
+                    $"{tag} round-trip OK: deserialized {distanceCount:N0} distance entries (expected ~{expectedDistanceEntries:N0}) " +
                     $"and {neighborCount:N0} neighbor entries (expected ~{expectedNeighborEntries:N0} = {expectedNeighborPairs:N0} pairs × 2 directions)");
+                return VerificationResult.Success(distanceCount, neighborCount);
             }
-            else
-            {
-                _logger.LogError(
-                    $"{tag} POST-WRITE VERIFICATION SHORTFALL: " +
-                    $"distance={distanceCount:N0}/{expectedDistancePairs:N0} (min {distanceMin:N0}, ok={distanceOk}); " +
-                    $"neighbor={neighborCount:N0}/{expectedNeighborEntries:N0} entries (= {expectedNeighborPairs:N0} pairs × 2; min {neighborMin:N0}, ok={neighborOk}). " +
-                    $"File MAY be truncated — consider restoring the .prev backup: '{outputPath}.prev' → '{outputPath}'.");
-            }
+
+            var reason =
+                $"distance={distanceCount:N0}/{expectedDistanceEntries:N0} (min {distanceMin:N0}, ok={distanceOk}); " +
+                $"neighbor={neighborCount:N0}/{expectedNeighborEntries:N0} entries (= {expectedNeighborPairs:N0} pairs × 2; min {neighborMin:N0}, ok={neighborOk})";
+            _logger.LogError(
+                $"{tag} POST-WRITE VERIFICATION SHORTFALL: {reason}. " +
+                $"File MAY be truncated — restore the .prev backup: '{outputPath}.prev' → '{outputPath}'.");
+            return VerificationResult.Failure($"output count shortfall — {reason}", distanceCount, neighborCount);
         }
         catch (Exception ex)
         {
-            _logger.LogError($"{tag} POST-WRITE VERIFICATION FAILED: {ex.GetType().Name}: {ex.Message}. File MAY be corrupt — keep the .prev backup as fallback.");
+            var msg = $"{ex.GetType().Name}: {ex.Message}";
+            _logger.LogError($"{tag} POST-WRITE VERIFICATION FAILED: {msg}. File MAY be corrupt — keep the .prev backup as fallback.");
+            return VerificationResult.Failure($"deserialize threw — {msg}", -1, -1);
         }
+    }
+
+    /// <summary>
+    /// Outcome of <see cref="VerifyOutputRoundTrip"/>. Returned so the caller can gate the
+    /// user-visible success popup on actual verification success, not just absence of an exception.
+    /// </summary>
+    internal readonly struct VerificationResult
+    {
+        public bool Ok { get; }
+        public string Reason { get; }
+        public int ActualDistanceCount { get; }
+        public int ActualNeighborCount { get; }
+
+        private VerificationResult(bool ok, string reason, int distance, int neighbor)
+        {
+            Ok = ok;
+            Reason = reason;
+            ActualDistanceCount = distance;
+            ActualNeighborCount = neighbor;
+        }
+
+        public static VerificationResult Success(int distance, int neighbor) =>
+            new VerificationResult(ok: true, reason: string.Empty, distance, neighbor);
+
+        public static VerificationResult Failure(string reason, int distance, int neighbor) =>
+            new VerificationResult(ok: false, reason, distance, neighbor);
     }
 
     private static string NewBuildId()
@@ -397,7 +444,7 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
 
     private static void Notify(string message)
     {
-        SafeDisplay(message);
+        SafeDisplay(message, Colors.Yellow);
     }
 
     private static void NotifyOnMainThread(string message)
@@ -405,14 +452,21 @@ public class RuntimeCacheRebuildService : IRuntimeCacheRebuildService
         // InformationManager.DisplayMessage appends to a static queue that the UI thread
         // drains each frame. In practice this works from any thread. Worst case the message
         // is silently dropped — the log already captured the full result.
-        SafeDisplay(message);
+        SafeDisplay(message, Colors.Yellow);
     }
 
-    private static void SafeDisplay(string message)
+    private static void NotifyFailure(string message)
+    {
+        // Red banner for verification / build failures. Distinct color so a user scanning the
+        // information panel can immediately tell success from failure without parsing the text.
+        SafeDisplay(message, Colors.Red);
+    }
+
+    private static void SafeDisplay(string message, Color color)
     {
         try
         {
-            InformationManager.DisplayMessage(new InformationMessage("[TAOM] " + message, Colors.Yellow));
+            InformationManager.DisplayMessage(new InformationMessage("[TAOM] " + message, color));
         }
         catch
         {
