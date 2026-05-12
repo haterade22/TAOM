@@ -24,16 +24,6 @@
 			<Name value="TAOM" />
 			<DLLName value="TAOM.dll" />
 			<SubModuleClassType value="TAOM.SubModule" />
-			<Tags>
-				<!-- DedicatedServerType=none + IsNoRenderModeElement=false are required for the
-				     C# SubModule to activate in editor mode (no-render context). Without them,
-				     OnSubModuleLoad never fires when launched via the editor button, which
-				     leaves all our Harmony patches unattached. Verified by comparing against
-				     SandBox/SandBox.View/BetterExceptionWindow/Bannerlord.Harmony — every
-				     SubModule that loads in editor mode declares this exact tag pair. -->
-				<Tag key="DedicatedServerType" value="none" />
-				<Tag key="IsNoRenderModeElement" value="false" />
-			</Tags>
 		</SubModule>
 	</SubModules>
 	<Xmls>
