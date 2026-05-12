@@ -149,7 +149,27 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
         _harmony.PatchCategory("Patch30_MixedFormations");
-        _harmony.PatchCategory("Patch37_EditorCacheRebuild");
+        // Patch37 attaches to NavigationCache<SettlementRecord>.GenerateCacheData. SettlementRecord
+        // is a `private sealed nested class` of SettlementPositionScript (editor-only script). The
+        // CLR's reflection emit cannot always produce a valid generic instantiation trampoline for
+        // a closed generic over a private-nested type when the calling assembly (TAOM) wasn't
+        // granted access — Harmony's UpdateWrapper throws "The given generic instantiation was
+        // invalid" before the JIT can verify the dynamic method. This failure only happens in
+        // singleplayer runtime (the editor environment is different); the editor mode path uses
+        // Path B which is anyway blocked by community-mod compatibility. The runtime MCM trigger
+        // (IRuntimeCacheRebuildService) is the primary path and does not depend on this patch.
+        // Catch + log loudly so SubModule.OnSubModuleLoad continues with the other features intact.
+        try
+        {
+            _harmony.PatchCategory("Patch37_EditorCacheRebuild");
+        }
+        catch (System.Exception ex)
+        {
+            logger.LogWarning(
+                $"[SubModule] Patch37_EditorCacheRebuild failed to attach: {ex.GetType().Name}: {ex.Message}. " +
+                $"This is expected in singleplayer runtime — the editor-mode patch is not needed. " +
+                $"Use the in-game MCM button (Mod Options → TAOM → Map Tools / Distance Cache Rebuild) instead.");
+        }
         // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
         // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
         // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,
