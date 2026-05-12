@@ -2,7 +2,12 @@
 
 ## Overview
 
-Replaces the Bannerlord Editor's vanilla settlement distance cache builder with a parallel + incremental + resumable TAOM implementation. Click the editor's `ComputeAndSaveSettlementDistanceCache` button as usual; behind the scenes, our Harmony patch intercepts `NavigationCache<SettlementRecord>.GenerateCacheData()` and routes work through `CacheBuilderService`. A full rebuild drops from ~108 hours to ~30 minutes; incremental rebuilds after small edits target ~30 seconds.
+Parallel + incremental + resumable settlement distance cache builder. Two entry points share the same underlying pipeline:
+
+1. **Singleplayer MCM trigger (primary):** Options → Mod Options → TAOM → "Map Tools / Distance Cache Rebuild" → **Rebuild Now** button. Runs in-game against the live campaign's `MapSceneWrapper`, writes output atomically with `.prev` backup, includes round-trip verification.
+2. **Editor button (legacy):** Bannerlord Editor's `ComputeAndSaveSettlementDistanceCache` — Harmony patch intercepts `NavigationCache<SettlementRecord>.GenerateCacheData()` and routes work through the same pipeline. Requires community mods to support editor mode, which most don't — kept as a fallback.
+
+A full rebuild drops from ~108 hours to ~30 minutes; incremental rebuilds after small edits target ~30 seconds.
 
 ## Why This Exists
 
@@ -26,6 +31,24 @@ Single Harmony patch on `NavigationCache<SettlementRecord>.GenerateCacheData()` 
 ### Component Diagram
 
 ```
+─── PATH A: Singleplayer MCM (primary) ──────────────────────────────────────────
+MCM "Rebuild Now" button click
+    ↓
+TaomSettings.RebuildDistanceCacheAction (static lambda, try/catch boundary)
+    ↓
+IoC.Resolve<IRuntimeCacheRebuildService>().Trigger()
+    ↓ [pre-flight: Campaign.Current != null, MapSceneWrapper != null, not running]
+RuntimeCacheRebuildService.Trigger
+    ↓ [Task.Run on threadpool — background, non-blocking]
+RuntimeCacheRebuildService.RunBuild
+    ├─→ new SandBoxNavigationCache(NavigationType.Default)
+    ├─→ new NavigationCacheAdapter(cache, logger)  // reflection T-agnostic
+    ├─→ resolve output path, log env + scene CRCs + existing file diagnostics
+    ├─→ CacheBuilderService.Build(adapter, ct)    // ← shared with Path B
+    ├─→ WriteOutputAtomically (.tmp → rename → .prev backup)
+    └─→ VerifyOutputRoundTrip (deserialize + count check)
+
+─── PATH B: Editor button (legacy) ──────────────────────────────────────────────
 Editor button click
     ↓
 SettlementPositionScript.SaveSettlementDistanceCacheEditor()
@@ -34,7 +57,12 @@ NavigationCache<SettlementRecord>.GenerateCacheData()
     ↓ [Harmony Prefix returns false]
 Patch37_CacheBuildOverride.Prefix
     ↓
-CacheBuilderService.Build(adapter)
+CacheBuilderService.Build(adapter)                // ← shared with Path A
+    ↓
+Vanilla SaveSettlementDistanceCacheEditor calls cache.Serialize(filePath)
+    → final cache binary written
+
+─── Shared pipeline (CacheBuilderService.Build) ─────────────────────────────────
     ├─→ Check checkpoint → maybe resume
     ├─→ SettlementDiffer.Compute → maybe incremental
     ├─→ SmokeTestGate.Run → maybe fall back to serial
@@ -44,9 +72,6 @@ CacheBuilderService.Build(adapter)
     ├─→ CheckpointSerializer.Delete
     ├─→ SettlementSnapshotStore.Save (for next incremental)
     └─→ ValidationReportWriter.Write
-    ↓
-Vanilla SaveSettlementDistanceCacheEditor calls cache.Serialize(filePath)
-    → final cache binary written
 ```
 
 ## Configuration
@@ -79,8 +104,10 @@ All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invali
 
 | File | Purpose |
 |---|---|
-| `Main/Features/EditorCacheRebuild/Hooks/Patch37_CacheBuildOverride.cs` | Harmony Prefix — wires editor button → service |
-| `Main/Features/EditorCacheRebuild/CacheBuilderService.cs` | Orchestrator. Mode selection, smoke test, checkpointing, validation report write. |
+| `Main/Features/EditorCacheRebuild/IRuntimeCacheRebuildService.cs` + `RuntimeCacheRebuildService.cs` | MCM-trigger entry point (Path A). Pre-flight gates, background `Task.Run`, atomic write with `.prev` backup, round-trip verification, build-correlation-ID logging. |
+| `Main/Features/TaomSettings.cs` (`RebuildDistanceCacheAction` property) | MCMv5 `SettingPropertyButton` — boundary. Static lambda that resolves `IRuntimeCacheRebuildService` from IoC and calls `Trigger()`, wrapped in try/catch with red `InformationMessage` on failure. |
+| `Main/Features/EditorCacheRebuild/Hooks/Patch37_CacheBuildOverride.cs` | Harmony Prefix — wires editor button → service (Path B, legacy) |
+| `Main/Features/EditorCacheRebuild/CacheBuilderService.cs` | Orchestrator. Mode selection, smoke test, checkpointing, validation report write. Shared by both paths. |
 | `Main/Features/EditorCacheRebuild/Phase1/SerialPhase1Builder.cs` | Reference serial Phase 1 implementation |
 | `Main/Features/EditorCacheRebuild/Phase1/ParallelPhase1Builder.cs` | `Parallel.For` + `ConcurrentBag` + locked-write Phase 1 |
 | `Main/Features/EditorCacheRebuild/Phase2/SerialPhase2Builder.cs` | Reference serial Phase 2 implementation |
@@ -121,10 +148,28 @@ All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invali
 
 ## How To Build / Use
 
+There are two entry points to the same underlying build pipeline:
+
+### Path A: Singleplayer MCM Trigger (RECOMMENDED — primary path)
+
+1. Launch Bannerlord normally (singleplayer/sandbox mode — no editor).
+2. Load a save (or start a new campaign) so `Campaign.Current` is initialized.
+3. Open **Options → Mod Options → TAOM → Map Tools / Distance Cache Rebuild** and click **Rebuild Now**.
+4. `TaomSettings.RebuildDistanceCacheAction` (an MCMv5 `SettingPropertyButton` action) resolves `IRuntimeCacheRebuildService` from IoC and calls `Trigger()`.
+5. `RuntimeCacheRebuildService` validates pre-flight (Campaign present, MapSceneWrapper present, not already running), logs an environment snapshot with a unique 6-hex correlation ID, then spawns the build on a `Task.Run` background thread.
+6. The background task constructs `new SandBoxNavigationCache(MobileParty.NavigationType.Default)`, wraps it in `NavigationCacheAdapter`, calls `IDistanceCacheBuilderService.Build(adapter, ct)` — same pipeline as path B.
+7. After Build completes, `WriteOutputAtomically` writes to `<final>.tmp`, renames any existing `<final>` → `<final>.prev`, then renames `<final>.tmp` → `<final>`. Previous cache preserved as `.prev` for manual rollback.
+8. `VerifyOutputRoundTrip` re-deserializes the written file and compares distance + neighbor counts against the build result (10% tolerance). Mismatch logs an error with `.prev` restoration instructions.
+9. Reload the save (or start a new campaign) to pick up the new cache.
+
+**Why this path is preferred:** It runs against the live, loaded campaign's `MapSceneWrapper` — exactly the same engine pathfinder the runtime uses. No editor-mode prerequisites; no community-mod compatibility risk; output is byte-equal to what vanilla would produce.
+
+### Path B: Editor Button (LEGACY — kept for completeness)
+
 1. User opens Bannerlord in editor mode with TAOM enabled.
 2. Loads the TAOM_Map scene.
 3. Clicks `ComputeAndSaveSettlementDistanceCache` (vanilla button — unchanged UI).
-4. `Patch37_CacheBuildOverride` Prefix fires. If `cache_rebuild_config.json` has `enabled: true` (default), the service takes over:
+4. `Patch37_CacheBuildOverride` Prefix fires (when the editor's `NavigationCache<SettlementRecord>.GenerateCacheData` is called). If `cache_rebuild_config.json` has `enabled: true` (default), the service takes over:
    - Optionally loads checkpoint (resume)
    - Optionally diffs against snapshot (incremental)
    - Runs smoke test if `parallelism > 1`
@@ -135,6 +180,15 @@ All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invali
    - Saves snapshot for next incremental
    - Writes validation report
 5. Prefix returns false → vanilla `SaveSettlementDistanceCacheEditor` proceeds to `cache.Serialize(filePath)` which writes the final `.bin`.
+
+**Known limitation:** This path requires community mods (Harmony, UIExtenderEx, MCMv5, ButterLib) to be activated in editor mode, which they don't support by default. Most users will get a ModuleManager crash. Path A is the recommended primary route.
+
+### Closed-generic isolation
+
+Path A operates on `NavigationCache<Settlement>` (the runtime closed generic, via `SandBoxNavigationCache`).
+Path B operates on `NavigationCache<SettlementRecord>` (the editor-only closed generic; `SettlementRecord` is a `private sealed nested class` in `SandBox.View.Map.SettlementPositionScript`).
+
+The Harmony patch `Patch37_CacheBuildOverride` targets only the editor closed generic. When TAOM is loaded in singleplayer mode the patch *attaches* (the `SettlementRecord` type is resolvable in `SandBox.View.dll`) but `GenerateCacheData` is never called outside the editor's button — so the patch remains dormant during normal play. No double-execution risk between the two paths.
 
 ### How To Recover From A Crash
 

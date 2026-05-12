@@ -2,6 +2,8 @@ using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
 using MCM.Common;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace TAOM.Features;
 
@@ -425,4 +427,38 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Battle Action Bar Debug Mode", Order = 3,
         HintText = "Show diagnostic [BattleActionBar] messages.")]
     public bool BattleActionBarDebug { get; set; } = false;
+
+    // --- Map Tools / Distance Cache Rebuild ---
+    //
+    // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin
+    // from the live campaign's map scene. The vanilla editor's ComputeAndSave button does the
+    // same thing but takes ~108 hours on TAOM's 863-settlement map. Our parallel + smoke-test +
+    // checkpoint pipeline brings that to ~30 min (full) or ~30s (incremental, 1-5 settlements
+    // moved). Output file replaces the live cache; previous file is preserved as ".prev".
+    // Reload the save (or start a new campaign) after the rebuild completes to pick up the
+    // new distances.
+
+    [SettingPropertyGroup("Map Tools/Distance Cache Rebuild", GroupOrder = 100)]
+    [SettingPropertyButton("Rebuild Settlement Distance Cache",
+        RequireRestart = false,
+        Content = "Rebuild Now",
+        HintText = "Spawns a 10-30 minute background task that recomputes the settlement distance cache against the live map scene. Requires an active campaign. Game stays playable but pathfinding queries during the rebuild may be inconsistent — best run from main menu after loading a save.")]
+    public System.Action RebuildDistanceCacheAction { get; set; } = static () =>
+    {
+        // MCMv5 invokes this delegate directly with no exception handling around the call site.
+        // Without the try/catch, an IoC failure (container not yet configured, missing service
+        // registration) or constructor throw is silently swallowed by Bannerlord's UI frame —
+        // the user clicks the button and nothing visible happens. Surface every failure mode.
+        try
+        {
+            var service = TAOM.IoC.Resolve<TAOM.Features.EditorCacheRebuild.IRuntimeCacheRebuildService>();
+            service.Trigger();
+        }
+        catch (System.Exception ex)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[TAOM] Cache rebuild FAILED to start: {ex.GetType().Name}: {ex.Message}. See rgl_log_*.txt for details.",
+                Colors.Red));
+        }
+    };
 }

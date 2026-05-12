@@ -25,5 +25,6 @@ public static class EditorCacheRebuildIoC
         container.Register<ISettlementSnapshotStore, SettlementSnapshotStore>(Reuse.Singleton);
         container.Register<ISettlementDiffer, SettlementDiffer>(Reuse.Singleton);
         container.Register<IDistanceCacheBuilderService, CacheBuilderService>(Reuse.Singleton);
+        container.Register<IRuntimeCacheRebuildService, RuntimeCacheRebuildService>(Reuse.Singleton);
     }
 }

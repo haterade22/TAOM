@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using HarmonyLib;
@@ -12,21 +13,67 @@ namespace TAOM.Features.EditorCacheRebuild.Hooks;
 [HarmonyPatchCategory("Patch37_EditorCacheRebuild")]
 public static class Patch37_CacheBuildOverride
 {
-    private const string SettlementRecordTypeName = "SandBox.View.Map.SettlementPositionScript+SettlementRecord, SandBox.View";
+    private const string SandBoxViewAssemblyName = "SandBox.View";
+    private const string SettlementRecordTypeName = "SandBox.View.Map.SettlementPositionScript+SettlementRecord";
+    private const string AssemblyQualifiedName = SettlementRecordTypeName + ", " + SandBoxViewAssemblyName;
+
+    /// <summary>
+    /// Resolves the private-nested SettlementRecord type.
+    /// Bannerlord uses Assembly.LoadFrom which puts mod assemblies in a load context that
+    /// Type.GetType doesn't search by default. AppDomain.GetAssemblies() fallback is required.
+    /// </summary>
+    private static Type? FindSettlementRecordType()
+    {
+        var direct = Type.GetType(AssemblyQualifiedName);
+        if (direct != null) return direct;
+
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            if (assembly.GetName().Name != SandBoxViewAssemblyName) continue;
+            var fromLoaded = assembly.GetType(SettlementRecordTypeName);
+            if (fromLoaded != null) return fromLoaded;
+        }
+        return null;
+    }
+
+    private static void TryLog(string message, bool error = false)
+    {
+        try
+        {
+            var logger = IoC.Resolve<IModLogger>();
+            if (error) logger.LogError(message);
+            else logger.LogInfo(message);
+        }
+        catch
+        {
+            // logger may not yet be wired at Prepare/TargetMethod time
+        }
+    }
 
     public static MethodBase? TargetMethod()
     {
-        var settlementRecordType = Type.GetType(SettlementRecordTypeName);
+        var settlementRecordType = FindSettlementRecordType();
         if (settlementRecordType == null)
+        {
+            var loaded = string.Join(", ", AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetName().Name)
+                .Where(n => n != null && n.Contains("SandBox"))
+                .Take(10));
+            TryLog($"[Patch37] TargetMethod: SettlementRecord NOT FOUND. SandBox-related assemblies loaded: [{loaded}]", error: true);
             return null;
+        }
 
         var closedType = typeof(NavigationCache<>).MakeGenericType(settlementRecordType);
-        return AccessTools.Method(closedType, "GenerateCacheData");
+        var method = AccessTools.Method(closedType, "GenerateCacheData");
+        TryLog($"[Patch37] TargetMethod: resolved {closedType.FullName}.GenerateCacheData (method={method?.Name})");
+        return method;
     }
 
     public static bool Prepare()
     {
-        return Type.GetType(SettlementRecordTypeName) != null;
+        var type = FindSettlementRecordType();
+        TryLog($"[Patch37] Prepare: SettlementRecord {(type != null ? "FOUND" : "NOT FOUND")}");
+        return type != null;
     }
 
     public static bool Prefix(object __instance)

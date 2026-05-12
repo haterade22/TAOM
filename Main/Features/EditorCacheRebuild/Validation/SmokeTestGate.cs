@@ -25,25 +25,34 @@ public class SmokeTestGate : ISmokeTestGate
     public SmokeTestResult Run(INavigationCacheAdapter adapter, CancellationToken ct)
     {
         var config = _configProvider.GetConfig();
+        _logger.LogInfo($"[SmokeTestGate] START — parallelism={config.Parallelism}, configuredPairs={config.SmokeTestPairs}, tolerance={config.SmokeTestDistanceTolerance:E2}");
+
         if (config.Parallelism <= 1)
         {
+            _logger.LogInfo("[SmokeTestGate] SKIPPED — parallelism=1, no need to verify parallel safety");
             return new SmokeTestResult(SmokeTestOutcome.Skipped, 0, 0, "parallelism=1; smoke test not required");
         }
 
         var settlements = adapter.GetAllRegisteredSettlements();
         var fortifications = settlements.Where(s => s.IsFortification).ToList();
+        _logger.LogInfo($"[SmokeTestGate] candidate pool: {fortifications.Count} fortifications (out of {settlements.Count} total settlements)");
+
         if (fortifications.Count < 2)
         {
+            _logger.LogWarning($"[SmokeTestGate] SKIPPED — only {fortifications.Count} fortifications available, need >= 2");
             return new SmokeTestResult(SmokeTestOutcome.Skipped, 0, 0, "fewer than 2 fortifications available");
         }
 
         var pairs = PickRandomPairs(fortifications, config.SmokeTestPairs);
         if (pairs.Count == 0)
         {
+            _logger.LogWarning("[SmokeTestGate] SKIPPED — could not generate any distinct pairs");
             return new SmokeTestResult(SmokeTestOutcome.Skipped, 0, 0, "no distinct pairs generated");
         }
+        _logger.LogInfo($"[SmokeTestGate] generated {pairs.Count} distinct test pairs (seed={RandomSeed})");
 
-        _logger.LogDebug($"[SmokeTestGate] running {pairs.Count} pairs in serial baseline");
+        var serialSw = System.Diagnostics.Stopwatch.StartNew();
+        _logger.LogInfo($"[SmokeTestGate] running {pairs.Count} pairs in SERIAL baseline");
         var baseline = new float[pairs.Count];
         for (int i = 0; i < pairs.Count; i++)
         {
@@ -52,8 +61,11 @@ public class SmokeTestGate : ISmokeTestGate
             var result = adapter.ComputeClosestEntrancePair(s1, false, s2, false);
             baseline[i] = result.IsValid ? result.Distance : 0f;
         }
+        serialSw.Stop();
+        _logger.LogInfo($"[SmokeTestGate] serial baseline computed in {serialSw.ElapsedMilliseconds}ms (avg {serialSw.ElapsedMilliseconds / (double)pairs.Count:F1}ms/pair)");
 
-        _logger.LogDebug($"[SmokeTestGate] running {pairs.Count} pairs in parallel x{config.Parallelism}");
+        var parallelSw = System.Diagnostics.Stopwatch.StartNew();
+        _logger.LogInfo($"[SmokeTestGate] running {pairs.Count} pairs in PARALLEL x{config.Parallelism}");
         var parallelResults = new float[pairs.Count];
         var options = new ParallelOptions
         {
@@ -67,39 +79,45 @@ public class SmokeTestGate : ISmokeTestGate
             var result = adapter.ComputeClosestEntrancePair(s1, false, s2, false);
             parallelResults[i] = result.IsValid ? result.Distance : 0f;
         });
+        parallelSw.Stop();
+        var speedupFactor = serialSw.ElapsedMilliseconds > 0 ? serialSw.ElapsedMilliseconds / (double)parallelSw.ElapsedMilliseconds : 0;
+        _logger.LogInfo($"[SmokeTestGate] parallel run completed in {parallelSw.ElapsedMilliseconds}ms (speedup={speedupFactor:F2}x)");
 
         var maxDelta = 0f;
         var worstPairIndex = -1;
+        var totalDivergence = 0.0;
         for (int i = 0; i < pairs.Count; i++)
         {
             var delta = Math.Abs(parallelResults[i] - baseline[i]);
+            totalDivergence += delta;
             if (delta > maxDelta)
             {
                 maxDelta = delta;
                 worstPairIndex = i;
             }
         }
+        var avgDelta = totalDivergence / pairs.Count;
 
-        if (worstPairIndex >= 0 && maxDelta > 0)
+        if (worstPairIndex >= 0)
         {
             var (ws1, ws2) = pairs[worstPairIndex];
-            _logger.LogDebug(
+            _logger.LogInfo(
                 $"[SmokeTestGate] worst pair: {ws1.StringId}↔{ws2.StringId} " +
-                $"serial={baseline[worstPairIndex]:F4} parallel={parallelResults[worstPairIndex]:F4} delta={maxDelta:F6}");
+                $"serial={baseline[worstPairIndex]:F4} parallel={parallelResults[worstPairIndex]:F4} delta={maxDelta:E2}, avg delta across all pairs={avgDelta:E2}");
         }
 
         if (maxDelta > config.SmokeTestDistanceTolerance)
         {
-            _logger.LogWarning(
-                $"[SmokeTestGate] FAILED — max delta {maxDelta:F6} > tolerance {config.SmokeTestDistanceTolerance:F6} " +
-                $"across {pairs.Count} pairs. Native pathfinder may not be parallel-safe on this setup. Falling back to serial mode.");
+            _logger.LogError(
+                $"[SmokeTestGate] **** FAILED **** — max delta {maxDelta:E2} > tolerance {config.SmokeTestDistanceTolerance:E2} " +
+                $"across {pairs.Count} pairs. Native pathfinder is NOT parallel-safe on this configuration. Falling back to serial mode (~6-8x slower).");
             return new SmokeTestResult(SmokeTestOutcome.Failed, pairs.Count, maxDelta,
-                $"parallel pathfind diverged from serial by {maxDelta:F6}");
+                $"parallel pathfind diverged from serial by {maxDelta:E2}");
         }
 
         _logger.LogInfo(
-            $"[SmokeTestGate] PASSED — max delta {maxDelta:F6} <= tolerance {config.SmokeTestDistanceTolerance:F6} " +
-            $"across {pairs.Count} pairs. Parallel mode is safe.");
+            $"[SmokeTestGate] **** PASSED **** — max delta {maxDelta:E2} <= tolerance {config.SmokeTestDistanceTolerance:E2} " +
+            $"across {pairs.Count} pairs. Parallel mode is SAFE. Proceeding with parallelism={config.Parallelism}.");
         return new SmokeTestResult(SmokeTestOutcome.Passed, pairs.Count, maxDelta);
     }
 
