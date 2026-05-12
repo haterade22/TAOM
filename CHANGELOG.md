@@ -1,5 +1,23 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-13
+
+### Feature: scene scripts library — `CS_Road` procedural mesh generator (clean-room port)
+
+Map authors now have a procedural road/river mesh generator they can attach to scene entities in Bannerlord's built-in scene editor. Drop a `CS_Road` script onto an entity, point it at a named scene Path, set width/material/UV options, click GENERATE — the engine builds a quad-strip mesh along the path with adaptive sample spacing. Live mode auto-regenerates every 0.5s while you tweak path control points.
+
+- **Behavioural inspiration:** Alliance multiplayer mod (`Byak0/Alliance@version/0.6.0.0:Alliance.Common/Extensions/CustomScripts/Scripts/CS_Road.cs`, ~380 lines, GPL v3). TAOM did a **clean-room rewrite** — read the source once, extracted a behavioural spec (`docs/scene-scripts/specs/cs-road.md`), implemented from the spec without re-reading Alliance source. Cross-check pass confirmed no algorithmic structure collisions; the only identifier overlaps (`_parsedCurve` field, `StepKey` struct) are natural English-language names from the spec, not copyrightable. Procedure documented in `docs/scene-scripts/ATTRIBUTION.md`.
+- **Engine discovery via reflection.** Bannerlord v1.3.15 `ScriptComponentBehavior.CollectEditableFields` enumerates **public instance fields** (not properties) for editor exposure. CS_Road declares 16 editor-visible fields (`PathName`, `Width`, `ElevationOffset`, `StepCurve`, `Material`, `CustomColor`, `RepeatU/V`, `InvertU/V`, `RotateUV`, `FlowDirection`, `FlipFaces`, `Generate`/`Readme` as `SimpleButton`, `Live`). No IoC registration, no SubModule.xml entry — the engine finds the class by scanning loaded DLLs.
+- **Thin entry point via aggressive helper extraction.** `CS_Road.cs` is 214 lines (down from 280) — the class body is irreducibly above the ADR-002 150-line ceiling because every editor knob must be a class field and every lifecycle method must be overridden in the same class. All algorithmic logic lives in pure C# helpers: `StepCurveParser`, `StepCurveEvaluator`, `RoadPathSampler`, `RoadGeometryBuilder`, `RoadMeshAttacher`, `HexColorParser`.
+- **TaleWorlds API surface** verified via `ilspycmd` on installed v1.3.15 DLLs (decompiled folder is v1.4 — not usable for signature verification). Pinned outputs at `docs/scene-scripts/sigs/` cover `ScriptComponentBehavior`, `EditableScriptComponentVariable`, `ScriptComponentParams`, `SimpleButton`, `Scene`, `Path`, `Mesh`, `MetaMesh`, `GameEntity`. Key v1.3.15 detail: override methods on `protected internal virtual` base must be declared `protected override` (the `internal` part is inaccessible cross-assembly).
+- **Adaptive sampling via StepCurve.** Format `{percent:step},{percent:step},...` (e.g., `"{0:0.5},{50:2},{100:0.5}"` = dense at start, sparse middle, dense at end). Lenient parser skips malformed pairs but keeps valid ones; falls back to default `(0,1)…(100,1)` only on zero parseable pairs. NaN/Infinity guards via `TAOM.Core.Validation.FiniteFloatValidator` on Width, ElevationOffset, RepeatU/V, totalDistance, and per-pair step values.
+- **MetaMesh lifecycle.** Each regen tags its `MetaMesh` with name `"taom_cs_road_generated"`, removes the previously-tracked instance before adding the new one. `OnRemoved` override cleans up on script removal. Known limitation: if the script is removed AFTER a save, the generated MetaMesh persists in the scene with the tag name — map maker can remove manually.
+- **Tests:** 67 unit tests across 5 pure helpers. `CS_Road.cs` itself is engine-bound; manual editor verification per the checklist in `docs/features/scene-scripts.md`.
+- **Review record.** `/deep-review` (5 agents) ⇒ 4 PASS + 1 MED data-flow gap (missing warning on malformed StepCurve) → fixed. `/codex-verify` (Codex adversarial) ⇒ 3 MED + 2 LOW findings → all fixed (finite-float gates, MetaMesh naming + OnRemoved cleanup, RoadPathSampler extraction + 9 new tests, spec clarification on lenient parsing, test attribution headers).
+- **Triage of the other 12 Alliance CustomScripts** (deep-dived but NOT ported in this PR): see `docs/features/scene-scripts.md` "Triage" section. Most depend on Alliance's custom `AnimationPlayer`, `EntityUtils.EnqueueTextPanel`, or `SynchedMissionObject` MP infrastructure that TAOM doesn't have.
+
+Issue: [#119](https://github.com/haterade22/TAOM/issues/119). Research: `Byak0/Alliance@version/0.6.0.0:Alliance.Common/Extensions/CustomScripts/Scripts/CS_Road.cs`. Not-tested: `CS_Road.cs` (engine-bound; manual editor verification).
+
 ## 2026-05-12
 
 ### Feature: editor settlement distance cache rebuild — parallel + incremental + resumable
