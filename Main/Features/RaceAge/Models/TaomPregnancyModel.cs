@@ -31,23 +31,18 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         if (hero.Age < comesOfAge || hero.Age > fertilityEnd)
             return 0f;
 
-        // Reimplementation of vanilla DefaultPregnancyModel with race-specific age bounds.
-        // Vanilla hardcodes age 18-45; we replace with race-specific comesOfAge and fertilityEnd.
-        int fertilityWindow = fertilityEnd - comesOfAge;
-        float declineRate = fertilityWindow > 0 ? 1.08f / fertilityWindow : 0.04f;
-        float ageFactor = 1.2f - (hero.Age - comesOfAge) * declineRate;
+        bool playerOrSpouseInvolved = (hero == Hero.MainHero) || (hero.Spouse == Hero.MainHero);
+        float fertilityModifier = _raceAgeService.GetFertilityModifier(race);
 
-        int childCount = hero.Children.Count + 1;
-        float clanCap = 4 + 4 * hero.Clan.Tier;
-        int aliveLords = hero.Clan.AliveLords.Count;
-        float populationFactor = (hero != Hero.MainHero && hero.Spouse != Hero.MainHero)
-            ? Math.Min(1f, (2f * clanCap - aliveLords) / clanCap)
-            : 1f;
-
-        float baseChance = ageFactor / (childCount * childCount) * 0.12f * populationFactor;
-
-        // Apply race fertility modifier
-        baseChance *= _raceAgeService.GetFertilityModifier(race);
+        float baseChance = ComputeBaseChance(
+            heroAge: (int)hero.Age,
+            comesOfAge: comesOfAge,
+            fertilityEnd: fertilityEnd,
+            childCount: hero.Children.Count,
+            clanTier: hero.Clan.Tier,
+            aliveLords: hero.Clan.AliveLords.Count,
+            playerOrSpouseInvolved: playerOrSpouseInvolved,
+            raceFertilityModifier: fertilityModifier);
 
         var result = new ExplainedNumber(baseChance);
         if (hero.GetPerkValue(DefaultPerks.Charm.Virile) || hero.Spouse.GetPerkValue(DefaultPerks.Charm.Virile))
@@ -56,5 +51,38 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         }
 
         return result.ResultNumber;
+    }
+
+    /// <summary>
+    /// Pure-math reimplementation of vanilla DefaultPregnancyModel with race-specific age bounds.
+    /// Vanilla hardcodes age 18-45; we replace with the race's comesOfAge..fertilityEnd window.
+    ///
+    /// Extracted as a public static helper so the 5 branches the Phase 7 audit (#179) flagged can be
+    /// unit-tested without the sealed-Hero coupling. Full ADR-007 refactor (introduce IHeroAgeInfo
+    /// adapter and move this into IRaceAgeService) is tracked separately as #131.
+    /// </summary>
+    public static float ComputeBaseChance(
+        int heroAge,
+        int comesOfAge,
+        int fertilityEnd,
+        int childCount,
+        int clanTier,
+        int aliveLords,
+        bool playerOrSpouseInvolved,
+        float raceFertilityModifier)
+    {
+        int fertilityWindow = fertilityEnd - comesOfAge;
+        float declineRate = fertilityWindow > 0 ? 1.08f / fertilityWindow : 0.04f;
+        float ageFactor = 1.2f - (heroAge - comesOfAge) * declineRate;
+
+        int effectiveChildCount = childCount + 1;
+        float clanCap = 4 + 4 * clanTier;
+        float populationFactor = !playerOrSpouseInvolved
+            ? Math.Min(1f, (2f * clanCap - aliveLords) / clanCap)
+            : 1f;
+
+        float baseChance = ageFactor / (effectiveChildCount * effectiveChildCount) * 0.12f * populationFactor;
+        baseChance *= raceFertilityModifier;
+        return baseChance;
     }
 }

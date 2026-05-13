@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #179 RaceAge TaomPregnancyModel ComputeBaseChance tests (Category 4d)
+
+Extracted the pure-math portion of `GetDailyChanceOfPregnancyForHero` to a static helper (`TaomPregnancyModel.ComputeBaseChance`), mirroring the `TaomAgeModel.ApplyRaceAgeLimits` pattern. The 5 branches the Phase 7 audit (#179) flagged as untested are now exercisable without the sealed-`Hero` coupling. Full ADR-007 refactor (introduce `IHeroAgeInfo` adapter, move logic into `IRaceAgeService`) is tracked separately as #131.
+
+- **`Main/Features/RaceAge/Models/TaomPregnancyModel.cs`** — extracted `ComputeBaseChance(int heroAge, int comesOfAge, int fertilityEnd, int childCount, int clanTier, int aliveLords, bool playerOrSpouseInvolved, float raceFertilityModifier)` as a `public static` helper. The override body now does the engine-coupled extraction (`hero.CharacterObject.Race`, `hero.Spouse`, `hero != Hero.MainHero`, perk lookups) then delegates to the pure-math helper.
+- **`TAOM.Tests/Features/RaceAge/TaomPregnancyModelTests.cs` — NEW (10 tests).** Age-factor branches (peak at `comesOfAge`, decayed at `fertilityEnd`, zero-window fallback), child-count quadratic decay (1 child, 3 children), population-factor branch (player-involved short-circuit, NPC overpopulation, NPC moderate), race fertility multiplier (dwarven half, sterile zero).
+- 1927 → 1937 tests, all passing.
+
 ### Phase 9b — fix + regression test SpecialResources × CareerSystem discount-debit parity (#174, #194)
 
 Cross-feature bug + its missing regression test, closed together. Pre-fix, `ClampUpgradeCount` / `CanAffordUpgrade` / `SpendForUpgrade` all applied the `CustomResourceUpgradeCostModifier` career passive (effective cost), but `QueueUpgradeSpend` debited the bare base cost — so a player with a -30% career discount queued upgrades at the discounted gate then got debited the full base price at `CommitSession`. Silent overpay by the discount percentage.
