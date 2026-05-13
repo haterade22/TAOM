@@ -21,6 +21,9 @@ public static class MapConversationTableau_SpawnOpponentBodyguard_Patch
     private static FieldInfo? _visDataField;
     private static MethodInfo? _clothColor1Method;
     private static MethodInfo? _clothColor2Method;
+    // Phase 9b #150 — see leader patch for full rationale. Post-construction Refresh re-applies
+    // mutated ClothColorData to the meshes so the colors actually reach native rendering.
+    private static MethodInfo? _refreshMethod;
 
     public static void Initialize(IBannerColorService service, IBannerHeroAdapter heroAdapter)
     {
@@ -44,6 +47,8 @@ public static class MapConversationTableau_SpawnOpponentBodyguard_Patch
             {
                 _clothColor1Method = AccessTools.Method(visDataType, "ClothColor1", new[] { typeof(uint) });
                 _clothColor2Method = AccessTools.Method(visDataType, "ClothColor2", new[] { typeof(uint) });
+                _refreshMethod = AccessTools.Method(agentVisualsType, "Refresh",
+                    new[] { typeof(bool), visDataType, typeof(bool) });
             }
         }
 
@@ -70,5 +75,8 @@ public static class MapConversationTableau_SpawnOpponentBodyguard_Patch
 
         _clothColor1Method?.Invoke(visData, new object[] { info.Value.Color1 });
         _clothColor2Method?.Invoke(visData, new object[] { info.Value.Color2 });
+
+        // Phase 9b #150 — push the new colors to native meshes. See leader patch for details.
+        _refreshMethod?.Invoke(lastVisual, new object[] { false, visData, false });
     }
 }

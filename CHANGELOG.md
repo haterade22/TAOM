@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #150 MapConversationTableau color writes silently failed (Category 2 R5)
+
+P1 silent-failure fix. Pre-fix, the leader + bodyguard `MapConversationTableau` Postfixes mutated `AgentVisualsData.ClothColor1Data/ClothColor2Data` AFTER `AgentVisuals` was constructed. Because `MBAgentVisuals.CreateAgentVisuals(...)` already pushed the initial deterministic colors to native renderer in the ctor, the post-construction C# field writes were silent no-ops — conversation tableau leader / bodyguard always rendered with vanilla `CharacterHelper.GetDeterministicColorsForCharacter` output.
+
+- **`Main/Features/BannerColorPersistence/Hooks/MapConversationTableau_SpawnOpponentLeader_Patch.cs`** + **`MapConversationTableau_SpawnOpponentBodyguard_Patch.cs`** — added cached `_refreshMethod` resolution for `AgentVisuals.Refresh(bool needBatchedVersionForWeaponMeshes, AgentVisualsData data, bool forceUseFaceCache = false)` (verified via ilspycmd against installed v1.3.15 `TaleWorlds.MountAndBlade.View.dll` — signature identical to decompile). After the existing `ClothColor1/2` fluent setters, the Postfix now invokes `Refresh(false, visData, false)` to re-run `AddTeamColorToMesh` / `AddSkinArmorWeaponMultiMeshesToEntity` against the mutated data — the cloth colors finally reach the GPU.
+- This is the alternative ("Option B") from the audit's fix sketch: the audit suggested either moving to a Prefix on `AgentVisuals.Create` (Site 5 pattern, hard because the Prefix has no character context) or finding a native SetClothColor API. ilspycmd showed no native push API exists — `AgentVisualsData.ClothColor1/2(uint)` are just fluent setters on private-set properties. `AgentVisuals.SetClothingColors(uint, uint)` (line 886) is the same — just calls the fluent setters. The Refresh-after-mutation pattern works because Refresh's mesh-build path reads `_data.ClothColor1Data/ClothColor2Data` at call time, not from the value captured at ctor time.
+
 ### Phase 9b — close #149 CompanionTactics Patch35 team filter (Category 2 R5)
 
 P1 concurrency fix. Pre-fix, `Patch35_Formation_SetMovementOrder.Postfix` mutated `TroopStanceManager._stances` for every team's formations — including enemy formations whose movement orders are issued from the async AI tick (`Mission.doAsyncAITick → TickAgentsAndTeamsAsync → BehaviorXxx.TickOccasionally → Formation.SetMovementOrder`). .NET Framework 4.7.2 `Dictionary<TKey,TValue>` is not concurrent-safe, so concurrent worker-thread `Remove` (Postfix) racing main-thread `TryGetValue`/`SetStance` (BattleActionBarMissionView) could produce `KeyNotFoundException` or silent bucket-chain corruption.

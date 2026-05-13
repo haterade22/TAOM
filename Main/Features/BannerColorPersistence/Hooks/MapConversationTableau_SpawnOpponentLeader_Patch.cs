@@ -24,6 +24,12 @@ public static class MapConversationTableau_SpawnOpponentLeader_Patch
     private static FieldInfo? _visDataField;
     private static MethodInfo? _clothColor1Method;
     private static MethodInfo? _clothColor2Method;
+    // Phase 9b #150 — Post-construction Refresh(needBatched=false, data, forceUseFaceCache=false)
+    // applies the new ClothColor1Data/ClothColor2Data to the rendered meshes via
+    // AddTeamColorToMesh / AddSkinArmorWeaponMultiMeshesToEntity. Without this, ClothColor1/2
+    // fluent setters only mutate C# state — native already captured the vanilla deterministic
+    // colors at MBAgentVisuals.CreateAgentVisuals time and our writes are silent no-ops.
+    private static MethodInfo? _refreshMethod;
 
     public static void Initialize(IBannerColorService service, IBannerHeroAdapter heroAdapter)
     {
@@ -60,6 +66,12 @@ public static class MapConversationTableau_SpawnOpponentLeader_Patch
             {
                 _clothColor1Method = AccessTools.Method(visDataType, "ClothColor1", new[] { typeof(uint) });
                 _clothColor2Method = AccessTools.Method(visDataType, "ClothColor2", new[] { typeof(uint) });
+
+                // Public Refresh(bool needBatchedVersionForWeaponMeshes, AgentVisualsData data,
+                // bool forceUseFaceCache = false) — line 210 of
+                // TaleWorlds.MountAndBlade.View.AgentVisuals in v1.3.15/v1.4 decompile.
+                _refreshMethod = AccessTools.Method(agentVisualsType, "Refresh",
+                    new[] { typeof(bool), visDataType, typeof(bool) });
             }
         }
 
@@ -94,5 +106,13 @@ public static class MapConversationTableau_SpawnOpponentLeader_Patch
 
         _clothColor1Method?.Invoke(visData, new object[] { info.Value.Color1 });
         _clothColor2Method?.Invoke(visData, new object[] { info.Value.Color2 });
+
+        // Phase 9b #150 — push the new colors to native meshes. Without Refresh(...), the fluent
+        // ClothColor1/2 setters above only update the C# AgentVisualsData field; the native
+        // renderer captured the vanilla deterministic colors at MBAgentVisuals.CreateAgentVisuals
+        // time during the AgentVisuals ctor and our post-construction writes are silent no-ops.
+        // Refresh re-invokes AddTeamColorToMesh / AddSkinArmorWeaponMultiMeshesToEntity with the
+        // updated ClothColorData on the data, pushing the clan colors all the way to the GPU.
+        _refreshMethod?.Invoke(lastVisual, new object[] { false, visData, false });
     }
 }
