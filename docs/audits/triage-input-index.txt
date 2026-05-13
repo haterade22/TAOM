@@ -1,0 +1,80 @@
+Unique issues: 78
+Min: 122, Max: 199
+#122  audit-wiring                              BannerColorPersistence: MobilePartyVisual_AddCharacterToPartyIcon_Patch wired but never in
+#123  audit-impl                                audit(impl): Messengers — singleton-state-reset gap + mission-null leak
+#124  audit-impl                                audit(impl): BannerInjection — singleton stale exclusions across campaigns + perf
+#125  audit-impl                                audit(impl): CharacterCreation — ADR-007 violations in service + IoC.Resolve in service 
+#126  audit-impl                                audit(impl): InitialChildGeneration — config NaN/Infinity + crash on zero-adult clan
+#127  audit-impl                                audit(impl): NamedCompanions — Review #23 regressed in Prisoner+Fugitive states + single
+#128  audit-impl                                audit(impl): CareerSystem — SyncData mutates on save + NaN config + ability cache stale
+#129  audit-impl                                audit(impl): Diplomacy — WarOfTheRing.CurrentPhase unsaved + config validation gaps
+#130  audit-impl                                audit(impl): HeroRace — _heroRaceMap singleton stale across campaigns + null-guard gaps
+#131  audit-impl                                audit(impl): RaceAge — TaomPregnancyModel ADR-007 violation + singleton race cache stale
+#132  audit-impl                                audit(impl): Siege — empty SyncData loses all active defense events on every load + R1
+#133  audit-impl                                audit(impl): SpecialResources — SyncData clamps wrong cap + ScreenManager event leak + R
+#134  audit-impl                                audit(impl): Siege — TaomSiegeEventModel party.MobileParty.HasPerk unguarded NRE for gar
+#135  audit-impl                                audit(impl): CulturalFeats — TaomPartySpeedModel Campaign.Current.MapSceneWrapper unguar
+#136  audit-impl                                audit(impl): StartupResources — Gold/Influence config validation + dead-guard cleanup
+#137  audit-impl                                audit(impl): Arena — TaomTournamentModel inline branching + unguarded Campaign.Current c
+#138  audit-impl                                audit(impl): ArmyTargeting — TaomTargetScoreModel inline ternary + early-return branchin
+#139  audit-impl                                audit(impl): CompanionTactics — SaveableTypeDefiner container collision risk + silent Sy
+#140  audit-impl                                audit(impl): BattleBalance — IoC.Resolve in TaomPartyHealingModel + rule-4 + config vali
+#141  audit-impl                                audit(impl): EquipPresets — Patch33 concrete cast + UX over-count
+#142  audit-impl                                audit(impl): CareerSystem GameModels — UpdateAgentStats inline + ApplyDamage branching +
+#143  audit-impl                                audit(impl): FiefManagement — silent swap-restore failure + presenter Reset() incomplete
+#144  audit-impl                                audit(impl): CulturalFeats — systemic rule-4 across all 16 models + 6 specific bugs (7 P
+#145  audit-impl                                audit(impl): Encyclopedia — TaomInformationRestrictionModel reaches TaomSettings.Instanc
+#146  audit-impl                                audit(impl): QuickActions — per-save IsSearchAvailable contract broken by reconcilers
+#147  audit-impl                                audit(impl): Execution — TaomExecutionRelationModel architectural smell (hook injected i
+#148  audit-impl                                audit(impl): TroopProgression — TaomPartyWageModel inline branching + cross-feature Care
+#149  audit-impl                                CompanionTactics Patch35 SetMovementOrder: no team filter -> TroopStanceManager race
+#150  audit-impl                                BannerColor MapConversationTableau leader/bodyguard color writes are silent no-ops
+#151  audit-impl                                HeroRace ActionSetCode patch: non-static class + likely no-op duplicate of vanilla
+#152  audit-impl                                Diplomacy EndAlliance block leaves caller in inconsistent state (duplicate alliance propos
+#153  audit-impl                                Diplomacy DeclareWarAction block skips OnWarDeclared event dispatch
+#154  audit-impl                                FiefManagement: verify GauntletFiefManagementScreen implements IGameStateListener
+#155  audit-impl                                SmartCavalryAI CavalryChargeService._states has no lock (structural fragility)
+#156  audit-impl                                BattleScenes _isRetrying non-volatile + Thread.Sleep in Prefix (dormant; disabled feature)
+#157  audit-impl                                SettlementGuards PrepareGuardAgentDataFromGarrison: v1.3.15 staticness unverified + bare c
+#158  audit-impl                                BannerColor AgentVisuals.Create manual patch: missing LogWarning fallback
+#159  audit-impl                                BannerColor MobilePartyVisual.AddCharacterToPartyIcon: in modreq binding uncertainty
+#160  audit-impl                                CharacterSelection RefreshCharacterEntityAuxPatch throws hard on IL mismatch
+#161  audit-impl                                ArmyTargeting Patch22: 3 uncached IoC.Resolve calls in hot path (~500-2000 calls/cycle)
+#162  audit-impl                                CustomBattles Patch19_OnCultureSelection: private method patch, v1.3.15 unverified
+#163  audit-impl                                CharacterCreation SpawnNonHuman Finalizer swallows all NREs unconditionally
+#164  audit-impl                                Misc Harmony patch cleanups: bare catch{}, missing [HarmonyPostfix] attrs, missing LogWarn
+#165  audit-impl                                audit(impl): CareerSystem UI — sprite registration gap (29 portraits + 41 abilities + al
+#166  audit-impl                                audit(impl): Messengers UI — mixin notifies wrong VM (host instead of self) + unused [Da
+#167  audit-impl                                audit(impl): SpecialResources UI — 8 of 11 sprite icons missing + SecondaryInfoItems.Add
+#168  audit-impl                                audit(impl): TimeAcceleration UI — wrong state signal (SpeedUpMultiplier never raised by
+#169  audit-impl                                audit(impl): Custom Widgets — per-frame allocations + static-list race + cross-thread wr
+#170  audit-impl                                audit(impl): SmartCavalryAI × MixedFormations × CompanionTactics — handshake test gap 
+#171  audit-impl                                audit(impl): CharacterCreation × HeroRace × RaceAge — stale race ID persistence + Pref
+#172  audit-impl                                audit(impl): BannerColorPersistence × BannerInjection × Patch24 — all-clan drift block
+#173  audit-impl                                audit(impl): CareerSystem × TroopProgression via CareerPassiveHelper — service locator 
+#174  audit-impl                                audit(impl): SpecialResources × CareerSystem inventory upgrade — career discount not ap
+#175  audit-impl                                audit(impl): FactionMap × CharacterCreation widget lifecycle — _factionVM stale + _pend
+#176  audit-impl,audit-tests                    audit-tests: CulturalFeats — 16 GameModels with zero behavior-hook tests
+#177  audit-impl,audit-tests                    audit-tests: FiefManagement — 5 behavior callbacks untested (ADR-008 80% hook target unm
+#178  audit-impl,audit-tests                    audit-tests: Warg — refactor IWargAttackService to use IAgentAdapter (ADR-007); 2 method
+#179  audit-impl,audit-tests                    audit-tests: RaceAge — TaomPregnancyModel.GetDailyChanceOfPregnancyForHero untested + cr
+#180  audit-impl,audit-tests                    audit-tests: TroopProgression — TaomPartyWageModel.GetTotalWage untested + CareerPassive
+#181  audit-impl,audit-tests                    audit-tests: CharacterCreation+HeroRace — race ID round-trip via save/load
+#182  audit-impl,audit-tests                    audit-tests: CompanionTactics+SmartCavalryAI — behavior ordering + shared SetMovementOrd
+#183  audit-impl,audit-tests                    audit-tests: HeroRace — RacePersistenceBehavior.OnSessionLaunched restore + cross-featur
+#184  audit-impl,audit-tests                    audit-tests: NamedCompanions — EnsureCompanionsPlaced state-matrix coverage
+#185  audit-impl,audit-tests                    audit-tests: AdvancedCombat — SpatialGridDebugService.RenderDebugVisualization untested
+#186  audit-impl,audit-tests                    audit-tests: Spider — SpawnSpiders invocation contract + integration hook
+#187  audit-impl,audit-tests                    audit-tests: BannerColorPersistence — triplet event-ordering and re-entry sequencing
+#188  audit-impl,audit-tests                    audit-tests: FactionMap — CultureStageView re-entry lifecycle (pending pins, stale VM)
+#189  audit-impl,audit-tests                    audit-tests: MixedFormations — SmartCavalryAI handshake (RepresentativeIsCavalry guards)
+#190  audit-impl,audit-tests                    audit-tests: SmartCavalryAI — cross-feature integration with MixedFormations (cavalry ex
+#191  audit-impl,audit-tests                    audit-tests: Messengers — IoC + RegisterEvents wiring regression smoke test (#121)
+#192  audit-impl,audit-tests                    audit-tests: SettlementGuards — manual Harmony patch wiring regression test
+#193  audit-impl,audit-tests                    audit-tests: SiegeDismount — manual Harmony patch wiring regression test
+#194  audit-impl,audit-tests                    audit-tests: SpecialResources — tiered-cost + passive-discount regression test (#174)
+#195  audit-impl,audit-tests                    audit-tests: TroopWeight — 4 IOn* hook implementations untested; ADR-008 80% hook covera
+#196  audit-impl,audit-docs                     audit-docs: Execution — docs/features/execution.md MISSING (Phase 0 #19 carryover)
+#197  audit-impl,audit-docs                     audit-docs: CompanionTactics — feature is build-disabled, status hidden in Known Limitat
+#198  audit-impl,audit-docs                     audit-docs: AdvancedCombat — Tests section claims no tests, but BoneCollisionServiceTest
+#199  audit-impl,audit-docs                     audit-docs: Warg — Tests section claims no dedicated test files, but WargAttackServiceTe

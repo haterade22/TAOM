@@ -1,0 +1,322 @@
+[
+  {
+    "body": "## Finding (P1)\n\n`Patch35_Formation_SetMovementOrder.cs` Postfix has no team filter. `Formation.SetMovementOrder` is called from the async AI tick (`doAsyncAITick -> TickAgentsAndTeamsAsync -> BehaviorXxx.TickOccasionally -> Formation.SetMovementOrder`) for every team's formations. The Postfix calls `TroopStanceManager.ClearStance` which mutates a non-concurrent `Dictionary<int, TroopStance>` (`_stances`). Concurrent `Remove` from a worker thread racing `TryGetValue`/`SetStance` on the main thread can produce `KeyNotFoundException` or silent bucket-chain corruption (.NET Framework 4.7.2 `Dictionary` is not concurrent-safe).\n\n## Fix sketch\n\nAdd team filter BEFORE the `_stances.ClearStance(...)` call:\n```csharp\nif (__instance?.Team != Mission.Current?.PlayerTeam) return;\n```\nStances are player-team-only semantically, so the filter is the simpler fix. Alternative: add `lock` to `TroopStanceManager`.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster B finding B1.",
+    "createdAt": "2026-05-13T16:43:48Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 149,
+    "title": "CompanionTactics Patch35 SetMovementOrder: no team filter -> TroopStanceManager race"
+  },
+  {
+    "body": "## Finding (P1)\n\n`MapConversationTableau_SpawnOpponentLeader_Patch` and `MapConversationTableau_SpawnOpponentBodyguard_Patch` Postfixes retrieve the last constructed `AgentVisuals`, read its `_data` (`AgentVisualsData`), and write `ClothColor1Data` / `ClothColor2Data`. But `MBAgentVisuals.CreateAgentVisuals(...)` already ran during `AgentVisuals` ctor and pushed the initial colors to the native renderer. Post-construction C# field writes never reach native, so conversation tableau leader/bodyguard colors silently fall back to vanilla.\n\n## Fix sketch\n\nMove color injection into a Prefix on `AgentVisuals.Create` (Site 5 \u00e2\u20ac\u201d `AgentVisuals_Create_Patch` \u00e2\u20ac\u201d already does this for the spawn path). Mutate `AgentVisualsData` BEFORE `MBAgentVisuals.CreateAgentVisuals` runs. Alternative: call a native `SetClothColor` API on `_data.AgentVisuals` if one exists in v1.3.15 \u00e2\u20ac\u201d verify via ilspycmd.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster C finding C1.",
+    "createdAt": "2026-05-13T16:43:49Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 150,
+    "title": "BannerColor MapConversationTableau leader/bodyguard color writes are silent no-ops"
+  },
+  {
+    "body": "## Finding (P2)\n\n`Main\\Features\\HeroRace\\Hooks\\ActionSetCode_GenerateActionSetNameWithSuffix_Patch.cs` has two issues:\n\n1. **Non-static class** \u00e2\u20ac\u201d declared `public class` instead of `public static class` (line 11). All other TAOM Harmony patches use static classes. Harmony 2 attribute-based patches require static classes; non-static can cause unpredictable application behavior.\n2. **Functional no-op** \u00e2\u20ac\u201d Prefix logic is bit-for-bit equivalent to vanilla `ActionSetCode.GenerateActionSetNameWithSuffix` in `TaleWorlds.Core`. The method is pure string ops with no LOTRLOME-specific behavior; vanilla's `Monster.BaseMonster` resolution already handles custom races. The patch adds per-call overhead on every agent spawn for no behavioral gain.\n\n## Fix sketch\n\nInvestigate whether LOTRLOME has a `BaseMonster` quirk vanilla can't handle (use `/research`). If not, **DELETE the patch** per simplicity-criterion (\"deletion that holds parity always wins\"). If kept for some reason, change `public class` to `public static class`.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster A finding A1 + Cluster D finding D2.",
+    "createdAt": "2026-05-13T16:43:51Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 151,
+    "title": "HeroRace ActionSetCode patch: non-static class + likely no-op duplicate of vanilla"
+  },
+  {
+    "body": "## Finding (P2)\n\n`AllianceCampaignBehavior_EndAlliance_Patch` Prefix returns false to prevent alliance dissolution. But vanilla callers (`OnAllianceTimerExpired`, `OnWarDeclared`) proceed to call `AddAllianceDecision` AFTER the (now-skipped) EndAlliance. Result: a \"propose new alliance\" event for kingdoms that are still allied \u00e2\u20ac\u201d duplicate alliance proposal in the queue.\n\n## Fix sketch\n\nEither:\n- Gate `ShouldPreventAllianceEnd` to alliance-expiry triggers only (not war-declaration triggered EndAlliance calls), so the war-declared path runs vanilla cleanup, OR\n- Suppress the downstream `AddAllianceDecision` via a thread-static flag set in this Prefix and read in the caller path.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster A finding A2.",
+    "createdAt": "2026-05-13T16:43:52Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 152,
+    "title": "Diplomacy EndAlliance block leaves caller in inconsistent state (duplicate alliance proposal)"
+  },
+  {
+    "body": "## Finding (P2)\n\n`DeclareWarAction_ApplyInternal_Patch` Prefix returns false to prevent war declaration. Vanilla `ApplyInternal` dispatches `CampaignEventDispatcher.Instance.OnWarDeclared(faction1, faction2, declareWarDetail)` (line 54 in v1.4 decompile) \u00e2\u20ac\u201d which the patch skips. Listeners (including `AllianceCampaignBehavior.OnWarDeclared` which handles forced alliance ends) receive no notification, leaving downstream state inconsistent.\n\n## Fix sketch\n\nDocument the suppression explicitly. If TAOM later \"force-declares\" a war through its own flow, it must use `DeclareWarAction.ApplyByX(...)` (which goes through the public path and dispatches the event), not `ApplyInternal` directly. Alternative: dispatch `OnWarDeclared` manually from the Prefix when blocking, so listeners see the attempt.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster A finding A3.",
+    "createdAt": "2026-05-13T16:43:53Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 153,
+    "title": "Diplomacy DeclareWarAction block skips OnWarDeclared event dispatch"
+  },
+  {
+    "body": "## Finding (P2)\n\n`Patch36_GameStateScreenManager` Prefix replaces vanilla `CreateScreen` for `FiefManagementGameState` and returns `GauntletFiefManagementScreen`. The CALLER (`OnCreateState`) then runs:\n```csharp\ngameState.RegisterListener((IGameStateListener)(object)((val is IGameStateListener) ? val : null));\n```\nIf `GauntletFiefManagementScreen` does NOT implement `IGameStateListener`, the screen receives no lifecycle callbacks. Per memory `feedback_gamestate_listener.md`, this caused a crash in a prior feature.\n\n## Fix sketch\n\nVerify `GauntletFiefManagementScreen : IGameStateListener`. If missing, add the interface and implement the lifecycle callbacks the screen needs (typically `OnActivate` / `OnDeactivate` / `OnFinalize`).\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster A finding A4.",
+    "createdAt": "2026-05-13T16:43:55Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 154,
+    "title": "FiefManagement: verify GauntletFiefManagementScreen implements IGameStateListener"
+  },
+  {
+    "body": "## Finding (P2)\n\n`CavalryChargeService._states` is a `Dictionary` with no lock. In current code Patch31's team filter prevents enemy-team threads from reaching the service, so the race is structurally unreachable today. But the absence of locking is fragile \u00e2\u20ac\u201d `FormationLayoutService` (sister service in the same feature cluster) explicitly locks for this exact reason with an inline comment acknowledging the risk per Codex review #35.\n\n## Fix sketch\n\nMirror `FormationLayoutService`'s pattern:\n```csharp\nprivate readonly object _lock = new();\n```\nWrap `_states` accesses in `HandleChargeOrder`, `Tick`, `GetState`, `OnMissionEnd`. `CavalryFormationState` field mutations (state transitions) also need lock coverage.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster B finding B2.",
+    "createdAt": "2026-05-13T16:44:56Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 155,
+    "title": "SmartCavalryAI CavalryChargeService._states has no lock (structural fragility)"
+  },
+  {
+    "body": "## Finding (P2 \u00e2\u20ac\u201d dormant)\n\n`MBMapScene_GetBattleSceneIndexMap_Patch` uses `static bool _isRetrying` (not `volatile`, not `[ThreadStatic]`) as a re-entry guard. Without `volatile`, the JIT may cache the read in a register and never see writes from another thread. Plus `Thread.Sleep(250ms)` inside a Prefix that fires from a rendering thread = main-thread stall.\n\nCurrently inert: category `Patch0_BattleScenes` is commented out in `SubModule.cs:117`. Issue applies if the feature is ever re-enabled.\n\n## Fix sketch\n\nMark `volatile static bool _isRetrying` or use `[ThreadStatic]` per-thread. Move retry to a background thread. If `Patch0_BattleScenes` stays permanently disabled, add an inline comment noting the safety issue so the next person to re-enable knows.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster B finding B3.",
+    "createdAt": "2026-05-13T16:44:57Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 156,
+    "title": "BattleScenes _isRetrying non-volatile + Thread.Sleep in Prefix (dormant; disabled feature)"
+  },
+  {
+    "body": "## Finding (P2 \u00e2\u20ac\u201d v1.3.15-unverified)\n\n`GuardsCampaignBehavior_TakeGuardAgentData_Patch` reflects `PrepareGuardAgentDataFromGarrison` and calls `_prepareMethod.Invoke(null, ...)` assuming the method is static. v1.4 decompile confirms `private static AgentData PrepareGuardAgentDataFromGarrison(CharacterObject, bool, bool)`, but v1.3.15 is NOT verified. If v1.3.15 made it instance-only, `Invoke(null, ...)` throws `TargetException` at runtime \u00e2\u20ac\u201d and the bare `catch {} return true;` swallows it silently, falling back to vanilla guards with NO log entry.\n\n## Fix sketch\n\n1. Verify with `ilspycmd \"E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.dll\" -t \"SandBox.CampaignBehaviors.GuardsCampaignBehavior\"`.\n2. If instance: change Prefix signature to accept `GuardsCampaignBehavior __instance` and pass to Invoke.\n3. Replace `catch {}` with `catch (Exception ex) { _service?.Log(\"...\", ex.Message); }` so future drift is visible.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster C findings C2 + C4.",
+    "createdAt": "2026-05-13T16:44:58Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 157,
+    "title": "SettlementGuards PrepareGuardAgentDataFromGarrison: v1.3.15 staticness unverified + bare catch{}"
+  },
+  {
+    "body": "## Finding (P2)\n\n`Main\\SubModule.cs` lines 454-458 register the `AgentVisuals.Create` manual patch. Unlike sibling sites (4, 6, 7) which all have `else IoC.Resolve<IModLogger>().LogWarning(\"[BannerColor] X not found ...\");` fallbacks, Site 5 has no `else` branch. If `AccessTools.TypeByName(\"TaleWorlds.MountAndBlade.View.AgentVisuals\")` fails (assembly not loaded yet, type moved in v1.3.15, or the 5-param overload changes), the patch silently does not apply with zero diagnostic. The clan color randomness suppression would be completely absent.\n\n## Fix sketch\n\nAdd after the patch call block:\n```csharp\nelse IoC.Resolve<IModLogger>().LogWarning(\"[BannerColor] AgentVisuals.Create not found \u00e2\u20ac\u201d clan color randomness suppression will not apply\");\n```\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster C finding C3.",
+    "createdAt": "2026-05-13T16:45:00Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 158,
+    "title": "BannerColor AgentVisuals.Create manual patch: missing LogWarning fallback"
+  },
+  {
+    "body": "## Finding (P2 \u00e2\u20ac\u201d v1.3.15-unverified)\n\n`MobilePartyVisual_AddCharacterToPartyIcon_Patch` uses an explicit param type array with `typeof(ActionIndexCache).MakeByRefType()` for two `in` parameters. In C#, `in` is a modreq-qualified `ref` in IL \u00e2\u20ac\u201d `AccessTools.Method` may or may not match depending on the Harmony version's handling of `in` modreq. If the match fails, `AccessTools.Method` returns null, the LogWarning fires, and party icon colors silently don't persist.\n\nNB: this is **separate** from issue #122, which covers this same patch's other bug (`Initialize(...)` never called \u00e2\u2020\u2019 static fields null \u00e2\u2020\u2019 silent no-op even when correctly bound).\n\n## Fix sketch\n\nDrop the param type array and let Harmony find the unique-name overload (only one `AddCharacterToPartyIcon` exists), OR runtime-test that the LogWarning never fires in a normal session.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster C finding C5. Related: #122.",
+    "createdAt": "2026-05-13T16:45:01Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 159,
+    "title": "BannerColor MobilePartyVisual.AddCharacterToPartyIcon: in modreq binding uncertainty"
+  },
+  {
+    "body": "## Finding (P2)\n\n`Late_Transpiler` patch `RefreshCharacterEntityAuxPatch` throws `ArgumentException` (lines 49, 31, 34) if it can't find the `Newobj AgentVisualsData` IL pattern in `BodyGeneratorView.RefreshCharacterEntityAux()`. The patch is applied in `OnGameInitializationFinished` \u00e2\u20ac\u201d a throw at this point crashes the mod during game initialization, not silently degrades. v1.4 decompile confirms the pattern exists; v1.3.15 not verified.\n\n## Fix sketch\n\n1. Run `ilspycmd \"E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.GauntletUI.dll\" -t \"TaleWorlds.MountAndBlade.GauntletUI.BodyGenerator.BodyGeneratorView\"` and confirm the IL pattern.\n2. Replace `throw new ArgumentException(...)` with soft-fail: log error, return `instructions` unmodified. Game can boot without the transpiler \u00e2\u20ac\u201d the feature degrades gracefully instead of bricking init.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster D finding D3.",
+    "createdAt": "2026-05-13T16:45:02Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 160,
+    "title": "CharacterSelection RefreshCharacterEntityAuxPatch throws hard on IL mismatch"
+  },
+  {
+    "body": "## Finding (P2 \u00e2\u20ac\u201d performance)\n\n`AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch` Postfix calls `IoC.Resolve<IArmyTargetingService>()`, `IoC.Resolve<IArmyTargetingSettingsProvider>()`, and `IoC.Resolve<IModLogger>()` on every invocation with no static caching. Per the feature doc, the patched method fires per-army per-AI-tick (~500-2000 calls/cycle). Violates `.claude/rules/harmony-patches.md`: \"Before \\ in hot path, use lazy cache.\" The early exit `if (bestDistanceScore > 0f) return;` reduces but doesn't eliminate impact \u00e2\u20ac\u201d armies targeting zero-score besiegeable settlements (the case the patch is for) call all 3 resolves.\n\n## Fix sketch\n\n```csharp\nprivate static IArmyTargetingService? _service;\nprivate static IArmyTargetingSettingsProvider? _settings;\nprivate static IModLogger? _logger;\n\n[HarmonyPostfix]\npublic static void Postfix(...) {\n    if (bestDistanceScore > 0f) return;\n    _service ??= IoC.Resolve<IArmyTargetingService>();\n    _settings ??= IoC.Resolve<IArmyTargetingSettingsProvider>();\n    _logger ??= IoC.Resolve<IModLogger>();\n    // ... existing logic\n}\n```\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster E finding E1.",
+    "createdAt": "2026-05-13T16:46:01Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 161,
+    "title": "ArmyTargeting Patch22: 3 uncached IoC.Resolve calls in hot path (~500-2000 calls/cycle)"
+  },
+  {
+    "body": "## Finding (P2 \u00e2\u20ac\u201d v1.3.15-unverified)\n\n`CustomBattleSideVM_OnCultureSelection_Patch` targets a **private** method via `[HarmonyPatch(typeof(CustomBattleSideVM), \"OnCultureSelection\")]`. v1.4 decompile did not surface the method under this name in the expected DLL. If v1.3.15 renamed/removed it, Harmony throws at patch application \u00e2\u20ac\u201d and because TAOM uses the category-based PatchCategory, the entire `Patch19_CustomBattles` category may fail to apply, breaking all sibling patches.\n\n## Fix sketch\n\n1. Verify with ilspycmd against the installed v1.3.15 DLL.\n2. Add a defensive `static MethodBase TargetMethod()` returning `AccessTools.Method(...)` with null-guard + LogWarning, so a missing method just disables this patch instead of failing the whole category.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster E finding E2.",
+    "createdAt": "2026-05-13T16:46:03Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 162,
+    "title": "CustomBattles Patch19_OnCultureSelection: private method patch, v1.3.15 unverified"
+  },
+  {
+    "body": "## Finding (P2)\n\n`CharacterCreationNarrativeStageView_SpawnNonHuman_Patch` (sub-patch inside `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`) has a `[HarmonyFinalizer]` that swallows ALL `NullReferenceException` AND `ArgumentNullException` with `ParamName == \"key\"`. The intent (per code comments) was \"belt-and-suspenders\" against horse-data NREs. But the bare `NullReferenceException` swallow masks ANY NRE in the target method \u00e2\u20ac\u201d including real bugs from unrelated code paths. If the primary defense `RemoveHorseCharacters` works, this Finalizer is dead code. If the primary defense fails, the Finalizer hides which NRE actually fired.\n\n## Fix sketch\n\nEither:\n- Tighten scope: set a thread-static flag in `RemoveHorseCharacters` indicating it ran; only swallow exceptions when the flag is NOT set (i.e., primary defense was bypassed), OR\n- Remove the Finalizer entirely if `RemoveHorseCharacters` is sufficient (preferred per simplicity-criterion if a session of testing confirms primary defense holds).\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d Cluster E finding E3.",
+    "createdAt": "2026-05-13T16:46:04Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oBtw",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 163,
+    "title": "CharacterCreation SpawnNonHuman Finalizer swallows all NREs unconditionally"
+  },
+  {
+    "body": "## Finding (P3 \u00e2\u20ac\u201d consolidated)\n\nA grab-bag of small cleanups across multiple patches found during Phase 4. Each is independently low-risk; consolidating to one issue to avoid noise.\n\n### Bare `catch {}` swallows real bugs (3 sites)\n- `Patch35_OOBHeroItem_GetCaptainTooltip.cs` (Cluster C P3)\n- `Patch35_Formation_SetMovementOrder.cs` (Cluster D P3)\n- (Plus Cluster C C4 already filed as part of issue for #9)\n\n### Missing `[HarmonyPostfix]` attribute (3 files; works today via naming convention)\n- `CulturalFeats/Hooks/Campaign_InitializeDefaultCampaignObjects_Patch.cs` (Cluster E E4)\n- `SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs` (Cluster E E4)\n- `SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` (Cluster E E4)\n\n### Missing `else LogWarning(...)` on manual `_harmony.Patch(...)` null-guards\n- `SubModule.cs:461-471` for `MapConversationTableau.SpawnOpponent*` (Cluster C P3) \u00e2\u20ac\u201d sites 6 & 7\n\n### Missing nullable annotations on lazy-init static fields\n- `Patch35_Formation_SetMovementOrder.cs` lines 21-22 \u00e2\u20ac\u201d `_settings` and `_stances` lack `?` despite `??=` init pattern (Cluster D P3)\n\n### Missing param type array for explicit overload disambiguation\n- `Patch31_FormationSetMovementOrder.cs` \u00e2\u20ac\u201d uses `nameof(Formation.SetMovementOrder)` without explicit `new[] { typeof(MovementOrder) }`. Patch35 (sibling) uses explicit type array. Defensive consistency. (Cluster C P3)\n\n### Missing `[HarmonyPrefix]` attribute (1 file; works today via naming convention)\n- `SpecialResources/Hooks/PartyScreenLogic_AddCommand_Patch.cs` (Cluster A note)\n\n## Fix sketch\n\nMostly mechanical. Best handled as a single batched cleanup PR in Phase 9 once the higher-severity issues land.\n\n## Audit reference\n[docs/audits/cluster-harmony-patches.md](../docs/audits/cluster-harmony-patches.md) \u00e2\u20ac\u201d multiple cluster P3 rows.",
+    "createdAt": "2026-05-13T16:46:05Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACV3oByA",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      }
+    ],
+    "number": 164,
+    "title": "Misc Harmony patch cleanups: bare catch{}, missing [HarmonyPostfix] attrs, missing LogWarnings (consolidated)"
+  }
+]

@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 0-9a audit artifacts checkpoint
+
+Committing the cumulative deliverables of the TAOM feature audit (Phases 0-8 manifest/wiring/cluster reviews + Phase 9a verification) as one atomic artifact commit so the next Phase 9b fix-batch session has a clean diff.
+
+- **`docs/audits/`** — 33 files: `README.md`, `feature-manifest.md` (43 features classified), `wiring-matrix.md` (Phase 1), `cluster-{gamemodels,campaign-behaviors,harmony-patches,ui,cross-feature}.md` (Phases 2-6), `test-coverage.md` (Phase 7), `docs-gaps.md` (Phase 8), `phase-{1-9}-kickoff.md` (per-phase briefs), `session-prompts.md`, `triage-input.json` + per-batch JSONs (raw `gh issue list` snapshots — reproducibility), `triage-input-index.txt`, `triage-results.md` (Phase 9a master) + per-batch detail (`triage-results-{A1,A2,B,C,D}.md`), `phase-9-fix-queue.md` (77 remaining VALID issues grouped by category).
+- These artifacts document the multi-phase audit that produced 78 GitHub issues (`audit-impl`, `audit-wiring`, `audit-tests`, `audit-docs`). Phase 9a verification confirmed 95% audit accuracy (1 STALE + 1 sub-FP + 2 SEVERITY-DRIFT of 78). Phase 9b is consuming the resulting queue across multiple sessions.
+
 ### Phase 9b — close 4 audit-docs issues (Category 5: Doc updates)
 
 First Phase 9b batch after the 9a verification (which validated 78 audit findings, closed #154 as STALE, and produced the 77-issue fix queue in `docs/audits/phase-9-fix-queue.md`). Doc-only edits; build + tests untouched at 1903/1903.

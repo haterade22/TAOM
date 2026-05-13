@@ -1,0 +1,402 @@
+[
+  {
+    "body": "## Phase 7 Finding\n\nCulturalFeats has 16 Taom*Model.cs overrides under Main/Features/CulturalFeats/Models/ with **zero behavior-hook tests**. The only test file (TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs) contains 8 structural reflection tests on feat definitions \u00e2\u20ac\u201d no test exercises any GameModel override calculation logic.\n\n## Severity rationale \u00e2\u20ac\u201d P1\n- 58 public methods across 16 models; ratio 0.14 (8 / 58).\n- ADR-008 100% service-testability target is unmet at the architectural level: there is NO service for CulturalFeats; logic is inlined into 16 GameModel override bodies (Phase 6 #144 systemic rule-4 violation).\n- 8 of 16 models call CareerPassiveHelper.ApplyFactor directly from override body \u00e2\u20ac\u201d cross-feature static coupling with zero test asserting per-call composition.\n\n## Cross-feature references\n- Phase 6 #144 (architectural \u00e2\u20ac\u201d rule-4 violation, no service exists)\n- Phase 6 #43 (CareerPassiveHelper coupling)\n- Phase 6 #8 (TaomSettlementLoyaltyModel \u00e2\u20ac\u201d the RevoltTuning consumer \u00e2\u20ac\u201d untested)\n- Phase 2 #135 (TaomPartySpeedModel P1 \u00e2\u20ac\u201d unguarded Campaign.Current.MapSceneWrapper)\n\n## Phase 9 fix sketch\n1. Extract ICulturalFeatsService and refactor the 16 GameModels to delegate (Phase 6 #144).\n2. Add per-model behavior tests for at least the calculation/multiplier logic; structural feat-definition tests already exist.\n3. Add an integration test for the CareerPassiveHelper compose path (one model x one career x one race -> expected magnitude).\n\n## ADR\n- [ADR-008](../docs/adrs/008-testability-requirements.md) \u00e2\u20ac\u201d 100% service coverage\n- [ADR-007](../docs/adrs/007-adapter-pattern.md) \u00e2\u20ac\u201d adapter pattern\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 1.",
+    "createdAt": "2026-05-13T18:34:53Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 176,
+    "title": "audit-tests: CulturalFeats \u00e2\u20ac\u201d 16 GameModels with zero behavior-hook tests"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nFiefHubService has strong service coverage (22 tests on 8 public methods, ratio 2.75). But FiefHubCampaignBehavior has **5 behavior callbacks with zero tests**: RegisterEvents, OnSessionLaunched, OnNewGameCreated, OnGameLoaded, SyncData.\n\n## Severity rationale \u00e2\u20ac\u201d P1\n- ADR-008 80% behavior-hook coverage target is entirely unmet for this feature.\n- The wiring-regression class (Messengers #121) ships untested \u00e2\u20ac\u201d if the behavior is dropped from IoC, no test fails.\n- Pattern from RacePersistenceBehaviorTests (delegation smoke tests) demonstrates the cure is straightforward.\n\n## Cross-feature references\n- Phase 3 #143 (FiefManagement campaign-behavior cluster finding)\n- Issue #121 (Messengers regression class \u00e2\u20ac\u201d same root cause)\n\n## Phase 9 fix sketch\nAdd FiefHubCampaignBehaviorTests.cs with:\n1. RegisterEvents_RegistersAllExpectedHandlers \u00e2\u20ac\u201d smoke test that subscriber count != 0 post-RegisterEvents\n2. One test per callback verifying it invokes the service method with the expected arguments (mock the service)\n3. SyncData_RoundTripsExpectedFields \u00e2\u20ac\u201d serialize / deserialize test\n\n## ADR\n- [ADR-008](../docs/adrs/008-testability-requirements.md)\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 2.",
+    "createdAt": "2026-05-13T18:34:54Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 177,
+    "title": "audit-tests: FiefManagement \u00e2\u20ac\u201d 5 behavior callbacks untested (ADR-008 80% hook target unmet)"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nWargAttackService exposes 4 public methods. **Two (HandleWargTargetHit line 32, WargAttack line 79) accept the sealed Agent type directly** \u00e2\u20ac\u201d they are NOT unit-testable.\n\nThe test file itself documents this at lines 9-20: *cannot be covered by unit tests: Agent is sealed and cannot be instantiated or substituted outside the Bannerlord process.*\n\n## Severity rationale \u00e2\u20ac\u201d P1\n- ADR-007 violation (sealed types must be wrapped by adapters) BLOCKING ADR-008 100% target.\n- Production-code refactor is required before tests can be written \u00e2\u20ac\u201d this is not a test gap, it is a test possibility gap.\n- 2 of 4 public methods cannot be regression-protected.\n\n## Phase 9 fix sketch\n1. Introduce IAgentAdapter (or extend existing if one exists \u00e2\u20ac\u201d verify before creating).\n2. Refactor WargAttackService to accept IAgentAdapter parameters instead of Agent.\n3. Add tests for the now-testable methods using Substitute.For<IAgentAdapter>().\n4. Update all call sites (likely in Patch_*_WargAttack Harmony patches) to construct the adapter at the patch boundary.\n\n## ADR\n- [ADR-007](../docs/adrs/007-adapter-pattern.md) \u00e2\u20ac\u201d adapter pattern (the violation being remediated)\n- [ADR-008](../docs/adrs/008-testability-requirements.md) \u00e2\u20ac\u201d the test target\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 3.",
+    "createdAt": "2026-05-13T18:34:55Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 178,
+    "title": "audit-tests: Warg \u00e2\u20ac\u201d refactor IWargAttackService to use IAgentAdapter (ADR-007); 2 methods currently untestable"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nTaomPregnancyModel.GetDailyChanceOfPregnancyForHero (22 lines, 5 branches) has NO matching test in TAOM.Tests/Features/RaceAge/. Service RaceAgeService is 100% covered; 2 of 3 models are covered (TaomAgeModel, TaomHeroCreationModel); TaomPregnancyModel is the gap.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- ADR-008 100% service target met for the service layer; gap is in the model layer (per cluster-gamemodels.md row 29).\n- Phase 6 #3 P3 and #13 P3 named the cross-tick consistency gap: RaceAgeBehavior.OnDailyTick and TaomPregnancyModel both read hero.Race same tick; no test asserts consistency.\n- Phase 6 #27, #28 flagged P2 naked .Spouse / .Clan access in the model (adapters.md violation).\n\n## Cross-feature references\n- #131 (RaceAge campaign-behavior cluster issue)\n- Phase 6 #3, #13 (same-tick consistency)\n- Phase 6 #27, #28 (naked-property access)\n\n## Phase 9 fix sketch\n1. Add unit tests for the 5 branches of GetDailyChanceOfPregnancyForHero (race-specific multipliers, default fallback, null spouse / null clan guards once #27/#28 land).\n2. Add a cross-feature consistency test: feed same hero through RaceAgeBehavior.OnDailyTick and TaomPregnancyModel.GetDailyChanceOfPregnancyForHero on the same simulated day, assert read consistency.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 4.",
+    "createdAt": "2026-05-13T18:34:56Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 179,
+    "title": "audit-tests: RaceAge \u00e2\u20ac\u201d TaomPregnancyModel.GetDailyChanceOfPregnancyForHero untested + cross-tick consistency"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nTaomPartyWageModel.GetTotalWage (~50 lines, multi-branch) has NO matching test in TAOM.Tests/Features/TroopProgression/. Services (VolunteerTierService, TroopCostService, VolunteerRecruitmentService) are 100% covered (42 tests, ratio 2.1).\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Largest untested method in TroopProgression's model layer (cluster-gamemodels.md row 32).\n- Phase 6 #32, #34, #148 \u00e2\u20ac\u201d inlines CareerPassiveHelper.ApplyFactor from override body. Couples TroopProgression -> CareerSystem at entry-point layer instead of via service composition.\n\n## Cross-feature references\n- Phase 6 #148 (CareerPassiveHelper architectural issue)\n- Phase 6 #32, #34 (TaomPartyWageModel coupling)\n\n## Phase 9 fix sketch\n1. Add tests for the 50-line GetTotalWage covering: tier-0..10 wages, culture wage feats, garrison wage feat, Rohan mounted feat, career TroopWages passive \u00e2\u20ac\u201d paired with no-passive baseline.\n2. Cross-reference with the CareerPassiveHelper fix track (Phase 6 #148) \u00e2\u20ac\u201d once helper is wrapped behind a service, update tests.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 5.",
+    "createdAt": "2026-05-13T18:34:58Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 180,
+    "title": "audit-tests: TroopProgression \u00e2\u20ac\u201d TaomPartyWageModel.GetTotalWage untested + CareerPassiveHelper coupling"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nCharacterCreation has 13 test files and 139 tests \u00e2\u20ac\u201d strong service-level coverage. But the cross-feature invariant *player race assigned at OnCharacterCreationFinalize survives save/load via RacePersistence* has no integration test.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 6 #171 documented the symptom (stale race ID + Prefix ordering risk).\n- The Messengers regression class (#121) was wiring; this is the data-flow analogue \u00e2\u20ac\u201d a behavior callback that captures race state must round-trip through SyncData.\n\n## Cross-feature references\n- Phase 6 #171 (CC x HeroRace x RaceAge stale race ID)\n- Issue #125 (Phase 3 CharacterCreation behavior findings)\n\n## Phase 9 fix sketch\n1. Add a test in either CharacterCreation or HeroRace test suite that:\n   - Constructs a fresh hero\n   - Assigns race via CharacterCreationContentService\n   - Drives RacePersistenceService.CaptureHeroRaces\n   - Round-trips through a SyncData store\n   - Drives RacePersistenceService.RestoreHeroRaces\n   - Asserts hero.Race is preserved\n2. If a test helper already exists (likely RacePersistenceServiceTests setup), extend it.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 6.",
+    "createdAt": "2026-05-13T18:34:59Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 181,
+    "title": "audit-tests: CharacterCreation+HeroRace \u00e2\u20ac\u201d race ID round-trip via save/load"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nCompanionTactics shares the deferred Patch_MissionTime_SetMovementOrder Harmony category with SmartCavalryAI (2 Postfixes on Formation.SetMovementOrder(MovementOrder)). No test validates the two postfixes coexist without clobbering each other on shared formation state.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 6 #1 / #170 named this as a cross-feature handshake test gap.\n- Postfix ordering on the same target method is a recurring TAOM bug class (see harness-facts.md Worktree isolation for parallel agent runs).\n\n## Cross-feature references\n- #170 (SmartCavalry handshake \u00e2\u20ac\u201d primary)\n\n## Phase 9 fix sketch\n1. Integration-style test: feed a single Formation through both Postfixes in deterministic order, assert state invariants survive (each postfix intent is preserved).\n2. Alternatively, add an interface-level test that asserts both subscribers are registered with the shared category.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 7.",
+    "createdAt": "2026-05-13T18:35:00Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 182,
+    "title": "audit-tests: CompanionTactics+SmartCavalryAI \u00e2\u20ac\u201d behavior ordering + shared SetMovementOrder postfix"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nRacePersistenceBehaviorTests cover only SyncData delegation. OnSessionLaunched restore logic (the path that re-applies captured race IDs to live heroes on game load) has NO test.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- The HeroRace x CharacterCreation cross-feature invariant has no integration verification (Phase 6 #171).\n- If race assignment moves around CharacterCreation lifecycle, RacePersistence cannot catch the drop.\n\n## Cross-feature references\n- Phase 6 #171 (companion of CharacterCreation issue)\n- Phase 3 #130 (HeroRace behavior findings)\n\n## Phase 9 fix sketch\n1. Add a test that mocks the CapturedHeroRaces store, drives OnSessionLaunched, and asserts each hero race is re-applied.\n2. Pair with the CharacterCreation+HeroRace cross-feature integration test for the round-trip case.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 8.",
+    "createdAt": "2026-05-13T18:35:02Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 183,
+    "title": "audit-tests: HeroRace \u00e2\u20ac\u201d RacePersistenceBehavior.OnSessionLaunched restore + cross-feature race ID persistence"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nNamedCompanionService.EnsureCompanionsPlaced has 13 tests via SpawnCompanions / EnsureCompanionsPlaced, but no explicit test for the *companion already recruited AND traveling with player party* state.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 3 #139 / Review #23 documented the regression class: Prisoner + Fugitive states caused companion teleportation bugs on load.\n- The state matrix should enumerate: NotSpawned / Spawned-Idle / Recruited-InPlayerParty / Recruited-Traveling / Prisoner / Fugitive / Dead. The test suite covers ~2 of these.\n\n## Cross-feature references\n- Phase 3 #139 (state-matrix warning)\n- feedback_observation_state_matrix (project memory \u00e2\u20ac\u201d state-matrix pattern)\n\n## Phase 9 fix sketch\n1. Enumerate the full state matrix.\n2. One test per state asserting EnsureCompanionsPlaced behaves correctly (skip / spawn / move / leave alone).\n3. Cross-reference observation-state-matrix memory entry for the sentinel-vs-terminal pattern.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 9.",
+    "createdAt": "2026-05-13T18:35:03Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 184,
+    "title": "audit-tests: NamedCompanions \u00e2\u20ac\u201d EnsureCompanionsPlaced state-matrix coverage"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nAdvancedCombat has two services. BoneCollisionService has 11 tests (good coverage). SpatialGridDebugService.RenderDebugVisualization at Main/Features/AdvancedCombat/Services/SpatialGridDebugService.cs:11 has ZERO tests.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 0 manifest flagged AdvancedCombat as *registered but consumption path unknown.*\n- ADR-008 100% service target unmet for this second service.\n\n## Phase 9 fix sketch\n1. First verify SpatialGridDebugService is actually invoked (grep call sites in Hooks/, Patches/, and SubModule lifecycle).\n2. If invoked: add unit tests for RenderDebugVisualization edge cases (empty grid, full grid, debug-mode-off skip).\n3. If not invoked: dead code \u00e2\u20ac\u201d consider removal under /deslop.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 10.",
+    "createdAt": "2026-05-13T18:35:04Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 185,
+    "title": "audit-tests: AdvancedCombat \u00e2\u20ac\u201d SpatialGridDebugService.RenderDebugVisualization untested"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nSpiderSpawnerService.SpawnSpiders at line 56 has 6 tests that verify the service is constructible and returns a list, but no verification of actual spawning behavior, team assignment, or position logic.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 0 manifest flagged Spider as *registered but consumption path unknown.*\n- SpiderAttackService (the other Spider service) has 14 tests with strong formula coverage; the integration gap is in SpiderSpawnerService.\n\n## Phase 9 fix sketch\n1. Verify where SpawnSpiders is invoked (likely a MissionBehavior or scene script).\n2. Add tests for: spawn count, team assignment, position derivation from anchor, monster ID resolution.\n3. Document the invocation path in docs/features/spider*.md.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 11.",
+    "createdAt": "2026-05-13T18:35:06Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 186,
+    "title": "audit-tests: Spider \u00e2\u20ac\u201d SpawnSpiders invocation contract + integration hook"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nBannerColorPersistence patch triplet (Clan.UpdateBannerColor, Clan.UpdateBannerColorsAccordingToKingdom, SPInventoryVM_UpdateCurrentCharacterIfPossible) has individual patch tests, but no test exercises the event ordering / sequencing across re-entry or custom-character-code assignments.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 6 #16 / #172 named the triplet as a cross-feature handshake.\n- 32 tests in 5 files cover service + config + individual patches; the integration is untested.\n\n## Cross-feature references\n- #172 (Banner triplet \u00e2\u20ac\u201d primary)\n- #122 (party-icon Initialize miss between SubModule.cs:176-177)\n\n## Phase 9 fix sketch\n1. Integration test that triggers all three patches in sequence with a re-entry scenario (character code set -> banner mutation -> another code set), asserts color stability.\n2. Pair with #122 fix verification.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 12.",
+    "createdAt": "2026-05-13T18:35:07Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 187,
+    "title": "audit-tests: BannerColorPersistence \u00e2\u20ac\u201d triplet event-ordering and re-entry sequencing"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nFactionMap has 7 services with 57 tests \u00e2\u20ac\u201d strong service-level coverage. But the 5 VM classes (FactionSelectionVM, FactionTraitItemVM, FactionBonusItemVM, FactionPerkItemVM, LandmarkItemVM) have zero unit tests, and the hook lifecycle (OnCreated -> OnTick x N -> OnFinalize) across re-entry has no integration test.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 6 #18 / #175 named _factionVM stale + _pendingPins bleed on CC re-entry.\n\n## Cross-feature references\n- #175 (FactionMap re-entry)\n\n## Phase 9 fix sketch\n1. Add a CultureStageView re-entry test: enter CC, select factions, exit (Finalize), re-enter without OnGameLoaded, assert pending pins are cleared and _factionVM is fresh.\n2. Optionally add VM-level unit tests for the 5 VM classes.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 13.",
+    "createdAt": "2026-05-13T18:35:08Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 188,
+    "title": "audit-tests: FactionMap \u00e2\u20ac\u201d CultureStageView re-entry lifecycle (pending pins, stale VM)"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nFormationLayoutService.ComputeUnitPlanePosition line 74 (`if (formation.RepresentativeIsCavalry) return null;`) and IsMixedFormationInternal line 191 (`if (formation.RepresentativeIsCavalry) return false;`) \u00e2\u20ac\u201d both guards have ZERO tests.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 6 #1 / #170 named these exact lines as the SmartCavalryAI cross-feature contract.\n- The two-feature handshake fails silently if either guard regresses.\n\n## Cross-feature references\n- #170 (SmartCavalry handshake \u00e2\u20ac\u201d primary)\n\n## Phase 9 fix sketch\n1. FormationLayoutService_ComputeUnitPlanePosition_ReturnsNullForCavalryFormation\n2. FormationLayoutService_IsMixedFormationInternal_ReturnsFalseForCavalryFormation\n3. Set representativeIsCavalry.Returns(true) on the IFormationAdapter mock; assert the guarded behavior.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 14.",
+    "createdAt": "2026-05-13T18:35:09Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 189,
+    "title": "audit-tests: MixedFormations \u00e2\u20ac\u201d SmartCavalryAI handshake (RepresentativeIsCavalry guards)"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nSmartCavalryAI own RepresentativeIsCavalry guards in CavalryChargeService (line 66) and CavalryPathPlanner (line 39) ARE tested in isolation. The cross-feature contract \u00e2\u20ac\u201d *a cavalry formation set to a mixed layout is skipped by MixedFormations across the call boundary* \u00e2\u20ac\u201d is untested.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Phase 6 #1 / #170 named the cross-feature handshake test gap.\n- The two features guards are siloed; no integration test verifies the call-boundary behavior.\n\n## Cross-feature references\n- #170 (SmartCavalry handshake \u00e2\u20ac\u201d primary)\n\n## Phase 9 fix sketch\n1. Cross-cutting integration test: a cavalry formation, set MixedFormations layout, call MixedFormations.ComputeUnitPlanePosition, assert null. Then drive SmartCavalryAI charge state machine, assert no contention.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 15.",
+    "createdAt": "2026-05-13T18:35:11Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 190,
+    "title": "audit-tests: SmartCavalryAI \u00e2\u20ac\u201d cross-feature integration with MixedFormations (cavalry exclusion)"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nMessengerService has 61 tests and MessengerStateStore is exhaustively validated. But the audit-motivating crash (#121) was a wiring class bug: MessengerCampaignBehavior was registered in code but NOT added to IoC / SubModule behavior list. None of the current tests would have caught that.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- This is the canonical Phase 7 regression class. ADR-008 does not strictly mandate wiring-class tests, but #121 demonstrates the cost of not having one.\n- A single smoke test MessengerCampaignBehavior_RegisterEvents_RegistersListeners() would have caught the crash.\n\n## Cross-feature references\n- #121 (the audit-motivating issue)\n- Phase 3 #123 (Messengers behavior cluster finding)\n\n## Phase 9 fix sketch\n1. Add MessengerCampaignBehaviorTests.cs (verify if it exists):\n   - RegisterEvents_RegistersListenersForAllExpectedEvents \u00e2\u20ac\u201d assert listener count != 0 post-RegisterEvents\n   - SyncData_RoundTripsExpectedFields\n2. Consider a generic IoC-registration test pattern that all behaviors can adopt \u00e2\u20ac\u201d Phase 9 might pull this into a base class.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 16.",
+    "createdAt": "2026-05-13T18:35:12Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 191,
+    "title": "audit-tests: Messengers \u00e2\u20ac\u201d IoC + RegisterEvents wiring regression smoke test (#121)"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nSettlementGuardService has 27 tests (strong settlement -> clan -> culture fallback coverage). But the feature uses manual _harmony.Patch(...) calls (no [HarmonyPatchCategory] \u00e2\u20ac\u201d Phase 0 #5). NO test verifies the patches bind or the service is invoked at mission-init time.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Same wiring regression class as Messengers #121. A regression in patch registration ships untested.\n- The manual patch pattern bypasses the category sweep, so no other gate exists.\n\n## Cross-feature references\n- Phase 0 Finding #5 (manual-patch features)\n- #121 (regression-class parent)\n\n## Phase 9 fix sketch\n1. Add SettlementGuardPatchWiringTests.cs that:\n   - Builds a Harmony instance\n   - Calls the feature patch-application code\n   - Asserts the patches are registered on the expected target methods\n2. (Optional integration) drive a fake mission init and assert SettlementGuardService receives the expected calls.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 17.",
+    "createdAt": "2026-05-13T18:35:13Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 192,
+    "title": "audit-tests: SettlementGuards \u00e2\u20ac\u201d manual Harmony patch wiring regression test"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nSiegeDismountService has 24 tests (strong skip-guard + capture/clear/deposit / auto-remount coverage). But the feature uses manual _harmony.Patch(...) calls. NO test verifies the patches bind or OnMissionStart / OnMissionEnd are invoked at the right mission-lifecycle hook.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- Same wiring regression class as SettlementGuards / Messengers #121.\n\n## Cross-feature references\n- Phase 0 Finding #5 (manual-patch features)\n- #121 (regression-class parent)\n\n## Phase 9 fix sketch\n1. Add SiegeDismountPatchWiringTests.cs mirroring the SettlementGuards pattern.\n2. Verify the mission-lifecycle binding (OnMissionStart, OnMissionEnd).\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 18.",
+    "createdAt": "2026-05-13T18:35:15Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 193,
+    "title": "audit-tests: SiegeDismount \u00e2\u20ac\u201d manual Harmony patch wiring regression test"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nThe discount-not-applied-to-debit overpay bug (Phase 6 #14 / #174) was fixed but no regression test was added in the same PR. Current tests cover CanAffordUpgrade with simple costs + passive discount; no test uses a tiered-cost structure.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- *Fix-without-regression-test* is a recurring TAOM anti-pattern. Phase 7 catches several instances \u00e2\u20ac\u201d this one is the cleanest example.\n- Without the regression test the bug can re-emerge silently.\n\n## Cross-feature references\n- #174 (SpecialResources x Career discount overpay \u00e2\u20ac\u201d primary)\n\n## Phase 9 fix sketch\n1. Add a test CanAffordUpgrade_TieredCostWithPassiveDiscount_GateAndDebitParity:\n   - Base cost 10, tier-2 multiplier 1.5x -> 15\n   - Passive discount -30% -> 10.5\n   - Assert CanAffordUpgrade and SpendForUpgrade use the same final cost (10.5)\n2. Pair with the existing SpendForUpgrade_CustomResourceUpgradeCostModifier_ReducesCost test.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 19.",
+    "createdAt": "2026-05-13T18:35:16Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 194,
+    "title": "audit-tests: SpecialResources \u00e2\u20ac\u201d tiered-cost + passive-discount regression test (#174)"
+  },
+  {
+    "body": "## Phase 7 Finding\n\nTroopWeight exposes 4 IOn* hook interfaces with corresponding hook implementations:\n- PartyBaseNumberOfAllMembersHook\n- PartyBaseNumberOfRegularMembersHook\n- PartyVMPopulatePartyListLabelHook\n- RecruitmentVMRefreshPartyPropertiesHook\n\n**None of the 4 hooks have tests.** Only the underlying TroopWeightService (8 public methods, 19 tests) and the XML loader are covered.\n\n## Severity rationale \u00e2\u20ac\u201d P2\n- ADR-008 80% behavior-hook coverage explicitly unmet \u00e2\u20ac\u201d cleanest violation in the audit.\n- Each hook -> service call path is the integration the Harmony patches rely on; a regression in the hook implementation slips past service-level tests.\n\n## Phase 9 fix sketch\n1. Add one test file per hook implementation:\n   - PartyBaseNumberOfAllMembersHookTests.cs\n   - PartyBaseNumberOfRegularMembersHookTests.cs\n   - PartyVMPopulatePartyListLabelHookTests.cs\n   - RecruitmentVMRefreshPartyPropertiesHookTests.cs\n2. ~2-3 tests per hook covering: invoke path, service-method routing, error/null guards.\n3. Consider a shared test base if the hook pattern is uniform.\n\n## Phase 7 source\nSee docs/audits/test-coverage.md row 20.",
+    "createdAt": "2026-05-13T18:35:17Z",
+    "labels": [
+      {
+        "id": "LA_kwDORAfr1s8AAAACjEr-Tg",
+        "name": "audit-impl",
+        "description": "TAOM feature audit Phase 2+ \u00e2\u20ac\u201d implementation defect surfaced by cluster review",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDORAfr1s8AAAACjFkziQ",
+        "name": "audit-tests",
+        "description": "TAOM feature audit Phase 7 \u00e2\u20ac\u201d test coverage gap",
+        "color": "FBCA04"
+      }
+    ],
+    "number": 195,
+    "title": "audit-tests: TroopWeight \u00e2\u20ac\u201d 4 IOn* hook implementations untested; ADR-008 80% hook coverage unmet"
+  }
+]
