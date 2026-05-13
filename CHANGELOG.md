@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #151 + #155 (Category 2 patch hygiene + threading hardening)
+
+Two small audit fixes batched together. Both are pure-mechanical, single-file changes matching their audit's specified solutions verbatim.
+
+- **#151 (P2)** — `Main/Features/HeroRace/Hooks/ActionSetCode_GenerateActionSetNameWithSuffix_Patch.cs` — `public class` → `public static class`. Harmony 2 attribute-based patches require static; non-static causes unpredictable application behavior. All other TAOM patches were static; this one was the outlier. The audit-flagged "possible no-op duplicate of vanilla" sub-finding is deferred (separate scope — needs vanilla `ActionSetCode.GenerateActionSetNameWithSuffix` decompile + behavioral comparison).
+- **#155 (P2)** — `Main/Features/SmartCavalryAI/CavalryChargeService.cs` — added `private readonly object _lock = new();` and wrapped `_states` accesses (GetState, OnMissionEnd, HandleChargeOrder, Tick) plus the downstream `state.State = ...` mutations in `lock (_lock) { ... }`. Mirrors the FormationLayoutService pattern Codex review #35 established for the sister service. Today Patch31's team filter structurally prevents enemy-team threads from reaching the service, but the absence of locking was fragile — a future refactor of Patch31 could re-introduce the race silently. Belt-and-braces lock now.
+
+Build green, 1958/1958 tests pass.
+
 ### Fix — TaomPregnancyModel heroAge truncation regression (Codex HIGH catch)
 
 Codex independent review of the Phase 9b autonomous-run production changes (commits `ec054a4..303adbf`) caught a HIGH regression I introduced in commit `57e9d9b` (#179 ComputeBaseChance extraction). The extraction commit passed `(int)hero.Age` to the new helper, truncating fractional age toward zero — a 44.9-year-old hero computed identically to a 44-year-old, materially shifting late-window pregnancy chance vs vanilla `DefaultPregnancyModel` which uses `Hero.Age` (float) directly.

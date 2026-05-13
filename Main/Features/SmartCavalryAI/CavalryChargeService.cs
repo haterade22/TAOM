@@ -31,6 +31,14 @@ public sealed class CavalryChargeService : ICavalryChargeService
     private readonly ICavalryPathPlanner _pathPlanner;
 
     private readonly Dictionary<object, CavalryFormationState> _states = new();
+    // Phase 9b #155 — mirrors FormationLayoutService._lock pattern. Today Patch31's team filter
+    // structurally prevents enemy-team threads from reaching the service, but the absence of
+    // locking is fragile. If a future refactor of Patch31 (or a different caller path) ever
+    // invokes HandleChargeOrder / Tick from an async AI thread, plain Dictionary mutations
+    // would race main-thread reads/writes from BattleActionBar — same regression class Codex
+    // review #35 caught for the sister service. Belt-and-braces lock now; performance cost is
+    // negligible because only player-team cavalry formations reach this code path.
+    private readonly object _lock = new();
 
     public CavalryChargeService(
         ISmartCavalryAISettingsProvider settings,
@@ -43,12 +51,18 @@ public sealed class CavalryChargeService : ICavalryChargeService
     public CavalryState GetState(object formationKey)
     {
         if (formationKey == null) return CavalryState.Idle;
-        return _states.TryGetValue(formationKey, out var state) ? state.State : CavalryState.Idle;
+        lock (_lock)
+        {
+            return _states.TryGetValue(formationKey, out var state) ? state.State : CavalryState.Idle;
+        }
     }
 
     public void OnMissionEnd()
     {
-        _states.Clear();
+        lock (_lock)
+        {
+            _states.Clear();
+        }
     }
 
     public void HandleChargeOrder(
@@ -65,33 +79,40 @@ public sealed class CavalryChargeService : ICavalryChargeService
         if (!battlefield.HasPlayerTeam) return;
         if (!cav.RepresentativeIsCavalry) return;
 
-        // Idempotency guard: if the formation is already mid-state-machine (Forming, Charging,
-        // PassingThrough, Reforming, Rerouting), a fresh Charge order would otherwise reset
-        // the line-charge positioning and throw away alignment progress. The user's intent on
-        // a double-tap is "I want to charge that thing"; we're already executing that.
-        if (_states.TryGetValue(cav.FormationKey, out var existing)
-            && existing.State != CavalryState.Idle)
+        // Phase 9b #155 — lock for the entire state-machine entry. BeginReroute / InitiateLineCharge
+        // both call GetOrCreateState (which mutates _states) and then state.State = ... — all of
+        // which must be lock-protected together so an interleaved Tick on the same FormationKey
+        // can't observe half-mutated state.
+        lock (_lock)
         {
-            return;
-        }
-
-        // Decide: reroute or initiate line charge?
-        var avoidFriendlies = _settings.AvoidFriendlies;
-        var lineSpacing = _settings.ChargeLineSpacing;
-
-        if (avoidFriendlies)
-        {
-            var friendlies = battlefield.GetFriendlyFormationsExcluding(cav.FormationKey);
-            if (_pathPlanner.TryGetReroutePoint(
-                    cav.CurrentPosition, targetPosition.AsVec2,
-                    friendlies, out var waypoint))
+            // Idempotency guard: if the formation is already mid-state-machine (Forming, Charging,
+            // PassingThrough, Reforming, Rerouting), a fresh Charge order would otherwise reset
+            // the line-charge positioning and throw away alignment progress. The user's intent on
+            // a double-tap is "I want to charge that thing"; we're already executing that.
+            if (_states.TryGetValue(cav.FormationKey, out var existing)
+                && existing.State != CavalryState.Idle)
             {
-                BeginReroute(cav, commands, battlefield, targetToken, waypoint);
                 return;
             }
-        }
 
-        InitiateLineCharge(cav, commands, battlefield, targetToken, targetPosition, lineSpacing, currentMissionTime);
+            // Decide: reroute or initiate line charge?
+            var avoidFriendlies = _settings.AvoidFriendlies;
+            var lineSpacing = _settings.ChargeLineSpacing;
+
+            if (avoidFriendlies)
+            {
+                var friendlies = battlefield.GetFriendlyFormationsExcluding(cav.FormationKey);
+                if (_pathPlanner.TryGetReroutePoint(
+                        cav.CurrentPosition, targetPosition.AsVec2,
+                        friendlies, out var waypoint))
+                {
+                    BeginReroute(cav, commands, battlefield, targetToken, waypoint);
+                    return;
+                }
+            }
+
+            InitiateLineCharge(cav, commands, battlefield, targetToken, targetPosition, lineSpacing, currentMissionTime);
+        }
     }
 
     private void BeginReroute(
@@ -151,25 +172,33 @@ public sealed class CavalryChargeService : ICavalryChargeService
     {
         if (cav == null || commands == null) return;
         if (cav.FormationKey == null) return;
-        if (!_states.TryGetValue(cav.FormationKey, out var state)) return;
 
-        switch (state.State)
+        // Phase 9b #155 — lock for the entire tick. The Update* methods mutate state.State and
+        // other CavalryFormationState fields; keeping them inside the lock prevents a concurrent
+        // HandleChargeOrder from observing a half-transitioned state. All Update* methods are
+        // private and called only from here, so they don't need their own lock.
+        lock (_lock)
         {
-            case CavalryState.Forming:
-                UpdateForming(cav, commands, state);
-                break;
-            case CavalryState.Charging:
-                UpdateCharging(cav, state);
-                break;
-            case CavalryState.PassingThrough:
-                UpdatePassingThrough(cav, commands, state);
-                break;
-            case CavalryState.Reforming:
-                UpdateReforming(cav, state);
-                break;
-            case CavalryState.Rerouting:
-                UpdateRerouting(cav, commands, state);
-                break;
+            if (!_states.TryGetValue(cav.FormationKey, out var state)) return;
+
+            switch (state.State)
+            {
+                case CavalryState.Forming:
+                    UpdateForming(cav, commands, state);
+                    break;
+                case CavalryState.Charging:
+                    UpdateCharging(cav, state);
+                    break;
+                case CavalryState.PassingThrough:
+                    UpdatePassingThrough(cav, commands, state);
+                    break;
+                case CavalryState.Reforming:
+                    UpdateReforming(cav, state);
+                    break;
+                case CavalryState.Rerouting:
+                    UpdateRerouting(cav, commands, state);
+                    break;
+            }
         }
     }
 

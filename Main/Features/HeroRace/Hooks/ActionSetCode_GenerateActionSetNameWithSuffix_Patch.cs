@@ -7,7 +7,10 @@ namespace TAOM.Features.HeroRace.Hooks;
 
 [HarmonyPatch(typeof(ActionSetCode), "GenerateActionSetNameWithSuffix")]
 [HarmonyPatchCategory("Late_ActionSetOverride")]
-public class ActionSetCode_GenerateActionSetNameWithSuffix_Patch
+// Phase 9b #151 — Harmony 2 attribute-based patches require `public static class`. A non-static
+// patch class causes unpredictable application behavior (Harmony tries to instantiate it under
+// some conditions). All other TAOM patches are static; this one was the outlier.
+public static class ActionSetCode_GenerateActionSetNameWithSuffix_Patch
 {
     [HarmonyPrefix]
     public static bool Prefix(ref string __result, Monster monster, bool isFemale, string suffix)
