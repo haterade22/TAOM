@@ -77,6 +77,12 @@ public class NamedCompanionService : INamedCompanionService
             if (!_companionAdapter.HeroExists(companion.CharacterId)) continue;
             if (!_companionAdapter.IsHeroAlive(companion.CharacterId)) continue;
             if (_companionAdapter.IsRecruitedOrInParty(companion.CharacterId)) continue;
+            // #127 P1 — Entity State Matrix completion. Prisoner / Fugitive companions previously
+            // slipped through ALL guards (PartyBelongedTo=null, CurrentSettlement=null,
+            // StayingInSettlement=null) and got force-placed every load — corrupting captor prison
+            // rosters and resetting fugitive state to Active.
+            if (_companionAdapter.IsHeroPrisoner(companion.CharacterId)) continue;
+            if (_companionAdapter.IsHeroFugitive(companion.CharacterId)) continue;
             if (_companionAdapter.IsPlacedInSettlement(companion.CharacterId)) continue;
 
             try
@@ -90,5 +96,13 @@ public class NamedCompanionService : INamedCompanionService
                     $"[NamedCompanions] Failed to re-place '{companion.CharacterId}': {ex.Message}");
             }
         }
+    }
+
+    public void ResetSession()
+    {
+        // #127 R1 — singleton field reset on session launch so campaign 2 in the same process can
+        // re-run SpawnCompanions. Without this, a new campaign would silently skip all companion
+        // placement because `_spawned` from the prior campaign survives.
+        _spawned = false;
     }
 }

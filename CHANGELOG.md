@@ -2,6 +2,17 @@
 
 ## 2026-05-13
 
+### Phase 9b — fix NamedCompanions Entity State Matrix completion (#127 + #184)
+
+P1 cross-feature fix for the Review #23 regression class plus its missing state-matrix tests. Pre-fix, Prisoner companions (mobile captor, `PartyBelongedTo=null`, no settlement) and Fugitive companions (`HeroState=Fugitive`, all party fields null) slipped through ALL guards in `EnsureCompanionsPlaced` and got force-placed via `EnterSettlementAction` every load — corrupting captor prison rosters and resetting fugitive state to Active. Plus a P1 singleton-state bug: `_spawned` survived across campaigns in the same Bannerlord process so campaign 2 silently skipped all companion placement.
+
+- **`Main/Adapters/INamedCompanionAdapter.cs`** + **`NamedCompanionAdapter.cs`** — added `IsHeroPrisoner` (Hero.IsPrisoner ∪ PartyBelongedToAsPrisoner != null) + `IsHeroFugitive` (HeroState == Fugitive); broadened `IsRecruitedOrInParty` to include `PartyBelongedToAsPrisoner` per #127 P2.
+- **`Main/Features/NamedCompanions/INamedCompanionService.cs`** + **`NamedCompanionService.cs`** — added `ResetSession()` clearing `_spawned`. `EnsureCompanionsPlaced` now checks IsHeroPrisoner + IsHeroFugitive before placement.
+- **`Main/Features/NamedCompanions/NamedCompanionBehavior.cs`** — subscribed `ResetSession()` to `OnNewGameCreatedEvent` (NOT `OnSessionLaunchedEvent` — see RCA). Codex review caught that `OnSessionLaunched` fires AFTER `OnNewGameCreatedPartialFollowUpEvent`, which would have cleared the latch within the same session. Per decompiled `CampaignEvents.cs:2078-2084`, `OnNewGameCreatedEvent` fires FIRST (line 2080), then the partial-follow-up loop (line 2083) — so the reset correctly lands before `SpawnCompanions` runs and leaves the latch set.
+- **`TAOM.Tests/Features/NamedCompanions/NamedCompanionServiceTests.cs`** — 3 new tests: `EnsureCompanionsPlaced_PrisonerCompanion_SkipsPlacement`, `EnsureCompanionsPlaced_FugitiveCompanion_SkipsPlacement`, `ResetSession_AllowsSpawnCompanionsAgainInSameProcess`.
+- **`docs/reviews/rca-named-companions-state-matrix-2026-05-13.md` — NEW.** Documents the lifecycle-ordering near-miss for the audit-spec-vs-codebase pattern. Codex independently re-read the decompiled source and caught what the audit's fix sketch got wrong.
+- `/codex-verify` MEDIUM finding addressed pre-commit. 1941 → 1944 tests, all passing.
+
 ### Phase 9b — close #186 Spider SpawnSpiders Monster lookup tests (Category 4e)
 
 The Phase 7 audit body slightly overstated the gap on `SpiderSpawnerService` — `ComputeSpawnPosition` math IS tested at `SpiderSpawnerServiceTests.cs:84-114` (radius bounds + z/w preservation). The actual gap was the **monster lookup** path and the **lookup ID contract**.

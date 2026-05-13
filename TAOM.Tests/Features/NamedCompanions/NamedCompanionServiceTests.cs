@@ -271,6 +271,88 @@ public class NamedCompanionServiceTests
         _companionAdapter.DidNotReceive().PlaceInSettlement(Arg.Any<string>(), Arg.Any<string>());
     }
 
+    // ── Entity State Matrix completion (#127 / #184) ──
+    // Phase 9b: prior guards (HeroExists/IsHeroAlive/IsRecruitedOrInParty/IsPlacedInSettlement) covered
+    // states 1-4 of the 6-state Entity State Matrix but missed Prisoner and Fugitive. Both states have
+    // PartyBelongedTo=null and no CurrentSettlement/StayingInSettlement — they slipped through ALL
+    // guards and got force-placed via EnterSettlementAction every load, corrupting captor prison
+    // rosters and resetting fugitive state to Active. These tests pin the new IsHeroPrisoner /
+    // IsHeroFugitive guards so a future refactor can't silently re-introduce the regression.
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_PrisonerCompanion_SkipsPlacement()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_prisoner",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_prisoner").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_prisoner").Returns(true);
+        _companionAdapter.IsRecruitedOrInParty("nc_prisoner").Returns(false);
+        _companionAdapter.IsPlacedInSettlement("nc_prisoner").Returns(false);
+        _companionAdapter.IsHeroPrisoner("nc_prisoner").Returns(true);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.DidNotReceive().PlaceInSettlement(Arg.Any<string>(), Arg.Any<string>());
+        _companionAdapter.DidNotReceive().MarkAsMet(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_FugitiveCompanion_SkipsPlacement()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_fugitive",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_fugitive").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_fugitive").Returns(true);
+        _companionAdapter.IsRecruitedOrInParty("nc_fugitive").Returns(false);
+        _companionAdapter.IsPlacedInSettlement("nc_fugitive").Returns(false);
+        _companionAdapter.IsHeroPrisoner("nc_fugitive").Returns(false);
+        _companionAdapter.IsHeroFugitive("nc_fugitive").Returns(true);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.DidNotReceive().PlaceInSettlement(Arg.Any<string>(), Arg.Any<string>());
+        _companionAdapter.DidNotReceive().MarkAsMet(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetSession_AllowsSpawnCompanionsAgainInSameProcess()
+    {
+        // #127 R1 — _spawned is a singleton field. Without ResetSession, a second campaign in the
+        // same Bannerlord process would have _spawned=true from campaign 1 and SpawnCompanions would
+        // early-exit, leaving the new campaign with zero placed companions.
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_a").Returns(true);
+        _raceManager.GetRaceIdFromName("human").Returns(0);
+
+        // Campaign 1
+        _sut.SpawnCompanions();
+        _companionAdapter.Received(1).PlaceInSettlement("nc_a", "town_1");
+
+        // Campaign 2 - without ResetSession, the second call is a no-op (existing
+        // SpawnCompanions_CalledTwice_OnlySpawnsOnce test) — ResetSession clears the latch.
+        _companionAdapter.ClearReceivedCalls();
+        _sut.ResetSession();
+        _sut.SpawnCompanions();
+
+        _companionAdapter.Received(1).PlaceInSettlement("nc_a", "town_1");
+    }
+
     private void SetupCompanions(params NamedCompanionDefinition[] companions)
     {
         _configProvider.GetCompanions().Returns(new List<NamedCompanionDefinition>(companions));
