@@ -4,6 +4,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.HeroRace;
+using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Tests.Features.HeroRace;
 
@@ -177,5 +178,89 @@ public class RacePersistenceServiceTests
         _sut.CaptureHeroRaces();
 
         Assert.AreEqual(1, _sut.CapturedRaceCount);
+    }
+
+    // --- Phase 9b #181 — CharacterCreation × HeroRace round-trip via save/load ---
+    //
+    // Closes the cross-feature contract gap from Phase 6 #171: a player race assigned at
+    // OnCharacterCreationFinalize must survive save/load via RacePersistence. Existing tests
+    // verify Capture and Restore independently; this one ties them into a single round-trip
+    // simulating the production save/load handoff.
+    //
+    // SyncData is the engine handoff (Dictionary<string,int> serialized via IDataStore). The
+    // test simulates the engine's role by reading `_heroRaceMap` through SyncData and re-injecting
+    // it on a fresh service instance.
+
+    [TestMethod]
+    public void CaptureRestore_RoundTrip_PreservesPlayerRaceSetByCharacterCreation()
+    {
+        // Step 1 — CharacterCreation finalize: player gets race=2 (elf).
+        const string playerId = "player_hero";
+        const int elfRace = 2;
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo(playerId, elfRace),
+            new HeroRaceInfo("npc_dwarf", 1)
+        });
+
+        // Step 2 — OnBeforeSave: capture races
+        _sut.CaptureHeroRaces();
+        Assert.AreEqual(2, _sut.CapturedRaceCount, "Capture must include both non-human heroes");
+
+        // Step 3 — Save: simulate engine SyncData by capturing the ref-parameter value via fake.
+        var savingStore = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(savingStore);
+        var savedSnapshot = savingStore.LastSavedDict;
+        Assert.IsNotNull(savedSnapshot, "SyncData must publish a snapshot when saving");
+        Assert.AreEqual(elfRace, savedSnapshot[playerId], "Player race must be in the save snapshot");
+        Assert.AreEqual(1, savedSnapshot["npc_dwarf"], "NPC race must also be in the save snapshot");
+
+        // Step 4 — Load: NEW service instance (simulates Bannerlord process restart),
+        // SyncData (loading) populates the new instance's map from the persisted snapshot.
+        var freshAdapter = Substitute.For<IHeroRosterAdapter>();
+        var freshService = new RacePersistenceService(freshAdapter, Substitute.For<IModLogger>());
+        var loadingStore = new RoundTripDataStore { IsSaving = false, NextLoadDict = savedSnapshot };
+        freshService.SyncRaceData(loadingStore);
+        Assert.AreEqual(2, freshService.CapturedRaceCount, "Fresh instance must rehydrate the snapshot");
+
+        // Step 5 — OnSessionLaunched restore: heroes are loaded with race=0 (vanilla), Restore
+        // re-applies the captured race=2 to the player.
+        freshAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo(playerId, 0),
+            new HeroRaceInfo("npc_dwarf", 0)
+        });
+        freshService.RestoreHeroRaces();
+
+        freshAdapter.Received(1).SetHeroRace(playerId, elfRace);
+        freshAdapter.Received(1).SetHeroRace("npc_dwarf", 1);
+    }
+}
+
+/// <summary>
+/// Minimal hand-rolled IDataStore stub for Phase 9b #181 round-trip test. NSubstitute can't easily
+/// model ref-parameter `SyncData<T>(string, ref T)` with the Do-callback pattern, so we capture
+/// the saved dict on save and re-inject it on load directly.
+/// </summary>
+internal class RoundTripDataStore : IDataStore
+{
+    public bool IsSaving { get; set; }
+    public bool IsLoading => !IsSaving;
+    public Dictionary<string, int> LastSavedDict { get; private set; }
+    public Dictionary<string, int> NextLoadDict { get; set; }
+
+    public bool SyncData<T>(string key, ref T data)
+    {
+        if (IsSaving && data is Dictionary<string, int> dict)
+        {
+            LastSavedDict = new Dictionary<string, int>(dict);
+            return true;
+        }
+        if (!IsSaving && NextLoadDict != null)
+        {
+            data = (T)(object)NextLoadDict;
+            return true;
+        }
+        return false;
     }
 }

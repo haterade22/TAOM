@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #181 CharacterCreation × HeroRace race-ID round-trip (Category 4c)
+
+The cross-feature contract from Phase 6 #171: a player race assigned at OnCharacterCreationFinalize must survive save/load via RacePersistence. Existing tests verified Capture and Restore independently but never wired them into a single round-trip through the SyncData serialization handoff.
+
+- **`TAOM.Tests/Features/HeroRace/RacePersistenceServiceTests.cs`** — added `CaptureRestore_RoundTrip_PreservesPlayerRaceSetByCharacterCreation`. Simulates the full save/load cycle: CC sets player race=2 (elf) → CaptureHeroRaces → SyncData(saving) via a hand-rolled `RoundTripDataStore` IDataStore stub that captures the dict → NEW service instance (simulating Bannerlord process restart) → SyncData(loading) re-injects the snapshot → fresh adapter shows heroes at race=0 → RestoreHeroRaces re-applies the persisted race-2. NSubstitute couldn't easily mock `SyncData<T>(string, ref T)` with the Do-callback pattern (ref args are tricky), so the test uses a 30-line hand-rolled stub.
+- 1956 → 1957 tests, all passing.
+
 ### Phase 9b — close #183 HeroRace OnSessionLaunched + persistence wiring tests (Category 4c)
 
 Pre-this, `RacePersistenceBehaviorTests` covered only `SyncData` delegation. `OnSessionLaunched` (which re-applies captured race IDs to live heroes on load) and `OnBeforeSave` (which captures them) had ZERO tests.
