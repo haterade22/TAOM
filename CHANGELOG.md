@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #183 HeroRace OnSessionLaunched + persistence wiring tests (Category 4c)
+
+Pre-this, `RacePersistenceBehaviorTests` covered only `SyncData` delegation. `OnSessionLaunched` (which re-applies captured race IDs to live heroes on load) and `OnBeforeSave` (which captures them) had ZERO tests.
+
+- **`TAOM.Tests/Features/HeroRace/RacePersistenceBehaviorTests.cs`** — 2 new source-content assertions:
+  - `RegisterEvents_SubscribesOnBeforeSaveAndOnSessionLaunched` — pins both `CampaignEvents.OnBeforeSaveEvent` (capture) and `CampaignEvents.OnSessionLaunchedEvent` (restore) subscriptions in the production source. Drop either subscription and the cross-feature contract with CharacterCreation (Phase 6 #171, race IDs from CC must round-trip through save/load) silently breaks.
+  - `MainSubModule_AndIoC_RegisterRacePersistenceBehavior` — pins `AddBehavior` + `HeroRaceIoC.RegisterHeroRaceFeature` wiring.
+- 1954 → 1956 tests, all passing.
+
 ### Phase 9b — close #189 + #190 SmartCavalryAI × MixedFormations handshake tests (Category 4c)
 
 The two-feature contract: SmartCavalryAI owns cavalry formation behavior; MixedFormations defers via two `RepresentativeIsCavalry` guards in `FormationLayoutService` (lines 74 and 191). Phase 7 audit found both guards had ZERO tests — a refactor of either feature could silently re-introduce the P1 charge-line overwrite Codex 2026-05-06 already caught.
