@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #193 SiegeDismount MissionBehavior wiring test (Category 4a, mechanism-corrected)
+
+The Phase 4 audit originally claimed SiegeDismount uses manual `_harmony.Patch(...)` like SettlementGuards (#192). Phase 9a verification (Codex confirmed) corrected the mechanism: SiegeDismount wires via `mission.AddMissionBehavior(new SiegeDismountMissionBehavior())` inside `Main/SubModule.cs::OnMissionBehaviorInitialize`. The wiring is uniquely vulnerable in TWO ways: drop the `AddMissionBehavior` line and the behavior never registers (silent broken siege dismount), or drop the `SiegeDismountIoC.RegisterSiegeDismountFeature` line and the behavior ctor's `IoC.Resolve<ISiegeDismountService>()` throws at mission start.
+
+- **`TAOM.Tests/Features/SiegeDismount/SiegeDismountWiringTests.cs` — NEW (3 tests).** `MainIoCConfigure_IncludesSiegeDismountFeatureRegistration` (source-content), `MainSubModule_AddsSiegeDismountMissionBehaviorOnMissionInit` (two-part assertion: the literal call AND the `OnMissionBehaviorInitialize` method that contains it — protects against the call surviving inside a comment or unreachable branch), `SiegeDismountMissionBehavior_IsMissionBehavior_LogicType` (type sanity: must inherit `MissionBehavior` so `AddMissionBehavior` accepts it).
+- 1912 → 1915 tests, all passing.
+
 ### Phase 9b — close #192 SettlementGuards manual-Harmony wiring test (Category 4a)
 
 Mirror of the #191 pattern, scoped to SettlementGuards' two manual `_harmony.Patch(...)` sites. Unlike most TAOM features, SettlementGuards has no `[HarmonyPatchCategory]` because both target methods are private instance methods that AccessTools can only resolve at runtime — the patches are applied directly from `Main/SubModule.cs` via `_harmony.Patch(...)`. That makes the wiring uniquely vulnerable to a Messengers-class regression.
