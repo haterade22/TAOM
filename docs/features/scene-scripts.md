@@ -121,20 +121,33 @@ Pairs separated by commas: `{0:0.5},{50:2},{100:0.5}`. Each pair is `{percent:st
 4. **File header on every TAOM file** porting external inspiration: cite source + spec doc + ATTRIBUTION.md.
 5. **Append to `docs/scene-scripts/ATTRIBUTION.md`** with the new entry.
 
-## How to verify CS_Road in the editor (hand-off checklist for map maker)
+## Editor compatibility (IMPORTANT — read before launching the modding kit)
 
-1. Open Bannerlord scene editor with TAOM + TAOM_Map active.
-2. Open a test scene; add a generic entity.
-3. Component picker → search "CS_Road" → attach.
-4. Verify all 16 editor fields appear with correct defaults (cross-check against `docs/scene-scripts/specs/cs-road.md`).
-5. Click the entity, click `Readme` button → editor log shows StepCurve format help.
-6. Create a Path entity, name it `test_path`, draw a few control points.
-7. On the CS_Road entity, set `PathName = "test_path"`, pick a material, click `Generate`.
-8. Confirm a road quad appears along the path.
-9. Tweak `Width`, `ElevationOffset`, `RepeatU/V`, `InvertU/V`, `FlipFaces`, `FlowDirection` — observe each takes effect on next `Generate`.
-10. Set `StepCurve = "{0:0.5},{50:2},{100:0.5}"` → confirm denser sampling at start/end, sparser in middle.
-11. Enable `Live = true` → move path control points → confirm mesh regenerates within ~0.5s.
-12. Save scene, reload, confirm the component re-resolves cleanly and mesh re-appears on play.
+**The TAOM modules are not loaded by the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`).** `Modules/TAOM/bin/Win64_Shipping_wEditor/` is intentionally empty — TAOM.dll has multiple community-mod runtime dependencies (UIExtenderEx, Harmony, MCMv5, ButterLib) that aren't necessarily activated in editor mode. With TAOM in a launcher's editor module list, the engine would load TAOM.dll, fail to resolve those references, throw `ReflectionTypeLoadException`, and crash via `TaleWorlds.ModuleManager.Debug.FailedAssert`. Removing the wEditor binaries makes the editor open cleanly when TAOM is enabled, at the cost of TAOM's `ScriptComponentBehavior` subclasses (CS_Road) not appearing in the modding kit's script picker.
+
+**Where to author CS_Road scenes:** use the **in-game scene editor**, accessible during an active singleplayer campaign. TAOM.dll loads in singleplayer with all dependencies, so `ScriptComponentBehavior` discovery via reflection works there. The in-game editor exposes the same component-panel UI as the modding kit, just inside an active campaign session.
+
+**Hand-edit fallback:** scene XML can be edited directly to add `<game_entity>` blocks with `<script_components>` markup pointing at `CS_Road`. Tedious but always available.
+
+**Future option:** if modding-kit support becomes important, split `Main/SceneScripts/` into a standalone `TAOM.SceneScripts.dll` with zero community-mod dependencies and deploy to both `Win64_Shipping_Client/` and `Win64_Shipping_wEditor/`. Documented in [CHANGELOG.md](../../CHANGELOG.md) 2026-05-13 cleanup entry as "Future option (deferred)".
+
+## How to verify CS_Road in the in-game scene editor (hand-off checklist for map maker)
+
+1. Launch Bannerlord normally (singleplayer), load any save or start a new sandbox campaign.
+2. Open the in-game scene editor on the current scene (default keybind: Ctrl+E in scenes that support it). The editor panel appears alongside the running scene.
+3. Open the relevant TAOM_Map scene (or a test scene). Add a generic entity.
+4. Component picker → search "CS_Road" → attach.
+5. Verify all 16 editor fields appear with correct defaults (cross-check against `docs/scene-scripts/specs/cs-road.md`).
+6. Click the entity, click `Readme` button → editor log shows StepCurve format help.
+7. Create a Path entity, name it `test_path`, draw a few control points.
+8. On the CS_Road entity, set `PathName = "test_path"`, pick a material, click `Generate`.
+9. Confirm a road quad appears along the path.
+10. Tweak `Width`, `ElevationOffset`, `RepeatU/V`, `InvertU/V`, `FlipFaces`, `FlowDirection` — observe each takes effect on next `Generate`.
+11. Set `StepCurve = "{0:0.5},{50:2},{100:0.5}"` → confirm denser sampling at start/end, sparser in middle.
+12. Enable `Live = true` → move path control points → confirm mesh regenerates within ~0.5s.
+13. Save scene, reload, confirm the component re-resolves cleanly and mesh re-appears on play.
+
+> Note: the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) does NOT see CS_Road — TAOM is intentionally excluded from that binary because of community-mod dependencies. See "Editor compatibility" above.
 
 ## Known limitations
 

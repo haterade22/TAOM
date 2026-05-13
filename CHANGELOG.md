@@ -23,6 +23,25 @@ What's retained (still load-bearing, used by the MCM path): `NavigationCacheAdap
 
 Build green, 1903/1903 tests pass (EditorCacheRebuild subset 116/116). Constraint: in-game MCM trigger is the only entry point.
 
+### Cleanup: TAOM is now strictly singleplayer (stale wEditor binaries removed)
+
+The standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) was crashing when TAOM was enabled because stale TAOM DLLs left over from earlier-session editor experiments (~12:38 today) referenced unresolved community-mod dependencies. The modding kit loads each enabled module's `bin/Win64_Shipping_wEditor/` DLLs and scans them via reflection for `ScriptComponentBehavior` subclasses; in that environment Bannerlord.UIExtenderEx, Bannerlord.Harmony, Bannerlord.MBOptionScreen, and Bannerlord.ButterLib aren't necessarily in the active module list, so the .NET resolver couldn't satisfy TAOM.dll's UI-mixin references. `Assembly.GetTypes()` threw `ReflectionTypeLoadException` → `TaleWorlds.ModuleManager.Debug.FailedAssert` → user-cancelable crash dialog. Logged in `C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_20432.txt` line 747.
+
+Cleanup actions:
+
+- Deleted `Modules/TAOM/bin/Win64_Shipping_wEditor/*` (9 files: TAOM.dll, TAOM.pdb, plus dep mirrors DryIoc.dll, MCMv5.dll, Newtonsoft.Json.dll, BehaviorTrees.dll, BehaviorTreeWrapper.dll, MinHook.x64.dll, TAOM.NativeSkinFixes.dll — all manually placed during earlier dependency-mirror experiments, none deployed by the normal build).
+- Deleted `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/*` (3 files — same provenance).
+- Deleted `Modules/TAOM_Online/bin/Win64_Shipping_wEditor/*` (2 files — same provenance; multiplayer module also doesn't load in the standalone editor).
+- Third-party mod folders untouched: `Bannerlord.{Harmony, UIExtenderEx, MBOptionScreen, ButterLib}/bin/Win64_Shipping_wEditor/` still hold their authors' own deploys.
+
+Engine mechanic confirmed: the standalone editor binary loads DLLs from each module's `bin/Win64_Shipping_wEditor/` (NOT `Win64_Shipping_Client/`), then scans loaded assemblies for `ScriptComponentBehavior` subclasses and lists them in the script picker. With no TAOM DLLs in that folder, the editor opens cleanly — but **scene-script authoring (`CS_Road` etc.) is no longer available from the modding kit**. Authoring options going forward: (a) in-game scene editor during an active campaign — TAOM.dll loads in singleplayer with all deps, so script discovery works there; (b) hand-edit scene XML directly; (c) revisit the split path below.
+
+Build pipeline already correct: `Bannerlord.BuildResources` `Basic.targets` only deploys to `Win64_Shipping_Client/` — the wEditor copies were always manual. No code or csproj changes needed; the crash will not recur unless someone explicitly re-introduces the manual mirror.
+
+Build green, 1903/1903 tests pass (no source changes).
+
+**Future option (deferred):** If the modding-kit workflow becomes important for scene authoring, the clean fix is to split `Main/SceneScripts/` into a standalone `TAOM.SceneScripts.dll` with zero community-mod dependencies. Explore agent verified feasibility: all 11 source files import only `System.*`, `TaleWorlds.{DotNet,Engine,Library}`, and `TAOM.Core.Validation.FiniteFloatValidator` (50-line pure static utility). Zero references to UIExtenderEx, MCM, Harmony, DryIoc, ButterLib, or Newtonsoft.Json. The split would: deploy `TAOM.SceneScripts.dll` to BOTH `Win64_Shipping_Client/` AND `Win64_Shipping_wEditor/`, while `TAOM.dll` continues Client-only. A second `<SubModule>` entry in `SubModule.xml` with `IsNoRenderModeElement=false` would activate the scene-scripts assembly in editor mode while leaving TAOM.dll singleplayer-only. Cost ~1-2 hours when prioritized.
+
 ### Feature: scene scripts library — `CS_Road` procedural mesh generator (clean-room port)
 
 Map authors now have a procedural road/river mesh generator they can attach to scene entities in Bannerlord's built-in scene editor. Drop a `CS_Road` script onto an entity, point it at a named scene Path, set width/material/UV options, click GENERATE — the engine builds a quad-strip mesh along the path with adaptive sample spacing. Live mode auto-regenerates every 0.5s while you tweak path control points.
