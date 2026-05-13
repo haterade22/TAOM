@@ -2,6 +2,12 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #185 AdvancedCombat SpatialGridDebugService minimum-coverage (Category 4e)
+
+ADR-008 minimum-coverage tests for `SpatialGridDebugService`. The audit's "consumption path unknown" framing was wrong — `AdvancedCombatBehavior.OnMissionTick` calls `RenderDebugVisualization()` every 2 seconds — but the `RenderDebugVisualization` body is 100% engine-coupled (sealed `Agent.Main` + `Input.IsKeyDown` + `SpatialGrid.Instance` + `MBDebug.RenderDebugSphere` statics) so a full behavior test would need an ADR-007 refactor introducing `IAgentSourceAdapter`/`IInputAdapter`/`ISpatialGridAdapter`/`IDebugRendererAdapter`. That's out of scope per #185.
+
+- **`TAOM.Tests/Features/AdvancedCombat/SpatialGridDebugServiceTests.cs` — NEW (2 tests).** Constructs without throwing (protects DryIoc Singleton lazy-init), implements `ISpatialGridDebugService` (protects `AdvancedCombatBehavior.OnMissionTick` consumer). Mirrors the `#195 TroopWeightHooksTests` pattern.
+
 ### Phase 9b — close #179 RaceAge TaomPregnancyModel ComputeBaseChance tests (Category 4d)
 
 Extracted the pure-math portion of `GetDailyChanceOfPregnancyForHero` to a static helper (`TaomPregnancyModel.ComputeBaseChance`), mirroring the `TaomAgeModel.ApplyRaceAgeLimits` pattern. The 5 branches the Phase 7 audit (#179) flagged as untested are now exercisable without the sealed-`Hero` coupling. Full ADR-007 refactor (introduce `IHeroAgeInfo` adapter, move logic into `IRaceAgeService`) is tracked separately as #131.
