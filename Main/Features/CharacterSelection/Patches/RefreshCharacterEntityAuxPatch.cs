@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.GauntletUI.BodyGenerator;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CharacterSelection.Patches;
 
@@ -25,13 +26,26 @@ public class RefreshCharacterEntityAuxPatch
     [HarmonyTranspiler]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilGen)
     {
+        // Phase 9b #160 — degrade gracefully on IL pattern mismatch. Prior to this fix, any of the
+        // three lookups (ctor / ActionSet method / Newobj match) throwing ArgumentException at
+        // PatchCategory("Late_Transpiler") time crashed the mod during OnGameInitializationFinished,
+        // bricking startup even though the rest of TAOM (and most of CharacterSelection) is
+        // unaffected. Soft-fail: log once with the specific gap, return original instructions
+        // unchanged, let the game boot. The CharacterSelection face-generator action-set inject
+        // doesn't apply, but no other feature breaks.
         var ctor = AccessTools.Constructor(typeof(AgentVisualsData), Type.EmptyTypes);
         if (ctor == null)
-            throw new ArgumentException("Cannot find AgentVisualsData parameterless constructor. Patch: RefreshCharacterEntityAuxPatch");
+        {
+            LogTranspilerDegradation("AgentVisualsData parameterless constructor not found via reflection.");
+            return instructions;
+        }
 
         var actionSetMethod = typeof(AgentVisualsData).GetMethod(nameof(AgentVisualsData.ActionSet));
         if (actionSetMethod == null)
-            throw new ArgumentException("Cannot find AgentVisualsData.ActionSet method. Patch: RefreshCharacterEntityAuxPatch");
+        {
+            LogTranspilerDegradation("AgentVisualsData.ActionSet method not found via reflection.");
+            return instructions;
+        }
 
         var newInstructions = new List<CodeInstruction>(instructions);
         var insertionIndex = -1;
@@ -46,7 +60,10 @@ public class RefreshCharacterEntityAuxPatch
         }
 
         if (insertionIndex < 0)
-            throw new ArgumentException("Cannot find AgentVisualsData Newobj in IL. Patch: RefreshCharacterEntityAuxPatch");
+        {
+            LogTranspilerDegradation("AgentVisualsData Newobj IL pattern not found in BodyGeneratorView.RefreshCharacterEntityAux.");
+            return instructions;
+        }
 
         newInstructions.InsertRange(insertionIndex, new[]
         {
@@ -56,5 +73,17 @@ public class RefreshCharacterEntityAuxPatch
         });
 
         return newInstructions.AsEnumerable();
+    }
+
+    private static void LogTranspilerDegradation(string detail)
+    {
+        try
+        {
+            IoC.Resolve<IModLogger>()?.LogError(
+                $"[CharacterSelection] RefreshCharacterEntityAuxPatch transpiler degrading to no-op — {detail} " +
+                $"BodyGenerator face-generator action-set injection will not apply this session; " +
+                $"verify v1.3.15 IL via ilspycmd on TaleWorlds.MountAndBlade.GauntletUI.dll if behavior is unexpected.");
+        }
+        catch { /* logger resolution failure must not surface to the transpiler caller */ }
     }
 }

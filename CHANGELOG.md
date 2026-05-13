@@ -2,6 +2,12 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #160 CharacterSelection transpiler soft-fail (Category 2 R5)
+
+P2 degradation fix. `RefreshCharacterEntityAuxPatch.Transpiler` previously threw `ArgumentException` at three points (missing ctor / missing ActionSet / missing IL pattern). Because the patch is applied via `PatchCategory("Late_Transpiler")` in `OnGameInitializationFinished`, any throw crashed the mod during game initialization rather than just disabling the one transpiler — bricking startup even though no other TAOM feature is affected.
+
+- **`Main/Features/CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs`** — replaced all 3 `throw new ArgumentException(...)` calls with `LogTranspilerDegradation(detail) + return instructions` (unchanged). One-shot error log via cached `IModLogger.LogError` per failure cause, then graceful fallback so the game can boot. Vanilla `BodyGeneratorView.RefreshCharacterEntityAux` continues to run unmodified; the only consequence is the face-generator action-set injection doesn't apply this session.
+
 ### Phase 9b — close #157 SettlementGuards bare-catch diagnostic (Category 2 R5)
 
 P2 diagnostic-visibility fix. `GuardsCampaignBehavior_TakeGuardAgentData_Patch.Prefix` reflected `PrepareGuardAgentDataFromGarrison` and called `Invoke(null, ...)` assuming static. The audit flagged this as v1.3.15-unverified — but per `ilspycmd` on installed `SandBox.dll`, the v1.3.15 signature IS `private static AgentData PrepareGuardAgentDataFromGarrison(CharacterObject, bool, bool)` — the static call shape is correct. The real remaining issue was the bare `catch {}` swallowing any unexpected exception with zero log output, masking future TaleWorlds drift.
