@@ -361,6 +361,11 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(
                 IoC.Resolve<Features.CompanionTactics.FormationPresets.IFormationPresetService>(),
                 IoC.Resolve<IModLogger>()));
+
+            // Messengers — paid messenger dispatch + dialog hooks + per-save SyncData persistence.
+            // Registered unconditionally so saves round-trip pending messengers even when
+            // EnableMessengers is OFF (disabled = inert, not absent).
+            campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.Messengers.MessengerCampaignBehavior>());
         }
     }
 

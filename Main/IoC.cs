@@ -22,6 +22,7 @@ using TAOM.Features.Warg;
 using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
+using TAOM.Features.Messengers;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
 using TAOM.Features.ArmyTargeting;
@@ -86,6 +87,7 @@ public static class IoC
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
+        MessengerIoC.RegisterMessengerFeature(container);
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);
         CompanionTacticsIoC.RegisterCompanionTacticsFeature(container);
         FiefManagementIoC.RegisterFiefManagementFeature(container);

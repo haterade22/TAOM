@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Fix: wire Messengers IoC + CampaignBehavior (#121)
+
+Encyclopedia hero click crashed because `Main/IoC.cs::Configure()` never invoked `MessengerIoC.RegisterMessengerFeature` and `Main/SubModule.cs::OnGameStart` never added `MessengerCampaignBehavior` to the campaign starter. Commit `03a41b6` shipped the Messengers module + tests + docs + localization with a commit body that literally stated "does NOT include the IoC/SubModule wiring" — and no gate caught it. Only the in-game NRE did.
+
+- **`Main/IoC.cs`** — added `using TAOM.Features.Messengers;` and `MessengerIoC.RegisterMessengerFeature(container);` in `Configure()` (sort position next to QuickActions / EquipPresets / CompanionTactics / FiefManagement).
+- **`Main/SubModule.cs::OnGameStart`** — added `campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.Messengers.MessengerCampaignBehavior>())` after the CompanionTactics behavior. Registered unconditionally so saves round-trip pending messengers even when `EnableMessengers` is OFF (disabled = inert, not absent — flipping the MCM toggle mid-save must not lose pending dispatches).
+- **`docs/audits/`** — this fix is also the seed for the multi-phase TAOM feature audit project. `feature-manifest.md` (43 features classified) + `phase-1-kickoff.md` already written in Phase 0; Phase 1 (wiring matrix) probes every other feature for the same class of miss. Tracked as label `audit-wiring`.
+
 ### Preventive measures from scene-scripts CS_Road RCA (commit 75ccd57)
 
 Three rule/skill updates to prevent the systemic patterns surfaced by `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md` from shipping again:
