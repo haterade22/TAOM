@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #191 Messengers wiring regression test (Category 4a)
+
+The audit-motivating regression-class root. The Messengers crash (#121) shipped because `Main/IoC.cs::Configure` never called `MessengerIoC.RegisterMessengerFeature(container)` and `Main/SubModule.cs::OnGameStart` never added `MessengerCampaignBehavior` to the campaign starter. Build was clean, 1903 unit tests passed, encyclopedia hero-click NRE was the first signal in-game. None of the existing Messenger tests asserted the feature was actually plugged into the global IoC catalog.
+
+- **`TAOM.Tests/Features/Messengers/MessengerCampaignBehaviorTests.cs` — NEW (5 tests).** Two source-content regression tests directly catch the #121 class: `MainIoCConfigure_IncludesMessengerFeatureRegistration` reads `Main/IoC.cs` and asserts it contains the `MessengerIoC.RegisterMessengerFeature(container);` call; `MainSubModule_AddsMessengerCampaignBehavior` reads `Main/SubModule.cs` and asserts it contains the `AddBehavior(IoC.Resolve<MessengerCampaignBehavior>())` call. Plus two DryIoc smoke tests (`RegisterMessengerFeature_RegistersBehavior_WithAllDependencies`, `RegisterMessengerFeature_RegistersService`) verifying that after the feature module's registration call, the behavior + all 3 sub-services resolve from the container. Plus a `Behavior_IsCampaignBehaviorBase` type sanity check.
+- The two source-content assertions are unconventional but EXACTLY the regression-grade tests #121 demanded: revert either `IoC.cs` line and the test goes red. Path resolution mirrors `ConfigIdValidationTests.FindModuleDataPath` (walk up from current dir until file found, `Assert.Inconclusive` if not in repo context).
+- 1903 → 1908 tests, all passing.
+
 ### Phase 9b — close 2 audit-impl mechanical-wiring issues (Category 1: Mechanical wiring)
 
 Two one-line wiring fixes in `Main/SubModule.cs`. Both target the same patch-init block (banner-color manual Harmony patches); no behavior change beyond completing the patch wiring.
