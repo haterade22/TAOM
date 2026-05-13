@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using HarmonyLib;
 using SandBox.CampaignBehaviors;
@@ -6,6 +7,7 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
+using TAOM.Core.Logging;
 using TAOM.Features.SettlementGuards.Domain;
 
 namespace TAOM.Features.SettlementGuards.Hooks;
@@ -14,6 +16,11 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
 {
     private static ISettlementGuardService _service;
     private static MethodInfo _prepareMethod;
+    // Phase 9b #157 — one-shot logging guard so a future TaleWorlds API drift surfaces ONE
+    // diagnostic line instead of either crashing the spawn or silently falling back forever.
+    // We do not want per-spawn log spam (TakeGuardAgentDataFromGarrisonTroopList fires for every
+    // settlement enter).
+    private static bool _exceptionLogged;
 
     public static void Initialize(ISettlementGuardService service)
     {
@@ -65,9 +72,27 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
                 return false;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Degrade gracefully — let vanilla run
+            // Phase 9b #157 — verified via ilspycmd that v1.3.15 still has
+            // `private static AgentData PrepareGuardAgentDataFromGarrison(CharacterObject, bool, bool)`
+            // so the `Invoke(null, ...)` static call shape is correct as of writing. Any exception
+            // here is therefore unexpected — log it ONCE per process so a future TaleWorlds API
+            // drift surfaces a diagnostic instead of falling back silently forever. We then
+            // degrade gracefully by returning true to let vanilla run.
+            if (!_exceptionLogged)
+            {
+                _exceptionLogged = true;
+                try
+                {
+                    IoC.Resolve<IModLogger>()?.LogError(
+                        $"[SettlementGuards] PrepareGuardAgentDataFromGarrison invoke failed: " +
+                        $"{ex.GetType().Name}: {ex.Message}. Falling back to vanilla guards. " +
+                        $"This log fires once per process — verify v1.3.15 signature via ilspycmd " +
+                        $"on SandBox.dll if behavior is unexpected.");
+                }
+                catch { /* logger resolution failure must not surface to vanilla path */ }
+            }
         }
 
         return true;

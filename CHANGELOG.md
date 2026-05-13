@@ -2,6 +2,12 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #157 SettlementGuards bare-catch diagnostic (Category 2 R5)
+
+P2 diagnostic-visibility fix. `GuardsCampaignBehavior_TakeGuardAgentData_Patch.Prefix` reflected `PrepareGuardAgentDataFromGarrison` and called `Invoke(null, ...)` assuming static. The audit flagged this as v1.3.15-unverified — but per `ilspycmd` on installed `SandBox.dll`, the v1.3.15 signature IS `private static AgentData PrepareGuardAgentDataFromGarrison(CharacterObject, bool, bool)` — the static call shape is correct. The real remaining issue was the bare `catch {}` swallowing any unexpected exception with zero log output, masking future TaleWorlds drift.
+
+- **`Main/Features/SettlementGuards/Hooks/GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs`** — replaced bare `catch {}` with `catch (Exception ex)` + one-shot logging via `IModLogger.LogError`. `_exceptionLogged` guard prevents per-spawn log spam (the patched method fires on every settlement enter). Vanilla fallback (`return true`) preserved. v1.3.15 staticness explicitly documented in the catch comment so future readers don't have to re-verify.
+
 ### Phase 9b — close #150 MapConversationTableau color writes silently failed (Category 2 R5)
 
 P1 silent-failure fix. Pre-fix, the leader + bodyguard `MapConversationTableau` Postfixes mutated `AgentVisualsData.ClothColor1Data/ClothColor2Data` AFTER `AgentVisuals` was constructed. Because `MBAgentVisuals.CreateAgentVisuals(...)` already pushed the initial deterministic colors to native renderer in the ctor, the post-construction C# field writes were silent no-ops — conversation tableau leader / bodyguard always rendered with vanilla `CharacterHelper.GetDeterministicColorsForCharacter` output.
