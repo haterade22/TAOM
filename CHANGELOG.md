@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — close 4 audit-docs issues (Category 5: Doc updates)
+
+First Phase 9b batch after the 9a verification (which validated 78 audit findings, closed #154 as STALE, and produced the 77-issue fix queue in `docs/audits/phase-9-fix-queue.md`). Doc-only edits; build + tests untouched at 1903/1903.
+
+- **#196 Execution doc missing (P1)** — wrote `docs/features/execution.md` from `TEMPLATE.md`. Documents the alignment-aware execution feature: `Patch14_Execution` patches + `TaomExecutionRelationModel` GameModel + `IAlignmentService` + `IOnExecutionAction` decision hook + `alignment.json` config (18 kingdoms mapped to free/evil/neutral). Cross-references the existing `alignment-aware-execution.md` deep-dive doc. This silences the `detect-docs-gaps.sh` SessionStart hook that has flagged Execution on every session since Phase 0.
+- **#197 CompanionTactics stale build-disabled note (P3 — drift-reclassified from P2)** — removed the `TEMP-SMARTCAVALRY-EXCLUDE` paragraph from `docs/features/companion-tactics.md`. Commit `0cc457f` (2026-05-07) restored the integration 6 days before the Phase 8 audit; the doc was stale at audit time. Codex verified.
+- **#198 AdvancedCombat stale "no tests" claim (P2)** — updated `docs/features/advanced-combat.md` Tests section to reflect `BoneCollisionServiceTests.cs` (11 tests). Documented remaining gaps (`SpatialGrid`, `CustomAttacksUtils`, `SpatialGridDebugService.RenderDebugVisualization` — cross-referenced to #185).
+- **#199 Warg stale "no dedicated test files" claim (P2)** — updated `docs/features/warg-combat.md` Tests section to reflect `WargAttackServiceTests.cs` (7 tests). Cross-referenced #178 (ADR-007 blocker — the 2 sealed-`Agent` methods remain untestable until `IWargAttackService` is refactored to accept `IAgentAdapter`).
+
 ### Fix: wire Messengers IoC + CampaignBehavior (#121)
 
 Encyclopedia hero click crashed because `Main/IoC.cs::Configure()` never invoked `MessengerIoC.RegisterMessengerFeature` and `Main/SubModule.cs::OnGameStart` never added `MessengerCampaignBehavior` to the campaign starter. Commit `03a41b6` shipped the Messengers module + tests + docs + localization with a commit body that literally stated "does NOT include the IoC/SubModule wiring" — and no gate caught it. Only the in-game NRE did.

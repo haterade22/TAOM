@@ -68,7 +68,12 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 - `ISpatialGridDebugService` — resolved via `IoC` in `AdvancedCombatBehavior`
 
 ## Tests
-No unit tests exist for AdvancedCombat services in `TAOM.Tests/Features/`. The `BoneCollisionService`, `SpatialGrid`, and `CustomAttacksUtils` are currently untested. `BoneCheck` collision logic requires live `Skeleton`/`MatrixFrame` objects from the engine and is difficult to unit test without the game runtime.
+`TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs` — 11 tests covering `IBoneCollisionService.CreateAnimationBoneCheck` / `CreateTimedBoneCheck` and the bone-tracking lifecycle via `IAgentAdapter` + `IAgentVisualsAdapter` substitutes.
+
+**Coverage gaps (tracked elsewhere):**
+- `SpatialGrid` and `CustomAttacksUtils` remain untested — these consume live `Skeleton` / `MatrixFrame` / sealed `Agent` types and need adapter work before they're unit-testable.
+- `SpatialGridDebugService.RenderDebugVisualization` is untested (audit issue #185).
+- `BoneCheck` itself uses live `Skeleton` matrices and is not directly unit-testable without the game runtime — coverage is achieved indirectly via `BoneCollisionService` orchestration tests.
 
 ## How to Add a New Bone-Based Attack
 1. Obtain an `IAgentAdapter` for the attacker and a `List<IAgentAdapter>` for targets (use `SpatialGrid.Instance.GetAgentsInRadius` to find nearby agents).

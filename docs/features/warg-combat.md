@@ -114,8 +114,9 @@ Alliance.Wargs (XML: monster, items, animations)
 
 ## Tests
 
-- **Current:** No dedicated test files (ported from LOTRAOM without TDD)
-- **Needed:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs`, `TAOM.Tests/Features/AdvancedCombat/SpatialGridTests.cs`, `TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs`
+- **Current:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs` — 7 tests covering the pure damage formula in `CalculateWargAttackDamage` via a testable subclass that stubs the sealed armor lookup.
+- **Coverage gap (tracked in #178):** `HandleWargTargetHit` and `WargAttack` accept sealed `Agent` directly in their signatures (ADR-007 violation), so they cannot be unit-tested without the engine runtime. Closing #178 requires refactoring `IWargAttackService` to accept `IAgentAdapter` instead; once that lands, the missing tests can be added.
+- **Other planned tests:** `TAOM.Tests/Features/AdvancedCombat/SpatialGridTests.cs` (still not present — Spatial grid logic uses live engine types and requires its own adapter work first).
 
 ## How to Add a New Creature with Custom Attacks
 
