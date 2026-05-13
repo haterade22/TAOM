@@ -177,6 +177,7 @@ public class SubModule : MBSubModuleBase
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         MapConversationTableau_SpawnOpponentBodyguard_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        MobilePartyVisual_AddCharacterToPartyIcon_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         OrderOfBattleHeroItemVM_RefreshInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
 
         Mission_Initialize_Patch.Initialize(logger);
@@ -456,6 +457,8 @@ public class SubModule : MBSubModuleBase
             _harmony.Patch(agentVisualsCreateTarget, prefix: new HarmonyMethod(
                 typeof(AgentVisuals_Create_Patch),
                 nameof(AgentVisuals_Create_Patch.Prefix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] AgentVisuals.Create not found — clan color randomness suppression will not apply");
 
         // Manual patches for MapConversationTableau (private methods in SandBox.View.dll)
         var leaderTarget = MapConversationTableau_SpawnOpponentLeader_Patch.TargetMethod();

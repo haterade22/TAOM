@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — close 2 audit-impl mechanical-wiring issues (Category 1: Mechanical wiring)
+
+Two one-line wiring fixes in `Main/SubModule.cs`. Both target the same patch-init block (banner-color manual Harmony patches); no behavior change beyond completing the patch wiring.
+
+- **#122 BannerColorPersistence MobilePartyVisual Initialize never called (P2 audit-wiring)** — `Main/SubModule.cs:180` added `MobilePartyVisual_AddCharacterToPartyIcon_Patch.Initialize(bannerColorService, bannerHeroAdapter);` next to the sibling manual-patch Initialize calls (AgentVisuals, MapConversationTableau). The manual `_harmony.Patch(...)` at line 447 was already binding the Postfix correctly, but the static `_service`/`_heroAdapter` fields stayed `null` — so the Postfix's `_heroAdapter?.GetClanColorInfo(...)` always returned null and the postfix early-exited. World-map party icons now receive clan colors as designed.
+- **#158 BannerColor AgentVisuals.Create missing LogWarning fallback (P3 audit-impl)** — `Main/SubModule.cs:459` added `else IoC.Resolve<IModLogger>().LogWarning(...)` mirroring the sibling fallbacks on `MobilePartyVisual` (line 451) and SettlementGuards spear/guard data (lines 437, 442). If `AgentVisuals.Create` is renamed or moved by a future TaleWorlds patch, the silent no-op now becomes a one-line diagnostic.
+
 ### Phase 0-9a audit artifacts checkpoint
 
 Committing the cumulative deliverables of the TAOM feature audit (Phases 0-8 manifest/wiring/cluster reviews + Phase 9a verification) as one atomic artifact commit so the next Phase 9b fix-batch session has a clean diff.
