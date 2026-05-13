@@ -197,7 +197,11 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return;
 
-        var added = cost.UpgradeCost * count;
+        // Phase 9b #174: apply the career-passive CustomResourceUpgradeCostModifier here too.
+        // Pre-fix this queued base cost while ClampUpgradeCount + SpendForUpgrade used the
+        // discounted cost — so a player with a -30% career discount got the cheaper *count* but
+        // was debited the full price at CommitSession, silently overpaying by the discount %.
+        var added = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, count);
         _pendingSpend += added;
         _logger.LogDebug($"[SpecRes] QUEUED: {troopId} x{count} = {added} pending (total pending={_pendingSpend:F0})");
     }

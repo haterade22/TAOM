@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — fix + regression test SpecialResources × CareerSystem discount-debit parity (#174, #194)
+
+Cross-feature bug + its missing regression test, closed together. Pre-fix, `ClampUpgradeCount` / `CanAffordUpgrade` / `SpendForUpgrade` all applied the `CustomResourceUpgradeCostModifier` career passive (effective cost), but `QueueUpgradeSpend` debited the bare base cost — so a player with a -30% career discount queued upgrades at the discounted gate then got debited the full base price at `CommitSession`. Silent overpay by the discount percentage.
+
+- **`Main/Features/SpecialResources/SpecialResourceService.cs::QueueUpgradeSpend`** — one-line fix replacing `cost.UpgradeCost * count` with `GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, count)`. `heroId` was already a parameter — the gap was the service not threading it through to the effective-cost helper.
+- **`TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs`** — two regression tests: `QueueUpgradeSpend_WithPassiveDiscount_DebitsEffectiveCost` (base 10, -30% → 7 debit) and `QueueUpgradeSpend_NoCareerDiscount_DebitsBaseCost` (no discount → bare cost). The latter is the negative-case partner that pins down "the fix didn't accidentally change behavior when no discount is active."
+- `/codex-verify` confirmed CLEAN — fix correctly aligns the 4 effective-cost call sites (`CanAffordUpgrade`, `SpendForUpgrade`, `ClampUpgradeCount`, `QueueUpgradeSpend`).
+- 1925 → 1927 tests, all passing.
+
 ### Phase 9b — close #195 TroopWeight 4 IOn* hook implementation tests (Category 4a)
 
 ADR-008 minimum-coverage tests for the four `IOn*` hook implementations the Phase 7 audit (#195) flagged as having zero tests. Full behavior tests would require an ADR-007 adapter refactor (the hooks accept sealed `PartyBase`, `MBBindingList<PartyCharacterVM>`, `RecruitmentVM` and call static `MBTextManager.SetTextVariable`) which the audit explicitly placed out of scope. What we CAN test without engine state is now covered.

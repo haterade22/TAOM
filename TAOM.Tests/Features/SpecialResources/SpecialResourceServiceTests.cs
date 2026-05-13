@@ -349,6 +349,49 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
+    public void QueueUpgradeSpend_WithPassiveDiscount_DebitsEffectiveCost()
+    {
+        // Regression test for #174 / #194. Pre-fix, ClampUpgradeCount + CanAffordUpgrade + SpendForUpgrade
+        // all called GetEffectiveUpgradeCost (discounted), but QueueUpgradeSpend used the bare base cost.
+        // A career with -30% CustomResourceUpgradeCostModifier would let the player queue upgrades at
+        // the discounted gate, then get debited the full base price at CommitSession — silently
+        // overpaying by the discount percentage.
+        //
+        // The fix threads heroId through QueueUpgradeSpend so the queued + committed amount matches
+        // the gate's effective per-unit cost. Setup:
+        //   - Base 10 per unit, -30% career discount -> effective 7 per unit
+        //   - Queue 1 unit -> pending = 7 (pre-fix this was 10)
+        //   - CommitSession -> storage.Add(..., -7) (pre-fix: -10)
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 10, dailyUpkeep: 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _passiveService
+            .GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpgradeCostModifier)
+            .Returns(-0.30f);
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 1);
+        _service.CommitSession("hero1", "empire_s", null);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -7f);
+    }
+
+    [TestMethod]
+    public void QueueUpgradeSpend_NoCareerDiscount_DebitsBaseCost()
+    {
+        // Negative-case partner to QueueUpgradeSpend_WithPassiveDiscount_DebitsEffectiveCost: confirms
+        // the fix doesn't accidentally change behavior when no discount is active (passive = 0).
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 10, dailyUpkeep: 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        // No _passiveService.Returns(...) configured — Substitute.For default-returns 0f.
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        _service.CommitSession("hero1", "empire_s", null);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -30f);
+    }
+
+    [TestMethod]
     public void CommitSession_NoOp_WhenNotInSession()
     {
         _service.CommitSession("hero1", "empire_s", null);
