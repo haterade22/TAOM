@@ -2,6 +2,17 @@
 
 ## 2026-05-13
 
+### Fix — TaomPregnancyModel heroAge truncation regression (Codex HIGH catch)
+
+Codex independent review of the Phase 9b autonomous-run production changes (commits `ec054a4..303adbf`) caught a HIGH regression I introduced in commit `57e9d9b` (#179 ComputeBaseChance extraction). The extraction commit passed `(int)hero.Age` to the new helper, truncating fractional age toward zero — a 44.9-year-old hero computed identically to a 44-year-old, materially shifting late-window pregnancy chance vs vanilla `DefaultPregnancyModel` which uses `Hero.Age` (float) directly.
+
+- **`Main/Features/RaceAge/Models/TaomPregnancyModel.cs`** — replaced `heroAge: (int)hero.Age` with `heroAge: hero.Age`; changed `ComputeBaseChance` parameter from `int heroAge` to `float heroAge`. Int literals in the existing tests implicit-convert to float — no test breakage. Inline comment documents the regression class.
+- **`TAOM.Tests/Features/RaceAge/TaomPregnancyModelTests.cs`** — added `ComputeBaseChance_FractionalAge_PreservesPrecision` regression test. Asserts that ages 44 / 44.5 / 45 produce three distinct monotonically-decreasing values. If `heroAge` were int-truncated, 44 and 44.5 would match — test would go red.
+- **`docs/reviews/rca-phase9b-autonomous-codex-review-2026-05-13.md`** — NEW. Documents the extraction-without-type-preservation root-cause pattern, walks through why all 5 deep-review agents missed it (Codex's independent re-read with adversarial framing was the load-bearing safety net), and proposes two new feedback memories for future extraction work.
+- One MEDIUM Codex finding deferred: `Patch35_Formation_SetMovementOrder` team filter is necessary-but-not-sufficient if a player-team formation is AI-controlled (player not general OR delegates command) — the postfix can still execute on the async AI thread for player-team formations. Audit issue #149 specified the team filter as "the simpler fix"; full hardening (lock / main-thread marshal / PlayerOwner gate) is Phase 10 candidate, not Phase 9. Tracked in the RCA.
+
+1957 → 1958 tests, all passing.
+
 ### Build — auto-mirror Win64_Shipping_Client → Win64_Shipping_wEditor on every deploy
 
 Map-maker hand-off testing of CS_Road exposed a long-standing footgun: `Bannerlord.BuildResources`'s `CopyBinariesWindows` target is hardcoded to `Win64_Shipping_Client`, so the standalone modding kit (`Win64_Shipping_wEditor`) silently launched stale TAOM.dll + companions until someone ran `cp -v Win64_Shipping_Client/* Win64_Shipping_wEditor/` by hand. Easy to forget; resulting "code change has no effect in editor" reports waste hours.

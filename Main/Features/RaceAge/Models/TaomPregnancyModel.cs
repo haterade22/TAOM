@@ -34,8 +34,14 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         bool playerOrSpouseInvolved = (hero == Hero.MainHero) || (hero.Spouse == Hero.MainHero);
         float fertilityModifier = _raceAgeService.GetFertilityModifier(race);
 
+        // Phase 9b Codex review (2026-05-13): heroAge MUST be float (not int). Vanilla
+        // DefaultPregnancyModel.GetDailyChanceOfPregnancyForHero uses Hero.Age (float) directly
+        // in the ageFactor formula. Truncating to int rounds fractional age toward zero, so a
+        // 44.9-year-old hero would compute as 44 — materially shifting late-window pregnancy
+        // chance. Pre-extract code used `hero.Age` directly; passing (int) here was a regression
+        // in the extraction commit. Keep heroAge as float to preserve byte-for-byte equivalence.
         float baseChance = ComputeBaseChance(
-            heroAge: (int)hero.Age,
+            heroAge: hero.Age,
             comesOfAge: comesOfAge,
             fertilityEnd: fertilityEnd,
             childCount: hero.Children.Count,
@@ -62,7 +68,7 @@ public class TaomPregnancyModel : DefaultPregnancyModel
     /// adapter and move this into IRaceAgeService) is tracked separately as #131.
     /// </summary>
     public static float ComputeBaseChance(
-        int heroAge,
+        float heroAge,
         int comesOfAge,
         int fertilityEnd,
         int childCount,

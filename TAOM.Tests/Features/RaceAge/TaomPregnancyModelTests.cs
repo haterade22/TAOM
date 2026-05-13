@@ -155,4 +155,39 @@ public class TaomPregnancyModelTests
 
         Assert.AreEqual(0f, sterile);
     }
+
+    [TestMethod]
+    public void ComputeBaseChance_FractionalAge_PreservesPrecision()
+    {
+        // Phase 9b Codex review regression test. The original extraction passed
+        // `(int)hero.Age` to the helper, truncating fractional age toward zero. A 44.9-year-old
+        // hero would compute identically to a 44-year-old hero — materially shifting late-window
+        // pregnancy chance vs vanilla DefaultPregnancyModel (which uses Hero.Age as float).
+        // This test pins float-precision behavior: age 44.5 must produce an ageFactor between
+        // age 44 and age 45.
+        var ageAt44 = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 44f, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 0,
+            playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
+
+        var ageAt44_5 = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 44.5f, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 0,
+            playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
+
+        var ageAt45 = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 45f, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 0,
+            playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
+
+        Assert.IsTrue(ageAt44 > ageAt44_5,
+            $"Age 44 ({ageAt44}) must yield higher pregnancy chance than 44.5 ({ageAt44_5}) — " +
+            "monotonically decreasing through the fertility window.");
+        Assert.IsTrue(ageAt44_5 > ageAt45,
+            $"Age 44.5 ({ageAt44_5}) must yield higher pregnancy chance than 45 ({ageAt45}).");
+        // If heroAge were truncated to int, ageAt44_5 would equal ageAt44 (both compute as 44).
+        Assert.AreNotEqual(ageAt44, ageAt44_5,
+            "Fractional age must produce a distinct result from its int-truncated value " +
+            "(if these match, the model is silently truncating Hero.Age — regression).");
+    }
 }
