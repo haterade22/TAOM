@@ -2,6 +2,12 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #149 CompanionTactics Patch35 team filter (Category 2 R5)
+
+P1 concurrency fix. Pre-fix, `Patch35_Formation_SetMovementOrder.Postfix` mutated `TroopStanceManager._stances` for every team's formations — including enemy formations whose movement orders are issued from the async AI tick (`Mission.doAsyncAITick → TickAgentsAndTeamsAsync → BehaviorXxx.TickOccasionally → Formation.SetMovementOrder`). .NET Framework 4.7.2 `Dictionary<TKey,TValue>` is not concurrent-safe, so concurrent worker-thread `Remove` (Postfix) racing main-thread `TryGetValue`/`SetStance` (BattleActionBarMissionView) could produce `KeyNotFoundException` or silent bucket-chain corruption.
+
+- **`Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs`** — added `if (__instance.Team != Mission.Current?.PlayerTeam) return;` before the `_stances.ClearStance(...)` call. One-line filter matching the audit's specified fix verbatim. Stances are player-team-only semantically, so the filter is simpler than adding lock-based synchronization.
+
 ### Phase 9b — close #181 CharacterCreation × HeroRace race-ID round-trip (Category 4c)
 
 The cross-feature contract from Phase 6 #171: a player race assigned at OnCharacterCreationFinalize must survive save/load via RacePersistence. Existing tests verified Capture and Restore independently but never wired them into a single round-trip through the SyncData serialization handoff.

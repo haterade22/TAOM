@@ -30,6 +30,17 @@ public static class Patch35_Formation_SetMovementOrder
             if (_settings == null || !_settings.CancelStanceOnMove) return;
             if (__instance == null) return;
 
+            // Phase 9b #149 — team filter. Formation.SetMovementOrder is invoked from the async AI
+            // tick (Mission.doAsyncAITick → TickAgentsAndTeamsAsync → BehaviorXxx.TickOccasionally →
+            // Formation.SetMovementOrder) for EVERY team's formations. Without this filter, the
+            // Postfix mutates TroopStanceManager._stances Dictionary from a worker thread,
+            // racing main-thread reads/writes from BattleActionBarMissionView. .NET 4.7.2
+            // `Dictionary<TKey,TValue>` is not concurrent-safe → KeyNotFoundException or silent
+            // bucket-chain corruption. Stances are player-team-only semantically, so the
+            // team filter is the simpler fix vs adding locks. See `cluster-harmony-patches.md`
+            // Cluster B finding B1.
+            if (__instance.Team != Mission.Current?.PlayerTeam) return;
+
             _stances ??= IoC.Resolve<ITroopStanceManager>();
             _stances?.ClearStance((int)__instance.FormationIndex);
         }
