@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #186 Spider SpawnSpiders Monster lookup tests (Category 4e)
+
+The Phase 7 audit body slightly overstated the gap on `SpiderSpawnerService` — `ComputeSpawnPosition` math IS tested at `SpiderSpawnerServiceTests.cs:84-114` (radius bounds + z/w preservation). The actual gap was the **monster lookup** path and the **lookup ID contract**.
+
+- **`TAOM.Tests/Features/Spider/SpiderSpawnerServiceTests.cs`** — added 2 tests: `SpawnSpiders_MonsterNotFound_ReturnsEmptyAndLogs` (symmetric partner to the existing `SpawnSpiders_AnchorCharacterNotFound_ReturnsEmptyAndLogs` — covers the LOTRLOME_Armory-not-loaded / "spider" id renamed branch); `SpawnSpiders_LookupsByExpectedIds` (pins the `"spider"` Monster id and `"taom_spider_creature"` character id constants — a rename in production without an audit-trail fix would break the silent path).
+- Team-assignment behavior tests (verifying `AgentBuildData.Team(team)` is invoked) deferred — `AgentBuildData` is a fluent-builder over sealed engine types and can't be observed without engine state.
+- 1937 → 1941 tests, all passing.
+
 ### Phase 9b — close #185 AdvancedCombat SpatialGridDebugService minimum-coverage (Category 4e)
 
 ADR-008 minimum-coverage tests for `SpatialGridDebugService`. The audit's "consumption path unknown" framing was wrong — `AdvancedCombatBehavior.OnMissionTick` calls `RenderDebugVisualization()` every 2 seconds — but the `RenderDebugVisualization` body is 100% engine-coupled (sealed `Agent.Main` + `Input.IsKeyDown` + `SpatialGrid.Instance` + `MBDebug.RenderDebugSphere` statics) so a full behavior test would need an ADR-007 refactor introducing `IAgentSourceAdapter`/`IInputAdapter`/`ISpatialGridAdapter`/`IDebugRendererAdapter`. That's out of scope per #185.

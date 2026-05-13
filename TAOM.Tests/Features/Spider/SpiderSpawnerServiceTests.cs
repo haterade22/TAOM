@@ -115,6 +115,40 @@ public class SpiderSpawnerServiceTests
     }
 
     // ---------------------------------------------------------------------
+    // Monster + character lookup gaps (Phase 7 audit #186)
+    // ---------------------------------------------------------------------
+
+    [TestMethod]
+    public void SpawnSpiders_MonsterNotFound_ReturnsEmptyAndLogs()
+    {
+        // Symmetric partner to the AnchorCharacterNotFound test. Anchor character is present;
+        // the Monster lookup returns null (LOTRLOME_Armory not loaded, or "spider" id renamed).
+        _objectManager.GetBasicCharacter(SpiderSpawnerService.SpiderCharacterId)
+            .Returns(Substitute.For<BasicCharacterObject>());
+        var sut = MakeSut(monsterLookup: _ => null);
+
+        var result = sut.SpawnSpiders(team: null, referencePosition: Vec3.Zero, count: 5, radius: 10f);
+
+        Assert.AreEqual(0, result.Count, "Missing Monster must short-circuit before spawn.");
+        _logger.Received().LogError(Arg.Is<string>(s => s.Contains("Monster")));
+    }
+
+    [TestMethod]
+    public void SpawnSpiders_LookupsByExpectedIds()
+    {
+        // Pin the lookup contract — Monster id "spider" and character id "taom_spider_creature".
+        // A rename in production without an audit-trail fix would break the silent path.
+        _objectManager.GetBasicCharacter(SpiderSpawnerService.SpiderCharacterId).Returns((BasicCharacterObject)null);
+        var sut = MakeSut();
+
+        sut.SpawnSpiders(team: null, referencePosition: Vec3.Zero, count: 1, radius: 5f);
+
+        _objectManager.Received(1).GetBasicCharacter("taom_spider_creature");
+        Assert.AreEqual("spider", SpiderSpawnerService.SpiderMonsterId);
+        Assert.AreEqual("taom_spider_creature", SpiderSpawnerService.SpiderCharacterId);
+    }
+
+    // ---------------------------------------------------------------------
     // Construction
     // ---------------------------------------------------------------------
 
