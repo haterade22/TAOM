@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #192 SettlementGuards manual-Harmony wiring test (Category 4a)
+
+Mirror of the #191 pattern, scoped to SettlementGuards' two manual `_harmony.Patch(...)` sites. Unlike most TAOM features, SettlementGuards has no `[HarmonyPatchCategory]` because both target methods are private instance methods that AccessTools can only resolve at runtime — the patches are applied directly from `Main/SubModule.cs` via `_harmony.Patch(...)`. That makes the wiring uniquely vulnerable to a Messengers-class regression.
+
+- **`TAOM.Tests/Features/SettlementGuards/SettlementGuardsWiringTests.cs` — NEW (4 tests).** Source-content assertions cover the 3 wiring-catalog requirements: `MainIoCConfigure_IncludesSettlementGuardsFeatureRegistration`, `MainSubModule_AppliesManualHarmonyPatches` (both `TargetMethod()` call sites — `TakeGuardAgentData` + `GetSuitableSpear`), `MainSubModule_InitializesBothPatchClassesWithService` (the `Initialize(_service)` calls so the Prefix's static `_service` isn't null). One DryIoc smoke test (`RegisterSettlementGuardsFeature_RegistersService`) verifies the service + config provider resolve after registration.
+- `SettlementGuardService` pulls a cross-feature `IRandomProvider` dep from TroopProgression; the smoke test registers it before calling `RegisterSettlementGuardsFeature` to mirror what `Main/IoC.cs` guarantees by ordering.
+- 1908 → 1912 tests, all passing.
+
 ### Phase 9b — close #191 Messengers wiring regression test (Category 4a)
 
 The audit-motivating regression-class root. The Messengers crash (#121) shipped because `Main/IoC.cs::Configure` never called `MessengerIoC.RegisterMessengerFeature(container)` and `Main/SubModule.cs::OnGameStart` never added `MessengerCampaignBehavior` to the campaign starter. Build was clean, 1903 unit tests passed, encyclopedia hero-click NRE was the first signal in-game. None of the existing Messenger tests asserted the feature was actually plugged into the global IoC catalog.
