@@ -2,6 +2,32 @@
 
 ## 2026-05-13
 
+### Build — auto-mirror Win64_Shipping_Client → Win64_Shipping_wEditor on every deploy
+
+Map-maker hand-off testing of CS_Road exposed a long-standing footgun: `Bannerlord.BuildResources`'s `CopyBinariesWindows` target is hardcoded to `Win64_Shipping_Client`, so the standalone modding kit (`Win64_Shipping_wEditor`) silently launched stale TAOM.dll + companions until someone ran `cp -v Win64_Shipping_Client/* Win64_Shipping_wEditor/` by hand. Easy to forget; resulting "code change has no effect in editor" reports waste hours.
+
+- **`Main/TAOM.csproj`** — added `MirrorWin64ShippingClientToEditor` target (`AfterTargets="PostBuildCopyToModules"`). Globs `<game>/Modules/TAOM/bin/Win64_Shipping_Client/*.*` and copies into `Win64_Shipping_wEditor/` with `SkipUnchangedFiles="true"`. Inherits the same `DisableModuleCopy != 'true'` + `Exists($(GameFolder))` + `ModuleId != ''` gate as the deploy itself, so unit-test builds (`-p:DisableModuleCopy=true`) skip cleanly. Emits `TAOM: mirrored <N> files Win64_Shipping_Client -> Win64_Shipping_wEditor` at high importance so the build log shows it ran. Verified end-to-end: deleted TAOM.dll from wEditor → ran `./build.ps1` → wEditor restored to 9-file parity with Client (identical sizes + timestamps).
+- **`docs/features/scene-scripts.md`** — "Editor compatibility" section updated. Removed the obsolete `cp -v` procedure and explained the new auto-mirror target.
+
+### Fix — CS_Road comprehensive diagnostic logging
+
+Map-maker hand-off testing reported "step 5 (click Generate) does nothing." Audit found three log-coverage gaps that masked the real cause: (1) `LogTag = 1L<<44` is filtered out by the engine's debug-tag mask in both editor and in-game log windows — even our existing yellow warnings were being silently swallowed; (2) four silent return paths in `GenerateMesh` (`!entity.IsValid`, `Scene == null`, `samples.Count < 2`, `triangles.Count == 0`) had zero logs; (3) no positive-success log on the happy path, so the map maker couldn't distinguish "click reached code, succeeded" from "click never reached code at all."
+
+- **`Main/SceneScripts/CS_Road.cs`** —
+  - `LogTag` switched from `17592186044416uL` (= `1L << 44`) to `0uL` so all `Debug.Print` calls are unconditionally surfaced. Comment added explaining why.
+  - New `LogInfo(string)` helper alongside `LogWarn` for white-text non-warning lines.
+  - `OnEditorVariableChanged` `Generate` case now logs `Generate button clicked.` before invoking `GenerateMesh`, so the map maker can distinguish event-routing failure from generation failure.
+  - `GenerateMesh` now logs `GenerateMesh start.` at entry, fills in the 4 previously-silent return paths with explanatory `LogWarn` lines, and logs `generated mesh from path '<X>' (totalDistance=<X>m, <N> samples, <N> triangles, material='<Y>').` on success.
+
+Build green. No behavior change beyond log surfacing. CS_Road remains engine-bound and is verified manually in the editor (helpers retain their 67-test coverage).
+
+### Docs — CS_Road map-maker quickstart
+
+A non-developer-facing one-page guide for map authors. The existing `docs/features/scene-scripts.md` hand-off checklist is buried under architecture / license / clean-room sections; the new doc distills only the operational content (prerequisites → 5-step workflow → 16-knob table → StepCurve cheatsheet → 3-step diagnostic ladder → cleanup gotcha → `Live`-mode warning) so a non-coder can follow it top-to-bottom without scrolling past irrelevant content.
+
+- **`docs/scene-scripts/map-maker-quickstart.md`** — new file. Pulls field defaults from `Main/SceneScripts/CS_Road.cs:32-47` and StepCurve semantics from `docs/scene-scripts/specs/cs-road.md:47-60`. Covers both editor targets (`Win64_Shipping_wEditor` and the in-game scene editor during an active campaign). Troubleshooting reorganized into a 3-step diagnostic ladder reflecting the new log surface (click reception → bail reason → invisible-mesh debugging).
+- **`docs/features/scene-scripts.md`** — added a one-line pointer at the top of the existing "How to verify CS_Road in the modding kit" section linking to the map-maker version. The architecture-doc version stays in place for engineers.
+
 ### Phase 9b — close #160 CharacterSelection transpiler soft-fail (Category 2 R5)
 
 P2 degradation fix. `RefreshCharacterEntityAuxPatch.Transpiler` previously threw `ArgumentException` at three points (missing ctor / missing ActionSet / missing IL pattern). Because the patch is applied via `PatchCategory("Late_Transpiler")` in `OnGameInitializationFinished`, any throw crashed the mod during game initialization rather than just disabling the one transpiler — bricking startup even though no other TAOM feature is affected.

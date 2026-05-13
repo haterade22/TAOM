@@ -27,7 +27,9 @@ namespace TAOM.SceneScripts;
 public class CS_Road : ScriptComponentBehavior
 {
     private const float LiveRegenerationIntervalSeconds = 0.5f;
-    private const ulong LogTag = 17592186044416uL;
+    // 0 = always-on tag; bit-mask tags (e.g. 1L<<44) are filtered by the engine
+    // and silently swallow our diagnostics in editor + in-game log windows.
+    private const ulong LogTag = 0uL;
 
     [EditableScriptComponentVariable(true)] public string PathName = "";
     [EditableScriptComponentVariable(true)] public float Width = 4f;
@@ -69,6 +71,7 @@ public class CS_Road : ScriptComponentBehavior
         switch (variableName)
         {
             case nameof(Generate):
+                LogInfo($"CS_Road on '{TryGetEntityName(GameEntity)}': Generate button clicked.");
                 GenerateMesh();
                 return;
             case nameof(Readme):
@@ -118,64 +121,84 @@ public class CS_Road : ScriptComponentBehavior
     private void GenerateMesh()
     {
         var entity = GameEntity;
-        if (!entity.IsValid) return;
+        var entityName = TryGetEntityName(entity);
+        LogInfo($"CS_Road on '{entityName}': GenerateMesh start.");
+
+        if (!entity.IsValid)
+        {
+            LogWarn($"CS_Road on '{entityName}': GameEntity is not valid. Skipping.");
+            return;
+        }
 
         if (!FiniteFloatValidator.IsFinite(Width) || Width <= 0f)
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': Width must be a finite value > 0; got {Width}. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': Width must be a finite value > 0; got {Width}. Skipping.");
             return;
         }
         if (!FiniteFloatValidator.IsFinite(ElevationOffset))
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': ElevationOffset must be finite; got {ElevationOffset}. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': ElevationOffset must be finite; got {ElevationOffset}. Skipping.");
             return;
         }
         if (!FiniteFloatValidator.IsFinite(RepeatU) || !FiniteFloatValidator.IsFinite(RepeatV))
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': RepeatU/RepeatV must be finite; got {RepeatU}/{RepeatV}. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': RepeatU/RepeatV must be finite; got {RepeatU}/{RepeatV}. Skipping.");
             return;
         }
         if (Material == null)
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': Material is not set. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': Material is not set. Skipping.");
             return;
         }
 
         var scene = Scene;
-        if (scene == null) return;
+        if (scene == null)
+        {
+            LogWarn($"CS_Road on '{entityName}': Scene is null (editor context not yet ready?). Skipping.");
+            return;
+        }
 
         if (string.IsNullOrWhiteSpace(PathName))
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': PathName is empty. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': PathName is empty. Skipping.");
             return;
         }
 
         var path = scene.GetPathWithName(PathName);
         if (path == null)
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': no path named '{PathName}' found in scene. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': no path named '{PathName}' found in scene. Skipping.");
             return;
         }
 
         float totalDistance = path.TotalDistance;
         if (!FiniteFloatValidator.IsFinite(totalDistance) || totalDistance <= 0f)
         {
-            LogWarn($"CS_Road on '{TryGetEntityName(entity)}': path '{PathName}' has TotalDistance={totalDistance}. Skipping.");
+            LogWarn($"CS_Road on '{entityName}': path '{PathName}' has TotalDistance={totalDistance}. Skipping.");
             return;
         }
 
         var samples = SamplePath(path, totalDistance);
-        if (samples.Count < 2) return;
+        if (samples.Count < 2)
+        {
+            LogWarn($"CS_Road on '{entityName}': path '{PathName}' produced only {samples.Count} sample(s) (StepCurve='{StepCurve}', totalDistance={totalDistance:F2}m). Skipping.");
+            return;
+        }
 
         var triangles = RoadGeometryBuilder.Build(
             samples, halfWidth: Width, elevationOffset: ElevationOffset,
             repeatU: RepeatU, repeatV: RepeatV,
             invertU: InvertU, invertV: InvertV, rotateUV: RotateUV,
             flowDirection: FlowDirection, flipFaces: FlipFaces);
-        if (triangles.Count == 0) return;
+        if (triangles.Count == 0)
+        {
+            LogWarn($"CS_Road on '{entityName}': geometry builder returned 0 triangles from {samples.Count} samples. Skipping.");
+            return;
+        }
 
         var color = HexColorParser.ToPackedArgb(CustomColor);
         _lastGenerated = RoadMeshAttacher.BuildAndAttach(entity, Material, triangles, color, _lastGenerated);
+        LogInfo($"CS_Road on '{entityName}': generated mesh from path '{PathName}' (totalDistance={totalDistance:F2}m, {samples.Count} samples, {triangles.Count} triangles, material='{Material.Name}').");
     }
 
     private List<RoadSampleFrame> SamplePath(Path path, float totalDistance)
@@ -204,6 +227,11 @@ public class CS_Road : ScriptComponentBehavior
     private static void LogWarn(string message)
     {
         Debug.Print($"TAOM: {message}", 0, Debug.DebugColor.Yellow, LogTag);
+    }
+
+    private static void LogInfo(string message)
+    {
+        Debug.Print($"TAOM: {message}", 0, Debug.DebugColor.White, LogTag);
     }
 
     private static string TryGetEntityName(WeakGameEntity entity)

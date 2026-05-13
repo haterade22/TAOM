@@ -134,13 +134,13 @@ These mods' SubModule.xml files carry `IsNoRenderModeElement=false` + `Dedicated
 
 **If you launch with only TAOM active** (community mods unchecked), the engine still loads `Modules/TAOM/bin/Win64_Shipping_wEditor/TAOM.dll` but `Assembly.GetTypes()` throws `ReflectionTypeLoadException: Could not load file or assembly 'Bannerlord.UIExtenderEx'` → `TaleWorlds.ModuleManager.Debug.FailedAssert` → user-cancelable crash dialog. Fix: enable the four community mods in the launcher's editor profile.
 
-`Modules/TAOM/bin/Win64_Shipping_wEditor/` is maintained as a manual mirror of `Win64_Shipping_Client/` (TAOM.dll + companion DLLs DryIoc, MCMv5, Newtonsoft.Json, BehaviorTrees, BehaviorTreeWrapper, MinHook.x64, TAOM.NativeSkinFixes). The `Bannerlord.BuildResources` `Basic.targets` only deploys to Client automatically; copying to wEditor is manual after rebuilds. To re-mirror after a build:
+`Modules/TAOM/bin/Win64_Shipping_wEditor/` is automatically mirrored from `Win64_Shipping_Client/` on every build by the `MirrorWin64ShippingClientToEditor` target in `Main/TAOM.csproj` (runs `AfterTargets="PostBuildCopyToModules"`). This covers TAOM.dll + .pdb plus all companion DLLs (DryIoc, MCMv5, Newtonsoft.Json, BehaviorTrees, BehaviorTreeWrapper, MinHook.x64, TAOM.NativeSkinFixes).
 
-```bash
-cp -v Modules/TAOM/bin/Win64_Shipping_Client/* Modules/TAOM/bin/Win64_Shipping_wEditor/
-```
+The mirror was previously manual — `Bannerlord.BuildResources`'s `CopyBinariesWindows` target only deploys to `Win64_Shipping_Client` (hardcoded), and the modding kit (`Win64_Shipping_wEditor`) silently launched stale DLLs until a developer ran `cp -v Win64_Shipping_Client/* Win64_Shipping_wEditor/` by hand. The new target ends that footgun. If you need to skip the mirror (e.g. unit tests with `-p:DisableModuleCopy=true`), the target inherits the same `DisableModuleCopy` gate as `PostBuildCopyToModules`.
 
 ## How to verify CS_Road in the modding kit (hand-off checklist for map maker)
+
+> For a non-developer-facing version of this checklist, see [map-maker-quickstart.md](../scene-scripts/map-maker-quickstart.md).
 
 1. Open your launcher, switch to the editor profile. Verify enabled: Bannerlord.Harmony, Bannerlord.UIExtenderEx, Bannerlord.MBOptionScreen, Bannerlord.ButterLib, TAOM (plus TAOM_Map if you want the TAOM main map open by default).
 2. Launch the modding kit (`Win64_Shipping_wEditor`). It should open without a crash dialog.

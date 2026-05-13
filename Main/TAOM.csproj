@@ -114,4 +114,21 @@
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
 	</Target>
 
+	<!-- Mirror the deployed Win64_Shipping_Client folder to Win64_Shipping_wEditor in the game install
+	     so the modding kit (Win64_Shipping_wEditor) loads the same TAOM.dll + companions as the runtime.
+	     Runs AFTER Bannerlord.BuildResources's PostBuildCopyToModules — the source folder must already be
+	     populated by CopyBinariesWindows + CopyModule. Without this mirror, the modding kit launches
+	     stale DLLs and code changes are invisible until manually copied with `cp -v Client/* wEditor/`.
+	     See docs/features/scene-scripts.md "Editor compatibility" section. -->
+	<Target Name="MirrorWin64ShippingClientToEditor"
+	        AfterTargets="PostBuildCopyToModules"
+	        Condition="$(ModuleId) != '' AND Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true' AND Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\')">
+		<ItemGroup>
+			<_TaomEditorMirrorFiles Include="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\*.*" />
+		</ItemGroup>
+		<MakeDir Directories="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_wEditor\" Condition="!Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_wEditor\')" />
+		<Copy SourceFiles="@(_TaomEditorMirrorFiles)" DestinationFolder="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_wEditor\" SkipUnchangedFiles="true" />
+		<Message Importance="high" Text="TAOM: mirrored @(_TaomEditorMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_wEditor in $(GameFolder)\Modules\$(ModuleId)\bin\" />
+	</Target>
+
 </Project>
