@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #177 FiefManagement behavior-callback coverage (Category 4b)
+
+ADR-008 80% behavior-hook coverage target was entirely unmet for `FiefHubCampaignBehavior` (5 callbacks, zero tests) even though `FiefHubService` had 22 tests on 8 methods.
+
+- **`TAOM.Tests/Features/FiefManagement/FiefHubCampaignBehaviorTests.cs` — NEW (7 tests).** Three direct-delegation tests (`OnNewGameCreated_CallsPresenterReset`, `OnGameLoaded_CallsPresenterReset`, `SyncData_DoesNotTouchDataStore`) reflection-invoke the private handler methods and verify the mocked presenter / data store. One type-sanity test (`Behavior_IsCampaignBehaviorBase`). Three source-content wiring tests for the engine-coupled callbacks: `RegisterEvents_SubscribesAllExpectedCampaignEvents` asserts all 3 subscriptions are in `FiefHubCampaignBehavior.cs`; `OnSessionLaunched_RegistersFiefHubMenuAndOptions` asserts the `fief_hub` menu + 4 menu options are registered; `MainSubModule_AddsFiefHubCampaignBehavior` asserts the `AddBehavior` call survives in `Main/SubModule.cs`.
+- 1944 → 1951 tests, all passing.
+
 ### Phase 9b — fix NamedCompanions Entity State Matrix completion (#127 + #184)
 
 P1 cross-feature fix for the Review #23 regression class plus its missing state-matrix tests. Pre-fix, Prisoner companions (mobile captor, `PartyBelongedTo=null`, no settlement) and Fugitive companions (`HeroState=Fugitive`, all party fields null) slipped through ALL guards in `EnsureCompanionsPlaced` and got force-placed via `EnterSettlementAction` every load — corrupting captor prison rosters and resetting fugitive state to Active. Plus a P1 singleton-state bug: `_spawned` survived across campaigns in the same Bannerlord process so campaign 2 silently skipped all companion placement.
