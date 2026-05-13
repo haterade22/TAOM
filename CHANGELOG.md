@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #189 + #190 SmartCavalryAI × MixedFormations handshake tests (Category 4c)
+
+The two-feature contract: SmartCavalryAI owns cavalry formation behavior; MixedFormations defers via two `RepresentativeIsCavalry` guards in `FormationLayoutService` (lines 74 and 191). Phase 7 audit found both guards had ZERO tests — a refactor of either feature could silently re-introduce the P1 charge-line overwrite Codex 2026-05-06 already caught.
+
+- **`TAOM.Tests/Features/MixedFormations/FormationLayoutServiceTests.cs`** — 3 new tests in a "SmartCavalryAI × MixedFormations handshake" section:
+  - `ComputeUnitPlanePosition_CavalryFormation_ReturnsNull_HonoringSmartCavalryHandshake` pins the line-74 guard.
+  - `IsMixedFormation_CavalryFormation_ReturnsFalse_HonoringSmartCavalryHandshake` pins the line-191 guard.
+  - `CavalryHandshake_NonCavalry_DoesNotShortCircuit_BaselineAssertion` baseline that a polarity-flip (returning null/false for ALL formations) would catch.
+- 1951 → 1954 tests, all passing.
+
 ### Phase 9b — close #177 FiefManagement behavior-callback coverage (Category 4b)
 
 ADR-008 80% behavior-hook coverage target was entirely unmet for `FiefHubCampaignBehavior` (5 callbacks, zero tests) even though `FiefHubService` had 22 tests on 8 methods.
