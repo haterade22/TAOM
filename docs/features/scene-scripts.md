@@ -121,21 +121,30 @@ Pairs separated by commas: `{0:0.5},{50:2},{100:0.5}`. Each pair is `{percent:st
 4. **File header on every TAOM file** porting external inspiration: cite source + spec doc + ATTRIBUTION.md.
 5. **Append to `docs/scene-scripts/ATTRIBUTION.md`** with the new entry.
 
-## Editor compatibility (IMPORTANT — read before launching the modding kit)
+## Editor compatibility (launching the modding kit)
 
-**The TAOM modules are not loaded by the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`).** `Modules/TAOM/bin/Win64_Shipping_wEditor/` is intentionally empty — TAOM.dll has multiple community-mod runtime dependencies (UIExtenderEx, Harmony, MCMv5, ButterLib) that aren't necessarily activated in editor mode. With TAOM in a launcher's editor module list, the engine would load TAOM.dll, fail to resolve those references, throw `ReflectionTypeLoadException`, and crash via `TaleWorlds.ModuleManager.Debug.FailedAssert`. Removing the wEditor binaries makes the editor open cleanly when TAOM is enabled, at the cost of TAOM's `ScriptComponentBehavior` subclasses (CS_Road) not appearing in the modding kit's script picker.
+TAOM.dll loads in the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) when the launcher's editor profile has TAOM **and** its community-mod runtime dependencies all active:
 
-**Where to author CS_Road scenes:** use the **in-game scene editor**, accessible during an active singleplayer campaign. TAOM.dll loads in singleplayer with all dependencies, so `ScriptComponentBehavior` discovery via reflection works there. The in-game editor exposes the same component-panel UI as the modding kit, just inside an active campaign session.
+- `Bannerlord.Harmony`
+- `Bannerlord.UIExtenderEx`
+- `Bannerlord.MBOptionScreen` (MCMv5)
+- `Bannerlord.ButterLib`
 
-**Hand-edit fallback:** scene XML can be edited directly to add `<game_entity>` blocks with `<script_components>` markup pointing at `CS_Road`. Tedious but always available.
+These mods' SubModule.xml files carry `IsNoRenderModeElement=false` + `DedicatedServerType=none` (added during this project's early editor-mode work — see `Bannerlord.*/SubModule.xml`), so the engine activates them in the editor's no-render context. Their DLLs enter the AppDomain, satisfying TAOM.dll's compile-time references to UIExtenderEx and Harmony types.
 
-**Future option:** if modding-kit support becomes important, split `Main/SceneScripts/` into a standalone `TAOM.SceneScripts.dll` with zero community-mod dependencies and deploy to both `Win64_Shipping_Client/` and `Win64_Shipping_wEditor/`. Documented in [CHANGELOG.md](../../CHANGELOG.md) 2026-05-13 cleanup entry as "Future option (deferred)".
+**If you launch with only TAOM active** (community mods unchecked), the engine still loads `Modules/TAOM/bin/Win64_Shipping_wEditor/TAOM.dll` but `Assembly.GetTypes()` throws `ReflectionTypeLoadException: Could not load file or assembly 'Bannerlord.UIExtenderEx'` → `TaleWorlds.ModuleManager.Debug.FailedAssert` → user-cancelable crash dialog. Fix: enable the four community mods in the launcher's editor profile.
 
-## How to verify CS_Road in the in-game scene editor (hand-off checklist for map maker)
+`Modules/TAOM/bin/Win64_Shipping_wEditor/` is maintained as a manual mirror of `Win64_Shipping_Client/` (TAOM.dll + companion DLLs DryIoc, MCMv5, Newtonsoft.Json, BehaviorTrees, BehaviorTreeWrapper, MinHook.x64, TAOM.NativeSkinFixes). The `Bannerlord.BuildResources` `Basic.targets` only deploys to Client automatically; copying to wEditor is manual after rebuilds. To re-mirror after a build:
 
-1. Launch Bannerlord normally (singleplayer), load any save or start a new sandbox campaign.
-2. Open the in-game scene editor on the current scene (default keybind: Ctrl+E in scenes that support it). The editor panel appears alongside the running scene.
-3. Open the relevant TAOM_Map scene (or a test scene). Add a generic entity.
+```bash
+cp -v Modules/TAOM/bin/Win64_Shipping_Client/* Modules/TAOM/bin/Win64_Shipping_wEditor/
+```
+
+## How to verify CS_Road in the modding kit (hand-off checklist for map maker)
+
+1. Open your launcher, switch to the editor profile. Verify enabled: Bannerlord.Harmony, Bannerlord.UIExtenderEx, Bannerlord.MBOptionScreen, Bannerlord.ButterLib, TAOM (plus TAOM_Map if you want the TAOM main map open by default).
+2. Launch the modding kit (`Win64_Shipping_wEditor`). It should open without a crash dialog.
+3. Open a test scene; add a generic entity.
 4. Component picker → search "CS_Road" → attach.
 5. Verify all 16 editor fields appear with correct defaults (cross-check against `docs/scene-scripts/specs/cs-road.md`).
 6. Click the entity, click `Readme` button → editor log shows StepCurve format help.
@@ -147,7 +156,7 @@ Pairs separated by commas: `{0:0.5},{50:2},{100:0.5}`. Each pair is `{percent:st
 12. Enable `Live = true` → move path control points → confirm mesh regenerates within ~0.5s.
 13. Save scene, reload, confirm the component re-resolves cleanly and mesh re-appears on play.
 
-> Note: the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) does NOT see CS_Road — TAOM is intentionally excluded from that binary because of community-mod dependencies. See "Editor compatibility" above.
+> Alternative: the **in-game scene editor** (accessible during an active campaign in singleplayer) also discovers CS_Road via the same `ScriptComponentBehavior` reflection scan. Use whichever workflow fits the change you're making — the modding kit is convenient for scene-only edits; the in-game editor lets you test directly against a live mission.
 
 ## Known limitations
 

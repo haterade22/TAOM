@@ -23,24 +23,22 @@ What's retained (still load-bearing, used by the MCM path): `NavigationCacheAdap
 
 Build green, 1903/1903 tests pass (EditorCacheRebuild subset 116/116). Constraint: in-game MCM trigger is the only entry point.
 
-### Cleanup: TAOM is now strictly singleplayer (stale wEditor binaries removed)
+### Restore: TAOM editor-mode loading after a misdiagnosed cleanup
 
-The standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) was crashing when TAOM was enabled because stale TAOM DLLs left over from earlier-session editor experiments (~12:38 today) referenced unresolved community-mod dependencies. The modding kit loads each enabled module's `bin/Win64_Shipping_wEditor/` DLLs and scans them via reflection for `ScriptComponentBehavior` subclasses; in that environment Bannerlord.UIExtenderEx, Bannerlord.Harmony, Bannerlord.MBOptionScreen, and Bannerlord.ButterLib aren't necessarily in the active module list, so the .NET resolver couldn't satisfy TAOM.dll's UI-mixin references. `Assembly.GetTypes()` threw `ReflectionTypeLoadException` → `TaleWorlds.ModuleManager.Debug.FailedAssert` → user-cancelable crash dialog. Logged in `C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_20432.txt` line 747.
+A first attempt at debugging an editor-mode crash today concluded (wrongly) that TAOM was intended to be singleplayer-only and that the wEditor mirror should be deleted. That conclusion was premature. The actual root cause of the morning's crash was simpler: the launcher's editor profile had been launched with only `*TAOM*` in `_MODULES_` — the four community-mod dependencies (Bannerlord.Harmony, Bannerlord.UIExtenderEx, Bannerlord.MBOptionScreen, Bannerlord.ButterLib) were not active, so the .NET resolver couldn't find `Bannerlord.UIExtenderEx` when `Assembly.GetTypes()` scanned TAOM.dll, producing the `ReflectionTypeLoadException` → `Debug.FailedAssert` crash dialog.
 
-Cleanup actions:
+Earlier in the same session (12:33 today), TAOM.dll had loaded successfully in the editor — the `taom_debug_2026-05-12_12-33-10.log` proves OnSubModuleLoad ran (localization, diplomacy, alignments, troop weights, MainMenuCustomizer all initialized). At that point the launcher had the community mods active. The morning's crash was a launcher-state regression, not a code regression.
 
-- Deleted `Modules/TAOM/bin/Win64_Shipping_wEditor/*` (9 files: TAOM.dll, TAOM.pdb, plus dep mirrors DryIoc.dll, MCMv5.dll, Newtonsoft.Json.dll, BehaviorTrees.dll, BehaviorTreeWrapper.dll, MinHook.x64.dll, TAOM.NativeSkinFixes.dll — all manually placed during earlier dependency-mirror experiments, none deployed by the normal build).
-- Deleted `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/*` (3 files — same provenance).
-- Deleted `Modules/TAOM_Online/bin/Win64_Shipping_wEditor/*` (2 files — same provenance; multiplayer module also doesn't load in the standalone editor).
-- Third-party mod folders untouched: `Bannerlord.{Harmony, UIExtenderEx, MBOptionScreen, ButterLib}/bin/Win64_Shipping_wEditor/` still hold their authors' own deploys.
+Reversal of the misdiagnosis:
 
-Engine mechanic confirmed: the standalone editor binary loads DLLs from each module's `bin/Win64_Shipping_wEditor/` (NOT `Win64_Shipping_Client/`), then scans loaded assemblies for `ScriptComponentBehavior` subclasses and lists them in the script picker. With no TAOM DLLs in that folder, the editor opens cleanly — but **scene-script authoring (`CS_Road` etc.) is no longer available from the modding kit**. Authoring options going forward: (a) in-game scene editor during an active campaign — TAOM.dll loads in singleplayer with all deps, so script discovery works there; (b) hand-edit scene XML directly; (c) revisit the split path below.
+- **Restored `Modules/TAOM/bin/Win64_Shipping_wEditor/`** as a manual mirror of `Win64_Shipping_Client/` (TAOM.dll + companion DLLs: DryIoc, MCMv5, Newtonsoft.Json, BehaviorTrees, BehaviorTreeWrapper, MinHook.x64, TAOM.NativeSkinFixes, plus .pdb). `Bannerlord.BuildResources` `Basic.targets` only auto-deploys to Client; the wEditor copy stays a manual `cp -v Win64_Shipping_Client/* Win64_Shipping_wEditor/` step after each rebuild.
+- **Restored `Modules/TAOM/SubModule.xml` editor-mode tags** (`DedicatedServerType=none` + `IsNoRenderModeElement=false`) that commit `5269507` had removed alongside the Patch37 cleanup. Restoring these lets `TAOM.SubModule.OnSubModuleLoad` fire in the editor's no-render context — necessary for the engine to scan TAOM.dll and discover its `ScriptComponentBehavior` subclasses (CS_Road). Patch37 stays deleted; we don't need it for editor mode and it never worked there anyway (the IL emission for closed generics over private nested types crashed).
+- **Did NOT restore** `TAOM.Dependencies` or `TAOM_Online` wEditor mirrors — both were over-mirroring leftovers; the editor doesn't need them.
+- **`docs/features/scene-scripts.md` Editor compatibility section rewritten** to document the actual requirement: launcher's editor profile must enable Bannerlord.Harmony + Bannerlord.UIExtenderEx + Bannerlord.MBOptionScreen + Bannerlord.ButterLib alongside TAOM. The four community mods' SubModule.xml files already have editor-mode tags (carried over from this project's early editor-mode work), so they activate when the launcher includes them.
 
-Build pipeline already correct: `Bannerlord.BuildResources` `Basic.targets` only deploys to `Win64_Shipping_Client/` — the wEditor copies were always manual. No code or csproj changes needed; the crash will not recur unless someone explicitly re-introduces the manual mirror.
+Confirmed working in `rgl_log_22468.txt` (10:18 today): TAOM.dll loads cleanly when all four community mods are active in the launcher, no `Loader Exceptions`, no `Error while getting types`, editor opens to its scene picker UI.
 
-Build green, 1903/1903 tests pass (no source changes).
-
-**Future option (deferred):** If the modding-kit workflow becomes important for scene authoring, the clean fix is to split `Main/SceneScripts/` into a standalone `TAOM.SceneScripts.dll` with zero community-mod dependencies. Explore agent verified feasibility: all 11 source files import only `System.*`, `TaleWorlds.{DotNet,Engine,Library}`, and `TAOM.Core.Validation.FiniteFloatValidator` (50-line pure static utility). Zero references to UIExtenderEx, MCM, Harmony, DryIoc, ButterLib, or Newtonsoft.Json. The split would: deploy `TAOM.SceneScripts.dll` to BOTH `Win64_Shipping_Client/` AND `Win64_Shipping_wEditor/`, while `TAOM.dll` continues Client-only. A second `<SubModule>` entry in `SubModule.xml` with `IsNoRenderModeElement=false` would activate the scene-scripts assembly in editor mode while leaving TAOM.dll singleplayer-only. Cost ~1-2 hours when prioritized.
+Build green, 1903/1903 tests pass (no code changes — this was a deploy + XML state restoration).
 
 ### Feature: scene scripts library — `CS_Road` procedural mesh generator (clean-room port)
 
