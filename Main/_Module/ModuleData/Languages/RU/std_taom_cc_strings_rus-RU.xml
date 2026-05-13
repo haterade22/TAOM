@@ -1,12 +1,782 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Русский" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_cc_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Русский" />
+  </tags>
+  <strings>
+    <string id="taom_cc_taom_parent_gondor_1_text" text="Noble Houses of Gondor" />
+    <string id="taom_cc_taom_parent_gondor_1_desc" text="Your family belonged to one of Gondor's noble houses, sworn to defend the White Tree. Your father was a knight who fought bravely in service to the Steward, while your mother managed the family's lands and affairs." />
+    <string id="taom_cc_taom_parent_gondor_2_text" text="Merchants of the White City" />
+    <string id="taom_cc_taom_parent_gondor_2_desc" text="Your family were prosperous traders within Minas Tirith, dealing in fine goods and wares. Their influence within the city's merchant guilds brought wealth and respect to your household." />
+    <string id="taom_cc_taom_parent_gondor_3_text" text="Farmers of the Pelennor" />
+    <string id="taom_cc_taom_parent_gondor_3_desc" text="Your family tilled the rich soil of the Pelennor Fields, providing sustenance for Minas Tirith. They also served as levy soldiers, standing in defense of the city during times of war." />
+    <string id="taom_cc_taom_parent_gondor_4_text" text="Artisans of Minas Tirith" />
+    <string id="taom_cc_taom_parent_gondor_4_desc" text="Your family were skilled craftsmen in Minas Tirith, creating fine armor, weapons, and tapestries that adorned the halls of the White City. Their artistry was renowned across Gondor." />
+    <string id="taom_cc_taom_parent_gondor_5_text" text="Rangers of Ithilien" />
+    <string id="taom_cc_taom_parent_gondor_5_desc" text="Your family were members of the Rangers of Ithilien, skilled in the arts of stealth and archery. They patrolled the wilds, protecting Gondor's borders from the forces of Mordor." />
+    <string id="taom_cc_taom_parent_gondor_6_text" text="Street Urchins of Osgiliath" />
+    <string id="taom_cc_taom_parent_gondor_6_desc" text="Your family lived among the ruins of Osgiliath, surviving through cunning and resourcefulness. They scavenged what they could and occasionally served under Gondor's banners as irregular troops." />
+    <string id="taom_cc_taom_parent_mordor_1_text" text="Servants of the Dark Tower" />
+    <string id="taom_cc_taom_parent_mordor_1_desc" text="Your family served directly under the command of the Dark Tower. Your father was a brutal enforcer, while your mother worked to instill the will of Sauron among the lesser folk." />
+    <string id="taom_cc_taom_parent_mordor_2_text" text="Merchants of the Black Road" />
+    <string id="taom_cc_taom_parent_mordor_2_desc" text="Your family managed trade and supplies within Mordor, ensuring the armies of Sauron were equipped for war. Their dealings were shadowed by intrigue and violence." />
+    <string id="taom_cc_taom_parent_mordor_3_text" text="Slaves of Barad-dur" />
+    <string id="taom_cc_taom_parent_mordor_3_desc" text="Your family were enslaved laborers, toiling in the forges and quarries of Mordor to fuel the war machine of the Dark Lord. Their resilience became a testament to their will to survive." />
+    <string id="taom_cc_taom_parent_mordor_4_text" text="Orc Taskmasters" />
+    <string id="taom_cc_taom_parent_mordor_4_desc" text="Your family were tasked with overseeing the labor of Orcs and Men alike, ensuring that Sauron's orders were carried out with ruthless efficiency." />
+    <string id="taom_cc_taom_parent_mordor_5_text" text="Hunters of Gorgoroth" />
+    <string id="taom_cc_taom_parent_mordor_5_desc" text="Your family roamed the volcanic plains of Gorgoroth, hunting and tracking prey to sustain the armies of Mordor. Their skill in the wilderness was unmatched." />
+    <string id="taom_cc_taom_parent_mordor_6_text" text="Uruk Overseers" />
+    <string id="taom_cc_taom_parent_mordor_6_desc" text="Your family served as overseers for the Uruk-hai legions, enforcing discipline and maintaining order within Sauron's ranks." />
+    <string id="taom_cc_taom_parent_erebor_1_text" text="Noble of the Lonely Mountain" />
+    <string id="taom_cc_taom_parent_erebor_1_desc" text="Your family was of Erebor's noble line, kin to King Dain, wielding mighty axes and inspiring warriors to defend the Lonely Mountain's honor." />
+    <string id="taom_cc_taom_parent_erebor_2_text" text="Master Smith" />
+    <string id="taom_cc_taom_parent_erebor_2_desc" text="Your family forged legendary arms in Erebor's blazing halls, crafting blades and armor coveted across Middle-earth, and traded them for wealth." />
+    <string id="taom_cc_taom_parent_erebor_3_text" text="Delve Miner" />
+    <string id="taom_cc_taom_parent_erebor_3_desc" text="Your family toiled in Erebor's deepest mines, unearthing mithril and gems, and learned to fortify the mountain against invaders." />
+    <string id="taom_cc_taom_parent_erebor_4_text" text="Ironfoot Warrior" />
+    <string id="taom_cc_taom_parent_erebor_4_desc" text="Your family fought with Dain Ironfoot's warriors, mastering axe and shield and wielding crossbows to hold Erebor's gates." />
+    <string id="taom_cc_taom_parent_erebor_5_text" text="Vault Keeper" />
+    <string id="taom_cc_taom_parent_erebor_5_desc" text="Your family guarded Erebor's vast treasuries, managing its riches and planning defenses to protect the mountain's wealth from foes." />
+    <string id="taom_cc_taom_parent_erebor_6_text" text="Mountain Scout" />
+    <string id="taom_cc_taom_parent_erebor_6_desc" text="Your family patrolled the wilds around Erebor, tracking Orcs and firing bows to safeguard the Lonely Mountain's borders." />
+    <string id="taom_cc_taom_parent_rivendell_1_text" text="Nobles of Imladris" />
+    <string id="taom_cc_taom_parent_rivendell_1_desc" text="Your family were esteemed Elves of Imladris, sworn to serve Elrond. They carried the wisdom of ages and the strength to defend Rivendell in its time of need." />
+    <string id="taom_cc_taom_parent_rivendell_2_text" text="Artisans of Rivendell" />
+    <string id="taom_cc_taom_parent_rivendell_2_desc" text="Your family were skilled craftsmen and loremasters, creating wonders of Elven craftsmanship and preserving the ancient knowledge of Middle-earth." />
+    <string id="taom_cc_taom_parent_rivendell_3_text" text="Farmers of the Hidden Valley" />
+    <string id="taom_cc_taom_parent_rivendell_3_desc" text="Your family tended the fertile fields of Rivendell, ensuring its people and guests were well-fed and sustained in their peaceful haven." />
+    <string id="taom_cc_taom_parent_rivendell_4_text" text="Wardens of the Valley" />
+    <string id="taom_cc_taom_parent_rivendell_4_desc" text="Your family served as scouts and guardians, patrolling the borders of Imladris and ensuring the valley remained a sanctuary free from evil." />
+    <string id="taom_cc_taom_parent_rivendell_5_text" text="Elven Scholars" />
+    <string id="taom_cc_taom_parent_rivendell_5_desc" text="Your family were scholars of lore, healing, and magic, preserving the ancient knowledge of the Elves and aiding the free peoples of Middle-earth." />
+    <string id="taom_cc_taom_parent_rivendell_6_text" text="Wanderers of the Wild" />
+    <string id="taom_cc_taom_parent_rivendell_6_desc" text="Your family were known to venture beyond Rivendell, aiding those in need and learning of the changing world beyond the valley." />
+    <string id="taom_cc_taom_parent_mirkwood_1_text" text="Descendants of Woodland Nobility" />
+    <string id="taom_cc_taom_parent_mirkwood_1_desc" text="Your family descended from the noble houses of the Woodland Realm, serving as close advisors and protectors of King Thranduil's court." />
+    <string id="taom_cc_taom_parent_mirkwood_2_text" text="Merchants of the Forest Path" />
+    <string id="taom_cc_taom_parent_mirkwood_2_desc" text="Your family were merchants who traveled the treacherous paths of Mirkwood, bringing goods and trade to the Elvenking's halls." />
+    <string id="taom_cc_taom_parent_mirkwood_3_text" text="Woodland Farmers" />
+    <string id="taom_cc_taom_parent_mirkwood_3_desc" text="Your family lived on the fringes of the Woodland Realm, cultivating the land and gathering what little the shadowed forest provided." />
+    <string id="taom_cc_taom_parent_mirkwood_4_text" text="Artisans of the Woodland Halls" />
+    <string id="taom_cc_taom_parent_mirkwood_4_desc" text="Your family were artisans of the Woodland Realm, crafting exquisite weapons and tools from the resources of the forest." />
+    <string id="taom_cc_taom_parent_mirkwood_5_text" text="Hunters of the Deep Woods" />
+    <string id="taom_cc_taom_parent_mirkwood_5_desc" text="Your family were skilled hunters who braved the shadowy depths of Mirkwood to provide food and fend off the creatures that lurk within." />
+    <string id="taom_cc_taom_parent_mirkwood_6_text" text="Rangers of the Woodland Realm" />
+    <string id="taom_cc_taom_parent_mirkwood_6_desc" text="Your family served as rangers, protecting the borders of the Woodland Realm and guarding the forest paths from intruders and threats alike." />
+    <string id="taom_cc_taom_parent_lothlorien_1_text" text="Nobles of Caras Galadhon" />
+    <string id="taom_cc_taom_parent_lothlorien_1_desc" text="Your family served directly under the guidance of Lady Galadriel and Lord Celeborn, defending the heart of Lothlorien with unwavering dedication." />
+    <string id="taom_cc_taom_parent_lothlorien_2_text" text="Artisans of the Golden Wood" />
+    <string id="taom_cc_taom_parent_lothlorien_2_desc" text="Your family were master artisans, weaving the beauty of the Golden Wood into their creations, from armor to musical instruments." />
+    <string id="taom_cc_taom_parent_lothlorien_3_text" text="Guardians of the Mallorn Trees" />
+    <string id="taom_cc_taom_parent_lothlorien_3_desc" text="Your family protected the sacred Mallorn trees, ensuring the splendor of Lothlorien endured against any threat." />
+    <string id="taom_cc_taom_parent_lothlorien_4_text" text="Rangers of the Dimrill Dale" />
+    <string id="taom_cc_taom_parent_lothlorien_4_desc" text="Your family patrolled the borders of Lothlorien, guarding the passes and defending against Orcs and other intruders." />
+    <string id="taom_cc_taom_parent_lothlorien_5_text" text="Healers of the Golden Wood" />
+    <string id="taom_cc_taom_parent_lothlorien_5_desc" text="Your family tended to the wounded and preserved the ancient wisdom of healing within the Golden Wood." />
+    <string id="taom_cc_taom_parent_lothlorien_6_text" text="Wanderers of the Galadhrim" />
+    <string id="taom_cc_taom_parent_lothlorien_6_desc" text="Your family roamed the lands beyond Lothlorien, aiding allies and spreading word of the Golden Wood's splendor." />
+    <string id="taom_cc_taom_parent_isengard_1_text" text="Servants of Saruman" />
+    <string id="taom_cc_taom_parent_isengard_1_desc" text="Your family worked under the orders of Saruman the White, managing his domain and assisting in his schemes of conquest." />
+    <string id="taom_cc_taom_parent_isengard_2_text" text="Craftsmen of Orthanc" />
+    <string id="taom_cc_taom_parent_isengard_2_desc" text="Your family crafted tools and weapons within the shadow of Orthanc, forging instruments of Saruman's will." />
+    <string id="taom_cc_taom_parent_isengard_3_text" text="Laborers of the Deeping Caves" />
+    <string id="taom_cc_taom_parent_isengard_3_desc" text="Your family toiled in the deep pits of Isengard, extracting stone and ore to fuel Saruman's ambitions." />
+    <string id="taom_cc_taom_parent_isengard_4_text" text="Uruk-Hai Warriors" />
+    <string id="taom_cc_taom_parent_isengard_4_desc" text="Your family were among the first Uruk-Hai bred by Saruman, warriors forged for war and domination." />
+    <string id="taom_cc_taom_parent_isengard_5_text" text="Scouts of the Wold" />
+    <string id="taom_cc_taom_parent_isengard_5_desc" text="Your family were scouts and trackers, ensuring Saruman's forces moved unseen across the plains of Rohan." />
+    <string id="taom_cc_taom_parent_isengard_6_text" text="Rogues of Isengard" />
+    <string id="taom_cc_taom_parent_isengard_6_desc" text="Your family operated in the shadows, gathering intelligence and undermining the enemies of Saruman." />
+    <string id="taom_cc_taom_parent_gundabad_1_text" text="Nobles of Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_1_desc" text="Your family were among the noble elite of Gundabad, dedicated to reclaiming their ancestral home and defending it from invaders." />
+    <string id="taom_cc_taom_parent_gundabad_2_text" text="Smiths of Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_2_desc" text="Your family were skilled smiths, crafting tools and weapons to equip the defenders of Gundabad." />
+    <string id="taom_cc_taom_parent_gundabad_3_text" text="Miners of Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_3_desc" text="Your family worked tirelessly in the mines of Gundabad, uncovering its hidden riches." />
+    <string id="taom_cc_taom_parent_gundabad_4_text" text="Warriors of the Grey Mountains" />
+    <string id="taom_cc_taom_parent_gundabad_4_desc" text="Your family fought against Orcs and other threats in the Grey Mountains, upholding the honor of their kin." />
+    <string id="taom_cc_taom_parent_gundabad_5_text" text="Rangers of Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_5_desc" text="Your family served as rangers, patrolling the wilds around Gundabad and safeguarding its borders from harm." />
+    <string id="taom_cc_taom_parent_gundabad_6_text" text="Outcasts of the Mountains" />
+    <string id="taom_cc_taom_parent_gundabad_6_desc" text="Your family lived on the fringes of Gundabad's society, surviving through cunning and ruthlessness in the unforgiving mountain passes." />
+    <string id="taom_cc_taom_parent_dolguldur_1_text" text="Servants of the Necromancer" />
+    <string id="taom_cc_taom_parent_dolguldur_1_desc" text="Your family served directly under the Necromancer, performing his dark bidding and enforcing his will across the region." />
+    <string id="taom_cc_taom_parent_dolguldur_2_text" text="Crafters of Shadowed Steel" />
+    <string id="taom_cc_taom_parent_dolguldur_2_desc" text="Your family forged weapons and armor imbued with the dark magic of Dol Guldur, equipping its armies for conquest." />
+    <string id="taom_cc_taom_parent_dolguldur_3_text" text="Miners of the Shadowed Halls" />
+    <string id="taom_cc_taom_parent_dolguldur_3_desc" text="Your family labored deep within the caverns of Dol Guldur, extracting resources to feed its war machine." />
+    <string id="taom_cc_taom_parent_dolguldur_4_text" text="Warriors of the Enchanted Wood" />
+    <string id="taom_cc_taom_parent_dolguldur_4_desc" text="Your family were fierce warriors who fought to extend the shadow of Dol Guldur over the surrounding lands." />
+    <string id="taom_cc_taom_parent_dolguldur_5_text" text="Hunters of the Dark Forest" />
+    <string id="taom_cc_taom_parent_dolguldur_5_desc" text="Your family hunted the twisted creatures of the forest and tracked those who dared trespass into the Necromancer's domain." />
+    <string id="taom_cc_taom_parent_dolguldur_6_text" text="Rogues of Dol Guldur" />
+    <string id="taom_cc_taom_parent_dolguldur_6_desc" text="Your family were spies and saboteurs, spreading the influence of Dol Guldur through deception and fear." />
+    <string id="taom_cc_taom_parent_umbar_1_text" text="Corsair Captains" />
+    <string id="taom_cc_taom_parent_umbar_1_desc" text="Your family were leaders among the Corsairs of Umbar, commanding ships and raiding the coasts of Gondor." />
+    <string id="taom_cc_taom_parent_umbar_2_text" text="Merchants of the Black Tide" />
+    <string id="taom_cc_taom_parent_umbar_2_desc" text="Your family conducted trade across the seas, often smuggling goods to fund the Corsairs' endeavors." />
+    <string id="taom_cc_taom_parent_umbar_3_text" text="Shipwrights of Umbar" />
+    <string id="taom_cc_taom_parent_umbar_3_desc" text="Your family constructed the vessels that carried the Corsairs to war, crafting ships of speed and stealth." />
+    <string id="taom_cc_taom_parent_umbar_4_text" text="Pirates of the Coasts" />
+    <string id="taom_cc_taom_parent_umbar_4_desc" text="Your family were Corsairs who raided the shores of Gondor and beyond, striking fear into the hearts of their enemies." />
+    <string id="taom_cc_taom_parent_umbar_5_text" text="Navigators of the High Seas" />
+    <string id="taom_cc_taom_parent_umbar_5_desc" text="Your family were skilled navigators, charting the dangerous seas and leading the Corsairs to victory." />
+    <string id="taom_cc_taom_parent_umbar_6_text" text="Smugglers of Umbar" />
+    <string id="taom_cc_taom_parent_umbar_6_desc" text="Your family moved in the shadows, smuggling goods and information vital to the survival of the Corsairs." />
+    <string id="taom_cc_taom_parent_empire_1_text" text="Descendants of Old Chieftains" />
+    <string id="taom_cc_taom_parent_empire_1_desc" text="Your family held sway as chieftains among the Dunlending clans, commanding respect through lineage and strength. Your father rallied warriors in times of conflict, while your mother managed the clan's affairs." />
+    <string id="taom_cc_taom_parent_empire_2_text" text="Clan Merchants" />
+    <string id="taom_cc_taom_parent_empire_2_desc" text="Your family traded goods between the Dunlending clans and the outside world. Their knowledge of the land and its people brought prosperity to your household." />
+    <string id="taom_cc_taom_parent_empire_3_text" text="Free Clansfolk" />
+    <string id="taom_cc_taom_parent_empire_3_desc" text="Your family were free folk of Dunland, tilling the soil and herding sheep among the hills. They answered the call of the chieftains when war came." />
+    <string id="taom_cc_taom_parent_empire_4_text" text="Skilled Artisans" />
+    <string id="taom_cc_taom_parent_empire_4_desc" text="Your family were craftsmen of the Dunlending clans, fashioning weapons, tools, and ornaments from the resources of the hills." />
+    <string id="taom_cc_taom_parent_empire_5_text" text="Woodland Foragers" />
+    <string id="taom_cc_taom_parent_empire_5_desc" text="Your family lived off the wild lands of Dunland, hunting game and gathering herbs in the dense forests that bordered the Misty Mountains." />
+    <string id="taom_cc_taom_parent_empire_6_text" text="Wanderers and Outcasts" />
+    <string id="taom_cc_taom_parent_empire_6_desc" text="Your family were drifters, cast out from the clans or choosing to live beyond their reach. They survived by their wits and occasionally by less honest means." />
+    <string id="taom_cc_taom_parent_vlandia_1_text" text="Retainers of the Marshal" />
+    <string id="taom_cc_taom_parent_vlandia_1_desc" text="Your family served the marshals of the Riddermark, riding with them in defense of Rohan's borders. Your father was a skilled horseman and warrior." />
+    <string id="taom_cc_taom_parent_vlandia_2_text" text="Merchants of Edoras" />
+    <string id="taom_cc_taom_parent_vlandia_2_desc" text="Your family were traders in the great hall-city of Edoras, bringing goods from across the Riddermark and beyond to the people of Rohan." />
+    <string id="taom_cc_taom_parent_vlandia_3_text" text="Freeholders of the Westfold" />
+    <string id="taom_cc_taom_parent_vlandia_3_desc" text="Your family were free farmers of the Westfold, raising horses and crops on the fertile plains. They served as mounted levy when the king called." />
+    <string id="taom_cc_taom_parent_vlandia_4_text" text="Smiths of Aldburg" />
+    <string id="taom_cc_taom_parent_vlandia_4_desc" text="Your family were renowned smiths in Aldburg, forging the blades and armor that equipped the Rohirrim for battle." />
+    <string id="taom_cc_taom_parent_vlandia_5_text" text="Hunters of the Eastfold" />
+    <string id="taom_cc_taom_parent_vlandia_5_desc" text="Your family were hunters and trackers in the Eastfold, skilled with the bow and knowledgeable in the ways of the wild." />
+    <string id="taom_cc_taom_parent_vlandia_6_text" text="Wanderers of the Wold" />
+    <string id="taom_cc_taom_parent_vlandia_6_desc" text="Your family drifted across the Wold, the wild grasslands between Rohan and the Brown Lands. They survived by their wits and occasional service as scouts." />
+    <string id="taom_cc_taom_parent_sturgia_1_text" text="Servants of King of Dale" />
+    <string id="taom_cc_taom_parent_sturgia_1_desc" text="Your family served directly under the court of the King of Dale, managing the affairs of the kingdom and defending its people." />
+    <string id="taom_cc_taom_parent_sturgia_2_text" text="Urban Traders" />
+    <string id="taom_cc_taom_parent_sturgia_2_desc" text="Your family were merchants of Dale, trading in the fine wares and toys that made the city famous across the North." />
+    <string id="taom_cc_taom_parent_sturgia_3_text" text="Free Farmers" />
+    <string id="taom_cc_taom_parent_sturgia_3_desc" text="Your family were farmers in the lands around Dale and Esgaroth, working the fields and fishing the Long Lake." />
+    <string id="taom_cc_taom_parent_sturgia_4_text" text="Urban Artisans" />
+    <string id="taom_cc_taom_parent_sturgia_4_desc" text="Your family were craftsmen in Dale, famous for their toy-making and metalwork that drew traders from distant lands." />
+    <string id="taom_cc_taom_parent_sturgia_5_text" text="Forest Hunters" />
+    <string id="taom_cc_taom_parent_sturgia_5_desc" text="Your family were hunters and woodsmen in the forests around Dale, providing furs and game for the city's markets." />
+    <string id="taom_cc_taom_parent_sturgia_6_text" text="Vagabonds" />
+    <string id="taom_cc_taom_parent_sturgia_6_desc" text="Your family lived on the margins of society in Dale, surviving through odd jobs and sometimes less reputable means." />
+    <string id="taom_cc_taom_parent_aserai_1_text" text="Allies of Black Serpent" />
+    <string id="taom_cc_taom_parent_aserai_1_desc" text="Your family were loyal to the Black Serpent, leading warbands into the northern lands at the behest of the Dark Lord." />
+    <string id="taom_cc_taom_parent_aserai_2_text" text="Desert Warriors" />
+    <string id="taom_cc_taom_parent_aserai_2_desc" text="Your family were fierce warriors of the Haradrim, trained from youth to fight in the scorching deserts of the South." />
+    <string id="taom_cc_taom_parent_aserai_3_text" text="Traders of the South" />
+    <string id="taom_cc_taom_parent_aserai_3_desc" text="Your family conducted trade along the southern roads, bringing exotic goods and spices to the markets of Harad." />
+    <string id="taom_cc_taom_parent_aserai_4_text" text="Desert Farmers" />
+    <string id="taom_cc_taom_parent_aserai_4_desc" text="Your family worked the oases and irrigated lands of Harad, coaxing life from the arid soil with skill and patience." />
+    <string id="taom_cc_taom_parent_aserai_5_text" text="Nomadic Tribespeople" />
+    <string id="taom_cc_taom_parent_aserai_5_desc" text="Your family roamed the vast deserts, following ancient paths between water sources and trading with settled peoples." />
+    <string id="taom_cc_taom_parent_aserai_6_text" text="Desert Outlaws" />
+    <string id="taom_cc_taom_parent_aserai_6_desc" text="Your family survived on the fringes of Haradrim society, raiding caravans and living by their cunning in the endless sands." />
+    <string id="taom_cc_taom_parent_battania_1_text" text="Horse-Lords of Khand" />
+    <string id="taom_cc_taom_parent_battania_1_desc" text="Your family were lords of the Variag horse clans, commanding fierce mounted warriors across the steppes of Khand." />
+    <string id="taom_cc_taom_parent_battania_2_text" text="Nomadic Healers" />
+    <string id="taom_cc_taom_parent_battania_2_desc" text="Your family were healers and wise folk of the Variag clans, tending to the sick and preserving ancient remedies." />
+    <string id="taom_cc_taom_parent_battania_3_text" text="Clan Warriors" />
+    <string id="taom_cc_taom_parent_battania_3_desc" text="Your family were warriors of the Variag clans, skilled in mounted combat and fiercely loyal to their chieftain." />
+    <string id="taom_cc_taom_parent_battania_4_text" text="Smiths of the Steppes" />
+    <string id="taom_cc_taom_parent_battania_4_desc" text="Your family were smiths of the Variag people, crafting weapons and horse gear from the metals of the eastern mountains." />
+    <string id="taom_cc_taom_parent_battania_5_text" text="Steppe Hunters" />
+    <string id="taom_cc_taom_parent_battania_5_desc" text="Your family hunted across the vast steppes of Khand, tracking game and guarding the herds from predators." />
+    <string id="taom_cc_taom_parent_battania_6_text" text="Bards of Khand" />
+    <string id="taom_cc_taom_parent_battania_6_desc" text="Your family were traveling bards and storytellers, keeping alive the oral traditions of the Variag people through song and tale." />
+    <string id="taom_cc_taom_parent_khuzait_1_text" text="Kinsfolk of Chieftain" />
+    <string id="taom_cc_taom_parent_khuzait_1_desc" text="Your family were close kin to the Easterling chieftain, holding positions of power and commanding respect among the warrior clans." />
+    <string id="taom_cc_taom_parent_khuzait_2_text" text="Merchants of East" />
+    <string id="taom_cc_taom_parent_khuzait_2_desc" text="Your family traded along the eastern routes, bringing goods from distant lands to the markets of Rhun." />
+    <string id="taom_cc_taom_parent_khuzait_3_text" text="Nomadic Tribesfolk" />
+    <string id="taom_cc_taom_parent_khuzait_3_desc" text="Your family were nomads of the eastern plains, moving with the seasons and living off the land." />
+    <string id="taom_cc_taom_parent_khuzait_4_text" text="Steppe Farmers" />
+    <string id="taom_cc_taom_parent_khuzait_4_desc" text="Your family worked the fertile valleys near the inland sea of Rhun, growing grain and raising livestock." />
+    <string id="taom_cc_taom_parent_khuzait_5_text" text="Spirit Callers" />
+    <string id="taom_cc_taom_parent_khuzait_5_desc" text="Your family were shamans and spirit-speakers of the Easterling clans, communing with the spirits of the land and sky." />
+    <string id="taom_cc_taom_parent_khuzait_6_text" text="Outland Scouts" />
+    <string id="taom_cc_taom_parent_khuzait_6_desc" text="Your family served as scouts and outriders for the Easterling host, ranging far ahead of the main force to gather intelligence." />
+    <string id="taom_cc_taom_childhood_leadership_text" text="your leadership skills." />
+    <string id="taom_cc_taom_childhood_leadership_desc" text="In the shadow of ancient ruins, your youthful band of companions looked to you for guidance. Whether charting a safe path through the woods or rallying courage against imagined foes, your natural leadership shone like the banners of the kings of old." />
+    <string id="taom_cc_taom_childhood_fighting_text" text="your fighting skills." />
+    <string id="taom_cc_taom_childhood_fighting_desc" text="Your strength was the stuff of stories among the village children. They marveled at your ability to carry burdens like a seasoned warrior and hurl stones with the force of a trebuchet. Even then, you were compared to the heroes of legend." />
+    <string id="taom_cc_taom_childhood_history_text" text="your history skills." />
+    <string id="taom_cc_taom_childhood_history_desc" text="With keen eyes that missed no movement and quick feet that outran most, you were often the first to spot a deer trail or the glint of a hidden trinket. Your friends likened you to the rangers of the north, silent and observant." />
+    <string id="taom_cc_taom_childhood_convince_text" text="your ability to convince others." />
+    <string id="taom_cc_taom_childhood_convince_desc" text="While others played, you lingered in the market, watching merchants haggle over prices and tally profits. You were fascinated by the craft of trade, often imagining yourself as a steward of Gondor or a dwarven craftsman counting gems." />
+    <string id="taom_cc_taom_childhood_charge_text" text="your ability to take charge of the situation." />
+    <string id="taom_cc_taom_childhood_charge_desc" text="You had a natural gift for understanding others, often diffusing arguments and winning friends with ease. Your elders said you had the charisma of an elven lord, while your peers followed you with unwavering loyalty." />
+    <string id="taom_cc_taom_childhood_horses_text" text="your skill with horses." />
+    <string id="taom_cc_taom_childhood_horses_desc" text="You felt a deep bond with animals, particularly horses. The stable hands marveled at how you could calm even the most spirited steed, and your skill in caring for wounds brought whispers that you might rival the horsemasters of Rohan one day." />
+    <string id="taom_cc_taom_youth_gondor_1_text" text="Trained with the Swan Knights." />
+    <string id="taom_cc_taom_youth_gondor_1_desc" text="You joined the ranks of the Swan Knights of Dol Amroth, learning the art of mounted combat and chivalric warfare under the banners of Gondor's finest." />
+    <string id="taom_cc_taom_youth_gondor_2_text" text="Stood guard in Minas Tirith." />
+    <string id="taom_cc_taom_youth_gondor_2_desc" text="You served in the garrison of Minas Tirith, defending the White City's walls and learning the art of siege defense from its veteran commanders." />
+    <string id="taom_cc_taom_youth_gondor_3_text" text="Rode with the Rangers of Ithilien." />
+    <string id="taom_cc_taom_youth_gondor_3_desc" text="You patrolled the wilds of Ithilien, striking at the enemy from the shadows and honing your skills as a ranger in the tradition of Faramir's company." />
+    <string id="taom_cc_taom_youth_gondor_4_text" text="Trained with the Tower Guard." />
+    <string id="taom_cc_taom_youth_gondor_4_desc" text="You joined the elite Tower Guard of Gondor, training in disciplined infantry warfare to protect the Citadel and the White Tree." />
+    <string id="taom_cc_taom_youth_gondor_5_text" text="Lived by your wits in the ruins of Osgiliath." />
+    <string id="taom_cc_taom_youth_gondor_5_desc" text="You scraped by in the contested ruins of Osgiliath, learning the lethal economy of street-fighting and the value of a well-thrown stone. Survival in that half-drowned maze of broken stone shaped you into someone who could improvise anything from nothing." />
+    <string id="taom_cc_taom_youth_mordor_1_text" text="Trained with the Warg Riders." />
+    <string id="taom_cc_taom_youth_mordor_1_desc" text="You were chosen to train with the elite Warg Riders of Mordor, learning to control the fearsome beasts and strike terror into the hearts of the enemy." />
+    <string id="taom_cc_taom_youth_mordor_2_text" text="Manned the towers of Mordor's fortresses." />
+    <string id="taom_cc_taom_youth_mordor_2_desc" text="You were stationed on the watchtowers and walls of Mordor's black fortresses, scanning the horizon for movement and directing fire on any who approached. The post suited those who could think as well as shoot." />
+    <string id="taom_cc_taom_youth_mordor_3_text" text="Rode with the Black Scouts." />
+    <string id="taom_cc_taom_youth_mordor_3_desc" text="You joined the Black Scouts, riding swiftly through the wastelands to gather intelligence and harry the enemy's flanks." />
+    <string id="taom_cc_taom_youth_mordor_4_text" text="Marched in the Orc legions of the Dark Lord." />
+    <string id="taom_cc_taom_youth_mordor_4_desc" text="You drilled in the relentless formations of Sauron's infantry, learning to shoulder-charge and cut with blade and axe in ranks that moved like a single armoured fist. Weakness was punished and strength rewarded in iron." />
+    <string id="taom_cc_taom_youth_mordor_5_text" text="Joined the Shadow Skirmishers." />
+    <string id="taom_cc_taom_youth_mordor_5_desc" text="You became a Shadow Skirmisher, harassing the enemy with thrown weapons and quick strikes before melting back into the darkness." />
+    <string id="taom_cc_taom_youth_mordor_6_text" text="Lived on the fringes of Sauron's war host." />
+    <string id="taom_cc_taom_youth_mordor_6_desc" text="You were neither soldier nor slave, moving on the shadowed margins of Mordor's great army — stealing what you could, trading information, and learning which officers were bribeable and which were better avoided. Cunning was the only currency you trusted." />
+    <string id="taom_cc_taom_youth_erebor_1_text" text="Served in the Royal Guard of Erebor." />
+    <string id="taom_cc_taom_youth_erebor_1_desc" text="You pledged your loyalty to the King Under the Mountain, serving in the elite Royal Guard and learning to wield axe and hammer in defense of the realm." />
+    <string id="taom_cc_taom_youth_erebor_2_text" text="Defended the gates of Erebor." />
+    <string id="taom_cc_taom_youth_erebor_2_desc" text="As part of Erebor's garrison, you manned the crossbows and held the gates against all comers, learning the art of dwarven siege defense." />
+    <string id="taom_cc_taom_youth_erebor_3_text" text="Trained with the Iron Guard." />
+    <string id="taom_cc_taom_youth_erebor_3_desc" text="You joined the Iron Guard, Erebor's shock troops, learning to hurl throwing axes and fight in the tight corridors of the mountain halls." />
+    <string id="taom_cc_taom_youth_erebor_4_text" text="Scouted the foothills of the Lonely Mountain." />
+    <string id="taom_cc_taom_youth_erebor_4_desc" text="You ventured into the wild lands around Erebor, tracking Orcs and wolves and safeguarding the mountain's approaches." />
+    <string id="taom_cc_taom_youth_erebor_5_text" text="Stood in the vanguard." />
+    <string id="taom_cc_taom_youth_erebor_5_desc" text="You trained as part of Erebor's vanguard, mastering the two-handed axe and polearm in the disciplined dwarven battle formations." />
+    <string id="taom_cc_taom_youth_erebor_6_text" text="Worked with the caravan guards." />
+    <string id="taom_cc_taom_youth_erebor_6_desc" text="You accompanied trading caravans between Erebor and Dale, learning the ways of commerce and the art of defending valuable cargo." />
+    <string id="taom_cc_taom_youth_rivendell_1_text" text="Trained with the Guard of Imladris." />
+    <string id="taom_cc_taom_youth_rivendell_1_desc" text="You served under the banners of Rivendell, training in mounted combat and the graceful Elven martial arts to defend the Last Homely House." />
+    <string id="taom_cc_taom_youth_rivendell_2_text" text="Stood watch at the halls of Elrond." />
+    <string id="taom_cc_taom_youth_rivendell_2_desc" text="You served as a sentry at the halls of Elrond, learning to read the land and anticipate threats before they could reach the hidden valley." />
+    <string id="taom_cc_taom_youth_rivendell_3_text" text="Ranged the Trollshaws with the border wardens." />
+    <string id="taom_cc_taom_youth_rivendell_3_desc" text="You joined the wardens who patrolled far beyond Rivendell's borders into the wild Trollshaws and the upper Anduin vales, learning to track enemies and read the signs of dark movement through ancient forest." />
+    <string id="taom_cc_taom_youth_rivendell_4_text" text="Trained in the art of Elven infantry." />
+    <string id="taom_cc_taom_youth_rivendell_4_desc" text="You stood with the ranks of Rivendell's warriors, mastering the spear and sword in the precise, deadly style of the High Elves." />
+    <string id="taom_cc_taom_youth_rivendell_5_text" text="Journeyed with the loremasters." />
+    <string id="taom_cc_taom_youth_rivendell_5_desc" text="You accompanied Rivendell's loremasters on their journeys, learning diplomacy, persuasion, and the art of leadership among the free peoples." />
+    <string id="taom_cc_taom_youth_mirkwood_1_text" text="Trained with the Woodland Riders." />
+    <string id="taom_cc_taom_youth_mirkwood_1_desc" text="You rode through the dark woods on swift Elven steeds, learning to fight from horseback among the ancient trees of Thranduil's realm." />
+    <string id="taom_cc_taom_youth_mirkwood_2_text" text="Patrolled the darkened glades." />
+    <string id="taom_cc_taom_youth_mirkwood_2_desc" text="You joined the wardens who patrolled the glades of Mirkwood, keeping watch against spiders, Orcs, and the creeping shadow of Dol Guldur." />
+    <string id="taom_cc_taom_youth_mirkwood_3_text" text="Stood with the Elven Spear Guard." />
+    <string id="taom_cc_taom_youth_mirkwood_3_desc" text="You took your place among the Spear Guard of the Woodland Realm, learning to fight in disciplined formations beneath the forest canopy." />
+    <string id="taom_cc_taom_youth_mirkwood_4_text" text="Set traps for the spiders of Mirkwood." />
+    <string id="taom_cc_taom_youth_mirkwood_4_desc" text="You were among the hunters tasked with keeping the great spiders from the Woodland Realm's heart, learning to lay snares and ambushes in the dark undergrowth and to strike with knife and hurled blade before the creatures could close with you." />
+    <string id="taom_cc_taom_youth_mirkwood_5_text" text="Served in the halls of the Woodland King." />
+    <string id="taom_cc_taom_youth_mirkwood_5_desc" text="You were admitted to the court of Thranduil, learning the diplomatic arts and the songs of the Woodland Elves under the tutelage of those who had sung since the first age of stars. The Elvenking's hall demanded as much from the tongue as from the sword-arm." />
+    <string id="taom_cc_taom_youth_lothlorien_1_text" text="Trained with the Galadhrim cavalry." />
+    <string id="taom_cc_taom_youth_lothlorien_1_desc" text="You joined the elite cavalry of Lothlorien, riding swift horses through the Golden Wood and learning to fight with the grace of the Galadhrim." />
+    <string id="taom_cc_taom_youth_lothlorien_2_text" text="Kept vigil on the flets of the Golden Wood." />
+    <string id="taom_cc_taom_youth_lothlorien_2_desc" text="You stood the long, still watches on the high platforms among the mallorn branches, your silver bow drawn across the threshold of the veiled borders. Nothing passed the Galadhrim wardens unseen — and you intended to keep it that way." />
+    <string id="taom_cc_taom_youth_lothlorien_3_text" text="Joined the archers of Caras Galadhon." />
+    <string id="taom_cc_taom_youth_lothlorien_3_desc" text="You trained with the famed archers of Lothlorien, learning to send arrows with deadly precision from the platforms among the mallorn trees." />
+    <string id="taom_cc_taom_youth_lothlorien_4_text" text="Joined the wardens of the trees." />
+    <string id="taom_cc_taom_youth_lothlorien_4_desc" text="You became a warden of the trees, defending the heart of Lothlorien with spear and sword in the ancient Elven tradition." />
+    <string id="taom_cc_taom_youth_lothlorien_5_text" text="Walked the mirror paths as a student of the Lady." />
+    <string id="taom_cc_taom_youth_lothlorien_5_desc" text="You studied the deeper arts of the Golden Wood under those closest to Galadriel's counsel, learning the songs of power and the quiet persuasion that could shift the will of lords without raising a blade. You left with gifts not easily named." />
+    <string id="taom_cc_taom_youth_isengard_1_text" text="Joined Saruman's Warg Riders." />
+    <string id="taom_cc_taom_youth_isengard_1_desc" text="You trained as a rider for Saruman's forces, learning to control Wargs and strike with devastating speed across the plains." />
+    <string id="taom_cc_taom_youth_isengard_2_text" text="Guarded the pits of Orthanc." />
+    <string id="taom_cc_taom_youth_isengard_2_desc" text="You were stationed at Orthanc, manning the crossbows and defending the breeding pits from any who would oppose Saruman's will." />
+    <string id="taom_cc_taom_youth_isengard_3_text" text="Fought among the Uruk-hai infantry." />
+    <string id="taom_cc_taom_youth_isengard_3_desc" text="You trained with the ferocious Uruk-hai, learning their brutal close-quarters fighting style and building endurance through grueling drills." />
+    <string id="taom_cc_taom_youth_isengard_4_text" text="Scouted for Saruman's spies." />
+    <string id="taom_cc_taom_youth_isengard_4_desc" text="You were sent as a scout and spy, ranging across the lands to gather intelligence for Saruman's war machine." />
+    <string id="taom_cc_taom_youth_isengard_5_text" text="Joined the ranks of Isengard's pikes." />
+    <string id="taom_cc_taom_youth_isengard_5_desc" text="You became a member of Isengard's formidable pikemen, learning to fight in tight formations that could break any cavalry charge." />
+    <string id="taom_cc_taom_youth_isengard_6_text" text="Fought your way through Saruman's warbands." />
+    <string id="taom_cc_taom_youth_isengard_6_desc" text="You proved yourself in the brutal warbands of Isengard, picking up every weapon style that kept you alive and leaving behind anything that did not. Saruman cared only for results and the warbands enforced that philosophy without mercy." />
+    <string id="taom_cc_taom_youth_gundabad_1_text" text="Rode with the Warg riders of Gundabad." />
+    <string id="taom_cc_taom_youth_gundabad_1_desc" text="You trained with the Warg riders of Mount Gundabad, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs." />
+    <string id="taom_cc_taom_youth_gundabad_2_text" text="Guarded the forges of Gundabad." />
+    <string id="taom_cc_taom_youth_gundabad_2_desc" text="You served in the garrison of Gundabad, defending the forges and tunnels from intruders with bow and spear." />
+    <string id="taom_cc_taom_youth_gundabad_3_text" text="Trained with the berserkers." />
+    <string id="taom_cc_taom_youth_gundabad_3_desc" text="You were among the berserkers of Gundabad, learning to fight with reckless fury and overwhelming force." />
+    <string id="taom_cc_taom_youth_gundabad_4_text" text="Scouted the mountain passes." />
+    <string id="taom_cc_taom_youth_gundabad_4_desc" text="You roamed the treacherous mountain paths around Gundabad, tracking enemies and ensuring safe passage for your kin." />
+    <string id="taom_cc_taom_youth_gundabad_5_text" text="Held the line in Gundabad's spear legions." />
+    <string id="taom_cc_taom_youth_gundabad_5_desc" text="You drilled and marched with the heavy spear formations of Mount Gundabad, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved." />
+    <string id="taom_cc_taom_youth_gundabad_6_text" text="Ran with the scavenger bands of the passes." />
+    <string id="taom_cc_taom_youth_gundabad_6_desc" text="You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would." />
+    <string id="taom_cc_taom_youth_dolguldur_1_text" text="Served the Necromancer's riders." />
+    <string id="taom_cc_taom_youth_dolguldur_1_desc" text="You rode in the service of Dol Guldur, commanding dark steeds and spreading terror across the southern reaches of Mirkwood." />
+    <string id="taom_cc_taom_youth_dolguldur_2_text" text="Guarded the halls of shadow." />
+    <string id="taom_cc_taom_youth_dolguldur_2_desc" text="You defended the dark halls of Dol Guldur, standing watch over the Necromancer's domain with bow and blade." />
+    <string id="taom_cc_taom_youth_dolguldur_3_text" text="Trained in the dark arts of war." />
+    <string id="taom_cc_taom_youth_dolguldur_3_desc" text="You honed your skills in the dark arts of warfare, learning to fight with cunning and deception in the shadowed corridors of Dol Guldur." />
+    <string id="taom_cc_taom_youth_dolguldur_4_text" text="Hunted trespassers in the corrupted Greenwood." />
+    <string id="taom_cc_taom_youth_dolguldur_4_desc" text="You were sent into the twisted undergrowth of southern Mirkwood to track and eliminate those who strayed near the Necromancer's domain, learning to stalk quarry through corrupted forest without making a sound or leaving a print." />
+    <string id="taom_cc_taom_youth_dolguldur_5_text" text="Marched in the shadow legions of Dol Guldur." />
+    <string id="taom_cc_taom_youth_dolguldur_5_desc" text="You drilled in the iron-disciplined ranks of Dol Guldur's dark legions, learning to wield heavy weapons in formation as the corruption of the Necromancer's fortress settled into your stride and your silence." />
+    <string id="taom_cc_taom_youth_dolguldur_6_text" text="Moved through darkness as a courier of the Necromancer." />
+    <string id="taom_cc_taom_youth_dolguldur_6_desc" text="You carried messages through the corrupted wood that no one would write down, delivering them by hand to agents who never showed their faces. The work demanded silence, patience, and the ability to strike without warning when the shadow required it." />
+    <string id="taom_cc_taom_youth_umbar_1_text" text="Served in the Corsair Fleet." />
+    <string id="taom_cc_taom_youth_umbar_1_desc" text="You joined the Corsair Fleet of Umbar, learning to fight aboard ships and lead boarding parties against Gondor's coastal defenses." />
+    <string id="taom_cc_taom_youth_umbar_2_text" text="Guarded the harbors of Umbar." />
+    <string id="taom_cc_taom_youth_umbar_2_desc" text="You served in the harbor garrisons of Umbar, defending the docks and learning the art of coastal defense." />
+    <string id="taom_cc_taom_youth_umbar_3_text" text="Raided the shores of Gondor with the Corsairs." />
+    <string id="taom_cc_taom_youth_umbar_3_desc" text="You led the charge onto enemy docks, hurling javelins and cutting your way through defenders before retreating to the Black ships with what you had taken. Raids were fast and brutal, and you learned that hesitation cost lives." />
+    <string id="taom_cc_taom_youth_umbar_4_text" text="Navigated the Bay of Belfalas as a Corsair scout." />
+    <string id="taom_cc_taom_youth_umbar_4_desc" text="You served in the masthead and scout-boats of the Corsair fleet, reading tides and spotting prey across open water while learning to loose a bow from a pitching deck. What you saw decided whether a raid went ahead or was abandoned." />
+    <string id="taom_cc_taom_youth_umbar_5_text" text="Stood in the spear line of the Black Numenoreans." />
+    <string id="taom_cc_taom_youth_umbar_5_desc" text="You drilled in the disciplined ground formations of Umbar's infantry, learning to hold a coastal beachhead with spear and shield while the ships unloaded behind you. The Black Numenorean officers expected precision, and they got it." />
+    <string id="taom_cc_taom_youth_umbar_6_text" text="Ran with the outlaws of the Umbar waterfront." />
+    <string id="taom_cc_taom_youth_umbar_6_desc" text="You survived on the rough margins of the harbor city, moving goods that could not be declared and acquiring skills that could not be taught in any school. The Corsair world had a place for those clever enough to see opportunities no one else had noticed." />
+    <string id="taom_cc_taom_youth_empire_1_text" text="Rode with the Hill Riders." />
+    <string id="taom_cc_taom_youth_empire_1_desc" text="Mounted on sturdy hill ponies, you rode with the Hill Riders of Dunland, learning to fight across the rough terrain of the highlands." />
+    <string id="taom_cc_taom_youth_empire_2_text" text="Served in the Tribal Longhouse." />
+    <string id="taom_cc_taom_youth_empire_2_desc" text="Within the tribal longhouses of Dunland, you learned tactics and the art of command, planning raids and defenses for your clan." />
+    <string id="taom_cc_taom_youth_empire_3_text" text="Stood guard with the Border Watch." />
+    <string id="taom_cc_taom_youth_empire_3_desc" text="You joined the Border Watch of Dunland, hurling javelins and fighting with sword to defend your clan's territory." />
+    <string id="taom_cc_taom_youth_empire_4_text" text="Scouted the highlands." />
+    <string id="taom_cc_taom_youth_empire_4_desc" text="You roamed the highlands and forests as a scout, learning to read the land and shoot from horseback." />
+    <string id="taom_cc_taom_youth_empire_5_text" text="Joined the Spear Brothers." />
+    <string id="taom_cc_taom_youth_empire_5_desc" text="You became one of the Spear Brothers of Dunland, learning to fight in tight formations with spear and shield." />
+    <string id="taom_cc_taom_youth_empire_6_text" text="Harried the horse-lords as a Tribal Skirmisher." />
+    <string id="taom_cc_taom_youth_empire_6_desc" text="As a Tribal Skirmisher, you learned to ambush Rohirrim outriders in the passes, hurling javelins and vanishing into the ridgeline before they could counter. The old grudge against the horse-lords lived in every throw." />
+    <string id="taom_cc_taom_youth_vlandia_1_text" text="Trained with the Riders of the Mark." />
+    <string id="taom_cc_taom_youth_vlandia_1_desc" text="You proved your skill as a rider among the Rohirrim, learning to charge with lance and fight from horseback in the traditions of Eorl the Young." />
+    <string id="taom_cc_taom_youth_vlandia_2_text" text="Served in the city watch of Edoras." />
+    <string id="taom_cc_taom_youth_vlandia_2_desc" text="You stood guard over the gates and walls of Edoras, learning tactics and discipline in service of the Golden Hall." />
+    <string id="taom_cc_taom_youth_vlandia_3_text" text="Joined the skirmishers of the Westfold." />
+    <string id="taom_cc_taom_youth_vlandia_3_desc" text="You joined the Westfold skirmishers, learning to fight with thrown weapons and sword on the open plains." />
+    <string id="taom_cc_taom_youth_vlandia_4_text" text="Rode with the scouts of the Wold." />
+    <string id="taom_cc_taom_youth_vlandia_4_desc" text="You rode with the scouts of the Wold, ranging far across the plains to watch for threats from the East." />
+    <string id="taom_cc_taom_youth_vlandia_5_text" text="Stood among the spearmen of the Eastfold." />
+    <string id="taom_cc_taom_youth_vlandia_5_desc" text="As a spearman of the Eastfold, you learned to hold the shieldwall against the enemy's charge." />
+    <string id="taom_cc_taom_youth_vlandia_6_text" text="Traveled with the camp followers of Rohan." />
+    <string id="taom_cc_taom_youth_vlandia_6_desc" text="Rather than taking up arms directly, you traveled with the camp followers, learning to survive on the march and profit from the chaos of war." />
+    <string id="taom_cc_taom_youth_sturgia_1_text" text="Served in the Royal Guard of Dale." />
+    <string id="taom_cc_taom_youth_sturgia_1_desc" text="You pledged your loyalty to the King of Dale, serving in the Royal Guard and learning the martial traditions of the Men of the North." />
+    <string id="taom_cc_taom_youth_sturgia_2_text" text="Defended the gates of Dale." />
+    <string id="taom_cc_taom_youth_sturgia_2_desc" text="As a member of the garrison, you defended the rebuilt gates of Dale, learning the art of siege defense from veterans who had seen the city fall and rise again." />
+    <string id="taom_cc_taom_youth_sturgia_3_text" text="Fought in the militia of the Long Lake shore." />
+    <string id="taom_cc_taom_youth_sturgia_3_desc" text="You trained with the lake-shore militia, learning to fight with thrown weapons and sword in defense of the settlements that straddled the trade route between Dale and the south. Commerce and combat were equally part of daily life." />
+    <string id="taom_cc_taom_youth_sturgia_4_text" text="Tracked game and Orcs in the forest east of Dale." />
+    <string id="taom_cc_taom_youth_sturgia_4_desc" text="You ranged the dark woodlands east of the Long Lake, hunting game for the market and keeping a watchful eye on the Orc paths coming down from the mountains. The forest taught you to read the land and keep your bow strung at all times." />
+    <string id="taom_cc_taom_youth_sturgia_5_text" text="Joined the shieldwall." />
+    <string id="taom_cc_taom_youth_sturgia_5_desc" text="You took your place in Dale's shieldwall, learning to stand firm with spear and shield against any enemy that threatened the city." />
+    <string id="taom_cc_taom_youth_sturgia_6_text" text="Traveled with the merchant caravans of the North." />
+    <string id="taom_cc_taom_youth_sturgia_6_desc" text="You went with the caravans that moved between Dale, Erebor, and the southern kingdoms, learning the arts of commerce, survival on the road, and the opportunism that made some traders very successful and others very sorry." />
+    <string id="taom_cc_taom_youth_aserai_1_text" text="Trained with the war elephants." />
+    <string id="taom_cc_taom_youth_aserai_1_desc" text="You trained alongside Harad's mighty war elephants, learning to ride and fight from their towering backs under the blazing southern sun." />
+    <string id="taom_cc_taom_youth_aserai_2_text" text="Watched the walls of Harad's desert cities." />
+    <string id="taom_cc_taom_youth_aserai_2_desc" text="You served as a sentinel on the sun-baked battlements of Harad's fortified cities, learning to scan the shimmering horizon for enemy movement and to direct arrow fire against raiders from the desert fringe." />
+    <string id="taom_cc_taom_youth_aserai_3_text" text="Rode with the desert outriders." />
+    <string id="taom_cc_taom_youth_aserai_3_desc" text="You joined Harad's swift outriders, scouting the vast desert on horseback and striking at the enemy's flanks before vanishing back into the heat-haze." />
+    <string id="taom_cc_taom_youth_aserai_4_text" text="Drilled with the Black Serpent's footmen." />
+    <string id="taom_cc_taom_youth_aserai_4_desc" text="You trained in the disciplined spear formations that served under the Black Serpent banner, learning to hold position in the merciless desert heat and advance in step with warriors sworn to carry the war into the north." />
+    <string id="taom_cc_taom_youth_aserai_5_text" text="Harassed enemies as a javelin skirmisher of Harad." />
+    <string id="taom_cc_taom_youth_aserai_5_desc" text="You fought in the loose Haradrim skirmishing style, hurling javelins to soften the enemy before closing with sword and buckler. The heat and the sand were on your side, and you learned to use both." />
+    <string id="taom_cc_taom_youth_aserai_6_text" text="Wandered with the nomadic tribes of the Sunlands." />
+    <string id="taom_cc_taom_youth_aserai_6_desc" text="You drifted with the wandering people of the deep desert, learning to read water-signs and navigate the dune-sea by starlight. When coin ran short you found other ways to survive, and the vast empty Sunlands gave you room to perfect them." />
+    <string id="taom_cc_taom_youth_battania_1_text" text="Rode with the Rangers of the North." />
+    <string id="taom_cc_taom_youth_battania_1_desc" text="You were taken into the company of the Dunedain Rangers, learning to ride hard through the ruins of Arnor and fight with the disciplined ferocity of the Heirs of Isildur. The Rangers rode far and told little to any they met on the road." />
+    <string id="taom_cc_taom_youth_battania_2_text" text="Watched the crossroads of Eriador." />
+    <string id="taom_cc_taom_youth_battania_2_desc" text="You kept vigil over the crumbling watchtowers and old road-crossings of the North Kingdom, learning to read the land and spot the signs of Orc movement before trouble arrived. The Rangers held no formal posts, only duty." />
+    <string id="taom_cc_taom_youth_battania_3_text" text="Ranged the wilds of Arnor as a Dunedain scout." />
+    <string id="taom_cc_taom_youth_battania_3_desc" text="You moved through the old kingdom's overgrown ruins and moorlands as a ranger scout, learning to live off the wild land and track both beast and enemy across terrain that held memory in its stones. Speed and silence were your only tools." />
+    <string id="taom_cc_taom_youth_battania_4_text" text="Stood in the Ranger line against the Orc warbands." />
+    <string id="taom_cc_taom_youth_battania_4_desc" text="You fought in the close-quarters engagements that kept the northern settlements alive, learning to wield sword and spear with the steadiness of men who knew they were the last line between the people and the dark. There were no reinforcements in the North." />
+    <string id="taom_cc_taom_youth_battania_5_text" text="Moved unseen among the villages of the North." />
+    <string id="taom_cc_taom_youth_battania_5_desc" text="You kept the hidden network of Dunedain informants alive, passing between settlements under assumed names and gathering word of Orc movements, dark strangers, and threats to the people. The Rangers relied on those who could pass for ordinary, and you had the gift." />
+    <string id="taom_cc_taom_youth_battania_6_text" text="Tracked and ambushed in the ruins of the North Kingdom." />
+    <string id="taom_cc_taom_youth_battania_6_desc" text="You learned to set ambushes in the old ruins and thickets of ruined Arnor, reading trails and using the broken landscape to your advantage. A well-placed arrow from cover was worth a dozen men in the open, and you made every shot count." />
+    <string id="taom_cc_taom_youth_khuzait_1_text" text="Rode with the Khelek Warriors." />
+    <string id="taom_cc_taom_youth_khuzait_1_desc" text="You proved your worth as a rider among the Khelek Warriors, learning mounted combat on the wide steppes of Rhun in the tradition of the eastern war-riders." />
+    <string id="taom_cc_taom_youth_khuzait_2_text" text="Guarded the settlements of Rhun." />
+    <string id="taom_cc_taom_youth_khuzait_2_desc" text="You patrolled the walls of Rhun's settlements, learning archery and the art of defense against raiders from the wild eastern steppes." />
+    <string id="taom_cc_taom_youth_khuzait_3_text" text="Joined the ranks of the Uruk-thar." />
+    <string id="taom_cc_taom_youth_khuzait_3_desc" text="As a member of the Uruk-thar, you learned to fight with thrown weapons and sword in the Easterling skirmishing tradition." />
+    <string id="taom_cc_taom_youth_khuzait_4_text" text="Ranged the Sea of Rhun shores as a mounted scout." />
+    <string id="taom_cc_taom_youth_khuzait_4_desc" text="You rode far ahead of the eastern columns along the shores of the inland sea, reading the land for threats and opportunity. The steppe gave you a horseman's eye for distance and a bowman's patience for the right moment." />
+    <string id="taom_cc_taom_youth_khuzait_5_text" text="Held the line in the Easterling spear formation." />
+    <string id="taom_cc_taom_youth_khuzait_5_desc" text="You stood shoulder to shoulder with your kinsmen in the disciplined Easterling spear line, learning to brace against cavalry and advance in ordered ranks under the red dawn banners that had marched west before." />
+    <string id="taom_cc_taom_youth_khuzait_6_text" text="Traveled with the Karash bands." />
+    <string id="taom_cc_taom_youth_khuzait_6_desc" text="You lived outside formal Easterling clan structure, moving with the Karash bands who followed the armies and profited from their passage. Cunning and thrown weapons kept you fed on the margins of the great eastern host." />
+    <string id="taom_cc_taom_education_gondor_1_text" text="Drilled with the sons of noble houses." />
+    <string id="taom_cc_taom_education_gondor_1_desc" text="You grew up training alongside the children of Gondor's noble families in the yards of Minas Tirith. You learned to fight with sword and lance under knights sworn to the Steward, and spent long hours practicing horsemanship on the Pelennor." />
+    <string id="taom_cc_taom_education_gondor_2_text" text="Apprenticed in the markets of Minas Tirith." />
+    <string id="taom_cc_taom_education_gondor_2_desc" text="You spent your adolescence running errands and learning accounts in the tiered market halls of the White City. You quickly learned the art of the deal, flattering merchants and counting coin in the shadow of the White Tower." />
+    <string id="taom_cc_taom_education_gondor_3_text" text="Labored in the fields of the Pelennor." />
+    <string id="taom_cc_taom_education_gondor_3_desc" text="You toiled from dawn to dusk in the rich farmland outside the city walls, hauling sheaves and driving oxen across the Pelennor. When the levy was called you were handed a spear and drilled in formation by a gruff veteran of the border wars." />
+    <string id="taom_cc_taom_education_gondor_4_text" text="Apprenticed to an armourer of the White City." />
+    <string id="taom_cc_taom_education_gondor_4_desc" text="You learned your craft in the smithing quarter of Minas Tirith, blowing bellows and grinding edges under a master armorer's stern eye. By the time you were grown your hands were calloused from hammer work and you could judge a blade's temper by its ring." />
+    <string id="taom_cc_taom_education_gondor_5_text" text="Ranged the wilds of Ithilien." />
+    <string id="taom_cc_taom_education_gondor_5_desc" text="You shadowed the Rangers of Ithilien as a youngster, learning to move without sound through the overgrown gardens east of the Anduin. You strung your first bow before you were tall enough to draw it properly and learned to read boot-prints in the mud." />
+    <string id="taom_cc_taom_education_gondor_6_text" text="Scrounged among the ruins of Osgiliath." />
+    <string id="taom_cc_taom_education_gondor_6_desc" text="You grew up picking through the shattered stones of Osgiliath, selling salvage to soldiers and running messages between outposts for coin. The ruined city taught you quickness and cunning — a thrown rock could drive off a man twice your size." />
+    <string id="taom_cc_taom_education_mordor_1_text" text="Fought in the training pits of Barad-dur." />
+    <string id="taom_cc_taom_education_mordor_1_desc" text="You were thrown into the pit-fighting yards of the Dark Tower as soon as you could hold a weapon. The older warriors showed no mercy, and you learned quickly that hesitation meant pain. Pain taught you to strike first and strike hard." />
+    <string id="taom_cc_taom_education_mordor_2_text" text="Hauled supply trains along the Black Road." />
+    <string id="taom_cc_taom_education_mordor_2_desc" text="You moved goods along the shadowed roads of Mordor, learning to barter and bluff your way past toll-keepers and corrupt overseers. The danger sharpened your wits, and you discovered that information was worth more than iron in the Dark Land." />
+    <string id="taom_cc_taom_education_mordor_3_text" text="Labored in the forges of the Dark Land." />
+    <string id="taom_cc_taom_education_mordor_3_desc" text="You hauled stone and worked bellows in the smoking forges that ringed Barad-dur, enduring heat and ash from before first light until long after dark. The work broke weaker youths, but you found a grim endurance that no taskmaster could extinguish." />
+    <string id="taom_cc_taom_education_mordor_4_text" text="Kept order among the Orc work gangs." />
+    <string id="taom_cc_taom_education_mordor_4_desc" text="You were given a club and a corner of the yard and told to keep the work gangs in line. You learned fast how to read a crowd and where to hit to get compliance without killing. Strategy and brutality became second nature." />
+    <string id="taom_cc_taom_education_mordor_5_text" text="Hunted across the plains of Gorgoroth." />
+    <string id="taom_cc_taom_education_mordor_5_desc" text="You tracked prey across the blasted volcanic flats of Gorgoroth, learning to read ash-trails and navigate by the glow of distant fires. There was little to hunt, and what little there was fought back. You came home lean and sharp-eyed." />
+    <string id="taom_cc_taom_education_mordor_6_text" text="Ran with the outcasts beyond the Black Gate." />
+    <string id="taom_cc_taom_education_mordor_6_desc" text="You survived on the margins of the Dark Lord's realm, running with the quick-fingered bands who slipped past patrols and lived by theft and misdirection. You learned every shadow and every bribe-price in the shadow of the Morannon." />
+    <string id="taom_cc_taom_education_erebor_1_text" text="Trained in the great hall with the King's axe-brothers." />
+    <string id="taom_cc_taom_education_erebor_1_desc" text="You practiced combat alongside the young warriors of Dain's household, learning to swing the two-handed axe in the echoing training halls deep beneath the Lonely Mountain. Every scar was a lesson; every lesson was a point of pride." />
+    <string id="taom_cc_taom_education_erebor_2_text" text="Apprenticed at the forges of Erebor." />
+    <string id="taom_cc_taom_education_erebor_2_desc" text="You spent your youth at the smith's bench, learning to work metal in the blazing heart of the Lonely Mountain. You mastered the values of craft and trade, carrying finished blades to the markets of Dale when the light faded on the forge." />
+    <string id="taom_cc_taom_education_erebor_3_text" text="Worked the deep mines of the Lonely Mountain." />
+    <string id="taom_cc_taom_education_erebor_3_desc" text="You swung a pick in the lowest galleries of Erebor before you were old enough to shave, learning the mountain's hidden passages and the engineering of tunnels and supports. The deep stone became as familiar to you as open sky." />
+    <string id="taom_cc_taom_education_erebor_4_text" text="Drilled with the Ironfoot shieldwall." />
+    <string id="taom_cc_taom_education_erebor_4_desc" text="You trained in the disciplined close-quarters style of Dain Ironfoot's warriors, learning to brace a shield and swing an axe in tight tunnel formations. Your short stride was an advantage in the corridors where taller folk stumbled." />
+    <string id="taom_cc_taom_education_erebor_5_text" text="Counted coin in the treasury vaults." />
+    <string id="taom_cc_taom_education_erebor_5_desc" text="You assisted in tallying Erebor's vast wealth from an early age, learning to manage ledgers and understand the logistics of supplying a mountain kingdom. The work made you methodical and gave you a strategist's eye for resources." />
+    <string id="taom_cc_taom_education_erebor_6_text" text="Patrolled the foothills and forest trails." />
+    <string id="taom_cc_taom_education_erebor_6_desc" text="You ranged the slopes around Erebor as part of the outer watch, learning to track Orc raiding parties and shoot from concealment in the pine forest. The mountain air sharpened your senses and distance became your ally." />
+    <string id="taom_cc_taom_education_rivendell_1_text" text="Trained in the riding courts of Imladris." />
+    <string id="taom_cc_taom_education_rivendell_1_desc" text="You practiced the mounted arts in the quiet training grounds of Rivendell, learning to ride and fight with the fluid grace that Elven tradition demanded. The great library was never far, and your education in blade and lore went hand in hand." />
+    <string id="taom_cc_taom_education_rivendell_2_text" text="Studied craft and lore in Elrond's halls." />
+    <string id="taom_cc_taom_education_rivendell_2_desc" text="You spent your formative years learning the craft-arts and histories preserved in Rivendell, working alongside master artisans and loremasters. Long evenings of talk sharpened your tongue and your understanding of the world's deep past." />
+    <string id="taom_cc_taom_education_rivendell_3_text" text="Tended the gardens and orchards of the Hidden Valley." />
+    <string id="taom_cc_taom_education_rivendell_3_desc" text="You worked the terraced gardens of Imladris, learning patience and diligence from Elves who had tended those same beds for an age. Between rows you practiced swordplay, finding that tending living things gave you an instinct for measured force." />
+    <string id="taom_cc_taom_education_rivendell_4_text" text="Walked the border watches of Imladris." />
+    <string id="taom_cc_taom_education_rivendell_4_desc" text="You accompanied the Elven wardens on their long circuits around the valley's hidden paths, learning to read the forest and loose an arrow before your quarry heard you coming. The valley's peace was hard-won and you helped keep it." />
+    <string id="taom_cc_taom_education_rivendell_5_text" text="Learned healing arts in the halls of Elrond." />
+    <string id="taom_cc_taom_education_rivendell_5_desc" text="You served in the healing rooms of Rivendell, learning herb-lore and the arts of mending under the guidance of Elrond's healers. Tending to weary travellers and wounded Elves gave you both knowledge and the empathy that comes with it." />
+    <string id="taom_cc_taom_education_rivendell_6_text" text="Wandered the wild roads beyond the valley." />
+    <string id="taom_cc_taom_education_rivendell_6_desc" text="You slipped beyond Rivendell's borders as often as you could, exploring the Trollshaws and the valleys of the Misty Mountains. You developed a taste for risk and discovered that you could survive on cunning where a sword would only bring trouble." />
+    <string id="taom_cc_taom_education_mirkwood_1_text" text="Drilled with the household guard of Thranduil's court." />
+    <string id="taom_cc_taom_education_mirkwood_1_desc" text="You trained with the young warriors of the Woodland King's household, learning to move and fight among the great beeches beneath the mountain halls. The court was demanding, and you were expected to be as sharp with words as with your blade." />
+    <string id="taom_cc_taom_education_mirkwood_2_text" text="Carried goods along the Forest Road." />
+    <string id="taom_cc_taom_education_mirkwood_2_desc" text="You escorted trade goods through the shadows of Mirkwood, learning to read the forest and haggle at the far end of a dangerous journey. The path was never safe, and the merchants who survived were charming, quick, and watchful." />
+    <string id="taom_cc_taom_education_mirkwood_3_text" text="Gathered and farmed on the forest margins." />
+    <string id="taom_cc_taom_education_mirkwood_3_desc" text="You grew up tending the clearings and cultivated patches at the edges of the Woodland Realm, harvesting what the shadowed forest would yield. It was hard and dangerous work, and you learned to move fast when the dark things came near." />
+    <string id="taom_cc_taom_education_mirkwood_4_text" text="Crafted bows and woodwork in the Elvenking's halls." />
+    <string id="taom_cc_taom_education_mirkwood_4_desc" text="You learned your craft from the Elven bowyers of Mirkwood, shaping staves and stringing the famous Woodland bows. The work required equal measures of patience and precision, and you left with hands that could shape a weapon as readily as use one." />
+    <string id="taom_cc_taom_education_mirkwood_5_text" text="Hunted deep in the shadowed wood." />
+    <string id="taom_cc_taom_education_mirkwood_5_desc" text="You followed the Woodland hunters into the darkest parts of Mirkwood, tracking deer and boar through the corrupted undergrowth. Every hunt risked an encounter with the forest's creatures, and you learned to shoot before you heard a sound clearly." />
+    <string id="taom_cc_taom_education_mirkwood_6_text" text="Ran with the forest border watch." />
+    <string id="taom_cc_taom_education_mirkwood_6_desc" text="You kept irregular company with the patrols that roamed outside Thranduil's formal borders, learning to set traps and ambushes for the spider-kin and Orc scouts that tested the Woodland Realm's edges. Cunning kept you alive where courage alone would not." />
+    <string id="taom_cc_taom_education_lothlorien_1_text" text="Trained with the wardens of Caras Galadhon." />
+    <string id="taom_cc_taom_education_lothlorien_1_desc" text="You practiced the warrior arts in the silver courts of Caras Galadhon, learning the sweeping sword-style of the Galadhrim under the light of the Lady's power. Every morning began with drills and every evening with starlight and long memory." />
+    <string id="taom_cc_taom_education_lothlorien_2_text" text="Wove and crafted in the mallorn-city." />
+    <string id="taom_cc_taom_education_lothlorien_2_desc" text="You learned the textile and craft arts of Lothlórien, working with the famous Elven weavers who produced cloth of silver and gold. The work required uncommon precision, and you found that beauty and persuasion were inseparable in the Golden Wood." />
+    <string id="taom_cc_taom_education_lothlorien_3_text" text="Kept watch from the flets of the mallorn trees." />
+    <string id="taom_cc_taom_education_lothlorien_3_desc" text="You stood the long quiet vigils on the high platforms among the mallorn branches, learning to read the forest below and loose silver-tipped arrows with deadly calm. The endless patience of those watches shaped your eye and stilled your hand." />
+    <string id="taom_cc_taom_education_lothlorien_4_text" text="Patrolled the silver borders of the Golden Wood." />
+    <string id="taom_cc_taom_education_lothlorien_4_desc" text="You walked the outer marches of Lothlórien, learning to spot the signs of Orc incursion at the Dimrill Dale passes. Long days of silent observation followed by sudden action shaped you into a hunter as patient as the wood and as quick as the arrow." />
+    <string id="taom_cc_taom_education_lothlorien_5_text" text="Studied the healing arts of the Golden Wood." />
+    <string id="taom_cc_taom_education_lothlorien_5_desc" text="You apprenticed among the healers of Lothlórien, gathering athelas and learning the lore of herb and wound under the instruction of those who had practiced the art for centuries. The Lady's grace touched all healing within those borders." />
+    <string id="taom_cc_taom_education_lothlorien_6_text" text="Wandered beyond the wood on private errands." />
+    <string id="taom_cc_taom_education_lothlorien_6_desc" text="You often slipped beyond the veiled borders of Lothlórien alone, exploring the Anduin's banks and the brown lands beyond out of restless curiosity. You learned to pass unseen and to use misdirection when straightforward paths were barred to you." />
+    <string id="taom_cc_taom_education_isengard_1_text" text="Trained in the war-yard of Orthanc." />
+    <string id="taom_cc_taom_education_isengard_1_desc" text="You were run through brutal drills in the packed-earth yards of Isengard, learning to wield halberd and two-hander under the eyes of Uruk-hai sergeants. Saruman's forces trained without mercy, and softness was driven out of you fast." />
+    <string id="taom_cc_taom_education_isengard_2_text" text="Apprenticed in the machine-shops beneath Orthanc." />
+    <string id="taom_cc_taom_education_isengard_2_desc" text="You learned to work metal and manage materials in the smoky workshops that fed Saruman's war machine, picking up the arts of crafting and supply under pressure. The work was constant and inventive, and Saruman rewarded ingenuity." />
+    <string id="taom_cc_taom_education_isengard_3_text" text="Dug and hauled in the pits of Isengard." />
+    <string id="taom_cc_taom_education_isengard_3_desc" text="You were put to work in the pits as soon as you were strong enough, breaking rock and hauling spoil to feed Saruman's endless construction. The work built your endurance past what most men's bodies could bear." />
+    <string id="taom_cc_taom_education_isengard_4_text" text="Trained alongside the Uruk-hai infantry." />
+    <string id="taom_cc_taom_education_isengard_4_desc" text="You ran drills alongside the bred warriors of Isengard, learning to brace and hold with spear and to cut with sword in tight formation. Being neither Uruk nor pure Man you had to be twice as relentless to be accepted." />
+    <string id="taom_cc_taom_education_isengard_5_text" text="Scouted the plains of Rohan for Saruman's eyes." />
+    <string id="taom_cc_taom_education_isengard_5_desc" text="You ranged the Wold and the approaches to Helm's Deep as a scout for Isengard, learning to travel fast and unseen across open country. Reading the land and avoiding the Rohirrim patrols sharpened your instincts to a fine edge." />
+    <string id="taom_cc_taom_education_isengard_6_text" text="Ran information through Isengard's shadows." />
+    <string id="taom_cc_taom_education_isengard_6_desc" text="You were quick-fingered and clever enough to be used as a courier and informant in the grey world of Saruman's spy networks. You learned how much a secret was worth and how much pain it cost to keep one." />
+    <string id="taom_cc_taom_education_gundabad_1_text" text="Trained in the war-halls of Mount Gundabad." />
+    <string id="taom_cc_taom_education_gundabad_1_desc" text="You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders." />
+    <string id="taom_cc_taom_education_gundabad_2_text" text="Apprenticed in the weapon-smiths of Gundabad." />
+    <string id="taom_cc_taom_education_gundabad_2_desc" text="You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing." />
+    <string id="taom_cc_taom_education_gundabad_3_text" text="Dug in the mines beneath the mountain." />
+    <string id="taom_cc_taom_education_gundabad_3_desc" text="You swung a pick in the lightless shafts of Gundabad, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to." />
+    <string id="taom_cc_taom_education_gundabad_4_text" text="Fought in the passes of the Grey Mountains." />
+    <string id="taom_cc_taom_education_gundabad_4_desc" text="You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival." />
+    <string id="taom_cc_taom_education_gundabad_5_text" text="Ranged the wild lands around Gundabad." />
+    <string id="taom_cc_taom_education_gundabad_5_desc" text="You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target." />
+    <string id="taom_cc_taom_education_gundabad_6_text" text="Survived alone in the mountain passes." />
+    <string id="taom_cc_taom_education_gundabad_6_desc" text="Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble." />
+    <string id="taom_cc_taom_education_dolguldur_1_text" text="Drilled in the shadow-yards of Dol Guldur." />
+    <string id="taom_cc_taom_education_dolguldur_1_desc" text="You trained in the lightless courtyards of the Necromancer's fortress, learning to fight with halberd and great blade under the eye of hooded overseers. The shadow that lay across the place seeped into your bones and sharpened your instincts for violence." />
+    <string id="taom_cc_taom_education_dolguldur_2_text" text="Forged shadow-steel in the dark workshops." />
+    <string id="taom_cc_taom_education_dolguldur_2_desc" text="You worked the black-iron forges of Dol Guldur, learning to shape weapons under conditions that would break a lesser youth. The materials were dark and the methods darker, and you left with knowledge that few would admit to having." />
+    <string id="taom_cc_taom_education_dolguldur_3_text" text="Hauled stone in the caverns of the fortress." />
+    <string id="taom_cc_taom_education_dolguldur_3_desc" text="You labored in the underground excavations of Dol Guldur, dragging blocks and shoring tunnels in the permanent darkness beneath the corrupted hill. The work was relentless, and endurance was the only currency that bought any relief." />
+    <string id="taom_cc_taom_education_dolguldur_4_text" text="Fought in the shadow-patrols of the Enchanted Wood." />
+    <string id="taom_cc_taom_education_dolguldur_4_desc" text="You ran with the dark patrols that pushed the corruption of Dol Guldur further into southern Mirkwood, cutting down resistance with axe and spear. Each foray took you deeper into the twisted forest and left less of your former self behind." />
+    <string id="taom_cc_taom_education_dolguldur_5_text" text="Hunted the dark forest's edges." />
+    <string id="taom_cc_taom_education_dolguldur_5_desc" text="You tracked through the corrupted undergrowth of southern Mirkwood, killing any creature that came too close to the fortress and learning to move without making a sound in a forest that twisted every trail. Your eyes adjusted to a world without sunlight." />
+    <string id="taom_cc_taom_education_dolguldur_6_text" text="Moved through shadows as a spy of the Necromancer." />
+    <string id="taom_cc_taom_education_dolguldur_6_desc" text="You were used as a courier and agent in the Necromancer's network, carrying messages through the dark wood and delivering them to contacts who never showed their faces. You learned that shadows were your armor and silence your best weapon." />
+    <string id="taom_cc_taom_education_umbar_1_text" text="Learned seamanship and swordsmanship aboard the Black ships." />
+    <string id="taom_cc_taom_education_umbar_1_desc" text="You were taken to sea young, learning to hand a sail and fight with the cutlass and boarding axe of the Corsair tradition. The deck of a warship was your training ground, and the Anduin Delta was your proving ground." />
+    <string id="taom_cc_taom_education_umbar_2_text" text="Ran the quays and counting-houses of the harbor." />
+    <string id="taom_cc_taom_education_umbar_2_desc" text="You grew up quick-tongued and quick-fingered in the busy dockyards of Umbar, learning to charm buyers, spot inflated bills, and move goods past customs without asking awkward questions. The harbor was a school in commerce and deception alike." />
+    <string id="taom_cc_taom_education_umbar_3_text" text="Worked the shipyards of Umbar." />
+    <string id="taom_cc_taom_education_umbar_3_desc" text="You learned to shape timber and caulk planking in the great ship-sheds of Umbar, studying the engineering of vessels that carried war across the sea. When you were not building ships you were thinking about how they might be broken." />
+    <string id="taom_cc_taom_education_umbar_4_text" text="Raided Gondor's coastal villages with the Corsairs." />
+    <string id="taom_cc_taom_education_umbar_4_desc" text="You made your first raids on the coasts of Gondor as little more than a youth, fighting at the front of a boarding party with sword and throwing knife. The raids were brutal and swift, and they taught you exactly what violence was worth." />
+    <string id="taom_cc_taom_education_umbar_5_text" text="Navigated the Corsair lanes from the crow's nest." />
+    <string id="taom_cc_taom_education_umbar_5_desc" text="You served as lookout and scout-sailor, learning to read the sea and chart a course through the dangerous waters of the Bay of Belfalas. What you spotted from the masthead determined whether a raid succeeded or became a catastrophe." />
+    <string id="taom_cc_taom_education_umbar_6_text" text="Moved contraband through Umbar's back alleys." />
+    <string id="taom_cc_taom_education_umbar_6_desc" text="You ran in the shadow economy of the harbor city, carrying goods that could not be declared and messages that could not be written down. The work paid in secrets and small coins, and you learned every fence, bribe, and bolt-hole in Umbar." />
+    <string id="taom_cc_taom_education_empire_1_text" text="Trained with the young warriors of the clan chief." />
+    <string id="taom_cc_taom_education_empire_1_desc" text="You drilled with the chieftain's sons in the muddy practice-grounds of the hill stronghold, learning to ride hard and swing a two-hander in the rough Dunlending style. Every bruise was a lesson and every lesson carried the old grudge against the horse-lords." />
+    <string id="taom_cc_taom_education_empire_2_text" text="Traded between the hill clans and the lowland markets." />
+    <string id="taom_cc_taom_education_empire_2_desc" text="You carried goods and news between the hill settlements and the river markets, learning to bargain hard and smile at buyers you did not trust. The roads between Dunland and the wider world were rough, and charm was often cheaper than a sword." />
+    <string id="taom_cc_taom_education_empire_3_text" text="Herded sheep and sharpened spears on the Dunland hills." />
+    <string id="taom_cc_taom_education_empire_3_desc" text="You spent your youth minding the flocks across the wind-scoured hillsides of Dunland, and when the call came you were handed a spear and shoved into the levy. The hills made you tough and the levy made you dangerous." />
+    <string id="taom_cc_taom_education_empire_4_text" text="Worked the forge and the woodcarving bench." />
+    <string id="taom_cc_taom_education_empire_4_desc" text="You learned to shape metal and wood in the practical crafts of the Dunlending settlements, making tools, weapons, and fittings for the clans. The work gave you clever hands and an eye for how things were put together and how they could be taken apart." />
+    <string id="taom_cc_taom_education_empire_5_text" text="Hunted and foraged in the forests of Dunland." />
+    <string id="taom_cc_taom_education_empire_5_desc" text="You learned the wooded ridges bordering the Misty Mountains as a young hunter, tracking deer and picking up the bow before most children could properly grip it. The forest kept its secrets, and you learned most of them." />
+    <string id="taom_cc_taom_education_empire_6_text" text="Drifted between the clans as an outcast." />
+    <string id="taom_cc_taom_education_empire_6_desc" text="You were cast out or wandered off, spending your formative years on the margins of Dunlending society, picking up work and trouble in equal measure. You learned that a well-aimed throw or a convincing lie could open doors that no clan-badge would." />
+    <string id="taom_cc_taom_education_vlandia_1_text" text="Rode in training with the Marshal's household." />
+    <string id="taom_cc_taom_education_vlandia_1_desc" text="You spent your youth learning the art of mounted war in service to one of the marshals of the Riddermark, drilling with lance and sword in the wide grasslands of Rohan. Horsemanship was not taught in the Riddermark — it was breathed." />
+    <string id="taom_cc_taom_education_vlandia_2_text" text="Traded goods through the Riddermark markets." />
+    <string id="taom_cc_taom_education_vlandia_2_desc" text="You carried wares and prices between the holds of Edoras and the smaller towns of Rohan, learning to read people and close a deal before the day's light faded. The plains were long and empty and the conversation at market stalls made the world go round." />
+    <string id="taom_cc_taom_education_vlandia_3_text" text="Raised horses and stood levy in the Westfold." />
+    <string id="taom_cc_taom_education_vlandia_3_desc" text="You worked your family's pastures in the Westfold, learning to handle horses almost before you could walk, and were pressed into levy service as soon as you were tall enough for the spear. The rolling plains of western Rohan were your school." />
+    <string id="taom_cc_taom_education_vlandia_4_text" text="Apprenticed to the smiths of Aldburg." />
+    <string id="taom_cc_taom_education_vlandia_4_desc" text="You learned to shape the bright steel of Rohan in the forge-houses of Aldburg, making blades and fittings for the Rohirrim. You went home each night with arms aching and a pride in craft that no battlefield could diminish." />
+    <string id="taom_cc_taom_education_vlandia_5_text" text="Hunted in the Eastfold and watched the horizon." />
+    <string id="taom_cc_taom_education_vlandia_5_desc" text="You ranged widely across the Eastfold with your bow, hunting game and keeping a sharp eye on the eastern horizon for signs of Orc movement. The wide plains taught you to see far and move quietly, and both skills served you well." />
+    <string id="taom_cc_taom_education_vlandia_6_text" text="Drifted across the Wold with no fixed allegiance." />
+    <string id="taom_cc_taom_education_vlandia_6_desc" text="You wandered the wild grasslands of the Wold without clan or hold to call your own, learning to survive on what the plains offered and occasionally on what other people had not hidden well enough. Cunning kept you fed when luck would not." />
+    <string id="taom_cc_taom_education_sturgia_1_text" text="Trained in the royal hall of King Brand." />
+    <string id="taom_cc_taom_education_sturgia_1_desc" text="You were schooled in the martial arts of Dale, learning to ride and wield heavy weapons under the instruction of Brand's household guard. The rebuilt city was prosperous and proud, and its soldiers were expected to match its reputation." />
+    <string id="taom_cc_taom_education_sturgia_2_text" text="Clerked in the trading houses of Dale." />
+    <string id="taom_cc_taom_education_sturgia_2_desc" text="You learned to keep accounts and charm buyers in the merchant halls of Dale, where goods from the East and South met goods from Erebor and the North. The city's famous trade made it the ideal classroom for anyone wanting to understand wealth." />
+    <string id="taom_cc_taom_education_sturgia_3_text" text="Fished the Long Lake and worked the surrounding fields." />
+    <string id="taom_cc_taom_education_sturgia_3_desc" text="You grew up hauling nets on the Long Lake and tending the farmland around Esgaroth, building the stamina that lake life demands. When the militia was called you took up your spear alongside the other freemen and marched to keep your home safe." />
+    <string id="taom_cc_taom_education_sturgia_4_text" text="Learned craft in the workshops of Dale." />
+    <string id="taom_cc_taom_education_sturgia_4_desc" text="You apprenticed in the workshops of Dale, famous for metalwork and the fine articles that traders carried far south. A craftsman's hands and a craftsman's pride became yours, along with a blade sharp enough to keep them." />
+    <string id="taom_cc_taom_education_sturgia_5_text" text="Hunted in the Mirkwood borders and forest trails." />
+    <string id="taom_cc_taom_education_sturgia_5_desc" text="You ranged the dark forest edge south of the Long Lake, learning to track game and avoid the attention of worse things. Your bow was your most reliable companion and your knowledge of the forest trails kept you alive more than once." />
+    <string id="taom_cc_taom_education_sturgia_6_text" text="Scraped by on the margins of the Lake-town docks." />
+    <string id="taom_cc_taom_education_sturgia_6_desc" text="You grew up among the dockworkers and minor thieves of Esgaroth, learning to supplement honest wages with dishonest ones and to vanish before the watch arrived. The lake town's busy quays were a fine education in how the world actually worked." />
+    <string id="taom_cc_taom_education_aserai_1_text" text="Rode with the war-host of the Black Serpent." />
+    <string id="taom_cc_taom_education_aserai_1_desc" text="You trained among the banner-warriors of the Black Serpent's household, learning to fight from horseback and wield the heavy blade in the heat of the southern sun. Every drill ended with the promise of the north, and the glory that awaited Harad's warriors there." />
+    <string id="taom_cc_taom_education_aserai_2_text" text="Drilled with the desert spearmen of Harad." />
+    <string id="taom_cc_taom_education_aserai_2_desc" text="You trained in the punishing heat of the southern deserts, learning to hold formation with axe and spear in the relentless fashion of the Haradrim footmen. Endurance under the sun was prized above all other qualities." />
+    <string id="taom_cc_taom_education_aserai_3_text" text="Carried trade goods along the southern desert roads." />
+    <string id="taom_cc_taom_education_aserai_3_desc" text="You traveled the blazing caravan routes of Harad, bartering exotic goods at the desert market towns and learning the art of persuasion from hard-bitten merchants who had crossed the Sunlands many times. The road taught you more than any hall could." />
+    <string id="taom_cc_taom_education_aserai_4_text" text="Worked the oasis fields in the heart of Harad." />
+    <string id="taom_cc_taom_education_aserai_4_desc" text="You labored in the irrigated fields around the desert oases, learning to coax growth from arid earth and to endure the physical demands of farm work under a merciless sun. When the war-levy came you were lean, strong, and ready." />
+    <string id="taom_cc_taom_education_aserai_5_text" text="Rode with the nomadic tribes across the Sunlands." />
+    <string id="taom_cc_taom_education_aserai_5_desc" text="You traveled with the wandering tribes, learning to navigate by stars and read the subtle signs of the desert. Your bow was your most reliable tool, and the vast open Sunlands taught you to sight a target long before it sighted you." />
+    <string id="taom_cc_taom_education_aserai_6_text" text="Ran with the sand-raider bands beyond the oases." />
+    <string id="taom_cc_taom_education_aserai_6_desc" text="You fell in with the raider bands that preyed on caravans in the deep desert, learning to move fast across the sands and hurl a javelin from horseback before the caravan guards had time to form up. The desert outlaws' life was brutal but educational." />
+    <string id="taom_cc_taom_education_battania_1_text" text="Ranged the northern wilds with the Dunedain." />
+    <string id="taom_cc_taom_education_battania_1_desc" text="You were taken in hand by the Rangers of the North while still young, learning to move through the wild lands of Eriador in silence and track enemies across ruined Arnor. The Rangers asked little and demanded everything, and you learned to give it." />
+    <string id="taom_cc_taom_education_battania_2_text" text="Studied healing and herb-lore under a Ranger healer." />
+    <string id="taom_cc_taom_education_battania_2_desc" text="You were apprenticed to one of the Dunedain healers who kept the knowledge of Westernesse alive in the north, learning to identify plants and treat wounds with the resources the wild lands offered. Wisdom and practical knowledge were equally revered." />
+    <string id="taom_cc_taom_education_battania_3_text" text="Fought with the Ranger patrols against Orc and wolf." />
+    <string id="taom_cc_taom_education_battania_3_desc" text="You ran patrols through the ruins of Arnor with the Dunedain, learning to fight with sword and spear against the Orc warbands that tested the northern marches. The Rangers kept no fortresses, only vigilance, and you learned what that cost." />
+    <string id="taom_cc_taom_education_battania_4_text" text="Worked the forge in a Ranger settlement." />
+    <string id="taom_cc_taom_education_battania_4_desc" text="You made blades and repaired equipment in the small hidden settlements where the Dunedain wintered, learning to craft with economy — materials were scarce and every piece had to be made to last. You developed a craftsman's precision and a warrior's instinct for what a weapon needed to do." />
+    <string id="taom_cc_taom_education_battania_5_text" text="Tracked game and enemies through Eriador's wilds." />
+    <string id="taom_cc_taom_education_battania_5_desc" text="You learned to read the signs of passage left by men and beasts in the old forests and moorlands of Eriador, hunting game for the table and Orc scouts for the safety of the settlements. The bow was your first language and the wilderness your second home." />
+    <string id="taom_cc_taom_education_battania_6_text" text="Moved between villages as an unnamed wanderer." />
+    <string id="taom_cc_taom_education_battania_6_desc" text="You lived by your wits on the roads of the North, trading small work for food and board, and occasionally lifting what was not offered. The Dunedain passed through the same settlements but spoke to no one, which taught you that invisibility was its own kind of power." />
+    <string id="taom_cc_taom_education_khuzait_1_text" text="Rode and drilled with the Easterling war-riders." />
+    <string id="taom_cc_taom_education_khuzait_1_desc" text="You trained as a war-rider of Rhun, learning mounted combat in the wide steppe tradition from elders whose fathers had ridden against Gondor under the red dawn banner. The great eastern plains were your practice ground and the horse your most trusted weapon." />
+    <string id="taom_cc_taom_education_khuzait_2_text" text="Bartered along the trade roads of the East." />
+    <string id="taom_cc_taom_education_khuzait_2_desc" text="You traveled the commerce routes between the Sea of Rhun and the western lands, learning to deal with merchants of many peoples and to charm your way through disputes. The eastern roads were dangerous and your tongue had to be sharper than any sword." />
+    <string id="taom_cc_taom_education_khuzait_3_text" text="Moved with the nomadic clans across the eastern steppes." />
+    <string id="taom_cc_taom_education_khuzait_3_desc" text="You followed the seasonal migrations of the steppe clans, learning to strike camp and cover great distances on foot and horseback through all weathers. The nomadic life built a hard endurance and an easy relationship with the spear." />
+    <string id="taom_cc_taom_education_khuzait_4_text" text="Worked the valley farms near the Sea of Rhun." />
+    <string id="taom_cc_taom_education_khuzait_4_desc" text="You farmed the fertile valleys around the inland sea, learning to craft tools and make the most of limited materials in the Easterling way. When training with the blade came you took to it with the methodical discipline the farm had given you." />
+    <string id="taom_cc_taom_education_khuzait_5_text" text="Learned spirit-lore and healing with the clan elders." />
+    <string id="taom_cc_taom_education_khuzait_5_desc" text="You sat with the shamans and healers of the Easterling clans, learning the ritual knowledge and practical medicine that kept the nomadic people alive on the open plains. Words and understanding were your tools long before any weapon." />
+    <string id="taom_cc_taom_education_khuzait_6_text" text="Scouted far ahead of the eastern war-host." />
+    <string id="taom_cc_taom_education_khuzait_6_desc" text="You rode as a forward scout for the Easterling cavalry columns, ranging days ahead of the main force and reporting back what you found. The work demanded you stay unseen, shoot straight from horseback, and judge when to run rather than fight." />
+    <string id="taom_cc_taom_adulthood_gondor_1_text" text="You distinguished yourself at the defence of Osgiliath." />
+    <string id="taom_cc_taom_adulthood_gondor_1_desc" text="When Mordor pressed hard across the river, you held your section of the bridge until the order to fall back was given. The captain commended your name to the Steward's herald, and the men of your company remembered what you did that day." />
+    <string id="taom_cc_taom_adulthood_gondor_2_text" text="You negotiated a vital grain supply contract for Minas Tirith." />
+    <string id="taom_cc_taom_adulthood_gondor_2_desc" text="When drought threatened the outer farms, you arranged terms with merchant houses from as far as Pelargir to keep the city's granaries full through a hard winter. The Steward's chamberlain noted your name for future service." />
+    <string id="taom_cc_taom_adulthood_gondor_3_text" text="You organized the Pelennor harvest under threat of Orc raids." />
+    <string id="taom_cc_taom_adulthood_gondor_3_desc" text="When raiding parties came out of the Ephel Duath, you coordinated the local levies to protect the harvesters and brought in the crop before the season broke. The village heads still talk about the year someone actually got it done." />
+    <string id="taom_cc_taom_adulthood_gondor_4_text" text="You forged a blade that was presented to a Tower Guard captain." />
+    <string id="taom_cc_taom_adulthood_gondor_4_desc" text="The captain had heard of your work and commissioned a sword for the ceremony of his promotion. When he drew it before the assembled guard and it rang true, you knew the craft had repaid every sore morning in the smithing quarter." />
+    <string id="taom_cc_taom_adulthood_gondor_5_text" text="You guided a Ranger company through an Orc encirclement in Ithilien." />
+    <string id="taom_cc_taom_adulthood_gondor_5_desc" text="When the patrol was cut off east of the Anduin, you led them through a track no Orc scout had mapped, losing not a single man. Faramir's lieutenant clasped your arm when you came in and said nothing more needed to be said." />
+    <string id="taom_cc_taom_adulthood_gondor_6_text" text="You uncovered a smuggling ring operating out of the lower city." />
+    <string id="taom_cc_taom_adulthood_gondor_6_desc" text="For months contraband had moved through Osgiliath's ruins into Minas Tirith without anyone knowing how. You mapped the routes, identified the ringleader, and handed the whole operation to the city watch. The reward paid for your first real sword." />
+    <string id="taom_cc_taom_adulthood_mordor_1_text" text="You survived the trial of the Black Pits and were named to the Eye's legion." />
+    <string id="taom_cc_taom_adulthood_mordor_1_desc" text="Few who entered the pits were named worthy. You did not merely survive — you broke three challengers in succession before the overseers called it done. The legionary brand was pressed into your arm before the crowd dispersed." />
+    <string id="taom_cc_taom_adulthood_mordor_2_text" text="You turned a losing supply route into the most profitable road in the Dark Land." />
+    <string id="taom_cc_taom_adulthood_mordor_2_desc" text="The previous courier had been bleeding supply convoys for months through bad routing and worse deals. You cut the dead weight, renegotiated the toll agreements, and doubled throughput inside a season. The overseers rewarded you with a better cut and a worse conscience." />
+    <string id="taom_cc_taom_adulthood_mordor_3_text" text="You completed the construction of a forge-tower ahead of schedule." />
+    <string id="taom_cc_taom_adulthood_mordor_3_desc" text="The overseer had promised punishment if the forge-tower was not ready before the Dark Lord's inspection. You drove the work gangs harder than anyone thought possible and the tower stood complete with two days to spare. The overseer took the credit; you took the survival." />
+    <string id="taom_cc_taom_adulthood_mordor_4_text" text="You quelled a work-gang revolt without losing the day's output." />
+    <string id="taom_cc_taom_adulthood_mordor_4_desc" text="When the exhausted laborers put down their tools and refused to move, you stepped in alone, identified the three instigators, and handled the situation before the overseers noticed the delay. The gang went back to work. The instigators did not cause further trouble." />
+    <string id="taom_cc_taom_adulthood_mordor_5_text" text="You tracked and killed a deserter that three patrols had failed to find." />
+    <string id="taom_cc_taom_adulthood_mordor_5_desc" text="The deserter had killed two overseers and vanished into Gorgoroth's wastes. You went alone, followed the trail for four days across the ash flats, and came back with proof of what you found. No one asked for details." />
+    <string id="taom_cc_taom_adulthood_mordor_6_text" text="You exposed a corrupt gatekeeper and took his post." />
+    <string id="taom_cc_taom_adulthood_mordor_6_desc" text="The gatekeeper at the Morannon had been taxing every band that passed and pocketing half the take. You documented the scheme, presented it to his superior at exactly the right moment, and watched the post change hands. You made sure it changed to yours." />
+    <string id="taom_cc_taom_adulthood_erebor_1_text" text="You fought off an Orc raiding party in the foothills alone." />
+    <string id="taom_cc_taom_adulthood_erebor_1_desc" text="Returning from an outer patrol, you came upon an Orc band that had bypassed the watch. There was no time to get help. You held the narrow path with your axe until the alarm reached the gate. Three Orcs did not reach it." />
+    <string id="taom_cc_taom_adulthood_erebor_2_text" text="You struck the best trade agreement with Dale in a generation." />
+    <string id="taom_cc_taom_adulthood_erebor_2_desc" text="The terms on Erebor's iron exports had not been renegotiated since the Mountain's reclamation. You identified the imbalance, assembled the facts, and presented the case to King Dain's steward with such clarity that the agreement was revised within the month." />
+    <string id="taom_cc_taom_adulthood_erebor_3_text" text="You discovered a lost gallery and opened a new vein of mithril." />
+    <string id="taom_cc_taom_adulthood_erebor_3_desc" text="The old maps showed a collapse, but you followed the sound of water in the deep stone and found the gallery intact behind the rubble. The mithril seam within was modest, but the engineers who mapped it added your name to the survey record." />
+    <string id="taom_cc_taom_adulthood_erebor_4_text" text="You held the shieldwall at the Battle under the Mountain." />
+    <string id="taom_cc_taom_adulthood_erebor_4_desc" text="When the Orc host pushed into the lower gates, you anchored your section of the shieldwall while others buckled, buying the counterattack time to form. Dain's captain noted your name in the battle record, which is the closest a Dwarf gets to poetry." />
+    <string id="taom_cc_taom_adulthood_erebor_5_text" text="You balanced the treasury accounts after years of discrepancy." />
+    <string id="taom_cc_taom_adulthood_erebor_5_desc" text="The ledgers had been misaligned since the reclamation, with losses no one could explain. You spent three months cross-referencing records and identified the error — a simple conversion mistake compounded across twenty years of entries. The King's treasurer shook your hand." />
+    <string id="taom_cc_taom_adulthood_erebor_6_text" text="You tracked an Orc raiding band back to its lair and marked it for the guard." />
+    <string id="taom_cc_taom_adulthood_erebor_6_desc" text="The band had struck three times from the same direction and slipped away before anyone could follow. You went alone into the pines, found the camp, counted them, sketched the approach, and brought the report back in time for the garrison to act on it." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_text" text="You rode out alone to escort a wounded messenger back to Imladris." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_desc" text="The messenger had been ambushed east of the Ford and could not ride unaided. You found him, fought off the Orc stragglers still searching the road, and brought him in. Elrond himself spoke to you briefly before turning to the message." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_text" text="You completed a work of craft that Elrond's loremasters chose to preserve." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_desc" text="The piece — a detailed relief map of Eriador's ancient road network, reconstructed from fragmentary sources — was considered accurate enough to be copied into the library's archives. Three loremasters disagreed about two valleys; you were right about both." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_text" text="You tended the valley's terraces through a blight season without losing a harvest." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_desc" text="A fungal blight spread through the upper orchards and threatened the lower terraces. You identified the affected trees early, imposed a quarantine the Elves considered excessive, and kept the blight from spreading. The harvest that year was smaller but whole." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_text" text="You warned Imladris of a Troll encampment before it threatened the Ford." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_desc" text="Three Stone Trolls had settled in the Trollshaws closer to the Ford than any before. You spotted their camp, mapped its position, estimated their range, and brought the report to the wardens before they had moved. The wardens handled the rest." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_text" text="You saved the life of a traveller that Elrond's healers had given up on." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_desc" text="The traveller had taken a Morgul-tainted wound and the senior healers were already preparing their regrets. You had read a different account of the toxin's behavior in the library's older texts. You applied what you had read and the traveller recovered." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_text" text="You retrieved a stolen document from a Ranger camp without being seen." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_desc" text="A private letter from Elrond's household had gone missing in circumstances that pointed to a guest's pack. You recovered it before anyone knew it was gone, replaced what had been disturbed, and returned the letter without a word spoken about any of it." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_text" text="You captured a spider-queen that had been terrorising the southern paths." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_desc" text="The creature had driven three scouting parties back and killed two. You studied its web-patterns, identified the anchoring tree it returned to, and took it at dawn with a long Elven blade while it was feeding. Thranduil's captains hung the trophy at the path's entrance." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_text" text="You reopened the Forest Road trade route after years of closure." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_desc" text="The road had been effectively closed for two seasons by spider and Orc harassment. You mapped the safest remaining corridors, negotiated guard arrangements with Thranduil's captain, and led the first merchant convoy through to success. Trade resumed within the month." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_text" text="You cleared a corrupted clearing and planted it back to health." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_desc" text="The darkness from Dol Guldur had seeped into a clearing near the realm's edge, blackening the soil and killing what grew there. Over two seasons you worked to remove the taint and replant, and the saplings took. Thranduil's foresters came to see it for themselves." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_text" text="You crafted a bow that the Elvenking's champion chose to carry." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_desc" text="The champion had broken his previous bow in the defence of the eastern passes and needed a replacement before the season's tournament. You worked three days without rest on the stave. When the champion drew it the first time he nodded once and walked away without speaking. That was enough." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_text" text="You mapped the web-tunnel network in the southern forest." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_desc" text="No one had been able to chart the extent of the spiders' underground passages without being caught in them. You went in small, moved carefully, and came out with a map that the Elvenking's scouts have used ever since. You declined to describe exactly how you got out." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_text" text="You freed three Elven captives from a spider web-hold by yourself." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_desc" text="The scouts had been taken deep in the corrupted southern wood where the patrols would not go. You went alone at night, cut them free, and led them out through three spider-guarded paths. Two of them asked how you knew the way. You told them it was instinct." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_text" text="You stood the watch at Dimrill Dale alone when your partner fell ill." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_desc" text="The post covered both approaches and could not be left unmanned. You kept the full vigil yourself through a cold night and a half a day's shift without rest, reporting three incidents that the relief watch found exactly as you described them." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_text" text="You wove a ceremonial cloak that the Lady of the Wood presented as a gift." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_desc" text="Galadriel had need of a cloak worthy of a diplomatic gift to a visiting lord. You were given the commission and the materials and one week. The cloak that left Caras Galadhon made three Elven weavers ask who had made it. Galadriel smiled and did not say." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_text" text="You shot three Orcs from a flet at night during a border incursion." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_desc" text="The Orc scouts had slipped the outer markers and were moving toward the heart of the wood. You picked them out of the darkness from sixty yards — three shots, three falls, no alarm given. The patrol found them in the morning and could not tell from which direction the arrows had come." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_text" text="You detected a Nazgul's approach before it reached the wood's borders." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_desc" text="The unnatural cold and the stillness of the birds were the first signs. You reported what you felt to the Galadhrim command before anyone else had noticed. The Lady's power moved to reinforce the borders. Afterward, Celeborn said your instincts were unusually sharp." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_text" text="You healed a severe Orc-wound that others said would not close." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_desc" text="The wound had been treated by two healers who agreed recovery was unlikely. You recognized a different preparation of kingsfoil from an older text and applied it over their objections. The Elf recovered. The two healers subsequently asked you about the preparation." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_text" text="You slipped through Dol Guldur's outer pickets and returned with a prisoner count." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_desc" text="The Galadhrim needed to know how many were garrisoned at the southern fortress before any action was planned. You volunteered to go and look. You were gone six days. What you brought back gave Galadriel the information she needed to make her decision." />
+    <string id="taom_cc_taom_adulthood_isengard_1_text" text="You led the assault column at Helm's Deep and breached the outer wall." />
+    <string id="taom_cc_taom_adulthood_isengard_1_desc" text="Saruman's plan called for a breach before dawn. Your column hit the gate first and you were the one who placed the blasting-fire charge at its base. The explosion lit the sky. The assault followed. What happened inside the Deep is your business." />
+    <string id="taom_cc_taom_adulthood_isengard_2_text" text="You designed a new alloy process that doubled Isengard's weapon output." />
+    <string id="taom_cc_taom_adulthood_isengard_2_desc" text="The existing process wasted a third of the steel through brittle failures at the quench. You identified the temperature as the problem, proposed a fix, tested it against Saruman's overseer's skepticism, and proved it in a single shift. Production doubled within the month." />
+    <string id="taom_cc_taom_adulthood_isengard_3_text" text="You completed Isengard's new eastern culvert system ahead of Saruman's deadline." />
+    <string id="taom_cc_taom_adulthood_isengard_3_desc" text="The culvert was needed to keep the pit floors dry through the flood season. Saruman had given thirty days. You reorganized the labour gangs, simplified the routing, and finished in twenty-two. Saruman examined the work without comment, which meant it was acceptable." />
+    <string id="taom_cc_taom_adulthood_isengard_4_text" text="You trained a company of raw recruits into a disciplined infantry unit." />
+    <string id="taom_cc_taom_adulthood_isengard_4_desc" text="The recruits were the worst draft Isengard had seen — underfed, undisciplined, and convinced of their own worthlessness. After twelve weeks under your instruction they held the line in a training exercise that the Uruk-hai observers called adequate. Coming from them, that was high praise." />
+    <string id="taom_cc_taom_adulthood_isengard_5_text" text="You mapped the Rohirrim patrol patterns and handed Saruman a strategic advantage." />
+    <string id="taom_cc_taom_adulthood_isengard_5_desc" text="For three months you observed, recorded, and cross-referenced Rohirrim movements along the Isen. When you presented the pattern map to Saruman's strategists they rearranged the entire eastern scouting rotation on its basis. Saruman acknowledged you by name in the briefing." />
+    <string id="taom_cc_taom_adulthood_isengard_6_text" text="You turned a Rohirrim spy into a double agent working for Isengard." />
+    <string id="taom_cc_taom_adulthood_isengard_6_desc" text="You identified the spy through behavioral inconsistency, confronted him privately, and gave him a choice that made the decision simple. He fed false information back to Edoras for two seasons before anyone in Rohan suspected. You received nothing in writing for the achievement." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_text" text="You won the Great Mountain Tournament and were named a warchief's retainer." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_desc" text="The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_text" text="You established a profitable arms trade with a southern Orc clan." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_desc" text="The southern clan had iron but no smiths. Gundabad had smiths but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_text" text="You shored up the lower mine galleries after a partial collapse." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_desc" text="The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_text" text="You led the raid that broke the Dwarven outpost on the Grey Mountains." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_desc" text="The Dwarves had fortified a pass that Gundabad used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_text" text="You tracked a Dwarven scouting party for four days and brought back their maps." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_desc" text="The Dwarves were mapping something in the Grey Mountains and Gundabad needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_text" text="You framed a rival warleader for theft and took his position." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_desc" text="The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_text" text="You commanded the patrol that first broke through Mirkwood's northern defences." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_desc" text="The Elven border wardens had held the approach for two seasons. You identified the gap in their rotation, timed your crossing to the minute, and brought your patrol through and back without a casualty. The shadow-masters noted your report and gave you a permanent command." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_text" text="You forged shadow-steel weapons that passed Sauron's quality inspection." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_desc" text="The Necromancer's inspectors had rejected two previous batches from the fortress's smiths. You reworked the smelting process, accepted no compromise on the quench, and delivered a batch that the inspector examined in silence before marking as approved. It was the first such approval in three years." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_text" text="You completed the expansion of the fortress's lowest dungeon level." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_desc" text="The work had stalled for a season due to seeping groundwater and failing supports. You redesigned the drainage, replaced the compromised timbers, and completed the level on the revised schedule. The Necromancer's overseers moved prisoners in the same week." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_text" text="You broke through the Elven outer watch and took a prisoner for questioning." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_desc" text="The intelligence taken from the Elven warden described the full rotation of Thranduil's eastern border patrol. It was the most useful strategic information Dol Guldur had received in a year. No one asked how you got the prisoner out. You did not explain." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_text" text="You mapped the Elven patrol routes in southern Mirkwood over six months." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_desc" text="Working alone and over multiple seasons, you built a complete picture of Thranduil's southern border dispositions. The map that resulted gave Dol Guldur's planners something they had never had before: certainty. The Necromancer's agents used it for two years." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_text" text="You infiltrated the Elvenking's court as a trader and reported what you heard." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_desc" text="Three months in Thranduil's halls under a false identity gave you access to conversations that no agent of Dol Guldur had ever overheard. You came back with names, plans, and relationships that the shadow-masters used to shape the next season's strategy. You found the experience unexpectedly informative about Elves." />
+    <string id="taom_cc_taom_adulthood_umbar_1_text" text="You captained the fastest raid up the Anduin in a decade." />
+    <string id="taom_cc_taom_adulthood_umbar_1_desc" text="Your ship made it past the Gondorian river chain, struck the supply depot at Pelargir, and was back at sea before the garrison's signal fires had burned down. The Corsair fleet captains raised a cup in your name when you came in, which was the only kind of ceremony they knew." />
+    <string id="taom_cc_taom_adulthood_umbar_2_text" text="You established a new trade route through the Bay that doubled harbor revenue." />
+    <string id="taom_cc_taom_adulthood_umbar_2_desc" text="The existing routes had been taxed to the point where merchants were looking for alternatives. You identified an underused passage through the bay islands, arranged the fees, and brought three new merchant houses into the harbor within a season. The harbormasters were irritated but richer." />
+    <string id="taom_cc_taom_adulthood_umbar_3_text" text="You designed the new drydock that solved Umbar's fleet maintenance bottleneck." />
+    <string id="taom_cc_taom_adulthood_umbar_3_desc" text="The old drydock could only handle one hull at a time and the fleet was backing up. Your redesign allowed parallel work on two vessels simultaneously. The ship-masters were skeptical until the first simultaneous completion came in ahead of schedule. They were not skeptical after that." />
+    <string id="taom_cc_taom_adulthood_umbar_4_text" text="You led the boarding party that took the Gondorian warship off Belfalas." />
+    <string id="taom_cc_taom_adulthood_umbar_4_desc" text="The warship was twice the size of your vessel and her crew outnumbered yours. You closed in a fog, went over the side first, took the helm, and had the crew disarmed before they fully understood what was happening. The ship was in Umbar's harbor within two days." />
+    <string id="taom_cc_taom_adulthood_umbar_5_text" text="You spotted a Gondorian naval trap before your fleet sailed into it." />
+    <string id="taom_cc_taom_adulthood_umbar_5_desc" text="The supply fleet was three hours out when you noticed the way the coastal birds were behaving around a particular headland. You called for a halt, went ahead in a small craft, and found a Gondorian squadron waiting in the calm water behind it. The fleet turned back. The admiral gave you the next command." />
+    <string id="taom_cc_taom_adulthood_umbar_6_text" text="You ran the most successful black market in Umbar's lower harbor for two years." />
+    <string id="taom_cc_taom_adulthood_umbar_6_desc" text="The operation moved goods that could not be declared through channels that did not officially exist, to buyers who paid in coin that was never counted. You ran it cleanly enough that no watch captain was ever able to make a case. When you closed it, you did so because you chose to." />
+    <string id="taom_cc_taom_adulthood_empire_1_text" text="You united three feuding clans against a Rohirrim punitive expedition." />
+    <string id="taom_cc_taom_adulthood_empire_1_desc" text="The three chiefs had not spoken in a generation, and the Rohirrim were counting on their division. You rode between camps for a week, said the right things to the right people in the right order, and on the day of the expedition's arrival, three clans stood together on the ridge. The Rohirrim turned back." />
+    <string id="taom_cc_taom_adulthood_empire_2_text" text="You opened a trading relationship with Isengard that kept your clan fed through winter." />
+    <string id="taom_cc_taom_adulthood_empire_2_desc" text="The harvest had failed and the winter stores were low. You went to Isengard alone, spoke to the right man, and came back with grain in exchange for iron ore the clan had been sitting on for years. The chief was astonished; the clan ate." />
+    <string id="taom_cc_taom_adulthood_empire_3_text" text="You drove off a Rohirrim cattle raid and recovered the stolen herd." />
+    <string id="taom_cc_taom_adulthood_empire_3_desc" text="The riders had taken the clan's breeding stock before anyone raised the alarm. You assembled six men, tracked the party through the night, caught them at the Isen ford, and brought the cattle back before morning. The chief added your name to the stronghold's stone." />
+    <string id="taom_cc_taom_adulthood_empire_4_text" text="You built the clan hall that replaced the one burned by Rohirrim." />
+    <string id="taom_cc_taom_adulthood_empire_4_desc" text="The old hall had stood for three generations before the riders put a torch to it. You designed the new one, organized the timber cutting, and led the build yourself. The hall that stands now is stronger and larger than the one that burned. That was the point." />
+    <string id="taom_cc_taom_adulthood_empire_5_text" text="You guided a Dunlending warband through Fangorn's edge without losing a man." />
+    <string id="taom_cc_taom_adulthood_empire_5_desc" text="The warband needed to reach the southern approaches without crossing the open country where the Rohirrim patrols could see them. The only path ran along Fangorn's border. You led them through in two nights, keeping the party quiet and the Ents undisturbed. Both groups arrived safely, which was not guaranteed." />
+    <string id="taom_cc_taom_adulthood_empire_6_text" text="You obtained Rohirrim military plans through a contact in Edoras." />
+    <string id="taom_cc_taom_adulthood_empire_6_desc" text="The contact was a disgruntled stable-hand who wanted money more than loyalty to the Mark. You cultivated the relationship carefully and received two seasons of patrol schedules in exchange for a sum the chief considered modest. The clan raided without incident for the year that followed." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_text" text="You rode in the charge at the Fords of Isen and held the line." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_desc" text="When Saruman's forces pushed across the Isen, the Rohirrim line buckled at the center. You were among those who held the ford long enough for the retreat to become a withdrawal rather than a rout. The Marshal mentioned you in his account of the battle." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_text" text="You negotiated the best horse-fair prices Edoras had seen in five years." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_desc" text="The buyers from the south had come expecting to set the price as they always did. You organized the Rohirrim sellers before the fair, agreed on a floor, and held it. The buyers paid what the horses were worth. The sellers remembered who had made it happen." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_text" text="You broke a Dunlending raid that struck the Westfold in early autumn." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_desc" text="The raiders had timed their strike for the harvest period when the farmsteads were exposed. You had anticipated the possibility, organized the local levies in advance, and met them at the valley entrance. The raid broke on the spear-line before it reached a single farmstead." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_text" text="You forged a sword that the King of the Mark chose for his personal guard." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_desc" text="The commission came from the stables — a request for a blade that could be carried on horseback without awkwardness. You studied the problem, adjusted the balance, and presented the result. Theoden's captain tested it in the yard and had it sent to the king's armory the same afternoon." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_text" text="You tracked the Isengard scouts that were mapping Helm's Deep approaches." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_desc" text="You noticed the signs of careful observation — broken grass pressed back upright, stones replaced — and realized someone had been reading the approaches to the Deep for weeks. You tracked back along their routes, identified the camp, and reported it to the garrison captain. Helm's Deep prepared accordingly." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_text" text="You exposed a Dunlending spy operating inside Edoras." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_desc" text="The spy had been in the city for two years, passing information to the clans about Rohirrim garrison strengths. You noticed the pattern in what went wrong on raids where only a few people had been told the details. Three conversations later you had the name and the method of transfer." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_text" text="You stood with King Brand at the Battle of Dale." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_desc" text="When Easterling forces swept down from the north and pressed into the city streets, you were among the guard that held the central square while Brand directed the defence. You were the last one standing beside the king before the relief came through the eastern gate." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_text" text="You opened the first permanent trading house between Dale and the Easterling border settlements." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_desc" text="The border was tense and no one wanted to go first. You went, established contact, made the first exchange, and survived long enough to make a second. Within a year, two other merchants had followed. The trading house you founded became the model for the rest." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_text" text="You rebuilt the Long Lake fish-weirs after the Easterling war damaged them." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_desc" text="The weirs had been destroyed in the raids and the lake catch had fallen to a fraction of its normal yield. You organized the reconstruction, solved the structural problem that had plagued the old design, and had the new weirs producing within a month. The fishermen named one of the weirs after you." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_text" text="You produced a set of works that Dale's craft guild displayed in its hall." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_desc" text="The guild displayed twelve pieces per year from craftsmen across the region. You submitted three — a blade, a lock mechanism, and a decorative fitting — and all three were accepted. The guild master told you it was the first time a single craftsman had placed three pieces in the same year." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_text" text="You guided refugees out of Mirkwood's southern edge during the shadow's expansion." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_desc" text="When Dol Guldur's corruption crept into the southern forest and drove the settlers out, you volunteered to lead them north along the forest's edge. The route was not obvious and the pursuit came twice. All forty-three people you started with arrived at Esgaroth." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_text" text="You recovered stolen cargo from a corrupt dock official and kept his accounts." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_desc" text="The official had been diverting cargo for three years and everyone knew it, but no one had the documentation. You got the documentation, recovered the cargo on behalf of the merchants, and presented the accounts to the town council along with a list of recipients. The official left Dale quietly." />
+    <string id="taom_cc_taom_adulthood_aserai_1_text" text="You rode in the vanguard of the Black Serpent's march north." />
+    <string id="taom_cc_taom_adulthood_aserai_1_desc" text="The Haradrim host moved toward Gondor and you rode at the front of the war-column, fighting the skirmishes that cleared the way. When the great battle came you were among those whose name the Black Serpent knew when it was over — for those who survived to tell him." />
+    <string id="taom_cc_taom_adulthood_aserai_2_text" text="You guided a Mumak caravan safely through the hostile desert interior." />
+    <string id="taom_cc_taom_adulthood_aserai_2_desc" text="The caravan carried tribute and was attacked twice by rival tribes. You fought at the front both times and held the column's order. The Mumak arrived, the tribute was delivered, and the merchants paid your fee without argument, which was the strongest praise they gave." />
+    <string id="taom_cc_taom_adulthood_aserai_3_text" text="You negotiated a peace between two feuding desert tribes." />
+    <string id="taom_cc_taom_adulthood_aserai_3_desc" text="The blood feud had been running for three years and was costing both tribes more than either would admit. You asked to speak at the gathering, laid out the numbers without sentiment, and proposed terms that neither side loved but both could accept. They accepted." />
+    <string id="taom_cc_taom_adulthood_aserai_4_text" text="You expanded the oasis irrigation network and doubled its yield." />
+    <string id="taom_cc_taom_adulthood_aserai_4_desc" text="The existing channels had not been extended in a generation. You surveyed the terrain, proposed a new branch, organized the labor, and finished the construction before the spring floods. The oasis produced twice as much as the previous year. Three other settlements sent messengers to learn how." />
+    <string id="taom_cc_taom_adulthood_aserai_5_text" text="You navigated the deep desert alone and found a lost oasis mentioned in old texts." />
+    <string id="taom_cc_taom_adulthood_aserai_5_desc" text="The oasis had been considered legend. You read the old accounts, identified the geographic clues, and went into the deep desert with ten days of water. On the ninth day you found it. The return took longer than expected but the route you marked brought caravans there within the season." />
+    <string id="taom_cc_taom_adulthood_aserai_6_text" text="You robbed a rival tribe's treasury caravan and redistributed it to your own." />
+    <string id="taom_cc_taom_adulthood_aserai_6_desc" text="The rival tribe had prospered for years through unfavorable toll agreements imposed on your trade routes. You studied their caravan schedules for a season, chose the right moment in the deep desert, and took back what had been taken. Your tribe considered it justice; the rival tribe called it something else." />
+    <string id="taom_cc_taom_adulthood_battania_1_text" text="You tracked and destroyed an Orc warband that had been preying on the North Downs settlements." />
+    <string id="taom_cc_taom_adulthood_battania_1_desc" text="The warband had struck four settlements without the Rangers catching them. You read the pattern, anticipated their next target, and moved to intercept rather than chase. Three of the Rangers with you said afterward that they had not expected you to be right. You were." />
+    <string id="taom_cc_taom_adulthood_battania_2_text" text="You kept an injured party alive through a Misty Mountain winter." />
+    <string id="taom_cc_taom_adulthood_battania_2_desc" text="The Ranger patrol was three days from help when a rock fall crippled two members. You set the worst injuries, built shelter from what the mountain offered, and kept the party alive for eleven days until the rescue party found you. Everyone came home." />
+    <string id="taom_cc_taom_adulthood_battania_3_text" text="You held a mountain pass alone against an Orc patrol to buy the company time to retreat." />
+    <string id="taom_cc_taom_adulthood_battania_3_desc" text="The pass was narrow enough for one to hold, and someone had to stay. You volunteered, held the Orcs for long enough, and then retreated the way you had agreed. The company made it out. So did you, though you chose not to discuss how." />
+    <string id="taom_cc_taom_adulthood_battania_4_text" text="You forged equipment from salvaged Dunedain materials that outlasted anything new." />
+    <string id="taom_cc_taom_adulthood_battania_4_desc" text="The settlement's supply line had been cut and the tools were failing. You assessed what could be recovered, salvaged the best material from broken pieces, and reforged it into working equipment. Three Rangers asked for your work over new supply when the line reopened." />
+    <string id="taom_cc_taom_adulthood_battania_5_text" text="You found the hidden Orc encampment that had been raiding the Weather Hills for a year." />
+    <string id="taom_cc_taom_adulthood_battania_5_desc" text="Seven patrols had looked and found nothing. You took a different approach — you tracked not the Orcs but the things that avoided them, reading the silence in the bird calls and the gaps in the wolf tracks. The camp was where the absences converged. The Rangers cleaned it out." />
+    <string id="taom_cc_taom_adulthood_battania_6_text" text="You passed through the Shire twice without any Hobbit knowing you had been there." />
+    <string id="taom_cc_taom_adulthood_battania_6_desc" text="The Dunedain watched the Shire from beyond its borders, but sometimes information required closer observation. You entered, spent three days moving through the farmland, gathered what was needed, and left without disturbing a single garden gate. The Hobbits never knew. That was the point." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_text" text="You led the flanking charge that broke the Gondorian infantry square." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_desc" text="The Gondorian square had held through three direct assaults and the battle-lord was considering withdrawal. You identified the timing of their shield rotation, requested the flanking cavalry, and committed the charge at exactly the right moment. The square broke. The battle was won." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_text" text="You opened trade with western merchants that gave the clans access to steel tools." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_desc" text="The clans had always traded east, but the best steel came from the west. You made the first contact, found a merchant willing to make the journey to the Sea of Rhun, and negotiated terms that made the exchange worthwhile for both parties. The tools that came back transformed three winters of work." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_text" text="You led the clan migration to new grazing lands without losing the herd." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_desc" text="The old grounds had been grazed out and the elder council was divided on where to go next. You proposed a route, argued the case with numbers and precedent, and led the migration yourself. Three hundred animals and eighty-two people made it to the new grounds intact." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_text" text="You adapted western farming methods to the valley settlement and tripled its yield." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_desc" text="The valley settlement had been subsistence farming on old methods for a generation. You had seen better approaches on the trade routes and applied them carefully, crop by crop, year by year. By the third season the settlement was producing surplus for the first time anyone could remember." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_text" text="You talked a dying chieftain back from the edge with knowledge from the clan elders." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="The poison was fast-acting and the shaman said there was nothing to be done. You remembered a different teaching — a preparation from the cold steppe plants that worked against this type of wound. You prepared it, applied it, and sat through the night. The chieftain recovered. He gave you a place at his council." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_text" text="You scouted the Gondorian fortress at Cair Andros and mapped its weaknesses." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="The battle-lord needed to know whether the fortress could be bypassed or had to be reduced. You went forward alone, spent four days observing from the river's eastern bank, and returned with a detailed assessment of its garrison strength, supply schedule, and the approach that gave the best odds. The battle-lord called it the most useful report he had received in a campaign." />
+  </strings>
+</base>
