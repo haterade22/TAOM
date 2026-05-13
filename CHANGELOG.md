@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — close #195 TroopWeight 4 IOn* hook implementation tests (Category 4a)
+
+ADR-008 minimum-coverage tests for the four `IOn*` hook implementations the Phase 7 audit (#195) flagged as having zero tests. Full behavior tests would require an ADR-007 adapter refactor (the hooks accept sealed `PartyBase`, `MBBindingList<PartyCharacterVM>`, `RecruitmentVM` and call static `MBTextManager.SetTextVariable`) which the audit explicitly placed out of scope. What we CAN test without engine state is now covered.
+
+- **`TAOM.Tests/Features/TroopWeight/TroopWeightHooksTests.cs` — NEW (10 tests).** Per-hook: construction with substituted deps + interface implementation check. For the two `PartyBase*` hooks: explicit null-receiver early-exit assertion (production catches all exceptions inside try/catch so a future refactor that drops the explicit `null` guard would silently mask the bug; this test asserts the guard works without exception AND that `__result` is preserved unchanged).
+- The 4 hooks covered: `PartyBaseNumberOfAllMembersHook`, `PartyBaseNumberOfRegularMembersHook`, `PartyVMPopulatePartyListLabelHook`, `RecruitmentVMRefreshPartyPropertiesHook`.
+- Deliberately out of scope: full behavior tests requiring engine init (deferred to an ADR-007 refactor session).
+- 1915 → 1925 tests, all passing.
+
 ### Phase 9b — close #193 SiegeDismount MissionBehavior wiring test (Category 4a, mechanism-corrected)
 
 The Phase 4 audit originally claimed SiegeDismount uses manual `_harmony.Patch(...)` like SettlementGuards (#192). Phase 9a verification (Codex confirmed) corrected the mechanism: SiegeDismount wires via `mission.AddMissionBehavior(new SiegeDismountMissionBehavior())` inside `Main/SubModule.cs::OnMissionBehaviorInitialize`. The wiring is uniquely vulnerable in TWO ways: drop the `AddMissionBehavior` line and the behavior never registers (silent broken siege dismount), or drop the `SiegeDismountIoC.RegisterSiegeDismountFeature` line and the behavior ctor's `IoC.Resolve<ISiegeDismountService>()` throws at mission start.
