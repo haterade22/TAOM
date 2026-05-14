@@ -27,6 +27,11 @@ public static class CareerSystemIoC
         container.Register<Abilities.ICareerAbilityService, Abilities.CareerAbilityService>(Reuse.Singleton);
         container.Register<IMutationService, MutationService>(Reuse.Singleton);
 
+        // Phase 9b #142 — agent-stat service extracted out of TaomAgentStatCalculateModel /
+        // TaomAgentApplyDamageModel bodies (gamemodels.md rule 4 — no inline branching in
+        // override bodies). Reads ICareerPassiveService + the static CareerAbilityBuffTracker.
+        container.Register<Abilities.ICareerAgentStatService, Abilities.CareerAgentStatService>(Reuse.Singleton);
+
         // Phase 4C: Ability effect execution — all 50 careers mapped to 3 archetypes
         container.RegisterDelegate(r => BuildAbilityEffectRegistry(r.Resolve<ICareerConfigProvider>()), Reuse.Singleton);
 

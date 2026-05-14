@@ -184,6 +184,7 @@
                    sound_effect="mahud_beast_rider_activate"
                    tooltip="{=taom_ability_mahud_beast_rider_tt}Channel the ancient fear of Mûmakan, boosting beast charge damage and spreading terror through enemy ranks." />
 
+  <!-- DISABLED 2026-05-14: Far Harad Halftroll ability WIP; not ready for live game yet. Re-enable by uncommenting.
   <AbilityTemplate id="far_harad_halftroll_ability"
                    display_name="{=taom_ability_far_harad_halftroll}Vile Brutality"
                    sprite="ability_far_harad_halftroll_icon"
@@ -192,6 +193,7 @@
                    particle_effect="far_harad_halftroll_particle"
                    sound_effect="far_harad_halftroll_activate"
                    tooltip="{=taom_ability_far_harad_halftroll_tt}Enter a state of savage brutality, massively boosting health and resistance while terrorizing nearby enemies." />
+  -->
 
   <!-- ═══ EASTERLINGS / RHÛN ═══ -->
 
@@ -398,6 +400,7 @@
 
   <!-- ═══ GUNDABAD ═══ -->
 
+  <!-- DISABLED 2026-05-14: Cave Troll Master ability WIP; not ready for live game yet. Re-enable by uncommenting.
   <AbilityTemplate id="cave_troll_master_ability"
                    display_name="{=taom_ability_cave_troll_master}Troll Frenzy"
                    sprite="ability_cave_troll_master_icon"
@@ -406,6 +409,7 @@
                    particle_effect="cave_troll_master_particle"
                    sound_effect="cave_troll_master_activate"
                    tooltip="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy, massively boosting health and troop damage." />
+  -->
 
   <AbilityTemplate id="goblin_sniper_ability"
                    display_name="{=taom_ability_goblin_sniper}Poison Dart"

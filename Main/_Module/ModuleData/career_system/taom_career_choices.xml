@@ -4168,6 +4168,7 @@
   <!-- HARAD - Far Harad Halftroll (Melee/Monster) -->
   <!-- ======================================================================= -->
 
+  <!-- DISABLED 2026-05-14: Far Harad Halftroll choice tree WIP; not ready for live game yet. Re-enable by uncommenting.
   <Choice id="far_harad_halftroll_root" group_id="" type="Passive"
           description="{=taom_far_harad_halftroll_root_desc}Vile Brutality grants massive health bonus and instills terror."
           icon_sprite="career_choice_far_harad_halftroll_root">
@@ -4281,6 +4282,7 @@
       <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
     </Choice>
   </ChoiceGroup>
+  -->
 
   <!-- ======================================================================= -->
   <!-- EASTERLINGS / RHÛN - Côdyan Legionaire (Melee) -->
@@ -6765,6 +6767,7 @@
   <!-- GUNDABAD - Cave Troll Master (Infantry) -->
   <!-- ======================================================================= -->
 
+  <!-- DISABLED 2026-05-14: Cave Troll Master choice tree WIP; not ready for live game yet. Re-enable by uncommenting.
   <Choice id="cave_troll_master_root" group_id="" type="Passive"
           description="{=taom_cave_troll_master_root_desc}Troll Frenzy grants +25 health and drives your trolls berserk."
           icon_sprite="career_choice_cave_troll_master_root">
@@ -6878,6 +6881,7 @@
       <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
+  -->
 
   <!-- ======================================================================= -->
   <!-- GUNDABAD - Goblin Sniper (Ranged) -->

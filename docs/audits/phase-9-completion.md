@@ -105,12 +105,24 @@ After the initial close-out, a parallel-agent batch was dispatched to fulfill th
 
 **Net test count delta (full Phase 9):** 1958 → **2110** total (+152). Of those: 2107 passing, 2 skipped (Warg `[Ignore]`), 1 pre-existing data-integrity test failure unrelated to this work (user disabled 2 career XML entries by comment-out; `EveryJsonEntry_HasMatchingCareerInXml` correctly flags the JSON↔XML inconsistency).
 
-**Deferred dispositions still remaining (NOT fulfilled this batch):**
-- #165 + #167 sprite asset authoring (~78 PNGs) — artist-driven, out-of-band
-- #169 widget allocation pool — audit was wrong; corrected design notes in close-out comment; future profiler-driven work
-- #142 (3 of 5 P2) — CareerSystem GameModel surface (3 service extractions still inline)
-- #143 (P2 perf) — FiefManagement Settlement.All on F6 (bounded but suboptimal)
-- #133 (P2 minor) — SpecialResources singleton reset + grace period
+## Round-2 deferred-fulfillment batch (2026-05-14, same day)
+
+After the initial Phase 9 close-out + round-1 batch, a final round-2 parallel-agent batch was dispatched to fulfill all remaining technical deferrals.
+
+| Issue | Commit | Result |
+|---|---|---|
+| **#169** Custom Widgets — corrected design | `c123630` | `HoveredFactionName` write moved from `OnRender` to `OnLateUpdate`/`ResolveGlobalHover`. `_allInstances` threading assumption documented inline. AUDIT-NOTE comments added at the 3 allocation sites documenting that the audit's hoist would BREAK rendering (TwoDimensionDrawData reference semantics) and pointing at the correct fix (SimpleMaterial pool indexed by (color, alpha)). IoC.Resolve in widget hot path: verified already cached via `??=`. |
+| **#142** CareerSystem 3 remaining P2s | `df0c7c9` | `ICareerAgentStatService` extracted (4 methods); `TaomAgentStatCalculateModel.UpdateAgentStats` body 55→4 lines; `TaomAgentApplyDamageModel` 3 overrides each 2-3 lines; unreachable null guards removed across 3 models. **+22 tests.** Net -58 model lines. |
+| **#143** FiefManagement F6 perf | `434319c` | `ISettlementOwnershipAdapter.GetPlayerOwnedFiefCount()` fast path uses `Clan.PlayerClan.Settlements` (cached, ~10 entries) instead of `Settlement.All` (~862). **+5 tests** asserting fast path is taken. |
+| **#133** SpecialResources minor P2s | `328f744` | `ResetSessionState()` clears `_loggedResolveKeys`/`_pendingSpend`/`_inSession` on `OnNewGameCreated` (R1). Desertion grace via `_isFirstTickAfterLoad`. Per-resource legacy-seed gate via `IStorageService.Contains(hero, resource)` instead of `current <= 0f`. **+7 tests.** |
+
+**Round-2 test count delta:** 2110 → 2144 (+34).
+
+**Final Phase 9 test count:** 1958 → **2144** (+186 net tests across all rounds, all commits).
+
+**Phase 9 audit cycle is now FULLY CLOSED.** All 79 audit-* issues closed + all technical-deferral dispositions fulfilled. The only remaining out-of-scope work is:
+
+- **#165 + #167 sprite asset authoring (~78 PNGs)** — artist-driven workflow, not addressable in autonomous coding mode. The data wiring + sprite-registry code is correct; the gap is purely binary PNG content.
 
 ## Closing commits
 

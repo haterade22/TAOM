@@ -225,6 +225,7 @@
       </IncludedGameTypes>
     </XmlNode>
     <!-- Spider creature anchor (used by SpiderSpawnerService for AgentBuildData) -->
+    <!-- DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
     <XmlNode>
       <XmlName id="NPCCharacters" path="characters/spider_creature"/>
       <IncludedGameTypes>
@@ -234,6 +235,8 @@
         <GameType value = "EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    -->
+
     <XmlNode>
       <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_dolguldur"/>
       <IncludedGameTypes>

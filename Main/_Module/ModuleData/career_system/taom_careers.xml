@@ -412,6 +412,7 @@
     </ChoiceGroups>
   </Career>
 
+  <!-- DISABLED 2026-05-14: Far Harad Halftroll career WIP; not ready for live game yet. Re-enable by uncommenting.
   <Career id="far_harad_halftroll"
           display_name="{=taom_career_far_harad_halftroll}Far Harad Halftroll"
           description="{=taom_career_far_harad_halftroll_desc}A half-troll berserker of the deepest Far Harad jungles who absorbs punishment that would kill lesser warriors and retaliates with vile brutality."
@@ -431,6 +432,7 @@
       <Group id="far_harad_halftroll_t3_b" />
     </ChoiceGroups>
   </Career>
+  -->
 
   <!-- ═══════════════════════════════════════════════════════════ -->
   <!-- EASTERLINGS / RHÛN (khuzait)                               -->
@@ -884,6 +886,7 @@
   <!-- GUNDABAD (gundabad)                                        -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
+  <!-- DISABLED 2026-05-14: Cave Troll Master career WIP; not ready for live game yet. Re-enable by uncommenting.
   <Career id="cave_troll_master"
           display_name="{=taom_career_cave_troll_master}Cave Troll Master"
           description="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning."
@@ -903,6 +906,7 @@
       <Group id="cave_troll_master_t3_b" />
     </ChoiceGroups>
   </Career>
+  -->
 
   <Career id="goblin_sniper"
           display_name="{=taom_career_goblin_sniper}Goblin Sniper"

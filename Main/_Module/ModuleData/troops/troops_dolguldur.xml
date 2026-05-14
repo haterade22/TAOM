@@ -8112,6 +8112,7 @@
          HorseItem in the Horse equipment slot. Pattern mirrors dg_fell_warg_rider.
          Spider mount items: spider_mount_a1/a2/a3 in LOTRLOME_Armory (Item.spider_mount_a*).
          Spider Monster: spider (LOTRLOME_Armory monsters.xml). -->
+    <!-- DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
     <NPCCharacter
         id="dg_giant_spider_rider"
         race="dg_uruk"
@@ -8241,5 +8242,6 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
+    -->
 
 </NPCCharacters>

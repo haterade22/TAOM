@@ -1,5 +1,7 @@
 # Spider
 
+> **Status (2026-05-14): DISABLED IN-PLACE.** Feature is intentionally taken out of the live game for now. The spawn `MissionBehavior` is no longer registered, the IoC feature registration is commented out, the `taom_spider_creature` XmlNode is no longer loaded, and the `dg_giant_spider_rider` cavalry troop is commented out in `troops_dolguldur.xml`. **All source, tests, tooling, and assets are preserved** — see CHANGELOG.md "Phase 9c". Re-enable by uncommenting the four marker blocks in `Main/IoC.cs`, `Main/SubModule.cs`, `Main/_Module/SubModule.xml`, `Main/_Module/ModuleData/troops/troops_dolguldur.xml` (search for `DISABLED 2026-05-14`).
+
 ## Overview
 
 Adds giant spiders to TAOM through **two complementary paths**:

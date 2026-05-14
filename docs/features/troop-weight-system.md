@@ -64,9 +64,11 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 ### Current Weight Tiers
 
+> **Note (2026-05-14):** The `cave_troll` TroopWeight is currently commented out in `troop_weights.xml` (WIP — see CHANGELOG "Phase 9c — Disable troll content in-place"). The 4.0 tier remains documented here for reference and will reactivate when the troop is re-enabled.
+
 | Weight | Count | Troop Types |
 |--------|-------|-------------|
-| 4.0 | 1 | Cave trolls |
+| 4.0 | 1 | Cave trolls (currently disabled) |
 | 3.0 | 7 | Rivendell Gondolin units (5), Mirkwood palace guard (2), Erebor royal elite (2) |
 | 2.0 | ~70 | All Imladris/Mirkwood elves, warg riders (all cultures), Black Numenoreans, Khamul's elite, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard, Erebor oathsworn |
 | 1.0 | default | All standard human/orc/goblin infantry, archers, militia, cavalry |

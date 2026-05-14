@@ -3340,6 +3340,10 @@
                 civilian="true" />
         </Equipments>
     </NPCCharacter>
+    <!-- DISABLED 2026-05-14: Cave troll WIP; not ready for live game yet. Re-enable by uncommenting.
+         Note: cave_troll is is_basic_troop="true" with culture="Culture.mordor" — wrapping the entire
+         NPCCharacter prevents vanilla DefaultVolunteerModel.GetBasicVolunteer from selecting it as a
+         Mordor volunteer (TaomVolunteerModel falls through to base for cultures without an explicit pool).
     <NPCCharacter
         id="cave_troll"
         race="cave_troll"
@@ -3471,6 +3475,7 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
+    -->
     <!-- ==================== MORDOR MILITIA TROOPS ==================== -->
 
     <NPCCharacter

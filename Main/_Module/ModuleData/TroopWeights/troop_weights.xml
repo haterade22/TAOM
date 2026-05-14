@@ -3,7 +3,9 @@
     <!-- Default weight is 1.0 for all unlisted troops -->
 
     <!-- ===== CAVE TROLLS (Weight 4.0) — Massive monster units ===== -->
+    <!-- DISABLED 2026-05-14: Cave troll WIP; not ready for live game yet. Re-enable by uncommenting.
     <TroopWeight id="cave_troll" weight="4.0" />
+    -->
 
     <!-- ===== RIVENDELL / IMLADRIS — High Elves ===== -->
     <!-- Legendary commanders (Weight 3.0) -->
