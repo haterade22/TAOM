@@ -161,8 +161,13 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             _originalPosition = Vec2.Invalid;
             if (!_justLoadedFromSave)
                 _store.Clear();
-            _justLoadedFromSave = false;
         }
+
+        // Phase 9b #123 — `_justLoadedFromSave` MUST clear unconditionally, not inside the
+        // `if (starter != _lastSessionStarter)` gate. Same-process save → load → save → load gives
+        // the SAME starter on the 2nd load, so the gate is false and the flag stayed stuck-on,
+        // misleading any future consumer of the flag.
+        _justLoadedFromSave = false;
 
         if (!_dialogsRegistered)
         {
@@ -386,7 +391,23 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
                 "", "");
         }
 
-        _currentMission?.AddListener(this);
+        // Phase 9b #123 P1 — null-guard `_currentMission`. If OpenConversationMission returns null,
+        // AddListener no-ops → OnEndMission never fires → `_processingArrivedMessenger` stays stuck
+        // true forever → all future arrived-messenger processing silently blocked for the session.
+        if (_currentMission != null)
+        {
+            _currentMission.AddListener(this);
+        }
+        else
+        {
+            _logger.LogWarning($"Messengers: OpenConversationMission returned null for target '{target?.StringId}'. " +
+                "Resetting processing flag + dropping messenger from store to recover.");
+            if (_activeMessenger != null)
+                _store.Remove(_activeMessenger.TargetHeroId);
+            _activeMessenger = null;
+            _processingArrivedMessenger = false;
+            _originalPosition = Vec2.Invalid;
+        }
     }
 
     // --- IMissionListener ---
@@ -442,6 +463,11 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         finally
         {
             _originalPosition = Vec2.Invalid;
+            // Phase 9b #123 P2 — audit suggested `RemoveNonSerializedListener` to avoid clearing
+            // unrelated listeners, but v1.3.15 `IMbEvent<T>` / generic `MbEvent<T>` only expose
+            // `AddNonSerializedListener` + `ClearListeners` (verified via ilspycmd). No public
+            // Remove-one exists. `ClearListeners(this)` IS the API. If a future author adds a 2nd
+            // TickEvent listener on this object, they must use a separate owner proxy.
             CampaignEvents.TickEvent.ClearListeners(this);
         }
     }

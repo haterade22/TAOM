@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — Messengers state-reset gaps (closes #123)
+
+Two P1s in the singleton-state-reset path that codex review #34 partially addressed. P2 "RemoveNonSerializedListener" suggestion is invalid in v1.3.15 (no public Remove-one API on IMbEvent<T>).
+
+- **P1 — `_justLoadedFromSave = false` was inside the `if (starter != _lastSessionStarter)` gate.** Same-process save → load → save → load gives the SAME starter on the 2nd load → gate is false → flag stayed stuck-on. Moved unconditional flag-clear OUTSIDE the gate at end of `OnSessionLaunched`.
+- **P1 — `_currentMission?.AddListener(this)` would no-op silently if OpenConversationMission returned null.** `OnEndMission` never fires → `_processingArrivedMessenger` stays stuck-true → all future arrived-messenger processing silently blocked. Added explicit null-guard: on null mission, log warning + drop messenger from store + reset processing state.
+- **P2 (rejected)** — Audit suggested `RemoveNonSerializedListener` to avoid clearing other TickEvent listeners. Verified via ilspycmd that v1.3.15 `IMbEvent<T>` / `MbEvent<T>` only expose `AddNonSerializedListener` + `ClearListeners`. No public Remove-one exists. Inline comment documents the constraint and the workaround (separate owner proxy) for future authors.
+
+Build green, 1972/1972 tests pass.
+
 ### Phase 9b — Siege SyncData + R1 reset + DaysFromNow safety (closes #132)
 
 P1 — `SiegeDefenseBehavior.SyncData` had an empty body; `_activeEvents` dict (campaign-time deadlines + accepted/claimed flags) was never serialized. First save-load with an active siege lost all in-flight defense state — VisualTracker registration leaked, reward never delivered.
