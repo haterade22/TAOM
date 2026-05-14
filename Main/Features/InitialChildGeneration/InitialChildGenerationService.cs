@@ -57,6 +57,11 @@ public class InitialChildGenerationService : IInitialChildGenerationService
                 int age = _random.Next(settings.MinAge, settings.MaxAge + 1);
                 string templateId = SelectTemplate(clan, isFemale);
 
+                // Phase 9b #126 P1 — SelectTemplate returns null for zero-adult clans. Skip child
+                // creation when no template available; previously the underlying [0] index would
+                // throw ArgumentOutOfRangeException.
+                if (templateId == null) continue;
+
                 _childCreator.CreateChild(templateId, clan.ClanId, isFemale, age);
                 totalCreated++;
             }
@@ -134,7 +139,14 @@ public class InitialChildGenerationService : IInitialChildGenerationService
         {
             var fallback = isFemale ? clan.AdultMaleHeroIds : clan.AdultFemaleHeroIds;
             if (fallback.Count == 0)
-                return clan.AdultMaleHeroIds.Count > 0 ? clan.AdultMaleHeroIds[0] : clan.AdultFemaleHeroIds[0];
+            {
+                // Phase 9b #126 P1 — both gender lists empty (zero-adult clan + FixedChildCount > 0).
+                // Pre-fix the original `clan.AdultMaleHeroIds[0] : clan.AdultFemaleHeroIds[0]` ternary
+                // indexed [0] on whichever list happened to be non-empty — but the outer `if`
+                // already proves both are empty. The else branch threw `ArgumentOutOfRangeException`.
+                // Return null; callers must propagate-null + skip the child creation.
+                return null;
+            }
             int idx = _random.Next(0, fallback.Count);
             return fallback[idx];
         }

@@ -2,6 +2,17 @@
 
 ## 2026-05-13
 
+### Phase 9b — InitialChildGeneration config validation (Category 2 R3, closes #126)
+
+Two P1s + one P2.
+
+- **P1 — NaN/Infinity/range-violation in `FemaleRatio` + `ChildCountMultiplier`.** Pre-fix the config provider parsed `double?` values via Newtonsoft `Value<double?>()` with no semantic validation. NaN propagates through `_random.NextDouble() < NaN` as `false` → all-male children. Negative multiplier or NaN flows through `Math.Ceiling(baseCount * X) -> (int)` to nonsense. Added `ValidateRatio` (finite + [0, 1]) and `ValidateMultiplier` (finite + ≥ 0) helpers using `FiniteFloatValidator`. Applied to defaults + culture_overrides + clan_overrides.
+- **P1 — `SelectTemplate` `ArgumentOutOfRangeException` on zero-adult clan.** Pre-fix the else branch indexed `[0]` on `AdultMaleHeroIds` when the outer `if` already proved both lists empty. Changed to return null; caller now `continue`s the loop to skip child creation for that clan.
+- **P2 — `MinAge > MaxAge` ordering invariant.** Pre-fix this triggered `Random.Next(min, max)` to throw, aborting generation. Added `ValidateAgeOrdering` swap + log.
+- Extended `FiniteFloatValidator` with `double` overloads for `IsFiniteInRange`/`IsFiniteAtMost`/`IsFiniteAtLeast` (matches the float overloads' semantics).
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — P1 NRE null-guards (Category 2, closes #134 #135)
 
 Two P1 null-guard fixes on hot paths.

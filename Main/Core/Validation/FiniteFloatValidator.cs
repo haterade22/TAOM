@@ -48,4 +48,20 @@ public static class FiniteFloatValidator
     /// </summary>
     public static bool IsFiniteAtLeast(float value, float min) =>
         IsFinite(value) && value >= min;
+
+    // Phase 9b #126 — double overloads. InitialChildGeneration (and other features that parse
+    // JSON via Newtonsoft `Value<double?>()`) need double-typed validation. Same semantics as
+    // the float overloads — NaN/Infinity always fail, range is inclusive.
+
+    /// <summary>Returns true if <paramref name="value"/> is finite AND within [min, max] (inclusive).</summary>
+    public static bool IsFiniteInRange(double value, double min, double max) =>
+        IsFinite(value) && value >= min && value <= max;
+
+    /// <summary>Returns true if <paramref name="value"/> is finite AND ≤ <paramref name="max"/>.</summary>
+    public static bool IsFiniteAtMost(double value, double max) =>
+        IsFinite(value) && value <= max;
+
+    /// <summary>Returns true if <paramref name="value"/> is finite AND ≥ <paramref name="min"/>.</summary>
+    public static bool IsFiniteAtLeast(double value, double min) =>
+        IsFinite(value) && value >= min;
 }
