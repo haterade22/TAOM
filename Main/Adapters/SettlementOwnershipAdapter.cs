@@ -25,6 +25,26 @@ public class SettlementOwnershipAdapter : ISettlementOwnershipAdapter
         return result;
     }
 
+    public int GetPlayerOwnedFiefCount()
+    {
+        // Fast path for Patch36_MapScreenF6.Postfix (polled every frame) and the FiefHubService
+        // Count / Clamp / Next / Previous routines. Iterates Clan.PlayerClan.Settlements — a
+        // cached MBReadOnlyList of just the player's own settlements (typically 1-10 entries) —
+        // instead of Settlement.All (~862 entries). Filters to towns + castles to match
+        // GetPlayerOwnedFiefs (the cache also contains BoundVillages). Audit issue #143.
+        var clan = Clan.PlayerClan;
+        if (clan == null) return 0;
+        var settlements = clan.Settlements;
+        if (settlements == null) return 0;
+        int count = 0;
+        foreach (var s in settlements)
+        {
+            if (s == null) continue;
+            if (s.IsTown || s.IsCastle) count++;
+        }
+        return count;
+    }
+
     public bool IsPlayerCurrentlyAt(string settlementId)
     {
         if (string.IsNullOrEmpty(settlementId)) return false;

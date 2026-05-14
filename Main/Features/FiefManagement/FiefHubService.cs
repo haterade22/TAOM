@@ -34,7 +34,12 @@ public class FiefHubService : IFiefHubService
         return result;
     }
 
-    public int Count => GetOrderedFiefs().Count;
+    // Fast path: delegates to the adapter, which iterates Clan.PlayerClan.Settlements (small
+    // cached list) instead of Settlement.All (~862 entries) and skips FiefSummary construction.
+    // Patch36_MapScreenF6.Postfix polls this every frame for the empty-fief gate; Clamp / Next /
+    // Previous benefit transparently. The slow `GetOrderedFiefs()` path is still used by the
+    // presenter's Refresh() when it actually needs the ordered list. Audit issue #143.
+    public int Count => _ownership.GetPlayerOwnedFiefCount();
 
     public int Clamp(int index)
     {

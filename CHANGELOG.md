@@ -2,6 +2,16 @@
 
 ## 2026-05-14
 
+### Phase 9b — FiefManagement F6 fast-path (closes deferred #143)
+
+Audit issue #143 (P2): `FiefHubService.Count` was implemented as `=> GetOrderedFiefs().Count`, which iterated `Settlement.All` (~862 entries) on every read and built a `FiefSummary` list of the player's towns + castles purely to take its `.Count`. `Patch36_MapScreenF6.Postfix` polled `service.Count` every frame for the empty-fief gate; `Clamp`/`Next`/`Previous` also called `Count` per invocation. Bounded but unnecessary work.
+
+- **`ISettlementOwnershipAdapter.GetPlayerOwnedFiefCount()` added.** Implementation in `SettlementOwnershipAdapter` iterates `Clan.PlayerClan.Settlements` — a cached `MBReadOnlyList<Settlement>` of just the player's owned settlements (typically 1-10 entries, verified via `ilspycmd` on installed v1.3.15 DLLs: `Clan._settlementsCache` populated from town-add/remove events). Filters to `s.IsTown || s.IsCastle` to match `GetPlayerOwnedFiefs` since the cached list also contains `BoundVillages`.
+- **`FiefHubService.Count` delegates to the adapter fast path.** No more `FiefSummary` construction or `Settlement.All` iteration for `Count` callers. `Clamp` / `Next` / `Previous` benefit transparently. `GetOrderedFiefs()` (the slow path) is unchanged — still used by `FiefHubMenuPresenter.Refresh()` when the full ordered list is actually needed.
+- **No presenter / patch changes required.** `FiefHubMenuPresenter.Count` already cached `_menuFiefs.Count` after `Refresh()`. `Patch36_MapScreenF6.Postfix`'s `service.Count` calls now route through the fast adapter method automatically.
+- **Tests:** `FiefHubServiceTests` `GivenFiefs(...)` helper updated to stub both `GetPlayerOwnedFiefs` (for `GetOrderedFiefs`-driven tests) and `GetPlayerOwnedFiefCount` (for the fast path) consistently — existing 23 tests stay green without touching their bodies. 5 new tests: `Count_UsesAdapterFastPath_DoesNotCallGetOrderedFiefs`, `Count_FastPathReturnsZero_ReturnsZeroWithoutOrderedList`, `Clamp_UsesFastPathForCount`, `Next_UsesFastPathForCount`, `Previous_UsesFastPathForCount` — each asserts `_ownership.DidNotReceive().GetPlayerOwnedFiefs()` to guarantee `Count`/`Clamp`/`Next`/`Previous` never silently fall back to the slow path.
+- **Test count delta:** `+5` (FiefHubServiceTests 23 → 28). GitHub issue stays open per orchestrator direction; this commit just lands the fix.
+
 ### Phase 9b — Custom Widgets IoC.Resolve cache + HoveredFactionName move + audit-note (closes deferred #169)
 
 Audit issue #169 (Custom Widgets — per-frame allocations + threading + IoC.Resolve in hot path) had three sub-findings; addresses them per the Phase 9 investigation disposition.

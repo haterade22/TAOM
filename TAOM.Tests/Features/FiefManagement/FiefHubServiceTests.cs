@@ -26,6 +26,17 @@ public class FiefHubServiceTests
     private void GivenFiefs(params FiefSummary[] fiefs)
     {
         _ownership.GetPlayerOwnedFiefs().Returns(new List<FiefSummary>(fiefs));
+        // Audit #143: Count now delegates to the fast-path adapter method, not GetOrderedFiefs().
+        // Stub both so existing Clamp/Next/Previous/GetAt tests stay green. Null entries in the
+        // ordered-list fixture are filtered by the service; the fast-path counts only non-null
+        // town/castle summaries — mirror that here.
+        int fastCount = 0;
+        foreach (var f in fiefs)
+        {
+            if (f == null) continue;
+            if (f.IsTown || f.IsCastle) fastCount++;
+        }
+        _ownership.GetPlayerOwnedFiefCount().Returns(fastCount);
     }
 
     // ---------- GetOrderedFiefs: sort + classification ----------
@@ -87,6 +98,52 @@ public class FiefHubServiceTests
     {
         GivenFiefs(Town("a"), Town("b"), Castle("c"));
         Assert.AreEqual(3, _sut.Count);
+    }
+
+    // ---------- Audit #143: Count uses fast path (no Settlement.All iteration, no FiefSummary build) ----------
+
+    [TestMethod]
+    public void Count_UsesAdapterFastPath_DoesNotCallGetOrderedFiefs()
+    {
+        _ownership.GetPlayerOwnedFiefCount().Returns(7);
+        var n = _sut.Count;
+        Assert.AreEqual(7, n);
+        // The whole point of #143 is to avoid Settlement.All iteration on every F6 press.
+        // Count must NEVER fall back to building the ordered list.
+        _ = _ownership.DidNotReceive().GetPlayerOwnedFiefs();
+    }
+
+    [TestMethod]
+    public void Count_FastPathReturnsZero_ReturnsZeroWithoutOrderedList()
+    {
+        _ownership.GetPlayerOwnedFiefCount().Returns(0);
+        Assert.AreEqual(0, _sut.Count);
+        _ = _ownership.DidNotReceive().GetPlayerOwnedFiefs();
+    }
+
+    [TestMethod]
+    public void Clamp_UsesFastPathForCount()
+    {
+        _ownership.GetPlayerOwnedFiefCount().Returns(5);
+        // Clamp consults Count; with the fast path it must succeed without GetOrderedFiefs.
+        Assert.AreEqual(4, _sut.Clamp(99));
+        _ = _ownership.DidNotReceive().GetPlayerOwnedFiefs();
+    }
+
+    [TestMethod]
+    public void Next_UsesFastPathForCount()
+    {
+        _ownership.GetPlayerOwnedFiefCount().Returns(3);
+        Assert.AreEqual(0, _sut.Next(2));
+        _ = _ownership.DidNotReceive().GetPlayerOwnedFiefs();
+    }
+
+    [TestMethod]
+    public void Previous_UsesFastPathForCount()
+    {
+        _ownership.GetPlayerOwnedFiefCount().Returns(3);
+        Assert.AreEqual(2, _sut.Previous(0));
+        _ = _ownership.DidNotReceive().GetPlayerOwnedFiefs();
     }
 
     // ---------- Cycle: Next / Previous ----------
