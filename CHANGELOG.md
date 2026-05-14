@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — CharacterCreation service-locator → ctor injection (partial closes #125)
+
+- **P2 — `IoC.Resolve` removed from `AssignCareer`.** Pre-fix `CharacterCreationContentService.AssignCareer` called `IoC.Resolve<ICareerCreationHandler>()` + `IoC.Resolve<ICareerRegistry>()` inside the service body. Banned per `feedback_no_service_locator_in_services.md` (Review #26). Both deps now constructor-injected; DryIoc auto-wires at registration. Tests updated to substitute both interfaces.
+- **Deferred:** P2 sealed TaleWorlds types in service body (`Hero.MainHero`, `MobileParty.MainParty.Position`, `Settlement.Find`, `MBObjectManager.GetObject<CultureObject>`) — needs 4 new adapter interfaces (IPlayerHeroAdapter / IPlayerPartyAdapter / ISettlementAdapter / ICultureCreationDataProvider extension). P2 `CareerMenuService.SelectedCareerStringId` mid-CC reset. P3 MobileParty.MainParty null-guard.
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — TroopProgression IoC cohesion (partial closes #148)
 
 - **P2.4 — Moved `IVolunteerContextAdapter` registration into `TroopProgressionIoC`.** Was in global `Main/IoC.cs`. Only consumer is `TaomVolunteerModel` inside the TroopProgression feature, so registration now lives with the feature for cohesion.

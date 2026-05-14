@@ -35,6 +35,9 @@ public class CharacterCreationContentServiceTests
         _playerStartupGoldService = Substitute.For<IPlayerStartupGoldService>();
         _playerEquipmentService = Substitute.For<IPlayerEquipmentService>();
         _logger = Substitute.For<IModLogger>();
+        // Phase 9b #125 — career deps constructor-injected (formerly IoC.Resolve).
+        var careerHandler = Substitute.For<TAOM.Features.CareerSystem.ICareerCreationHandler>();
+        var careerRegistry = Substitute.For<TAOM.Features.CareerSystem.ICareerRegistry>();
 
         _sut = new CharacterCreationContentService(
             _dataProvider,
@@ -45,6 +48,8 @@ public class CharacterCreationContentServiceTests
             _careerMenuService,
             _playerStartupGoldService,
             _playerEquipmentService,
+            careerHandler,
+            careerRegistry,
             _logger);
     }
 

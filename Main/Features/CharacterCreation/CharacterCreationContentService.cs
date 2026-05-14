@@ -30,6 +30,10 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     private readonly ICareerMenuService _careerMenuService;
     private readonly IPlayerStartupGoldService _playerStartupGoldService;
     private readonly IPlayerEquipmentService _playerEquipmentService;
+    // Phase 9b #125 — constructor-injected per feedback_no_service_locator_in_services.md
+    // (banned IoC.Resolve in service body). Both used by AssignCareer.
+    private readonly CareerSystem.ICareerCreationHandler _careerHandler;
+    private readonly CareerSystem.ICareerRegistry _careerRegistry;
     private readonly IModLogger _logger;
 
     // Vanilla cultures already registered by SandBox handler — skip these
@@ -47,6 +51,8 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         ICareerMenuService careerMenuService,
         IPlayerStartupGoldService playerStartupGoldService,
         IPlayerEquipmentService playerEquipmentService,
+        CareerSystem.ICareerCreationHandler careerHandler,
+        CareerSystem.ICareerRegistry careerRegistry,
         IModLogger logger)
     {
         _dataProvider = dataProvider;
@@ -57,6 +63,8 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         _careerMenuService = careerMenuService;
         _playerStartupGoldService = playerStartupGoldService;
         _playerEquipmentService = playerEquipmentService;
+        _careerHandler = careerHandler;
+        _careerRegistry = careerRegistry;
         _logger = logger;
     }
 
@@ -215,10 +223,11 @@ public class CharacterCreationContentService : ICharacterCreationContentService
 
         try
         {
-            var handler = IoC.Resolve<CareerSystem.ICareerCreationHandler>();
-            if (handler == null)
+            // Phase 9b #125 — use ctor-injected dependencies. Previously resolved via IoC.Resolve
+            // (service-locator anti-pattern, see feedback_no_service_locator_in_services.md).
+            if (_careerHandler == null)
             {
-                _logger.LogWarning("CareerSystem: Cannot assign career at CC — handler not resolved");
+                _logger.LogWarning("CareerSystem: Cannot assign career at CC — handler not injected");
                 return;
             }
 
@@ -226,26 +235,25 @@ public class CharacterCreationContentService : ICharacterCreationContentService
             var selectedCareerId = _careerMenuService?.SelectedCareerStringId;
             if (!string.IsNullOrEmpty(selectedCareerId))
             {
-                handler.OnCareerSelected(heroStringId, selectedCareerId);
+                _careerHandler.OnCareerSelected(heroStringId, selectedCareerId);
                 _logger.LogInfo($"CareerSystem: Assigned player-selected career '{selectedCareerId}' during CC");
                 return;
             }
 
             // Fallback: auto-assign first eligible career (legacy/backward compat)
-            var registry = IoC.Resolve<CareerSystem.ICareerRegistry>();
-            if (registry == null)
+            if (_careerRegistry == null)
             {
-                _logger.LogWarning("CareerSystem: Cannot assign career at CC — registry not resolved");
+                _logger.LogWarning("CareerSystem: Cannot assign career at CC — registry not injected");
                 return;
             }
 
-            foreach (var career in registry.GetAllCareers())
+            foreach (var career in _careerRegistry.GetAllCareers())
             {
                 foreach (var eligibleCulture in career.EligibleCultureIds)
                 {
                     if (string.Equals(eligibleCulture, cultureId, StringComparison.OrdinalIgnoreCase))
                     {
-                        handler.OnCareerSelected(heroStringId, career.Id);
+                        _careerHandler.OnCareerSelected(heroStringId, career.Id);
                         _logger.LogInfo($"CareerSystem: Auto-assigned career '{career.Id}' during CC for culture '{cultureId}' (no player selection)");
                         return;
                     }
