@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — StartupResources Gold/Influence validation (Category 2 R3, closes #136)
+
+P1 config validation gap. Pre-fix `Gold` (int) and `Influence` (float) were parsed via bare `int.Parse`/`float.Parse` — asymmetric with `PlayerGold` which already used `TryParse` + range validation. Concrete bugs: `gold="-500000"` flowed to `GiveGoldToHero(-500000)`; `influence="NaN"` returned NaN and the downstream `> 0f` guard rejected silently with no warning (csharp-architecture.md "Config Providers MUST Validate" — NaN BEFORE range check).
+
+- **`Main/Features/StartupResources/StartupResourcesConfigProvider.cs`** — added `ParseGold(raw, cultureId)` and `ParseInfluence(raw, cultureId)` helpers using the same TryParse-and-validate pattern as `ParsePlayerGold`. Influence uses `FiniteFloatValidator.IsFiniteAtLeast(value, 0f)` so NaN/Infinity/negative all revert with a warning log.
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — CustomBattles + QuickActions (closes #146, #162)
 
 - **#162 (P2 v1.3.15-unverified) — CustomBattleSideVM.OnCultureSelection verification.** Confirmed via ilspycmd on installed `Modules/CustomBattle/bin/Win64_Shipping_Client/TaleWorlds.MountAndBlade.CustomBattle.dll` that the v1.3.15 signature is `private void OnCultureSelection(BasicCultureObject selectedCulture)` — exact match for the patch. Added inline comment documenting the verification + assembly path so future readers don't have to re-verify, with explicit warning that the type is in `TaleWorlds.MountAndBlade.CustomBattle` (not `TaleWorlds.MountAndBlade` or `SandBox.GauntletUI`) — if a future TaleWorlds refactor moves the type, the entire Patch19 category would fail to apply.

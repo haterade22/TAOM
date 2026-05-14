@@ -48,11 +48,16 @@ public class StartupResourcesConfigProvider : IStartupResourcesConfigProvider
                 if (string.IsNullOrEmpty(id))
                     continue;
 
+                // Phase 9b #136 P1 — validate Gold (int, must be ≥ 0) and Influence (float, must be
+                // finite + ≥ 0). Pre-fix `int.Parse("-500000")` flowed to GiveGoldToHero(-500000)
+                // unchallenged; `float.Parse("NaN")` returned NaN, which the downstream `> 0f`
+                // guard rejected silently with no warning. Now uses the same TryParse-and-validate
+                // pattern as ParsePlayerGold.
                 config.CultureEntries.Add(new CultureResourceEntry
                 {
                     CultureId = id,
-                    Gold = int.Parse(el.Attribute("gold")?.Value ?? "0", CultureInfo.InvariantCulture),
-                    Influence = float.Parse(el.Attribute("influence")?.Value ?? "0", CultureInfo.InvariantCulture),
+                    Gold = ParseGold(el.Attribute("gold")?.Value, id),
+                    Influence = ParseInfluence(el.Attribute("influence")?.Value, id),
                     PlayerGold = ParsePlayerGold(el.Attribute("playerGold")?.Value, id)
                 });
             }
@@ -85,6 +90,43 @@ public class StartupResourcesConfigProvider : IStartupResourcesConfigProvider
             return 0;
         }
 
+        return value;
+    }
+
+    // Phase 9b #136 P1 — validate Gold (int, ≥ 0). Pre-fix int.Parse("-500000") passed unchallenged.
+    private int ParseGold(string raw, string cultureId)
+    {
+        if (string.IsNullOrEmpty(raw)) return 0;
+
+        if (!int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+        {
+            _logger.LogWarning($"StartupResourcesConfigProvider: invalid gold='{raw}' for culture '{cultureId}' — reverting to 0");
+            return 0;
+        }
+        if (value < 0)
+        {
+            _logger.LogWarning($"StartupResourcesConfigProvider: gold={value} for culture '{cultureId}' negative — reverting to 0");
+            return 0;
+        }
+        return value;
+    }
+
+    // Phase 9b #136 P1 — validate Influence (float, finite + ≥ 0). Pre-fix float.Parse("NaN")
+    // returned NaN; downstream `entry.Influence > 0f` evaluated false silently.
+    private float ParseInfluence(string raw, string cultureId)
+    {
+        if (string.IsNullOrEmpty(raw)) return 0f;
+
+        if (!float.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+        {
+            _logger.LogWarning($"StartupResourcesConfigProvider: invalid influence='{raw}' for culture '{cultureId}' — reverting to 0");
+            return 0f;
+        }
+        if (!TAOM.Core.Validation.FiniteFloatValidator.IsFiniteAtLeast(value, 0f))
+        {
+            _logger.LogWarning($"StartupResourcesConfigProvider: influence={value} for culture '{cultureId}' invalid (NaN/Inf/negative) — reverting to 0");
+            return 0f;
+        }
         return value;
     }
 }
