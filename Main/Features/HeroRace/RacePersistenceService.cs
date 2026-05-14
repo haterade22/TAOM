@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Adapters;
+using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
 
@@ -9,14 +10,19 @@ namespace TAOM.Features.HeroRace;
 public class RacePersistenceService : IRacePersistenceService
 {
     private readonly IHeroRosterAdapter _heroRosterAdapter;
+    // Phase 9b #171 — injected for validate-before-restore on save data; without this guard,
+    // an obsolete race ID (e.g., from a removed race-mod) flows into GetRaceNameFromId → "human"
+    // fallback gets permanently session-cached, silently breaking lifespan/fertility everywhere.
+    private readonly IRaceManager _raceManager;
     private readonly IModLogger _logger;
     private Dictionary<string, int> _heroRaceMap = new();
 
     public int CapturedRaceCount => _heroRaceMap.Count;
 
-    public RacePersistenceService(IHeroRosterAdapter heroRosterAdapter, IModLogger logger)
+    public RacePersistenceService(IHeroRosterAdapter heroRosterAdapter, IRaceManager raceManager, IModLogger logger)
     {
         _heroRosterAdapter = heroRosterAdapter;
+        _raceManager = raceManager;
         _logger = logger;
     }
 
@@ -61,12 +67,24 @@ public class RacePersistenceService : IRacePersistenceService
         }
 
         var restoredCount = 0;
+        var skippedInvalid = 0;
         var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
 
         foreach (var hero in heroes)
         {
             if (_heroRaceMap.TryGetValue(hero.StringId, out var savedRace) && hero.Race != savedRace)
             {
+                // Phase 9b #171 P1 — validate-before-restore. Save predating a race-mod removal
+                // can persist int IDs that no longer correspond to a valid race; on restore the
+                // bad ID would flow into RaceManager.GetRaceNameFromId → "human" fallback gets
+                // cached PERMANENTLY for the session, silently breaking elven immortality, dwarf
+                // aging, etc. See feedback_validate_before_lookup_with_fallback.md.
+                if (savedRace != 0 && !_raceManager.IsValidRaceId(savedRace))
+                {
+                    skippedInvalid++;
+                    _logger.LogWarning($"RacePersistenceService: skipping invalid saved race {savedRace} for hero '{hero.StringId}' (race-mod removed?); falling back to current XML race.");
+                    continue;
+                }
                 _heroRosterAdapter.SetHeroRace(hero.StringId, savedRace);
                 restoredCount++;
             }

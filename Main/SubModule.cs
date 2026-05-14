@@ -161,6 +161,7 @@ public class SubModule : MBSubModuleBase
 
         Banner_TryGetBannerDataFromCode_Transpiler.Initialize(bannerColorConfig, logger);
         Clan_UpdateBannerColorsAccordingToKingdom_Patch.Initialize(bannerColorService);
+        Clan_UpdateBannerColorsAccordingToKingdom_Patch.Initialize(logger);
         Clan_UpdateBannerColor_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         Banner_GetFirstIconColor_Patch.Initialize(bannerColorService);
         BannerEditorView_OnTick_Patch.Initialize(bannerColorService, logger);
@@ -276,8 +277,9 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger));
             campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
 
-            var executionAction = IoC.Resolve<IOnExecutionAction>();
-            campaignStarter.AddModel(new TaomExecutionRelationModel(executionAction));
+            var executionRelationService = IoC.Resolve<IExecutionRelationService>();
+            var playerContext = IoC.Resolve<IPlayerContextAdapter>();
+            campaignStarter.AddModel(new TaomExecutionRelationModel(executionRelationService, playerContext));
 
             // Cultural feat models
             campaignStarter.AddModel(new TaomArmyManagementModel());

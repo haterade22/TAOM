@@ -127,6 +127,12 @@ public class PolygonWidget : ImageWidget
         _globalPulseIndex = 0;
         _globalPulseAlpha = 0f;
         HoveredFactionName = "";
+        // Phase 9b #175 F7 — pre-fix _pendingPins survived CC re-entry. The pin-draw guard
+        // (`_allInstances[Count-1] == this`) could fire from multiple widgets in the first few
+        // frames after re-entry while the new `_allInstances` was still growing, producing
+        // multi-render of stale pins per frame. Clearing here aligns with the rest of the
+        // static state machine.
+        _pendingPins.Clear();
     }
 
     public PolygonWidget(UIContext context) : base(context)

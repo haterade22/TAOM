@@ -53,6 +53,13 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
     {
         try
         {
+            // Phase 9b #175 F6 — call Cleanup() BEFORE ResetSession() so backward navigation
+            // (CC stage → prior → forward again with sequence construct-new → finalize-old) cannot
+            // leave the stale _factionVM alive briefly while the new session initializes. If
+            // CurrentVM read happens during that window, the tick patch would tick the OLD VM
+            // with the NEW widget state (just cleared by ResetSession) producing stale
+            // HoveredFactionName="" for 0-1 frames.
+            Cleanup();
             PolygonWidget.ResetSession();
 
             var regions = _configProvider.LoadRegions();

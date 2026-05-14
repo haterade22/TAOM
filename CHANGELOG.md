@@ -1,5 +1,30 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-14
+
+### Phase 9b — Execution IExecutionRelationService extraction (closes #147)
+
+3 P2 findings — architectural smell (hook injected into model), inline branching in override body, direct `Hero.MainHero.MapFaction.StringId` access.
+
+- **P2 — `IExecutionRelationService` extracted.** Wraps the previous `IOnExecutionAction.GetRelationModifier` call + the `showQuickNotification` decision into a struct-returning `ExecutionRelationResult { RelationDelta, ShowNotification }`. Registered `Reuse.Singleton` in `ExecutionIoC`.
+- **P2 — Model body now single-call delegate.** `TaomExecutionRelationModel.GetRelationChangeForExecutingHero` no longer contains inline if-branches; computes baseline at boundary, delegates to service, returns struct fields.
+- **P2 — `Hero.MainHero.MapFaction.StringId` removed from model.** Replaced with constructor-injected `IPlayerContextAdapter.GetPlayerKingdomId()`. Service receives primitive string IDs only.
+- **Tests:** `ExecutionRelationServiceTests` covers null/empty kingdom paths + showQuickNotification preservation.
+
+### Phase 9b — Cross-feature small fixes batch (closes #171, #172 F2/F3, #175 F6/F7)
+
+Three sibling cross-feature handshakes, all addressable as small targeted changes (full audit list deferred where service extraction was needed).
+
+- **#171 P1 — Validate-before-restore in `RacePersistenceService.RestoreHeroRaces`.** Pre-fix a save predating a removed race-mod (e.g., mod uninstalled between sessions) would have its int IDs flow through `RaceManager.GetRaceNameFromId` → `"human"` fallback gets PERMANENTLY session-cached, silently breaking elven immortality, dwarf aging, etc. for all subsequent lookups. Now: `IRaceManager` injected; skip restore if `!_raceManager.IsValidRaceId(savedRace)` (only fires for non-zero races so race=0 still round-trips per #130 fix). +2 tests. Memory `feedback_validate_before_lookup_with_fallback.md` applied at the consumer.
+- **#172 F2 — Patch24 `Clan.UpdateBannerColorsAccordingToKingdom_Patch.Prefix` now takes `Clan __instance`.** Was a parameterless `Prefix() => !_service.IsDriftGuardEnabled()` blocking ALL clans. Now: when DriftGuard is enabled, block only for the player clan (`__instance != Clan.PlayerClan`). NPC clans get vanilla color sync; player clan stays frozen by the DriftGuard's design intent.
+- **#172 F3 — `TargetMethod()` null-guards via `IModLogger`.** `AccessTools.Method` returning null (TaleWorlds rename) would have made Harmony silently skip the patch with no warning. Now: capture-and-log `LogWarning` if the private method isn't found.
+- **#175 F6 — `CultureStageViewCreatedHook.OnCreated` calls `Cleanup()` BEFORE `ResetSession()`.** Pre-fix a backward CC navigation (construct-new → finalize-old) could leave `_factionVM` briefly alive while the new session initialized; the tick patch reading `CurrentVM` during that window would tick the OLD VM with the NEW widget state (just cleared by ResetSession), producing stale `HoveredFactionName=""` for 0-1 frames.
+- **#175 F7 — `PolygonWidget.ResetSession()` now clears `_pendingPins`.** Static pin list survived CC re-entry; the pin-draw guard could fire from multiple widgets in the first few frames after re-entry, producing multi-render of stale pins per frame.
+
+#170 was verified to already have its threading lock + handshake tests (lock at `CavalryChargeService:41`, handshake tests at `FormationLayoutServiceTests.cs:260-303`); closed as already-resolved.
+
+Build green, 1995/1995 tests pass (+2 from #171).
+
 ## 2026-05-13
 
 ### Phase 9b — CharacterCreation service-locator → ctor injection (partial closes #125)
