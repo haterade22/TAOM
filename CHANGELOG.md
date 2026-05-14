@@ -2,6 +2,17 @@
 
 ## 2026-05-13
 
+### Phase 9b — Siege SyncData + R1 reset + DaysFromNow safety (closes #132)
+
+P1 — `SiegeDefenseBehavior.SyncData` had an empty body; `_activeEvents` dict (campaign-time deadlines + accepted/claimed flags) was never serialized. First save-load with an active siege lost all in-flight defense state — VisualTracker registration leaked, reward never delivered.
+
+- **F1 (SyncData)** — Flat-primitive serialization (mirrors `CareerPersistenceBehavior` pattern; avoids `SaveableTypeDefiner`). Encoded as `Dictionary<string, string>` where value = `"defenderFactionId|remainingHoursFromNow|accepted|rewardClaimed"`. Used `RemainingHoursFromNow` (public) rather than `_numTicks` (internal). On load, re-registers VisualTracker for `PlayerAccepted && !RewardClaimed` events.
+- **F2 (R1 reset)** — `OnNewGameCreatedEvent` calls `_service.Reset()` to clear `_activeEvents` for fresh new campaigns in the same process. NOT `OnSessionLaunchedEvent` (which fires for both new + load) to avoid racing with SyncData's `IsLoading` branch.
+- **F3 (DaysFromNow)** — The silent `catch { deadline = default; }` assigned `CampaignTime` epoch (instantly past), which guaranteed the event self-destructed on the next hourly tick before the player could respond. Replaced with logged catch + `CampaignTime.Never` fallback — strictly better failure mode (event persists until siege ends naturally).
+- **Tests** — 6 new tests in `SiegeDefenseServiceTests.cs`: `Reset_WithActiveEvents_ClearsAll`, `Reset_EmptyState_IsNoOp`, `RestoreFromSave_NullSnapshot_ClearsAndDoesNotThrow`, `RestoreFromSave_MalformedEntry_SkipsWithoutThrowing`, `RestoreFromSave_FlagsRoundTrip_PreservesAcceptedAndRewardClaimed`, `RestoreFromSave_DefenderFactionPreserved`.
+
+Build green, 1972/1972 tests pass.
+
 ### Phase 9b — CareerPassiveHelper deletion + ADR-007 refactor (closes #173)
 
 P1 systemic refactor across 13 files. CareerPassiveHelper.cs was a static helper holding a cached `IoC.Resolve<ICareerPassiveService>()` — service-locator anti-pattern (csharp-architecture.md). Helper deleted; logic moved to instance methods on `CareerPassiveService`.

@@ -376,4 +376,90 @@ public class SiegeDefenseServiceTests
         // Assert
         Assert.AreEqual("Help Defend", msgs.AcceptButton);
     }
+
+    // Phase 9b #132 — Reset + Snapshot/Restore for save-load + R1 singleton reset
+
+    [TestMethod]
+    public void Reset_WithActiveEvents_ClearsAll()
+    {
+        // Arrange — populate active events via restore (Reset target)
+        var snapshot = new Dictionary<string, string>
+        {
+            ["town_gondor_minas_tirith"] = "gondor|72.0|1|0"
+        };
+        _sut.RestoreFromSave(snapshot);
+        Assert.AreEqual(1, _sut.ActiveEvents.Count);
+
+        // Act
+        _sut.Reset();
+
+        // Assert — cleared, ready for fresh campaign
+        Assert.AreEqual(0, _sut.ActiveEvents.Count);
+    }
+
+    [TestMethod]
+    public void Reset_EmptyState_IsNoOp()
+    {
+        _sut.Reset();
+        Assert.AreEqual(0, _sut.ActiveEvents.Count);
+    }
+
+    [TestMethod]
+    public void RestoreFromSave_NullSnapshot_ClearsAndDoesNotThrow()
+    {
+        // Pre-populate to ensure Restore CLEARS even when input is null
+        _sut.RestoreFromSave(new Dictionary<string, string> { ["x"] = "f|1|0|0" });
+        Assert.AreEqual(1, _sut.ActiveEvents.Count);
+
+        _sut.RestoreFromSave(null);
+
+        Assert.AreEqual(0, _sut.ActiveEvents.Count);
+    }
+
+    [TestMethod]
+    public void RestoreFromSave_MalformedEntry_SkipsWithoutThrowing()
+    {
+        var snapshot = new Dictionary<string, string>
+        {
+            ["valid"] = "gondor|24.0|1|0",
+            ["too_few_parts"] = "gondor|24.0",
+            ["bad_hours"] = "gondor|notanumber|1|0",
+            ["null_value"] = null
+        };
+        _sut.RestoreFromSave(snapshot);
+
+        // Only the valid entry survives
+        Assert.AreEqual(1, _sut.ActiveEvents.Count);
+        Assert.IsTrue(_sut.ActiveEvents.ContainsKey("valid"));
+    }
+
+    [TestMethod]
+    public void RestoreFromSave_FlagsRoundTrip_PreservesAcceptedAndRewardClaimed()
+    {
+        var snapshot = new Dictionary<string, string>
+        {
+            ["accepted_not_claimed"] = "rohan|48.0|1|0",
+            ["accepted_and_claimed"] = "rohan|48.0|1|1",
+            ["not_accepted"] = "rohan|48.0|0|0"
+        };
+        _sut.RestoreFromSave(snapshot);
+
+        Assert.AreEqual(3, _sut.ActiveEvents.Count);
+        Assert.IsTrue(_sut.ActiveEvents["accepted_not_claimed"].PlayerAccepted);
+        Assert.IsFalse(_sut.ActiveEvents["accepted_not_claimed"].RewardClaimed);
+        Assert.IsTrue(_sut.ActiveEvents["accepted_and_claimed"].PlayerAccepted);
+        Assert.IsTrue(_sut.ActiveEvents["accepted_and_claimed"].RewardClaimed);
+        Assert.IsFalse(_sut.ActiveEvents["not_accepted"].PlayerAccepted);
+    }
+
+    [TestMethod]
+    public void RestoreFromSave_DefenderFactionPreserved()
+    {
+        _sut.RestoreFromSave(new Dictionary<string, string>
+        {
+            ["t"] = "gondor|12.5|1|0"
+        });
+
+        Assert.AreEqual("gondor", _sut.ActiveEvents["t"].DefenderFactionId);
+    }
 }

@@ -89,14 +89,21 @@ public class SiegeDefenseService : ISiegeDefenseService
         if (!IsWatchedSiege(siege))
             return;
 
+        // Phase 9b #132 — was a silent try/catch that assigned default(CampaignTime) (= campaign
+        // epoch, instantly past) on ANY exception, guaranteeing the event self-destructed on the
+        // next hourly tick before the player could respond. Replaced with logged catch + Never
+        // fallback: if DaysFromNow throws (no Campaign.Current — only realistic in test envs), the
+        // event persists until OnSiegeEnded fires rather than vanishing on the next tick. That's
+        // a strictly better failure mode than the prior silent self-destruct.
         CampaignTime deadline;
         try
         {
             deadline = CampaignTime.DaysFromNow(_settings.SiegeDefenseResponseDays);
         }
-        catch
+        catch (Exception ex)
         {
-            deadline = default;
+            _logger.LogWarning($"[SiegeDefense] CampaignTime.DaysFromNow failed (test env or pre-campaign): {ex.Message}");
+            deadline = CampaignTime.Never;
         }
 
         var evt = new ActiveSiegeDefenseEvent
@@ -187,6 +194,69 @@ public class SiegeDefenseService : ISiegeDefenseService
                 UntrackSettlement(settlementId);
             _activeEvents.Remove(settlementId);
         }
+    }
+
+    public void Reset()
+    {
+        // Phase 9b #132 R1 — clear singleton state on new campaign start (same process).
+        // VisualTracker registrations are scoped to Campaign.Current and are released when the
+        // campaign tears down; no untrack pass needed here.
+        if (_activeEvents.Count > 0)
+            _logger.LogInfo($"[SiegeDefense] Reset clearing {_activeEvents.Count} stale events from prior campaign");
+        _activeEvents.Clear();
+    }
+
+    public Dictionary<string, string> SnapshotForSave()
+    {
+        var snapshot = new Dictionary<string, string>();
+        foreach (var kvp in _activeEvents)
+        {
+            var evt = kvp.Value;
+            // Store remaining hours from save-time Now (CampaignTime's internal _numTicks is not
+            // accessible — ToDays exists but loses precision for sub-day deadlines).
+            // Format: defenderFactionId|remainingHours|accepted|rewardClaimed
+            float remainingHours = evt.Deadline.RemainingHoursFromNow;
+            snapshot[kvp.Key] = $"{evt.DefenderFactionId}|{remainingHours.ToString(System.Globalization.CultureInfo.InvariantCulture)}|{(evt.PlayerAccepted ? 1 : 0)}|{(evt.RewardClaimed ? 1 : 0)}";
+        }
+        return snapshot;
+    }
+
+    public void RestoreFromSave(Dictionary<string, string> snapshot)
+    {
+        _activeEvents.Clear();
+        if (snapshot == null) return;
+
+        foreach (var kvp in snapshot)
+        {
+            var parts = kvp.Value?.Split('|');
+            if (parts == null || parts.Length < 4) continue;
+
+            if (!float.TryParse(parts[1], System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var remainingHours)) continue;
+            var accepted = parts[2] == "1";
+            var rewardClaimed = parts[3] == "1";
+
+            // Same fallback strategy as OnSiegeStarted: if HoursFromNow throws (no Campaign.Current),
+            // use Never rather than default(=campaign-zero=instantly-past).
+            CampaignTime deadline;
+            try { deadline = CampaignTime.HoursFromNow(remainingHours); }
+            catch { deadline = CampaignTime.Never; }
+
+            var evt = new ActiveSiegeDefenseEvent
+            {
+                SettlementId = kvp.Key,
+                DefenderFactionId = parts[0] ?? "",
+                Deadline = deadline,
+                PlayerAccepted = accepted,
+                RewardClaimed = rewardClaimed
+            };
+            _activeEvents[kvp.Key] = evt;
+
+            // Re-register VisualTracker for pending events the player accepted but hasn't claimed yet.
+            if (accepted && !rewardClaimed)
+                TrackSettlement(kvp.Key);
+        }
+        _logger.LogInfo($"[SiegeDefense] Restored {_activeEvents.Count} active siege events from save");
     }
 
     private void TrackSettlement(string settlementId)
