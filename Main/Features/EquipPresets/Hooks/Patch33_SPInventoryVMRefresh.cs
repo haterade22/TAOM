@@ -26,7 +26,11 @@ namespace TAOM.Features.EquipPresets.Hooks;
 [HarmonyPatchCategory("Patch33_EquipPresets")]
 public static class Patch33_SPInventoryVMRefresh
 {
-    private static InventoryScreenAdapter? _cachedAdapter;
+    // Phase 9b #141 P1 — use the interface type, not the concrete. SetActive is now on
+    // IInventoryScreenAdapter so this works for any implementation (incl. test mocks). Pre-fix
+    // `as InventoryScreenAdapter` would return null for any non-concrete impl and silently skip
+    // the call without any log signal.
+    private static IInventoryScreenAdapter? _cachedAdapter;
     private static IModLogger? _cachedLogger;
 
     [HarmonyPostfix]
@@ -34,7 +38,7 @@ public static class Patch33_SPInventoryVMRefresh
     {
         try
         {
-            _cachedAdapter ??= IoC.Resolve<IInventoryScreenAdapter>() as InventoryScreenAdapter;
+            _cachedAdapter ??= IoC.Resolve<IInventoryScreenAdapter>();
             _cachedAdapter?.SetActive(__instance);
         }
         catch (Exception ex)

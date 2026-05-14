@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TAOM.Features.EquipPresets.Models;
 
 namespace TAOM.Adapters;
@@ -14,6 +15,16 @@ namespace TAOM.Adapters;
 /// </summary>
 public interface IInventoryScreenAdapter
 {
+    /// <summary>
+    /// Phase 9b #141 P1 — expose VM capture on the interface. Pre-fix
+    /// Patch33_SPInventoryVMRefresh did a concrete cast (`as InventoryScreenAdapter`) because
+    /// the method was missing from the interface. Cast succeeded today but would silently fail
+    /// (returning null + skipping the call) if a future mock/alternative impl was registered,
+    /// leading to the user-visible "presets overlay shows no hero, can't load" symptom with
+    /// no log signal.
+    /// </summary>
+    void SetActive(SPInventoryVM? vm);
+
     /// <summary>True when an inventory screen is open and a VM has been captured.</summary>
     bool IsAvailable { get; }
 

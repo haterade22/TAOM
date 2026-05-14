@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — EquipPresets adapter interface seam (partial closes #141)
+
+P1 fixed; P2 over-counting + 4 P3 doc-rot deferred.
+
+- **P1 — `IInventoryScreenAdapter.SetActive(SPInventoryVM?)` lifted to interface.** Pre-fix `Patch33_SPInventoryVMRefresh` did `IoC.Resolve<IInventoryScreenAdapter>() as InventoryScreenAdapter`. Cast succeeded today because the IoC registers the same concrete class, but a future mock/alternative would silently return null and `SetActive` would never fire — user-visible "presets overlay opens but shows no hero, can't load" with no log signal. Now the method is on the interface; patch resolves the interface type, no cast.
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — BattleBalance config validation (partial closes #140)
 
 P2 validation gap. Other P2s (IoC.Resolve in TaomPartyHealingModel ctor refactor, GetSurvivalChance rule-4, GetDefaultTroopPower rule-4) deferred — service-extraction scope.
