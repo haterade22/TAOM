@@ -93,6 +93,25 @@ The deferred dispositions above represent ~12 issues whose fixes would need thei
 5. **CulturalFeats GameModel surface gaps** (#142 remaining) — 3 service extractions
 6. **Widget allocation pool** (#169 corrected design) — needs profiler-driven prioritization first
 
+## Deferred dispositions FULFILLED in follow-up batch (2026-05-14)
+
+After the initial close-out, a parallel-agent batch was dispatched to fulfill the most impactful deferred dispositions:
+
+| Issue | Commit | Result |
+|---|---|---|
+| **#144 + #176** CulturalFeats systemic | `4431cff` | `ICulturalFeatsService` (19 methods) + `ICultureFeatAdapter` (ADR-007) + concrete service + IoC + all 16 `Taom*Model.cs` refactored to thin boundaries. **+49 tests** in `CulturalFeatsServiceTests`. 26 files, +1437/-367. |
+| **#178** Warg ADR-007 | `5a61e17` | `IWargAttackService` now adapter-pure. No new IAgentAdapter surface needed (existing surface sufficient). **+15 tests** (7 → 22; 2 deferred via `[Ignore]` for `ActionIndexCache.Create` engine dependency). |
+| **#180 + partial #148** Wage modifiers | `64c5fab` | `IWageModifierService` extracted. Boundary helpers (`ResolveGarrisonInputs`, `ResolvePartyInputs`, etc.) translate sealed `CultureObject.HasFeat` → primitive `WageFeatInputs` struct at the model edge. **+28 tests** covering 33 test executions. |
+
+**Net test count delta (full Phase 9):** 1958 → **2110** total (+152). Of those: 2107 passing, 2 skipped (Warg `[Ignore]`), 1 pre-existing data-integrity test failure unrelated to this work (user disabled 2 career XML entries by comment-out; `EveryJsonEntry_HasMatchingCareerInXml` correctly flags the JSON↔XML inconsistency).
+
+**Deferred dispositions still remaining (NOT fulfilled this batch):**
+- #165 + #167 sprite asset authoring (~78 PNGs) — artist-driven, out-of-band
+- #169 widget allocation pool — audit was wrong; corrected design notes in close-out comment; future profiler-driven work
+- #142 (3 of 5 P2) — CareerSystem GameModel surface (3 service extractions still inline)
+- #143 (P2 perf) — FiefManagement Settlement.All on F6 (bounded but suboptimal)
+- #133 (P2 minor) — SpecialResources singleton reset + grace period
+
 ## Closing commits
 
 `docs/audits/phase-9-completion.md` (this file) marks Phase 9 complete.
