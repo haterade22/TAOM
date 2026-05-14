@@ -39,7 +39,10 @@
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/Logs/**)",
       "Bash(cp \"c:/Users/mikew/source/repos/TAOM/CHANGELOG.md\" \"c:/Users/mikew/source/repos/TAOM/CHANGELOG.md.full\")",
       "Bash(git checkout *)",
-      "PowerShell(./build.ps1 -RunTests 2>&1)"
+      "PowerShell(./build.ps1 -RunTests 2>&1)",
+      "PowerShell(dotnet build Main/TAOM.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)",
+      "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug --no-restore --verbosity quiet 2>&1)",
+      "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
