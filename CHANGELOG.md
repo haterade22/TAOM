@@ -2,6 +2,13 @@
 
 ## 2026-05-13
 
+### Phase 9b — TroopProgression IoC cohesion (partial closes #148)
+
+- **P2.4 — Moved `IVolunteerContextAdapter` registration into `TroopProgressionIoC`.** Was in global `Main/IoC.cs`. Only consumer is `TaomVolunteerModel` inside the TroopProgression feature, so registration now lives with the feature for cohesion.
+- **Other findings — see #173 closure.** P2.1 Rohan mounted-wage block extracted to private method as part of #173. P2.3 `CareerPassiveHelper` static call replaced by injected `ICareerPassiveService` as part of #173. P2.1 garrison-wage feat loop + P2.2 `GetTroopRecruitmentCost` inline branching still inline — defer to a separate per-feature semantic-fix PR (needs `IWageModifierService` extraction).
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — Messengers UI mixin notifications fire on self (closes #166)
 
 P1 + P2.

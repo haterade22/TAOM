@@ -109,7 +109,8 @@ public static class IoC
         container.Register<IReflectionService, ReflectionService>(Reuse.Singleton);
         container.Register<IRaceManager, RaceManager>(Reuse.Singleton);
         container.Register<IHeroRosterAdapter, HeroRosterAdapter>(Reuse.Singleton);
-        container.Register<IVolunteerContextAdapter, VolunteerContextAdapter>(Reuse.Singleton);
+        // Phase 9b #148 P2 — IVolunteerContextAdapter moved to TroopProgressionIoC for cohesion
+        // (only consumer is TaomVolunteerModel inside that feature).
         container.Register<IMissionAdapterFactory, MissionAdapterFactory>(Reuse.Singleton);
         container.Register<IObjectManagerAdapter, ObjectManagerAdapter>(Reuse.Singleton);
         container.Register<ICampaignSessionAdapter, CampaignSessionAdapter>(Reuse.Singleton);
