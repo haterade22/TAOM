@@ -2,6 +2,27 @@
 
 ## 2026-05-14
 
+### fix(battle): restore `BehaviorType.Other` on three ported MissionBehaviors (root-cause NRE in `Mission.CheckMissionEnded`)
+
+Field battles NRE'd at t≈10s in vanilla `TaleWorlds.MountAndBlade.Mission.CheckMissionEnded()` (v1.3.15, Mission.cs:4701). RCA via live VS debugger: three TAOM `MissionBehavior` subclasses had `BehaviorType => MissionBehaviorType.Logic` despite **not** inheriting from `MissionLogic`. Vanilla `AddMissionBehavior` does `MissionLogics.Add(missionBehavior as MissionLogic)` — the `as` cast returns null when the class isn't a MissionLogic, leaving 3 null slots in `Mission.MissionLogics`. Vanilla `CheckMissionEnded` then unconditionally calls `missionLogic.MissionEnded(ref ...)` and NREs every 10s.
+
+Decompiling the original DLLs (`~/Downloads/Features_fixed/`) showed every one declared `BehaviorType => (MissionBehaviorType)1` (= `Other`). The bug was introduced during the 2026-05-07 ports (`eed8e7b`, `7ddd6bb`, `bc15949`) — `Logic` was cargo-culted into the port without verifying inheritance. Restored to `Other` to match the working originals.
+
+| File | Was | Now |
+|---|---|---|
+| `Main/Features/MixedFormations/Hooks/MixedFormationsMissionBehavior.cs:24` | `Logic` | `Other` |
+| `Main/Features/SmartCavalryAI/Hooks/SmartCavalryAIMissionBehavior.cs:36` | `Logic` | `Other` |
+| `Main/Features/SiegeDismount/Hooks/SiegeDismountMissionBehavior.cs:19` | `Logic` | `Other` |
+
+None of the three override any `MissionLogic`-only virtual (`MissionEnded`, `OnMissionResultReady`, `OnEndMissionRequest`, `OnBattleEnded`, `OnRetreatMission`, `OnSurrenderMission`, `GetExtraEquipmentElementsForCharacter`, `ShowBattleResults`), so routing through `_otherMissionBehaviors` instead of `MissionLogics` changes no observable behavior beyond eliminating the null.
+
+**Prevention:** Memory entry `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance.md` added to the project memory directory. Documents the v1.3.15 vanilla NRE path, the `Logic=0/Other=1` enum mapping (which the original ports preserved correctly via `(MissionBehaviorType)1`), and the rule that `BehaviorType => Logic` requires actually inheriting from `MissionLogic`. Future ports should decompile the original DLL with `ilspycmd` and copy the `BehaviorType` getter literally rather than inferring from class semantics.
+
+A diagnostic Patch37 with `[MissionTrace]` lifecycle logging + null-scrub was built during RCA and removed once root cause was identified — defense-in-depth was no longer justified per the simplicity criterion (`/.claude/rules/simplicity-criterion.md`).
+
+Save-compat: BehaviorType change reroutes the three behaviors from `MissionLogics` into `_otherMissionBehaviors`. No save-file fields touched.
+Not-tested: live Harmony patch wiring (requires game runtime); manual battle-load smoke required before close-out.
+
 ### Phase 9b — CareerSystem agent-stat service extraction (closes deferred #142)
 
 Audit issue #142 had 5 P2 dispositions; two service-locator issues were resolved by #173. The three remaining were inline-business-logic rule-4 violations in `TaomAgentStatCalculateModel.UpdateAgentStats` (55-line override body with `CareerAbilityBuffTracker` integration + stat-mutation logic all inline), `TaomAgentApplyDamageModel`'s three overrides (mixed early-exit + nested-guard pattern with inline `if` chains), and unreachable defensive null guards on `_passiveService` across 5 models (the service is resolved unconditionally at the SubModule registration site — DryIoc throws if missing).

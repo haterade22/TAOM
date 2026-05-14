@@ -29,7 +29,11 @@ public sealed class SmartCavalryAIMissionBehavior : MissionBehavior
     private readonly Dictionary<Formation, FormationAdapter> _cavCache = new();
     private readonly Dictionary<Formation, CavalryCommandAdapter> _commandCache = new();
 
-    public override MissionBehaviorType BehaviorType => MissionBehaviorType.Logic;
+    // BehaviorType=Other: this class inherits MissionBehavior (not MissionLogic) and does not
+    // override MissionEnded/OnMissionResultReady, so it has no business in Mission.MissionLogics.
+    // Returning Logic here caused vanilla AddMissionBehavior to do `MissionLogics.Add(this as MissionLogic)`
+    // which evaluates to null and NREs the next CheckMissionEnded tick.
+    public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
     public SmartCavalryAIMissionBehavior()
     {
