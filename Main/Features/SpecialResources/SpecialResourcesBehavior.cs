@@ -43,7 +43,29 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
         CampaignEvents.TournamentFinished.AddNonSerializedListener(this, OnTournamentFinished);
         CampaignEvents.OnHideoutBattleCompletedEvent.AddNonSerializedListener(this, OnHideoutCompleted);
+        // Phase 9b #133 P1 — ScreenManager is static/global and outlives any campaign. New campaign
+        // in same process: a second behavior instance registers another listener; first instance's
+        // listener stays alive, calling _service.BeginPartyScreenSession() on the shared singleton
+        // service → resets _pendingSpend/_inSession for new campaign sessions, potentially
+        // cancelling legitimate spends. OnGameOverEvent is the only public lifecycle hook in
+        // v1.3.15 that fires when a campaign ends; CampaignBehaviorBase has no OnFinalize/OnGameEnd
+        // overrides. Best-effort: unsubscribe on game over. (If a player exits via main menu
+        // without "Game Over" firing, the listener is still orphaned — but the next campaign's
+        // ScreenManager.OnPushScreen += in its OWN RegisterEvents at least won't double-subscribe
+        // because the orphan listener was bound to the prior behavior instance, which is GC-eligible
+        // once its CampaignGameStarter is released.)
         ScreenManager.OnPushScreen += OnScreenPushed;
+        CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, UnsubscribeScreenManager);
+    }
+
+    private bool _screenManagerSubscribed = true;
+
+    private void UnsubscribeScreenManager()
+    {
+        if (!_screenManagerSubscribed) return;
+        ScreenManager.OnPushScreen -= OnScreenPushed;
+        _screenManagerSubscribed = false;
+        _logger.LogInfo("[SpecRes] OnGameOver — unsubscribed from ScreenManager.OnPushScreen");
     }
 
     public override void SyncData(IDataStore dataStore)
@@ -53,15 +75,11 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         dataStore.SyncData("_taom_specialResources", ref data);
         _storage.RestoreData(data);
         _logger.LogInfo($"[SpecRes] SyncData restored {data?.Count ?? 0} entries");
-
-        var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
-        var resource = _service.ResolveResource(kingdomId, cultureId);
-        if (resource != null)
-        {
-            _storage.ClampAll(resource.Cap);
-            _logger.LogInfo($"[SpecRes] SyncData clamped all values to cap={resource.Cap}");
-        }
+        // Phase 9b #133 P1 — pre-fix called _storage.ClampAll(playerResource.Cap) here. That
+        // applied the PLAYER's current resource cap to EVERY key in the dict (multi-hero,
+        // multi-resource saves). Gems (cap 600) got clamped to War Spoils' 500; Elven Wine
+        // clamped to 500 instead of 400. SyncData should be pure round-trip — per-resource
+        // cap belongs inside RestoreData/Set (keyed by resource), not here.
     }
 
     private void OnNewGameCreated(CampaignGameStarter starter)

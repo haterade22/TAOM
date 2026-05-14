@@ -195,6 +195,13 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     private static float ParseFloat(XElement el, string attr, float defaultValue)
     {
         var val = el.Attribute(attr)?.Value;
-        return val != null ? float.Parse(val, CultureInfo.InvariantCulture) : defaultValue;
+        if (val == null) return defaultValue;
+        // Phase 9b #133 P1 — was `float.Parse` (throws on malformed value, bubbles to outer catch
+        // → silently zeroes ALL resources for the file). Use TryParse + NaN/Infinity guard.
+        if (!float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
+            return defaultValue;
+        if (float.IsNaN(result) || float.IsInfinity(result))
+            return defaultValue;
+        return result;
     }
 }

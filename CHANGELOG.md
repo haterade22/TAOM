@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — SpecialResources SyncData clamp + screen event leak + NaN ParseFloat (partial closes #133)
+
+3 P1s fixed; P2s (singleton reset, desertion grace, legacy-seed kingdom-change) deferred.
+
+- **P1 — Removed wrong-cap `ClampAll` from SyncData.** Pre-fix `_storage.ClampAll(playerResource.Cap)` applied the player's CURRENT resource cap to every key in the dict regardless of which resource the key represented. Gems (cap 600) got clamped to War Spoils' 500; Elven Wine clamped to 500 instead of 400. SyncData should be a pure round-trip — per-resource cap belongs inside RestoreData/Set keyed by resource.
+- **P1 — `ScreenManager.OnPushScreen` event leak.** `ScreenManager` is static/global and outlives any campaign. New campaign in same process: a fresh behavior instance subscribed again while the previous instance's listener stayed alive, calling `_service.BeginPartyScreenSession()` on the shared singleton → resetting `_pendingSpend`/`_inSession` for the new session. CampaignBehaviorBase has no public OnGameEnd/OnFinalize in v1.3.15; using `CampaignEvents.OnGameOverEvent` to unsubscribe (best-effort — covers death-of-character flow; doesn't cover main-menu-exit but the orphan listener's behavior instance becomes GC-eligible once its starter releases).
+- **P1 — `ParseFloat` malformed/NaN guard.** Was bare `float.Parse(val, InvariantCulture)` — throws on `cap="abc"` bubbling to outer catch and silently zeroing ALL resources for the file; accepts `cap="NaN"` and collapses balances. Replaced with `TryParse` + `IsNaN/IsInfinity` rejection. Matches the pattern in csharp-architecture.md "Config Providers MUST Validate".
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — CompanionTactics player-facing preset error + Reset() semantic (partial closes #139)
 
 P1 player notification + P2 abstraction-leak fixes; P1 SaveableTypeDefiner refactor to flat primitives deferred.
