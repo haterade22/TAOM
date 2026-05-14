@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — Messengers UI mixin notifications fire on self (closes #166)
+
+P1 + P2.
+
+- **P1 — Notifications now on `this` (mixin), not host VM.** Pre-fix all 3 `[DataSourceProperty]` setters called `ViewModel?.OnPropertyChangedWithValue(value, nameof(X))` — firing on the host `EncyclopediaHeroPageVM`. Gauntlet binds `@IsMessengerAvailable`/`@SendMessengerActionName`/`{SendMessengerHint}` to the MIXIN's data source, so the host-VM notifications were heard by no one. Bindings froze at first construction; re-opening the encyclopedia for different heroes never refreshed the button state. Now calls `OnPropertyChangedWithValue(...)` on `this`, matching `TimeAccelerationMixin`/`CharacterDeveloperCareerMixin`.
+- **P2 — Removed dead `SendMessengerCost` `[DataSourceProperty]`.** Declared but never bound by any `@SendMessengerCost` XML binding. Per gui-ui.md, unused properties are dead code. Removed.
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — EquipPresets adapter interface seam (partial closes #141)
 
 P1 fixed; P2 over-counting + 4 P3 doc-rot deferred.

@@ -140,13 +140,15 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
             if (_sendMessengerActionName != value)
             {
                 _sendMessengerActionName = value;
-                ViewModel?.OnPropertyChangedWithValue(value, nameof(SendMessengerActionName));
+                // Phase 9b #166 P1 — was ViewModel?.OnPropertyChangedWithValue(...). That fires
+                // the notification on the host EncyclopediaHeroPageVM, NOT on the mixin where
+                // the [DataSourceProperty] bindings actually resolve. Result: bindings froze at
+                // first construction; re-opening encyclopedia for different heroes never
+                // refreshed the button state. gui-ui.md confirms: notifications must fire on `this`.
+                OnPropertyChangedWithValue(value, nameof(SendMessengerActionName));
             }
         }
     }
-
-    [DataSourceProperty]
-    public int SendMessengerCost => _settings.MessengerGoldCost;
 
     [DataSourceProperty]
     public bool IsMessengerAvailable
@@ -157,7 +159,8 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
             if (_isMessengerAvailable != value)
             {
                 _isMessengerAvailable = value;
-                ViewModel?.OnPropertyChangedWithValue(value, nameof(IsMessengerAvailable));
+                // Phase 9b #166 P1 — see SendMessengerActionName.
+                OnPropertyChangedWithValue(value, nameof(IsMessengerAvailable));
             }
         }
     }
@@ -171,7 +174,8 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
             if (_sendMessengerHint != value)
             {
                 _sendMessengerHint = value;
-                ViewModel?.OnPropertyChangedWithValue(value, nameof(SendMessengerHint));
+                // Phase 9b #166 P1 — see SendMessengerActionName.
+                OnPropertyChangedWithValue(value, nameof(SendMessengerHint));
             }
         }
     }
