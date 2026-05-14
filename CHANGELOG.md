@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — CustomBattles + QuickActions (closes #146, #162)
+
+- **#162 (P2 v1.3.15-unverified) — CustomBattleSideVM.OnCultureSelection verification.** Confirmed via ilspycmd on installed `Modules/CustomBattle/bin/Win64_Shipping_Client/TaleWorlds.MountAndBlade.CustomBattle.dll` that the v1.3.15 signature is `private void OnCultureSelection(BasicCultureObject selectedCulture)` — exact match for the patch. Added inline comment documenting the verification + assembly path so future readers don't have to re-verify, with explicit warning that the type is in `TaleWorlds.MountAndBlade.CustomBattle` (not `TaleWorlds.MountAndBlade` or `SandBox.GauntletUI`) — if a future TaleWorlds refactor moves the type, the entire Patch19 category would fail to apply.
+
+- **#146 (P2) — QuickActions IsSearchAvailable per-save contract.** Pre-fix, `OnGameLoaded` and `OnTick` both unconditionally overwrote `_isSearchAvailable` with current MCM value, contradicting CLAUDE.md's "per-save toggle" promise. Re-architected with an explicit `_persistedVersion` SyncData tag (v0 = legacy, v1 = post-#146): legacy saves still reconcile against MCM (can't tell stored-true from missing-key); new saves are authoritative on load. Mid-game MCM toggle is now detected via transition observation (`_lastSeenMcmValue != currentMcm`) instead of unconditional per-tick overwrite — preserves both "per-save preference survives reload" AND "MCM toggle mid-game takes effect."
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — Diplomacy prefix documentation + diagnostic logs (closes #152, #153)
 
 Two P2 patches where the prefix returns false to skip vanilla. Documented the suppression semantics inline so future maintainers don't re-introduce duplicate-side-effect bugs.
