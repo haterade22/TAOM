@@ -37,6 +37,13 @@ public interface ISpecialResourceService
     /// Returns the current tier level (1-N), or 0 if below all thresholds or no tiers defined.
     /// </summary>
     int GetCurrentTierLevel(string heroId, string kingdomId, string cultureId);
+
+    /// <summary>
+    /// Clears singleton-scope session state that must not leak across new campaigns started in the
+    /// same process: pending PartyScreen spend, in-session flag, and the dedupe set for resolve
+    /// debug logging. Wired to <c>OnNewGameCreatedEvent</c> by the behavior. Phase 9b deferred #133 P2 R1.
+    /// </summary>
+    void ResetSessionState();
 }
 
 public sealed class TroopUpkeepInfo

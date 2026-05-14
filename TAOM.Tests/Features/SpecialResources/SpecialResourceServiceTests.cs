@@ -632,4 +632,62 @@ public class SpecialResourceServiceTests
         // Net = 2.0 - 1.5 = 0.5 → 100 + 0.5 = 100.5
         _storage.Received(1).Set("hero1", "war_spoils", 100.5f);
     }
+
+    // ── ResetSessionState (Phase 9b deferred #133 P2 R1) ──
+    //
+    // Service is registered as Reuse.Singleton — its private state (_loggedResolveKeys,
+    // _pendingSpend, _inSession) survives across new-campaign-in-same-process boundaries.
+    // ResetSessionState wipes that state so a second campaign doesn't inherit a stale
+    // _inSession=true (which would let an orphaned CommitSession deduct from the new hero)
+    // or a stale _pendingSpend (which would be applied at the next CommitSession).
+
+    [TestMethod]
+    public void ResetSessionState_ClearsPendingSpend()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        // Pre-reset: pending = 12 → GetAvailableAfterPending = 100 - 12 = 88.
+        Assert.AreEqual(88f, _service.GetAvailableAfterPending("hero1", "empire_s", null));
+
+        _service.ResetSessionState();
+
+        // After reset: pending cleared → GetAvailableAfterPending == raw storage (100).
+        Assert.AreEqual(100f, _service.GetAvailableAfterPending("hero1", "empire_s", null));
+    }
+
+    [TestMethod]
+    public void ResetSessionState_ClearsInSession_CommitSessionBecomesNoOp()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+
+        _service.ResetSessionState();
+
+        // After reset _inSession==false → CommitSession early-returns, no Add.
+        _service.CommitSession("hero1", "empire_s", null);
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void ResetSessionState_ClearsLoggedResolveKeys_ReResolutionLogsAgain()
+    {
+        // First resolve logs once, second is deduped silent.
+        _service.ResolveResource("empire_s", null);
+        _logger.ClearReceivedCalls();
+        _service.ResolveResource("empire_s", null);
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+
+        // After reset, the dedupe key set is cleared — same call logs again.
+        _service.ResetSessionState();
+        _logger.ClearReceivedCalls();
+        _service.ResolveResource("empire_s", null);
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("via kingdom 'empire_s'")));
+    }
 }

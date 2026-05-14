@@ -24,6 +24,11 @@ public class SpecialResourceStorageService : ISpecialResourceStorageService
         Set(heroId, resourceId, current + delta);
     }
 
+    public bool Contains(string heroId, string resourceId)
+    {
+        return _data.ContainsKey(MakeKey(heroId, resourceId));
+    }
+
     public Dictionary<string, float> GetAllData() => _data;
 
     public void RestoreData(Dictionary<string, float> data)

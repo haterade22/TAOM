@@ -103,4 +103,41 @@ public class SpecialResourceStorageServiceTests
         _storage.RestoreData(null);
         Assert.AreEqual(0f, _storage.Get("hero1", "scraps"));
     }
+
+    // ── Contains (Phase 9b deferred #133 P2 legacy-seed gate) ──
+    //
+    // Distinguishes "never seeded this resource for this hero" from "seeded and then
+    // spent to zero". The legacy-save seed in OnSessionLaunched uses this to avoid
+    // re-seeding on every kingdom-change (Mordor→Gondor exposes a new resource slot
+    // with no balance; seeding it would bypass the "earn it" progression).
+
+    [TestMethod]
+    public void Contains_ReturnsFalse_WhenKeyMissing()
+    {
+        Assert.IsFalse(_storage.Contains("hero1", "war_spoils"));
+    }
+
+    [TestMethod]
+    public void Contains_ReturnsTrue_AfterSet_EvenWithZeroValue()
+    {
+        _storage.Set("hero1", "war_spoils", 0f);
+        Assert.IsTrue(_storage.Contains("hero1", "war_spoils"));
+    }
+
+    [TestMethod]
+    public void Contains_ReturnsTrue_AfterSpendToZero()
+    {
+        _storage.Set("hero1", "war_spoils", 50f);
+        _storage.Add("hero1", "war_spoils", -50f);
+        Assert.IsTrue(_storage.Contains("hero1", "war_spoils"));
+    }
+
+    [TestMethod]
+    public void Contains_DistinguishesResourcesPerHero()
+    {
+        _storage.Set("hero1", "war_spoils", 10f);
+        Assert.IsTrue(_storage.Contains("hero1", "war_spoils"));
+        Assert.IsFalse(_storage.Contains("hero1", "gems"));
+        Assert.IsFalse(_storage.Contains("hero2", "war_spoils"));
+    }
 }

@@ -261,6 +261,23 @@ public class SpecialResourceService : ISpecialResourceService
         _logger.LogDebug($"[SpecRes] PartyScreen CANCELLED: discarded {wasPending:F0} pending spend");
     }
 
+    public void ResetSessionState()
+    {
+        // Phase 9b #133 P2 R1 — clear singleton-scope state on new-campaign boundary so the
+        // second campaign in the same process doesn't inherit:
+        //   - _inSession=true from a prior session (would let a stale CommitSession debit
+        //     the new hero's balance against the old pending amount)
+        //   - _pendingSpend>0 (would be applied at the next legitimate CommitSession)
+        //   - _loggedResolveKeys (so the first resolve of every new (kingdom,culture)
+        //     pair in the new campaign still surfaces a single diagnostic line)
+        var hadPending = _pendingSpend;
+        var wasInSession = _inSession;
+        _pendingSpend = 0f;
+        _inSession = false;
+        _loggedResolveKeys.Clear();
+        _logger.LogInfo($"[SpecRes] ResetSessionState: cleared (pending was {hadPending:F0}, inSession was {wasInSession})");
+    }
+
     public void InitializeHero(string heroId, string kingdomId, string cultureId)
     {
         var resource = ResolveResource(kingdomId, cultureId);

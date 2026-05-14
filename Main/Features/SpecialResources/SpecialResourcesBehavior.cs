@@ -33,6 +33,14 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     private PartyScreenLogic _activePartyScreenLogic;
 
+    // Phase 9b deferred #133 P2 — desertion grace flag. Set true in OnSessionLaunched +
+    // OnNewGameCreated; cleared at the end of OnDailyTickHero. Suppresses the desertion
+    // branch on the FIRST daily tick after a save load so a player who saved at
+    // balance=0 isn't punished before they get a chance to earn (battle / raid / etc.)
+    // in the new session. After the first tick (which lets income arrive and balance
+    // potentially flip positive), the desertion branch resumes normal operation.
+    private bool _isFirstTickAfterLoad = true;
+
     public override void RegisterEvents()
     {
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -87,13 +95,22 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         if (hero == null) return;
 
+        // Phase 9b deferred #133 P2 R1 — clear singleton-scope service state so a second
+        // campaign in the same process can't inherit _inSession / _pendingSpend from the
+        // prior campaign. Must run BEFORE InitializeHero so any stale _loggedResolveKeys
+        // dedupe entries don't suppress the new campaign's first-resolve diagnostics.
+        _service.ResetSessionState();
+
         GetHeroIds(hero, out var kingdomId, out var cultureId);
         _service.InitializeHero(hero.StringId, kingdomId, cultureId);
+        _isFirstTickAfterLoad = true;
         _logger.LogInfo($"SpecialResources: Initialized resource for {hero.Name}");
     }
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        _isFirstTickAfterLoad = true;
+
         var hero = Hero.MainHero;
         if (hero == null) return;
 
@@ -101,11 +118,31 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var current = _storage.Get(hero.StringId, resource.Id);
-        if (current <= 0f && resource.StartingAmount > 0f)
+        // Phase 9b deferred #133 P2 — pre-fix this gate was `current <= 0f`, which seeded
+        // StartingAmount EVERY TIME OnSessionLaunched fired with balance==0 for the
+        // resolved resource. Two failure modes:
+        //   1. Kingdom-change in-session (Gondor → Mordor) — the new kingdom resolves
+        //      to a different SpecialResource the player has never owned. Balance==0
+        //      because they've never earned any → seeded as if it were a legacy save,
+        //      bypassing "earn it" progression.
+        //   2. Player spends down to 0, saves, reloads — re-seeded back up to
+        //      StartingAmount, effectively a refund.
+        // Fix: gate on storage.Contains, which is true iff the (hero, resource) pair has
+        // ever been written. A legacy save (predating SpecialResources) has zero entries
+        // for the player → Contains==false → seed once. After that, the key is present
+        // regardless of value, so no further seeding occurs.
+        var alreadyTracked = _storage.Contains(hero.StringId, resource.Id);
+        if (!alreadyTracked && resource.StartingAmount > 0f)
         {
             _storage.Set(hero.StringId, resource.Id, resource.StartingAmount);
             _logger.LogInfo($"SpecialResources: Seeded {resource.DisplayName} = {resource.StartingAmount} for legacy save ({hero.Name})");
+        }
+        else if (!alreadyTracked)
+        {
+            // Resource has StartingAmount=0 but we still need to record the (hero, resource)
+            // pair so the next OnSessionLaunched doesn't re-evaluate it as "never seen."
+            // Write 0f explicitly — Set is idempotent.
+            _storage.Set(hero.StringId, resource.Id, 0f);
         }
     }
 
@@ -118,6 +155,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (resource == null)
         {
             _logger.LogDebug($"[SpecRes] DailyTick: no resource for hero (kingdom='{kingdomId}', culture='{cultureId}')");
+            // Clear the grace flag even on a no-resource tick so a kingdom change
+            // mid-session doesn't keep the flag set forever.
+            _isFirstTickAfterLoad = false;
             return;
         }
 
@@ -129,7 +169,14 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // Check balance for warnings and desertion
         var balance = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
 
-        if (balance <= 0f && troopUpkeep.Count > 0)
+        // Phase 9b deferred #133 P2 — desertion grace. On the FIRST daily tick after a save
+        // load (or new-game start), suppress desertion. This protects a player who saved at
+        // balance=0 from immediate troop loss before they have any chance to earn income.
+        // The grace is one tick only: after this method returns we clear the flag, so the
+        // SECOND daily tick (one in-game day later) applies desertion as normal.
+        var inGracePeriod = _isFirstTickAfterLoad;
+
+        if (balance <= 0f && troopUpkeep.Count > 0 && !inGracePeriod)
         {
             // Desertion: remove troops from roster
             var desertions = _service.CalculateDesertion(hero.StringId, kingdomId, cultureId, troopUpkeep);
@@ -142,6 +189,10 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
                     extraTimeInMs: 3000);
             }
         }
+        else if (balance <= 0f && troopUpkeep.Count > 0 && inGracePeriod)
+        {
+            _logger.LogInfo($"[SpecRes] DailyTick: desertion grace active (first tick after load) — {troopUpkeep.Count} upkeep troop types spared this tick");
+        }
         else if (balance > 0f && balance < resource.Cap * 0.1f)
         {
             // Low resource warning (below 10% of cap)
@@ -149,6 +200,8 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
                 $"{resource.DisplayName} running low: {balance:F0}/{resource.Cap:F0}",
                 Colors.Yellow));
         }
+
+        _isFirstTickAfterLoad = false;
     }
 
     private void OnMapEventEnded(MapEvent mapEvent)
