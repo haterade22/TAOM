@@ -2,6 +2,14 @@
 
 ## 2026-05-13
 
+### Phase 9b — BattleBalance config validation (partial closes #140)
+
+P2 validation gap. Other P2s (IoC.Resolve in TaomPartyHealingModel ctor refactor, GetSurvivalChance rule-4, GetDefaultTroopPower rule-4) deferred — service-extraction scope.
+
+- **P2 — `BattleBalanceConfigProvider` validates per-key.** Per csharp-architecture.md "Config Providers MUST Validate". TierPower["T0".."T10"] must be finite + > 0; out-of-range or NaN reverts to compiled default with warning. CulturalSurvivalBonuses must be finite + [-1, +1] (formula is `vanilla * (1 - bonus)`; outside this range yields negative survival probability). Pre-fix NaN TierPower propagated through `CalculateTierPower` switch into `DefaultMilitaryPowerModel` silently (`feedback_editor_fields_are_config.md` — pattern shipped 3×).
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — SpecialResources SyncData clamp + screen event leak + NaN ParseFloat (partial closes #133)
 
 3 P1s fixed; P2s (singleton reset, desertion grace, legacy-seed kingdom-change) deferred.
