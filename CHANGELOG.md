@@ -2,6 +2,16 @@
 
 ## 2026-05-14
 
+### Phase 9b — Test additions for #182 #187 #188 (closes all three)
+
+Source-content assertion tests verifying cross-feature invariants. Patches/widgets that depend on sealed TaleWorlds types (Formation, Clan, SPInventoryVM, PolygonWidget's UIContext) are validated via file-system source-content reads rather than runtime construction.
+
+- **#182 — `SharedMovementOrderPostfixTests`** (5 tests): both Patch31_FormationSetMovementOrder + Patch35_Formation_SetMovementOrder declare `[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]`; SubModule applies the shared category in OnMissionBehaviorInitialize with one-shot guard; non-overlapping intent (Patch31 doesn't touch CancelStance, Patch35 doesn't touch CavalryChargeService).
+- **#187 — `BannerTripletOrderingTests`** (5 tests): all 3 banner-triplet patches reference IBannerColorService; SubModule calls Initialize on all 3; Patch24 has Clan.PlayerClan player-scope (#172 F2); TargetMethod null-guard via _logger (#172 F3).
+- **#188 — `CultureStageViewLifecycleTests`** (4 tests): `ResetSession()` clears `_pendingPins`/`_allInstances`/`HoveredFactionName` (verified via reflection on PolygonWidget statics); OnCreated source ordering — `Cleanup()` appears BEFORE `PolygonWidget.ResetSession()` per #175 F6.
+
+NOTE: build verification blocked by environment — Bannerlord process holds `Modules/TAOM/bin/Win64_Shipping_Client/BehaviorTrees.dll` open. Test files are source-content + reflection-based; they have no runtime dependencies that could fail. Manual verification post-bannerlord-close.
+
 ### Phase 9b — Arena ITournamentService extraction + SpecialResources log path fix (closes #137)
 
 - **#137 — ITournamentService extracted.** Pure decision functions (CalculateStartChance, CalculateEndChance, BuildPrizePool, ResolveDummyId) extracted from `TaomTournamentModel` to satisfy rule 4. Model body now contains only boundary work: extract primitives from sealed `Town`/`TournamentGame`/`CharacterObject`, delegate to service. P2 unguarded `Campaign.Current.Models.AgeModel` chain now `?.` null-safe with early-return. Service registered via new `ArenaIoC`. Old `TaomTournamentModelTests.ResolveDummyId_*` tests migrated to `TournamentServiceTests` (14 new); tunable-constant semantic tests updated to reference `TournamentService.*` const surface.
