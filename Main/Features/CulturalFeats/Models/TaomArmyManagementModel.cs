@@ -1,53 +1,30 @@
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
+/// <summary>
+/// Thin GameModel boundary — converts <see cref="MobileParty"/> into the
+/// adapter the <see cref="ICulturalFeatsService"/> needs, then delegates. Per
+/// <c>gamemodels.md</c> rule 4: no inline if/foreach/switch/yield, no business
+/// logic. Issues #144 / #176.
+/// </summary>
 public class TaomArmyManagementModel : DefaultArmyManagementCalculationModel
 {
-    public override float DailyBeingAtArmyInfluenceAward(MobileParty armyMemberParty)
+    private readonly ICulturalFeatsService _feats;
+
+    public TaomArmyManagementModel(ICulturalFeatsService feats)
     {
-        float result = base.DailyBeingAtArmyInfluenceAward(armyMemberParty);
-
-        var culture = armyMemberParty.Party?.Owner?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.RivendellArmyInfluenceFeat))
-            result += result * TaomCulturalFeats.RivendellArmyInfluenceFeat.EffectBonus;
-
-        if (culture.HasFeat(TaomCulturalFeats.GondorArmyInfluenceFeat))
-            result += result * TaomCulturalFeats.GondorArmyInfluenceFeat.EffectBonus;
-
-        return result;
+        _feats = feats;
     }
+
+    public override float DailyBeingAtArmyInfluenceAward(MobileParty armyMemberParty)
+        => _feats.ApplyArmyInfluenceAward(
+            CultureFeatAdapter.FromOrNull(armyMemberParty.Party?.Owner?.Culture),
+            base.DailyBeingAtArmyInfluenceAward(armyMemberParty));
 
     public override int CalculatePartyInfluenceCost(MobileParty armyLeaderParty, MobileParty party)
-    {
-        int result = base.CalculatePartyInfluenceCost(armyLeaderParty, party);
-
-        var culture = armyLeaderParty.Party?.Owner?.Culture;
-        if (culture == null)
-            return result;
-
-        float multiplier = 0f;
-
-        if (culture.HasFeat(TaomCulturalFeats.RivendellArmyInfluenceCostFeat))
-            multiplier += TaomCulturalFeats.RivendellArmyInfluenceCostFeat.EffectBonus;
-
-        if (culture.HasFeat(TaomCulturalFeats.GundabadArmyInfluenceCostFeat))
-            multiplier += TaomCulturalFeats.GundabadArmyInfluenceCostFeat.EffectBonus;
-
-        if (culture.HasFeat(TaomCulturalFeats.DolGuldurArmyInfluenceCostFeat))
-            multiplier += TaomCulturalFeats.DolGuldurArmyInfluenceCostFeat.EffectBonus;
-
-        if (culture.HasFeat(TaomCulturalFeats.MordorArmyInfluenceCostFeat))
-            multiplier += TaomCulturalFeats.MordorArmyInfluenceCostFeat.EffectBonus;
-
-        if (multiplier != 0f)
-            result = (int)(result * (1f + multiplier));
-
-        return result;
-    }
+        => _feats.ApplyArmyInfluenceCost(
+            CultureFeatAdapter.FromOrNull(armyLeaderParty.Party?.Owner?.Culture),
+            base.CalculatePartyInfluenceCost(armyLeaderParty, party));
 }

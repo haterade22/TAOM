@@ -2,7 +2,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -10,12 +9,12 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartyMoraleModel : DefaultPartyMoraleModel
 {
+    private readonly ICulturalFeatsService _feats;
     private readonly ICareerPassiveService _careerPassives;
-    private static TextObject? _cultureText;
-    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
-    public TaomPartyMoraleModel(ICareerPassiveService careerPassives)
+    public TaomPartyMoraleModel(ICulturalFeatsService feats, ICareerPassiveService careerPassives)
     {
+        _feats = feats;
         _careerPassives = careerPassives;
     }
 
@@ -23,26 +22,7 @@ public class TaomPartyMoraleModel : DefaultPartyMoraleModel
         MobileParty party, bool includeDescription = false)
     {
         var result = base.GetEffectivePartyMorale(party, includeDescription);
-
-        var culture = party.Party?.Owner?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.GondorMoraleFeat))
-            result.Add(TaomCulturalFeats.GondorMoraleFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.RohanMoraleFeat))
-            result.Add(TaomCulturalFeats.RohanMoraleFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.EreborMoraleFeat))
-            result.Add(TaomCulturalFeats.EreborMoraleFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.MirkwoodMoraleFeat))
-            result.Add(TaomCulturalFeats.MirkwoodMoraleFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.LothlorienMoraleFeat))
-            result.Add(TaomCulturalFeats.LothlorienMoraleFeat.EffectBonus, CultureText);
-
+        _feats.ApplyMoraleFeats(CultureFeatAdapter.FromOrNull(party.Party?.Owner?.Culture), ref result);
         _careerPassives.ApplyFactor(party.LeaderHero?.StringId, ref result, PassiveEffectType.TroopMorale);
         return result;
     }

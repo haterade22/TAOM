@@ -2,7 +2,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -10,12 +9,12 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomRaidModel : DefaultRaidModel
 {
+    private readonly ICulturalFeatsService _feats;
     private readonly ICareerPassiveService _careerPassives;
-    private static TextObject? _cultureText;
-    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
-    public TaomRaidModel(ICareerPassiveService careerPassives)
+    public TaomRaidModel(ICulturalFeatsService feats, ICareerPassiveService careerPassives)
     {
+        _feats = feats;
         _careerPassives = careerPassives;
     }
 
@@ -23,20 +22,9 @@ public class TaomRaidModel : DefaultRaidModel
         MapEventSide attackerSide, float settlementHitPoints)
     {
         var result = base.CalculateHitDamage(attackerSide, settlementHitPoints);
-
-        var culture = attackerSide?.LeaderParty?.Owner?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.MordorRaidDamageFeat))
-            result.AddFactor(TaomCulturalFeats.MordorRaidDamageFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.GundabadRaidDamageFeat))
-            result.AddFactor(TaomCulturalFeats.GundabadRaidDamageFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.IsengardRaidDamageFeat))
-            result.AddFactor(TaomCulturalFeats.IsengardRaidDamageFeat.EffectBonus, CultureText);
-
+        _feats.ApplyRaidDamageFeats(
+            CultureFeatAdapter.FromOrNull(attackerSide?.LeaderParty?.Owner?.Culture),
+            ref result);
         _careerPassives.ApplyFactor(attackerSide?.LeaderParty?.Owner?.StringId, ref result, PassiveEffectType.TroopDamage);
         return result;
     }

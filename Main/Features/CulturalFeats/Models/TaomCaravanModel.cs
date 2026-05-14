@@ -1,18 +1,19 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.Library;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomCaravanModel : DefaultCaravanModel
 {
-    public override int GetCaravanFormingCost(bool largerCaravan, bool navalCaravan)
+    private readonly ICulturalFeatsService _feats;
+
+    public TaomCaravanModel(ICulturalFeatsService feats)
     {
-        int baseCost = base.GetCaravanFormingCost(largerCaravan, navalCaravan);
-
-        if (CharacterObject.PlayerCharacter?.Culture?.HasFeat(TaomCulturalFeats.UmbarCheaperCaravansFeat) == true)
-            return MathF.Round(baseCost * (1f + TaomCulturalFeats.UmbarCheaperCaravansFeat.EffectBonus));
-
-        return baseCost;
+        _feats = feats;
     }
+
+    public override int GetCaravanFormingCost(bool largerCaravan, bool navalCaravan)
+        => _feats.ApplyCaravanCost(
+            CultureFeatAdapter.FromOrNull(CharacterObject.PlayerCharacter?.Culture),
+            base.GetCaravanFormingCost(largerCaravan, navalCaravan));
 }

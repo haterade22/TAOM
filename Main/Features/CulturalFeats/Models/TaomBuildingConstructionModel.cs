@@ -3,35 +3,22 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Settlements.Buildings;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomBuildingConstructionModel : DefaultBuildingConstructionModel
 {
-    private static TextObject? _cultureText;
-    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+    private readonly ICulturalFeatsService _feats;
+
+    public TaomBuildingConstructionModel(ICulturalFeatsService feats)
+    {
+        _feats = feats;
+    }
 
     public override ExplainedNumber CalculateDailyConstructionPower(Town town, bool includeDescriptions = false)
     {
         var result = base.CalculateDailyConstructionPower(town, includeDescriptions);
-
-        var culture = town.OwnerClan?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.EreborConstructionSpeedFeat))
-            result.AddFactor(TaomCulturalFeats.EreborConstructionSpeedFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.LothlorienConstructionSpeedFeat))
-            result.AddFactor(TaomCulturalFeats.LothlorienConstructionSpeedFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.DolGuldurConstructionSpeedFeat))
-            result.AddFactor(TaomCulturalFeats.DolGuldurConstructionSpeedFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.IsengardConstructionSpeedFeat))
-            result.AddFactor(TaomCulturalFeats.IsengardConstructionSpeedFeat.EffectBonus, CultureText);
-
+        _feats.ApplyConstructionSpeedFeats(CultureFeatAdapter.FromOrNull(town.OwnerClan?.Culture), ref result);
         return result;
     }
 }

@@ -20,7 +20,8 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.Warg;
-using TAOM.Features.Spider;
+// DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
+// using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.Messengers;
@@ -41,6 +42,7 @@ using TAOM.Features.CompanionTactics;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.EquipPresets;
 using TAOM.Features.EditorCacheRebuild;
+using TAOM.Features.CulturalFeats;
 
 namespace TAOM;
 
@@ -73,7 +75,8 @@ public static class IoC
         TroopWeightIoC.RegisterTroopWeightFeature(container);
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
-        SpiderIoC.RegisterSpiderFeature(container);
+        // DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
+        // SpiderIoC.RegisterSpiderFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);
@@ -95,6 +98,7 @@ public static class IoC
         CompanionTacticsIoC.RegisterCompanionTacticsFeature(container);
         FiefManagementIoC.RegisterFiefManagementFeature(container);
         EditorCacheRebuildIoC.RegisterEditorCacheRebuildFeature(container);
+        CulturalFeatsIoC.RegisterCulturalFeatsFeature(container);
 
         _container = container;
 

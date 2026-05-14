@@ -6,20 +6,17 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomSettlementMilitiaModel : DefaultSettlementMilitiaModel
 {
+    private readonly ICulturalFeatsService _feats;
+
+    public TaomSettlementMilitiaModel(ICulturalFeatsService feats)
+    {
+        _feats = feats;
+    }
+
     public override ExplainedNumber CalculateVeteranMilitiaSpawnChance(Settlement settlement)
     {
         var result = base.CalculateVeteranMilitiaSpawnChance(settlement);
-
-        var culture = settlement.OwnerClan?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.MirkwoodMilitiaProductionFeat))
-            result.Add(TaomCulturalFeats.MirkwoodMilitiaProductionFeat.EffectBonus);
-
-        if (culture.HasFeat(TaomCulturalFeats.DolGuldurMilitiaProductionFeat))
-            result.Add(TaomCulturalFeats.DolGuldurMilitiaProductionFeat.EffectBonus);
-
+        _feats.ApplyVeteranMilitiaFeats(CultureFeatAdapter.FromOrNull(settlement.OwnerClan?.Culture), ref result);
         return result;
     }
 }

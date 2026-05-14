@@ -36,7 +36,8 @@ using TAOM.Features.CulturalFeats.Models;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
-using TAOM.Features.Spider;
+// DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
+// using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
@@ -246,11 +247,15 @@ public class SubModule : MBSubModuleBase
             // + TroopProgression model registration block. Replaces all CareerPassiveHelper static
             // calls with instance-injected ICareerPassiveService.
             var careerPassives = IoC.Resolve<TAOM.Features.CareerSystem.ICareerPassiveService>();
+            // Phase 9b #180 / partial #148 — IWageModifierService extraction. Hoists garrison-wage
+            // feat loop + Mordor/Gundabad/Umbar party-wage feats + Rohan mounted-wage scaling +
+            // recruitment-cost feats out of the model body, satisfying gamemodels.md rule 4.
+            var wageModifiers = IoC.Resolve<IWageModifierService>();
             var volunteerService = IoC.Resolve<IVolunteerTierService>();
             var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
             var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
             campaignStarter.AddModel(new TaomCharacterStatsModel());
-            campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives));
+            campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
             campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter));
 
             var raceAgeService = IoC.Resolve<IRaceAgeService>();
@@ -281,24 +286,27 @@ public class SubModule : MBSubModuleBase
             var playerContext = IoC.Resolve<IPlayerContextAdapter>();
             campaignStarter.AddModel(new TaomExecutionRelationModel(executionRelationService, playerContext));
 
-            // Cultural feat models
-            campaignStarter.AddModel(new TaomArmyManagementModel());
-            campaignStarter.AddModel(new TaomPartySpeedModel(careerPassives));
-            campaignStarter.AddModel(new TaomSettlementProsperityModel());
-            campaignStarter.AddModel(new TaomSettlementMilitiaModel());
-            campaignStarter.AddModel(new TaomBuildingConstructionModel());
-            campaignStarter.AddModel(new TaomVillageProductionModel());
-            campaignStarter.AddModel(new TaomCaravanModel());
-            campaignStarter.AddModel(new TaomBattleRewardModel(careerPassives));
+            // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
+            // ICulturalFeatsService. Each model is now a thin boundary that converts
+            // CultureObject → ICultureFeatAdapter and delegates (gamemodels.md rule 4).
+            var culturalFeats = IoC.Resolve<TAOM.Features.CulturalFeats.ICulturalFeatsService>();
+            campaignStarter.AddModel(new TaomArmyManagementModel(culturalFeats));
+            campaignStarter.AddModel(new TaomPartySpeedModel(culturalFeats, careerPassives));
+            campaignStarter.AddModel(new TaomSettlementProsperityModel(culturalFeats));
+            campaignStarter.AddModel(new TaomSettlementMilitiaModel(culturalFeats));
+            campaignStarter.AddModel(new TaomBuildingConstructionModel(culturalFeats));
+            campaignStarter.AddModel(new TaomVillageProductionModel(culturalFeats));
+            campaignStarter.AddModel(new TaomCaravanModel(culturalFeats));
+            campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
             campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
-            campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(careerPassives));
-            campaignStarter.AddModel(new TaomPartySizeModel(careerPassives));
-            campaignStarter.AddModel(new TaomFoodConsumptionModel());
-            campaignStarter.AddModel(new TaomSettlementLoyaltyModel(IoC.Resolve<IRevoltTuningConfigProvider>()));
-            campaignStarter.AddModel(new TaomPartyMoraleModel(careerPassives));
-            campaignStarter.AddModel(new TaomSmithingModel(careerPassives));
-            campaignStarter.AddModel(new TaomClanFinanceModel());
-            campaignStarter.AddModel(new TaomRaidModel(careerPassives));
+            campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
+            campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives));
+            campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
+            campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
+            campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
+            campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
+            campaignStarter.AddModel(new TaomClanFinanceModel(culturalFeats));
+            campaignStarter.AddModel(new TaomRaidModel(culturalFeats, careerPassives));
 
             // Battle balance models
             var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
@@ -505,7 +513,8 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
-        mission.AddMissionBehavior(new SpiderMissionBehavior());
+        // DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
+        // mission.AddMissionBehavior(new SpiderMissionBehavior());
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
         mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());

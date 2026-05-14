@@ -2,36 +2,23 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomFoodConsumptionModel : DefaultMobilePartyFoodConsumptionModel
 {
-    private static TextObject? _cultureText;
-    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+    private readonly ICulturalFeatsService _feats;
+
+    public TaomFoodConsumptionModel(ICulturalFeatsService feats)
+    {
+        _feats = feats;
+    }
 
     public override ExplainedNumber CalculateDailyFoodConsumptionf(
         MobileParty party, ExplainedNumber baseConsumption)
     {
         var result = base.CalculateDailyFoodConsumptionf(party, baseConsumption);
-
-        var culture = party.Party?.Owner?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.RivendellFoodConsumptionFeat))
-            result.AddFactor(TaomCulturalFeats.RivendellFoodConsumptionFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.MirkwoodFoodConsumptionFeat))
-            result.AddFactor(TaomCulturalFeats.MirkwoodFoodConsumptionFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.LothlorienFoodConsumptionFeat))
-            result.AddFactor(TaomCulturalFeats.LothlorienFoodConsumptionFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.DolGuldurFoodConsumptionFeat))
-            result.AddFactor(TaomCulturalFeats.DolGuldurFoodConsumptionFeat.EffectBonus, CultureText);
-
+        _feats.ApplyFoodConsumptionFeats(CultureFeatAdapter.FromOrNull(party.Party?.Owner?.Culture), ref result);
         return result;
     }
 }

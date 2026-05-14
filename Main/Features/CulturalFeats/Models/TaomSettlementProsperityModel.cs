@@ -2,32 +2,22 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomSettlementProsperityModel : DefaultSettlementProsperityModel
 {
-    private static TextObject? _cultureText;
-    private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+    private readonly ICulturalFeatsService _feats;
+
+    public TaomSettlementProsperityModel(ICulturalFeatsService feats)
+    {
+        _feats = feats;
+    }
 
     public override ExplainedNumber CalculateHearthChange(Village village, bool includeDescriptions = false)
     {
         var result = base.CalculateHearthChange(village, includeDescriptions);
-
-        var culture = village.Settlement?.OwnerClan?.Culture;
-        if (culture == null)
-            return result;
-
-        if (culture.HasFeat(TaomCulturalFeats.RivendellHearthGrowthFeat) && result.ResultNumber >= 0f)
-            result.AddFactor(TaomCulturalFeats.RivendellHearthGrowthFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.MirkwoodHearthGrowthFeat) && result.ResultNumber >= 0f)
-            result.AddFactor(TaomCulturalFeats.MirkwoodHearthGrowthFeat.EffectBonus, CultureText);
-
-        if (culture.HasFeat(TaomCulturalFeats.GondorHearthGrowthFeat) && result.ResultNumber >= 0f)
-            result.AddFactor(TaomCulturalFeats.GondorHearthGrowthFeat.EffectBonus, CultureText);
-
+        _feats.ApplyHearthGrowthFeats(CultureFeatAdapter.FromOrNull(village.Settlement?.OwnerClan?.Culture), ref result);
         return result;
     }
 }
