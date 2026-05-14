@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — Diplomacy prefix documentation + diagnostic logs (closes #152, #153)
+
+Two P2 patches where the prefix returns false to skip vanilla. Documented the suppression semantics inline so future maintainers don't re-introduce duplicate-side-effect bugs.
+
+- **#152 — AllianceCampaignBehavior.EndAlliance prefix.** Vanilla callers (`OnAllianceTimerExpired`, `OnWarDeclared`) sequence `EndAlliance(A,B)` → `AddAllianceDecision(A,B)`. When the prefix blocks `EndAlliance`, the subsequent `AddAllianceDecision` could in theory queue a "propose new alliance" for kingdoms that are still allied. Vanilla `AddAllianceDecision` (decompiled) checks `IsAlliedWith` before queuing, so the duplicate is filtered at that layer. Inline comment documents the mitigation + escalation path (Patch15 on `AddAllianceDecision` if reports surface). LogDebug surfaces blocked attempts for visibility.
+- **#153 — DeclareWarAction.ApplyInternal prefix.** Prefix returns false → vanilla skips the `CampaignEventDispatcher.Instance.OnWarDeclared` dispatch. This is intentional (war never happened from vanilla's perspective) but documented inline: future "force-declare war through TAOM's own path" code must either use `DeclareWarAction.ApplyByX(...)` (emits the event) or manually dispatch `OnWarDeclared` via `CampaignEventDispatcher.Instance`. LogDebug surfaces blocked attempts.
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — InitialChildGeneration config validation (Category 2 R3, closes #126)
 
 Two P1s + one P2.
