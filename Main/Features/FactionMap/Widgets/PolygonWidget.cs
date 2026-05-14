@@ -96,7 +96,11 @@ public class PolygonWidget : ImageWidget
     public static string HoveredFactionName { get; private set; } = "";
 
 
-    // Global registry of all LIVE PolygonWidget instances for custom hover resolution
+    // Global registry of all LIVE PolygonWidget instances for custom hover resolution.
+    // THREADING: Gauntlet renders TAOM widgets on the same thread as LateUpdate per the
+    // #175 cluster doc downgrade (see audit findings, P2 #15). No lock needed but treat
+    // as semantic smell — if TaleWorlds ever moves widget render to a worker thread, this
+    // list will need a ReaderWriterLockSlim or a per-frame snapshot copy.
     private static readonly System.Collections.Generic.List<PolygonWidget> _allInstances
         = new System.Collections.Generic.List<PolygonWidget>();
     // The currently hovered widget (globally unique -- only one at a time)
@@ -351,6 +355,29 @@ public class PolygonWidget : ImageWidget
         // the list order changes or instances are added/removed.
         ResolveGlobalHover();
 
+        // Tooltip update for the pulse-case (no widget hovered, but a playable region
+        // is at peak pulse).  Audit P2 #16: moved out of OnRender — the static write
+        // belongs in the update phase, not the per-frame draw call.  ResolveGlobalHover
+        // already handles the hovered-widget case at hover-state transition.
+        // First instance only drives this scan — avoids N redundant writes per frame.
+        if (_allInstances.Count > 0 && _allInstances[0] == this &&
+            _globalHovered == null &&
+            _globalPulseAlpha > 0.3f)
+        {
+            for (int i = 0; i < _allInstances.Count; i++)
+            {
+                var inst = _allInstances[i];
+                if (inst._isPlayable &&
+                    inst._playableIndex >= 0 &&
+                    inst._playableIndex == _globalPulseIndex &&
+                    !string.IsNullOrEmpty(inst._factionDisplayName))
+                {
+                    HoveredFactionName = inst._factionDisplayName;
+                    break;
+                }
+            }
+        }
+
         // Texture loading
         TryLoadTexture();
         if (_isPlayable) TryLoadBanner();
@@ -379,6 +406,10 @@ public class PolygonWidget : ImageWidget
         float liftT = _isPlayable ? Math.Abs(_hoverOffset / HoverTargetOffset) : 0f;
 
         // Pass 1: Drop shadow -- only for playable regions (Tier 3)
+        // AUDIT-NOTE: #169 audit recommendation to hoist SimpleMaterial allocation would BREAK
+        // rendering (TwoDimensionDrawData holds material by REFERENCE; queued draws read CURRENT
+        // values at end-of-frame).  If perf becomes profiler-measurable, use a SimpleMaterial pool
+        // indexed by (color, alpha) tuple — not a hoist.  See feedback_audit_findings_not_always_correct.md.
         if (liftT > 0.01f)
         {
             SimpleMaterial shadowMat = drawContext.CreateSimpleMaterial();
@@ -404,6 +435,12 @@ public class PolygonWidget : ImageWidget
         }
 
         // Pass 2: Edge/thickness -- only for playable regions (Tier 3)
+        // AUDIT-NOTE: #169 audit recommendation to hoist SimpleMaterial allocation would BREAK
+        // rendering (TwoDimensionDrawData holds material by REFERENCE; queued draws read CURRENT
+        // values at end-of-frame; sharing one material across iterations of this edge loop would
+        // make every slice take the LAST iteration's ValueFactor/shade).  If perf becomes
+        // profiler-measurable, use a SimpleMaterial pool indexed by (color, alpha) tuple —
+        // not a hoist.  See feedback_audit_findings_not_always_correct.md.
         if (liftT > 0.01f)
         {
             const float edgeThickness = 7f; // max pixels of visible edge
@@ -638,20 +675,10 @@ public class PolygonWidget : ImageWidget
             _pendingPins.Clear();
         }
 
-        // Tooltip: update static property so the VM can show the colored tooltip.
-        // Hover takes priority; pulsing region also shows its name.
-        if (_isHovered && _hasFaction && !string.IsNullOrEmpty(_factionDisplayName))
-        {
-            HoveredFactionName = _factionDisplayName;
-        }
-        else if (_isPlayable && !_isHovered &&
-                 _playableIndex >= 0 && _playableIndex == _globalPulseIndex &&
-                 _globalPulseAlpha > 0.3f &&
-                 _globalHovered == null &&
-                 !string.IsNullOrEmpty(_factionDisplayName))
-        {
-            HoveredFactionName = _factionDisplayName;
-        }
+        // Tooltip writes (HoveredFactionName) moved to OnLateUpdate (audit P2 #16) —
+        // the hover-state-transition write is in ResolveGlobalHover; the pulse-fallback
+        // write is in OnLateUpdate after ResolveGlobalHover.  No static-property write
+        // remains in OnRender.
     }
 
     protected override void OnHoverBegin()

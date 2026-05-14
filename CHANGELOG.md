@@ -2,6 +2,17 @@
 
 ## 2026-05-14
 
+### Phase 9b — Custom Widgets IoC.Resolve cache + HoveredFactionName move + audit-note (closes deferred #169)
+
+Audit issue #169 (Custom Widgets — per-frame allocations + threading + IoC.Resolve in hot path) had three sub-findings; addresses them per the Phase 9 investigation disposition.
+
+- **P2 #17 (IoC.Resolve cache in widget hot path):** verified scope.  `Main/Features/FactionMap/Widgets/` has no `IoC.Resolve<>` calls.  `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` already uses the `??=` lazy-cache pattern (Phase 9b convention) — no further change needed.  Sibling `SpecialResourceMapBarMixin.cs` resolves in its constructor (boundary class), which is correct per ADR-007 / csharp-architecture.md.
+- **P2 #16 (HoveredFactionName write moved out of OnRender):** `PolygonWidget.OnRender` no longer mutates the static `HoveredFactionName` property.  The hover-state-transition write lives in `ResolveGlobalHover` (where it was already wired in the `_globalHovered != bestCandidate` branch) and the pulse-fallback write moved to `OnLateUpdate`, scanning `_allInstances` for the currently-pulsing playable widget from the first-instance driver to avoid N redundant writes per frame.  Semantic-smell cleanup per the #175 cluster doc downgrade — Gauntlet single-threaded for TAOM widgets, so no lock needed.
+- **P2 #15 (`_allInstances` threading assumption inline-documented):** added a comment block to `_allInstances` documenting "Gauntlet renders TAOM widgets on the same thread as LateUpdate per #175 cluster doc downgrade; no lock needed but treat as semantic smell — if TaleWorlds ever moves widget render to a worker thread, this list will need a ReaderWriterLockSlim or a per-frame snapshot copy."  No lock added (would over-engineer per the downgrade).
+- **P2 #12-14 (per-frame allocations) DEFERRED with audit-note:** the audit's recommendation to hoist `SimpleMaterial` allocations outside the OnRender loop WOULD BREAK rendering — `TwoDimensionDrawData` holds `SimpleMaterial` by REFERENCE; queued draw commands read CURRENT values at end-of-frame (during `DrawTo`), so sharing one material across loop iterations causes every queued draw to read the LAST iteration's color/alpha/value-factor.  Added `// AUDIT-NOTE: #169 ...` comments at three cited allocation sites (`PolygonWidget` Pass-1 shadow, `PolygonWidget` Pass-2 edge-loop, `BannerWidget` glow-loop) documenting why the audit recommendation is wrong + pointing at the correct fix (SimpleMaterial pool indexed by (color, alpha) tuple, only if perf becomes profiler-measurable).  See `feedback_audit_findings_not_always_correct.md`.
+- **Issue #169 stays open** per orchestrator direction — closing is reserved for the parent session.  Build verified clean (`dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` → 0 errors).  No test changes — custom widgets are not directly unit-testable due to sealed `UIContext` (per gui-ui.md + Phase 9b #188 source-content tests already covering the static-state lifecycle).
+- **Files touched:** `Main/Features/FactionMap/Widgets/PolygonWidget.cs`, `Main/Features/FactionMap/Widgets/BannerWidget.cs`, `CHANGELOG.md`.  Out of scope and untouched: `Main/SubModule.cs`, `Main/IoC.cs`, all other feature/test dirs.
+
 ### Phase 9b — CulturalFeats service extraction + tests (closes #144 #176)
 
 All 16 `Taom*Model.cs` overrides in `Main/Features/CulturalFeats/Models/` had inline feat-dispatch logic (`if (culture.HasFeat(X)) result.AddFactor(X.EffectBonus, CultureText)` chains) directly in the override body — violating `gamemodels.md` rule 4 ("no inline if/foreach/switch in override body"). Per `Phase 9b deferred-dispositions audit #144` this was a systemic rule-4 violation across 16 models. Per `#176` the dispatch logic was untestable because it lived in GameModel override bodies that require live `Hero`/`MobileParty`/`Settlement`/`Town` instances to invoke. Both closed by extracting an `ICulturalFeatsService` with one dispatch method per affected GameModel.
@@ -15,6 +26,29 @@ All 16 `Taom*Model.cs` overrides in `Main/Features/CulturalFeats/Models/` had in
 - **Behavior preservation:** the only intentional behavior change in this PR is `CulturalFeatsService.CultureText` — the lazy `GameTexts.FindText("str_culture")` call is now try/catch-guarded so unit tests don't NRE on the TaleWorlds runtime dependency. Production behavior is unchanged (the try succeeds, `_cultureText` is cached identically, `Add`/`AddFactor` see the same `TextObject` description as before).
 - **Test count delta:** `+49` (49 new service tests; `TaomCulturalFeatsDefinitionTests` count unchanged at 66). Baseline 2018 → 2107 (full session including parallel work).
 - **Closes #144 (CulturalFeats systemic rule-4 across 16 models) and #176 (CulturalFeats 16-models zero behavior-hook tests).** Issues stay open in this commit per orchestrator direction — closing is reserved for the parent session.
+
+### Phase 9c — Disable troll content in-place (preserve work)
+
+User direction: trolls (cave_troll troop + 2 troll-themed careers `far_harad_halftroll` / `cave_troll_master`) are WIP — disable everywhere, preserve all artifacts for re-enable later. Mirrors the spider disable approach (no deletions; consistent `DISABLED 2026-05-14` markers).
+
+- **Troop disabled.** `cave_troll` NPCCharacter (`troops_mordor.xml:3343-3473`, level-51 Mordor infantry with `is_basic_troop="true"`) wrapped in XML disable comment. The "MORDOR MILITIA TROOPS" section header below it is preserved as-is.
+- **Volunteer-recruitment path covered.** `cave_troll` was `is_basic_troop="true"` with `culture="Culture.mordor"` — without the disable, vanilla `DefaultVolunteerModel.GetBasicVolunteer` could have recruited it as a Mordor village volunteer because `TaomVolunteerModel.GetBasicVolunteer` falls through to base for cultures without an explicit pool (Mordor has none in `VolunteerRecruitmentService.cs` — only Gondor, Dol Guldur, Erebor, Shaghana, Abanissa initialize pools). Wrapping the entire NPCCharacter prevents `MBObjectManager` from loading it, so vanilla's basic-troop selection can't see it. Rationale is documented inline in `troops_mordor.xml`.
+- **Encounter weight disabled.** `<TroopWeight id="cave_troll" weight="4.0" />` (`troop_weights.xml:6`) wrapped in XML disable comment.
+- **C# ability registrations disabled.** Two `registry.Register(new InfantryAbilityExecutor(...))` calls in `Main/Features/CareerSystem/CareerSystemIoC.cs` commented out: `far_harad_halftroll` (line 69, Harad section) and `cave_troll_master` (line 109, Gundabad section).
+- **Career XML disabled (3 files × 2 careers = 6 blocks).** Wrapped in XML disable comments:
+  - `taom_careers.xml` — `<Career id="far_harad_halftroll">` (415-433) and `<Career id="cave_troll_master">` (887-905)
+  - `taom_ability_templates.xml` — `<AbilityTemplate id="far_harad_halftroll_ability">` (187-194) and `<AbilityTemplate id="cave_troll_master_ability">` (401-408)
+  - `taom_career_choices.xml` — `far_harad_halftroll` root Choice + 6 ChoiceGroups (4171-4283) and `cave_troll_master` root Choice + 6 ChoiceGroups (6768-6880)
+- **Preserved (no touch):**
+  - `Main/_Module/ModuleData/charactercreation/career_menu.json` — entries at lines 154-161 (`far_harad_halftroll`) and 330-337 (`cave_troll_master`) become unreachable orphans since the loader keys lookups by `career_string_id` against careers that no longer load from XML. Safer than JSON-comment hacks (Newtonsoft strict mode may reject `//`); preserves work bit-for-bit.
+  - `Main/_Module/ModuleData/TAOM_bodyproperties.xml` — `BodyProperty id="fighter_cave_troll"` (harmless unused once the troop is disabled).
+  - `Main/_Module/ModuleData/module_sounds.xml` — `LOTR/Monsters/Troll/*` sound registrations (only consumed when a troll agent exists).
+  - Career string XMLs: `taom_career_strings.xml` + PL/RU/SP localized copies — localization keys remain (referenced only from now-disabled XML blocks; harmless).
+  - Narrative/lore: Gundabad culture description in `taom_spcultures.xml` ("...amass legions of goblins, wargs, and trolls"), Borzak hero description in `heroes.xml`, Trollshaws CC string in `taom_cc_strings.xml`. All world flavor — no spawn impact.
+  - Troll equipment items (`Item.wm_cave_troll_*`, `Item.lotr_troll_*`) — only referenced by the now-disabled `cave_troll` NPCCharacter.
+  - Career system tests in `TAOM.Tests/Features/CareerSystem/Abilities/CareerAbilityEffectRegistryTests.cs` and `TAOM.Tests/Features/TroopWeight/TroopWeightXmlLoaderTests.cs` / `TroopWeightServiceTests.cs` — tests cover abstractions; may reference `cave_troll`/`cave_troll_master` as input fixtures but don't require live registration.
+- **Re-enable procedure:** Uncomment the disable markers in these 6 files (5 XML + 1 C#). Search for `DISABLED 2026-05-14` to find every site.
+- **Verification:** XML well-formedness validated for all 5 XML files via `[xml]$x = Get-Content` round-trip — all parse cleanly. C# build + tests not run this session (pre-existing in-flight Phase 9b CulturalFeats refactor still leaves the working tree non-buildable per the spider disable entry — same caveat).
 
 ### Phase 9c — Disable spider feature in-place (preserve work)
 

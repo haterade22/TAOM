@@ -213,6 +213,12 @@ public class BannerWidget : ImageWidget
             const float glowAlpha = 0.55f;
             const float glowExpand = 4f;
 
+            // AUDIT-NOTE: #169 audit recommendation to hoist SimpleMaterial allocation would BREAK
+            // rendering (TwoDimensionDrawData holds material by REFERENCE; queued draws read CURRENT
+            // values at end-of-frame; sharing one material across the 8 glow-offset iterations
+            // would make every queued draw read the LAST iteration's offset color).  If perf
+            // becomes profiler-measurable, use a SimpleMaterial pool indexed by (color, alpha)
+            // tuple — not a hoist.  See feedback_audit_findings_not_always_correct.md.
             float[] offsets = { -glowExpand, 0f, glowExpand };
             foreach (float ox in offsets)
             {
