@@ -27,11 +27,27 @@ public class RacePersistenceService : IRacePersistenceService
         var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
         foreach (var hero in heroes)
         {
-            if (hero.Race > 0 && !_heroRaceMap.ContainsKey(hero.StringId))
+            // Phase 9b #130 P2 — capture ALL races including 0 (human). Pre-fix the `> 0` guard
+            // skipped humans to keep the map small; but a hero deliberately reset to human (race=0)
+            // by Patch3_SetRace/CharacterCreation/NamedCompanions wouldn't get captured, and the
+            // stale non-human entry from a prior capture would silently revert the human assignment
+            // on next load. Capture all races now (cost: one int per hero — negligible).
+            if (!_heroRaceMap.ContainsKey(hero.StringId))
             {
                 _heroRaceMap[hero.StringId] = hero.Race;
             }
         }
+    }
+
+    public void ResetForNewCampaign()
+    {
+        // Phase 9b #130 R1 — clear singleton on new campaign in same process. SyncData on an
+        // absent-key load (fresh save) leaves _heroRaceMap unchanged → prior campaign's map
+        // carries over → RestoreHeroRaces silently overwrites new heroes with old race assignments
+        // for colliding StringIds (every common vanilla lord uses stable IDs like "lord_1_1").
+        if (_heroRaceMap.Count > 0)
+            _logger.LogInfo($"RacePersistenceService: ResetForNewCampaign clearing {_heroRaceMap.Count} stale race entries from prior campaign.");
+        _heroRaceMap = new Dictionary<string, int>();
     }
 
     public void RestoreHeroRaces()

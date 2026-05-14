@@ -24,8 +24,10 @@ public class RacePersistenceServiceTests
     }
 
     [TestMethod]
-    public void CaptureHeroRaces_StoresOnlyNonHumanHeroes()
+    public void CaptureHeroRaces_StoresAllHeroesIncludingHumans()
     {
+        // Phase 9b #130 P2 — pre-fix filtered out race=0 (humans) to keep map small. This silently
+        // reverted deliberate human-resets on next load. Now all heroes are captured.
         _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_human", 0),
@@ -35,7 +37,7 @@ public class RacePersistenceServiceTests
 
         _sut.CaptureHeroRaces();
 
-        Assert.AreEqual(2, _sut.CapturedRaceCount);
+        Assert.AreEqual(3, _sut.CapturedRaceCount);
     }
 
     [TestMethod]
@@ -63,8 +65,11 @@ public class RacePersistenceServiceTests
     }
 
     [TestMethod]
-    public void CaptureHeroRaces_AllHumans_StoresNothing()
+    public void CaptureHeroRaces_AllHumans_StoresAll()
     {
+        // Phase 9b #130 P2 — humans are now captured too. Restoring race=0 is the mechanism
+        // by which CharacterCreation/Patch3_SetRace/NamedCompanions can deliberately reset a hero
+        // to human and have that survive save-load.
         _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_1", 0),
@@ -73,7 +78,7 @@ public class RacePersistenceServiceTests
 
         _sut.CaptureHeroRaces();
 
-        Assert.AreEqual(0, _sut.CapturedRaceCount);
+        Assert.AreEqual(2, _sut.CapturedRaceCount);
     }
 
     [TestMethod]
@@ -164,6 +169,50 @@ public class RacePersistenceServiceTests
         _sut.RestoreHeroRaces();
 
         _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("2")));
+    }
+
+    // Phase 9b #130 R1 — singleton reset on new campaign
+
+    [TestMethod]
+    public void ResetForNewCampaign_WithCapturedRaces_ClearsMap()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1)
+        });
+        _sut.CaptureHeroRaces();
+        Assert.AreEqual(1, _sut.CapturedRaceCount);
+
+        _sut.ResetForNewCampaign();
+
+        Assert.AreEqual(0, _sut.CapturedRaceCount);
+    }
+
+    [TestMethod]
+    public void ResetForNewCampaign_EmptyState_IsNoOp()
+    {
+        _sut.ResetForNewCampaign();
+        Assert.AreEqual(0, _sut.CapturedRaceCount);
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_AfterReset_DoesNothing()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1)
+        });
+        _sut.CaptureHeroRaces();
+        _sut.ResetForNewCampaign();
+
+        // After reset, even if the live roster has the same hero, the map is empty and no SetHeroRace fires.
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 0)
+        });
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
     }
 
     [TestMethod]

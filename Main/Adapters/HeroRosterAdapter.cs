@@ -8,7 +8,11 @@ public class HeroRosterAdapter : IHeroRosterAdapter
 {
     public IReadOnlyList<HeroRaceInfo> GetAllAliveHeroRaces()
     {
+        // Phase 9b #130 P2 — `h.CharacterObject` is a computed property and can be null in
+        // transient states. NRE here during OnBeforeSaveEvent would abort the save with no
+        // recovery path. Per `adapters.md` rule, use `?.` on computed TaleWorlds properties.
         return Hero.AllAliveHeroes
+            .Where(h => h?.CharacterObject != null)
             .Select(h => new HeroRaceInfo(h.StringId, h.CharacterObject.Race))
             .ToList();
     }
@@ -22,7 +26,7 @@ public class HeroRosterAdapter : IHeroRosterAdapter
     public void SetHeroRace(string heroStringId, int race)
     {
         var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == heroStringId);
-        if (hero != null)
+        if (hero?.CharacterObject != null)
         {
             hero.CharacterObject.Race = race;
         }

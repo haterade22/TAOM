@@ -2,6 +2,24 @@
 
 ## 2026-05-13
 
+### Phase 9b — HeroRace R1 + capture-all-races + null-guards (closes #130)
+
+P1 — `_heroRaceMap` singleton not reset between campaigns. P2 — `CaptureHeroRaces` skipped race=0 (humans) so deliberate human-resets silently reverted. P2 — adapter NRE risk on computed `Hero.CharacterObject` property.
+
+- **P1 R1 reset** — Added `IRacePersistenceService.ResetForNewCampaign()` + `OnNewGameCreatedEvent` subscription in `RacePersistenceBehavior`. SyncData on an absent-key load doesn't overwrite the ref → prior campaign's map carries over, corrupting ALL race-state consumers (Patch3_SetRace, Patch5_FaceGen, Patch9_RaceFilter, Patch29_CCBodyProperties, RaceAge, NamedCompanions) with stale assignments for stable IDs like `lord_1_1`.
+- **P2 capture-all-races** — Dropped `hero.Race > 0` filter in `CaptureHeroRaces`. Now captures humans too; cost is ~1 int per hero (negligible). Without this, a hero deliberately reset to human (race=0) by CC/Patch3_SetRace/NamedCompanions wouldn't be captured, and the stale non-human entry from a prior capture would silently revert the human assignment.
+- **P2 null-guards** — `HeroRosterAdapter.GetAllAliveHeroRaces` and `SetHeroRace` now use `?.CharacterObject` per adapters.md. Computed properties can be null in transient states; previously an NRE during OnBeforeSaveEvent would abort the save.
+- **P3** — `CapturedRaceCount` lifted onto `IRacePersistenceService` (was concrete-only) for testability.
+- **Tests** — 2 existing tests updated (now expect race=0 to be captured); +3 new tests for `ResetForNewCampaign`. Net +3.
+
+### Phase 9b — BannerInjection singleton-stale exclusions (closes #124)
+
+P1 — `BannerExclusionService._playerModifiedIds` singleton not reset between campaigns. `SyncData` initialized local `list` from current set, so absent-key load was a no-op (kept stale state). New campaign 2 → TAOM canon banners not re-injected onto entities the player modified in campaign 1.
+
+- **P1 SyncData fix** — Split saving/loading paths. Saving serializes current set. Loading initializes `list = null` so an absent-key load clears `_playerModifiedIds` instead of preserving it.
+- **P1 R1 reset** — Added `IBannerExclusionService.Reset()` + `BannerInjectionBehavior.OnNewGameCreatedEvent` subscription that calls `Reset()` BEFORE `InjectBanners()`.
+- **Tests** — +2 (`Reset_WithExclusions_ClearsAll`, `Reset_EmptyState_IsNoOp`).
+
 ### Phase 9b — Messengers state-reset gaps (closes #123)
 
 Two P1s in the singleton-state-reset path that codex review #34 partially addressed. P2 "RemoveNonSerializedListener" suggestion is invalid in v1.3.15 (no public Remove-one API on IMbEvent<T>).

@@ -229,7 +229,8 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new RacePersistenceBehavior(racePersistenceService));
 
             var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
-            campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService));
+            var bannerExclusionService = IoC.Resolve<IBannerExclusionService>();
+            campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService, bannerExclusionService));
 
             var ccContentService = IoC.Resolve<ICharacterCreationContentService>();
             var ccLogger = IoC.Resolve<IModLogger>();
