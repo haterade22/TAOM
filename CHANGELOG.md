@@ -2,6 +2,15 @@
 
 ## 2026-05-13
 
+### Phase 9b — P1 NRE null-guards (Category 2, closes #134 #135)
+
+Two P1 null-guard fixes on hot paths.
+
+- **#134 (P1) — TaomSiegeEventModel `party.MobileParty` NRE** — `party.MobileParty` is null for garrison defenders (`PartyBase.IsMobile=false`). Pre-fix the unguarded `party.MobileParty.HasPerk(...)` chain threw NRE on every garrison siege-defense calculation. Added `?.HasPerk(...) == true` short-circuit; fall-through treats null `MobileParty` as "no fire-perk engines" which matches vanilla's `false`-return-on-null-perk-check semantic.
+- **#135 (P1) — TaomPartySpeedModel `Campaign.Current.MapSceneWrapper` NRE on per-tick path** — both `Campaign.Current` and `MapSceneWrapper` can be null during scene transitions. `CalculateFinalSpeed` fires per-party-per-tick on the world-map hot path. Added `?. ?? TerrainType.Plain` short-circuit so non-Forest fall-through skips the forest-feat block correctly.
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — small model+UI fixes (Category 2, closes #138 #145 #168)
 
 Three model/UI fixes batched.

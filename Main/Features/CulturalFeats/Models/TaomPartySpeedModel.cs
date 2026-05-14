@@ -27,7 +27,13 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
         if (culture == null)
             return result;
 
-        var terrain = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(mobileParty.CurrentNavigationFace);
+        // Phase 9b #135 P1 — `Campaign.Current` and `MapSceneWrapper` can both be null during
+        // scene transitions (between campaign-map and battle-mission for example). This method
+        // fires per-party-per-tick (`CalculateFinalSpeed` is on the world-map hot path), so the
+        // pre-fix NRE was non-deterministic but frequent. `?.` short-circuit returns
+        // `TerrainType.Plain` from the default-int 0; we only branch on `Forest` so non-forest
+        // (including the null fallback) correctly skips the forest-feat block.
+        var terrain = Campaign.Current?.MapSceneWrapper?.GetFaceTerrainType(mobileParty.CurrentNavigationFace) ?? TerrainType.Plain;
         if (terrain == TerrainType.Forest)
         {
             if (culture.HasFeat(TaomCulturalFeats.MirkwoodForestSpeedFeat))

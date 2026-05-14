@@ -20,9 +20,13 @@ public class TaomSiegeEventModel : DefaultSiegeEventModel
 
     public override IEnumerable<SiegeEngineType> GetAvailableDefenderSiegeEngines(PartyBase party)
     {
+        // Phase 9b #134 P1 — `party.MobileParty` is null for garrison defenders (PartyBase.IsMobile=false).
+        // Pre-fix the unguarded `party.MobileParty.HasPerk(...)` chain threw NRE on every garrison
+        // siege-defense calculation. Use `?.` short-circuit; vanilla returns false for null perk
+        // checks so the fall-through is "no fire-perk engines" which is the safe default.
         bool hasFirePerks =
-            party.MobileParty.HasPerk(DefaultPerks.Engineering.Stonecutters, checkSecondaryRole: true)
-         || party.MobileParty.HasPerk(DefaultPerks.Engineering.SiegeEngineer, checkSecondaryRole: true);
+            party.MobileParty?.HasPerk(DefaultPerks.Engineering.Stonecutters, checkSecondaryRole: true) == true
+         || party.MobileParty?.HasPerk(DefaultPerks.Engineering.SiegeEngineer, checkSecondaryRole: true) == true;
 
         foreach (var kind in _availability.GetDefenderEngines(hasFirePerks))
             yield return Resolve(kind);
