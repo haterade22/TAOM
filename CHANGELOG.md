@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — Diplomacy WarOfTheRing phase persistence + config validation (closes #129)
+
+P1 + 2 P2s.
+
+- **P1 — `WarOfTheRingService.CurrentPhase` now persisted.** Pre-fix the phase was re-derived from elapsed days on every load, replaying BOTH Peace→IsengardWar and IsengardWar→FullWar transitions on every load past Phase2 day. Currently idempotent (`AreAtWar` guards), but ANY non-idempotent side effect added later (notifications, influence, story flags) would replay. Now: `WarOfTheRingBehavior.SyncData` persists `(int)CurrentPhase` under key `"WarOfTheRing_CurrentPhase"`; service exposes `SetPhaseFromSave(WarPhase)` for round-trip; `OnNewGameCreatedEvent` resets to Peace.
+- **P2 — Null-literal JSON fallback.** Both `DiplomacyConfigProvider.LoadConfig` and `WarOfTheRingConfigProvider.LoadConfig` now use `?? new T()` after `DeserializeObject`. Pre-fix, JSON literal `null` would return a null config and NRE-crash mod startup on first property access. Matches the established pattern (BattleBalance, RevoltTuning, Siege providers all use this).
+- **P2 — Semantic validation in `WarOfTheRingConfigProvider`.** Per csharp-architecture.md "Config Providers MUST Validate". Phase1.TriggerDay < 1 reverts to 1; Phase2.TriggerDay ≤ Phase1.TriggerDay reverts to Phase1.TriggerDay + 1. Pre-fix the shipped config had both at day 1 (latent ordering violation). Null sub-configs (Phase1/Phase2/TestMode) now default-initialized.
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — RaceAge R1 cache + R3 validation + R4 validate-before-lookup (partial closes #131)
 
 3 of 4 findings addressed. P1 TaomPregnancyModel 32-line inline logic deferred (substantial ADR-007 service-extraction; needs separate PR to define IRaceAgeService.GetDailyPregnancyChance + IHeroAdapter expansion).

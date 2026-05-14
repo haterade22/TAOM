@@ -31,7 +31,8 @@ public class DiplomacyConfigProvider : IDiplomacyConfigProvider
         try
         {
             var json = File.ReadAllText(path);
-            var config = JsonConvert.DeserializeObject<DiplomacyConfig>(json);
+            // Phase 9b #129 P2 — null-literal JSON returns null; `.Relationships` would NRE.
+            var config = JsonConvert.DeserializeObject<DiplomacyConfig>(json) ?? new DiplomacyConfig();
             _logger.LogInfo($"Loaded {config.Relationships.Count} diplomacy relationships");
             return config;
         }

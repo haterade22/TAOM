@@ -16,6 +16,14 @@ public class WarOfTheRingService : IWarOfTheRingService
     public WarPhase CurrentPhase { get; private set; } = WarPhase.Peace;
     public bool IsWarOfTheRingActive => CurrentPhase == WarPhase.FullWar;
 
+    // Phase 9b #129 P1 — exposed for SyncData round-trip without giving public setter.
+    // Behavior's SyncData calls SetPhaseFromSave during load to rehydrate.
+    public void SetPhaseFromSave(WarPhase phase)
+    {
+        CurrentPhase = phase;
+        _logger.LogInfo($"War of the Ring: Phase restored from save → {phase}");
+    }
+
     public WarOfTheRingService(
         IWarOfTheRingConfigProvider configProvider,
         IDiplomacyService diplomacyService,
