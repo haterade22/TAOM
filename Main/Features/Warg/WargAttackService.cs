@@ -11,6 +11,10 @@ namespace TAOM.Features.Warg;
 
 public class WargAttackService : IWargAttackService
 {
+    // Boundary conversion (Agent → IAgentAdapter) happens in WargAttackTask. The service
+    // itself is adapter-pure post-#178. The factory field is retained — mirrors the
+    // Spider service pattern — and remains available for future per-callback adapter
+    // resolution if needed.
     private readonly IMissionAdapterFactory _adapterFactory;
     private readonly IModLogger _logger;
 
@@ -20,55 +24,58 @@ public class WargAttackService : IWargAttackService
         _logger = logger;
     }
 
-    public int CalculateWargAttackDamage(Agent target, float velocity)
+    public int CalculateWargAttackDamage(IAgentAdapter target, float velocity, float armorEffectivenessPercent)
     {
         float fromSpeed = Math.Min(WargConfig.MaxSpeedDamage, velocity * WargConfig.MaxSpeedDamage / WargConfig.SpeedForMaxDamage);
         float allDamage = fromSpeed + WargConfig.MaxBaseDamage;
-        float damageAbsorption = (100 - target.GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType.Chest)) / 100;
-        int damage = (int)(allDamage * MathF.Clamp(damageAbsorption, 0, 1));
-        return damage;
+        float damageAbsorption = (100f - armorEffectivenessPercent) / 100f;
+        return (int)(allDamage * MathF.Clamp(damageAbsorption, 0f, 1f));
     }
 
-    public void HandleWargTargetHit(Agent attacker, Agent target, sbyte boneId)
+    public void HandleWargTargetHit(IAgentAdapter attacker, IAgentAdapter target, sbyte boneId)
     {
-        if (target == null || !target.IsActive()) return;
+        if (target == null || !target.IsActive() || target.IsFadingOut()) return;
+        if (attacker == null) return;
 
-        Team victimTeam;
-        if (target.IsMount && target.RiderAgent != null)
-            victimTeam = target.RiderAgent.Team;
-        else
-            victimTeam = target.Team;
-
-        if (attacker.RiderAgent != null && attacker.RiderAgent.Team == victimTeam) return;
+        // Warg-specific victim-team rule: if the victim is a mount, attribute the team to its rider.
+        var victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target;
+        if (attacker.RiderAgent != null && attacker.RiderAgent.IsSameTeam(victimTeamSource)) return;
 
         try
         {
-            if (target.State == AgentState.Active || target.State == AgentState.Routed)
+            if (target.State != AgentState.Active && target.State != AgentState.Routed) return;
+
+            float velocity = attacker.MovementVelocity.Y;
+            int armor = target.GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType.Chest);
+            int damage = CalculateWargAttackDamage(target, velocity, armor);
+
+            // Damager attribution: prefer the warg's rider; fall back to the warg itself.
+            // If both are absent/dead, vanilla self-damage fallback at 20 damage.
+            IAgentAdapter damagerAdapter = attacker.RiderAgent ?? attacker;
+            if (damagerAdapter == null || damagerAdapter.Health <= 0)
             {
-                if (target.IsFadingOut()) return;
-
-                int damage = CalculateWargAttackDamage(target, attacker.MovementVelocity.Y);
-
-                Agent damagerAgent = attacker?.RiderAgent ?? attacker;
-                if (damagerAgent == null || damagerAgent.Health <= 0)
-                {
-                    damagerAgent = target;
-                    damage = 20;
-                }
-
-                var targetAdapter = _adapterFactory.GetAgentAdapter(target);
-                if (targetAdapter.IsHorse() || targetAdapter.IsCamel()) damage *= 2;
-
-                if (!target.HasMount)
-                {
-                    DamageAnimation anim;
-                    if (damage < WargConfig.DamageToFlinch) anim = DamageAnimation.Nothing;
-                    else if (damage < WargConfig.DamageToFall) anim = DamageAnimation.Flinch;
-                    else anim = DamageAnimation.Fall;
-                    targetAdapter.ProjectAgent(damagerAgent.Position, anim);
-                }
-                CustomAttacksUtils.TakeDamage(target, damagerAgent, damage);
+                damagerAdapter = target;
+                damage = 20;
             }
+
+            if (target.IsHorse() || target.IsCamel()) damage *= 2;
+
+            if (!target.HasMount)
+            {
+                DamageAnimation anim;
+                if (damage < WargConfig.DamageToFlinch) anim = DamageAnimation.Nothing;
+                else if (damage < WargConfig.DamageToFall) anim = DamageAnimation.Flinch;
+                else anim = DamageAnimation.Fall;
+                target.ProjectAgent(damagerAdapter.Position, anim);
+            }
+
+            // Underlying-agent extraction at the boundary — required because
+            // CustomAttacksUtils.TakeDamage operates on sealed Agent types.
+            // Mirrors the established Spider pattern.
+            var damagerAgent = (damagerAdapter as AgentAdapter)?.GetUnderlyingAgent();
+            var targetAgent = (target as AgentAdapter)?.GetUnderlyingAgent();
+            if (damagerAgent != null && targetAgent != null)
+                CustomAttacksUtils.TakeDamage(targetAgent, damagerAgent, damage);
         }
         catch (Exception e)
         {
@@ -76,8 +83,10 @@ public class WargAttackService : IWargAttackService
         }
     }
 
-    public void WargAttack(Agent warg)
+    public void WargAttack(IAgentAdapter warg)
     {
+        if (warg == null || !warg.IsActive()) return;
+
         List<sbyte> boneIds;
         float targetDetectionRange = WargConfig.TargetDetectionRange;
         float boneCollisionRadius = 0.3f;
@@ -101,13 +110,7 @@ public class WargAttackService : IWargAttackService
             actionProgressMax = 0.5f;
         }
 
-        var wargAdapter = _adapterFactory.GetAgentAdapter(warg);
-        wargAdapter.CustomAttack(action, boneIds, actionProgressMin, actionProgressMax, targetDetectionRange, boneCollisionRadius, true, (attackerAdapter, targetAdapter, boneId) =>
-        {
-            var attackerAgent = (attackerAdapter as AgentAdapter)?.GetUnderlyingAgent();
-            var targetAgent = (targetAdapter as AgentAdapter)?.GetUnderlyingAgent();
-            if (attackerAgent != null && targetAgent != null)
-                HandleWargTargetHit(attackerAgent, targetAgent, boneId);
-        });
+        warg.CustomAttack(action, boneIds, actionProgressMin, actionProgressMax, targetDetectionRange, boneCollisionRadius, true,
+            (attackerAdapter, targetAdapter, boneId) => HandleWargTargetHit(attackerAdapter, targetAdapter, boneId));
     }
 }

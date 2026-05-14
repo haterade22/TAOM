@@ -2,6 +2,7 @@ using BehaviorTrees;
 using BehaviorTrees.Nodes;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using System;
+using TAOM.Adapters;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Warg.BehaviorTreeElements;
@@ -23,7 +24,12 @@ public class WargAttackTask : BTTask, IBTBannerlordBase, IBTWargBlackboard
     {
         RageAttackAmount.SetValue(RageAttackAmount.GetValue() - 1);
         Agent warg = Agent.GetValue();
-        IoC.Resolve<IWargAttackService>().WargAttack(warg);
+        if (warg != null)
+        {
+            // Boundary: wrap sealed Agent into adapter before crossing into service (ADR-007).
+            var wargAdapter = IoC.Resolve<IMissionAdapterFactory>().GetAgentAdapter(warg);
+            IoC.Resolve<IWargAttackService>().WargAttack(wargAdapter);
+        }
         return BTTaskStatus.FinishedWithTrue;
     }
 }

@@ -2,6 +2,24 @@
 
 ## 2026-05-14
 
+### Phase 9b — Warg ADR-007 IAgentBattleAdapter + tests (closes #178)
+
+`IWargAttackService.HandleWargTargetHit` and `WargAttack` accepted sealed TaleWorlds `Agent` directly — `Agent` is sealed and cannot be substituted/mocked from MSTest, so both methods were untestable per the audit. Solution: refactor signatures to take `IAgentAdapter`. No new adapter interface was required — the existing `IAgentAdapter` already exposed every method/property Warg needed (`IsActive`, `IsFadingOut`, `IsMount`, `RiderAgent`, `MovementVelocity`, `Position`, `Health`, `State`, `IsHorse`, `IsCamel`, `HasMount`, `GetBaseArmorEffectivenessForBodyPart`, `ProjectAgent`, `CustomAttack`, `IsSameTeam`). Pattern mirrors the already-ADR-007-compliant `SpiderAttackService` exactly.
+
+- **`WargAttackService` adapter-pure.** All three methods take `IAgentAdapter`. `CalculateWargAttackDamage` now takes `armorEffectivenessPercent` as an explicit `float` parameter (removes the `TestableWargAttackService` subclass workaround). Warg's mounted-victim team rule preserved: if the victim is a mount with a rider, the friendly-fire check uses the rider's team. Damager-attribution + horse-camel 2× + ProjectAgent + HasMount-suppression branches all behavior-preserved. The single remaining sealed-type leak is `CustomAttacksUtils.TakeDamage` at the bottom of `HandleWargTargetHit` — extracted from the underlying `AgentAdapter` via `GetUnderlyingAgent()` at the boundary, mirroring Spider's pattern.
+- **Boundary wrap in `WargAttackTask`.** Behavior-tree task pulls `Agent` from the blackboard, wraps via `IoC.Resolve<IMissionAdapterFactory>().GetAgentAdapter(warg)`, then passes the adapter to `WargAttack`. The sealed type does not cross the service boundary.
+- **Tests:** dissolved the `TestableWargAttackService` subclass blocker. `WargAttackServiceTests` now exercises every Warg-specific branch via NSubstitute mocks: 5 formula tests, 8 `HandleWargTargetHit` guard/branch tests (null target, inactive, fading-out, null attacker, friendly-fire on unmounted target, friendly-fire via victim-rider team rule, killed-state, unseated-fall, mounted-skip, horse-doubling, exception-logging path), 3 `WargAttack` tests (null, inactive, fast=running action / 1 bone / 0.4 radius, slow=stand action / 3 bones / 0.3 radius). Header lines 9-20 rewritten to document the dissolved blocker.
+- Coverage delta: `CalculateWargAttackDamage` previously needed a testable subclass to be exercised; `HandleWargTargetHit` + `WargAttack` were previously untestable. All three are now directly testable.
+
+### Phase 9b — TroopProgression IWageModifierService extraction + tests (closes #180, partial #148)
+
+`TaomPartyWageModel.GetTotalWage` was untested (#180) and had inline garrison-wage feat loop + Mordor/Gundabad/Umbar party-wage feats + career passive call directly in the override body. `GetTroopRecruitmentCost` had inline mounted-feat branching (#148 P2.2). Both violate gamemodels.md rule 4 (no inline if/foreach in override body).
+
+- **`IWageModifierService` extracted.** New `WageModifierService` owns the pure decision functions: `ApplyWageModifiers` (garrison + party + Rohan-scaled mounted feats), `CalculateRecruitmentCost` (base + horse + Isengard/Rohan mounted-cost feats), `CalculateHorseCost` (tier lookup). Operates on primitives + pre-resolved `WageFeatInputs` / `MountedCostFeatInputs` structs — model resolves `CultureObject.HasFeat → bool → bonus float` at the boundary, keeping the service free of TaleWorlds sealed types per ADR-007.
+- **Model body now thin per gamemodels.md rule 4.** `GetTotalWage` and `GetTroopRecruitmentCost` are now boundary-extract → delegate. No inline `if`/`foreach`/`switch` in the override bodies. Roster iteration for the Rohan mounted-wage share moved to a private `ComputeMountedWageShare` helper (still needs `TroopRoster` from the boundary — `IRosterAdapter` extraction deferred to keep scope bounded).
+- **Tests:** `WageModifierServiceTests` adds 22 tests covering each feat path (garrison applicability gate, individual feat factors, additive composition), Rohan share-scaling edge cases (zero bonus, zero share, party-not-applicable gate), recruitment-cost composition (mounted/unmounted, withoutItemCost, mercenary pass-through, mounted-feat gating), and horse-cost tier-26 threshold.
+- Registered `Reuse.Singleton` in `TroopProgressionIoC`. `SubModule.cs` ctor site updated atomically.
+
 ### Phase 9b — Test additions for #182 #187 #188 (closes all three)
 
 Source-content assertion tests verifying cross-feature invariants. Patches/widgets that depend on sealed TaleWorlds types (Formation, Clan, SPInventoryVM, PolygonWidget's UIContext) are validated via file-system source-content reads rather than runtime construction.
