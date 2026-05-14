@@ -17,10 +17,12 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
 
     private readonly ITroopCostService _costService;
+    private readonly ICareerPassiveService _careerPassives;
 
-    public TaomPartyWageModel(ITroopCostService costService)
+    public TaomPartyWageModel(ITroopCostService costService, ICareerPassiveService careerPassives)
     {
         _costService = costService;
+        _careerPassives = careerPassives;
     }
 
     public override int MaxWagePaymentLimit => 20000;
@@ -62,26 +64,13 @@ public class TaomPartyWageModel : DefaultPartyWageModel
                 result.AddFactor(TaomCulturalFeats.MordorWageFeat.EffectBonus, CultureText);
 
             // Rohan mounted wage reduction — scale by mounted wage share (matches vanilla pattern)
-            if (partyCulture.HasFeat(TaomCulturalFeats.RohanMountedWageFeat) && troopRoster != null)
-            {
-                float baseWageTotal = result.BaseNumber;
-                if (baseWageTotal > 0f)
-                {
-                    float mountedWageTotal = 0f;
-                    foreach (var element in troopRoster.GetTroopRoster())
-                    {
-                        if (element.Character?.IsMounted == true)
-                            mountedWageTotal += GetCharacterWage(element.Character) * element.Number;
-                    }
-                    float mountedWageShare = mountedWageTotal / baseWageTotal;
-                    result.AddFactor(TaomCulturalFeats.RohanMountedWageFeat.EffectBonus * mountedWageShare, CultureText);
-                }
-            }
+            // Phase 9b #173 F3 — extracted to private method to satisfy gamemodels.md rule 4 (no inline
+            // foreach in GameModel overrides). Full ADR-007 extraction to a service would require an
+            // IRosterAdapter; deferred to keep #173 scope bounded.
+            ApplyRohanMountedWageFeat(ref result, partyCulture, troopRoster);
         }
 
-        if (mobileParty.LeaderHero != null)
-            CareerPassiveHelper.ApplyFactor(mobileParty.LeaderHero, ref result, PassiveEffectType.TroopWages);
-
+        _careerPassives.ApplyFactor(mobileParty.LeaderHero?.StringId, ref result, PassiveEffectType.TroopWages);
         return result;
     }
 
@@ -116,6 +105,26 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     {
         if (culture.HasFeat(feat))
             result.AddFactor(feat.EffectBonus, CultureText);
+    }
+
+    private void ApplyRohanMountedWageFeat(
+        ref ExplainedNumber result, CultureObject partyCulture, TroopRoster troopRoster)
+    {
+        if (!partyCulture.HasFeat(TaomCulturalFeats.RohanMountedWageFeat) || troopRoster == null)
+            return;
+
+        float baseWageTotal = result.BaseNumber;
+        if (baseWageTotal <= 0f)
+            return;
+
+        float mountedWageTotal = 0f;
+        foreach (var element in troopRoster.GetTroopRoster())
+        {
+            if (element.Character?.IsMounted == true)
+                mountedWageTotal += GetCharacterWage(element.Character) * element.Number;
+        }
+        float mountedWageShare = mountedWageTotal / baseWageTotal;
+        result.AddFactor(TaomCulturalFeats.RohanMountedWageFeat.EffectBonus * mountedWageShare, CultureText);
     }
 
     private static bool IsMercenaryOccupation(Occupation occupation)

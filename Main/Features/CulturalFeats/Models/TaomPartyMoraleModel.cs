@@ -10,8 +10,14 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartyMoraleModel : DefaultPartyMoraleModel
 {
+    private readonly ICareerPassiveService _careerPassives;
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+
+    public TaomPartyMoraleModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
 
     public override ExplainedNumber GetEffectivePartyMorale(
         MobileParty party, bool includeDescription = false)
@@ -37,9 +43,7 @@ public class TaomPartyMoraleModel : DefaultPartyMoraleModel
         if (culture.HasFeat(TaomCulturalFeats.LothlorienMoraleFeat))
             result.Add(TaomCulturalFeats.LothlorienMoraleFeat.EffectBonus, CultureText);
 
-        if (party.LeaderHero != null)
-            CareerPassiveHelper.ApplyFactor(party.LeaderHero, ref result, PassiveEffectType.TroopMorale);
-
+        _careerPassives.ApplyFactor(party.LeaderHero?.StringId, ref result, PassiveEffectType.TroopMorale);
         return result;
     }
 }

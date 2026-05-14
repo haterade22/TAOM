@@ -240,11 +240,15 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
 
             var costService = IoC.Resolve<ITroopCostService>();
+            // Phase 9b #173 — careerPassives resolved once for the whole CulturalFeats + CareerSystem
+            // + TroopProgression model registration block. Replaces all CareerPassiveHelper static
+            // calls with instance-injected ICareerPassiveService.
+            var careerPassives = IoC.Resolve<TAOM.Features.CareerSystem.ICareerPassiveService>();
             var volunteerService = IoC.Resolve<IVolunteerTierService>();
             var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
             var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
             campaignStarter.AddModel(new TaomCharacterStatsModel());
-            campaignStarter.AddModel(new TaomPartyWageModel(costService));
+            campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives));
             campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter));
 
             var raceAgeService = IoC.Resolve<IRaceAgeService>();
@@ -276,22 +280,22 @@ public class SubModule : MBSubModuleBase
 
             // Cultural feat models
             campaignStarter.AddModel(new TaomArmyManagementModel());
-            campaignStarter.AddModel(new TaomPartySpeedModel());
+            campaignStarter.AddModel(new TaomPartySpeedModel(careerPassives));
             campaignStarter.AddModel(new TaomSettlementProsperityModel());
             campaignStarter.AddModel(new TaomSettlementMilitiaModel());
             campaignStarter.AddModel(new TaomBuildingConstructionModel());
             campaignStarter.AddModel(new TaomVillageProductionModel());
             campaignStarter.AddModel(new TaomCaravanModel());
-            campaignStarter.AddModel(new TaomBattleRewardModel());
+            campaignStarter.AddModel(new TaomBattleRewardModel(careerPassives));
             campaignStarter.AddModel(new TaomTournamentModel());
-            campaignStarter.AddModel(new TaomPartyTroopUpgradeModel());
-            campaignStarter.AddModel(new TaomPartySizeModel());
+            campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(careerPassives));
+            campaignStarter.AddModel(new TaomPartySizeModel(careerPassives));
             campaignStarter.AddModel(new TaomFoodConsumptionModel());
             campaignStarter.AddModel(new TaomSettlementLoyaltyModel(IoC.Resolve<IRevoltTuningConfigProvider>()));
-            campaignStarter.AddModel(new TaomPartyMoraleModel());
-            campaignStarter.AddModel(new TaomSmithingModel());
+            campaignStarter.AddModel(new TaomPartyMoraleModel(careerPassives));
+            campaignStarter.AddModel(new TaomSmithingModel(careerPassives));
             campaignStarter.AddModel(new TaomClanFinanceModel());
-            campaignStarter.AddModel(new TaomRaidModel());
+            campaignStarter.AddModel(new TaomRaidModel(careerPassives));
 
             // Battle balance models
             var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
@@ -329,8 +333,8 @@ public class SubModule : MBSubModuleBase
                 careerDataService, careerRegistry, careerSwitchService, careerAdapterFactory, careerLogger));
 
             // Career system GameModels — reuse careerPassiveService resolved above (line 300).
-            campaignStarter.AddModel(new TaomMapVisibilityModel());
-            campaignStarter.AddModel(new TaomInventoryCapacityModel());
+            campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives));
+            campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
             campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService));
             campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerPassiveService));
             campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));

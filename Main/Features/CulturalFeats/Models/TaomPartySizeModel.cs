@@ -10,8 +10,14 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartySizeModel : DefaultPartySizeLimitModel
 {
+    private readonly ICareerPassiveService _careerPassives;
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+
+    public TaomPartySizeModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
 
     public override ExplainedNumber GetPartyMemberSizeLimit(
         PartyBase party, bool includeDescriptions = false)
@@ -37,10 +43,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         if (culture.HasFeat(TaomCulturalFeats.GondorPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.GondorPartySizeFeat.EffectBonus, CultureText);
 
-        var hero = party.Owner ?? party.LeaderHero;
-        if (hero != null)
-            CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.PartySize);
-
+        _careerPassives.ApplyFactor((party.Owner ?? party.LeaderHero)?.StringId, ref result, PassiveEffectType.PartySize);
         return result;
     }
 }

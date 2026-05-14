@@ -8,6 +8,13 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomSmithingModel : DefaultSmithingModel
 {
+    private readonly ICareerPassiveService _careerPassives;
+
+    public TaomSmithingModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
+
     public override int GetEnergyCostForSmithing(ItemObject item, Hero hero)
     {
         var baseCost = base.GetEnergyCostForSmithing(item, hero);
@@ -26,32 +33,28 @@ public class TaomSmithingModel : DefaultSmithingModel
         return ApplySmithingFeatReduction(baseCost, hero);
     }
 
-    private static int ApplySmithingFeatReduction(int baseCost, Hero hero)
+    private int ApplySmithingFeatReduction(int baseCost, Hero hero)
     {
+        // Phase 9b #173 F4 — composed math BEFORE the int cast. Pre-fix the culture feat factor
+        // was applied as `(int)(baseCost * (1f + factor))` (truncating to int), THEN the career
+        // passive was applied via a NEW ExplainedNumber starting from the truncated value. Two
+        // distinct truncations + composition stages compounded rounding error vs the
+        // "single-shot ExplainedNumber.AddFactor + final cast" path. Now: single ExplainedNumber,
+        // both feat + career applied as factors, final cast once at the end.
         var culture = hero?.Culture;
-        if (culture == null)
-            return baseCost;
+        var result = new ExplainedNumber(baseCost, false);
 
-        float factor = 0f;
-
-        if (culture.HasFeat(TaomCulturalFeats.EreborSmithingFeat))
-            factor += TaomCulturalFeats.EreborSmithingFeat.EffectBonus;
-
-        if (culture.HasFeat(TaomCulturalFeats.IsengardSmithingFeat))
-            factor += TaomCulturalFeats.IsengardSmithingFeat.EffectBonus;
-
-        if (factor == 0f && hero == null)
-            return baseCost;
-
-        int featResult = factor != 0f ? (int)(baseCost * (1f + factor)) : baseCost;
-
-        if (hero != null)
+        if (culture != null)
         {
-            var explained = new ExplainedNumber(featResult, false);
-            CareerPassiveHelper.ApplyFactor(hero, ref explained, PassiveEffectType.EnchantmentCostReduction);
-            return (int)explained.ResultNumber;
+            if (culture.HasFeat(TaomCulturalFeats.EreborSmithingFeat))
+                result.AddFactor(TaomCulturalFeats.EreborSmithingFeat.EffectBonus);
+
+            if (culture.HasFeat(TaomCulturalFeats.IsengardSmithingFeat))
+                result.AddFactor(TaomCulturalFeats.IsengardSmithingFeat.EffectBonus);
         }
 
-        return featResult;
+        _careerPassives.ApplyFactor(hero?.StringId, ref result, PassiveEffectType.EnchantmentCostReduction);
+
+        return (int)result.ResultNumber;
     }
 }

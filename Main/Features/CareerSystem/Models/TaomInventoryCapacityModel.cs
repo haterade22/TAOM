@@ -7,6 +7,13 @@ namespace TAOM.Features.CareerSystem.Models;
 
 public class TaomInventoryCapacityModel : DefaultInventoryCapacityModel
 {
+    private readonly ICareerPassiveService _careerPassives;
+
+    public TaomInventoryCapacityModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
+
     public override ExplainedNumber CalculateInventoryCapacity(
         MobileParty mobileParty, bool isCurrentlyAtSea, bool includeDescriptions = false,
         int additionalTroops = 0, int additionalSpareMounts = 0,
@@ -16,10 +23,7 @@ public class TaomInventoryCapacityModel : DefaultInventoryCapacityModel
             mobileParty, isCurrentlyAtSea, includeDescriptions,
             additionalTroops, additionalSpareMounts, additionalPackAnimals, includeFollowers);
 
-        var hero = mobileParty?.LeaderHero;
-        if (hero != null)
-            CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.InventoryCapacity);
-
+        _careerPassives.ApplyFactor(mobileParty?.LeaderHero?.StringId, ref result, PassiveEffectType.InventoryCapacity);
         return result;
     }
 }

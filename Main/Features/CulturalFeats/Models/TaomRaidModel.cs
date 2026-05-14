@@ -10,8 +10,14 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomRaidModel : DefaultRaidModel
 {
+    private readonly ICareerPassiveService _careerPassives;
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+
+    public TaomRaidModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
 
     public override ExplainedNumber CalculateHitDamage(
         MapEventSide attackerSide, float settlementHitPoints)
@@ -31,10 +37,7 @@ public class TaomRaidModel : DefaultRaidModel
         if (culture.HasFeat(TaomCulturalFeats.IsengardRaidDamageFeat))
             result.AddFactor(TaomCulturalFeats.IsengardRaidDamageFeat.EffectBonus, CultureText);
 
-        var hero = attackerSide?.LeaderParty?.Owner;
-        if (hero != null)
-            CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.TroopDamage);
-
+        _careerPassives.ApplyFactor(attackerSide?.LeaderParty?.Owner?.StringId, ref result, PassiveEffectType.TroopDamage);
         return result;
     }
 }

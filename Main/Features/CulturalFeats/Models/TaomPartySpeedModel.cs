@@ -16,8 +16,14 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
     /// </summary>
     private const float ForestPenaltyMagnitude = 0.3f;
 
+    private readonly ICareerPassiveService _careerPassives;
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+
+    public TaomPartySpeedModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
 
     public override ExplainedNumber CalculateFinalSpeed(MobileParty mobileParty, ExplainedNumber finalSpeed)
     {
@@ -67,9 +73,7 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
             }
         }
 
-        if (mobileParty.LeaderHero != null)
-            CareerPassiveHelper.ApplyFactor(mobileParty.LeaderHero, ref result, PassiveEffectType.PartyMovementSpeed);
-
+        _careerPassives.ApplyFactor(mobileParty.LeaderHero?.StringId, ref result, PassiveEffectType.PartyMovementSpeed);
         return result;
     }
 }

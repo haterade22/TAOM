@@ -10,8 +10,14 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
 {
+    private readonly ICareerPassiveService _careerPassives;
     private static TextObject? _cultureText;
     private static TextObject CultureText => _cultureText ??= GameTexts.FindText("str_culture");
+
+    public TaomPartyTroopUpgradeModel(ICareerPassiveService careerPassives)
+    {
+        _careerPassives = careerPassives;
+    }
 
     public override ExplainedNumber GetGoldCostForUpgrade(
         PartyBase party, CharacterObject characterObject, CharacterObject upgradeTarget)
@@ -28,10 +34,7 @@ public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
                 result.AddFactor(TaomCulturalFeats.RohanMountedCostFeat.EffectBonus, CultureText);
         }
 
-        var hero = party.Owner ?? party.LeaderHero;
-        if (hero != null)
-            CareerPassiveHelper.ApplyFactor(hero, ref result, PassiveEffectType.TroopUpgradeCost);
-
+        _careerPassives.ApplyFactor((party.Owner ?? party.LeaderHero)?.StringId, ref result, PassiveEffectType.TroopUpgradeCost);
         return result;
     }
 }

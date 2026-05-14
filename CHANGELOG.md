@@ -2,6 +2,19 @@
 
 ## 2026-05-13
 
+### Phase 9b — CareerPassiveHelper deletion + ADR-007 refactor (closes #173)
+
+P1 systemic refactor across 13 files. CareerPassiveHelper.cs was a static helper holding a cached `IoC.Resolve<ICareerPassiveService>()` — service-locator anti-pattern (csharp-architecture.md). Helper deleted; logic moved to instance methods on `CareerPassiveService`.
+
+- **F1 (service-locator)** — Deleted `Main/Features/CareerSystem/CareerPassiveHelper.cs`. Added `ApplyFactor(string heroStringId, ref ExplainedNumber, PassiveEffectType)` + `ApplyFlat(...)` to `ICareerPassiveService`. All 10 GameModel consumers now take `ICareerPassiveService` via constructor injection (registered in `SubModule.cs` near IoC.Resolve site).
+- **F2 (race condition)** — `CareerPassiveService` now mirrors `FormationLayoutService`'s snapshot-swap pattern. `RefreshCache` builds a new Dictionary OUTSIDE the lock and atomically swaps the reference under the lock. Reads briefly take the lock to capture a stable reference, then operate lock-free on the captured snapshot. Several callers can fire from AI worker threads (party-desertion model, party-size model).
+- **F3 (gamemodels.md rule 4)** — `TaomPartyWageModel.GetTotalWage` had an inline `foreach` over `troopRoster.GetTroopRoster()` (Rohan mounted-wage share). Extracted to private `ApplyRohanMountedWageFeat` method. Full ADR-007 extraction to a service would require an `IRosterAdapter`; deferred to keep #173 scope bounded.
+- **F4 (int truncation)** — `TaomSmithingModel` was casting magnitudes to `int` mid-composition. Recomposed as `ExplainedNumber` operations with a single `(int)` cast at the end.
+- **ADR-007 compliance** — Per Codex CRITICAL feedback, `ApplyFactor`/`ApplyFlat` accept primitive `string heroStringId`, not sealed `Hero`. All 10 call sites extract `hero?.StringId` at the boundary.
+- **Tests** — 8 new tests in `CareerPassiveServiceTests.cs` covering ApplyFactor/ApplyFlat (non-zero/null/empty/zero-magnitude) + RefreshCache snapshot-swap (second refresh replaces prior cache).
+
+Build green, 1966/1966 tests pass. Test count: 1958 → 1966.
+
 ### Phase 9b — StartupResources Gold/Influence validation (Category 2 R3, closes #136)
 
 P1 config validation gap. Pre-fix `Gold` (int) and `Influence` (float) were parsed via bare `int.Parse`/`float.Parse` — asymmetric with `PlayerGold` which already used `TryParse` + range validation. Concrete bugs: `gold="-500000"` flowed to `GiveGoldToHero(-500000)`; `influence="NaN"` returned NaN and the downstream `> 0f` guard rejected silently with no warning (csharp-architecture.md "Config Providers MUST Validate" — NaN BEFORE range check).

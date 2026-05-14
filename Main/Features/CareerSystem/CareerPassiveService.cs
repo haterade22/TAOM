@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -8,8 +10,19 @@ public class CareerPassiveService : ICareerPassiveService
 {
     private readonly IModLogger _logger;
 
+    // Phase 9b #173 F2 — snapshot-swap pattern + lock-on-mutation to fix the data race the
+    // sister service FormationLayoutService already locks for. RefreshCache builds a brand-new
+    // Dictionary and swaps the field under the lock; reads take the lock briefly to capture
+    // a stable reference, then operate on the (immutable from their POV) snapshot lock-free.
+    // Several callers can fire from AI worker threads (party-desertion model, party-size model).
+    private readonly object _lock = new object();
     private Dictionary<string, Dictionary<PassiveEffectType, float>> _cache
         = new Dictionary<string, Dictionary<PassiveEffectType, float>>();
+
+    // Phase 9b #173 — cached localization string for the ApplyFactor/Flat methods. Was duplicated
+    // in CareerPassiveHelper; consolidated here so deletion of the helper doesn't leak the text.
+    private static TextObject? _careerText;
+    private static TextObject CareerText => _careerText ?? (_careerText = new TextObject("{=taom_career}Career"));
 
     public CareerPassiveService(IModLogger logger)
     {
@@ -18,7 +31,9 @@ public class CareerPassiveService : ICareerPassiveService
 
     public void RefreshCache(ICareerDataService dataService, ICareerRegistry registry)
     {
-        _cache.Clear();
+        // Phase 9b #173 F2 — build the new dict OUTSIDE the lock, then swap under the lock.
+        // Reads can briefly capture the OLD reference and finish their work without contention.
+        var nextCache = new Dictionary<string, Dictionary<PassiveEffectType, float>>();
 
         var allData = dataService.GetAllData();
         _logger.LogInfo($"CareerSystem: Refreshing passive cache for {allData.Count} heroes");
@@ -60,16 +75,29 @@ public class CareerPassiveService : ICareerPassiveService
 
             if (effectMap.Count > 0)
             {
-                _cache[heroId] = effectMap;
+                nextCache[heroId] = effectMap;
                 _logger.LogDebug($"CareerSystem: Cached {effectMap.Count} passives for hero '{heroId}' (career: {heroData.CareerStringId})");
             }
         }
-        _logger.LogInfo($"CareerSystem: Passive cache complete — {_cache.Count} heroes with active passives");
+
+        lock (_lock)
+        {
+            _cache = nextCache;
+        }
+        _logger.LogInfo($"CareerSystem: Passive cache complete — {nextCache.Count} heroes with active passives");
     }
 
     public float GetPassiveMagnitude(string heroStringId, PassiveEffectType type)
     {
-        if (!_cache.TryGetValue(heroStringId, out var effectMap)) return 0f;
+        if (string.IsNullOrEmpty(heroStringId)) return 0f;
+
+        // Phase 9b #173 F2 — capture the cache reference under the lock, then operate on the
+        // captured snapshot lock-free. RefreshCache may concurrently swap _cache to a new
+        // instance, but our captured reference remains stable.
+        Dictionary<string, Dictionary<PassiveEffectType, float>> snapshot;
+        lock (_lock) { snapshot = _cache; }
+
+        if (!snapshot.TryGetValue(heroStringId, out var effectMap)) return 0f;
         if (!effectMap.TryGetValue(type, out var magnitude)) return 0f;
         if (magnitude != 0f)
             _logger.LogDebug($"CareerSystem: GetPassiveMagnitude hero='{heroStringId}' type={type} = {magnitude}");
@@ -78,7 +106,29 @@ public class CareerPassiveService : ICareerPassiveService
 
     public bool HasActivePassive(string heroStringId, PassiveEffectType type)
     {
-        return _cache.TryGetValue(heroStringId, out var effectMap)
+        if (string.IsNullOrEmpty(heroStringId)) return false;
+        Dictionary<string, Dictionary<PassiveEffectType, float>> snapshot;
+        lock (_lock) { snapshot = _cache; }
+        return snapshot.TryGetValue(heroStringId, out var effectMap)
             && effectMap.ContainsKey(type);
+    }
+
+    // Phase 9b #173 — instance methods replacing the static CareerPassiveHelper.ApplyFactor /
+    // ApplyFlat. Per ADR-007 accept primitive `string heroStringId` (boundary GameModels extract
+    // `hero?.StringId` at the call site). Null/empty/zero-magnitude all short-circuit.
+    public void ApplyFactor(string heroStringId, ref ExplainedNumber result, PassiveEffectType type)
+    {
+        if (string.IsNullOrEmpty(heroStringId)) return;
+        var magnitude = GetPassiveMagnitude(heroStringId, type);
+        if (magnitude != 0f)
+            result.AddFactor(magnitude, CareerText);
+    }
+
+    public void ApplyFlat(string heroStringId, ref ExplainedNumber result, PassiveEffectType type)
+    {
+        if (string.IsNullOrEmpty(heroStringId)) return;
+        var magnitude = GetPassiveMagnitude(heroStringId, type);
+        if (magnitude != 0f)
+            result.Add(magnitude, CareerText);
     }
 }
