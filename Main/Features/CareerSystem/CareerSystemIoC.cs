@@ -66,7 +66,8 @@ public static class CareerSystemIoC
 
         // ═══ HARAD ═══
         registry.Register(new InfantryAbilityExecutor("tribesman_of_jelut", config));
-        registry.Register(new InfantryAbilityExecutor("far_harad_halftroll", config));
+        // DISABLED 2026-05-14: Troll careers WIP; not ready for live game yet. Re-enable by uncommenting.
+        // registry.Register(new InfantryAbilityExecutor("far_harad_halftroll", config));
         registry.Register(new RangedAbilityExecutor("pezarsani_javelineer", config));
         registry.Register(new CavalryAbilityExecutor("mahud_beast_rider", config));
 
@@ -106,7 +107,8 @@ public static class CareerSystemIoC
         registry.Register(new CavalryAbilityExecutor("warg_scout", config));
 
         // ═══ GUNDABAD ═══
-        registry.Register(new InfantryAbilityExecutor("cave_troll_master", config));
+        // DISABLED 2026-05-14: Troll careers WIP; not ready for live game yet. Re-enable by uncommenting.
+        // registry.Register(new InfantryAbilityExecutor("cave_troll_master", config));
         registry.Register(new RangedAbilityExecutor("goblin_sniper", config));
         registry.Register(new CavalryAbilityExecutor("warg_pack_leader", config));
 

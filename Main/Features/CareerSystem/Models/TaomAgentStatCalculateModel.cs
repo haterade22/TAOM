@@ -6,85 +6,37 @@ using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.Models;
 
+// Phase 9b — thin boundary per gamemodels.md rule 4. All branching/stat-mutation logic
+// lives in ICareerAgentStatService. This file extracts primitives from the sealed Agent
+// at the boundary and delegates. Closes deferred audit-issue #142 inline-logic P2.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerPassiveService _passiveService;
+    private readonly ICareerAgentStatService _agentStatService;
 
-    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService)
+    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService, ICareerAgentStatService agentStatService)
     {
         _passiveService = passiveService;
+        _agentStatService = agentStatService;
     }
 
     public override float GetEffectiveMaxHealth(Agent agent)
     {
         var baseHealth = base.GetEffectiveMaxHealth(agent);
         if (!agent.IsHero) return baseHealth;
-
-        var hero = (agent.Character as CharacterObject)?.HeroObject;
-        if (hero == null) return baseHealth;
-        if (_passiveService == null) return baseHealth;
-
-        var healthBonus = _passiveService.GetPassiveMagnitude(hero.StringId, PassiveEffectType.Health);
-        return baseHealth + healthBonus;
+        var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
+        if (heroId == null) return baseHealth;
+        return baseHealth + _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Health);
     }
 
     public override void UpdateAgentStats(Agent agent, AgentDrivenProperties agentDrivenProperties)
     {
         base.UpdateAgentStats(agent, agentDrivenProperties);
-
-        if (!agent.IsHuman) return;
-
-        // Hero-specific: passive service bonuses + active ability buffs
-        if (agent.IsHero)
-        {
-            var hero = (agent.Character as CharacterObject)?.HeroObject;
-            if (hero != null && _passiveService != null)
-            {
-                var heroId = hero.StringId;
-
-                var swingBonus = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.SwingSpeed);
-                if (swingBonus != 0f)
-                    agentDrivenProperties.SwingSpeedMultiplier += swingBonus;
-
-                var damageBonus = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Damage);
-                if (damageBonus != 0f)
-                    agentDrivenProperties.DamageMultiplierBonus += damageBonus;
-
-                var speedBonus = _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
-                if (speedBonus != 0f)
-                    agentDrivenProperties.MaxSpeedMultiplier += speedBonus;
-
-                // Apply active ability buffs AFTER base recalc so they are not overwritten.
-                var buffs = CareerAbilityBuffTracker.GetBuff(heroId);
-                if (buffs != null)
-                {
-                    agentDrivenProperties.MaxSpeedMultiplier += buffs.SpeedMultiplier;
-                    agentDrivenProperties.CombatMaxSpeedMultiplier += buffs.CombatSpeedMultiplier;
-                    agentDrivenProperties.DamageMultiplierBonus += buffs.DamageBonus;
-                    agentDrivenProperties.ArmorEncumbrance -= buffs.ArmorReduction;
-                    agentDrivenProperties.ThrustOrRangedReadySpeedMultiplier += buffs.DrawSpeedBonus;
-                    // Mount stats: multiplicative scaling — engine values are pre-normalized
-                    if (buffs.MountSpeedBonus != 0f)
-                        agentDrivenProperties.MountSpeed *= (1f + buffs.MountSpeedBonus);
-                    if (buffs.ChargeDamageBonus != 0f)
-                        agentDrivenProperties.MountChargeDamage *= (1f + buffs.ChargeDamageBonus);
-                }
-            }
-        }
-
-        // AoE ally buffs — applied to ALL human agents (set by Infantry ability on nearby troops)
-        // (damage reduction is handled by TaomAgentApplyDamageModel's damage path)
-        var allyBuffs = CareerAbilityBuffTracker.GetAllyBuff(agent.Index);
-        if (allyBuffs != null)
-        {
-            agentDrivenProperties.DamageMultiplierBonus += allyBuffs.DamageBonus;
-            agentDrivenProperties.MaxSpeedMultiplier += allyBuffs.SpeedMultiplier;
-            agentDrivenProperties.CombatMaxSpeedMultiplier += allyBuffs.CombatSpeedMultiplier;
-            agentDrivenProperties.ThrustOrRangedReadySpeedMultiplier += allyBuffs.DrawSpeedBonus;
-            if (allyBuffs.MountSpeedBonus != 0f)
-                agentDrivenProperties.MountSpeed *= (1f + allyBuffs.MountSpeedBonus);
-            if (allyBuffs.ChargeDamageBonus != 0f)
-                agentDrivenProperties.MountChargeDamage *= (1f + allyBuffs.ChargeDamageBonus);
-        }
+        _agentStatService.ApplyAgentStatModifiers(
+            heroId: (agent.Character as CharacterObject)?.HeroObject?.StringId,
+            agentIndex: agent.Index,
+            isHuman: agent.IsHuman,
+            isHero: agent.IsHero,
+            agentDrivenProperties);
     }
 }

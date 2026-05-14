@@ -16,12 +16,13 @@ public class TaomClanTierModel : DefaultClanTierModel
     public override int GetCompanionLimit(Clan clan)
     {
         var baseLimit = base.GetCompanionLimit(clan);
-
-        var leader = clan?.Leader;
-        if (leader == null) return baseLimit;
-        if (_passiveService == null) return baseLimit;
-
-        var bonus = _passiveService.GetPassiveMagnitude(leader.StringId, PassiveEffectType.CompanionLimit);
+        // Phase 9b — defensive `_passiveService == null` guard removed: DryIoc resolves
+        // the service unconditionally at SubModule registration, so a null reference
+        // here would be a wiring bug, not a runtime state. Closes deferred audit-issue
+        // #142 unreachable-null-guard P2.
+        var leaderId = clan?.Leader?.StringId;
+        if (leaderId == null) return baseLimit;
+        var bonus = _passiveService.GetPassiveMagnitude(leaderId, PassiveEffectType.CompanionLimit);
         return baseLimit + (int)bonus;
     }
 }
