@@ -61,6 +61,7 @@ public static class IoC
         BannerInjectionIoC.RegisterBannerInjectionFeature(container);
         BannerColorPersistenceIoC.RegisterBannerColorPersistenceFeature(container);
         TroopProgressionIoC.RegisterTroopProgressionFeature(container);
+        Features.Arena.ArenaIoC.RegisterArenaFeature(container);
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);

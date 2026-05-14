@@ -2,6 +2,13 @@
 
 ## 2026-05-14
 
+### Phase 9b — Arena ITournamentService extraction + SpecialResources log path fix (closes #137)
+
+- **#137 — ITournamentService extracted.** Pure decision functions (CalculateStartChance, CalculateEndChance, BuildPrizePool, ResolveDummyId) extracted from `TaomTournamentModel` to satisfy rule 4. Model body now contains only boundary work: extract primitives from sealed `Town`/`TournamentGame`/`CharacterObject`, delegate to service. P2 unguarded `Campaign.Current.Models.AgeModel` chain now `?.` null-safe with early-return. Service registered via new `ArenaIoC`. Old `TaomTournamentModelTests.ResolveDummyId_*` tests migrated to `TournamentServiceTests` (14 new); tunable-constant semantic tests updated to reference `TournamentService.*` const surface.
+- **#167 partial (log path fix).** `SpecialResourceSpriteWidget.cs:62` log message said `SpriteParts/ui_taom/MapBar/` (wrong); now says `SpriteParts/ui_taom/SpecialResources/`. The 8-sprite asset gap remains deferred for asset authoring.
+
+Build green, 2004/2004 tests pass.
+
 ### Phase 9b — Execution IExecutionRelationService extraction (closes #147)
 
 3 P2 findings — architectural smell (hook injected into model), inline branching in override body, direct `Hero.MainHero.MapFaction.StringId` access.

@@ -290,7 +290,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomVillageProductionModel());
             campaignStarter.AddModel(new TaomCaravanModel());
             campaignStarter.AddModel(new TaomBattleRewardModel(careerPassives));
-            campaignStarter.AddModel(new TaomTournamentModel());
+            campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
             campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(careerPassives));
             campaignStarter.AddModel(new TaomPartySizeModel(careerPassives));
             campaignStarter.AddModel(new TaomFoodConsumptionModel());

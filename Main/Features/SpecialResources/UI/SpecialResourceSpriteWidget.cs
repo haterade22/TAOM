@@ -59,7 +59,7 @@ public class SpecialResourceSpriteWidget : IconBrushWidget
         {
             if (!_loggedOnce)
             {
-                _logger?.LogWarning($"[SpecRes] SpriteWidget: sprite '{spriteName}' not found in SpriteData — icon will be blank until PNG is added to SpriteParts/ui_taom/MapBar/");
+                _logger?.LogWarning($"[SpecRes] SpriteWidget: sprite '{spriteName}' not found in SpriteData — icon will be blank until PNG is added to SpriteParts/ui_taom/SpecialResources/");
                 _loggedOnce = true;
             }
             return;
