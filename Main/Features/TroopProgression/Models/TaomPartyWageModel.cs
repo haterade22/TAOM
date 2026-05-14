@@ -18,11 +18,16 @@ public class TaomPartyWageModel : DefaultPartyWageModel
 
     private readonly ITroopCostService _costService;
     private readonly ICareerPassiveService _careerPassives;
+    private readonly IWageModifierService _wageModifiers;
 
-    public TaomPartyWageModel(ITroopCostService costService, ICareerPassiveService careerPassives)
+    public TaomPartyWageModel(
+        ITroopCostService costService,
+        ICareerPassiveService careerPassives,
+        IWageModifierService wageModifiers)
     {
         _costService = costService;
         _careerPassives = careerPassives;
+        _wageModifiers = wageModifiers;
     }
 
     public override int MaxWagePaymentLimit => 20000;
@@ -40,35 +45,14 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     {
         var result = base.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
 
-        // Garrison wage feats — only apply to actual garrison parties (matches vanilla IsGarrison gate)
-        if (mobileParty.IsGarrison && mobileParty.CurrentSettlement?.Town != null
-            && mobileParty.CurrentSettlement.Owner?.Culture is { } garrisonCulture)
-        {
-            ApplyGarrisonWageFeat(ref result, garrisonCulture, TaomCulturalFeats.EreborGarrisonWageFeat);
-            ApplyGarrisonWageFeat(ref result, garrisonCulture, TaomCulturalFeats.LothlorienGarrisonWageFeat);
-            ApplyGarrisonWageFeat(ref result, garrisonCulture, TaomCulturalFeats.IsengardGarrisonWageFeat);
-            ApplyGarrisonWageFeat(ref result, garrisonCulture, TaomCulturalFeats.GondorGarrisonWageFeat);
-        }
-
-        // Party wage feats — apply to party owner's culture
+        var garrisonInputs = ResolveGarrisonInputs(mobileParty);
         var partyCulture = mobileParty.Party?.Owner?.Culture;
-        if (partyCulture != null)
-        {
-            if (partyCulture.HasFeat(TaomCulturalFeats.GundabadWageFeat))
-                result.AddFactor(TaomCulturalFeats.GundabadWageFeat.EffectBonus, CultureText);
+        var partyInputs = ResolvePartyInputs(partyCulture);
+        float rohanMountedWageBonus = ResolveRohanMountedWageBonus(partyCulture);
+        float mountedWageShare = ComputeMountedWageShare(rohanMountedWageBonus, result.BaseNumber, troopRoster);
 
-            if (partyCulture.HasFeat(TaomCulturalFeats.UmbarWageFeat))
-                result.AddFactor(TaomCulturalFeats.UmbarWageFeat.EffectBonus, CultureText);
-
-            if (partyCulture.HasFeat(TaomCulturalFeats.MordorWageFeat))
-                result.AddFactor(TaomCulturalFeats.MordorWageFeat.EffectBonus, CultureText);
-
-            // Rohan mounted wage reduction — scale by mounted wage share (matches vanilla pattern)
-            // Phase 9b #173 F3 — extracted to private method to satisfy gamemodels.md rule 4 (no inline
-            // foreach in GameModel overrides). Full ADR-007 extraction to a service would require an
-            // IRosterAdapter; deferred to keep #173 scope bounded.
-            ApplyRohanMountedWageFeat(ref result, partyCulture, troopRoster);
-        }
+        _wageModifiers.ApplyWageModifiers(
+            ref result, garrisonInputs, partyInputs, rohanMountedWageBonus, mountedWageShare, CultureText);
 
         _careerPassives.ApplyFactor(mobileParty.LeaderHero?.StringId, ref result, PassiveEffectType.TroopWages);
         return result;
@@ -77,45 +61,53 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     public override ExplainedNumber GetTroopRecruitmentCost(
         CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
     {
-        int level = troop.Level;
-        bool isMercenary = IsMercenaryOccupation(troop.Occupation);
-
-        int baseCost = _costService.GetTroopRecruitmentCost(level, isMercenary);
-
-        var result = new ExplainedNumber(baseCost, includeDescriptions: false);
-
-        if (!withoutItemCost && troop.IsMounted)
-        {
-            int horseCost = troop.Level >= 26 ? 500 : 150;
-            result.Add(horseCost, null);
-        }
-
-        // Mounted recruit cost feats
-        if (troop.IsMounted && buyerHero?.Culture?.HasFeat(TaomCulturalFeats.IsengardCheaperRecruitsFeat) == true)
-            result.AddFactor(TaomCulturalFeats.IsengardCheaperRecruitsFeat.EffectBonus, CultureText);
-
-        if (troop.IsMounted && buyerHero?.Culture?.HasFeat(TaomCulturalFeats.RohanMountedCostFeat) == true)
-            result.AddFactor(TaomCulturalFeats.RohanMountedCostFeat.EffectBonus, CultureText);
-
-        return result;
+        var feats = ResolveMountedCostFeats(buyerHero?.Culture, troop.IsMounted);
+        int cost = _wageModifiers.CalculateRecruitmentCost(
+            troop.Level,
+            troop.IsMounted,
+            IsMercenaryOccupation(troop.Occupation),
+            withoutItemCost,
+            feats,
+            CultureText);
+        return new ExplainedNumber(cost, includeDescriptions: false);
     }
 
-    private static void ApplyGarrisonWageFeat(
-        ref ExplainedNumber result, CultureObject culture, FeatObject feat)
+    private static WageFeatInputs ResolveGarrisonInputs(MobileParty mobileParty)
     {
-        if (culture.HasFeat(feat))
-            result.AddFactor(feat.EffectBonus, CultureText);
+        if (!mobileParty.IsGarrison || mobileParty.CurrentSettlement?.Town == null)
+            return WageFeatInputs.None;
+
+        var garrisonCulture = mobileParty.CurrentSettlement.Owner?.Culture;
+        if (garrisonCulture == null)
+            return WageFeatInputs.None;
+
+        return new WageFeatInputs(
+            isApplicable: true,
+            ereborGarrisonBonus: BonusIfHas(garrisonCulture, TaomCulturalFeats.EreborGarrisonWageFeat),
+            lothlorienGarrisonBonus: BonusIfHas(garrisonCulture, TaomCulturalFeats.LothlorienGarrisonWageFeat),
+            isengardGarrisonBonus: BonusIfHas(garrisonCulture, TaomCulturalFeats.IsengardGarrisonWageFeat),
+            gondorGarrisonBonus: BonusIfHas(garrisonCulture, TaomCulturalFeats.GondorGarrisonWageFeat));
     }
 
-    private void ApplyRohanMountedWageFeat(
-        ref ExplainedNumber result, CultureObject partyCulture, TroopRoster troopRoster)
+    private static WageFeatInputs ResolvePartyInputs(CultureObject? partyCulture)
     {
-        if (!partyCulture.HasFeat(TaomCulturalFeats.RohanMountedWageFeat) || troopRoster == null)
-            return;
+        if (partyCulture == null)
+            return WageFeatInputs.None;
 
-        float baseWageTotal = result.BaseNumber;
-        if (baseWageTotal <= 0f)
-            return;
+        return new WageFeatInputs(
+            isApplicable: true,
+            gundabadWageBonus: BonusIfHas(partyCulture, TaomCulturalFeats.GundabadWageFeat),
+            umbarWageBonus: BonusIfHas(partyCulture, TaomCulturalFeats.UmbarWageFeat),
+            mordorWageBonus: BonusIfHas(partyCulture, TaomCulturalFeats.MordorWageFeat));
+    }
+
+    private static float ResolveRohanMountedWageBonus(CultureObject? partyCulture)
+        => BonusIfHas(partyCulture, TaomCulturalFeats.RohanMountedWageFeat);
+
+    private float ComputeMountedWageShare(float rohanMountedWageBonus, float baseWageTotal, TroopRoster troopRoster)
+    {
+        if (rohanMountedWageBonus == 0f || troopRoster == null || baseWageTotal <= 0f)
+            return 0f;
 
         float mountedWageTotal = 0f;
         foreach (var element in troopRoster.GetTroopRoster())
@@ -123,9 +115,21 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             if (element.Character?.IsMounted == true)
                 mountedWageTotal += GetCharacterWage(element.Character) * element.Number;
         }
-        float mountedWageShare = mountedWageTotal / baseWageTotal;
-        result.AddFactor(TaomCulturalFeats.RohanMountedWageFeat.EffectBonus * mountedWageShare, CultureText);
+        return mountedWageTotal / baseWageTotal;
     }
+
+    private static MountedCostFeatInputs ResolveMountedCostFeats(CultureObject? buyerCulture, bool isMounted)
+    {
+        if (!isMounted || buyerCulture == null)
+            return MountedCostFeatInputs.None;
+
+        return new MountedCostFeatInputs(
+            isengardMountedCostBonus: BonusIfHas(buyerCulture, TaomCulturalFeats.IsengardCheaperRecruitsFeat),
+            rohanMountedCostBonus: BonusIfHas(buyerCulture, TaomCulturalFeats.RohanMountedCostFeat));
+    }
+
+    private static float BonusIfHas(CultureObject? culture, FeatObject feat)
+        => culture?.HasFeat(feat) == true ? feat.EffectBonus : 0f;
 
     private static bool IsMercenaryOccupation(Occupation occupation)
     {

@@ -8,6 +8,7 @@ public static class TroopProgressionIoC
     public static void RegisterTroopProgressionFeature(IContainer container)
     {
         container.Register<ITroopCostService, TroopCostService>(Reuse.Singleton);
+        container.Register<IWageModifierService, WageModifierService>(Reuse.Singleton);
         container.Register<IVolunteerTierService, VolunteerTierService>(Reuse.Singleton);
         container.Register<IRandomProvider, RandomProvider>(Reuse.Singleton);
         container.Register<IVolunteerRecruitmentService, VolunteerRecruitmentService>(Reuse.Singleton);
