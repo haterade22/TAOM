@@ -59,8 +59,16 @@ public class CultureStageViewLifecycleTests
     [TestMethod]
     public void ResetSession_ClearsHoveredFactionName()
     {
-        // Public static field — direct check.
-        PolygonWidget.HoveredFactionName = "test";
+        // HoveredFactionName has a private setter — verify via reflection that the field is
+        // empty after ResetSession (the setter is invoked internally at line 129).
+        var prop = typeof(PolygonWidget).GetProperty("HoveredFactionName",
+            BindingFlags.Public | BindingFlags.Static);
+        Assert.IsNotNull(prop);
+
+        // Set via reflection on the private setter
+        prop.SetValue(null, "test");
+        Assert.AreEqual("test", PolygonWidget.HoveredFactionName);
+
         PolygonWidget.ResetSession();
         Assert.AreEqual("", PolygonWidget.HoveredFactionName);
     }
