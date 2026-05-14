@@ -29,4 +29,12 @@ public interface IFormationPresetService
 
     /// <summary>Mission lifecycle reset — clears any per-battle state.</summary>
     void OnMissionEnd();
+
+    /// <summary>
+    /// Phase 9b #139 P2 — explicit reset for new-game scenarios. Pre-fix the campaign behavior
+    /// called <c>OnGameLoaded(empty)</c> for both save-load and new-game-reset, which is a
+    /// semantic abstraction leak (any future load-path validation would inadvertently run on
+    /// new-game). New-game reset now has its own no-arg entry point.
+    /// </summary>
+    void Reset();
 }

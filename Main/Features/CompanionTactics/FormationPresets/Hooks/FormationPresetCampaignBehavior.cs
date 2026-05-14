@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TAOM.Core.Logging;
 using TAOM.Features.CompanionTactics.FormationPresets.Models;
 
@@ -61,15 +63,23 @@ public sealed class FormationPresetCampaignBehavior : CampaignBehaviorBase
             // On any deserialization error, reset to empty rather than crashing the load.
             _savedPresets = new List<HoNFormationPreset>();
             _service.OnGameLoaded(_savedPresets);
+            // Phase 9b #139 P1 — surface to player. Pre-fix only LogWarning to TAOM internal log;
+            // player never saw the cause and lost presets repeatedly with no idea why.
+            try
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[TAOM] Formation presets could not be loaded — reset to empty (see log for details).",
+                    Color.FromUint(0xFFFFAA00)));
+            }
+            catch { /* InformationManager may not be available in some load paths */ }
         }
     }
 
     private void OnNewGameCreated(CampaignGameStarter starter)
     {
-        // Reset the singleton's preset list so the previous campaign's presets don't leak
-        // into the new campaign. SyncData on subsequent saves will record an empty buffer
-        // (correct), and reloads will populate from disk.
+        // Phase 9b #139 P2 — was OnGameLoaded(empty) (semantic mismatch: load-path entry point
+        // used for new-game reset). Now calls Reset() explicitly.
         _savedPresets = new List<HoNFormationPreset>();
-        _service.OnGameLoaded(_savedPresets);
+        _service.Reset();
     }
 }

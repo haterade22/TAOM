@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — CompanionTactics player-facing preset error + Reset() semantic (partial closes #139)
+
+P1 player notification + P2 abstraction-leak fixes; P1 SaveableTypeDefiner refactor to flat primitives deferred.
+
+- **P1 — Player-facing message on SyncData failure.** Pre-fix the catch block in `FormationPresetCampaignBehavior.SyncData` only `LogWarning`'d to TAOM internal log; players never saw the cause and lost presets repeatedly. Now wraps `InformationManager.DisplayMessage` (with try/catch in case InformationManager isn't available in some load paths) to surface the failure with the orange-warning color.
+- **P2 — Explicit `Reset()` on `IFormationPresetService`.** Pre-fix `OnNewGameCreated` called `OnGameLoaded(empty)` (semantic mismatch: load-path entry point used for new-game reset). Any future load-path validation logic would inadvertently run on new-game. Now has dedicated `Reset()` with its own log line.
+- **Deferred:** P1 SaveableTypeDefiner-to-flat-primitives refactor (substantial — would mirror CareerPersistenceBehavior's `Dictionary<string,string>` pattern; needs design pass on how to encode `HoNFormationPreset` fields). For now the existing BaseId 726900601 collision risk is mitigated by the try/catch + player message.
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — FiefManagement swap restore safety + presenter reset (partial closes #143)
 
 P1 + P2 addressed; P2 perf + P3 ADR-007 deferred.

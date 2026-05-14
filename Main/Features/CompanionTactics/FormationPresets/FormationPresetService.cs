@@ -82,6 +82,13 @@ public sealed class FormationPresetService : IFormationPresetService
 
     public List<HoNFormationPreset> GetPresetsForSaving() => new(_presets);
 
+    public void Reset()
+    {
+        // Phase 9b #139 P2 — explicit new-game reset (was OnGameLoaded(empty)).
+        _presets.Clear();
+        DebugLog("Reset — cleared all presets for new game");
+    }
+
     public void OnMissionEnd()
     {
         // No per-mission state in the service today; this exists for symmetry with other
