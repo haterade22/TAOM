@@ -44,6 +44,17 @@ public class RaceAgeService : IRaceAgeService
         if (_raceIdCache.TryGetValue(raceId, out var cached))
             return cached;
 
+        // Phase 9b #131 P2 — validate BEFORE the lookup. _raceManager.GetRaceNameFromId returns
+        // "human" as fallback for unknown IDs (RaceManager.cs:126-131). Without this guard, an
+        // invalid raceId would resolve to the human RaceAgeEntry — silently treating dwarves/elves
+        // with corrupted IDs as humans for ALL age + fertility calculations. See
+        // feedback_validate_before_lookup_with_fallback.md (Codex review #33).
+        if (!_raceManager.IsValidRaceId(raceId))
+        {
+            _raceIdCache[raceId] = _defaultEntry;
+            return _defaultEntry;
+        }
+
         var raceName = _raceManager.GetRaceNameFromId(raceId);
         var entry = (raceName != null && _races.TryGetValue(raceName, out var found))
             ? found
@@ -51,5 +62,13 @@ public class RaceAgeService : IRaceAgeService
 
         _raceIdCache[raceId] = entry;
         return entry;
+    }
+
+    // Phase 9b #131 P1 R1 — clear cache between campaigns. If race integer IDs shift (HeroRace #130
+    // would have caused this), cache served entries mapped from old integer→name pairings to wrong
+    // RaceAgeEntry. Now exposed for the behavior to call on session launch.
+    public void ResetCache()
+    {
+        _raceIdCache.Clear();
     }
 }

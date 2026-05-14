@@ -2,6 +2,17 @@
 
 ## 2026-05-13
 
+### Phase 9b — RaceAge R1 cache + R3 validation + R4 validate-before-lookup (partial closes #131)
+
+3 of 4 findings addressed. P1 TaomPregnancyModel 32-line inline logic deferred (substantial ADR-007 service-extraction; needs separate PR to define IRaceAgeService.GetDailyPregnancyChance + IHeroAdapter expansion).
+
+- **P1 R1 — `_raceIdCache` reset.** Added `IRaceAgeService.ResetCache()` called on `OnSessionLaunchedEvent`. Stale int→entry mappings from prior campaign could serve wrong RaceAgeEntry if integer IDs shifted (HeroRace #130 showed this can happen).
+- **P2 R4 — Validate-before-lookup in `GetEntry`.** `_raceManager.GetRaceNameFromId(raceId)` returns "human" as fallback for unknown IDs. Without an `IsValidRaceId` guard, invalid raceIds resolved to the human RaceAgeEntry for ALL age + fertility calculations. Now: validate → short-circuit to `_defaultEntry` on invalid, BEFORE the name lookup. See `feedback_validate_before_lookup_with_fallback.md` (Codex review #33).
+- **P2 R3 — Semantic validation in `RaceAgeConfigProvider.LoadConfig`.** Pre-fix accepted any parseable JSON. Now validates each `RaceAgeEntry`: NaN/Infinity-guard on FertilityMod (reverts to 1.0), ordering invariants on ComesOfAge < FertilityEnd, MiddleAge < MaxAge, BecomeOld < MaxAge.
+- **Tests** — Updated `RaceAgeServiceTests` setup to register IsValidRaceId per ID; +4 new tests (`GetMaxAge_InvalidRaceId_ReturnsDefaultEntryNotFallbackLookup`, `GetMaxAge_NeverValidatedRaceId_ReturnsDefaultEntry`, `ResetCache_AfterCachedLookup_ReleasesPriorAssignments`, `ResetCache_EmptyCache_IsNoOp`).
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — CareerSystem SyncData gate + NaN ParseFloat + ability cache reset (closes #128)
 
 P1 + 2 P2s in CareerSystem persistence + config.

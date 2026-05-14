@@ -24,6 +24,10 @@ public class RaceAgeBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
+        // Phase 9b #131 R1 — clear race-id cache on new campaign. Cache integer→RaceAgeEntry
+        // mapping is process-wide and would serve stale entries if int IDs shift (HeroRace #130
+        // showed this can happen). OnSessionLaunched (not OnNewGameCreated) so load also resets.
+        CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => _raceAgeService.ResetCache());
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
     }
 

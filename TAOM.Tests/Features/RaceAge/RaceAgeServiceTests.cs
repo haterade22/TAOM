@@ -40,6 +40,13 @@ public class RaceAgeServiceTests
         _raceManager.GetRaceNameFromId(3).Returns("nazghul");
         _raceManager.GetRaceNameFromId(99).Returns("unknown_race");
 
+        // Phase 9b #131 P2 — validate-before-lookup. Mark 0–3 as valid; 99+ as invalid.
+        _raceManager.IsValidRaceId(0).Returns(true);
+        _raceManager.IsValidRaceId(1).Returns(true);
+        _raceManager.IsValidRaceId(2).Returns(true);
+        _raceManager.IsValidRaceId(3).Returns(true);
+        _raceManager.IsValidRaceId(99).Returns(false);
+
         _sut = new RaceAgeService(_configProvider, _raceManager);
     }
 
@@ -149,5 +156,50 @@ public class RaceAgeServiceTests
     public void ShouldDieOfOldAge_Immortal_NeverDies()
     {
         Assert.IsFalse(_sut.ShouldDieOfOldAge(3, 99999f));
+    }
+
+    // Phase 9b #131 P2 — validate-before-lookup. Invalid race IDs should resolve to the default
+    // entry, NOT to whatever name the fallback yields (which would smuggle invalid IDs through
+    // the lookup as if they were "human"). See feedback_validate_before_lookup_with_fallback.md.
+
+    [TestMethod]
+    public void GetMaxAge_InvalidRaceId_ReturnsDefaultEntryNotFallbackLookup()
+    {
+        // raceId 99 is invalid per IsValidRaceId(99)=false. Even though GetRaceNameFromId(99)
+        // returns "unknown_race" (which is not in _races), the guard short-circuits BEFORE the
+        // lookup. We should get the default (human=85) entry — not 0 from a missing key.
+        Assert.AreEqual(85, _sut.GetMaxAge(99));
+    }
+
+    [TestMethod]
+    public void GetMaxAge_NeverValidatedRaceId_ReturnsDefaultEntry()
+    {
+        // raceId 12345 was never registered in either valid or invalid lists; IsValidRaceId
+        // default-returns false. The guard fires.
+        Assert.AreEqual(85, _sut.GetMaxAge(12345));
+    }
+
+    // Phase 9b #131 P1 R1 — cache reset on new campaign
+
+    [TestMethod]
+    public void ResetCache_AfterCachedLookup_ReleasesPriorAssignments()
+    {
+        // Pre-populate cache by querying
+        Assert.AreEqual(85, _sut.GetMaxAge(0));
+        Assert.AreEqual(250, _sut.GetMaxAge(1));
+
+        // Reset
+        _sut.ResetCache();
+
+        // Subsequent lookups should re-query the race manager (which we test by changing
+        // its return value and observing the new value flows through)
+        _raceManager.GetRaceNameFromId(0).Returns("dwarf");
+        Assert.AreEqual(250, _sut.GetMaxAge(0));
+    }
+
+    [TestMethod]
+    public void ResetCache_EmptyCache_IsNoOp()
+    {
+        _sut.ResetCache(); // No exceptions
     }
 }
