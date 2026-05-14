@@ -2,6 +2,17 @@
 
 ## 2026-05-13
 
+### Phase 9b — CareerSystem SyncData gate + NaN ParseFloat + ability cache reset (closes #128)
+
+P1 + 2 P2s in CareerSystem persistence + config.
+
+- **P1 — SyncData IsLoading gate.** `CareerPersistenceBehavior.SyncData` was running RestoreData on every call (including saves), replacing the dict reference mid-save. Heroes with non-empty data but empty `CareerStringId` were dropped, and any in-flight mutations to the OLD dict between other behaviors' SyncData calls in the same pass were lost. Now gated on `!dataStore.IsLoading` early-return after the save serialization.
+- **P2 — ParseFloat NaN/Infinity rejection.** Only `CooldownSeconds` had the Career #31 NaN fix; generic `CareerConfigProvider.ParseFloat` fed `Duration`/`Radius`/`MaxCharge`/`DamageBonus`/etc with bare `float.TryParse`. NaN propagates: `ExpiresAt = currentTime + NaN` → `IsExpired` always false → contexts never expire. NaN `Radius` → all distance comparisons false → zero agents affected. Now rejects NaN/Infinity in the helper.
+- **P2 — CareerAbilityService cache reset.** `_abilities` dict keyed by hero `StringId` (stable across campaigns). Without reset on `OnSessionLaunched`, the cached `CareerAbility` carried old `CooldownDuration` baked in. Injected `ICareerAbilityService` into `CareerCampaignBehavior`; calls `ClearAll()` at the top of `OnSessionLaunched`.
+- **Tests** — Updated `FakeDataStore` to support `Mode = Saving | Loading` (Phase 9b #128 — tests previously had `IsSaving => true` always, masking the gate). +1 new test `SyncData_OnSaving_DoesNotMutateServiceData` asserting the gate.
+
+Build green, 1978/1978 tests pass.
+
 ### Phase 9b — HeroRace R1 + capture-all-races + null-guards (closes #130)
 
 P1 — `_heroRaceMap` singleton not reset between campaigns. P2 — `CaptureHeroRaces` skipped race=0 (humans) so deliberate human-resets silently reverted. P2 — adapter NRE risk on computed `Hero.CharacterObject` property.

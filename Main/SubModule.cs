@@ -325,8 +325,9 @@ public class SubModule : MBSubModuleBase
             var careerLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService, careerLogger));
             var careerCreationHandler = IoC.Resolve<ICareerCreationHandler>();
+            var careerAbilityServiceForBehavior = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
             campaignStarter.AddBehavior(new CareerCampaignBehavior(
-                careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerLogger));
+                careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerAbilityServiceForBehavior, careerLogger));
 
             var careerSwitchService = IoC.Resolve<ICareerSwitchService>();
             var careerAdapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();

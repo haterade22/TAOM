@@ -1,6 +1,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TAOM.Core.Logging;
+using TAOM.Features.CareerSystem.Abilities;
 
 namespace TAOM.Features.CareerSystem;
 
@@ -10,6 +11,7 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
     private readonly ICareerCreationHandler _creationHandler;
+    private readonly ICareerAbilityService _abilityService;
     private readonly IModLogger _logger;
 
     public CareerCampaignBehavior(
@@ -17,12 +19,14 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
         ICareerRegistry registry,
         ICareerPassiveService passiveService,
         ICareerCreationHandler creationHandler,
+        ICareerAbilityService abilityService,
         IModLogger logger)
     {
         _dataService = dataService;
         _registry = registry;
         _passiveService = passiveService;
         _creationHandler = creationHandler;
+        _abilityService = abilityService;
         _logger = logger;
     }
 
@@ -39,6 +43,11 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        // Phase 9b #128 P2 R1 — clear stale ability cache from a prior campaign in the same
+        // process. _abilities is keyed by hero StringId (which is stable across campaigns for the
+        // player), so without this the cached CareerAbility carries old CooldownDuration baked in.
+        _abilityService.ClearAll();
+
         _logger.LogInfo("CareerSystem: OnSessionLaunched fired");
         var hero = Hero.MainHero;
         if (hero == null)

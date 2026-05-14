@@ -47,6 +47,17 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
         dataStore.SyncData("_taom_careerChoices", ref choiceLists);
         dataStore.SyncData("_taom_careerTiers", ref tierLists);
 
+        // Phase 9b #128 P1 — gate the reconstruct block on IsLoading. Pre-fix this ran on EVERY
+        // SyncData call including saves: RestoreData(restored) called `_heroData = data`,
+        // replacing the dict reference mid-save. Heroes with non-empty HeroCareerData but empty
+        // CareerStringId were dropped, and any in-flight mutations to the OLD _heroData dict
+        // between the SyncData calls of other behaviors in the same save pass were lost.
+        if (!dataStore.IsLoading)
+        {
+            _logger.LogInfo($"CareerSystem: SyncData (saving) complete — {allData.Count} heroes serialized (careerIds={careerIds.Count}, choiceLists={choiceLists.Count}, tierLists={tierLists.Count})");
+            return;
+        }
+
         // Load path: reconstruct HeroCareerData from primitive dicts
         var restored = new Dictionary<string, HeroCareerData>();
         if (careerIds != null)

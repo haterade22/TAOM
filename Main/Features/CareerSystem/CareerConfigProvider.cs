@@ -428,8 +428,15 @@ public class CareerConfigProvider : ICareerConfigProvider
     {
         var val = el.Attribute(attrName)?.Value;
         if (val == null) return defaultValue;
-        return float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var result)
-            ? result : defaultValue;
+        // Phase 9b #128 P2 — reject NaN/Infinity. Pre-fix only CooldownSeconds had this guard
+        // (Career #31 fix); generic ParseFloat fed Duration/Radius/MaxCharge/DamageBonus etc.
+        // NaN propagates: ExpiresAt = currentTime + NaN → IsExpired always false; NaN Radius →
+        // all distance comparisons false. See feedback_clamp_nan_infinity_propagates.md.
+        if (!float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
+            return defaultValue;
+        if (float.IsNaN(result) || float.IsInfinity(result))
+            return defaultValue;
+        return result;
     }
 
     private static bool ParseBool(XElement el, string attrName, bool defaultValue)

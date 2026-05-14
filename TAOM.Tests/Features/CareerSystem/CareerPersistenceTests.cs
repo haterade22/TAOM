@@ -81,7 +81,7 @@ public class CareerPersistenceTests
         // Simulate loading into a fresh service
         var freshService = new CareerDataService();
         var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
-        var loadStore = new FakeDataStore();
+        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
         loadStore.SetData("_taom_careerIds", savedCareerIds);
         loadStore.SetData("_taom_careerChoices", savedChoices);
         loadStore.SetData("_taom_careerTiers", savedTiers);
@@ -96,7 +96,7 @@ public class CareerPersistenceTests
     [TestMethod]
     public void SyncData_EmptyData_DoesNotCrash()
     {
-        var loadStore = new FakeDataStore();
+        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
         _behavior.SyncData(loadStore);
 
         Assert.IsFalse(_dataService.HasCareer("hero1"));
@@ -105,11 +105,8 @@ public class CareerPersistenceTests
     [TestMethod]
     public void SyncData_PreFeatureSave_GracefullyLoadsEmpty()
     {
-        // Simulate loading a save that has no career data (null from dataStore)
-        var loadStore = new FakeDataStore();
-        loadStore.SetData<Dictionary<string, string>>("_taom_careerIds", null);
-        loadStore.SetData<Dictionary<string, string>>("_taom_careerChoices", null);
-        loadStore.SetData<Dictionary<string, string>>("_taom_careerTiers", null);
+        // Simulate loading a save that has no career data — engine leaves the ref untouched.
+        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
 
         _behavior.SyncData(loadStore);
 
@@ -130,7 +127,7 @@ public class CareerPersistenceTests
 
         var freshService = new CareerDataService();
         var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
-        var loadStore = new FakeDataStore();
+        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
         loadStore.SetData("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
         loadStore.SetData("_taom_careerChoices", store.GetSaved<Dictionary<string, string>>("_taom_careerChoices"));
         loadStore.SetData("_taom_careerTiers", store.GetSaved<Dictionary<string, string>>("_taom_careerTiers"));
@@ -140,23 +137,61 @@ public class CareerPersistenceTests
         Assert.AreEqual("ranger", freshService.GetCareerStringId("hero2"));
     }
 
+    // Phase 9b #128 P1 — guard against running reconstruct on save path. Pre-fix, save passes
+    // ran the entire load reconstruction block, calling RestoreData which replaced the dict
+    // reference mid-save. Verify saving does NOT mutate the service's data.
+
+    [TestMethod]
+    public void SyncData_OnSaving_DoesNotMutateServiceData()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_root", 10);
+        _dataService.UnlockTier("hero1", 2);
+
+        // Capture the in-memory state via reference identity. RestoreData replaces the dict
+        // reference (`_heroData = data`), so if it ran during save the reference would change.
+        var preReference = _dataService.GetAllData();
+        var preCareer = _dataService.GetCareerStringId("hero1");
+        var preChoiceCount = _dataService.GetChoiceCount("hero1");
+
+        var saveStore = new FakeDataStore();
+        _behavior.SyncData(saveStore);
+
+        Assert.AreSame(preReference, _dataService.GetAllData(),
+            "Saving must not replace the service's data dictionary (RestoreData side-effect)");
+        Assert.AreEqual(preCareer, _dataService.GetCareerStringId("hero1"));
+        Assert.AreEqual(preChoiceCount, _dataService.GetChoiceCount("hero1"));
+    }
+
     /// <summary>
     /// Fake IDataStore that captures saved values and replays them on load.
     /// Only supports Dictionary&lt;string, string&gt; — enforcing the primitive-only constraint.
+    /// Phase 9b #128 — `IsSaving`/`IsLoading` are now toggleable. Defaults match the historical
+    /// behavior (IsSaving=true) since the original SyncData implementation didn't gate on this.
+    /// New tests that exercise the load path explicitly set <see cref="Mode"/> = Loading.
     /// </summary>
     private class FakeDataStore : IDataStore
     {
+        public enum StoreMode { Saving, Loading }
+
         private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
+
+        public StoreMode Mode { get; set; } = StoreMode.Saving;
 
         public bool SyncData<T>(string key, ref T data)
         {
-            if (_data.TryGetValue(key, out var stored))
+            if (Mode == StoreMode.Loading)
             {
-                data = (T)stored;
-                return true;
+                if (_data.TryGetValue(key, out var stored))
+                {
+                    data = (T)stored;
+                    return true;
+                }
+                // Loading + no stored value: data stays unchanged (matches engine behavior).
+                return false;
             }
 
-            // Save path: store what was passed
+            // Saving path: store what was passed.
             if (data != null)
                 _data[key] = data;
 
@@ -173,7 +208,7 @@ public class CareerPersistenceTests
             _data[key] = value;
         }
 
-        public bool IsSaving => true;
-        public bool IsLoading => false;
+        public bool IsSaving => Mode == StoreMode.Saving;
+        public bool IsLoading => Mode == StoreMode.Loading;
     }
 }
