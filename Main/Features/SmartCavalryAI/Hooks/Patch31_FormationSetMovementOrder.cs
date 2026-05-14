@@ -17,7 +17,10 @@ namespace TAOM.Features.SmartCavalryAI.Hooks;
 /// <c>ChargeToTarget=3</c>) — NEVER int casts. The decompiled v1.4 source used
 /// integer casts against values 4 and 5, which silently mismatch on v1.3.15.</para>
 /// </summary>
-[HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder))]
+// Phase 9b #164 — explicit param type array matches Patch35 sibling for defensive consistency
+// (`Formation.SetMovementOrder` has one overload today but a future TaleWorlds patch could
+// introduce another; the explicit signature locks the binding).
+[HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder), new[] { typeof(MovementOrder) })]
 // Shared with Patch35_Formation_SetMovementOrder. The category is applied from
 // OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
 // Mission.Current.CurrentTime — null during OnSubModuleLoad / OnGameInitializationFinished.

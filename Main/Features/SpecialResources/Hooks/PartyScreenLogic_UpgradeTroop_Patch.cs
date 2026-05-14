@@ -18,6 +18,7 @@ public static class PartyScreenLogic_UpgradeTroop_Patch
         _logger = logger;
     }
 
+    [HarmonyPostfix]
     public static void Postfix(PartyScreenLogic.PartyCommand command)
     {
         if (_hook == null) return;

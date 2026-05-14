@@ -466,12 +466,16 @@ public class SubModule : MBSubModuleBase
             _harmony.Patch(leaderTarget, postfix: new HarmonyMethod(
                 typeof(MapConversationTableau_SpawnOpponentLeader_Patch),
                 nameof(MapConversationTableau_SpawnOpponentLeader_Patch.Postfix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MapConversationTableau.SpawnOpponentLeader not found — conversation tableau leader colors will not apply");
 
         var bodyguardTarget = MapConversationTableau_SpawnOpponentBodyguard_Patch.TargetMethod();
         if (bodyguardTarget != null)
             _harmony.Patch(bodyguardTarget, postfix: new HarmonyMethod(
                 typeof(MapConversationTableau_SpawnOpponentBodyguard_Patch),
                 nameof(MapConversationTableau_SpawnOpponentBodyguard_Patch.Postfix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MapConversationTableau.SpawnOpponentBodyguardCharacter not found — conversation tableau bodyguard colors will not apply");
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)

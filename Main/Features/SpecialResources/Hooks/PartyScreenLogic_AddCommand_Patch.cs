@@ -24,6 +24,7 @@ public static class PartyScreenLogic_AddCommand_Patch
 
     public static void SetBehavior(SpecialResourcesBehavior behavior) => _behavior = behavior;
 
+    [HarmonyPrefix]
     public static bool Prefix(PartyScreenLogic __instance, ref PartyScreenLogic.PartyCommand command)
     {
         if (_hook == null) return true;

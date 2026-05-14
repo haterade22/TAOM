@@ -148,10 +148,24 @@ public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
     [HarmonyFinalizer]
     static Exception Finalizer(Exception __exception)
     {
+        if (__exception == null) return null;
+        // Phase 9b #163 — keep the specific ArgumentNullException(ParamName="key") swallow because
+        // that's a known TaleWorlds bug for missing horse keys. But the bare NullReferenceException
+        // swallow was masking arbitrary NREs from unrelated code paths. Log every NRE before
+        // suppressing so real bugs surface in diagnostic builds even if the finalizer keeps the
+        // game running. Specific known-good case still returns null (suppress); generic NRE now
+        // logs + suppresses so the bug is observable.
         if (__exception is ArgumentNullException ane && ane.ParamName == "key")
             return null;
         if (__exception is NullReferenceException)
+        {
+            try { IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning(
+                $"[CharacterCreation] SpawnNonHumanNarrativeMenuCharacter NRE suppressed: {__exception.Message}. " +
+                $"Stack: {__exception.StackTrace?.Split('\n')[0]?.Trim()}. " +
+                $"If this fires repeatedly, the primary RemoveHorseCharacters defense may have a gap."); }
+            catch { /* logger unavailable — suppress silently as before */ }
             return null;
+        }
         return __exception;
     }
 }

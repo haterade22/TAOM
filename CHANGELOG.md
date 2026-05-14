@@ -2,6 +2,23 @@
 
 ## 2026-05-13
 
+### Phase 9b — Harmony cleanups batch (Category 2, closes #156 #159 #161 #163 #164)
+
+Five mechanical patch-hygiene fixes across 9 files. All match audit-specified solutions verbatim. No behavior change in the normal path; better diagnostic visibility + threading correctness + perf on the degraded path.
+
+- **#156 (P2 dormant) — BattleScenes** — `Main/Features/BattleScenes/Hooks/MBMapScene_GetBattleSceneIndexMap_Patch.cs`: marked `_isRetrying` as `volatile` (cross-thread visibility for the re-entry guard) and the class itself `static` per Harmony 2 convention. Dormant today (Patch0_BattleScenes category is commented out) but correct for re-enablement.
+- **#159 (P2 v1.3.15-unverified) — BannerColor MobilePartyVisual** — `MobilePartyVisual_AddCharacterToPartyIcon_Patch.cs`: dropped the explicit param-type array (which included `typeof(ActionIndexCache).MakeByRefType()` for the two `in ActionIndexCache` params — `in` is modreq-qualified in IL and Harmony 2's AccessTools is inconsistent about matching modreq). Verified via ilspycmd that the method has exactly one overload in v1.3.15, so name-only resolution is unambiguous.
+- **#161 (P2 perf) — ArmyTargeting Patch22** — `AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch.cs`: cached the 3 IoC.Resolve calls (`IArmyTargetingService`, `IArmyTargetingSettingsProvider`, `IModLogger`) in static fields via lazy `??=` init. Patch fires ~500-2000 calls/AI-cycle per feature doc; each pre-fix invocation walked the DryIoc registration table 3 times. Also marked class `static` (#151 pattern).
+- **#163 (P2) — CharacterCreation SpawnNonHuman finalizer** — `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`: kept the specific `ArgumentNullException(ParamName="key")` swallow (known TaleWorlds horse-data bug), but generic `NullReferenceException` now logs before suppressing so real bugs in the target method surface in diagnostics instead of being masked forever.
+- **#164 (P3 consolidated) — Misc patch cleanups** — 6 files:
+  - `Patch35_OOBHeroItem_GetCaptainTooltip.cs` + `Patch35_Formation_SetMovementOrder.cs` — bare `catch {}` replaced with one-shot logging via `_exceptionLogged` flag. `Patch35_Formation_SetMovementOrder` also gained `?` nullable annotations on its lazy-init static fields.
+  - `CulturalFeats/Hooks/Campaign_InitializeDefaultCampaignObjects_Patch.cs`, `SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs`, `SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` — added missing `[HarmonyPostfix]` attribute (works today via Harmony's naming convention; explicit attribute is defensive against a future Harmony version that tightens binding rules).
+  - `SpecialResources/Hooks/PartyScreenLogic_AddCommand_Patch.cs` — added missing `[HarmonyPrefix]` attribute (same rationale).
+  - `SmartCavalryAI/Hooks/Patch31_FormationSetMovementOrder.cs` — added explicit `new[] { typeof(MovementOrder) }` param-type array on `[HarmonyPatch]` for defensive consistency with sibling Patch35.
+  - `SubModule.cs` (lines 470-475) — added missing `else IoC.Resolve<IModLogger>().LogWarning(...)` fallbacks on the two `MapConversationTableau.SpawnOpponent*` manual `_harmony.Patch(...)` sites. Matches the diagnostic pattern from #122/#158.
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — close #151 + #155 (Category 2 patch hygiene + threading hardening)
 
 Two small audit fixes batched together. Both are pure-mechanical, single-file changes matching their audit's specified solutions verbatim.

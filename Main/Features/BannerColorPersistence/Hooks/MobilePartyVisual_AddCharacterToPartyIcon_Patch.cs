@@ -22,21 +22,14 @@ public static class MobilePartyVisual_AddCharacterToPartyIcon_Patch
 
     public static MethodBase? TargetMethod()
     {
-        return AccessTools.Method(typeof(MobilePartyVisual), "AddCharacterToPartyIcon",
-            new[]
-            {
-                typeof(PartyBase),
-                typeof(CharacterObject),
-                typeof(uint),
-                typeof(string),
-                typeof(int),
-                typeof(uint),
-                typeof(uint),
-                typeof(ActionIndexCache).MakeByRefType(),
-                typeof(ActionIndexCache).MakeByRefType(),
-                typeof(float),
-                typeof(bool).MakeByRefType()
-            });
+        // Phase 9b #159 — drop the explicit param-type array. The method has exactly one overload
+        // in v1.3.15 (verified via ilspycmd on SandBox.View.dll), so name-only resolution is
+        // unambiguous. The previous array included `typeof(ActionIndexCache).MakeByRefType()` for
+        // the two `in ActionIndexCache` params — `in` is modreq-qualified in IL and Harmony 2's
+        // AccessTools is inconsistent about matching modreq. If resolution failed, the LogWarning
+        // would fire and party-icon colors silently stop persisting. Name-only resolution is
+        // robust because there's no ambiguity to resolve.
+        return AccessTools.Method(typeof(MobilePartyVisual), "AddCharacterToPartyIcon");
     }
 
     public static void Postfix(CharacterObject characterObject, ref uint teamColor1, ref uint teamColor2)

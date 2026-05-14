@@ -1,5 +1,7 @@
+using System;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 
@@ -18,8 +20,13 @@ namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 [HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
 public static class Patch35_Formation_SetMovementOrder
 {
-    private static ICompanionTacticsSettingsProvider _settings;
-    private static ITroopStanceManager _stances;
+    // Phase 9b #164 — `?` nullable annotations match the `??=` lazy-init pattern. Codex review
+    // pattern: the fields ARE null before first invocation, declaring them non-nullable is
+    // misleading even though C# allows the lazy assignment without warnings.
+    private static ICompanionTacticsSettingsProvider? _settings;
+    private static ITroopStanceManager? _stances;
+    // Phase 9b #164 — one-shot logging guard for the catch (was bare).
+    private static bool _exceptionLogged;
 
     [HarmonyPostfix]
     public static void Postfix(Formation __instance)
@@ -44,6 +51,17 @@ public static class Patch35_Formation_SetMovementOrder
             _stances ??= IoC.Resolve<ITroopStanceManager>();
             _stances?.ClearStance((int)__instance.FormationIndex);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            if (!_exceptionLogged)
+            {
+                _exceptionLogged = true;
+                try { IoC.Resolve<IModLogger>()?.LogError(
+                    $"[CompanionTactics] Patch35 CancelStanceOnMove postfix failed: " +
+                    $"{ex.GetType().Name}: {ex.Message}. CancelStanceOnMove disabled for the rest " +
+                    $"of this session (one-shot log)."); }
+                catch { /* logger unavailable — keep silent fallback */ }
+            }
+        }
     }
 }

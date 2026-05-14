@@ -18,6 +18,7 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
         _logger = logger;
     }
 
+    [HarmonyPostfix]
     public static void Postfix(PartyCharacterVM __instance)
     {
         if (_hook == null) return;

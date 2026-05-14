@@ -8,6 +8,7 @@ namespace TAOM.Features.CulturalFeats.Hooks;
 [HarmonyPatchCategory("Patch18_CulturalFeats")]
 public static class Campaign_InitializeDefaultCampaignObjects_Patch
 {
+    [HarmonyPostfix]
     public static void Postfix()
     {
         TaomCulturalFeats.CreateAndRegister();
