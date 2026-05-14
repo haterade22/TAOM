@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.TimeAcceleration.UI;
 
@@ -15,7 +16,9 @@ internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
 
     public TimeAccelerationMixin(MapTimeControlVM viewModel) : base(viewModel)
     {
-        _extraFastForwardHint = new BasicTooltipViewModel(() => "Extra Fast Forward (E)");
+        // Phase 9b #168 P3 — localized tooltip. Was hardcoded English literal.
+        _extraFastForwardHint = new BasicTooltipViewModel(
+            () => new TextObject("{=taom_extra_fast_forward_hint}Extra Fast Forward (E)").ToString());
     }
 
     [DataSourceProperty]
@@ -51,7 +54,20 @@ internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
         if (Campaign.Current == null)
             return;
 
-        IsExtraFastForwardActive = Campaign.Current.SpeedUpMultiplier > 4f;
+        // Phase 9b #168 P2 — watch the right field. Pre-fix the mixin read SpeedUpMultiplier (only
+        // mutated by the `campaign.set_campaign_speed_multiplier` cheat console — vanilla play
+        // never raises it), so IsExtraFastForwardActive was permanently false.
+        //
+        // The TAOM button's `CommandParameter.Click="2"` invokes vanilla
+        // `MapTimeControlVM.ExecuteTimeControlChange(2)` which sets
+        // `TimeControlMode = StoppableFastForward`. Watching that enum gives a working
+        // selected-state visual.
+        //
+        // Known limitation (Option B from audit #168): this mirrors vanilla's FastForward speed —
+        // the button is functionally redundant with vanilla's FastForwardButton. To deliver actual
+        // EXTRA speed, the command handler would need to raise `SpeedUpMultiplier` via a service.
+        // Tracked as future enhancement.
+        IsExtraFastForwardActive = Campaign.Current.TimeControlMode == CampaignTimeControlMode.StoppableFastForward;
     }
 
     public override void OnFinalize() { }

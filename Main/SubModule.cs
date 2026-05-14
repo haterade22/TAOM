@@ -40,6 +40,7 @@ using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
+using TAOM.Features.Encyclopedia;
 using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.ShaderPrecompilation;
@@ -299,7 +300,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
             campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig));
 
-            campaignStarter.AddModel(new TaomInformationRestrictionModel());
+            campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
 
             var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
             campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService));

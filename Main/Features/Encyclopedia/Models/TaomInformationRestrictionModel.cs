@@ -1,4 +1,3 @@
-using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 
@@ -6,16 +5,16 @@ namespace TAOM.Features.Encyclopedia.Models;
 
 public class TaomInformationRestrictionModel : DefaultInformationRestrictionModel
 {
-    private readonly Func<bool> _showAll;
+    private readonly IEncyclopediaSettingsProvider _settings;
 
-    public TaomInformationRestrictionModel()
-        : this(() => TaomSettings.Instance?.ShowAllEncyclopediaCharacters ?? true) { }
-
-    internal TaomInformationRestrictionModel(Func<bool> showAll) => _showAll = showAll;
+    public TaomInformationRestrictionModel(IEncyclopediaSettingsProvider settings)
+    {
+        _settings = settings;
+    }
 
     public override bool DoesPlayerKnowDetailsOf(Hero hero)
     {
-        if (_showAll())
+        if (_settings.ShowAllEncyclopediaCharacters)
             return true;
         return base.DoesPlayerKnowDetailsOf(hero);
     }

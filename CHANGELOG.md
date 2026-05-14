@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — small model+UI fixes (Category 2, closes #138 #145 #168)
+
+Three model/UI fixes batched.
+
+- **#138 (P2 × 2) — ArmyTargeting TaomTargetScoreModel** — extracted the inline ternary + early-return branch out of `GetTargetScoreForFaction` per gamemodels.md rule 4. Added `IArmyTargetingService.GetEffectiveStrength(factionId, isBesieger, ourStrength)` and `ApplyTargetScoreModifiers(baseScore, isBesieger, factionId, targetSettlementId, committedTargetId)`. Model body now does only boundary extraction (factionId from MapFaction.StringId, isBesieger from missionType, committedTargetId from Army.AiBehaviorObject) and delegates.
+- **#145 (P2) — Encyclopedia TaomInformationRestrictionModel** — replaced concrete-singleton coupling (`TaomSettings.Instance?.ShowAllEncyclopediaCharacters`) with injected `IEncyclopediaSettingsProvider`. New files: `IEncyclopediaSettingsProvider.cs` + `EncyclopediaSettingsProvider.cs` + `EncyclopediaIoC.cs`. Registered in `Main/IoC.cs` (new `EncyclopediaIoC.RegisterEncyclopediaFeature(container)` call after `ExecutionIoC`). `Main/SubModule.cs:302` now constructs the model with `IoC.Resolve<IEncyclopediaSettingsProvider>()`. Test file updated to use NSubstitute on the new interface.
+- **#168 (P2 + P3) — TimeAcceleration UI** — `IsExtraFastForwardActive` now watches `Campaign.Current.TimeControlMode == CampaignTimeControlMode.StoppableFastForward` (Option A from the audit) instead of `SpeedUpMultiplier > 4f` (only mutated by cheat console). The button's selected-state visual now activates correctly. Known limitation documented inline: button is functionally redundant with vanilla's FastForwardButton; Option B (actual extra speed via service-raised SpeedUpMultiplier) is a future enhancement. P3 tooltip localized via `{=taom_extra_fast_forward_hint}Extra Fast Forward (E)` TextObject.
+
+Build green, 1958/1958 tests pass.
+
 ### Phase 9b — Harmony cleanups batch (Category 2, closes #156 #159 #161 #163 #164)
 
 Five mechanical patch-hygiene fixes across 9 files. All match audit-specified solutions verbatim. No behavior change in the normal path; better diagnostic visibility + threading correctness + perf on the degraded path.

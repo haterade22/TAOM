@@ -80,6 +80,25 @@ public class ArmyTargetingService : IArmyTargetingService
         return _priorityIndex.TryGetValue(factionId, out var targets) && targets.ContainsKey(settlementId);
     }
 
+    // Phase 9b #138 — orchestration methods moved out of TaomTargetScoreModel override body.
+    public float GetEffectiveStrength(string factionId, bool isBesieger, float ourStrength)
+    {
+        if (!isBesieger) return ourStrength;
+        return ourStrength * GetStrengthMultiplier(factionId);
+    }
+
+    public float ApplyTargetScoreModifiers(float baseScore, bool isBesieger, string factionId, string targetSettlementId, string committedTargetId)
+    {
+        // Only Besieger armies receive priority + distance modifiers — Raider re-selects freely
+        // each tick, Defender stays reactive to incoming threats. Vanilla rejection (baseScore <= 0)
+        // also passes through unchanged.
+        if (baseScore <= 0f || !isBesieger) return baseScore;
+
+        float targetMultiplier = GetTargetMultiplier(targetSettlementId, committedTargetId, factionId);
+        float distanceCompensation = GetDistanceCompensation(factionId, targetSettlementId);
+        return baseScore * targetMultiplier * distanceCompensation;
+    }
+
     private static Dictionary<string, float> BuildFloatIndex(Dictionary<string, float> source)
     {
         var index = new Dictionary<string, float>();

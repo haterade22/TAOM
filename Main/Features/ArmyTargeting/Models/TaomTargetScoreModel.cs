@@ -18,25 +18,20 @@ public class TaomTargetScoreModel : DefaultTargetScoreCalculatingModel
         Settlement targetSettlement, Army.ArmyTypes missionType,
         MobileParty mobileParty, float ourStrength)
     {
-        // Extract primitives at boundary — no sealed types cross into service
-        // Use faction StringId (empire_s/empire_w/empire) not culture StringId — Mordor, Gondor,
-        // and Dunland all share Culture.empire so culture cannot distinguish them.
+        // Phase 9b #138 — boundary extraction + pure delegation per gamemodels.md rule 4.
+        // The model class is a thin entry point: extract sealed-type primitives once, hand off
+        // to IArmyTargetingService for all decision logic.
+        //
+        // factionId via MapFaction.StringId (not Culture.StringId) — empire_s (Mordor), empire_w
+        // (Rohan), and empire (Dunland) all share culture "empire" so culture cannot distinguish
+        // them.
+        bool isBesieger = missionType == Army.ArmyTypes.Besieger;
         string factionId = mobileParty.MapFaction?.StringId;
 
-        float effectiveStrength = missionType == Army.ArmyTypes.Besieger
-            ? ourStrength * _service.GetStrengthMultiplier(factionId)
-            : ourStrength;
-
+        float effectiveStrength = _service.GetEffectiveStrength(factionId, isBesieger, ourStrength);
         float baseScore = base.GetTargetScoreForFaction(targetSettlement, missionType, mobileParty, effectiveStrength);
 
-        // Only Besieger armies: Raider re-selects freely, Defender stays reactive
-        if (baseScore <= 0f || missionType != Army.ArmyTypes.Besieger)
-            return baseScore;
-
         string committedTargetId = (mobileParty.Army?.AiBehaviorObject as Settlement)?.StringId;
-
-        float targetMultiplier = _service.GetTargetMultiplier(targetSettlement.StringId, committedTargetId, factionId);
-        float distanceCompensation = _service.GetDistanceCompensation(factionId, targetSettlement.StringId);
-        return baseScore * targetMultiplier * distanceCompensation;
+        return _service.ApplyTargetScoreModifiers(baseScore, isBesieger, factionId, targetSettlement.StringId, committedTargetId);
     }
 }
