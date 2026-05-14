@@ -2,6 +2,16 @@
 
 ## 2026-05-13
 
+### Phase 9b — FiefManagement swap restore safety + presenter reset (partial closes #143)
+
+P1 + P2 addressed; P2 perf + P3 ADR-007 deferred.
+
+- **P1 — `RemoteFiefSettlementSwapper.Restore` now uses captured ref.** Pre-fix Restore re-queried `MobileParty.MainParty` at restore time and silently returned if null (campaign teardown, VM exception mid-flow). The swap was never restored, leaving `MobileParty._currentSettlement` pointing at a remote fief — corrupting party movement, AI, and every subsequent F6 invocation in the same session. Now: `_swappedParty` captured at `Swap` time, used at `Restore` (with logged fallback to MainParty for safety). Errors loudly on both null + missing-prior-swap paths.
+- **P2 — `FiefHubMenuPresenter.Reset()` now clears all 4 stateful fields.** Pre-fix only `_selectedIndex` was reset; `_menuFiefs`/`_menuCurrentFief`/`_menuCurrentAtPlayer` carried stale FiefSummary refs from prior campaign. ManageOptionEnabled returned true on stale fiefs; Prev/Next showed wrong counts.
+- **Deferred:** P2 `FiefHubService.Count` perf (Settlement.All iteration per F6 press — bounded but suboptimal; needs `Clan.PlayerClan?.Settlements.Count(...)` fast-path). P3 ADR-007 sealed Settlement on `FiefManagementGameState.Fief` (UI-layer terminating).
+
+Build green, 1982/1982 tests pass.
+
 ### Phase 9b — Diplomacy WarOfTheRing phase persistence + config validation (closes #129)
 
 P1 + 2 P2s.

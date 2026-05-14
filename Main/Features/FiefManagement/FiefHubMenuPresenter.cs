@@ -29,7 +29,17 @@ public class FiefHubMenuPresenter : IFiefHubMenuPresenter
 
     public int Count => _menuFiefs.Count;
 
-    public void Reset() => _selectedIndex = 0;
+    public void Reset()
+    {
+        // Phase 9b #143 P2 — clear ALL stateful fields. Pre-fix only `_selectedIndex` was reset;
+        // `_menuFiefs`/`_menuCurrentFief`/`_menuCurrentAtPlayer` carried stale references from
+        // the prior campaign in the same process. New campaign 2 saw old FiefSummary objects,
+        // ManageOptionEnabled returned true on stale fiefs, Prev/Next showed wrong index counts.
+        _selectedIndex = 0;
+        _menuFiefs = System.Array.Empty<FiefSummary>();
+        _menuCurrentFief = null;
+        _menuCurrentAtPlayer = false;
+    }
 
     public void Refresh()
     {
