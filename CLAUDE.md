@@ -507,19 +507,24 @@ Phase 4: CLOSE OUT
 | Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
 | Git blame, diff analysis | **git** (`git_blame`, `git_diff`) | `git` via Bash |
 | Create/close GitHub issues | **GitHub** | `gh` via Bash |
-| Research before implementing | **Read/Grep** decompiled source + **Serena**, **ilspy** if needed | Manual decompilation workflow |
+| Research before implementing | **`taom-src path <Type>`** for signatures, **Read/Grep** decompiled source for browsing patterns, **Serena** for symbol nav, **ilspy** MCP as fallback | Manual decompilation workflow |
 
 ### TaleWorlds Research — Lookup Order
 
-**WARNING:** `E:\Decompiled_Bannerlord\` is v1.4 but the installed game is v1.3.15. Use decompiled source for understanding concepts/patterns, but **NEVER trust its method signatures**. For signature verification, ALWAYS use `ilspycmd` on the installed DLLs.
+**Always use `taom-src` first.** It runs `ilspycmd` against the installed v1.3.15 DLLs and caches under `~/.taom-src/v1.3.15/`. The v1.4 dump at `E:\Decompiled_Bannerlord\` is fine for browsing namespaces/patterns but **NEVER trust its method signatures** — they drift from v1.3.15.
 
 | Step | Action | When |
 |------|--------|------|
-| 1. **Read decompiled source** | `Read` or `Grep` in `E:\Decompiled_Bannerlord\` | Understanding patterns, finding classes — but signatures may differ from installed v1.3.15 |
-| 2. **Verify signatures** | `ilspycmd "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/<dll>" -t "<type>"` | **ALWAYS** before overriding methods, creating patches, or calling APIs |
-| 3. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Fallback if type not found via ilspycmd |
+| 1. **`pwsh tools/taom-src.ps1 path <Type>`** | One command — decompiles v1.3.15 DLL on cache miss, returns absolute path | **ALWAYS first** for any signature verification (Harmony patch, GameModel override, adapter, API call) |
+| 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the v1.4 dump (see folder layout below) | Finding which DLL a class lives in, exploring a namespace tree — NEVER for signatures |
+| 3. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Fallback if `taom-src` fails (e.g., need a full DLL type listing) |
 
-**Decompiled source layout** (`E:\Decompiled_Bannerlord\`):
+See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard tools:
+```bash
+rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
+```
+
+**Decompiled source layout** (`E:\Decompiled_Bannerlord\` — for browsing only, never signatures):
 
 | Folder | Contents |
 |--------|----------|
@@ -534,19 +539,7 @@ Phase 4: CLOSE OUT
 | `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
 | `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
 
-**Quick lookup examples:**
-```bash
-# Find a class
-find "E:/Decompiled_Bannerlord/" -name "DefaultPartyWageModel.cs"
-
-# Search for a method across all decompiled source
-grep -r "GetCharacterWage" "E:/Decompiled_Bannerlord/Campaign/"
-
-# Browse a namespace
-ls "E:/Decompiled_Bannerlord/Campaign/TaleWorlds.CampaignSystem/TaleWorlds/CampaignSystem/GameComponents/"
-```
-
-**DLL path** (for ILSpy fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+**DLL path** (for ILSpy MCP fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
 
 ### Configuration
 

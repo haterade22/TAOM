@@ -41,6 +41,7 @@ tools/node_modules/
 
 # Claude Code / Codex transient runtime state
 .claude/scheduled_tasks.lock
+.claude/worktrees/
 .codex-temp/
 .dotnet-cli-home/
 
