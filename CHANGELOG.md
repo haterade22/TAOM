@@ -2,6 +2,27 @@
 
 ## 2026-05-18
 
+### feat(troops): add standalone T9 `gondor_ithilien_ranger` with 12 Ithilien-themed equipment rosters
+
+New troop `gondor_ithilien_ranger` (level 41, `is_basic_troop="true"`, default_group=`Ranged`, Bow=280) appended after `gondor_brv_ranger` in [Main/_Module/ModuleData/troops/troops_gondor.xml](Main/_Module/ModuleData/troops/troops_gondor.xml). Standalone — not reachable via BRV upgrade chain (no existing troop upgrades into it; `<upgrade_targets />` empty). Spawned units randomize across 12 `<EquipmentRoster>` blocks built from every Ithilien-prefixed item in `LOTRLOME_Armory`:
+
+| Roster bucket | Bodies (12) | Helmets (6) | Cloaks (2) | Boots (2) | Bows (3) | Shields (2) |
+|---|---|---|---|---|---|---|
+| Rosters 1–8 (ranger leather) | `ithilien_jerkin_long{,_slim,_var,_var_slim}` + `ithilien_jerkin_short{,_slim,_var,_var_slim}` | `ithilien_hood{,_var,_masked,_masked_var}` | both | both | `wm_ithilien_bow{,_b,_c}` | none (twin quiver) |
+| Rosters 9–12 (Ithil Guard plate) | `sk_gd_ith_chest_noble_{med,heavy}_{a,b}` | `sk_gd_ith_noble_helmet_heavy_{a,b}` | both | heavy only | `wm_ithilien_bow_{b,c}` | `wm_gondor_shield_{a,d_new}_minas_ithil` |
+
+Gloves slot is `ithilien_bracers` across all rosters; sidearm is `wm_gondor_sword_a10` (matches `gondor_brv_shadowbow`'s T9 sword tier). The starter bow `wm_ithilien_bow_starter` is excluded — too weak for T9. Every Ithilien item in the Armory appears in at least one roster; cross-verified via `Grep "id=\"(ithilien_|sk_gd_ith_|wm_ithilien_|...minas_ithil)"` against all relevant Armory XMLs before writing.
+
+Recruitable directly from notables in Minas Tirith (`town_EW1`) and the two Ithilien-area castles Amonost (`castle_EW15`) and Erethir (`castle_EW16`) via [VolunteerRecruitmentService.cs](Main/Features/TroopProgression/VolunteerRecruitmentService.cs). Replaces the existing notable-slot offering for those three settlements (previously `gondor_mt_trainee` for Minas Tirith, `gondor_ith_watcher` for the two castles) — significant power jump but matches the user's intent to make Ithilien Rangers a regional-specialty elite recruitable straight from the notable pool. Regular-troop slot (`gondor_ano_peasant`, weight 7) is unchanged.
+
+Tests: 3 new `_HighRoll_ReturnsIthilienRanger` cases in [VolunteerRecruitmentServiceTests.cs](TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs) cover all three settlements via weighted-random boundary roll (rolls 7 with total weight 10). Existing `_WeightedRandom_HighRoll_ReturnsNobleTroop` test repurposed to assert the new Minas Tirith notable. Full suite: 2143 passed, 1 unrelated pre-existing failure (`EveryJsonEntry_HasMatchingCareerInXml` — orphaned `far_harad_halftroll`/`cave_troll_master` in `career_menu.json`, confirmed failing on the pre-change tree).
+
+Save-compat: fully additive. New troop ID added; no existing IDs renamed or removed. The 3 settlement entries change their notable-slot reference, but the old troop IDs (`gondor_mt_trainee`, `gondor_ith_watcher`) remain defined in `troops_gondor.xml` and remain reachable via clan-map fallback (`clan_empire_west_1` still references `gondor_mt_trainee` as its notable). Existing saves load without troop drops.
+
+Research: cross-referenced 25 Armory item IDs against five `LOTRLOME_Armory\ModuleData\LOTRLOME_items\gondor\*.xml` files plus `LOTRAOM_weapons.xml` and `LOTRAOM_shields.xml`. Verified `gondor_brv_shadowbow` (existing T9 endpoint) was untouched so the BRV ranger line still has its terminal upgrade.
+
+Deep-review: 5 agents (standards/compat/efficiency/completeness/data-flow). Data-flow agent flagged `MaxVolunteerTier=6` as a CRITICAL tier filter; verified false via `ilspycmd` on `RecruitmentCampaignBehavior.UpdateVolunteersOfNotablesInSettlement` — the tier check only gates upgrade progression on slots with non-empty `UpgradeTargets`, and the new troop has empty `<upgrade_targets />`. Disagreement memorialized in `feedback_codex_caught_api_misread.md`-style decompilation cross-check. No HIGH findings remain.
+
 ### feat(tooling): add `taom-src` CLI + SKILL — one-command TaleWorlds v1.3.15 decompile cache (inspired by vercel-labs/opensrc)
 
 Reviewed [vercel-labs/opensrc](https://github.com/vercel-labs/opensrc) for transferable patterns. Most of its surface (npm/PyPI/crates registry resolution, shallow git clone, npm distribution, Turborepo monorepo) doesn't apply — TAOM's "dependency" is a closed-source local game install. But the central idea — a single composable command that returns an absolute path to cached source — maps directly to TAOM's recurring TaleWorlds-signature-lookup ritual. Full review at `~/.claude/plans/review-https-github-com-vercel-labs-open-deep-brooks.md`.

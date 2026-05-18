@@ -81,7 +81,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     private static void InitializeGondorSettlements()
     {
         // Towns
-        AddSettlement("town_EW1", "gondor_ano_peasant", 7, "gondor_mt_trainee", 3);
+        AddSettlement("town_EW1", "gondor_ano_peasant", 7, "gondor_ithilien_ranger", 3);
         AddSettlement("town_EW2", "gondor_ano_peasant", 7, "gondor_osg_veteran", 3);
         AddSettlement("town_EW3", "gondor_ano_peasant", 7, "gondor_osg_veteran", 3);
         AddSettlement("town_EW4", "gondor_leb_militia", 7, "gondor_pel_skirmisher", 3);
@@ -108,8 +108,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddSettlement("castle_EW12", "gondor_loss_lumberman", 7, "gondor_loss_axebearer", 3);
         AddSettlement("castle_EW13", "gondor_anf_levy", 8, "gondor_anf_levy", 2);
         AddSettlement("castle_EW14", "gondor_leb_militia", 7, "gondor_lin_noble", 3);
-        AddSettlement("castle_EW15", "gondor_ano_peasant", 7, "gondor_ith_watcher", 3);
-        AddSettlement("castle_EW16", "gondor_ano_peasant", 7, "gondor_ith_watcher", 3);
+        AddSettlement("castle_EW15", "gondor_ano_peasant", 7, "gondor_ithilien_ranger", 3);
+        AddSettlement("castle_EW16", "gondor_ano_peasant", 7, "gondor_ithilien_ranger", 3);
     }
 
     // --- Gondor Clan Mappings ---

@@ -184,10 +184,10 @@ public class VolunteerRecruitmentServiceTests
     // --- Weighted random selection ---
 
     [TestMethod]
-    public void GetVolunteerTroopId_WeightedRandom_HighRoll_ReturnsNobleTroop()
+    public void GetVolunteerTroopId_MinasTirith_HighRoll_ReturnsIthilienRanger()
     {
-        // town_EW1 = Minas Tirith: gondor_ano_peasant(7) + gondor_mt_trainee(3) = total 10
-        // Roll 7 should land in the gondor_mt_trainee range
+        // town_EW1 = Minas Tirith: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
+        // Roll 7 should land in the gondor_ithilien_ranger range
         _random.Next(10).Returns(7);
         var context = new VolunteerContext(
             settlementId: "town_EW1",
@@ -197,7 +197,39 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("gondor_mt_trainee", result);
+        Assert.AreEqual("gondor_ithilien_ranger", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AmonostCastle_HighRoll_ReturnsIthilienRanger()
+    {
+        // castle_EW15 = Amonost: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: "castle_EW15",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("gondor_ithilien_ranger", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ErethirCastle_HighRoll_ReturnsIthilienRanger()
+    {
+        // castle_EW16 = Erethir: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: "castle_EW16",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("gondor_ithilien_ranger", result);
     }
 
     [TestMethod]

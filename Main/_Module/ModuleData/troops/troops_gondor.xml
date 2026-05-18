@@ -3419,6 +3419,165 @@
   </NPCCharacter>
 
   <NPCCharacter
+      id="gondor_ithilien_ranger"
+      default_group="Ranged"
+      level="41"
+      name="{=aom_gondor_ithilien_ranger_name}[Gondor] Ithilien Ranger"
+      occupation="Soldier"
+      culture="Culture.gondor"
+      is_basic_troop="true">
+    <face>
+      <face_key_template value="BodyProperty.fighter_empire" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="230" />
+      <skill id="TwoHanded" value="145" />
+      <skill id="Polearm" value="145" />
+      <skill id="Bow" value="280" />
+      <skill id="Crossbow" value="55" />
+      <skill id="Throwing" value="70" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_long" />
+        <equipment slot="Cape" id="Item.ithilien_cloak" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood_var" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
+        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood_masked" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+        <equipment slot="Cape" id="Item.ithilien_cloak" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_long_var_slim" />
+        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_short" />
+        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood_var" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_short_slim" />
+        <equipment slot="Cape" id="Item.ithilien_cloak" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood_masked" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_short_var" />
+        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_short_var_slim" />
+        <equipment slot="Cape" id="Item.ithilien_cloak" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_shield_a_minas_ithil" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_med_a" />
+        <equipment slot="Cape" id="Item.ithilien_cloak" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_shield_d_new_minas_ithil" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_med_b" />
+        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_shield_d_new_minas_ithil" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_heavy_a" />
+        <equipment slot="Cape" id="Item.ithilien_cloak" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_shield_a_minas_ithil" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_heavy_b" />
+        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
+        <equipment slot="Gloves" id="Item.ithilien_bracers" />
+        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
       id="gondor_brv_shadowbow"
       default_group="Ranged"
       level="41"
