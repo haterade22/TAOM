@@ -364,6 +364,26 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_dol_goldur_axe_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.wm_dol_goldur_1h_sword_a03" />
                 <equipment
                     slot="Item1"
@@ -503,6 +523,35 @@
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_f" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dg_uruk_pauldron_med_a" />
@@ -781,6 +830,29 @@
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_f" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dg_uruk_pauldron_med_a" />
@@ -1764,6 +1836,122 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_f" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
                     id="Item.wm_dol_goldur_halberd_a04" />
                 <equipment
                     slot="Head"
@@ -2368,6 +2556,98 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_f" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.wm_dol_goldur_1h_sword_a03" />
                 <equipment
                     slot="Item1"
@@ -2525,6 +2805,75 @@
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_i" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dg_uruk_boots_elite_a" />
@@ -2699,6 +3048,121 @@
                     id="Item.wm_gundabad_shield_a03" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_h" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_i" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_dg_uruk_helmet_lord_b" />
                 <equipment
                     slot="Body"
@@ -2857,6 +3321,98 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_elite_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_i" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.wm_dol_goldur_halberd_a03" />
                 <equipment
                     slot="Item1"
@@ -3008,6 +3564,52 @@
                 <equipment
                     slot="Cape"
                     id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_d" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_h" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_d" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_f" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dg_uruk_bracer_elite_f" />
@@ -3394,6 +3996,122 @@
                     id="Item.wm_dol_goldur_1h_sword_a03" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_f" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_b" />
                 <equipment
                     slot="Body"
@@ -3751,6 +4469,35 @@
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_elite_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_lord_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_lord_h" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_elite_a" />

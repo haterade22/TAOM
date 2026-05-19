@@ -79,6 +79,166 @@
                     id="Item.wm_isengard_shield_a03" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_med_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_med_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_med_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_uruk_hai_helmet_sword_med_a4" />
                 <equipment
                     slot="Body"
@@ -715,6 +875,190 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_ar2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_br2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_b3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.isengard_1h_sword_b" />
                 <equipment
                     slot="Item1"
@@ -874,6 +1218,186 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_light_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_light_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_med_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_med_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_cross_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.isengard_2h_axe_a" />
                 <equipment
                     slot="Head"
@@ -1017,6 +1541,296 @@
                 <equipment
                     slot="Gloves"
                     id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_light_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_light_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_med_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_brown" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_b3" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_medium_b1" />
@@ -1212,6 +2026,188 @@
                 <equipment
                     slot="Gloves"
                     id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_ar2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_br2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_b3" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_medium_b1" />
@@ -1576,6 +2572,180 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_ar2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_br2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.isengard_spear_b" />
                 <equipment
                     slot="Item1"
@@ -1767,6 +2937,136 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.isengard_spear_b" />
                 <equipment
                     slot="Item1"
@@ -1949,6 +3249,144 @@
                     id="Item.wm_isengard_shield_a03" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_b3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_uruk_hai_helmet_sword_heavy_a4" />
                 <equipment
                     slot="Cape"
@@ -2086,6 +3524,66 @@
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_spear_med_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_med_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a3" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_uruk_hai_pauldron_med_a1" />
@@ -2441,6 +3939,32 @@
                     id="Item.isengard_1h_sword_b" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_uruk_hai_helmet_sapper_a4" />
                 <equipment
                     slot="Cape"
@@ -2596,6 +4120,358 @@
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_b2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_br1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_br2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.warg_dark" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a2" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_uruk_hai_bracer_elite_a1" />
@@ -2975,6 +4851,32 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
+                    id="Item.isengard_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
                     id="Item.isengard_spear_b" />
                 <equipment
                     slot="Item1"
@@ -3308,6 +5210,23 @@
                     id="Item.isengard_berserker_sword_2h" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_ar1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_skirt_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_gloves_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword_2h" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_uruk_hai_helmet_bers_a2" />
                 <equipment
                     slot="Body"
@@ -3434,6 +5353,46 @@
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_medium_a2" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_med_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_2h_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_med_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_b2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a2" />
+            </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
                 civilian="true" />
@@ -3512,6 +5471,35 @@
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_medium_a3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a3" />
+            </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
                 civilian="true" />
@@ -3574,6 +5562,32 @@
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_sapper_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_med_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_crossbow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_bolt_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sapper_a3" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_uruk_hai_pauldron_heavy_b1" />
@@ -3764,6 +5778,26 @@
                     id="Item.isengard_berserker_sword" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_uruk_hai_helmet_bers_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_uruk_hai_helmet_bers_a3" />
                 <equipment
                     slot="Cape"
@@ -3910,6 +5944,122 @@
                 <equipment
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_heavy_a3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar3" />
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
@@ -4178,6 +6328,75 @@
                     id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_spear_heavy_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
                     id="Item.sk_uruk_hai_helmet_spear_heavy_a3" />
                 <equipment
                     slot="Cape"
@@ -4324,6 +6543,344 @@
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_captain_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_b2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_br1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_br2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a04" />
+                <equipment
+                    slot="Item2"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b3" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_uruk_hai_bracer_elite_a1" />
@@ -4508,6 +7065,75 @@
                     id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
                     id="Item.wm_isengard_shield_a01" />
                 <equipment
                     slot="Head"
@@ -4648,6 +7274,52 @@
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_bers_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_nazg_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_b3" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_b1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_nazg_ar1" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_uruk_hai_pauldron_heavy_b3" />
@@ -4824,6 +7496,75 @@
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+            </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
                 civilian="true" />
@@ -4896,6 +7637,75 @@
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+            </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
                 civilian="true" />
@@ -4955,6 +7765,144 @@
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_command_a3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_ar1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_b2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_br1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_elite_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_command_br2" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_uruk_hai_pauldron_heavy_a1" />
@@ -5122,6 +8070,33 @@
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
+                <equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+                <equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.crossbow_a" />
+                <equipment slot="Item1" id="Item.bolt_a" />
+                <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
+                <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a1" />
+                <equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+                <equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.crossbow_a" />
+                <equipment slot="Item1" id="Item.bolt_a" />
+                <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
+                <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a2" />
+                <equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
+                <equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+                <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.crossbow_a" />
+                <equipment slot="Item1" id="Item.bolt_a" />
+                <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
+                <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a3" />
                 <equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
                 <equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
                 <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
