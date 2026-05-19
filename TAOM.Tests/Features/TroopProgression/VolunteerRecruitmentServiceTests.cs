@@ -711,4 +711,125 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual(expectedTroopId, result);
     }
+
+    // --- Lothlorien settlement verifications (temporarily borrows Rivendell troops) ---
+
+    [TestMethod]
+    [DataRow("town_L1", "imladris_recruit")]
+    [DataRow("castle_L1", "imladris_recruit")]
+    [DataRow("castle_L2", "imladris_recruit")]
+    [DataRow("castle_L3", "imladris_recruit")]
+    public void GetVolunteerTroopId_LothlorienSettlements_ReturnExpectedRegularTroop(
+        string settlementId, string expectedTroopId)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienSettlement_HighRoll_ReturnsImladrisInfantry()
+    {
+        // town_L1: imladris_recruit(5) + imladris_infantry(3) = total 8
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(
+            settlementId: "town_L1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("imladris_infantry", result);
+    }
+
+    // --- Lothlorien clan verifications ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienClan_ReturnsImladrisRecruit()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_lothlorien_1",
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("imladris_recruit", result);
+    }
+
+    // --- Lothlorien culture fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienCulture_LowRoll_ReturnsImladrisRecruit()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("imladris_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienCulture_HighRoll_ReturnsImladrisBowman()
+    {
+        // Culture pool: imladris_recruit(5) + imladris_infantry(3) + imladris_bowman(2) = 10
+        // Roll 8 should land in imladris_bowman range
+        _random.Next(10).Returns(8);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("imladris_bowman", result);
+    }
+
+    // --- Lothlorien village bound settlement fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienVillage_InheritsBoundSettlement()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "village_L1_1",
+            boundSettlementId: "town_L1",
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("imladris_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienCastleVillage_InheritsBoundCastle()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "castle_village_L1_1",
+            boundSettlementId: "castle_L1",
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("imladris_recruit", result);
+    }
 }
