@@ -2,6 +2,14 @@
 
 ## 2026-05-19
 
+### feat(troops): upgrade Ithilien Ranger quivers to Noldar Elven Arrows (best in Armory)
+
+Replaced vanilla `bodkin_arrows_a` (3 thrust_damage, 32 stack) in all 8 `gondor_ithilien_ranger` rosters with [Noldar Elven Arrow](https://example) variants from LOTRLOME_Armory (`wm_elven_arrow_v*_*` — 5 thrust_damage, 50 stack). Audited every `Type="Arrows"` item in the Armory: Noldar Elven Arrows have the highest damage tier (tied with Mirkwood at 5) AND the largest quiver (50 vs Mirkwood 40, vs Isengard 40, vs Erebor 30) — clear "best" winner. Isengard/Erebor arrows at 3 damage are worse than vanilla. No Gondor-prefixed arrow exists in the Armory; the Noldar series is the closest lore-appropriate upgrade (Lothlórien gifted Ithilien Rangers their cloaks per book lore — elven ammunition fits the Galadhrim-adjacent theme).
+
+Each of the 8 rosters now uses a unique Noldar visual variant (`v1_a`, `v2_a`, `v3_a`, `v4_a`, `v1_b`, `v1_c`, `v1_d`, `v2_b`) — all stat-identical, mesh-distinct. Sidearm remains `wm_gondor_sword_a10` (no Ithilien sword in the Armory; Gondor swords are the natural fit per user direction).
+
+Save-compat: per-element replacement, no troop IDs touched. Existing recruits keep their already-spawned equipment; new recruits draw the upgraded quivers.
+
 ### refactor(troops): drop Ithil Guard plate rosters from `gondor_ithilien_ranger` (12 → 8)
 
 Removed `EquipmentRoster` blocks 9–12 from [troops_gondor.xml](Main/_Module/ModuleData/troops/troops_gondor.xml). Those rosters used `sk_gd_ith_chest_noble_*` (Ithil Guard plate), `sk_gd_ith_noble_helmet_heavy_*` (Ithil Guard helmets), and `wm_gondor_shield_*_minas_ithil` (Minas Ithil shields) — items whose display names read "Ithil Guard" / "Minas Ithil," not "Ithilien." Visually they made rangers look like heavily-armored garrison guards rather than light skirmisher rangers. Rangers should only wear items literally branded "Ithilien."

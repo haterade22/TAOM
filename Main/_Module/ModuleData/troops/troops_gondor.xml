@@ -3443,8 +3443,8 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v1_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long" />
@@ -3454,8 +3454,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
@@ -3465,8 +3465,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_masked" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
@@ -3476,8 +3476,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long_var_slim" />
@@ -3487,8 +3487,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v1_b" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v1_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short" />
@@ -3498,8 +3498,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v1_c" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short_slim" />
@@ -3509,8 +3509,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v1_d" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v1_d" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_masked" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short_var" />
@@ -3520,8 +3520,8 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_ithilien_bow" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v2_b" />
+        <equipment slot="Item2" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short_var_slim" />
