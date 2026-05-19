@@ -504,7 +504,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item1"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Item2"
 				id="Item.wm_gondor_spear" />
@@ -546,7 +546,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item1"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Item2"
 				id="Item.wm_gondor_spear" />
@@ -588,7 +588,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item1"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Item2"
 				id="Item.wm_gondor_spear" />
@@ -630,7 +630,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item1"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Item2"
 				id="Item.wm_gondor_spear" />
@@ -669,7 +669,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Item1"
 				id="Item.wm_gondor_sword_a01" />
@@ -714,7 +714,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Item1"
 				id="Item.wm_gondor_sword_a01" />
@@ -1092,7 +1092,7 @@
 				id="Item.wm_gondor_lossarnach_1h_axe_a" />
 			<Equipment
 				slot="Item3"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -1131,7 +1131,7 @@
 				id="Item.wm_gondor_lossarnach_1h_axe_a" />
 			<Equipment
 				slot="Item3"
-				id="Item.gond_shld2" />
+				id="Item.wm_gondor_shield_a02" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />

@@ -49,6 +49,9 @@ tools/node_modules/
 tools/**/__pycache__/
 tools/**/*.pyc
 
+# Audit-MeshRefs.ps1 report output (regenerated per run)
+tools/reports/
+
 # Serena MCP code-indexing cache
 .serena/cache/
 .serena/project.local.yml

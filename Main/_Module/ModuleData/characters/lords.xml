@@ -8617,7 +8617,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item1" id="Item.anduril" />
-                <equipment slot="Item2" id="Item.gond_shld2" />
+                <equipment slot="Item2" id="Item.wm_gondor_shield_a02" />
                 <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
                 <equipment slot="Body" id="Item.gondor_armor" />
                 <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />

@@ -3127,7 +3127,7 @@
                     id="Item.dunland_caerdh_bracer_heavy_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.dunland_caerdh_pauldron__elite_a" />
+                    id="Item.dunland_caerdh_pauldron_elite_a" />
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"

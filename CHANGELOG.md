@@ -2,6 +2,24 @@
 
 ## 2026-05-18
 
+### feat(tooling): add `tools/Audit-MeshRefs.ps1` — diff every Armory XML `mesh=` ref against every `.tpac` mesh, find orphans in one pass
+
+New PowerShell CLI at [tools/Audit-MeshRefs.ps1](tools/Audit-MeshRefs.ps1). Loads `TpacTool.Lib.dll` (`E:\Release_v0.5.1\bin\`) via `Add-Type`, recursively parses every `.tpac` under a module's `Assets/`, recursively scans every `.xml` under `ModuleData/` for `mesh="X"` attributes, and emits a `REPORT.md` plus three sorted text files under `tools/reports/mesh-audit/<module>/`. Orphan items (refs with no mesh) are the cleanup list; orphan assets (meshes nothing references) are informational. First LOTRLOME_Armory run: 4235 `.tpac` parsed, 0 failures, 3829 unique meshes, 3287 XML refs, **20 orphan items**. Replaces the unsafe "the screenshot is exhaustive" workflow that almost flagged `wm_pelargir_shield_a/b` as orphans in an earlier conversation. Report output is `.gitignore`'d (`tools/reports/`).
+
+### fix(armory): clean 20 orphan mesh refs across LOTRLOME_Armory + TAOM cross-refs
+
+Each row is a `mesh="X"` reference whose `X` does not exist in any `.tpac`. Fix path varies by category:
+
+| Category | Fix | Files touched |
+|---|---|---|
+| `gond_shld2`, `gond_shld2_lrg` (Gondor shields) | Deleted Item rows from Armory. Retargeted 9 TAOM refs to `Item.wm_gondor_shield_a02` (8 in `taom_char_creation_equipment.xml`, 1 in `lords.xml` for Boromir-like lord at line 8620). | `LOTRAOM_shields.xml` (Armory), `taom_char_creation_equipment.xml`, `lords.xml` |
+| `m_northern_armor_{a1,a2,a3,b1,b2,b3,b4}` + `m_northern_cape_a` (Northern mercenary) | Item IDs preserved (no consumers but defensive). `mesh=` retargeted by tier: `a1/2/3` → `sk_northern_armor_light_{a,a_slim,b}`, `b1/2/3/4` → `sk_northern_armor_medium_{a,a_slim,b,b_slim}`, cape → `clo_sk_northern_pauldron_cape_c`. | `mercenary/body_armors.xml`, `mercenary/shoulder_armors.xml` |
+| `sk_dwarf_erebor_pauldron_scale_cape_{a,b}_{blue,green,red}` (6 Erebor) | Deleted via PowerShell regex (Edit-tool string-match failed on CRLF line endings). Zero consumers in TAOM or Armory. | `erebor/shoulder_armors.xml` |
+| `dunland_caerdh_pauldron__elite_a` (double-underscore typo) | Renamed id + mesh + name-key to single underscore in Armory item XML; updated 13 `loc_dunland.xml` language files; updated 5 TAOM consumer refs (4 in `taom_equipment_sets_dunland.xml`, 1 in `troops_dunland.xml`). New name resolves to `dunland_caerdh_pauldron_elite_a` mesh which exists in `.tpac`. Save-compat note: existing characters wearing the typo'd item lose it on load (acceptable per user instruction to "fix the typo"). | Armory `dunland/shoulder_armors.xml` + 13 language files + 2 TAOM files |
+| `wm_swan_knight_spear_{,gondor_,pg_}banner` (3 crafting pieces) | Updated `mesh="..."` to `_flag` suffix variants which exist in `.tpac`. CraftingPiece ids unchanged (would break 9 `<AvailablePiece id="...">` refs in `weapon_descriptions.xslt`). | `LOTRLOME_crafting_pieces.xml` |
+
+Final audit confirms **0 orphan items** in LOTRLOME_Armory.
+
 ### feat(troops): add standalone T9 `gondor_ithilien_ranger` with 12 Ithilien-themed equipment rosters
 
 New troop `gondor_ithilien_ranger` (level 41, `is_basic_troop="true"`, default_group=`Ranged`, Bow=280) appended after `gondor_brv_ranger` in [Main/_Module/ModuleData/troops/troops_gondor.xml](Main/_Module/ModuleData/troops/troops_gondor.xml). Standalone — not reachable via BRV upgrade chain (no existing troop upgrades into it; `<upgrade_targets />` empty). Spawned units randomize across 12 `<EquipmentRoster>` blocks built from every Ithilien-prefixed item in `LOTRLOME_Armory`:

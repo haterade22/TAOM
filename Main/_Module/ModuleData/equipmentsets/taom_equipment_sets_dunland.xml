@@ -7,7 +7,7 @@
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
         <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -56,7 +56,7 @@
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_elite_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_lord_a" />
         <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -70,7 +70,7 @@
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
             <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -119,7 +119,7 @@
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_elite_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
-            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron__elite_a" />
+            <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_caerdh_shield_lord_a" />
             <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
