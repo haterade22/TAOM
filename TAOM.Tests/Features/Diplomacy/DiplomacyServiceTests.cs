@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Models;
+using TAOM.Features.Execution;
 
 namespace TAOM.Tests.Features.Diplomacy;
 
@@ -13,6 +14,7 @@ public class DiplomacyServiceTests
 {
     private IDiplomacyConfigProvider _configProvider;
     private IAllianceAdapter _allianceAdapter;
+    private IAlignmentService _alignmentService;
     private IModLogger _logger;
     private DiplomacyService _sut;
 
@@ -21,6 +23,7 @@ public class DiplomacyServiceTests
     {
         _configProvider = Substitute.For<IDiplomacyConfigProvider>();
         _allianceAdapter = Substitute.For<IAllianceAdapter>();
+        _alignmentService = Substitute.For<IAlignmentService>();
         _logger = Substitute.For<IModLogger>();
 
         var config = new DiplomacyConfig
@@ -37,7 +40,7 @@ public class DiplomacyServiceTests
         };
         _configProvider.LoadConfig().Returns(config);
 
-        _sut = new DiplomacyService(_configProvider, _allianceAdapter, _logger);
+        _sut = new DiplomacyService(_configProvider, _allianceAdapter, _alignmentService, _logger);
     }
 
     [TestMethod]
@@ -133,6 +136,69 @@ public class DiplomacyServiceTests
         _allianceAdapter.Received(1).StartAlliance("erebor", "sturgia");
         _allianceAdapter.Received(1).StartAlliance("rivendell", "lothlorien");
         _allianceAdapter.DidNotReceive().StartAlliance("erebor", "mirkwood");
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_PermanentTier_ReturnsFalse()
+    {
+        // Permanent tier blocks war regardless of alignment-service answer.
+        _alignmentService.AreSameAlignment(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+
+        Assert.IsFalse(_sut.IsWarAllowed("empire_w", "vlandia"));
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_SameAlignmentFree_ReturnsFalse()
+    {
+        // The bug case: mirkwood vs sturgia (Dale) — no tier in config, same "free" alignment.
+        _alignmentService.AreSameAlignment("mirkwood", "sturgia").Returns(true);
+
+        Assert.IsFalse(_sut.IsWarAllowed("mirkwood", "sturgia"));
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_SameAlignmentEvil_ReturnsFalse()
+    {
+        // Evil-vs-evil: both gates compose (Permanent OR same alignment); covers OR semantics.
+        _alignmentService.AreSameAlignment("isengard", "dolguldur").Returns(true);
+
+        Assert.IsFalse(_sut.IsWarAllowed("isengard", "dolguldur"));
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_DifferentAlignment_ReturnsTrue()
+    {
+        // Gondor vs Mordor — Hostile tier, different alignment. War must be allowed.
+        _alignmentService.AreSameAlignment("empire_w", "empire_s").Returns(false);
+
+        Assert.IsTrue(_sut.IsWarAllowed("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_NeutralAlignment_ReturnsTrue()
+    {
+        // Neutrals (Umbar, Khand-equivalent) can war each other. AreSameAlignment returns false for neutrals.
+        _alignmentService.AreSameAlignment("umbar", "shaghana").Returns(false);
+
+        Assert.IsTrue(_sut.IsWarAllowed("umbar", "shaghana"));
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_OneNeutralOneFree_ReturnsTrue()
+    {
+        // Mixed neutral-vs-free: neutrals do not gain alignment protection.
+        _alignmentService.AreSameAlignment("umbar", "empire_w").Returns(false);
+
+        Assert.IsTrue(_sut.IsWarAllowed("umbar", "empire_w"));
+    }
+
+    [TestMethod]
+    public void IsWarAllowed_UnknownIds_ReturnsTrue()
+    {
+        // Vanilla third-party kingdoms not in alignment.json fall through to allowed.
+        _alignmentService.AreSameAlignment("unknown_a", "unknown_b").Returns(false);
+
+        Assert.IsTrue(_sut.IsWarAllowed("unknown_a", "unknown_b"));
     }
 
     [TestMethod]

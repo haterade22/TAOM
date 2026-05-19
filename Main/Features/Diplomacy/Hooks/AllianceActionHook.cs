@@ -26,11 +26,11 @@ public class AllianceActionHook : IOnAllianceAction
 
     public bool ShouldPreventWarDeclaration(string factionAId, string factionBId)
     {
-        var isPermanent = _diplomacyService.GetRelationshipTier(factionAId, factionBId) == AllianceTier.Permanent;
-        if (isPermanent)
-            _logger.LogInfo($"[Diplomacy] War declaration blocked: {factionAId} <-> {factionBId} (Permanent)");
+        var blocked = !_diplomacyService.IsWarAllowed(factionAId, factionBId);
+        if (blocked)
+            _logger.LogInfo($"[Diplomacy] War declaration blocked: {factionAId} <-> {factionBId}");
         else
             _logger.LogDebug($"[Diplomacy] War declaration allowed: {factionAId} <-> {factionBId}");
-        return isPermanent;
+        return blocked;
     }
 }

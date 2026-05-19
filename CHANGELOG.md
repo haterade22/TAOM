@@ -2,6 +2,21 @@
 
 ## 2026-05-19
 
+### fix(diplomacy): block war between same-alignment kingdoms (#203)
+
+In-game notifications showed *Bard II calling Erebor to war against Mirkwood* and *Thranduil declaring war on Dale* — all three are tagged `"free"` in [`alignment.json`](Main/_Module/ModuleData/execution/alignment.json) and should not be able to war each other. The two existing war-block gates ([`TaomKingdomDecisionPermissionModel.IsWarDecisionAllowedBetweenKingdoms`](Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs) + the [`DeclareWarAction.ApplyInternal` Harmony Prefix](Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs)) only blocked when the per-pair tier in `diplomacy.json` was `Permanent`. Permanent was reserved for canonical lore alliances (Gondor-Rohan, Erebor-Dale, the Elven trio); other free-vs-free pairs were at `Natural` or missing entirely (`mirkwood↔sturgia` defaulted to `Neutral`).
+
+Added [`IDiplomacyService.IsWarAllowed(a, b)`](Main/Features/Diplomacy/IDiplomacyService.cs) composing the existing `Permanent`-tier check with `TAOM.Features.Execution.IAlignmentService.AreSameAlignment` (reused as-is from the Execution feature — no file moves). Routed both gates through it. `AreSameAlignment` returns `false` whenever either side is `Neutral`, so Umbar/Khand-equivalents stay free to war each other. Neither `diplomacy.json` nor `alignment.json` was modified — the gate is policy, the JSON files keep their separate semantics (tier still drives the alliance-score modifier).
+
+The Harmony Prefix on `DeclareWarAction.ApplyInternal` covers all 8 public `ApplyBy*` entry points including `ApplyByCallToWarAgreement`, so the call-to-war path ("Bard II calls Erebor") is gated at execution time too — confirmed via decompile of `DeclareWarAction` against installed v1.3.15 DLL.
+
+No save-load healer per user direction — existing wars in current saves persist (AI will sue for peace naturally); new war decisions are blocked going forward.
+
+Files: [DiplomacyService.cs](Main/Features/Diplomacy/DiplomacyService.cs), [IDiplomacyService.cs](Main/Features/Diplomacy/IDiplomacyService.cs), [TaomKingdomDecisionPermissionModel.cs](Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs), [AllianceActionHook.cs](Main/Features/Diplomacy/Hooks/AllianceActionHook.cs), [DiplomacyServiceTests.cs](TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs) (+7 cases), [AllianceActionHookTests.cs](TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs) (3 updated).
+Research: ilspycmd verified `DefaultKingdomDecisionPermissionModel.IsWarDecisionAllowedBetweenKingdoms` signature + `DeclareWarAction.ApplyInternal` private-static entry-point uniqueness against installed v1.3.15 DLL.
+Save-compat: no schema changes. Existing wars persist; new decisions blocked.
+Not-tested: Harmony entry-point invocation (`/deep-review` 5/5 PASS — Standards, Compatibility, Efficiency, Completeness, Data-Flow agents all green; in-game verification pending). RCA at [docs/reviews/rca-diplomacy-same-alignment-war-block-2026-05-19.md](docs/reviews/rca-diplomacy-same-alignment-war-block-2026-05-19.md).
+
 ### fix(career-system): remove orphan `career_menu.json` entries for disabled WIP careers
 
 `taom_careers.xml` disabled the `far_harad_halftroll` and `cave_troll_master` careers on 2026-05-14 by wrapping them in XML comments (`<!-- DISABLED ... WIP; not ready for live game yet. Re-enable by uncommenting. -->`), but the matching entries in [career_menu.json](Main/_Module/ModuleData/charactercreation/career_menu.json) were left in place — JSON has no comment syntax, so they remained active config. The `CareerCultureCoverageTests.EveryJsonEntry_HasMatchingCareerInXml` cross-reference test correctly caught the mismatch and had been failing for 5 days. Removed both JSON entries; full test suite now 2147/2147 (was 2146 + 1 pre-existing fail). When the careers are re-enabled in XML, the JSON entries need to be re-added alongside (the test will catch the inverse case too).

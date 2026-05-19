@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy.Models;
+using TAOM.Features.Execution;
 
 namespace TAOM.Features.Diplomacy;
 
 public class DiplomacyService : IDiplomacyService
 {
     private readonly IAllianceAdapter _allianceAdapter;
+    private readonly IAlignmentService _alignmentService;
     private readonly IModLogger _logger;
     private readonly Dictionary<(string, string), AllianceTier> _relationships;
     private readonly List<KingdomRelationship> _permanentRelationships;
@@ -16,9 +18,11 @@ public class DiplomacyService : IDiplomacyService
     public DiplomacyService(
         IDiplomacyConfigProvider configProvider,
         IAllianceAdapter allianceAdapter,
+        IAlignmentService alignmentService,
         IModLogger logger)
     {
         _allianceAdapter = allianceAdapter;
+        _alignmentService = alignmentService;
         _logger = logger;
         _relationships = new Dictionary<(string, string), AllianceTier>();
         _permanentRelationships = new List<KingdomRelationship>();
@@ -57,6 +61,15 @@ public class DiplomacyService : IDiplomacyService
     public bool IsAllianceAllowed(string kingdomAId, string kingdomBId)
     {
         return GetRelationshipTier(kingdomAId, kingdomBId) != AllianceTier.Hostile;
+    }
+
+    public bool IsWarAllowed(string kingdomAId, string kingdomBId)
+    {
+        if (GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent)
+            return false;
+        if (_alignmentService.AreSameAlignment(kingdomAId, kingdomBId))
+            return false;
+        return true;
     }
 
     public void EstablishInitialAlliances()

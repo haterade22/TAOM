@@ -31,8 +31,7 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
     public override bool IsWarDecisionAllowedBetweenKingdoms(
         Kingdom kingdom1, Kingdom kingdom2, out TextObject reason)
     {
-        if (_diplomacyService.GetRelationshipTier(kingdom1.StringId, kingdom2.StringId)
-            == AllianceTier.Permanent)
+        if (!_diplomacyService.IsWarAllowed(kingdom1.StringId, kingdom2.StringId))
         {
             reason = new TextObject("{=taom_war_blocked}These kingdoms are bound by an unbreakable alliance.");
             return false;

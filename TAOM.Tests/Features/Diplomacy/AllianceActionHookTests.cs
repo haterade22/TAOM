@@ -50,19 +50,17 @@ public class AllianceActionHookTests
     }
 
     [TestMethod]
-    public void ShouldPreventWarDeclaration_PermanentAllies_ReturnsTrue()
+    public void ShouldPreventWarDeclaration_WarBlocked_ReturnsTrue()
     {
-        _diplomacyService.GetRelationshipTier("empire_w", "vlandia")
-            .Returns(AllianceTier.Permanent);
+        _diplomacyService.IsWarAllowed("empire_w", "vlandia").Returns(false);
 
         Assert.IsTrue(_sut.ShouldPreventWarDeclaration("empire_w", "vlandia"));
     }
 
     [TestMethod]
-    public void ShouldPreventWarDeclaration_HostileKingdoms_ReturnsFalse()
+    public void ShouldPreventWarDeclaration_WarAllowed_ReturnsFalse()
     {
-        _diplomacyService.GetRelationshipTier("empire_w", "empire_s")
-            .Returns(AllianceTier.Hostile);
+        _diplomacyService.IsWarAllowed("empire_w", "empire_s").Returns(true);
 
         Assert.IsFalse(_sut.ShouldPreventWarDeclaration("empire_w", "empire_s"));
     }
@@ -70,8 +68,7 @@ public class AllianceActionHookTests
     [TestMethod]
     public void ShouldPreventWarDeclaration_NeutralKingdoms_ReturnsFalse()
     {
-        _diplomacyService.GetRelationshipTier("battania", "aserai")
-            .Returns(AllianceTier.Neutral);
+        _diplomacyService.IsWarAllowed("battania", "aserai").Returns(true);
 
         Assert.IsFalse(_sut.ShouldPreventWarDeclaration("battania", "aserai"));
     }
