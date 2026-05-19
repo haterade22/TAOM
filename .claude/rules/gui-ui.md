@@ -45,6 +45,41 @@ If ANY of these are true: **do NOT inject children into that container**. Use bo
 mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))  // NEVER DO THIS
 ```
 
+## Custom GauntletLayer Input Wiring (MANDATORY)
+
+When adding a custom `GauntletLayer` overlay to a `ScreenBase` via Harmony postfix on `OnInitialize` (NOT a `MissionScreen` overlay, NOT a full-screen replacement), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions()` after construction or it paints but is invisible to the screen's input dispatcher — buttons render but never receive clicks. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
+
+**Correct pattern:**
+```csharp
+[HarmonyPostfix]
+[HarmonyPatch(typeof(GauntletInventoryScreen), "OnInitialize")]
+public static void OnInitialize_Postfix(GauntletInventoryScreen __instance)
+{
+    _layer = new GauntletLayer("GauntletLayer", zOrder, true);
+    _layer.InputRestrictions.SetInputRestrictions();        // ← REQUIRED
+    _layer.LoadMovie(prefabName, dataSourceVm);
+    __instance.AddLayer(_layer);
+}
+
+[HarmonyPrefix]
+[HarmonyPatch(typeof(GauntletInventoryScreen), "OnFinalize")]
+public static void OnFinalize_Prefix(GauntletInventoryScreen __instance)
+{
+    if (_layer != null)
+    {
+        _layer.InputRestrictions.ResetInputRestrictions();  // ← REQUIRED before Remove
+        __instance.RemoveLayer(_layer);
+        _layer = null;
+    }
+}
+```
+
+**Do NOT** also set `IsFocusLayer = true` on a parasitic overlay — that steals Esc/Tab/hotkey focus from the live vanilla screen underneath. `IsFocusLayer = true` is appropriate ONLY for full-screen replacements (`GauntletCareerScreen`, `GauntletFiefManagementScreen`), where the layer IS the screen. For overlays, the parent widget in the prefab should have `DoNotAcceptEvents="true"` so non-button areas pass clicks through to vanilla.
+
+**Why:** EquipPresets shipped with the "Presets" inventory-overlay button as a silent no-op. The custom layer at z-order 1000 was added without `SetInputRestrictions()`. Button rendered, datasource bindings active, but the layer never registered with the input dispatcher — mouse events passed through to vanilla inventory. Two prior reviews (`/deep-review` + Codex review #28) both missed it because they focused on service-layer correctness and TAOM had no other `ScreenBase` overlay to compare against. **Rendering ≠ live.** RCA: `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`. Feedback memory: `feedback_gauntlet_overlay_input_wiring.md`.
+
+**Verification:** `taom-src` confirmed `GauntletLayer.InputRestrictions` is `TaleWorlds.ScreenSystem.InputRestrictions` (defined on base class `ScreenLayer`), and `SetInputRestrictions(bool isMouseVisible = true, InputUsageMask mask = InputUsageMask.All)` has both defaults supplied — parameterless call is valid in v1.3.15.
+
 ## TaleWorlds VM property setters: verify no-op early returns (MANDATORY)
 
 Before writing `vm.X = value` on any TaleWorlds-owned ViewModel property (especially anything ending in `Index`, `SelectedItem`, `Selected*`, or `Current*`), decompile the setter to confirm whether it returns early when `value == _backingField`. Many setters are guarded:
