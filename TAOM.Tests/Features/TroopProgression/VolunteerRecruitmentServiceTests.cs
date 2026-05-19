@@ -235,7 +235,7 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_WeightedRandom_LowRoll_ReturnsRegularTroop()
     {
-        // town_EW1: gondor_ano_peasant(7) + gondor_mt_trainee(3) = total 10
+        // town_EW1: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
         // Roll 0 should return gondor_ano_peasant
         _random.Next(10).Returns(0);
         var context = new VolunteerContext(
@@ -252,7 +252,7 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_WeightedRandom_BoundaryRoll_ReturnsCorrectTroop()
     {
-        // town_EW1: gondor_ano_peasant(7) + gondor_mt_trainee(3) = total 10
+        // town_EW1: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
         // Roll 6 = last index in regular range
         _random.Next(10).Returns(6);
         var context = new VolunteerContext(
@@ -264,6 +264,55 @@ public class VolunteerRecruitmentServiceTests
         var result = _sut.GetVolunteerTroopId(context);
 
         Assert.AreEqual("gondor_ano_peasant", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AmonostCastle_LowRoll_ReturnsRegularTroop()
+    {
+        // castle_EW15 = Amonost: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
+        _random.Next(10).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "castle_EW15",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("gondor_ano_peasant", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ErethirCastle_LowRoll_ReturnsRegularTroop()
+    {
+        // castle_EW16 = Erethir: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
+        _random.Next(10).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "castle_EW16",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("gondor_ano_peasant", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_NonIthilienSettlement_HighRoll_DoesNotReturnIthilienRanger()
+    {
+        // town_EW2 = Osgiliath: gondor_ano_peasant(7) + gondor_osg_veteran(3) — region-specificity check
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: "town_EW2",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreNotEqual("gondor_ithilien_ranger", result);
+        Assert.AreEqual("gondor_osg_veteran", result);
     }
 
     // --- Specific settlement verifications ---
