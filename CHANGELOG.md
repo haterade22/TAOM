@@ -2,6 +2,18 @@
 
 ## 2026-05-19
 
+### fix(equip-presets): wire input restrictions on overlay layer — Presets button was a silent no-op
+
+The "Presets" button rendered in the inventory overlay (`Patch33_GauntletInventoryScreen`) but clicking it did nothing — no dialog, no message, no error. Root cause: the custom `GauntletLayer` at z-order 1000 was added via `__instance.AddLayer(_layer)` without calling `_layer.InputRestrictions.SetInputRestrictions()`. Without that call the layer paints but never registers with the screen's input dispatcher, so mouse events pass through the overlay to the vanilla inventory beneath. Every other TAOM-authored Gauntlet layer that needs mouse input on a `ScreenBase` (`GauntletFiefManagementScreen`, `GauntletCareerScreen`) calls `SetInputRestrictions()`; EquipPresets was the only one that didn't, which is why neither `/deep-review` nor Codex review #28 caught it — both focused on the service layer + prefab structure, not layer input wiring (no inventory-overlay precedent in the project to compare against).
+
+Deliberately did NOT set `IsFocusLayer = true` — that would steal Esc / Tab / hotkey focus from the live inventory underneath. Parent widget in `PresetsOverlay.xml` is `DoNotAcceptEvents="true"` so non-button areas still pass clicks through to vanilla. Paired the `SetInputRestrictions()` call in `OnInitialize_Postfix` with `ResetInputRestrictions()` in `OnFinalize_Prefix`, matching the `GauntletCareerScreen` teardown pattern (caught by `/deep-review` data-flow agent on the followup pass).
+
+RCA at `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md` documents why this slipped past three review layers and adds a `feedback_gauntlet_overlay_input_wiring.md` memory entry plus a `/deep-review` GUI-checklist follow-up.
+
+Files: [Main/Features/EquipPresets/Hooks/Patch33_GauntletInventoryScreen.cs](Main/Features/EquipPresets/Hooks/Patch33_GauntletInventoryScreen.cs).
+Research: ilspycmd verified `GauntletLayer.InputRestrictions` + `SetInputRestrictions(bool, InputUsageMask)` (both defaults supplied) against installed v1.3.15 DLL.
+Not-tested: Harmony entry-point — verified live in-game (button now opens the Save/Load/Update/Delete multi-selection inquiry).
+
 ### feat(troops): upgrade Ithilien Ranger quivers to Noldar Elven Arrows (best in Armory)
 
 Replaced vanilla `bodkin_arrows_a` (3 thrust_damage, 32 stack) in all 8 `gondor_ithilien_ranger` rosters with [Noldar Elven Arrow](https://example) variants from LOTRLOME_Armory (`wm_elven_arrow_v*_*` — 5 thrust_damage, 50 stack). Audited every `Type="Arrows"` item in the Armory: Noldar Elven Arrows have the highest damage tier (tied with Mirkwood at 5) AND the largest quiver (50 vs Mirkwood 40, vs Isengard 40, vs Erebor 30) — clear "best" winner. Isengard/Erebor arrows at 3 damage are worse than vanilla. No Gondor-prefixed arrow exists in the Armory; the Noldar series is the closest lore-appropriate upgrade (Lothlórien gifted Ithilien Rangers their cloaks per book lore — elven ammunition fits the Galadhrim-adjacent theme).

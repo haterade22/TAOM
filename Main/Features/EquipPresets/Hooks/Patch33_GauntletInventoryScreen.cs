@@ -59,6 +59,12 @@ public static class Patch33_GauntletInventoryScreen
 
             // GauntletLayer(string name, int localOrder, bool shouldClear) — verified ilspy 2026-05-06.
             _layer = new GauntletLayer("GauntletLayer", OverlayLayerZOrder, true);
+            // Required: without InputRestrictions the layer paints but never registers with the
+            // screen's input dispatcher — mouse events pass through and the button click is a
+            // silent no-op. Do NOT set IsFocusLayer (would steal Esc/Tab/hotkey focus from the
+            // live inventory). Parent widget in PresetsOverlay.xml is DoNotAcceptEvents="true" so
+            // non-button areas still pass clicks through to vanilla.
+            _layer.InputRestrictions.SetInputRestrictions();
             _layer.LoadMovie(PrefabName, _overlayVm);
             __instance.AddLayer(_layer);
         }
@@ -77,6 +83,10 @@ public static class Patch33_GauntletInventoryScreen
         {
             if (_layer != null)
             {
+                // Mirror GauntletCareerScreen / GauntletFiefManagementScreen teardown: release
+                // the input mask we set in OnInitialize before removing the layer. ScreenBase's
+                // HandleFinalize does not reset InputRestrictions itself.
+                _layer.InputRestrictions.ResetInputRestrictions();
                 __instance.RemoveLayer(_layer);
                 _layer = null;
             }
