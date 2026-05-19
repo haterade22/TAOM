@@ -170,52 +170,58 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.western_javelin_1_t2" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.western_javelin_2_t3" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.eastern_javelin_2_t3" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.generic_javelin_1_t3" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.northern_javelin_2_t3" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_black_ash_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.western_javelin_1_t2" />
         <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
     </Equipments>
@@ -246,58 +252,64 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.woodland_throwing_axe_1_t1" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.western_throwing_axe_1_t1" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.northern_throwing_axe_1_t1" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.highland_throwing_axe_1_t2" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.southern_throwing_axe_1_t4" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_black_ash_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.highland_throwing_axe_1_t2" />
         <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
     </Equipments>
@@ -326,58 +338,64 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item0" id="Item.southern_throwing_axe_1_t4" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item0" id="Item.southern_throwing_axe_1_t4" />
         <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item0" id="Item.highland_throwing_axe_1_t2" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item0" id="Item.southern_throwing_axe_1_t4" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item0" id="Item.southern_throwing_axe_1_t4" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_black_ash_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
-        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item0" id="Item.highland_throwing_axe_1_t2" />
+        <equipment slot="Item1" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_los_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+        <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
     </Equipments>
