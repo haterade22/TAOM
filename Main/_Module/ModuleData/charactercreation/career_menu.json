@@ -152,14 +152,6 @@
         "attribute_level_to_add": 1
     },
     {
-        "career_string_id": "far_harad_halftroll",
-        "skills": ["TwoHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
-    },
-    {
         "career_string_id": "codyan_legionaire",
         "skills": ["OneHanded", "Tactics"],
         "attribute": "Endurance",
@@ -323,14 +315,6 @@
         "career_string_id": "warg_scout",
         "skills": ["Riding", "Scouting"],
         "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
-    },
-    {
-        "career_string_id": "cave_troll_master",
-        "skills": ["TwoHanded", "Leadership"],
-        "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1

@@ -2,6 +2,10 @@
 
 ## 2026-05-19
 
+### fix(career-system): remove orphan `career_menu.json` entries for disabled WIP careers
+
+`taom_careers.xml` disabled the `far_harad_halftroll` and `cave_troll_master` careers on 2026-05-14 by wrapping them in XML comments (`<!-- DISABLED ... WIP; not ready for live game yet. Re-enable by uncommenting. -->`), but the matching entries in [career_menu.json](Main/_Module/ModuleData/charactercreation/career_menu.json) were left in place — JSON has no comment syntax, so they remained active config. The `CareerCultureCoverageTests.EveryJsonEntry_HasMatchingCareerInXml` cross-reference test correctly caught the mismatch and had been failing for 5 days. Removed both JSON entries; full test suite now 2147/2147 (was 2146 + 1 pre-existing fail). When the careers are re-enabled in XML, the JSON entries need to be re-added alongside (the test will catch the inverse case too).
+
 ### chore(harness): codify Gauntlet-overlay input-wiring rule in scoped GUI rule + `/deep-review`
 
 Adds "Custom GauntletLayer Input Wiring (MANDATORY)" section to [.claude/rules/gui-ui.md](.claude/rules/gui-ui.md) and a tenth check to the `/deep-review` Standards agent prompt in [.claude/skills/deep-review/SKILL.md](.claude/skills/deep-review/SKILL.md). The rule fires whenever a new `GauntletLayer` is instantiated in a Harmony postfix on `<ScreenBase>.OnInitialize`: the layer MUST call `_layer.InputRestrictions.SetInputRestrictions()` after construction (paired with `ResetInputRestrictions()` in teardown) or the layer paints but the input dispatcher never sees clicks. The follow-up to the EquipPresets Presets-button RCA (`docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`); the bug shipped past 2 prior reviews because TAOM had no prior `ScreenBase` overlay to compare against. Distinct from `IsFocusLayer = true`, which is the right choice ONLY for full-screen replacements (`GauntletCareerScreen`, `GauntletFiefManagementScreen`) and the wrong choice for parasitic overlays that need vanilla to keep hotkey focus.
