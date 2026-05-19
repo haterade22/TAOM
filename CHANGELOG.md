@@ -1,5 +1,17 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-19
+
+### refactor(troops): drop Ithil Guard plate rosters from `gondor_ithilien_ranger` (12 → 8)
+
+Removed `EquipmentRoster` blocks 9–12 from [troops_gondor.xml](Main/_Module/ModuleData/troops/troops_gondor.xml). Those rosters used `sk_gd_ith_chest_noble_*` (Ithil Guard plate), `sk_gd_ith_noble_helmet_heavy_*` (Ithil Guard helmets), and `wm_gondor_shield_*_minas_ithil` (Minas Ithil shields) — items whose display names read "Ithil Guard" / "Minas Ithil," not "Ithilien." Visually they made rangers look like heavily-armored garrison guards rather than light skirmisher rangers. Rangers should only wear items literally branded "Ithilien."
+
+Remaining 8 rosters all use the ranger-leather wardrobe: `ithilien_jerkin_{long,long_slim,long_var,long_var_slim,short,short_slim,short_var,short_var_slim}` bodies, `ithilien_hood{,_var,_masked,_masked_var}` heads, `ithilien_boots{,_heavy}` legs, `ithilien_cloak{,_var}` capes, `ithilien_bracers` gloves, `wm_ithilien_bow{,_b,_c}` bows, `bodkin_arrows_a` ×2 quivers, `wm_gondor_sword_a10` sidearm (no Ithilien sword exists in the Armory).
+
+Save-compat: pure subtraction — no troop IDs changed, only rosters dropped. Existing recruits keep their already-spawned equipment; new recruits draw from the remaining 8 rosters.
+
+Build verified via `dotnet build -t:CoreCompile` (0 errors). Post-build copy step fails because game is running (BehaviorTrees.dll locked) — environment issue per `.claude/rules/environment-failures.md`, not a code regression.
+
 ## 2026-05-18
 
 ### feat(tooling): add `tools/Audit-MeshRefs.ps1` — diff every Armory XML `mesh=` ref against every `.tpac` mesh, find orphans in one pass

@@ -3529,50 +3529,6 @@
         <equipment slot="Gloves" id="Item.ithilien_bracers" />
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
-      <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.wm_gondor_shield_a_minas_ithil" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
-        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_med_a" />
-        <equipment slot="Cape" id="Item.ithilien_cloak" />
-        <equipment slot="Gloves" id="Item.ithilien_bracers" />
-        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
-      </EquipmentRoster>
-      <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.wm_gondor_shield_d_new_minas_ithil" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
-        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_b" />
-        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_med_b" />
-        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
-        <equipment slot="Gloves" id="Item.ithilien_bracers" />
-        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
-      </EquipmentRoster>
-      <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.wm_gondor_shield_d_new_minas_ithil" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
-        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_heavy_a" />
-        <equipment slot="Cape" id="Item.ithilien_cloak" />
-        <equipment slot="Gloves" id="Item.ithilien_bracers" />
-        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
-      </EquipmentRoster>
-      <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
-        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item2" id="Item.wm_gondor_shield_a_minas_ithil" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
-        <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_b" />
-        <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_heavy_b" />
-        <equipment slot="Cape" id="Item.ithilien_cloak_var" />
-        <equipment slot="Gloves" id="Item.ithilien_bracers" />
-        <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
-      </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
     </Equipments>
   </NPCCharacter>
