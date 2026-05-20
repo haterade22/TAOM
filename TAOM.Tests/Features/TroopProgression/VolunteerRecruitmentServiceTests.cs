@@ -287,6 +287,7 @@ public class VolunteerRecruitmentServiceTests
     [DataRow("town_EW1",    "gondor_ano_peasant")]
     [DataRow("town_EW4",    "gondor_pel_skirmisher")]
     [DataRow("town_EW5",    "gondor_da_noble")]
+    [DataRow("town_EW6",    "gondor_anf_levy")]
     [DataRow("town_EW9",    "gondor_cal_noble")]
     [DataRow("town_EW10",   "gondor_ser_noble")]
     [DataRow("town_EW11",   "gondor_met_noble")]
@@ -295,7 +296,7 @@ public class VolunteerRecruitmentServiceTests
     [DataRow("castle_EW8",  "gondor_pg_volunteer")]
     [DataRow("castle_EW10", "gondor_har_conscript")]
     [DataRow("castle_EW11", "gondor_bel_recruit")]
-    [DataRow("castle_EW9",  "gondor_bel_recruit")]
+    [DataRow("castle_EW9",  "gondor_tol_arbalest")]
     [DataRow("castle_EW12", "gondor_lin_noble")]
     public void GetVolunteerTroopId_SpecificSettlements_ReturnExpectedRegularTroop(
         string settlementId, string expectedTroopId)
@@ -320,10 +321,13 @@ public class VolunteerRecruitmentServiceTests
     [DataRow("clan_empire_west_3",  "gondor_leb_militia")]
     [DataRow("clan_empire_west_5",  "gondor_loss_lumberman")]
     [DataRow("clan_empire_west_6",  "gondor_pg_volunteer")]
+    [DataRow("clan_empire_west_8",  "gondor_anf_levy")]
     [DataRow("clan_empire_west_9",  "gondor_brv_bowman")]
     [DataRow("clan_empire_west_10", "gondor_har_conscript")]
     [DataRow("clan_empire_west_11", "gondor_ca_noble")]
     [DataRow("clan_empire_west_12", "gondor_lin_noble")]
+    [DataRow("clan_empire_west_13", "gondor_tol_arbalest")]
+    [DataRow("clan_empire_west_14", "gondor_anf_levy")]
     public void GetVolunteerTroopId_SpecificClans_ReturnExpectedRegularTroop(
         string clanId, string expectedTroopId)
     {
@@ -351,6 +355,30 @@ public class VolunteerRecruitmentServiceTests
             settlementId: null,
             boundSettlementId: null,
             ownerClanId: "clan_empire_west_11",
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    [TestMethod]
+    // clan_empire_west_8 (House of Olindurionath, Anfalas + Seregond):
+    // anf_levy(5) + ser_pikeman(2) + ser_noble(2) + anf_guardsman(1) — total 10
+    [DataRow(0, "gondor_anf_levy")]
+    [DataRow(4, "gondor_anf_levy")]
+    [DataRow(5, "gondor_ser_pikeman")]
+    [DataRow(6, "gondor_ser_pikeman")]
+    [DataRow(7, "gondor_ser_noble")]
+    [DataRow(8, "gondor_ser_noble")]
+    [DataRow(9, "gondor_anf_guardsman")]
+    public void GetVolunteerTroopId_ClanEmpireWest8_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
+    {
+        _random.Next(10).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_empire_west_8",
             cultureId: "gondor");
 
         var result = _sut.GetVolunteerTroopId(context);

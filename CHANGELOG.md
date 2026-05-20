@@ -15,6 +15,18 @@ Files: [CareerMenuService.cs](Main/Features/CharacterCreation/CareerMenuService.
 Save-compat: no schema changes. The runtime grant at finalize is unchanged; this fix only affects what the player sees during CC.
 Research: ilspycmd against `TaleWorlds.CampaignSystem.dll` v1.3.15 confirmed `CharacterCreationContent.TryGetEquipmentToUse` is the vanilla equipment-id resolution chain; decompiled `CharacterCreationReviewStageView.AddCharacterEntity` confirmed it reads from `Hero.MainHero.CharacterObject.Equipment` (not from a menu character).
 
+### feat(troop-progression): Lond Cirion + Caras Tolfalas pools + 2 new clan registrations
+
+Second-round Gondor (EW) volunteer tuning in [`VolunteerRecruitmentService.cs`](Main/Features/TroopProgression/VolunteerRecruitmentService.cs):
+
+- **`town_EW6` (Lond Cirion / Anfalas coast)** — pool retuned to `anf_levy 7, anf_guardsman 3` (was `bel_recruit 7, da_noble 3`). Lond Cirion is the oldest Númenórean settlement, geographically Anfalas, owned by clan_empire_west_14 (House of Baranionath).
+- **`castle_EW9` (Caras Tolfalas)** — flipped to `tol_arbalest 7, bel_recruit 3` (was `bel_recruit 7, tol_arbalest 3`). Tolfalas crossbowmen are now the regular at their namesake island settlement; Belfalas mainland recruits remain as filler.
+- **`clan_empire_west_8` (House of Olindurionath, owns Serelond / "Seregond")** — replaced single-troop `har_conscript 8/2` pool (Harondor mismatch) with a 4-troop Anfalas + Seregond mix: `anf_levy 5, ser_pikeman 2, ser_noble 2, anf_guardsman 1` (total 10). Captures both the clan's Anfalas geography and its rule over Serelond.
+- **`clan_empire_west_13` (House of Hirilionath) registered for the first time** with `tol_arbalest 7, bel_recruit 3`. Clan 13 owns `castle_EW9` (Caras Tolfalas), so its lord-party pool now matches the settlement-level pool.
+- **`clan_empire_west_14` (House of Baranionath) registered for the first time** with `anf_levy 7, anf_guardsman 3`. Clan 14 owns `town_EW6` (Lond Cirion), pool matches settlement.
+
+Test coverage: extended `SpecificSettlements` (added `town_EW6`, updated `castle_EW9` expected troop) + `SpecificClans` (added clans 8 / 13 / 14) DataRows. New parameterized boundary-roll DataRow for clan 8's 4-troop pool (verifies the 5/2/2/1 split across rolls 0–9).
+
 ### refactor(troop-progression): volunteer pools accept arbitrary-length tuples
 
 [`VolunteerRecruitmentService.AddSettlement`](Main/Features/TroopProgression/VolunteerRecruitmentService.cs) and `AddClan` migrated from the fixed 2-troop shape `(id, weight, id, weight)` to `params (string troopId, int weight)[]`. Every existing call site rewritten to the tuple shape — pure mechanical change, no behavior delta for any pool that did not actively need a 3+ entry table. New `internal static BuildPool` validates: rejects empty pools, non-positive weights, and blank troop ids — surfacing data errors at static-init time instead of as silent zero-probability rolls. Unblocks the next data round.

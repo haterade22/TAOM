@@ -94,7 +94,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddSettlement("town_EW3",  ("gondor_osg_veteran", 6),     ("gondor_ano_peasant", 4));
         AddSettlement("town_EW4",  ("gondor_pel_skirmisher", 7),  ("gondor_leb_militia", 3));
         AddSettlement("town_EW5",  ("gondor_da_noble", 7),        ("gondor_bel_recruit", 3));
-        AddSettlement("town_EW6",  ("gondor_bel_recruit", 7),     ("gondor_da_noble", 3));
+        AddSettlement("town_EW6",  ("gondor_anf_levy", 7),        ("gondor_anf_guardsman", 3));
         AddSettlement("town_EW7",  ("gondor_leb_militia", 7),     ("gondor_lg_noble", 3));
         AddSettlement("town_EW8",  ("gondor_pg_volunteer", 7),    ("gondor_arn_noble", 3));
         AddSettlement("town_EW9",  ("gondor_cal_noble", 7),       ("gondor_lam_clansman", 3));
@@ -110,7 +110,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddSettlement("castle_EW6",  ("gondor_har_conscript", 8),   ("gondor_har_conscript", 2));
         AddSettlement("castle_EW7",  ("gondor_anf_levy", 7),        ("gondor_ser_noble", 3));
         AddSettlement("castle_EW8",  ("gondor_pg_volunteer", 7),    ("gondor_arn_noble", 3));
-        AddSettlement("castle_EW9",  ("gondor_bel_recruit", 7),     ("gondor_tol_arbalest", 3));
+        AddSettlement("castle_EW9",  ("gondor_tol_arbalest", 7),    ("gondor_bel_recruit", 3));
         AddSettlement("castle_EW10", ("gondor_har_conscript", 7),   ("gondor_met_noble", 3));
         AddSettlement("castle_EW11", ("gondor_bel_recruit", 7),     ("gondor_da_noble", 3));
         AddSettlement("castle_EW12", ("gondor_lin_noble", 7),       ("gondor_leb_militia", 3));
@@ -135,11 +135,17 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddClan("clan_empire_west_5", ("gondor_loss_lumberman", 7), ("gondor_loss_axebearer", 3));
         AddClan("clan_empire_west_6", ("gondor_pg_volunteer", 8),   ("gondor_pg_volunteer", 2));
         AddClan("clan_empire_west_7", ("gondor_lam_clansman", 7),   ("gondor_cal_noble", 3));
-        AddClan("clan_empire_west_8", ("gondor_har_conscript", 8),  ("gondor_har_conscript", 2));
+        AddClan("clan_empire_west_8",
+            ("gondor_anf_levy",      5),
+            ("gondor_ser_pikeman",   2),
+            ("gondor_ser_noble",     2),
+            ("gondor_anf_guardsman", 1));
         AddClan("clan_empire_west_9",  ("gondor_brv_bowman", 7),  ("gondor_ano_peasant", 3));
         AddClan("clan_empire_west_10", ("gondor_har_conscript", 7), ("gondor_met_noble", 3));
         AddClan("clan_empire_west_11", ("gondor_ca_noble", 9),    ("gondor_ithilien_ranger", 1));
         AddClan("clan_empire_west_12", ("gondor_lin_noble", 7),   ("gondor_ano_peasant", 3));
+        AddClan("clan_empire_west_13", ("gondor_tol_arbalest", 7), ("gondor_bel_recruit", 3));
+        AddClan("clan_empire_west_14", ("gondor_anf_levy", 7),    ("gondor_anf_guardsman", 3));
     }
 
     // --- Gondor Culture Fallback ---
