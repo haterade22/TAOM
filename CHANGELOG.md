@@ -2,6 +2,19 @@
 
 ## 2026-05-20
 
+### fix(career-system): review-stage 3D preview now matches career selection (#206)
+
+The career-menu live preview (shipped in `0048c33`) updated the menu's `NarrativeMenuCharacter` but not `Hero.MainHero.Equipment`. The downstream [`CharacterCreationReviewStageView`](file:///E:/Decompiled_Bannerlord/Modules/SandBox.GauntletUI/SandBox.GauntletUI.CharacterCreation/CharacterCreationReviewStageView.cs) builds its 3D agent from `Hero.MainHero.CharacterObject.Equipment` directly — so the review stage was still showing the youth/culture-default outfit even after the player picked a career, even though the career menu itself looked correct.
+
+[`CareerMenuService.UpdateCareerEquipmentPreview`](Main/Features/CharacterCreation/CareerMenuService.cs) now runs the same two-step apply chain that `OnCharacterCreationFinalize` does — `IPlayerEquipmentService.ApplyPlayerStartingEquipment` (resets to culture+title default) → `ICareerStartingEquipmentService.ApplyCareerStartingEquipment` (overlays career roster). Two consequences:
+
+1. Review stage 3D agent now matches the career-menu preview and the actual spawn equipment.
+2. Switching careers mid-CC (cavalry → ranged → infantry) starts from a clean culture-default slate each click rather than inheriting the previous career's overrides — important because `Equipment.FillFrom` is a slot-merge, not a wholesale replace.
+
+Files: [CareerMenuService.cs](Main/Features/CharacterCreation/CareerMenuService.cs) (+2 ctor deps, expanded UpdateCareerEquipmentPreview), [CareerMenuServiceTests.cs](TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs) (ctor update + null-manager assertions extended to the new services), [docs/features/career-system.md](docs/features/career-system.md) (Live Preview section rewritten to explain WHY two updates are needed — menu char buffer vs `Hero.MainHero.Equipment` for review stage).
+Save-compat: no schema changes. The runtime grant at finalize is unchanged; this fix only affects what the player sees during CC.
+Research: ilspycmd against `TaleWorlds.CampaignSystem.dll` v1.3.15 confirmed `CharacterCreationContent.TryGetEquipmentToUse` is the vanilla equipment-id resolution chain; decompiled `CharacterCreationReviewStageView.AddCharacterEntity` confirmed it reads from `Hero.MainHero.CharacterObject.Equipment` (not from a menu character).
+
 ### refactor(troop-progression): volunteer pools accept arbitrary-length tuples
 
 [`VolunteerRecruitmentService.AddSettlement`](Main/Features/TroopProgression/VolunteerRecruitmentService.cs) and `AddClan` migrated from the fixed 2-troop shape `(id, weight, id, weight)` to `params (string troopId, int weight)[]`. Every existing call site rewritten to the tuple shape — pure mechanical change, no behavior delta for any pool that did not actively need a 3+ entry table. New `internal static BuildPool` validates: rejects empty pools, non-positive weights, and blank troop ids — surfacing data errors at static-init time instead of as silent zero-probability rolls. Unblocks the next data round.

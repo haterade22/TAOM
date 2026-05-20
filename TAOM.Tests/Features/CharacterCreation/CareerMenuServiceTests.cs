@@ -18,6 +18,8 @@ public class CareerMenuServiceTests
     private ICareerMenuDataProvider _dataProvider;
     private ICareerArchetypeService _archetypeService;
     private IEquipmentRosterProvider _equipmentRosterProvider;
+    private IPlayerEquipmentService _playerEquipmentService;
+    private ICareerStartingEquipmentService _careerStartingEquipmentService;
     private IModLogger _logger;
     private CareerMenuService _sut;
 
@@ -28,8 +30,10 @@ public class CareerMenuServiceTests
         _dataProvider = Substitute.For<ICareerMenuDataProvider>();
         _archetypeService = Substitute.For<ICareerArchetypeService>();
         _equipmentRosterProvider = Substitute.For<IEquipmentRosterProvider>();
+        _playerEquipmentService = Substitute.For<IPlayerEquipmentService>();
+        _careerStartingEquipmentService = Substitute.For<ICareerStartingEquipmentService>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new CareerMenuService(_registry, _dataProvider, _archetypeService, _equipmentRosterProvider, _logger);
+        _sut = new CareerMenuService(_registry, _dataProvider, _archetypeService, _equipmentRosterProvider, _playerEquipmentService, _careerStartingEquipmentService, _logger);
     }
 
     [TestMethod]
@@ -162,7 +166,7 @@ public class CareerMenuServiceTests
     [TestMethod]
     public void FreshService_HasNullSelectedCareer()
     {
-        var freshService = new CareerMenuService(_registry, _dataProvider, _archetypeService, _equipmentRosterProvider, _logger);
+        var freshService = new CareerMenuService(_registry, _dataProvider, _archetypeService, _equipmentRosterProvider, _playerEquipmentService, _careerStartingEquipmentService, _logger);
         Assert.IsNull(freshService.SelectedCareerStringId);
     }
 
@@ -180,6 +184,8 @@ public class CareerMenuServiceTests
         Assert.AreEqual("ranger_of_ithilien", _sut.SelectedCareerStringId);
         _archetypeService.DidNotReceiveWithAnyArgs().TryGetArchetype(default, out _);
         _equipmentRosterProvider.DidNotReceiveWithAnyArgs().GetRoster(default);
+        _playerEquipmentService.DidNotReceiveWithAnyArgs().ApplyPlayerStartingEquipment(default, default, default, default);
+        _careerStartingEquipmentService.DidNotReceiveWithAnyArgs().ApplyCareerStartingEquipment(default, default, default, default);
     }
 
     [TestMethod]

@@ -20,6 +20,8 @@ public class CareerMenuService : ICareerMenuService
     private readonly ICareerMenuDataProvider _dataProvider;
     private readonly ICareerArchetypeService _archetypeService;
     private readonly IEquipmentRosterProvider _equipmentRosterProvider;
+    private readonly IPlayerEquipmentService _playerEquipmentService;
+    private readonly ICareerStartingEquipmentService _careerStartingEquipmentService;
     private readonly IModLogger _logger;
 
     public string SelectedCareerStringId { get; private set; }
@@ -63,12 +65,16 @@ public class CareerMenuService : ICareerMenuService
         ICareerMenuDataProvider dataProvider,
         ICareerArchetypeService archetypeService,
         IEquipmentRosterProvider equipmentRosterProvider,
+        IPlayerEquipmentService playerEquipmentService,
+        ICareerStartingEquipmentService careerStartingEquipmentService,
         IModLogger logger)
     {
         _registry = registry;
         _dataProvider = dataProvider;
         _archetypeService = archetypeService;
         _equipmentRosterProvider = equipmentRosterProvider;
+        _playerEquipmentService = playerEquipmentService;
+        _careerStartingEquipmentService = careerStartingEquipmentService;
         _logger = logger;
     }
 
@@ -140,12 +146,21 @@ public class CareerMenuService : ICareerMenuService
         UpdateCareerEquipmentPreview(careerStringId, manager);
     }
 
-    // Live equipment-preview update on the CC career menu. Mirrors the youth-stage pattern
-    // in NarrativeMenuBuilder.UpdateYouthEquipment — finds the player character in the
-    // current menu by StringId and calls SetEquipment with the archetype roster. The engine
-    // re-renders the 3D agent automatically. Same fallback policy as the runtime grant
-    // service (CareerStartingEquipmentService): missing archetype or roster → log + leave
-    // whatever's currently rendered (youth equipment) in place.
+    // Live equipment-preview update on the CC career menu. Two updates are needed because
+    // the review stage (CharacterCreationReviewStage) reads from Hero.MainHero.Equipment
+    // directly, while the career menu's NarrativeMenuCharacter has its own per-menu
+    // equipment buffer:
+    //
+    //   1. Update the career-menu NarrativeMenuCharacter via SetEquipment — drives the 3D
+    //      preview on the career menu itself. Mirrors NarrativeMenuBuilder.UpdateYouthEquipment.
+    //   2. Update Hero.MainHero.BattleEquipment / CivilianEquipment by re-running the same
+    //      two-step apply that OnCharacterCreationFinalize does: culture+title roster (resets
+    //      slate) → career roster (overrides body/leg/weapons + cavalry horse). The review
+    //      stage's AgentVisuals reads Hero.MainHero.Equipment so this step is what makes
+    //      the review screen match what the player will spawn with.
+    //
+    // Same fallback policy as the runtime grant: missing archetype / roster → log + leave
+    // whatever's currently rendered in place.
     private void UpdateCareerEquipmentPreview(string careerId, CharacterCreationManager manager)
     {
         if (manager?.CurrentMenu == null)
@@ -164,6 +179,7 @@ public class CareerMenuService : ICareerMenuService
             return;
         }
 
+        var heroId = Hero.MainHero?.StringId;
         var isFemale = Hero.MainHero?.IsFemale ?? false;
         var rosterId = CareerEquipmentRosterIds.Build(cultureId, archetype, isFemale);
         var roster = _equipmentRosterProvider.GetRoster(rosterId);
@@ -173,17 +189,35 @@ public class CareerMenuService : ICareerMenuService
             return;
         }
 
+        // (1) Career-menu NarrativeMenuCharacter preview
+        var updatedMenuChar = false;
         foreach (var character in manager.CurrentMenu.Characters)
         {
             if (character.StringId == "player_career_character")
             {
                 character.SetEquipment(roster);
-                _logger.LogInfo($"CareerMenuService: applied preview roster '{rosterId}'");
-                return;
+                updatedMenuChar = true;
+                break;
             }
         }
+        if (!updatedMenuChar)
+            _logger.LogWarning("CareerMenuService: 'player_career_character' not found in current menu — menu preview not updated");
 
-        _logger.LogWarning("CareerMenuService: 'player_career_character' not found in current menu — preview not updated");
+        // (2) Hero.MainHero equipment for the downstream review stage. Re-applies the
+        //     culture+title roster first so switching careers (e.g., cavalry → ranged) starts
+        //     from a clean culture-default slate rather than inheriting the previous career's
+        //     overrides. Then overlays the career roster, exactly as finalize does.
+        if (!string.IsNullOrEmpty(heroId))
+        {
+            var titleType = manager.CharacterCreationContent?.SelectedTitleType;
+            _playerEquipmentService.ApplyPlayerStartingEquipment(cultureId, titleType, isFemale, heroId);
+            _careerStartingEquipmentService.ApplyCareerStartingEquipment(cultureId, careerId, isFemale, heroId);
+            _logger.LogInfo($"CareerMenuService: applied preview roster '{rosterId}' (menu + Hero.MainHero)");
+        }
+        else
+        {
+            _logger.LogWarning("CareerMenuService: Hero.MainHero is null — review stage preview will not reflect career selection");
+        }
     }
 
     public IReadOnlyList<string> GetEligibleCultureIds(CareerDefinition career)
