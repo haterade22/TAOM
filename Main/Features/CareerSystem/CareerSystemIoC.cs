@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using DryIoc;
 using TAOM.Adapters;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Abilities.Executors;
+using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CareerSystem.Mutations;
 
 namespace TAOM.Features.CareerSystem;
@@ -32,8 +34,11 @@ public static class CareerSystemIoC
         // override bodies). Reads ICareerPassiveService + the static CareerAbilityBuffTracker.
         container.Register<Abilities.ICareerAgentStatService, Abilities.CareerAgentStatService>(Reuse.Singleton);
 
-        // Phase 4C: Ability effect execution — all 50 careers mapped to 3 archetypes
+        // Phase 4C: Ability effect execution — all 50 careers mapped to 3 archetypes.
+        // GetCareerArchetypeMap() is the single source of truth — the executor registry and
+        // the ICareerArchetypeService both read from it.
         container.RegisterDelegate(r => BuildAbilityEffectRegistry(r.Resolve<ICareerConfigProvider>()), Reuse.Singleton);
+        container.RegisterDelegate<ICareerArchetypeService>(_ => new CareerArchetypeService(GetCareerArchetypeMap()), Reuse.Singleton);
 
         // Phase 5: GameModel support
         container.Register<ICareerHeroAdapterFactory, CareerHeroAdapterFactory>(Reuse.Singleton);
@@ -42,93 +47,113 @@ public static class CareerSystemIoC
     private static CareerAbilityEffectRegistry BuildAbilityEffectRegistry(ICareerConfigProvider config)
     {
         var registry = new CareerAbilityEffectRegistry();
-
-        // ═══ GONDOR ═══
-        registry.Register(new InfantryAbilityExecutor("captain_of_osgiliath", config));
-        registry.Register(new RangedAbilityExecutor("ranger_of_ithilien", config));
-        registry.Register(new CavalryAbilityExecutor("knight_of_belfalas", config));
-
-        // ═══ MORDOR ═══
-        registry.Register(new InfantryAbilityExecutor("black_uruk_captain", config));
-        registry.Register(new InfantryAbilityExecutor("olog_hai_warchief", config));
-        registry.Register(new RangedAbilityExecutor("mulkerhili_cultist", config));
-        registry.Register(new CavalryAbilityExecutor("snaga_rider", config));
-
-        // ═══ ROHAN ═══
-        registry.Register(new InfantryAbilityExecutor("watchman_of_stangard", config));
-        registry.Register(new RangedAbilityExecutor("marksman_of_aldburg", config));
-        registry.Register(new CavalryAbilityExecutor("eotheod_windrider", config));
-
-        // ═══ DUNLAND ═══
-        registry.Register(new InfantryAbilityExecutor("avanc_luth_raider", config));
-        registry.Register(new RangedAbilityExecutor("wolfskin_hunter", config));
-        registry.Register(new CavalryAbilityExecutor("clanguard_rider", config));
-
-        // ═══ KHAND ═══
-        registry.Register(new InfantryAbilityExecutor("blademaster_of_ren", config));
-        registry.Register(new RangedAbilityExecutor("steppe_bowmaster", config));
-        registry.Register(new CavalryAbilityExecutor("chariot_warlord", config));
-
-        // ═══ HARAD ═══
-        registry.Register(new InfantryAbilityExecutor("tribesman_of_jelut", config));
-        // DISABLED 2026-05-14: Troll careers WIP; not ready for live game yet. Re-enable by uncommenting.
-        // registry.Register(new InfantryAbilityExecutor("far_harad_halftroll", config));
-        registry.Register(new RangedAbilityExecutor("pezarsani_javelineer", config));
-        registry.Register(new CavalryAbilityExecutor("mahud_beast_rider", config));
-
-        // ═══ EASTERLINGS / RHÛN ═══
-        registry.Register(new InfantryAbilityExecutor("codyan_legionaire", config));
-        registry.Register(new RangedAbilityExecutor("lokhas_drus_marksman", config));
-        registry.Register(new CavalryAbilityExecutor("balchoth_kan", config));
-
-        // ═══ DALE ═══
-        registry.Register(new InfantryAbilityExecutor("dale_guardsman", config));
-        registry.Register(new RangedAbilityExecutor("dale_marksman", config));
-        registry.Register(new CavalryAbilityExecutor("dale_outrider", config));
-
-        // ═══ EREBOR ═══
-        registry.Register(new InfantryAbilityExecutor("ironguard", config));
-        registry.Register(new RangedAbilityExecutor("crossbow_master", config));
-        registry.Register(new CavalryAbilityExecutor("ram_rider", config));
-
-        // ═══ RIVENDELL ═══
-        registry.Register(new InfantryAbilityExecutor("blade_dancer", config));
-        registry.Register(new RangedAbilityExecutor("elven_archer", config));
-        registry.Register(new CavalryAbilityExecutor("rivendell_knight", config));
-
-        // ═══ LOTHLORIEN ═══
-        registry.Register(new InfantryAbilityExecutor("warden", config));
-        registry.Register(new RangedAbilityExecutor("galadhrim_archer", config));
-        registry.Register(new CavalryAbilityExecutor("sentinel", config));
-
-        // ═══ MIRKWOOD ═══
-        registry.Register(new InfantryAbilityExecutor("shadow_walker", config));
-        registry.Register(new RangedAbilityExecutor("silvan_archer", config));
-        registry.Register(new CavalryAbilityExecutor("elk_rider", config));
-
-        // ═══ ISENGARD ═══
-        registry.Register(new InfantryAbilityExecutor("uruk_berserker", config));
-        registry.Register(new RangedAbilityExecutor("uruk_crossbow", config));
-        registry.Register(new CavalryAbilityExecutor("warg_scout", config));
-
-        // ═══ GUNDABAD ═══
-        // DISABLED 2026-05-14: Troll careers WIP; not ready for live game yet. Re-enable by uncommenting.
-        // registry.Register(new InfantryAbilityExecutor("cave_troll_master", config));
-        registry.Register(new RangedAbilityExecutor("goblin_sniper", config));
-        registry.Register(new CavalryAbilityExecutor("warg_pack_leader", config));
-
-        // ═══ DOL GULDUR ═══
-        registry.Register(new InfantryAbilityExecutor("shadow_warrior", config));
-        registry.Register(new RangedAbilityExecutor("necromancer_acolyte", config));
-        registry.Register(new CavalryAbilityExecutor("fell_rider", config));
-
-        // ═══ UMBAR ═══
-        registry.Register(new InfantryAbilityExecutor("corsair_boarder", config));
-        registry.Register(new RangedAbilityExecutor("corsair_crossbow", config));
-        registry.Register(new CavalryAbilityExecutor("corsair_captain", config));
-
+        foreach (var pair in GetCareerArchetypeMap())
+        {
+            switch (pair.Value)
+            {
+                case CareerArchetype.Infantry: registry.Register(new InfantryAbilityExecutor(pair.Key, config)); break;
+                case CareerArchetype.Ranged:   registry.Register(new RangedAbilityExecutor(pair.Key, config));   break;
+                case CareerArchetype.Cavalry:  registry.Register(new CavalryAbilityExecutor(pair.Key, config));  break;
+            }
+        }
         return registry;
     }
+
+    // Single source of truth: careerId → archetype. Both the ability executor registry
+    // and ICareerArchetypeService (used by CareerStartingEquipmentService) read from this.
+    // Cached in a static field — invoked twice during IoC startup (executor builder +
+    // archetype service registration), no reason to allocate the dict twice.
+    // Disabled careers (troll WIP) are absent — adding them here re-enables their executor.
+    private static readonly IReadOnlyDictionary<string, CareerArchetype> CareerArchetypeMap = BuildCareerArchetypeMap();
+
+    internal static IReadOnlyDictionary<string, CareerArchetype> GetCareerArchetypeMap() => CareerArchetypeMap;
+
+    private static IReadOnlyDictionary<string, CareerArchetype> BuildCareerArchetypeMap() => new Dictionary<string, CareerArchetype>
+    {
+        // ═══ GONDOR ═══
+        ["captain_of_osgiliath"]   = CareerArchetype.Infantry,
+        ["ranger_of_ithilien"]     = CareerArchetype.Ranged,
+        ["knight_of_belfalas"]     = CareerArchetype.Cavalry,
+
+        // ═══ MORDOR ═══
+        ["black_uruk_captain"]     = CareerArchetype.Infantry,
+        ["olog_hai_warchief"]      = CareerArchetype.Infantry,
+        ["mulkerhili_cultist"]     = CareerArchetype.Ranged,
+        ["snaga_rider"]            = CareerArchetype.Cavalry,
+
+        // ═══ ROHAN ═══
+        ["watchman_of_stangard"]   = CareerArchetype.Infantry,
+        ["marksman_of_aldburg"]    = CareerArchetype.Ranged,
+        ["eotheod_windrider"]      = CareerArchetype.Cavalry,
+
+        // ═══ DUNLAND ═══
+        ["avanc_luth_raider"]      = CareerArchetype.Infantry,
+        ["wolfskin_hunter"]        = CareerArchetype.Ranged,
+        ["clanguard_rider"]        = CareerArchetype.Cavalry,
+
+        // ═══ KHAND ═══
+        ["blademaster_of_ren"]     = CareerArchetype.Infantry,
+        ["steppe_bowmaster"]       = CareerArchetype.Ranged,
+        ["chariot_warlord"]        = CareerArchetype.Cavalry,
+
+        // ═══ HARAD ═══
+        ["tribesman_of_jelut"]     = CareerArchetype.Infantry,
+        // DISABLED 2026-05-14: Troll careers WIP — re-enable by uncommenting.
+        // ["far_harad_halftroll"]    = CareerArchetype.Infantry,
+        ["pezarsani_javelineer"]   = CareerArchetype.Ranged,
+        ["mahud_beast_rider"]      = CareerArchetype.Cavalry,
+
+        // ═══ EASTERLINGS / RHÛN ═══
+        ["codyan_legionaire"]      = CareerArchetype.Infantry,
+        ["lokhas_drus_marksman"]   = CareerArchetype.Ranged,
+        ["balchoth_kan"]           = CareerArchetype.Cavalry,
+
+        // ═══ DALE ═══
+        ["dale_guardsman"]         = CareerArchetype.Infantry,
+        ["dale_marksman"]          = CareerArchetype.Ranged,
+        ["dale_outrider"]          = CareerArchetype.Cavalry,
+
+        // ═══ EREBOR ═══
+        ["ironguard"]              = CareerArchetype.Infantry,
+        ["crossbow_master"]        = CareerArchetype.Ranged,
+        ["ram_rider"]              = CareerArchetype.Cavalry,
+
+        // ═══ RIVENDELL ═══
+        ["blade_dancer"]           = CareerArchetype.Infantry,
+        ["elven_archer"]           = CareerArchetype.Ranged,
+        ["rivendell_knight"]       = CareerArchetype.Cavalry,
+
+        // ═══ LOTHLORIEN ═══
+        ["warden"]                 = CareerArchetype.Infantry,
+        ["galadhrim_archer"]       = CareerArchetype.Ranged,
+        ["sentinel"]               = CareerArchetype.Cavalry,
+
+        // ═══ MIRKWOOD ═══
+        ["shadow_walker"]          = CareerArchetype.Infantry,
+        ["silvan_archer"]          = CareerArchetype.Ranged,
+        ["elk_rider"]              = CareerArchetype.Cavalry,
+
+        // ═══ ISENGARD ═══
+        ["uruk_berserker"]         = CareerArchetype.Infantry,
+        ["uruk_crossbow"]          = CareerArchetype.Ranged,
+        ["warg_scout"]             = CareerArchetype.Cavalry,
+
+        // ═══ GUNDABAD ═══
+        // DISABLED 2026-05-14: Troll careers WIP — re-enable by uncommenting.
+        // ["cave_troll_master"]      = CareerArchetype.Infantry,
+        ["goblin_sniper"]          = CareerArchetype.Ranged,
+        ["warg_pack_leader"]       = CareerArchetype.Cavalry,
+
+        // ═══ DOL GULDUR ═══
+        ["shadow_warrior"]         = CareerArchetype.Infantry,
+        ["necromancer_acolyte"]    = CareerArchetype.Ranged,
+        ["fell_rider"]             = CareerArchetype.Cavalry,
+
+        // ═══ UMBAR ═══
+        ["corsair_boarder"]        = CareerArchetype.Infantry,
+        ["corsair_crossbow"]       = CareerArchetype.Ranged,
+        ["corsair_captain"]        = CareerArchetype.Cavalry,
+    };
 
     public static void InitializeCalculators(IMutationCalculatorRegistry registry)
     {

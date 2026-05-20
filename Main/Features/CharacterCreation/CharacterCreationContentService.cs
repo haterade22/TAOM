@@ -30,6 +30,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     private readonly ICareerMenuService _careerMenuService;
     private readonly IPlayerStartupGoldService _playerStartupGoldService;
     private readonly IPlayerEquipmentService _playerEquipmentService;
+    private readonly ICareerStartingEquipmentService _careerStartingEquipmentService;
     // Phase 9b #125 — constructor-injected per feedback_no_service_locator_in_services.md
     // (banned IoC.Resolve in service body). Both used by AssignCareer.
     private readonly CareerSystem.ICareerCreationHandler _careerHandler;
@@ -51,6 +52,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         ICareerMenuService careerMenuService,
         IPlayerStartupGoldService playerStartupGoldService,
         IPlayerEquipmentService playerEquipmentService,
+        ICareerStartingEquipmentService careerStartingEquipmentService,
         CareerSystem.ICareerCreationHandler careerHandler,
         CareerSystem.ICareerRegistry careerRegistry,
         IModLogger logger)
@@ -63,6 +65,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         _careerMenuService = careerMenuService;
         _playerStartupGoldService = playerStartupGoldService;
         _playerEquipmentService = playerEquipmentService;
+        _careerStartingEquipmentService = careerStartingEquipmentService;
         _careerHandler = careerHandler;
         _careerRegistry = careerRegistry;
         _logger = logger;
@@ -204,15 +207,29 @@ public class CharacterCreationContentService : ICharacterCreationContentService
             _logger.LogError($"CC Finalize: player startup gold failed: {ex.Message}");
         }
 
+        var careerIsFemale = Hero.MainHero?.IsFemale ?? false;
         try
         {
             var titleType = manager.CharacterCreationContent?.SelectedTitleType;
-            var isFemale = Hero.MainHero?.IsFemale ?? false;
-            _playerEquipmentService.ApplyPlayerStartingEquipment(cultureId, titleType, isFemale, heroId);
+            _playerEquipmentService.ApplyPlayerStartingEquipment(cultureId, titleType, careerIsFemale, heroId);
         }
         catch (Exception ex)
         {
             _logger.LogError($"CC Finalize: player starting equipment failed: {ex.Message}");
+        }
+
+        // Career-archetype equipment overrides the culture-default roster applied above.
+        // AssignCareer just persisted the career on line 185; the menu-service property is
+        // the direct input that drove that persistence, so reading from it here is
+        // equivalent and avoids re-resolving via ICareerDataService.
+        try
+        {
+            var careerId = _careerMenuService.SelectedCareerStringId;
+            _careerStartingEquipmentService.ApplyCareerStartingEquipment(cultureId, careerId, careerIsFemale, heroId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"CC Finalize: career starting equipment failed: {ex.Message}");
         }
     }
 

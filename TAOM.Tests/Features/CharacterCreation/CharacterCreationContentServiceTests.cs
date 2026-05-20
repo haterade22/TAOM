@@ -34,6 +34,7 @@ public class CharacterCreationContentServiceTests
         _careerMenuService = Substitute.For<ICareerMenuService>();
         _playerStartupGoldService = Substitute.For<IPlayerStartupGoldService>();
         _playerEquipmentService = Substitute.For<IPlayerEquipmentService>();
+        var careerStartingEquipmentService = Substitute.For<ICareerStartingEquipmentService>();
         _logger = Substitute.For<IModLogger>();
         // Phase 9b #125 — career deps constructor-injected (formerly IoC.Resolve).
         var careerHandler = Substitute.For<TAOM.Features.CareerSystem.ICareerCreationHandler>();
@@ -48,6 +49,7 @@ public class CharacterCreationContentServiceTests
             _careerMenuService,
             _playerStartupGoldService,
             _playerEquipmentService,
+            careerStartingEquipmentService,
             careerHandler,
             careerRegistry,
             _logger);

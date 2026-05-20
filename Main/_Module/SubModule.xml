@@ -650,6 +650,15 @@
         <GameType value ="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Career-archetype starting equipment overrides applied after culture-default
+         roster at end of character creation (CareerStartingEquipmentService). -->
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_career_starting_equipment"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- XSLT to remove vanilla faction strings and replace with LOTR-themed -->
     <XmlNode>
       <XmlName id="GameText" path="module_strings"/>

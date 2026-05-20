@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TAOM career-archetype starting equipment rosters.
+
+  Roster ID convention: player_career_{cultureId}_{archetype}_{f|m}
+  Looked up at end of character creation by CareerStartingEquipmentService.
+  Layered on top of the culture-default roster applied by PlayerEquipmentService via
+  Equipment.FillFrom (slot-by-slot merge — slots NOT mentioned here keep whatever the
+  culture default set).
+
+  Archetypes (CareerArchetype.cs):
+    ranged   — bow + arrows + sword
+    cavalry  — spear + shield + sword + horse + harness
+    infantry — 1H + shield + (2H or spear, per-culture decided)
+
+  Scope: career rosters override only chest (Body) + boots (Leg) + weapons (Item0..2)
+  + horse/harness for cavalry. Head, Cape, Gloves inherit from culture-default.
+
+  Per-culture infantry weapon (2H vs spear):
+    gondor   = spear
+
+  Phasing: Gondor end-to-end first. Other cultures fall through to the culture-default
+  roster until their rosters are authored here — see ICareerStartingEquipmentService
+  RosterNotFound handling.
+-->
+<EquipmentRosters>
+
+    <!-- ═══ GONDOR — RANGED (Ranger of Ithilien) ═══ -->
+
+    <EquipmentRoster id="player_career_gondor_ranged_m" culture="Culture.gondor">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Body"  id="Item.starter_ranged_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_ranged_gondor_leg_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_gondor_ranged_f" culture="Culture.gondor">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Body"  id="Item.starter_ranged_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_ranged_gondor_leg_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ GONDOR — CAVALRY (Knight of Belfalas) ═══ -->
+
+    <EquipmentRoster id="player_career_gondor_cavalry_m" culture="Culture.gondor">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
+            <Equipment slot="Horse" id="Item.charger" />
+            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_gondor_cavalry_f" culture="Culture.gondor">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
+            <Equipment slot="Horse" id="Item.charger" />
+            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ GONDOR — INFANTRY (Captain of Osgiliath); Gondor=spear ═══ -->
+
+    <EquipmentRoster id="player_career_gondor_infantry_m" culture="Culture.gondor">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
+            <Equipment slot="Body"  id="Item.starter_infantry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_infantry_gondor_leg_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_gondor_infantry_f" culture="Culture.gondor">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
+            <Equipment slot="Body"  id="Item.starter_infantry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_infantry_gondor_leg_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+</EquipmentRosters>
