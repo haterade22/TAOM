@@ -16,6 +16,8 @@ public class CareerMenuServiceTests
 {
     private ICareerRegistry _registry;
     private ICareerMenuDataProvider _dataProvider;
+    private ICareerArchetypeService _archetypeService;
+    private IEquipmentRosterProvider _equipmentRosterProvider;
     private IModLogger _logger;
     private CareerMenuService _sut;
 
@@ -24,8 +26,10 @@ public class CareerMenuServiceTests
     {
         _registry = Substitute.For<ICareerRegistry>();
         _dataProvider = Substitute.For<ICareerMenuDataProvider>();
+        _archetypeService = Substitute.For<ICareerArchetypeService>();
+        _equipmentRosterProvider = Substitute.For<IEquipmentRosterProvider>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new CareerMenuService(_registry, _dataProvider, _logger);
+        _sut = new CareerMenuService(_registry, _dataProvider, _archetypeService, _equipmentRosterProvider, _logger);
     }
 
     [TestMethod]
@@ -105,7 +109,7 @@ public class CareerMenuServiceTests
     [TestMethod]
     public void OnCareerOptionSelected_StoresCareerStringId()
     {
-        _sut.OnCareerOptionSelected("ranger_of_ithilien");
+        _sut.OnCareerOptionSelected("ranger_of_ithilien", manager: null);
 
         Assert.AreEqual("ranger_of_ithilien", _sut.SelectedCareerStringId);
     }
@@ -113,8 +117,8 @@ public class CareerMenuServiceTests
     [TestMethod]
     public void OnCareerOptionSelected_OverwritesPreviousSelection()
     {
-        _sut.OnCareerOptionSelected("ranger_of_ithilien");
-        _sut.OnCareerOptionSelected("captain_of_osgiliath");
+        _sut.OnCareerOptionSelected("ranger_of_ithilien", manager: null);
+        _sut.OnCareerOptionSelected("captain_of_osgiliath", manager: null);
 
         Assert.AreEqual("captain_of_osgiliath", _sut.SelectedCareerStringId);
     }
@@ -147,19 +151,43 @@ public class CareerMenuServiceTests
     public void FallbackOption_SetsSelectedCareerToNull()
     {
         // Simulate selecting a career then switching to fallback
-        _sut.OnCareerOptionSelected("ranger_of_ithilien");
+        _sut.OnCareerOptionSelected("ranger_of_ithilien", manager: null);
         Assert.AreEqual("ranger_of_ithilien", _sut.SelectedCareerStringId);
 
         // Fallback clears the selection
-        _sut.OnCareerOptionSelected(null);
+        _sut.OnCareerOptionSelected(null, manager: null);
         Assert.IsNull(_sut.SelectedCareerStringId);
     }
 
     [TestMethod]
     public void FreshService_HasNullSelectedCareer()
     {
-        var freshService = new CareerMenuService(_registry, _dataProvider, _logger);
+        var freshService = new CareerMenuService(_registry, _dataProvider, _archetypeService, _equipmentRosterProvider, _logger);
         Assert.IsNull(freshService.SelectedCareerStringId);
+    }
+
+    // --- Live equipment-preview update on selection ---
+    //
+    // The happy path requires a non-null CharacterCreationManager with a populated
+    // CurrentMenu — both are sealed TaleWorlds types that can't be unit-mocked. Those
+    // paths are covered by in-game smoke testing. Below are the unit-testable branches.
+
+    [TestMethod]
+    public void OnCareerOptionSelected_NullManager_StoresIdButSkipsPreviewLookups()
+    {
+        _sut.OnCareerOptionSelected("ranger_of_ithilien", manager: null);
+
+        Assert.AreEqual("ranger_of_ithilien", _sut.SelectedCareerStringId);
+        _archetypeService.DidNotReceiveWithAnyArgs().TryGetArchetype(default, out _);
+        _equipmentRosterProvider.DidNotReceiveWithAnyArgs().GetRoster(default);
+    }
+
+    [TestMethod]
+    public void OnCareerOptionSelected_NullManager_DoesNotThrow()
+    {
+        // Defensive: short-circuit at manager?.CurrentMenu == null guard.
+        _sut.OnCareerOptionSelected("knight_of_belfalas", manager: null);
+        // No assertion needed beyond "did not throw".
     }
 
     // --- Helpers ---

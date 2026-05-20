@@ -114,6 +114,8 @@ After the culture-default starting roster is applied at `OnCharacterCreationFina
 
 **Graceful fallback:** When no roster exists for a given (culture, archetype, gender) combination, [`CareerStartingEquipmentService`](../../Main/Features/CharacterCreation/CareerStartingEquipmentService.cs) logs a warning and leaves the already-applied culture default in place. This lets new cultures ship incrementally without code changes.
 
+**Live preview during CC:** When the player clicks a career option in the career menu, [`CareerMenuService.UpdateCareerEquipmentPreview`](../../Main/Features/CharacterCreation/CareerMenuService.cs) immediately calls `NarrativeMenuCharacter.SetEquipment(roster)` on the `player_career_character` so the on-screen 3D character updates to match the loadout they'll spawn with. Same fallback policy as the runtime grant: missing roster → log + leave the youth/culture-default preview in place. Mirrors the existing `NarrativeMenuBuilder.UpdateYouthEquipment` pattern.
+
 **Critical: `FillFrom` does NOT clear unspecified slots.** `Equipment.FillFrom(source)` copies only the slots that are present in the source roster — it does not zero-clear the target's other slots first. This means if your culture-default roster sets a Horse and your career roster does not mention Horse, the horse persists. For archetypes that should be on foot (ranged, infantry), include explicit empty overrides:
 
 ```xml

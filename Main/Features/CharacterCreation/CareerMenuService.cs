@@ -18,6 +18,8 @@ public class CareerMenuService : ICareerMenuService
 
     private readonly ICareerRegistry _registry;
     private readonly ICareerMenuDataProvider _dataProvider;
+    private readonly ICareerArchetypeService _archetypeService;
+    private readonly IEquipmentRosterProvider _equipmentRosterProvider;
     private readonly IModLogger _logger;
 
     public string SelectedCareerStringId { get; private set; }
@@ -56,10 +58,17 @@ public class CareerMenuService : ICareerMenuService
             ["Intelligence"] = () => DefaultCharacterAttributes.Intelligence,
         };
 
-    public CareerMenuService(ICareerRegistry registry, ICareerMenuDataProvider dataProvider, IModLogger logger)
+    public CareerMenuService(
+        ICareerRegistry registry,
+        ICareerMenuDataProvider dataProvider,
+        ICareerArchetypeService archetypeService,
+        IEquipmentRosterProvider equipmentRosterProvider,
+        IModLogger logger)
     {
         _registry = registry;
         _dataProvider = dataProvider;
+        _archetypeService = archetypeService;
+        _equipmentRosterProvider = equipmentRosterProvider;
         _logger = logger;
     }
 
@@ -125,9 +134,56 @@ public class CareerMenuService : ICareerMenuService
         return options;
     }
 
-    public void OnCareerOptionSelected(string careerStringId)
+    public void OnCareerOptionSelected(string careerStringId, CharacterCreationManager manager)
     {
         SelectedCareerStringId = careerStringId;
+        UpdateCareerEquipmentPreview(careerStringId, manager);
+    }
+
+    // Live equipment-preview update on the CC career menu. Mirrors the youth-stage pattern
+    // in NarrativeMenuBuilder.UpdateYouthEquipment — finds the player character in the
+    // current menu by StringId and calls SetEquipment with the archetype roster. The engine
+    // re-renders the 3D agent automatically. Same fallback policy as the runtime grant
+    // service (CareerStartingEquipmentService): missing archetype or roster → log + leave
+    // whatever's currently rendered (youth equipment) in place.
+    private void UpdateCareerEquipmentPreview(string careerId, CharacterCreationManager manager)
+    {
+        if (manager?.CurrentMenu == null)
+            return;
+
+        var cultureId = manager.CharacterCreationContent?.SelectedCulture?.StringId;
+        if (string.IsNullOrEmpty(cultureId))
+        {
+            _logger.LogWarning("CareerMenuService: SelectedCulture is null — skipping career equipment preview");
+            return;
+        }
+
+        if (!_archetypeService.TryGetArchetype(careerId, out var archetype))
+        {
+            _logger.LogInfo($"CareerMenuService: no archetype mapped for career '{careerId}' — leaving preview unchanged");
+            return;
+        }
+
+        var isFemale = Hero.MainHero?.IsFemale ?? false;
+        var rosterId = CareerEquipmentRosterIds.Build(cultureId, archetype, isFemale);
+        var roster = _equipmentRosterProvider.GetRoster(rosterId);
+        if (roster == null)
+        {
+            _logger.LogInfo($"CareerMenuService: roster '{rosterId}' not found — leaving preview unchanged");
+            return;
+        }
+
+        foreach (var character in manager.CurrentMenu.Characters)
+        {
+            if (character.StringId == "player_career_character")
+            {
+                character.SetEquipment(roster);
+                _logger.LogInfo($"CareerMenuService: applied preview roster '{rosterId}'");
+                return;
+            }
+        }
+
+        _logger.LogWarning("CareerMenuService: 'player_career_character' not found in current menu — preview not updated");
     }
 
     public IReadOnlyList<string> GetEligibleCultureIds(CareerDefinition career)
@@ -212,7 +268,7 @@ public class CareerMenuService : ICareerMenuService
             },
             (CharacterCreationManager manager) =>
             {
-                OnCareerOptionSelected(careerId);
+                OnCareerOptionSelected(careerId, manager);
                 _logger.LogInfo($"Player selected career: {careerId}");
             },
             null);
