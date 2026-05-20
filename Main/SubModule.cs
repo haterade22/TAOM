@@ -388,6 +388,14 @@ public class SubModule : MBSubModuleBase
             // Registered unconditionally so saves round-trip pending messengers even when
             // EnableMessengers is OFF (disabled = inert, not absent).
             campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.Messengers.MessengerCampaignBehavior>());
+
+            // CultureMarketplace (#207) — daily injection of LOTRLOME items into town markets
+            // keyed by owner culture. No SyncData (stock lives in vanilla Settlement.ItemRoster).
+            campaignStarter.AddBehavior(new Features.CultureMarketplace.CultureMarketplaceBehavior(
+                IoC.Resolve<Features.CultureMarketplace.ICultureItemPoolService>(),
+                IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceInjectionService>(),
+                IoC.Resolve<ITownRosterAdapter>(),
+                IoC.Resolve<IModLogger>()));
         }
     }
 

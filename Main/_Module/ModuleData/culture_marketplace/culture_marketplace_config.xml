@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Culture Marketplace overrides — optional.
+
+  When this file is empty the engine auto-derives culture → items pools from MBObjectManager
+  (group by ItemObject.Culture.StringId, with ID-prefix fallback for items missing the attribute).
+
+  Three sections:
+
+  1. <Culture id="..."> — per-culture blacklist / weight boost.
+       <Blacklist><Item id="anduril" /></Blacklist>     keep specific items quest-only
+       <Boost>   <Item id="..." weight="3.0" /></Boost> bias weighted-draw toward an item
+
+  2. <Routing> — cross-culture item routing (top-level).
+       <Item id="warg_brown" cultures="isengard,mordor,gundabad,dolguldur" />
+     Items listed here IGNORE their `Culture.X` attribute and ID-prefix fallback. They
+     appear ONLY in the listed cultures' pools. Use this for items that culturally belong
+     to a faction GROUP rather than a single culture — e.g., wargs are Isengard-tagged in
+     the upstream XML but lore-correctly should appear in every "evil" culture's markets.
+
+  Weight validation: 0 <= weight <= 1000, finite (NaN / Infinity rejected). Bad values
+  revert to 1.0 with a warning written to the TAOM log. Lifetime: provider is
+  Reuse.Singleton; changes require a full Bannerlord restart, not a save reload.
+-->
+<CultureMarketplaceConfig>
+
+  <Routing>
+    <!-- Warg mounts from Alliance.Wargs/ModuleData/Items/LOTR/lotr_warg.xml are tagged
+         Culture.isengard upstream but should appear in all four "evil" culture markets. -->
+    <Item id="warg_brown"  cultures="isengard,mordor,gundabad,dolguldur" />
+    <Item id="warg_dark"   cultures="isengard,mordor,gundabad,dolguldur" />
+    <Item id="warg_albino" cultures="isengard,mordor,gundabad,dolguldur" />
+    <Item id="warg_saddle" cultures="isengard,mordor,gundabad,dolguldur" />
+  </Routing>
+
+</CultureMarketplaceConfig>

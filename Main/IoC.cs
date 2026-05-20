@@ -43,6 +43,7 @@ using TAOM.Features.FiefManagement;
 using TAOM.Features.EquipPresets;
 using TAOM.Features.EditorCacheRebuild;
 using TAOM.Features.CulturalFeats;
+using TAOM.Features.CultureMarketplace;
 
 namespace TAOM;
 
@@ -99,6 +100,7 @@ public static class IoC
         FiefManagementIoC.RegisterFiefManagementFeature(container);
         EditorCacheRebuildIoC.RegisterEditorCacheRebuildFeature(container);
         CulturalFeatsIoC.RegisterCulturalFeatsFeature(container);
+        CultureMarketplaceIoC.RegisterCultureMarketplaceFeature(container);
 
         _container = container;
 
