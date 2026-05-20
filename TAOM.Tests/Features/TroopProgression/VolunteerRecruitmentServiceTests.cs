@@ -94,7 +94,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("gondor_bel_recruit", result);
+        // town_EW5 = Dol Amroth, regular troop is now Dol Amroth noble (was Belfalas recruit before geography pass)
+        Assert.AreEqual("gondor_da_noble", result);
     }
 
     [TestMethod]
@@ -109,8 +110,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        // town_EW5 = Dol Amroth, should return Belfalas recruit, not Húrinionath clan troop
-        Assert.AreEqual("gondor_bel_recruit", result);
+        // town_EW5 (Dol Amroth → da_noble) must win over the clan_empire_west_1 pool
+        Assert.AreEqual("gondor_da_noble", result);
     }
 
     // --- Bound settlement fallback (villages) ---
@@ -127,7 +128,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("gondor_bel_recruit", result);
+        // town_EW5 = Dol Amroth → da_noble at roll 0
+        Assert.AreEqual("gondor_da_noble", result);
     }
 
     [TestMethod]
@@ -142,8 +144,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        // castle_EW8 = Amon Dîn → Lossarnach
-        Assert.AreEqual("gondor_loss_lumberman", result);
+        // castle_EW8 = Hyarpëndë (Pinnath Gelin / Arndir) → pg_volunteer at roll 0
+        Assert.AreEqual("gondor_pg_volunteer", result);
     }
 
     // --- Clan fallback ---
@@ -184,11 +186,16 @@ public class VolunteerRecruitmentServiceTests
     // --- Weighted random selection ---
 
     [TestMethod]
-    public void GetVolunteerTroopId_MinasTirith_HighRoll_ReturnsIthilienRanger()
+    // town_EW1 (Minas Tirith): peasant(6) + ranger(1) + fountain_guard(1) + trainee(2) = total 10
+    [DataRow(0, "gondor_ano_peasant")]       // peasant covers rolls 0..5
+    [DataRow(5, "gondor_ano_peasant")]
+    [DataRow(6, "gondor_ithilien_ranger")]   // ranger at roll 6
+    [DataRow(7, "gondor_mt_fountain_guard")] // fountain_guard at roll 7
+    [DataRow(8, "gondor_mt_trainee")]        // trainee covers rolls 8..9
+    [DataRow(9, "gondor_mt_trainee")]
+    public void GetVolunteerTroopId_MinasTirith_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
     {
-        // town_EW1 = Minas Tirith: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        // Roll 7 should land in the gondor_ithilien_ranger range
-        _random.Next(10).Returns(7);
+        _random.Next(10).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_EW1",
             boundSettlementId: null,
@@ -197,114 +204,73 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("gondor_ithilien_ranger", result);
+        Assert.AreEqual(expectedTroopId, result);
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_AmonostCastle_HighRoll_ReturnsIthilienRanger()
+    // castle_EW15 / castle_EW16 (Amonost / Erethir, both owned by clan_empire_west_10 / Methir):
+    // har_conscript(7) + met_noble(3) — total 10
+    [DataRow("castle_EW15", 0, "gondor_har_conscript")]
+    [DataRow("castle_EW15", 6, "gondor_har_conscript")]
+    [DataRow("castle_EW15", 7, "gondor_met_noble")]
+    [DataRow("castle_EW15", 9, "gondor_met_noble")]
+    [DataRow("castle_EW16", 0, "gondor_har_conscript")]
+    [DataRow("castle_EW16", 6, "gondor_har_conscript")]
+    [DataRow("castle_EW16", 7, "gondor_met_noble")]
+    [DataRow("castle_EW16", 9, "gondor_met_noble")]
+    public void GetVolunteerTroopId_MethirClanCastles_BoundaryRolls_ReturnExpectedTroop(
+        string settlementId, int roll, string expectedTroopId)
     {
-        // castle_EW15 = Amonost: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        _random.Next(10).Returns(7);
+        _random.Next(10).Returns(roll);
         var context = new VolunteerContext(
-            settlementId: "castle_EW15",
+            settlementId: settlementId,
             boundSettlementId: null,
             ownerClanId: null,
             cultureId: "gondor");
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("gondor_ithilien_ranger", result);
+        Assert.AreEqual(expectedTroopId, result);
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_ErethirCastle_HighRoll_ReturnsIthilienRanger()
+    // clan_empire_west_1: peasant(6) + ranger(1) + fountain_guard(1) + trainee(2) = total 10
+    [DataRow(0, "gondor_ano_peasant")]
+    [DataRow(5, "gondor_ano_peasant")]
+    [DataRow(6, "gondor_ithilien_ranger")]
+    [DataRow(7, "gondor_mt_fountain_guard")]
+    [DataRow(8, "gondor_mt_trainee")]
+    [DataRow(9, "gondor_mt_trainee")]
+    public void GetVolunteerTroopId_ClanEmpireWest1_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
     {
-        // castle_EW16 = Erethir: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        _random.Next(10).Returns(7);
+        _random.Next(10).Returns(roll);
         var context = new VolunteerContext(
-            settlementId: "castle_EW16",
+            settlementId: null,
             boundSettlementId: null,
-            ownerClanId: null,
+            ownerClanId: "clan_empire_west_1",
             cultureId: "gondor");
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("gondor_ithilien_ranger", result);
+        Assert.AreEqual(expectedTroopId, result);
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_WeightedRandom_LowRoll_ReturnsRegularTroop()
+    // town_EW2 / town_EW3 (West / East Osgiliath): osg_veteran(6) + ano_peasant(4) — total 10
+    [DataRow("town_EW2", 0, "gondor_osg_veteran")]
+    [DataRow("town_EW2", 5, "gondor_osg_veteran")]
+    [DataRow("town_EW2", 6, "gondor_ano_peasant")]
+    [DataRow("town_EW2", 9, "gondor_ano_peasant")]
+    [DataRow("town_EW3", 0, "gondor_osg_veteran")]
+    [DataRow("town_EW3", 5, "gondor_osg_veteran")]
+    [DataRow("town_EW3", 6, "gondor_ano_peasant")]
+    [DataRow("town_EW3", 9, "gondor_ano_peasant")]
+    public void GetVolunteerTroopId_OsgiliathSettlements_BoundaryRolls_ReturnExpectedTroop(
+        string settlementId, int roll, string expectedTroopId)
     {
-        // town_EW1: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        // Roll 0 should return gondor_ano_peasant
-        _random.Next(10).Returns(0);
+        _random.Next(10).Returns(roll);
         var context = new VolunteerContext(
-            settlementId: "town_EW1",
-            boundSettlementId: null,
-            ownerClanId: null,
-            cultureId: "gondor");
-
-        var result = _sut.GetVolunteerTroopId(context);
-
-        Assert.AreEqual("gondor_ano_peasant", result);
-    }
-
-    [TestMethod]
-    public void GetVolunteerTroopId_WeightedRandom_BoundaryRoll_ReturnsCorrectTroop()
-    {
-        // town_EW1: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        // Roll 6 = last index in regular range
-        _random.Next(10).Returns(6);
-        var context = new VolunteerContext(
-            settlementId: "town_EW1",
-            boundSettlementId: null,
-            ownerClanId: null,
-            cultureId: "gondor");
-
-        var result = _sut.GetVolunteerTroopId(context);
-
-        Assert.AreEqual("gondor_ano_peasant", result);
-    }
-
-    [TestMethod]
-    public void GetVolunteerTroopId_AmonostCastle_LowRoll_ReturnsRegularTroop()
-    {
-        // castle_EW15 = Amonost: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        _random.Next(10).Returns(0);
-        var context = new VolunteerContext(
-            settlementId: "castle_EW15",
-            boundSettlementId: null,
-            ownerClanId: null,
-            cultureId: "gondor");
-
-        var result = _sut.GetVolunteerTroopId(context);
-
-        Assert.AreEqual("gondor_ano_peasant", result);
-    }
-
-    [TestMethod]
-    public void GetVolunteerTroopId_ErethirCastle_LowRoll_ReturnsRegularTroop()
-    {
-        // castle_EW16 = Erethir: gondor_ano_peasant(7) + gondor_ithilien_ranger(3) = total 10
-        _random.Next(10).Returns(0);
-        var context = new VolunteerContext(
-            settlementId: "castle_EW16",
-            boundSettlementId: null,
-            ownerClanId: null,
-            cultureId: "gondor");
-
-        var result = _sut.GetVolunteerTroopId(context);
-
-        Assert.AreEqual("gondor_ano_peasant", result);
-    }
-
-    [TestMethod]
-    public void GetVolunteerTroopId_NonIthilienSettlement_HighRoll_DoesNotReturnIthilienRanger()
-    {
-        // town_EW2 = Osgiliath: gondor_ano_peasant(7) + gondor_osg_veteran(3) — region-specificity check
-        _random.Next(10).Returns(7);
-        var context = new VolunteerContext(
-            settlementId: "town_EW2",
+            settlementId: settlementId,
             boundSettlementId: null,
             ownerClanId: null,
             cultureId: "gondor");
@@ -312,19 +278,25 @@ public class VolunteerRecruitmentServiceTests
         var result = _sut.GetVolunteerTroopId(context);
 
         Assert.AreNotEqual("gondor_ithilien_ranger", result);
-        Assert.AreEqual("gondor_osg_veteran", result);
+        Assert.AreEqual(expectedTroopId, result);
     }
 
     // --- Specific settlement verifications ---
 
     [TestMethod]
-    [DataRow("town_EW1", "gondor_ano_peasant")]
-    [DataRow("town_EW4", "gondor_leb_militia")]
-    [DataRow("town_EW5", "gondor_bel_recruit")]
-    [DataRow("town_EW9", "gondor_lam_clansman")]
-    [DataRow("castle_EW4", "gondor_ano_peasant")]
-    [DataRow("castle_EW8", "gondor_loss_lumberman")]
-    [DataRow("castle_EW9", "gondor_bel_recruit")]
+    [DataRow("town_EW1",    "gondor_ano_peasant")]
+    [DataRow("town_EW4",    "gondor_pel_skirmisher")]
+    [DataRow("town_EW5",    "gondor_da_noble")]
+    [DataRow("town_EW9",    "gondor_cal_noble")]
+    [DataRow("town_EW10",   "gondor_ser_noble")]
+    [DataRow("town_EW11",   "gondor_met_noble")]
+    [DataRow("castle_EW3",  "gondor_bel_recruit")]
+    [DataRow("castle_EW4",  "gondor_ca_noble")]
+    [DataRow("castle_EW8",  "gondor_pg_volunteer")]
+    [DataRow("castle_EW10", "gondor_har_conscript")]
+    [DataRow("castle_EW11", "gondor_bel_recruit")]
+    [DataRow("castle_EW9",  "gondor_bel_recruit")]
+    [DataRow("castle_EW12", "gondor_lin_noble")]
     public void GetVolunteerTroopId_SpecificSettlements_ReturnExpectedRegularTroop(
         string settlementId, string expectedTroopId)
     {
@@ -343,11 +315,15 @@ public class VolunteerRecruitmentServiceTests
     // --- Specific clan verifications ---
 
     [TestMethod]
-    [DataRow("clan_empire_west_1", "gondor_ano_peasant")]
-    [DataRow("clan_empire_west_2", "gondor_bel_recruit")]
-    [DataRow("clan_empire_west_3", "gondor_leb_militia")]
-    [DataRow("clan_empire_west_5", "gondor_loss_lumberman")]
-    [DataRow("clan_empire_west_6", "gondor_pg_volunteer")]
+    [DataRow("clan_empire_west_1",  "gondor_ano_peasant")]
+    [DataRow("clan_empire_west_2",  "gondor_bel_recruit")]
+    [DataRow("clan_empire_west_3",  "gondor_leb_militia")]
+    [DataRow("clan_empire_west_5",  "gondor_loss_lumberman")]
+    [DataRow("clan_empire_west_6",  "gondor_pg_volunteer")]
+    [DataRow("clan_empire_west_9",  "gondor_brv_bowman")]
+    [DataRow("clan_empire_west_10", "gondor_har_conscript")]
+    [DataRow("clan_empire_west_11", "gondor_ca_noble")]
+    [DataRow("clan_empire_west_12", "gondor_lin_noble")]
     public void GetVolunteerTroopId_SpecificClans_ReturnExpectedRegularTroop(
         string clanId, string expectedTroopId)
     {
@@ -356,6 +332,25 @@ public class VolunteerRecruitmentServiceTests
             settlementId: null,
             boundSettlementId: null,
             ownerClanId: clanId,
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    [TestMethod]
+    // clan_empire_west_11 (House of Caladionath, Cair Andros): ca_noble(9) + ithilien_ranger(1) — total 10
+    [DataRow(0, "gondor_ca_noble")]
+    [DataRow(8, "gondor_ca_noble")]
+    [DataRow(9, "gondor_ithilien_ranger")]
+    public void GetVolunteerTroopId_ClanEmpireWest11_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
+    {
+        _random.Next(10).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_empire_west_11",
             cultureId: "gondor");
 
         var result = _sut.GetVolunteerTroopId(context);
@@ -831,5 +826,35 @@ public class VolunteerRecruitmentServiceTests
         var result = _sut.GetVolunteerTroopId(context);
 
         Assert.AreEqual("imladris_recruit", result);
+    }
+
+    // --- BuildPool validation ---
+
+    [TestMethod]
+    [ExpectedException(typeof(System.ArgumentException))]
+    public void BuildPool_EmptyEntries_Throws()
+    {
+        VolunteerRecruitmentService.BuildPool("owner_id", new (string, int)[0]);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(System.ArgumentException))]
+    public void BuildPool_NonPositiveWeight_Throws()
+    {
+        VolunteerRecruitmentService.BuildPool("owner_id", new[] { ("some_troop", 0) });
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(System.ArgumentException))]
+    public void BuildPool_NegativeWeight_Throws()
+    {
+        VolunteerRecruitmentService.BuildPool("owner_id", new[] { ("some_troop", -1) });
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(System.ArgumentException))]
+    public void BuildPool_BlankTroopId_Throws()
+    {
+        VolunteerRecruitmentService.BuildPool("owner_id", new[] { ("", 5) });
     }
 }

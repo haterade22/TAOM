@@ -45,7 +45,7 @@ TaomPartyWageModel.GetTotalWage(MobileParty, TroopRoster)
 ```
 
 ## Configuration
-None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `TroopCostService`. Recruitment pools are hardcoded in `VolunteerRecruitmentService`. To change them, edit the service directly and update the corresponding tests.
+None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `TroopCostService`. Recruitment pools are hardcoded in `VolunteerRecruitmentService` as arbitrary-length weight tables — `AddSettlement` and `AddClan` accept `params (string troopId, int weight)[]`, validated by the internal `BuildPool` helper (rejects empty pools, non-positive weights, blank troop ids). To change them, edit the service directly and update the corresponding tests.
 
 ## Key Files
 | File | Purpose |

@@ -1,5 +1,23 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-20
+
+### refactor(troop-progression): volunteer pools accept arbitrary-length tuples
+
+[`VolunteerRecruitmentService.AddSettlement`](Main/Features/TroopProgression/VolunteerRecruitmentService.cs) and `AddClan` migrated from the fixed 2-troop shape `(id, weight, id, weight)` to `params (string troopId, int weight)[]`. Every existing call site rewritten to the tuple shape — pure mechanical change, no behavior delta for any pool that did not actively need a 3+ entry table. New `internal static BuildPool` validates: rejects empty pools, non-positive weights, and blank troop ids — surfacing data errors at static-init time instead of as silent zero-probability rolls. Unblocks the next data round.
+
+### feat(troop-progression): Gondor (EW) volunteer pool retune + 3 new clan registrations
+
+End-to-end pass over Gondor's volunteer recruitment in [`VolunteerRecruitmentService.cs`](Main/Features/TroopProgression/VolunteerRecruitmentService.cs):
+
+- **`town_EW1` (Minas Tirith)** + **`clan_empire_west_1`** — expanded from 2-troop to 4-troop pools: peasant 6 / ithilien_ranger 1 / fountain_guard 1 / trainee 2 (total 10). Notables at Minas Tirith now occasionally offer Fountain Guards + Citadel Trainees.
+- **`town_EW2` / `town_EW3` (West / East Osgiliath)** — flipped: `osg_veteran 6, ano_peasant 4` (was `peasant 7, osg_veteran 3`). Osgiliath veterans are now the regular recruit at their namesake settlements.
+- **`clan_empire_west_9`** — regular changed to `gondor_brv_bowman 7, gondor_ano_peasant 3` (was `anf_levy 7, brv_bowman 3`).
+- **`clan_empire_west_10` / `_11` / `_12` registered for the first time** — these clans exist in `clans.xml` (Houses of Hýarthulionath / Caladionath / Garvirionath) but were not in the volunteer service. Pools: clan 10 `har_conscript 7, met_noble 3`; clan 11 `ca_noble 9, ithilien_ranger 1`; clan 12 `lin_noble 7, ano_peasant 3`. Lord parties from these clans will now offer the right culture/region recruits.
+- **Geography audit — 8 high-confidence + 5 medium-confidence settlement swaps.** Settlements whose name was the troop-prefix namesake but whose pool used an unrelated-region troop as regular were corrected: Pelargir → `pel`, Dol Amroth → `da`, Calembel → `cal`, Serelond → `ser`, Methir → `met`, Cair Andros → `ca`, Linhir → `lin` (Lossarnach was 200+km away), Edhellond → Belfalas. Medium-confidence settlements aligned with owner clan: castle_EW8 Hyarpëndë → Pinnath Gelin/Arndir; castle_EW10/EW15/EW16 → clan 10 (Methir) `har_conscript`/`met_noble`; castle_EW11 → clan 2 (Dol Amroth) `bel_recruit`/`da_noble`.
+
+Test coverage: parameterized boundary-roll DataRows for town_EW1, town_EW2/EW3, castle_EW15/EW16, and clan_empire_west_1/_11. Extended `SpecificClans` + `SpecificSettlements` DataRows. 4 new `BuildPool` validation tests cover empty pools, non-positive weights, and blank troop ids.
+
 ## 2026-05-19
 
 ### feat(career-system): archetype-driven starting equipment at character creation
