@@ -184,9 +184,11 @@
 
 	<EquipmentRoster id="faramir_civ_equipment" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Body" id="Item.faramir_armor_slim" />
+			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />
-			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
