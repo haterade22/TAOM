@@ -145,23 +145,23 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_boromir_sword" />
 			<Equipment slot="Item1" id="Item.wm_boromir_shield" />
-			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
-			<Equipment slot="Cape" id="Item.boromir_cloak" />
-			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
+			<Equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-      <Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="boromir_civ_equipment" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
-			<Equipment slot="Cape" id="Item.boromir_cloak" />
-			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
-			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
+			<Equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -171,9 +171,9 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_faramir_sword" />
 			<Equipment slot="Item2" id="Item.wm_ithilien_bow_c" />
-			<Equipment slot="Item3" id="Item.wm_elven_arrow_v4_a" />
+			<Equipment slot="Item3" id="Item.wm_elven_arrow_v2_d" />
 			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.faramir_armor" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />

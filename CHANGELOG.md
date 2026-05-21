@@ -1,5 +1,37 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-21
+
+### fix(lore): rewrite Gondor named-hero equipment for Boromir + Faramir
+
+**Boromir** was rendering naked in the encyclopedia because `boromir_bat_equipment` + `boromir_civ_equipment` (in [taom_equipment_sets_gondor.xml](Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml)) referenced `Item.sk_gd_osg_inf_chest_elite_a` — a body armor variant that does not exist in `LOTRLOME_Armory` (Osgiliath only ships `_med_a`, `_med_b`, `_heavy_a`, `_heavy_b`). `MBObjectManager.GetObject<ItemObject>` returned null → body slot resolved to empty → bare torso. Same failure class as career-system RCA 2026-05-19.
+
+Rewrote both rosters with the full Osgiliath noble/elite kit per user direction — all IDs verified by exact display-name match against `LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor/*.xml`:
+
+| Slot | Item ID | Display name |
+|------|---------|--------------|
+| Head | `sk_gd_osg_noble_helmet_heavy_a` | Osgiliath Noble Helmet A |
+| Body | `sk_gd_osg_inf_chest_heavy_b` | Osgiliath Heavy Armour B |
+| Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | Osgiliath Elite Pauldron I - Cape |
+| Gloves | `sk_gd_osg_bracer_noble_elite_a` | Osgiliath Noble Elite Bracer |
+| Leg | `sk_gd_ano_grvs_noble_heavy_a` | Anorien Noble Heavy Greaves (Osgiliath has no Noble Heavy Greaves variant; Anorien is the only family that ships this slot at that tier) |
+
+Boromir's signature weapons (`wm_gondor_boromir_sword`, `wm_boromir_shield`) + mount + harness were already correct — kept as-is.
+
+**Faramir** wasn't rendering his Ithilien Ranger identity in the encyclopedia — his battle roster referenced `faramir_armor` (a custom brown noble jerkin mesh) instead of an Ithilien-themed piece. Per user direction, swapped two slots in `faramir_bat_equipment`:
+- Body: `faramir_armor` → `ithilien_jerkin_long` (green/grey ranger cloth-leather, lore-accurate for Captain of the Rangers of Ithilien)
+- Arrows: `wm_elven_arrow_v4_a` ("Noldar Elven Arrow IV") → `wm_elven_arrow_v2_d` ("Noldar Elven Arrow X" — top of the I-X Noldar range, per the same "best in Armory" rationale that drove the 2026-05-19 Ithilien Ranger troop quiver upgrade)
+
+Civilian roster (`faramir_civ_equipment`) intentionally stays on `faramir_armor_slim` — Faramir is a Noble of Gondor off-duty, the brown jerkin fits that peace-time identity. Encyclopedia + battle preview now show the ranger kit.
+
+Files: [taom_equipment_sets_gondor.xml](Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml) lines 144-191. No code changes. No new items.
+Save-compat: equipment is re-bound from XML on game load; no migration needed.
+Not-tested: in-game verification (user reported the naked + wrong-outfit symptoms originally; expect their next encyclopedia check to confirm).
+
+### fix(career-system): Captain of Osgiliath Keystone descriptions now say "Career Ability" not "Sailing"
+
+In-game report: the Captain of Osgiliath career screen Tier 1 Keystone read *"Sailing ability radius increased, commanding wider river approaches."* — confusing, since the actual ability is named **Hold the Line** in [`taom_ability_templates.xml`](Main/_Module/ModuleData/career_system/taom_ability_templates.xml):16 and the user expected a "Career Ability" label. Every other career in [`taom_career_choices.xml`](Main/_Module/ModuleData/career_system/taom_career_choices.xml) uses its actual ability name in the Keystone text (Ambush, Stampede, Twin Strike, Storm of Arrows, …); Captain of Osgiliath was the only career whose descriptions referenced a thematic word ("Sailing") that doesn't match its ability. Fix: 7 string substitutions across the root passive + 6 Keystones, replacing standalone `Sailing` with `Career Ability` and `Sailing ability` with `Career Ability` (avoiding the redundant *"Career Ability ability"*). Applied across 5 files: the runtime career choices XML, the English strings XML, and the 3 language stubs (RU/PL/SP — all English placeholders, untranslated). Ability template untouched — the ability stays "Hold the Line"; user chose the generic "Career Ability" phrasing over renaming the ability itself. Pure data fix, no C# or schema changes.
+
 ## 2026-05-20
 
 ### fix(lore): rewrite Gondor + Mordor hero encyclopedia bios — 47 lords get inline `text=`
