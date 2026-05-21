@@ -2,6 +2,16 @@
 
 ## 2026-05-21
 
+### data(clans): unify banner_key heraldry across Rohan + Isengard noble houses
+
+Updated `banner_key` on 21 noble clans in [clans.xml](Main/_Module/ModuleData/characters/clans.xml) for visual consistency within each kingdom.
+
+**Rohan (vlandia, 10 clans, sigil `21005`)** — Ælfwiging (12), Celmunding (13), Widmunding (14), Ordgaring (15), Hunthelming (16), Bregdaning (17), Deáfringas (18), Marhad (19), Morcargas (20), Rungaring (22). Unified template `11.X.X.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0`; primary color X varies per house. Celmunding/Ordgaring/Rungaring intentionally share `X=273`. Halethring (21) untouched.
+
+**Isengard (11 clans, sigil `23000`)** — White Hand (1), Red Echelon (2), Black Maw (4), Blood Guard (6), Shadow Reavers (7), Skull Crushers (8), War Hounds (9), Ash Guard (10), Stone Breakers (11) on `23000`. Two named-sigil exceptions: Black Echelon (3) → `23001`, Iron Fist (5) → `23002`. Common template `11.2001.2001.1528.1528.764.764.1.0.0.<sigil>.224.171.605.605.764.764.0.0.0`.
+
+Save-compat: existing saves keep their cached banners; new campaigns pick up the new keys.
+
 ### fix(lore): rewrite Gondor named-hero equipment for Boromir + Faramir
 
 **Boromir** was rendering naked in the encyclopedia because `boromir_bat_equipment` + `boromir_civ_equipment` (in [taom_equipment_sets_gondor.xml](Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml)) referenced `Item.sk_gd_osg_inf_chest_elite_a` — a body armor variant that does not exist in `LOTRLOME_Armory` (Osgiliath only ships `_med_a`, `_med_b`, `_heavy_a`, `_heavy_b`). `MBObjectManager.GetObject<ItemObject>` returned null → body slot resolved to empty → bare torso. Same failure class as career-system RCA 2026-05-19.
