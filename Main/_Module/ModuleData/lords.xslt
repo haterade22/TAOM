@@ -695,7 +695,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">true</xsl:attribute>
+            <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_ruler</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -843,7 +843,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">true</xsl:attribute>
+            <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -893,17 +893,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_17']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_17</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_17_name}Sauron - Just To View Armor</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_17_name}Sauron</xsl:attribute>
             <xsl:attribute name="age">50</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">elf</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0.0162" key="00000C0FC000300010000011110000000000000010010001011001101010000000F006030F001101000000000000000000000000000000000000000005F40142"/>
+                <BodyProperties version="4" age="22.23" weight="0.3009" build="0.8796" key="00005C0000140003F08FF0F7BBF0F0087F86880BF0EF000F00000E709F0777F700FD56030F00F006000000000000000000000000000000000000000045F40146"/>
             </face>
                                                             <skills>
                 <skill id="OneHanded" value="510"/>
@@ -1266,6 +1267,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">orc</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1713,7 +1715,7 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">true</xsl:attribute>
+            <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
@@ -2052,6 +2054,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">orc</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
