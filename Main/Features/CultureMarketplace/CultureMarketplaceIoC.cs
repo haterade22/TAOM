@@ -14,5 +14,6 @@ public static class CultureMarketplaceIoC
         container.Register<ICultureMarketplaceConfigProvider, CultureMarketplaceConfigProvider>(Reuse.Singleton);
         container.Register<ICultureItemPoolService, CultureItemPoolService>(Reuse.Singleton);
         container.Register<ICultureMarketplaceInjectionService, CultureMarketplaceInjectionService>(Reuse.Singleton);
+        container.Register<ICultureMarketplaceMaintenanceService, CultureMarketplaceMaintenanceService>(Reuse.Singleton);
     }
 }

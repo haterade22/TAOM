@@ -65,11 +65,11 @@ public class CultureItemPoolService : ICultureItemPoolService
             // entries that collide post-alias (e.g., `cultures="rohan,vlandia"` — both alias
             // to vlandia, or `cultures="mordor,mordor"` — author typo) previously added the
             // item to the same canonical pool twice, silently doubling its draw weight.
-            if (routing.TryGetValue(item.ItemId, out var routedCultures))
+            if (routing.TryGetValue(item.ItemId, out var routed))
             {
                 var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 var duplicates = 0;
-                foreach (var cId in routedCultures)
+                foreach (var cId in routed.Cultures)
                 {
                     var routedTarget = ApplyCultureAlias(cId);
                     if (!seen.Add(routedTarget))
@@ -86,17 +86,12 @@ public class CultureItemPoolService : ICultureItemPoolService
                 continue;
             }
 
-            var cultureId = !string.IsNullOrEmpty(item.CultureId)
-                ? item.CultureId
-                : item.PrefixCultureId;
-
+            var cultureId = ClassifyEffectiveCulture(item.CultureId, item.PrefixCultureId);
             if (string.IsNullOrEmpty(cultureId))
             {
                 unresolved++;
                 continue;
             }
-
-            cultureId = ApplyCultureAlias(cultureId);
 
             if (string.IsNullOrEmpty(item.CultureId) && !string.IsNullOrEmpty(item.PrefixCultureId))
                 prefixHits++;
@@ -159,5 +154,44 @@ public class CultureItemPoolService : ICultureItemPoolService
             throw new InvalidOperationException("CultureItemPoolService: BuildPools must be called before GetPool");
         if (string.IsNullOrEmpty(cultureId)) return null;
         return _pools.TryGetValue(cultureId, out var pool) ? pool : null;
+    }
+
+    /// <summary>
+    /// Pure classification — attribute culture wins, then prefix fallback, then alias
+    /// normalization. Returns null/empty if no signal. Extracted from BuildPools so the
+    /// behavior's filter pass uses the SAME chain (no logic drift).
+    /// </summary>
+    public string ClassifyEffectiveCulture(string attributeCultureId, string prefixCultureId)
+    {
+        var cultureId = !string.IsNullOrEmpty(attributeCultureId)
+            ? attributeCultureId
+            : prefixCultureId;
+        if (string.IsNullOrEmpty(cultureId)) return null;
+        return ApplyCultureAlias(cultureId);
+    }
+
+    /// <summary>
+    /// All RoutedItems whose Cultures list, after alias normalization, includes the given
+    /// target. Iterates the entire routing dict each call but the dict is tiny (~4 entries
+    /// today) and this fires once per town per daily tick.
+    /// </summary>
+    public IReadOnlyList<RoutedItem> GetRoutedItemsForCulture(string cultureId)
+    {
+        if (string.IsNullOrEmpty(cultureId)) return Array.Empty<RoutedItem>();
+        var target = ApplyCultureAlias(cultureId);
+        var routing = _config.GetItemRouting();
+        var result = new List<RoutedItem>(routing.Count);
+        foreach (var kvp in routing)
+        {
+            foreach (var rawCulture in kvp.Value.Cultures)
+            {
+                if (string.Equals(ApplyCultureAlias(rawCulture), target, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(kvp.Value);
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }

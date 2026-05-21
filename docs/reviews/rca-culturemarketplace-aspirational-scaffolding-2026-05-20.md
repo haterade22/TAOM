@@ -236,3 +236,94 @@ No new feedback memory codified — this rule is downstream of the existing conf
 | Pre-fix | Post-fix |
 |---------|----------|
 | Routing branch iterated `routedCultures` and added each to `AddToGroup` with no dedup | Routing branch builds a `HashSet<string>(OrdinalIgnoreCase)` of post-alias targets; only first occurrence is added; subsequent duplicates increment a counter; one warn log per affected item if duplicates were seen |
+
+---
+
+## Addendum — Phase 4 (in-game findings post-commit `3167d08`, 2026-05-21)
+
+After the `3167d08` ship, the user opened Orthanc (Isengard's capital) and reported:
+
+1. **No wargs visible.** 2× `[Isengard] Warg Saddle` from random luck, 0 actual Warg mounts. K=6 random draws from a ~200-item Isengard pool give each warg ~3% per-day chance — insufficient for "always available."
+2. **Foreign-culture LOTRLOME items appearing.** `[Gondor] Light Horse Armour — Pinnath Gelin` and `[Rohan] Horse Armour I` showing in Orthanc on day 1. Investigation confirmed the Rivendell folder was clean, my PrefixMap routes correctly, and `GetPool("isengard")` only contains isengard-tagged items. The leak came from vanilla's `VillageGoodProductionCampaignBehavior.DistributeInitialItemsToTowns` (25 production passes at `OnNewGameCreatedPartialFollowUpEvent(i=1)`, no culture filter).
+
+### Findings + Root Cause Table (Phase 4)
+
+| # | Sev | Bug | Category | Why Missed | Preventive Action |
+|---|-----|-----|----------|-----------|-------------------|
+| F1 | HIGH (in-game) | Wargs unreliable — probabilistic K=6 draw from 200-item pool gives ~3%/day per warg variant, so the user-promised "wargs in evil-culture markets" was a coin flip. | **Probabilistic vs deterministic contract gap** | Original design treated routing as "this item is in this culture's pool" without a guaranteed-floor concept. Codex reviews #1 + #2 also missed it because the routing mechanism's user-facing contract was "they appear sometimes," which matches the implementation. No in-game testing of the actual frequency happened. | New `min_stock` attribute on `<Routing><Item>`. Listed items are kept above a floor by daily top-up; cap-bypassing. Documented in the feature doc as "Guaranteed Stock" with the explicit promise: ≥1 of each variant always available. 14 new tests across `GetRoutedItemsForCultureTests` (6) + `CultureMarketplaceBehaviorGuaranteedStockTests` (8). |
+| F2 | HIGH (in-game) | Vanilla `DistributeInitialItemsToTowns` seeds foreign-culture LOTRLOME items into every town's roster at game start; my feature only ADDS, never FILTERS. Orthanc shows `[Gondor]` + `[Rohan]` items on day 1 because vanilla's 25-village-production passes put them there. | **Vanilla-flow blindspot** | The original design (#207) explicitly chose "additive only — don't filter vanilla" because we didn't want to disturb vanilla's behavior or risk removing player-sold items. But that left the cross-cultural seeding visible to the player. Codex review #1 disputed S8 ("no quest item reservations") but didn't surface that vanilla's village-production seeding distributes culture-tagged items with no filter — a different vanilla flow. | New `FilterForeignCultureItems` pass on every daily tick (capped at `MaxFilterRemovalsPerTick=6` to avoid surprise) PLUS an uncapped one-shot sweep on `OnNewGameCreatedPartialFollowUpEvent(i=2)` to clean the initial seed in one pass. Filter preserves routed items, vanilla universals (no culture attribute), and same-culture items. Net result: Orthanc no longer shows Gondor/Rohan items on day 1; vanilla universals (food, trade goods, base armour) remain untouched. 9 new filter tests via `CultureMarketplaceBehaviorFilterTests`. |
+| F3 | NEW (mechanism) | Filter and pool-builder previously had their classification logic in different code paths; if the pool-builder's "attribute → prefix → alias" chain diverged from the filter's, the filter could remove items the pool was injecting. | **Logic drift risk** | The original `BuildPools` had the classification inline. Adding the filter would have duplicated the code. | Extracted `ICultureItemPoolService.ClassifyEffectiveCulture(attributeCultureId, prefixCultureId)` as a pure helper used by both `BuildPools` and the new filter pass. 6 new tests in `CultureItemPoolServiceClassifierTests` lock the contract. Refactor is behavior-preserving for the pool-builder (regression-tested via the existing `CultureItemPoolServiceTests` which still pass). |
+| F4 | NEW (adapter) | The filter needs to inspect roster items (which culture, how many) and remove specific items — but the prior `ITownRosterAdapter` only exposed `AddItem` and a roster-size count. | **Adapter incompleteness** | The original adapter was designed for the inject-only flow. The filter needs read + delete operations. | Extended `ITownRosterAdapter` with `GetItemCount`, `RemoveItem` (via `AddToCounts(EquipmentElement, -N)` — confirmed in vanilla source as accepting negative counts and triggering `OnInventoryUpdated` → `TownMarketData` price recalc), and `EnumerateRoster` (returns `RosterItemSnapshot` DTOs to keep `ItemObject` out of services per ADR-007). Adapter is thin — tested via service tests that mock the adapter. |
+
+### Root cause pattern (Phase 4): "user-promise gap between probabilistic + additive design and deterministic + visible expectations"
+
+Both F1 and F2 are the same shape: the original design (#207) made implicit choices that the user-facing promise didn't reflect:
+
+- F1: design said "items appear via weighted-random draws" → user heard "wargs are in the marketplace." Random meant unreliable; user thought "always at least one."
+- F2: design said "we add items; vanilla decides what to seed" → user heard "the marketplace shows culture-appropriate items." Additive meant vanilla noise still leaks through; user thought "Orthanc shows Isengard items only."
+
+**Generalizable rule (informal):** for any user-facing feature contract that uses verbs like "always," "every," "no [foreign category]," ensure the implementation is **deterministic** (guaranteed floor / explicit filter), not just **probabilistic** or **additive**. Audit feature docs for these verbs before shipping.
+
+### Why each prior review missed Phase 4 findings
+
+- **Phase 1 deep-review:** Caught dead code (3 LOW), not user-promise gaps.
+- **Phase 2 Codex adversarial:** Found 4 real bugs (cap semantics, alias map, prefix gaps, retry latch) — all about implementation correctness. Didn't surface the "additive-only" or "probabilistic" gap because those WERE the design.
+- **Phase 3 Codex self-review:** Found 1 routing dedup bug. Operating on the same design assumptions.
+
+The lesson: **adversarial review catches implementation bugs, not user-promise gaps.** Those need in-game testing or an explicit "user-promise audit" review pass. Adding a future pre-ship check: read the feature doc's user-facing promises out loud against the code; if "always" / "every" / "no" appear, verify the implementation is deterministic.
+
+### Patch History (Phase 4)
+
+| Pre-fix | Post-fix |
+|---------|----------|
+| Routing dict was `Dictionary<string, IReadOnlyList<string>>` (item → cultures) | `Dictionary<string, RoutedItem>` (item → cultures + min_stock); old test suite updated mechanically |
+| `MarketplaceTuning(itemsPerTownPerDay, perTownTotalRosterCap)` | `MarketplaceTuning(itemsPerTownPerDay, perTownTotalRosterCap, maxFilterRemovalsPerTick)` |
+| `ITownRosterAdapter` had `AddItem` + `GetRosterDistinctItemCount` | Added `GetItemCount(settlement, itemId)`, `RemoveItem(settlement, itemId, count)`, `EnumerateRoster(settlement) -> IReadOnlyList<RosterItemSnapshot>` |
+| `CultureItemPoolService.BuildPools` had inline classification | Extracted as `ClassifyEffectiveCulture(attributeCultureId, prefixCultureId)` — public on the interface; new `GetRoutedItemsForCulture(cultureId)` for the behavior's two new passes |
+| `CultureMarketplaceBehavior.OnDailyTickSettlement` ran weighted-random injection only | Now runs three passes in order: guaranteed-stock (cap-bypass) → filter (capped) → weighted-random (capped). Plus uncapped one-shot filter sweep on `OnNewGameCreatedPartialFollowUpEvent(i≥2)`. |
+| `culture_marketplace_config.xml` had `<Routing>` items without `min_stock` | 4 wargs gained `min_stock="1"` |
+| `Main/SubModule.cs` registered the behavior with 4 ctor args | Now passes `MarketplaceTuning` as the 4th arg (5 total) |
+
+### Tests after Phase 4 changes
+
+- 34 new tests across 4 new classes + extended ConfigProvider tests (5 new `min_stock` cases)
+- Full suite: **2321 passed / 0 failed / 2 skipped** (was 2287 after Phase 3)
+- CultureMarketplace + adapter scope: **87/87** (was 53 after Phase 3)
+
+---
+
+## Addendum — Phase 4b (deep-review of Phase-4 fixes, 2026-05-21)
+
+`/deep-review` on the Phase-4 changes returned 2 HIGH, 1 MEDIUM, 1 LOW. All 4 fixed in the same session.
+
+### Findings + Root Cause Table (Phase 4b)
+
+| # | Sev | Bug | Category | Why Missed | Preventive Action |
+|---|-----|-----|----------|-----------|-------------------|
+| D1 | HIGH | `OnNewGameCreatedPartialFollowUpEvent` guard `if (i < 2) return` ran the uncapped initial filter sweep 98 times per new game (event fires for i ∈ [0, 99]). Functionally correct (subsequent sweeps no-op) but wasteful and produced 97 redundant log lines. | **Event-iteration count not enumerated** | Designed the hook assuming the event fires only for i values associated with documented vanilla phases (0=clear, 1=DistributeInitialItemsToTowns, 2=our cleanup). Didn't decompile to confirm the upper bound of i. The `feedback_observation_state_matrix.md` rule covers polled state machines but didn't fire here because this was an event with a discrete index parameter, not polling. | Added `_initialSweepDone` boolean; guard now `if (_initialSweepDone) return; if (i < 2) return;`. The flag is set after a successful sweep AND on exception (one-shot is the contract). Documented the i ∈ [0, 99] range inline. |
+| D2 | HIGH | `CultureMarketplaceBehavior` grew to 194 lines with `EnsureGuaranteedStock` (17 lines) + `FilterForeignCultureItems` (33 lines) as inline business logic — both contain HashSet construction, decision logic, multi-call adapter sequences. Violates ADR-002 ("thin entry points <150 lines, no logic"). | **Behavior creep through additive private methods** | When adding the new passes, treated them as "just two more private helpers." The cumulative size + their internal complexity crossed the ADR-002 line. Standards review didn't fire on the prior commit because the behavior was 105 lines then; the new passes were each individually under any per-method line ceiling. | Extracted to new `ICultureMarketplaceMaintenanceService` + impl. Behavior now ~140 lines and delegates `EnsureGuaranteedStock` / `FilterForeignCultureItems` to the service. Service is constructor-injected, fully testable via public API (the prior private-method-reflection tests were renamed `CultureMarketplaceMaintenanceService{GuaranteedStock,Filter}Tests` and refactored to call the public methods directly, with the same coverage + 2 additional null-cultureId defenses). |
+| D3 | MED | `ITownRosterAdapter.GetItemCount` only summed the FIRST `ItemRoster` stack matching the ItemObject (via `FindIndexOfItem`). Vanilla `ItemRoster` stores `(ItemObject × ItemModifier)` as distinct stacks — a town with "Sharp warg_brown ×3" + "Damaged warg_brown ×2" would report 3 (or 2, whichever stack is first in `_data[]`), not the total 5. Latent at MinStock=1 (any non-zero count satisfies the floor); real misfire at higher floors (the top-up would over-inject). | **Vanilla API semantic not verified for modifier-split inventory** | When implementing the adapter, treated `FindIndexOfItem` as "find the item" without considering that ItemRoster stacks split on modifier. The decompile verification confirmed the API exists but I didn't read the body to see it returns only the first matching index. | Rewrote `GetItemCount` to iterate `roster.Count` and sum `GetElementNumber(i)` for every index where `GetItemAtIndex(i) == itemObject`. O(n) where n is the town's distinct-item count (typically 30–200) — vanilla `FindIndexOfItem` was already O(n) so no regression. |
+| D4 | LOW | Routing dict used `StringComparer.Ordinal` — flagged as "asymmetric vs `_byCulture` which uses `OrdinalIgnoreCase`." | **Self-audit revealed false positive** | The agent conflated two dict scopes: `_byCulture` is culture-id-keyed (case-insensitive is correct — defensive against author-typos), while `_routing`, `Blacklist`, and `WeightBoosts` are item-id-keyed (case-sensitive everywhere because `MBObjectManager.GetObject<ItemObject>(id)` is case-sensitive ordinal downstream — verified Phase 3). Item-id-keyed dicts are CONSISTENTLY Ordinal across the feature. | **Initially "fixed" to OrdinalIgnoreCase, then self-audit on the Codex Phase 4b prompt (S4 "case-insensitivity downstream") surfaced that uppercase author IDs would succeed the routing lookup but FAIL the `MBObjectManager` lookup → silent injection failure. Reverted to `Ordinal` with corrected comment explaining the key-scope distinction.** |
+
+### Root cause pattern (Phase 4b): "scaling-up review surface area without scaling-up review attention"
+
+D1, D2 share a shape: the previous review-and-ship cycles (3 of them) didn't notice these because each new piece was small in isolation. D1 was one new event hook; D2 was two ~20-line private methods. The deep-review caught both because Agent 1 measures lines per file (catches D2) and Agent 5 traces event iteration counts (catches D1). Both would have been caught earlier if a `/deep-review` had been run after Phase 2.5 (when the C5/C6 fixes added the partial-followup hook and pushed the behavior past the line ceiling).
+
+**Generalizable rule (informal):** after any cluster of in-session fixes (Phase 2.5-style C5/C6 work), re-run `/deep-review` BEFORE the next ship event. Don't trust prior reviews on now-larger surface area. The cost of one extra review (~5 minutes wall-clock) is much less than the cost of shipping an architecture violation that the next review will catch anyway.
+
+### Patch History (Phase 4b)
+
+| Pre-fix | Post-fix |
+|---------|----------|
+| `if (i < 2) return;` allowed 98 sweep invocations per new game | `if (_initialSweepDone) return; if (i < 2) return;` — one-shot |
+| `CultureMarketplaceBehavior.EnsureGuaranteedStock` + `FilterForeignCultureItems` private methods (194-line behavior) | Extracted to `ICultureMarketplaceMaintenanceService` + impl; behavior shrinks to ~140 lines, business logic in service |
+| `GetItemCount` returned `FindIndexOfItem` → `GetElementNumber` of first matching stack | Iterates `roster.Count`, sums `GetElementNumber(i)` for every index where `GetItemAtIndex(i) == itemObject` |
+| Routing dict comment claimed it was "for consistency" without specifying the scope | Kept `StringComparer.Ordinal` (item-id-keyed, consistent with `Blacklist`/`WeightBoosts`); comment now distinguishes the two key scopes and cites Phase 3's verification that `MBObjectManager` is case-sensitive |
+| `Reflection`-based behavior tests on private methods (17 tests) | Public-API tests on `CultureMarketplaceMaintenanceService` (19 tests, +2 null defenses) |
+
+### Tests after Phase 4b fixes
+
+- 2 new null-cultureId defense tests on the maintenance service
+- 17 tests migrated from reflection-private to public-API (same coverage, cleaner contract)
+- Full suite: **2323 passed / 0 failed / 2 skipped** (was 2321 after Phase 4)
+- CultureMarketplace + adapter scope: **89/89** (was 87 after Phase 4)

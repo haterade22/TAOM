@@ -394,7 +394,9 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new Features.CultureMarketplace.CultureMarketplaceBehavior(
                 IoC.Resolve<Features.CultureMarketplace.ICultureItemPoolService>(),
                 IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceInjectionService>(),
+                IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceMaintenanceService>(),
                 IoC.Resolve<ITownRosterAdapter>(),
+                IoC.Resolve<Features.CultureMarketplace.Domain.MarketplaceTuning>(),
                 IoC.Resolve<IModLogger>()));
         }
     }

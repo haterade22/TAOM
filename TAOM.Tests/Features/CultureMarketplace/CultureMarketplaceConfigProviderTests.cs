@@ -249,11 +249,12 @@ public class CultureMarketplaceConfigProviderTests
         Assert.AreEqual(4, result.Count);
         Assert.IsTrue(result.ContainsKey("warg_brown"));
         var wargBrown = result["warg_brown"];
-        Assert.AreEqual(4, wargBrown.Count);
-        Assert.IsTrue(wargBrown.Contains("isengard"));
-        Assert.IsTrue(wargBrown.Contains("mordor"));
-        Assert.IsTrue(wargBrown.Contains("gundabad"));
-        Assert.IsTrue(wargBrown.Contains("dolguldur"));
+        Assert.AreEqual(4, wargBrown.Cultures.Count);
+        Assert.IsTrue(wargBrown.Cultures.Contains("isengard"));
+        Assert.IsTrue(wargBrown.Cultures.Contains("mordor"));
+        Assert.IsTrue(wargBrown.Cultures.Contains("gundabad"));
+        Assert.IsTrue(wargBrown.Cultures.Contains("dolguldur"));
+        Assert.AreEqual(0, wargBrown.MinStock, "default min_stock when attribute absent is 0");
     }
 
     [TestMethod]
@@ -311,8 +312,69 @@ public class CultureMarketplaceConfigProviderTests
 
         var x = provider.GetItemRouting()["x"];
 
-        Assert.AreEqual(2, x.Count);
-        Assert.IsTrue(x.Contains("isengard"));
-        Assert.IsTrue(x.Contains("mordor"));
+        Assert.AreEqual(2, x.Cultures.Count);
+        Assert.IsTrue(x.Cultures.Contains("isengard"));
+        Assert.IsTrue(x.Cultures.Contains("mordor"));
+    }
+
+    // New min_stock attribute on <Routing><Item> — guaranteed-floor stock per culture.
+
+    [TestMethod]
+    public void GetItemRouting_MinStockPositive_Parsed()
+    {
+        WriteConfig(@"<CultureMarketplaceConfig>
+  <Routing><Item id=""warg_brown"" cultures=""isengard"" min_stock=""1"" /></Routing>
+</CultureMarketplaceConfig>");
+        var provider = new CultureMarketplaceConfigProvider(_pathService, _logger);
+
+        var entry = provider.GetItemRouting()["warg_brown"];
+
+        Assert.AreEqual(1, entry.MinStock);
+    }
+
+    [TestMethod]
+    public void GetItemRouting_MinStockAbsent_DefaultsToZero()
+    {
+        WriteConfig(@"<CultureMarketplaceConfig>
+  <Routing><Item id=""x"" cultures=""mordor"" /></Routing>
+</CultureMarketplaceConfig>");
+        var provider = new CultureMarketplaceConfigProvider(_pathService, _logger);
+
+        Assert.AreEqual(0, provider.GetItemRouting()["x"].MinStock);
+    }
+
+    [TestMethod]
+    public void GetItemRouting_MinStockNegative_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"<CultureMarketplaceConfig>
+  <Routing><Item id=""x"" cultures=""mordor"" min_stock=""-3"" /></Routing>
+</CultureMarketplaceConfig>");
+        var provider = new CultureMarketplaceConfigProvider(_pathService, _logger);
+
+        Assert.AreEqual(0, provider.GetItemRouting()["x"].MinStock);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("min_stock") && s.Contains("outside")));
+    }
+
+    [TestMethod]
+    public void GetItemRouting_MinStockUnparseable_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"<CultureMarketplaceConfig>
+  <Routing><Item id=""x"" cultures=""mordor"" min_stock=""abc"" /></Routing>
+</CultureMarketplaceConfig>");
+        var provider = new CultureMarketplaceConfigProvider(_pathService, _logger);
+
+        Assert.AreEqual(0, provider.GetItemRouting()["x"].MinStock);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("min_stock") && s.Contains("unparseable")));
+    }
+
+    [TestMethod]
+    public void GetItemRouting_MinStockOverCeiling_RevertsToZero()
+    {
+        WriteConfig(@"<CultureMarketplaceConfig>
+  <Routing><Item id=""x"" cultures=""mordor"" min_stock=""500"" /></Routing>
+</CultureMarketplaceConfig>");
+        var provider = new CultureMarketplaceConfigProvider(_pathService, _logger);
+
+        Assert.AreEqual(0, provider.GetItemRouting()["x"].MinStock);
     }
 }

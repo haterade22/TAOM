@@ -15,11 +15,12 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
     private const string ConfigSubfolder = "culture_marketplace";
     private const string ConfigFileName = "culture_marketplace_config.xml";
     private const float MaxWeight = 1000f;
+    private const int MaxMinStock = 100;   // sanity ceiling for the new min_stock attribute
 
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
     private Dictionary<string, MarketplaceConfigOverride> _byCulture;
-    private Dictionary<string, IReadOnlyList<string>> _routing;
+    private Dictionary<string, RoutedItem> _routing;
 
     public CultureMarketplaceConfigProvider(IPathService pathService, IModLogger logger)
     {
@@ -33,7 +34,7 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
         return _byCulture;
     }
 
-    public IReadOnlyDictionary<string, IReadOnlyList<string>> GetItemRouting()
+    public IReadOnlyDictionary<string, RoutedItem> GetItemRouting()
     {
         EnsureLoaded();
         return _routing;
@@ -44,7 +45,15 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
         if (_byCulture != null) return;
 
         _byCulture = new Dictionary<string, MarketplaceConfigOverride>(StringComparer.OrdinalIgnoreCase);
-        _routing = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
+        // _byCulture uses OrdinalIgnoreCase (culture-id-keyed — same comparer as the pool
+        // service's culture-pool dict). _routing is item-id-keyed; item IDs are
+        // case-sensitive downstream because `MBObjectManager.GetObject<ItemObject>(id)`
+        // does case-sensitive ordinal lookup (verified Phase 3 review). Routing therefore
+        // uses Ordinal — same as Blacklist / WeightBoosts (also item-id-keyed). The deep-
+        // review 2026-05-21 (Data Flow #7) flagged this as asymmetric vs `_byCulture` but
+        // that was conflating the two key scopes; item-id dicts are case-sensitive
+        // everywhere in this codebase, by design.
+        _routing = new Dictionary<string, RoutedItem>(StringComparer.Ordinal);
 
         var path = Path.Combine(_pathService.ModuleDataPath, ConfigSubfolder, ConfigFileName);
         if (!File.Exists(path))
@@ -164,7 +173,31 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
                     _logger.LogWarning($"[CultureMarketplace] <Routing>/<Item id='{itemId}'> cultures='{culturesRaw}' parsed to empty list — skipped");
                     continue;
                 }
-                _routing[itemId] = cultureIds;
+
+                // Optional min_stock attribute — guaranteed-floor stock for the listed cultures.
+                // Validate: non-negative int, ≤ MaxMinStock. Bad values revert to 0 with a
+                // warning (per csharp-architecture.md "Config Providers MUST Validate").
+                var minStock = 0;
+                var minStockRaw = itemEl.Attribute("min_stock")?.Value;
+                if (minStockRaw != null)
+                {
+                    if (!int.TryParse(minStockRaw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
+                    {
+                        _logger.LogWarning($"[CultureMarketplace] <Routing>/<Item id='{itemId}'> min_stock='{minStockRaw}' unparseable — reverted to 0");
+                        revertedFields++;
+                    }
+                    else if (parsed < 0 || parsed > MaxMinStock)
+                    {
+                        _logger.LogWarning($"[CultureMarketplace] <Routing>/<Item id='{itemId}'> min_stock={parsed} outside [0,{MaxMinStock}] — reverted to 0");
+                        revertedFields++;
+                    }
+                    else
+                    {
+                        minStock = parsed;
+                    }
+                }
+
+                _routing[itemId] = new RoutedItem(itemId, cultureIds, minStock);
             }
         }
 

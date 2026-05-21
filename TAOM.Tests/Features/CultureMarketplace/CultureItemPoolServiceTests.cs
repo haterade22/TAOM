@@ -24,7 +24,7 @@ public class CultureItemPoolServiceTests
         _logger = Substitute.For<IModLogger>();
 
         _config.GetOverridesByCulture().Returns(new Dictionary<string, MarketplaceConfigOverride>());
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>());
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>());
     }
 
     private CultureItemPoolService NewSut() => new(_adapter, _config, _logger);
@@ -228,9 +228,9 @@ public class CultureItemPoolServiceTests
         {
             new("warg_brown", "isengard", null),  // attribute says isengard
         });
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["warg_brown"] = new List<string> { "isengard", "mordor", "gundabad", "dolguldur" },
+            ["warg_brown"] = new RoutedItem("warg_brown", new List<string> { "isengard", "mordor", "gundabad", "dolguldur" }, 0),
         });
         var sut = NewSut();
 
@@ -250,9 +250,9 @@ public class CultureItemPoolServiceTests
             new("warg_brown", "isengard", null),
             new("regular_isengard_item", "isengard", null),
         });
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["warg_brown"] = new List<string> { "isengard", "mordor" },
+            ["warg_brown"] = new RoutedItem("warg_brown", new List<string> { "isengard", "mordor" }, 0),
         });
         var sut = NewSut();
 
@@ -277,9 +277,9 @@ public class CultureItemPoolServiceTests
         {
             new("misplaced_item", "gondor", null),
         });
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["misplaced_item"] = new List<string> { "mordor" },
+            ["misplaced_item"] = new RoutedItem("misplaced_item", new List<string> { "mordor" }, 0),
         });
         var sut = NewSut();
 
@@ -296,9 +296,9 @@ public class CultureItemPoolServiceTests
         {
             new("warg_brown", "isengard", null),
         });
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["warg_brown"] = new List<string> { "isengard", "mordor" },
+            ["warg_brown"] = new RoutedItem("warg_brown", new List<string> { "isengard", "mordor" }, 0),
         });
         _config.GetOverridesByCulture().Returns(new Dictionary<string, MarketplaceConfigOverride>
         {
@@ -325,9 +325,9 @@ public class CultureItemPoolServiceTests
         {
             new("dup_item", "isengard", null),
         });
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["dup_item"] = new List<string> { "mordor", "mordor", "mordor" },
+            ["dup_item"] = new RoutedItem("dup_item", new List<string> { "mordor", "mordor", "mordor" }, 0),
         });
         var sut = NewSut();
 
@@ -345,9 +345,9 @@ public class CultureItemPoolServiceTests
             new("collision_item", "isengard", null),
         });
         // 'rohan' aliases to 'vlandia', so this routing is effectively {vlandia, vlandia, mordor}.
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["collision_item"] = new List<string> { "rohan", "vlandia", "mordor" },
+            ["collision_item"] = new RoutedItem("collision_item", new List<string> { "rohan", "vlandia", "mordor" }, 0),
         });
         var sut = NewSut();
 
@@ -367,9 +367,9 @@ public class CultureItemPoolServiceTests
         {
             new("test_item", "isengard", null),
         });
-        _config.GetItemRouting().Returns(new Dictionary<string, IReadOnlyList<string>>
+        _config.GetItemRouting().Returns(new Dictionary<string, RoutedItem>
         {
-            ["test_item"] = new List<string> { "rohan", "mordor" },
+            ["test_item"] = new RoutedItem("test_item", new List<string> { "rohan", "mordor" }, 0),
         });
         var sut = NewSut();
 

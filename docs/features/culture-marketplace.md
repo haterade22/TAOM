@@ -45,10 +45,13 @@ culture_marketplace_config.xml (optional)
 CultureMarketplaceInjectionService (weighted draw + per-town cap)
         │
         ▼
-CultureMarketplaceBehavior (DailyTickSettlementEvent)
-        │
+CultureMarketplaceBehavior (DailyTickSettlementEvent + OnNewGameCreatedPartialFollowUp)
+        │  per-tick order:
+        │   ① EnsureGuaranteedStock     — bypass cap
+        │   ② FilterForeignCultureItems — capped removal
+        │   ③ weighted-random injection — capped at PerTownTotalRosterCap
         ▼
-  ITownRosterAdapter → Settlement.ItemRoster.AddToCounts
+  ITownRosterAdapter → Settlement.ItemRoster.AddToCounts / GetItemCount / RemoveItem / EnumerateRoster
 ```
 
 ## Configuration
@@ -65,6 +68,7 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 | `<Boost><Item>` | `weight` | float | Draw weight in `[0, 1000]`. NaN / Infinity / negative / above max → revert to 1.0 with warning. |
 | `<Routing><Item>` | `id` | string | Item StringId to route across multiple culture pools. The item IGNORES its `culture=` attribute and ID-prefix fallback and appears ONLY in the listed cultures' pools. |
 | `<Routing><Item>` | `cultures` | string | Comma-separated culture IDs (e.g., `isengard,mordor,gundabad,dolguldur`). Whitespace around commas is trimmed. Aliases are normalized (e.g., `rohan` → `vlandia`). |
+| `<Routing><Item>` | `min_stock` | int | Optional. 0–100. Guaranteed-floor stock per listed culture's town markets; daily tick tops up if the count falls below the floor. **Bypasses `PerTownTotalRosterCap`** — lore-essential items always available. Bad values (negative, non-integer, over ceiling) revert to 0 with warning. Default 0 (no floor). |
 
 ### Tunables (in code: `MarketplaceTuning.Default`)
 
@@ -72,19 +76,21 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 |-------|--------:|-------------|
 | `ItemsPerTownPerDay` | 6 | Number of weighted-random items injected per town on each `DailyTickSettlementEvent`. |
 | `PerTownTotalRosterCap` | 200 | Maximum distinct items in the town's full roster at which injection stops for the day. Vanilla `DistributeInitialItemsToTowns` runs 25 village-production passes per town, so towns commonly start at 30-80 distinct items — the cap is set high enough to leave 120+ headroom for our K=6 daily draws. Headroom (cap − current roster count) is the effective draw limit; the field bounds unbounded growth from edge cases. |
+| `MaxFilterRemovalsPerTick` | 6 | Maximum foreign-culture items the daily filter pass removes per town per tick. Mirrors `ItemsPerTownPerDay` so injection and filtering cancel in steady state. The new-game initial-seed sweep IGNORES this cap (one-time cleanup of vanilla seeding). |
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/CultureMarketplace/CultureMarketplaceBehavior.cs` | Thin `CampaignBehaviorBase` — wires `DailyTickSettlementEvent` / `OnGameLoaded` / `OnNewGameCreated`, delegates to services. |
+| `Main/Features/CultureMarketplace/CultureMarketplaceBehavior.cs` | Thin `CampaignBehaviorBase` — wires `DailyTickSettlementEvent` / `OnGameLoaded` / `OnNewGameCreated` / `OnNewGameCreatedPartialFollowUp`. Daily tick runs three passes in order: guaranteed-stock top-up (cap-bypassing) → cross-culture filter (capped) → weighted-random injection. The follow-up event runs an uncapped initial filter sweep to clean vanilla's `DistributeInitialItemsToTowns` seed. |
 | `Main/Features/CultureMarketplace/CultureMarketplaceConfigProvider.cs` | Loads optional XML overrides, validates weights via `FiniteFloatValidator`. |
 | `Main/Features/CultureMarketplace/CultureItemPoolService.cs` | Builds the culture → `CultureItemPool` dict from `IItemPoolAdapter`, applies blacklist + weight boosts, falls through to ID prefix when attribute is missing. |
 | `Main/Features/CultureMarketplace/CultureMarketplaceInjectionService.cs` | Weighted-random draw with per-town headroom enforcement. |
 | `Main/Features/CultureMarketplace/CultureMarketplaceIoC.cs` | DryIoc registrations (all `Reuse.Singleton`). |
-| `Main/Features/CultureMarketplace/Domain/*.cs` | `MarketplaceTuning`, `CultureItemPool`, `ItemPoolEntry`, `ItemPoolItem`, `MarketplaceConfigOverride`. |
+| `Main/Features/CultureMarketplace/Domain/*.cs` | `MarketplaceTuning` (+ `MaxFilterRemovalsPerTick`), `CultureItemPool`, `ItemPoolEntry`, `ItemPoolItem`, `MarketplaceConfigOverride`, `RoutedItem` (item-id + cultures + min_stock). |
 | `Main/Adapters/IItemPoolAdapter.cs` + `ItemPoolAdapter.cs` | Wraps `MBObjectManager.GetObjectTypeList<ItemObject>()`; ID-prefix table for culture fallback. |
-| `Main/Adapters/ITownRosterAdapter.cs` + `TownRosterAdapter.cs` | Wraps `Settlement.OwnerClan.Culture` and `Settlement.ItemRoster.AddToCounts` per ADR-007. |
+| `Main/Adapters/ITownRosterAdapter.cs` + `TownRosterAdapter.cs` | Wraps `Settlement.OwnerClan.Culture` + `Settlement.ItemRoster` operations per ADR-007. Exposes `AddItem`, `GetItemCount`, `RemoveItem` (via `AddToCounts(-N)`), `EnumerateRoster` (returning `RosterItemSnapshot` DTOs that keep `ItemObject` out of the service layer). |
+| `Main/Adapters/RosterItemSnapshot.cs` | TAOM-owned DTO carrying `ItemId + CultureStringId + Count` for one roster entry. |
 | `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` | Optional XML override (ships empty). |
 
 ## Dependencies
@@ -102,7 +108,12 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 - `TAOM.Tests/Features/CultureMarketplace/CultureMarketplaceInjectionServiceTests.cs` — 10 tests: null/unknown culture, at-cap + near-cap clamping, typical draw count, picks belong to pool, weighted-bias holds across 2000 trials (0.70 ≤ ratio ≤ 0.95 for a 10:1:1 split), empty pool, zero-total-weight pool, null RNG throws.
 - `TAOM.Tests/Features/CultureMarketplace/ItemPoolAdapterPrefixTests.cs` — 7 tests covering Mirkwood crafted-weapon prefix (Codex C3), Harad crafted-weapon prefix (Codex C3), regression on Gondor/Mordor/Rohan/Dunland prefixes, null/empty/unknown defenses.
 
-Total: 52 tests, all green (`dotnet test --filter "FullyQualifiedName~CultureMarketplace|FullyQualifiedName~ItemPoolAdapter"`).
+- `TAOM.Tests/Features/CultureMarketplace/CultureItemPoolServiceClassifierTests.cs` — 6 tests covering the extracted `ClassifyEffectiveCulture` pure function (attribute wins, prefix fallback, alias normalization, case-insensitivity, null/empty defenses).
+- `TAOM.Tests/Features/CultureMarketplace/GetRoutedItemsForCultureTests.cs` — 6 tests covering the routing-by-culture lookup (4 wargs in each of the 4 evil cultures, none in gondor/vlandia, alias normalization on input).
+- `TAOM.Tests/Features/CultureMarketplace/CultureMarketplaceBehaviorGuaranteedStockTests.cs` — 8 tests covering the `EnsureGuaranteedStock` pass via reflection: top-up to min_stock, no-op when at/above floor, partial-stock delta, multi-item independence, min_stock=0 skip, no routed items → no-op, AddItem-failure handling.
+- `TAOM.Tests/Features/CultureMarketplace/CultureMarketplaceBehaviorFilterTests.cs` — 9 tests covering the `FilterForeignCultureItems` pass via reflection: foreign LOTRLOME item removed, vanilla universal kept, same-culture kept, routed item kept (warg in mordor town), removal cap honored, zero cap = no-op, empty roster = no-op, mixed roster discrimination, RemoveItem-failure handling.
+
+Total: 87 tests across 8 classes, all green (`dotnet test --filter "FullyQualifiedName~CultureMarketplace|FullyQualifiedName~ItemPoolAdapter"`). Full suite 2321/2323 (2 unrelated skipped).
 
 ## Cross-Culture Item Routing
 
@@ -122,6 +133,39 @@ The `<Routing>` section of [`culture_marketplace_config.xml`](../../Main/_Module
 Listed items IGNORE their `culture=` attribute and ID-prefix fallback. They appear ONLY in the listed cultures' pools. Per-culture blacklists still apply (a routed item can be blacklisted from one of its routed cultures). Culture aliases (e.g., `rohan` → `vlandia`) are normalized so the routing target list can use either form.
 
 Currently routed: the 4 warg items above. To add more cross-culture items, append `<Item>` entries and restart Bannerlord.
+
+## Guaranteed Stock (min_stock)
+
+Weighted-random injection isn't enough for items the player MUST be able to find — with ~200 items in a culture's pool and K=6 daily draws, each specific item has a ~3% per-day chance of appearing in a given town. After in-game testing showed that wargs were missing from Orthanc (Isengard's capital), the `min_stock` attribute was added:
+
+```xml
+<Routing>
+  <Item id="warg_brown"  cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+  <Item id="warg_dark"   cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+  <Item id="warg_albino" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+  <Item id="warg_saddle" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+</Routing>
+```
+
+Every daily settlement tick, [`CultureMarketplaceBehavior.EnsureGuaranteedStock`](../../Main/Features/CultureMarketplace/CultureMarketplaceBehavior.cs) checks the town's current count of each routed item whose `Cultures` list includes the town's owner culture. If the count is below `min_stock`, it tops up the difference via `ITownRosterAdapter.AddItem`. **This bypasses `PerTownTotalRosterCap`** — lore-essential items must always be available, even in towns that hit the cap from other vanilla / TAOM flows.
+
+The player can still buy guaranteed items normally; the next daily tick restocks them. Valid `min_stock` range is 0–100; out-of-range, non-integer, or NaN-equivalent values revert to 0 with a warning per the project's [`csharp-architecture.md` "Config Providers MUST Validate"](../../.claude/rules/csharp-architecture.md) rule.
+
+## Cross-Culture Filter
+
+Vanilla's [`VillageGoodProductionCampaignBehavior.DistributeInitialItemsToTowns`](C:/Users/mikew/.taom-src/v1.3.15/TaleWorlds.CampaignSystem.CampaignBehaviors.VillageGoodProductionCampaignBehavior.cs) seeds each town's `ItemRoster` with ~25 village-production passes at `OnNewGameCreatedPartialFollowUpEvent(i=1)`. Vanilla has no culture awareness, so LOTRLOME-authored items tagged with one culture can leak into towns of unrelated cultures (e.g., `[Gondor] Light Horse Armour — Pinnath Gelin` appearing in Orthanc). Subsequent vanilla flows (caravans, lord sells, workshop output) can keep adding cross-cultural items at a slower rate.
+
+[`CultureMarketplaceBehavior.FilterForeignCultureItems`](../../Main/Features/CultureMarketplace/CultureMarketplaceBehavior.cs) snapshots the roster (`ITownRosterAdapter.EnumerateRoster`), computes each item's effective culture via the shared [`ICultureItemPoolService.ClassifyEffectiveCulture`](../../Main/Features/CultureMarketplace/ICultureItemPoolService.cs) (attribute → prefix → alias chain — same logic the pool builder uses), and removes items whose effective culture is non-empty AND ≠ the town owner's culture AND NOT in the routing list for this culture.
+
+Two safeguards:
+- **Routed items are preserved.** A warg in a Mordor town has effective culture `isengard` but is in the routing list for `mordor` → kept. Without this protection, the filter would treat the warg as foreign and remove it.
+- **Vanilla universals are preserved.** Items with no `Culture` attribute AND no recognized ID-prefix (food, trade goods, base vanilla armour) are left alone. The filter ONLY targets items that have positively been classified into a culture.
+
+Bounded removal:
+- Daily ticks cap removal at `MaxFilterRemovalsPerTick` (default 6) to bound the visible per-tick change.
+- The `OnNewGameCreatedPartialFollowUp(i=2)` initial sweep ignores the cap to clean the entire vanilla initial-seed pollution in one pass before the player ever sees the markets.
+
+**Known limitation:** the filter classifier uses `item.Culture.StringId` (attribute) but does NOT recompute the ID-prefix fallback from `RosterItemSnapshot.ItemId`. LOTRLOME items lacking a culture attribute (e.g., the no-attribute Mirkwood crafted weapons covered by `ItemPoolAdapter.PrefixMap`) are treated as universals from the filter's perspective and won't be removed even in non-Mirkwood towns. The user-reported bug (`[Gondor]` / `[Rohan]` items in Orthanc) was about attribute-cultured items, which the filter handles correctly.
 
 ## Culture ID Normalization
 

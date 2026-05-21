@@ -20,7 +20,7 @@ public class CultureMarketplaceInjectionServiceTests
     {
         _poolService = Substitute.For<ICultureItemPoolService>();
         _logger = Substitute.For<IModLogger>();
-        _tuning = new MarketplaceTuning(itemsPerTownPerDay: 6, perTownTotalRosterCap: 60);
+        _tuning = new MarketplaceTuning(itemsPerTownPerDay: 6, perTownTotalRosterCap: 60, maxFilterRemovalsPerTick: 6);
     }
 
     private CultureMarketplaceInjectionService NewSut(MarketplaceTuning tuning = null)
@@ -108,7 +108,7 @@ public class CultureMarketplaceInjectionServiceTests
         // roughly 10/12 ≈ 83% of the time. Allow generous bounds for variance.
         _poolService.GetPool("gondor").Returns(MakePool("gondor",
             ("boosted", 10f), ("normal_a", 1f), ("normal_b", 1f)));
-        var tuning = new MarketplaceTuning(itemsPerTownPerDay: 1, perTownTotalRosterCap: 100);
+        var tuning = new MarketplaceTuning(itemsPerTownPerDay: 1, perTownTotalRosterCap: 100, maxFilterRemovalsPerTick: 6);
         var sut = NewSut(tuning);
 
         var rng = new Random(1234);
@@ -157,3 +157,4 @@ public class CultureMarketplaceInjectionServiceTests
         sut.SelectItems("gondor", 0, null);
     }
 }
+

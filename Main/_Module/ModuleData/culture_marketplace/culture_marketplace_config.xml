@@ -12,11 +12,16 @@
        <Boost>   <Item id="..." weight="3.0" /></Boost> bias weighted-draw toward an item
 
   2. <Routing> — cross-culture item routing (top-level).
-       <Item id="warg_brown" cultures="isengard,mordor,gundabad,dolguldur" />
+       <Item id="warg_brown" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
      Items listed here IGNORE their `Culture.X` attribute and ID-prefix fallback. They
      appear ONLY in the listed cultures' pools. Use this for items that culturally belong
      to a faction GROUP rather than a single culture — e.g., wargs are Isengard-tagged in
      the upstream XML but lore-correctly should appear in every "evil" culture's markets.
+
+     Optional `min_stock="N"` (0–100) guarantees at least N units in each listed culture's
+     town markets — the daily tick tops up if the roster count drops below the floor.
+     min_stock injection BYPASSES PerTownTotalRosterCap (lore-essential items must always
+     be available). Bad values (negative, non-integer, over ceiling) revert to 0 with warn.
 
   Weight validation: 0 <= weight <= 1000, finite (NaN / Infinity rejected). Bad values
   revert to 1.0 with a warning written to the TAOM log. Lifetime: provider is
@@ -26,11 +31,13 @@
 
   <Routing>
     <!-- Warg mounts from Alliance.Wargs/ModuleData/Items/LOTR/lotr_warg.xml are tagged
-         Culture.isengard upstream but should appear in all four "evil" culture markets. -->
-    <Item id="warg_brown"  cultures="isengard,mordor,gundabad,dolguldur" />
-    <Item id="warg_dark"   cultures="isengard,mordor,gundabad,dolguldur" />
-    <Item id="warg_albino" cultures="isengard,mordor,gundabad,dolguldur" />
-    <Item id="warg_saddle" cultures="isengard,mordor,gundabad,dolguldur" />
+         Culture.isengard upstream but should appear in all four "evil" culture markets.
+         min_stock="1" guarantees at least one of each variant + the saddle is always
+         available in Isengard / Mordor / Gundabad / Dol Guldur towns. -->
+    <Item id="warg_brown"  cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+    <Item id="warg_dark"   cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+    <Item id="warg_albino" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+    <Item id="warg_saddle" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
   </Routing>
 
 </CultureMarketplaceConfig>
