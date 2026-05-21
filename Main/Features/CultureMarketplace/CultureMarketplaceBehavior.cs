@@ -149,7 +149,10 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
                 added++;
         }
 
-        if (added > 0 || topUp > 0 || removed > 0)
-            _logger.LogDebug($"[CultureMarketplace] {_townAdapter.GetSettlementId(settlement)} ({cultureId}): +{added} injected, +{topUp} guaranteed, -{removed} foreign");
+        // 2026-05-21 diagnostic: log every tick unconditionally (was gated on >0). The
+        // user reported foreign items at Rivendell but town_R1 had zero log entries —
+        // we need to know whether the tick fires at all and what each pass produces.
+        // Filter + roster count + picks-count surface the full decision context.
+        _logger.LogDebug($"[CultureMarketplace] {_townAdapter.GetSettlementId(settlement)} ({cultureId}): rosterCount={rosterCount}, picks={picks.Count}, +{added} injected, +{topUp} guaranteed, -{removed} foreign");
     }
 }
