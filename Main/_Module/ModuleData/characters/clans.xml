@@ -230,7 +230,7 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-		banner_key="11.273.273.1528.1528.764.764.1.0.0.17286.171.171.700.700.764.764.0.0.0" />
+		banner_key="11.273.273.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_22"
 		name="{=aom_clan_vlandia_22_name}House of Rungaring"

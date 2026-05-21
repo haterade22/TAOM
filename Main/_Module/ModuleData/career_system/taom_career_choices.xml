@@ -202,14 +202,14 @@
   <!-- ╚═══════════════════════════════════════════════════════════════════╝ -->
 
   <Choice id="captain_of_osgiliath_root" group_id="" type="Passive"
-          description="{=taom_cop_root_desc}Sailing grants +5% melee damage and improves troop morale near rivers and coasts."
+          description="{=taom_cop_root_desc}Career Ability grants +5% melee damage and improves troop morale near rivers and coasts."
           icon_sprite="career_choice_captain_of_osgiliath_root">
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
   <ChoiceGroup id="captain_of_osgiliath_t1_a" career_id="captain_of_osgiliath" tier="1">
     <Choice id="captain_of_osgiliath_t1_a_key" type="Keystone"
-            description="{=taom_cop_t1a_key}Sailing ability radius increased, commanding wider river approaches."
+            description="{=taom_cop_t1a_key}Career Ability radius increased, commanding wider river approaches."
             icon_sprite="career_choice_cop_t1a_key">
       <Mutations>
         <Mutation target_id="captain_of_osgiliath_ability" property="Radius" calculator="flat" value="3" operation="Add" />
@@ -239,7 +239,7 @@
 
   <ChoiceGroup id="captain_of_osgiliath_t1_b" career_id="captain_of_osgiliath" tier="1">
     <Choice id="captain_of_osgiliath_t1_b_key" type="Keystone"
-            description="{=taom_cop_t1b_key}Sailing ability duration extended, holding the harbor line longer."
+            description="{=taom_cop_t1b_key}Career Ability duration extended, holding the harbor line longer."
             icon_sprite="career_choice_cop_t1b_key">
       <Mutations>
         <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="4" operation="Add" />
@@ -269,7 +269,7 @@
 
   <ChoiceGroup id="captain_of_osgiliath_t2_a" career_id="captain_of_osgiliath" tier="2">
     <Choice id="captain_of_osgiliath_t2_a_key" type="Keystone"
-            description="{=taom_cop_t2a_key}Sailing charge requirement reduced, allowing more frequent activation."
+            description="{=taom_cop_t2a_key}Career Ability charge requirement reduced, allowing more frequent activation."
             icon_sprite="career_choice_cop_t2a_key">
       <Mutations>
         <Mutation target_id="captain_of_osgiliath_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
@@ -299,7 +299,7 @@
 
   <ChoiceGroup id="captain_of_osgiliath_t2_b" career_id="captain_of_osgiliath" tier="2">
     <Choice id="captain_of_osgiliath_t2_b_key" type="Keystone"
-            description="{=taom_cop_t2b_key}Sailing also boosts troop melee damage while active."
+            description="{=taom_cop_t2b_key}Career Ability also boosts troop melee damage while active."
             icon_sprite="career_choice_cop_t2b_key">
       <Mutations>
         <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="2" operation="Add" />
@@ -329,7 +329,7 @@
 
   <ChoiceGroup id="captain_of_osgiliath_t3_a" career_id="captain_of_osgiliath" tier="3">
     <Choice id="captain_of_osgiliath_t3_a_key" type="Keystone"
-            description="{=taom_cop_t3a_key}Sailing grants troop resistance while active, fortifying the fleet."
+            description="{=taom_cop_t3a_key}Career Ability grants troop resistance while active, fortifying the fleet."
             icon_sprite="career_choice_cop_t3a_key">
       <Mutations>
         <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="3" operation="Add" />
@@ -359,7 +359,7 @@
 
   <ChoiceGroup id="captain_of_osgiliath_t3_b" career_id="captain_of_osgiliath" tier="3">
     <Choice id="captain_of_osgiliath_t3_b_key" type="Keystone"
-            description="{=taom_cop_t3b_key}Sailing ability radius and duration maximized, dominating every waterway."
+            description="{=taom_cop_t3b_key}Career Ability radius and duration maximized, dominating every waterway."
             icon_sprite="career_choice_cop_t3b_key">
       <Mutations>
         <Mutation target_id="captain_of_osgiliath_ability" property="Radius" calculator="flat" value="5" operation="Add" />

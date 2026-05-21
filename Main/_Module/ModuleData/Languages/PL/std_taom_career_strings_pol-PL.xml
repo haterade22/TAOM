@@ -237,33 +237,33 @@
     <string id="taom_roi_t3b_p2" text="+15% movement speed." />
     <string id="taom_roi_t3b_p3" text="+75 max health." />
     <string id="taom_roi_t3b_p4" text="+15% party spotting range." />
-    <string id="taom_cop_root_desc" text="Sailing grants +5% melee damage and improves troop morale near rivers and coasts." />
-    <string id="taom_cop_t1a_key" text="Sailing ability radius increased, commanding wider river approaches." />
+    <string id="taom_cop_root_desc" text="Career Ability grants +5% melee damage and improves troop morale near rivers and coasts." />
+    <string id="taom_cop_t1a_key" text="Career Ability radius increased, commanding wider river approaches." />
     <string id="taom_cop_t1a_p1" text="+8% melee damage." />
     <string id="taom_cop_t1a_p2" text="+10% swing speed." />
     <string id="taom_cop_t1a_p3" text="+5% troop damage." />
     <string id="taom_cop_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_cop_t1b_key" text="Sailing ability duration extended, holding the harbor line longer." />
+    <string id="taom_cop_t1b_key" text="Career Ability duration extended, holding the harbor line longer." />
     <string id="taom_cop_t1b_p1" text="+5% resistance." />
     <string id="taom_cop_t1b_p2" text="+30 max health." />
     <string id="taom_cop_t1b_p3" text="+5% troop morale." />
     <string id="taom_cop_t1b_p4" text="-5% troop wages." />
-    <string id="taom_cop_t2a_key" text="Sailing charge requirement reduced, allowing more frequent activation." />
+    <string id="taom_cop_t2a_key" text="Career Ability charge requirement reduced, allowing more frequent activation." />
     <string id="taom_cop_t2a_p1" text="+8% party movement speed." />
     <string id="taom_cop_t2a_p2" text="+10% troop morale." />
     <string id="taom_cop_t2a_p3" text="+2 party size." />
     <string id="taom_cop_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_cop_t2b_key" text="Sailing also boosts troop melee damage while active." />
+    <string id="taom_cop_t2b_key" text="Career Ability also boosts troop melee damage while active." />
     <string id="taom_cop_t2b_p1" text="+12% melee damage." />
     <string id="taom_cop_t2b_p2" text="+8% armor penetration." />
     <string id="taom_cop_t2b_p3" text="+15% swing speed." />
     <string id="taom_cop_t2b_p4" text="+35 max health." />
-    <string id="taom_cop_t3a_key" text="Sailing grants troop resistance while active, fortifying the fleet." />
+    <string id="taom_cop_t3a_key" text="Career Ability grants troop resistance while active, fortifying the fleet." />
     <string id="taom_cop_t3a_p1" text="+15% troop morale." />
     <string id="taom_cop_t3a_p2" text="+4 party size." />
     <string id="taom_cop_t3a_p3" text="-10% troop wages." />
     <string id="taom_cop_t3a_p4" text="+10% custom resource gain." />
-    <string id="taom_cop_t3b_key" text="Sailing ability radius and duration maximized, dominating every waterway." />
+    <string id="taom_cop_t3b_key" text="Career Ability radius and duration maximized, dominating every waterway." />
     <string id="taom_cop_t3b_p1" text="+15% melee damage." />
     <string id="taom_cop_t3b_p2" text="+10% resistance." />
     <string id="taom_cop_t3b_p3" text="+15% armor penetration." />

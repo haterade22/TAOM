@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.ObjectSystem;
 using TAOM.Core.Logging;
 using TAOM.Features.EquipPresets.Models;
 
@@ -32,14 +31,16 @@ public sealed class EquipmentSlotAdapter : IEquipmentSlotAdapter
     public bool HeroExists(string heroStringId)
     {
         if (string.IsNullOrEmpty(heroStringId)) return false;
-        var hero = MBObjectManager.Instance?.GetObject<Hero>(heroStringId);
+        // Heroes register in CampaignObjectManager only — MBObjectManager.GetObject<Hero> always
+        // returns null. See Hero.ctor (TaleWorlds v1.3.15 Hero.cs:1450-1452).
+        var hero = Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroStringId);
         return hero != null && hero.IsActive;
     }
 
     public IReadOnlyList<EquippedSlotSnapshot> Capture(string heroStringId, bool civilian)
     {
         if (string.IsNullOrEmpty(heroStringId)) return Empty;
-        var hero = MBObjectManager.Instance?.GetObject<Hero>(heroStringId);
+        var hero = Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroStringId);
         if (hero == null) return Empty;
 
         var equipment = civilian ? hero.CivilianEquipment : hero.BattleEquipment;

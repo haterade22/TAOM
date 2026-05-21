@@ -90,7 +90,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 | `Main/Features/EquipPresets/Hooks/Patch33_GauntletInventoryScreen.cs` | Overlay layer creation + cleanup (z-order 1000) |
 | `Main/Features/EquipPresets/Hooks/Patch33_SPInventoryVMRefresh.cs` | Active VM capture (cached IoC.Resolve) |
 | `Main/Features/EquipPresets/UI/PresetsOverlayVM.cs` | Datasource for `PresetsOverlay.xml` (ButtonText + ExecuteOpenPresets + Save/Load/Update/Delete dialogs) |
-| `Main/Adapters/IEquipmentSlotAdapter.cs` + `EquipmentSlotAdapter.cs` | 11-slot reader/writer, modifier-preserving via `equipment[EquipmentIndex] = new EquipmentElement(item, modifier)` |
+| `Main/Adapters/IEquipmentSlotAdapter.cs` + `EquipmentSlotAdapter.cs` | 11-slot reader/writer, modifier-preserving via `equipment[EquipmentIndex] = new EquipmentElement(item, modifier)`. Hero lookup via `Campaign.Current.CampaignObjectManager.Find<Hero>(...)` — heroes do NOT live in `MBObjectManager` (only items/modifiers/templates do); using the wrong manager makes every `HeroExists` check fail and produces the user-visible `No active hero` save error. |
 | `Main/Adapters/IItemModifierLookupAdapter.cs` + `ItemModifierLookupAdapter.cs` | Validates modifier StringId BEFORE the lookup is acted on |
 | `Main/Adapters/IInventoryScreenAdapter.cs` + `InventoryScreenAdapter.cs` | Wraps active `SPInventoryVM` (active hero, equipment mode, item lock, refresh, clear) |
 | `Main/_Module/GUI/Prefabs/PresetsOverlay.xml` | Vanilla-brushes-only overlay markup |
@@ -98,7 +98,8 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 ## Dependencies
 
 - `IModLogger` (Core) — Diagnostic file log + optional HUD output
-- `MBObjectManager` (TaleWorlds) — Wrapped behind `IEquipmentSlotAdapter` / `IItemModifierLookupAdapter`
+- `MBObjectManager` (TaleWorlds) — Wrapped behind `IItemModifierLookupAdapter` (items + modifiers only)
+- `Campaign.CampaignObjectManager` (TaleWorlds) — Wrapped behind `IEquipmentSlotAdapter` for Hero-by-StringId lookups
 - `SPInventoryVM` (TaleWorlds) — Wrapped behind `IInventoryScreenAdapter`
 - `Hero.BattleEquipment` / `Hero.CivilianEquipment` (TaleWorlds) — Wrapped behind `IEquipmentSlotAdapter`
 
