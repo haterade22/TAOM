@@ -74,26 +74,62 @@ public class DiplomacyService : IDiplomacyService
 
     public void EstablishInitialAlliances()
     {
+        int created = 0, alreadyAllied = 0, failed = 0;
         foreach (var rel in _permanentRelationships)
         {
-            if (!_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
+            if (_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
             {
-                _logger.LogInfo($"Establishing initial alliance: {rel.KingdomA} <-> {rel.KingdomB}");
-                _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
+                alreadyAllied++;
+                continue;
+            }
+            _logger.LogInfo($"Establishing initial alliance: {rel.KingdomA} <-> {rel.KingdomB}");
+            _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
+
+            // DR2 diagnostic (2026-05-22): verify the call actually took effect.
+            // Hypothesis: at index=0 of OnNewGameCreatedPartialFollowUpEvent,
+            // IAllianceCampaignBehavior may not be registered yet, so the
+            // AllianceAdapter's `behavior?.StartAlliance(...)` would silently
+            // null-noop. If that's the case, the post-call AreAllied returns
+            // false here even though we logged "Establishing".
+            if (_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
+            {
+                created++;
+            }
+            else
+            {
+                failed++;
+                _logger.LogWarning(
+                    $"[Diplomacy] StartAlliance had no effect for {rel.KingdomA} <-> {rel.KingdomB} " +
+                    "— IAllianceCampaignBehavior likely not yet registered at this lifecycle phase. " +
+                    "Will retry via OnSessionLaunched/EnforcePermanentAlliances.");
             }
         }
+        _logger.LogInfo(
+            $"[Diplomacy] EstablishInitialAlliances summary: {created} created, " +
+            $"{alreadyAllied} already-allied, {failed} silent-noop (will retry)");
     }
 
     public void EnforcePermanentAlliances()
     {
+        int restored = 0, stillMissing = 0, ok = 0;
         foreach (var rel in _permanentRelationships)
         {
-            if (!_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
+            if (_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
             {
-                _logger.LogWarning($"Permanent alliance missing, restoring: {rel.KingdomA} <-> {rel.KingdomB}");
-                _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
+                ok++;
+                continue;
             }
+            _logger.LogWarning($"Permanent alliance missing, restoring: {rel.KingdomA} <-> {rel.KingdomB}");
+            _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
+
+            if (_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
+                restored++;
+            else
+                stillMissing++;
         }
+        _logger.LogInfo(
+            $"[Diplomacy] EnforcePermanentAlliances summary: {ok} already-ok, " +
+            $"{restored} restored, {stillMissing} STILL MISSING (vanilla StartAlliance rejected the call)");
     }
 
     private static (string, string) MakeKey(string a, string b)
