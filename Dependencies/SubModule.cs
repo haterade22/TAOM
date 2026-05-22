@@ -17,11 +17,42 @@ public class SubModule : MBSubModuleBase
 
     static SubModule()
     {
+        AppDomain.CurrentDomain.AssemblyResolve += RedirectBundledDependencies;
+        EarlyLog.Info("[TAOM.Dependencies] Static init: AssemblyResolve redirect handler registered");
+
         EarlyLog.Info("[TAOM.Dependencies] Static init: loading TaleWorlds.Engine.GauntletUI");
         Assembly.Load("TaleWorlds.Engine.GauntletUI");
 
         UIConfig.DoNotUseGeneratedPrefabs = true;
         EarlyLog.Info("[TAOM.Dependencies] Static init: DoNotUseGeneratedPrefabs = true");
+    }
+
+    private static readonly string[] RedirectedSimpleNames =
+    {
+        "0Harmony",
+        "Bannerlord.UIExtenderEx",
+        "Bannerlord.ButterLib",
+        "MCMv5",
+    };
+
+    private static Assembly? RedirectBundledDependencies(object sender, ResolveEventArgs args)
+    {
+        var requested = new AssemblyName(args.Name);
+        foreach (var simpleName in RedirectedSimpleNames)
+        {
+            if (!string.Equals(requested.Name, simpleName, StringComparison.Ordinal))
+                continue;
+
+            foreach (var loaded in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (string.Equals(loaded.GetName().Name, simpleName, StringComparison.Ordinal))
+                {
+                    EarlyLog.Info($"[TAOM.Dependencies] AssemblyResolve: redirecting '{args.Name}' to loaded '{loaded.FullName}'");
+                    return loaded;
+                }
+            }
+        }
+        return null;
     }
 
     protected override void OnSubModuleLoad()

@@ -26,10 +26,20 @@
 		DR3 (2026-05-22): TAOM.Dependencies bundles the entire BUTR stack as
 		runtime DLLs. Version pins:
 		  - Lib.Harmony 2.4.2 (NuGet → 0Harmony.dll, deployed automatically)
+		    TAOM source uses HarmonyPatchCategoryAttribute (Harmony 2.3.0+).
+		    All BUTR DLLs pin to `0Harmony Version=2.2.2.0` in metadata, but
+		    0Harmony.dll has PublicKeyToken=null (un-strong-named) so the CLR
+		    binder matches by simple name only and version mismatch is benign.
+		    SubModule.cs registers an AssemblyResolve handler as belt-and-braces
+		    that returns the loaded 0Harmony for any requested version.
 		  - Bannerlord.UIExtenderEx 2.13.1 (NuGet → Bannerlord.UIExtenderEx.dll)
 		  - Bannerlord.MCM 5.11.3 (NuGet → MCMv5.dll — API only)
 		  - ButterLib 2.10.4 + Implementation.1.4.{0,1}.dll (vendored from
 		    Steam Workshop 2859232415)
+		  - BUTR.CrashReport family v14.0.0.99 (6 DLLs, vendored from the same
+		    ButterLib release — ButterLib references these in metadata; missing
+		    them caused ReflectionTypeLoadException on ButterLib's type
+		    enumeration at SubModule init).
 		  - MBOptionScreen v5.11.4 + .v1.4.{0,1}.dll + ModuleLoader (vendored
 		    from Steam Workshop 2859238197)
 

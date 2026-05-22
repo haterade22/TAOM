@@ -49,6 +49,26 @@ End-user launcher now needs ONLY `TAOM` + `TAOM.Dependencies` enabled (plus Nati
 
 **Commits**: a89e07a (csproj architecture change), f6c1b76 (complete bundle + maintenance doc).
 
+### fix(deps): bundle BUTR.CrashReport (v14.0.0.99) — resolves ButterLib ReflectionTypeLoadException
+
+DR3 follow-up. First in-game launch surfaced `TAOM Dependencies.ButterLib submodule could not be loaded correctly due to a dependency conflict` immediately after `Bannerlord.ButterLib.dll` loaded. Debug trace showed `ReflectionTypeLoadException` from `mscorlib.dll` during CLR type enumeration of ButterLib.
+
+**Root cause**: `Bannerlord.ButterLib.dll` v2.10.4 metadata references the `BUTR.CrashReport` family (6 DLLs at v14.0.0.99): `BUTR.CrashReport`, `.Models`, `.Renderer.Html/.ImGui/.WinForms/.Zip`. All 6 were missing from our bundle. Diagnosed by dumping ButterLib's `AssemblyReferences` table via `System.Reflection.Metadata` — referenced types resolved to absent assemblies, so CLR threw on `Assembly.GetTypes()` enumeration.
+
+**Red herring ruled out**: ButterLib (and all BUTR DLLs — UIExtenderEx, MCMv5) metadata pins `0Harmony Version=2.2.2.0` while we ship 2.4.2.0. Earlier hypothesis was version mismatch. But `0Harmony.dll` has `PublicKeyToken=null` (un-strong-named) — the CLR default binder matches un-strong-named assemblies by simple name only, ignoring version. The version drift is benign in practice.
+
+**Fix**:
+- Copied 6 `BUTR.CrashReport*.dll` v14.0.0.99 from `E:/LOTRAOMAssets/ButterLib-2018-v2-10-4-1777059538/` into `Dependencies/_Module/bin/Win64_Shipping_Client/` (vendored alongside other BUTR DLLs; tracked via `.gitignore` exception).
+- Added belt-and-braces `AssemblyResolve` handler in `Dependencies/SubModule.cs` static cctor that redirects requests for `0Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `MCMv5` to the loaded assembly regardless of requested version. Logs each redirect for diagnostics.
+- Ignored `Dependencies/_Module/bin/Gaming.Desktop.x64_Shipping_Client/` (build artifacts only — Bannerlord on Windows reads Win64).
+- Updated `Dependencies/_Module/SubModule.xml` comment block + `Dependencies/TAOM.Dependencies.csproj` Harmony pin comment to document the actual root cause + the un-strong-named binding fact.
+
+**Total bundle now**: 33 DLLs deployed (was 27; +6 BUTR.CrashReport).
+
+**Verification**: `dotnet build` 0 errors, `dotnet test TAOM.Tests` 2,323/2,325 pass (baseline parity). In-game verification pending user launch.
+
+Research: ButterLib `AssemblyReferences` metadata table dump via `System.Reflection.PortableExecutable.PEReader` + `PEReaderExtensions.GetMetadataReader`.
+
 ---
 
 ## 2026-05-22
