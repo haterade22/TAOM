@@ -29,7 +29,7 @@
         <!--Right Side-->
         <!--<Widget VisualDefinition="InfoPanel" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="0" SuggestedHeight="0" HorizontalAlignment="Center" VerticalAlignment="Top" PositionXOffset="50" MarginTop="200" Sprite="text_box_9" ClipContents="true" IsHidden="@IsInSiegeMode">
           <Children>
-            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
               <Children>
 
               </Children>
@@ -72,17 +72,17 @@
 
                             <DimensionSyncWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" Sprite="BlankWhiteSquare_9" AlphaFactor="0" WidgetToCopyHeightFrom="..\ItemListPanel" DimensionToSync="Vertical"/>
 
-                            <ListPanel Id="ItemListPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                            <ListPanel Id="ItemListPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                               <Children>
 
                                 <!--Context Text-->
                                 <AutoHideRichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" SuggestedWidth="!Text.Width" HorizontalAlignment="Center" MarginTop="15" MarginBottom="10" MarginLeft="15" MarginRight="15" Brush="GameMenu.InfoText" Brush.FontSize="24" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" Command.LinkClick="ExecuteLink" Text="@ContextText"/>
 
                                 <!--Progress Slider-->
-                                <ListPanel DataSource="{ProgressItemList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="12" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <ListPanel DataSource="{ProgressItemList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="12" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <ItemTemplate>
 
-                                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10" MarginBottom="10" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10" MarginBottom="10" StackLayout.LayoutMethod="VerticalTopToBottom">
                                       <Children>
                                         <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="33.6" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" Locked="false" MaxValueFloat="100" MinValueInt="0" ValueFloat="@Progress">
                                           <Children>
@@ -105,7 +105,7 @@
                                 </ListPanel>
 
                                 <!--Option List-->
-                                <NavigatableListPanel Id="OptionItemsList" DataSource="{ItemList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="15" MarginBottom="15" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <NavigatableListPanel Id="OptionItemsList" DataSource="{ItemList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="15" MarginBottom="15" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <ItemTemplate>
                                     <GameMenuItem />
                                   </ItemTemplate>

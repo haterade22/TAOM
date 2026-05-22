@@ -36,7 +36,7 @@
                 <!-- LEFT PANEL: Career Info -->
                 <Widget WidthSizePolicy="Fixed" SuggestedWidth="500" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" Sprite="StdAssets\Popup\canvas">
                   <Children>
-                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
                         <!-- Career Name -->
                         <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="400" HorizontalAlignment="Center" Text="@CareerName" MarginTop="15" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
@@ -80,7 +80,7 @@
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" HorizontalAlignment="Center" Text="@AbilityName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
 
                         <!-- Ability Effects List -->
-                        <ListPanel DataSource="{AbilityEffects}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" MarginLeft="20" MarginRight="20" StackLayout.LayoutMethod="VerticalBottomToTop">
+                        <ListPanel DataSource="{AbilityEffects}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" MarginLeft="20" MarginRight="20" StackLayout.LayoutMethod="VerticalTopToBottom">
                           <ItemTemplate>
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@LineText" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" MarginTop="3" />
                           </ItemTemplate>
@@ -95,7 +95,7 @@
                 <Widget WidthSizePolicy="Fixed" SuggestedWidth="1420" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right">
                   <Children>
 
-                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
 
                         <!-- TIER 1 -->
@@ -128,7 +128,7 @@
                                       </Children>
                                     </ImageWidget>
                                     <!-- +/- buttons -->
-                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" IsVisible="@IsActive">
+                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsActive">
                                       <Children>
                                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
                                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />
@@ -170,7 +170,7 @@
                                         <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
                                       </Children>
                                     </ImageWidget>
-                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" IsVisible="@IsActive">
+                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsActive">
                                       <Children>
                                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
                                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />
@@ -211,7 +211,7 @@
                                         <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
                                       </Children>
                                     </ImageWidget>
-                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" IsVisible="@IsActive">
+                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsActive">
                                       <Children>
                                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
                                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />

@@ -19,7 +19,7 @@
               <Children>
 
                 <!--Left Side Faction Image Properties-->
-                <ListPanel HeightSizePolicy="StretchToParent" WidthSizePolicy="Fixed" StackLayout.LayoutMethod="VerticalBottomToTop" SuggestedWidth="370" >
+                <ListPanel HeightSizePolicy="StretchToParent" WidthSizePolicy="Fixed" StackLayout.LayoutMethod="VerticalTopToBottom" SuggestedWidth="370" >
                   <Children>
 
                     <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" >
@@ -86,7 +86,7 @@
                             <Widget HeightSizePolicy="CoverChildren" WidthSizePolicy="Fixed" SuggestedWidth="739" DoNotAcceptEvents="true">
                               <Children>
 
-                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalBottomToTop"  DoNotAcceptEvents="true">
+                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom"  DoNotAcceptEvents="true">
                                   <Children>
 
                                     <!--Clan Info Text-->
@@ -117,7 +117,7 @@
 
                                         <!--Leader Visual--> 
                                         <NavigationAutoScrollWidget TrackedWidget="..\LeaderPortrait\LeaderVisual" AutoScrollTopOffset="35" AutoScrollBottomOffset="35" />
-                                        <ListPanel Id="LeaderPortrait" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalBottomToTop" >
+                                        <ListPanel Id="LeaderPortrait" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalTopToBottom" >
                                           <Children>
                                             <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@LeaderText" Brush="Encyclopedia.SubPage.Element.Name.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Center" />
                                             <EncyclopediaSubPageElement Id="LeaderVisual" Parameter.Title="@LeaderText" DataSource="{Leader}" SuggestedHeight="89" SuggestedWidth="123" MarginTop="10" HorizontalAlignment="Center" GamepadNavigationIndex="0"/>
@@ -184,7 +184,7 @@
                             </Widget>
 
                             <!--Event Log-->
-                            <ListPanel DataSource="{History}" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="34" MarginLeft="19" MarginRight="10" MarginBottom="55">
+                            <ListPanel DataSource="{History}" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="34" MarginLeft="19" MarginRight="10" MarginBottom="55">
                               <ItemTemplate>
                                 <EncyclopediaSubPageHistoryElement/>
                               </ItemTemplate>

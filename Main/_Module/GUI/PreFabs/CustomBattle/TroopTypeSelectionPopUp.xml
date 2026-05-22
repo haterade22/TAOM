@@ -11,7 +11,7 @@
 				
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#000000B0"/>
 
-        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalBottomToTop">
+        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom">
           <Children>
             <!--Popup-->
             <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="900" MarginTop="70" MarginBottom="110" SuggestedWidth="930" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.TroopSelection.PopUp.Window">

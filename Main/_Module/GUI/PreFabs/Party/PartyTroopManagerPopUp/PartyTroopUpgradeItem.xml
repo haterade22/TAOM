@@ -107,7 +107,7 @@
                             <!--Requirement For The First Upgrade-->
                             <SiblingIndexVisibilityWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="55" VerticalAlignment="Center" WatchType="Even" WidgetToWatch="..\.">
                               <Children>
-                                <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
                                     <!--Item Requirement-->
                                     <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Center" MarginBottom="2" IsSufficient="@IsItemRequirementMet" NormalColor="#F4E1C4FF" InsufficientColor="#C01219FF" RequirementId="@ItemRequirement" IsPerkRequirement="false" IsVisible="@HasItemRequirement">
@@ -141,7 +141,7 @@
                             <!--Requirement For The Second Upgrade-->
                             <SiblingIndexVisibilityWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="55" VerticalAlignment="Center" WatchType="Odd" WidgetToWatch="..\.">
                               <Children>
-                                <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
                                     <!--Item Requirement-->
                                     <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Center" MarginBottom="2" IsSufficient="@IsItemRequirementMet" NormalColor="#F4E1C4FF" InsufficientColor="#C01219FF" RequirementId="@ItemRequirement" IsPerkRequirement="false" IsVisible="@HasItemRequirement">
@@ -176,7 +176,7 @@
                       <Children>
                         <ListPanel Id="Upgrades" DataSource="{Upgrades}" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="5" StackLayout.LayoutMethod="HorizontalCentered">
                           <ItemTemplate>
-                            <ListPanel DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                            <ListPanel DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                               <Children>
                                 <PartyUpgradeButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="64" SuggestedHeight="50" VerticalAlignment="Center" Command.AlternateClick="ExecuteUpgradeEncyclopediaLink" Command.Click="ExecuteUpgrade" DefaultBrush="Party.UpgradeSlot.Button" ImageIdentifierWidget="ImageIdentifier" InsufficientBrush="Party.UpgradeSlot.ButtonInsufficient" MarinerTroopBrush="MarinerTroopIcon" IsAvailable="@IsAvailable" IsInsufficient="@IsInsufficient" UnavailableBrush="Party.UpgradeSlot.ButtonUnavailable" HoveredCursorState="RightClickLink" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" UpdateChildrenStates="true">
                                   <Children>

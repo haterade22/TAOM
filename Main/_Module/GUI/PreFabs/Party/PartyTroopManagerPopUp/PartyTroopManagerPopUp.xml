@@ -28,7 +28,7 @@
             <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="50" MarginRight="50" MarginTop="130" MarginBottom="80" Brush="Party.UpgradePopup.Dent">
               <Children>
 
-                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
                   <Children>
 
                     <!--Top Bar-->
@@ -71,7 +71,7 @@
                             <Widget Id="UpgradeClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" >
                               <Children>
 
-                                <NavigatableListPanel Id="UpgradeTroops" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" AlwaysRefreshAll="true" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <NavigatableListPanel Id="UpgradeTroops" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" AlwaysRefreshAll="true" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <ItemTemplate>
                                     <PartyTroopUpgradeItem />
                                   </ItemTemplate>
@@ -99,7 +99,7 @@
                             <Widget Id="RecruitClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" >
                               <Children>
 
-                                <NavigatableListPanel Id="RecruitTroops" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <NavigatableListPanel Id="RecruitTroops" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <ItemTemplate>
                                     <PartyTroopRecruitItem />
                                   </ItemTemplate>

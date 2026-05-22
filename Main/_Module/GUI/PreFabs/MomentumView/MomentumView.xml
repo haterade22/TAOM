@@ -15,7 +15,7 @@
 	<Window>
 		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
 			<Children>
-				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" LayoutImp.LayoutMethod="VerticalBottomToTop" Brush="Frame1Canvas">
+				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" LayoutImp.LayoutMethod="VerticalTopToBottom" Brush="Frame1Canvas">
 					<Children>
 
 						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1100" SuggestedHeight="900" Brush="Frame1.Border" IsEnabled="true">
@@ -38,7 +38,7 @@
 
 								<StaticDiplomacyButton Parameter.FontSize="24" HorizontalAlignment="Right" MarginRight="50" MarginTop="10" Parameter.HintDataSource="{HelpHint}" Parameter.YOffset="3" />
 
-								<ListPanel MarginTop="60" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" HorizontalAlignment="Center">
+								<ListPanel MarginTop="60" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" HorizontalAlignment="Center">
 									<Children>
 										<!-- Leaders -->
 										<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="20">
@@ -114,7 +114,7 @@
 										<TextWidget HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.SubPage.Info.Text" Text="Momentum Breakdown"/>
 										<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10">
 											<Children>
-												<ListPanel DataSource="{MomentumBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+												<ListPanel DataSource="{MomentumBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
@@ -131,7 +131,7 @@
 														</ListPanel>
 													</ItemTemplate>
 												</ListPanel>
-												<ListPanel DataSource="{MomentumBreakdown}" MarginLeft="!StatMargin" MarginRight="!StatMargin" HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+												<ListPanel DataSource="{MomentumBreakdown}" MarginLeft="!StatMargin" MarginRight="!StatMargin" HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center">
 															<Children>
@@ -140,7 +140,7 @@
 														</ListPanel>
 													</ItemTemplate>
 												</ListPanel>
-												<ListPanel DataSource="{MomentumBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+												<ListPanel DataSource="{MomentumBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
@@ -168,7 +168,7 @@
 										<TextWidget HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.SubPage.Info.Text" Text="@StatsLabel"/>
 										<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10">
 											<Children>
-												<ListPanel DataSource="{StatsBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+												<ListPanel DataSource="{StatsBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
@@ -185,7 +185,7 @@
 														</ListPanel>
 													</ItemTemplate>
 												</ListPanel>
-												<ListPanel DataSource="{StatsBreakdown}" MarginLeft="!StatMargin" MarginRight="!StatMargin" HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+												<ListPanel DataSource="{StatsBreakdown}" MarginLeft="!StatMargin" MarginRight="!StatMargin" HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center">
 															<Children>
@@ -194,7 +194,7 @@
 														</ListPanel>
 													</ItemTemplate>
 												</ListPanel>
-												<ListPanel DataSource="{StatsBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+												<ListPanel DataSource="{StatsBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>

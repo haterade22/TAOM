@@ -2,6 +2,28 @@
 
 ## 2026-05-22
 
+### migration(ui): mass-flip remaining 22 TAOM prefab files (VerticalBottomToTop → VerticalTopToBottom)
+
+Live in-game observation confirmed the audit-deferred mass swap is now safe. After the CC stages fix landed, the user reported the same inversion happening "across the board" — Party screen, Encyclopedia subpages, Custom Battle screens, Nameplates, MomentumView, Career screen, GameMenu, FacGen PreBuild. The earlier conservatism (per-site review before mass swap) was justified pre-test; with in-game confirmation, the blanket flip is the right call.
+
+73 occurrences across 22 files flipped:
+- `CareerSystem/CareerScreen.xml` — 6
+- `CustomBattle/{ArmyComposition,CustomBattleScreen}.xml` — 3 each
+- `CustomBattle/{SimpleDropdown,TroopTypeSelectionPopUp}.xml` — 1 each
+- `Encyclopedia/EncyclopediaSubPages/Encyclopedia{Clan,Faction,Hero,Settlement}Page.xml` — 4 / 3 / 6 / 5
+- `FacGen/PreBuildCharacterSelection.xml` — 6
+- `GameMenu/GameMenu.xml` — 5
+- `MomentumView/{MomentumView,Relationship}.xml` — 8 / 1
+- `Nameplate/{Party,PartyPlayer,SettlementLarge,SettlementMedium,SettlementSmall}NameplateItem*.xml` — 1 each
+- `Party/{PartyScreen,PartySortController}.xml` — 9 / 1
+- `Party/PartyTroopManagerPopUp/{PartyTroopManagerPopUp,PartyTroopUpgradeItem}.xml` — 3 / 3
+
+Zero `VerticalBottomToTop` remain in TAOM source. Deployed directly to game install (build deploy step currently blocked by Bannerlord's DLL lock — game is mid-session).
+
+**Risk acknowledged:** if a specific TAOM site was deliberately authored to use `VerticalBottomToTop` (e.g., a chat-log scroller wanting newest-at-top), it'll now render bottom-up. The user has agreed to revert individual sites post-test if anything looks worse — but the global UI improvement is the expected outcome based on in-game inspection across multiple screens.
+
+---
+
 ### migration(ui): fix CC narrative + culture stage ListPanel direction (v1.4.0 layout-fix regression)
 
 **Symptom:** Character Creation Family/Youth/Adolescence stages rendered the "You were born into a family of..." prompt at the BOTTOM of the option list instead of the top. Same regression on the CultureStage faction-info panel (perks/bonuses/strengths/weaknesses lists appeared inverted).

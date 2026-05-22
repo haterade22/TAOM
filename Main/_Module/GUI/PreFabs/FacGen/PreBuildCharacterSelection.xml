@@ -35,9 +35,9 @@
   <Window >
     <Widget HeightSizePolicy="StretchToParent"  WidthSizePolicy="Fixed" SuggestedWidth="!Clan.Header.Width" MarginTop="10" MarginLeft="10" MarginBottom="30"  UpdateChildrenStates="true" >
       <Children>
-        <ListPanel MarginTop="10" MarginLeft="10" MarginBottom="10" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="VerticalBottomToTop">
+        <ListPanel MarginTop="10" MarginLeft="10" MarginBottom="10" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="VerticalTopToBottom">
           <Children>
-            <BrushListPanel Id="CompanionsList" IsVisible="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"  HorizontalAlignment="Left" LayoutImp.LayoutMethod="VerticalBottomToTop" DoNotAcceptEvents="true"  RenderLate="true" Brush="Frame1Brush" >
+            <BrushListPanel Id="CompanionsList" IsVisible="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"  HorizontalAlignment="Left" LayoutImp.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true"  RenderLate="true" Brush="Frame1Brush" >
               <Children>
                 <!--List and Scrollbar horizontal list-->
                 <ListPanel WidthSizePolicy="StretchToParent"  HeightSizePolicy="StretchToParent ">
@@ -48,7 +48,7 @@
                         <NavigationScopeTargeter ScopeID="ClanMembersScope" ScopeParent="..\ClanListClipRect" ScopeMovements="Vertical" IsDefaultNavigationScope="true" DoNotAutoNavigateAfterSort="true" />
                         <Widget Id="ClanListClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
                           <Children>
-                            <NavigatableListPanel Id="ClanElementsListPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="0" StepSize="1000">
+                            <NavigatableListPanel Id="ClanElementsListPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="0" StepSize="1000">
                               <Children>
                                 <!-- Kingdom Header -->
                                 <NavigationAutoScrollWidget TrackedWidget="..\KingdomHeader"  />
@@ -56,7 +56,7 @@
                                 </ScrollablePanelFixedHeaderWidget>
 
                                 <!--Kingdom List-->
-                                <NavigatableListPanel Id="KingdomList" DataSource="{KingdomMembers}"  WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalBottomToTop" UseSelfIndexForMinimum="true">
+                                <NavigatableListPanel Id="KingdomList" DataSource="{KingdomMembers}"  WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalTopToBottom" UseSelfIndexForMinimum="true">
                                   <ItemTemplate>
                                     <ClanLordTuple Command.Click="OnPreBuildCharacterSelected" IsSelected="@IsSelected" />
                                   </ItemTemplate>
@@ -67,7 +67,7 @@
                                 <ScrollablePanelFixedHeaderWidget Id="ClanHeader" FixedHeader="..\..\..\ClanToggleButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Clan.Header.Width" HeaderHeight="!Clan.Header.Height" AdditionalBottomOffset="!Clan.Header.Height"/>
 
                                 <!--Companions List-->
-                                <NavigatableListPanel Id="ClanList" DataSource="{ClanLeaders}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalBottomToTop" UseSelfIndexForMinimum="true">
+                                <NavigatableListPanel Id="ClanList" DataSource="{ClanLeaders}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalTopToBottom" UseSelfIndexForMinimum="true">
                                   <ItemTemplate>
                                     <ClanLordTuple Command.Click="OnPreBuildCharacterSelected" IsSelected="@IsSelected"/>
                                   </ItemTemplate>
@@ -78,7 +78,7 @@
                                 <ScrollablePanelFixedHeaderWidget Id="CompanionsHeader" FixedHeader="..\..\..\CompanionsToggleButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Clan.Header.Width" HeaderHeight="!Clan.Header.Height" AdditionalBottomOffset="!Clan.Header.Height"/>
 
                                 <!--Companions List-->
-                                <NavigatableListPanel Id="CompanionsList" DataSource="{Companions}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalBottomToTop" UseSelfIndexForMinimum="true">
+                                <NavigatableListPanel Id="CompanionsList" DataSource="{Companions}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalTopToBottom" UseSelfIndexForMinimum="true">
                                   <ItemTemplate>
                                     <ClanLordTuple Command.Click="OnPreBuildCharacterSelected" IsSelected="@IsSelected"/>
                                   </ItemTemplate>

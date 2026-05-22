@@ -54,7 +54,7 @@
         <Widget Id="HeadGroupWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center">
           <Children>
             
-            <ListPanel Id="NameSpeedContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginRight="10" ClipContents="false" StackLayout.LayoutMethod="VerticalBottomToTop">
+            <ListPanel Id="NameSpeedContainer" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginRight="10" ClipContents="false" StackLayout.LayoutMethod="VerticalTopToBottom">
               <Children>
                 <TextWidget Id="SpeedTextWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="17" Brush="PartyNameplate.FullName.Text" Brush.FontColor="@FactionColor" Text="@MovementSpeedText">
                   <Children>

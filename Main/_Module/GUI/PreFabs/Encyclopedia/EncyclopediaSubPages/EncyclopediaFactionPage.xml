@@ -23,7 +23,7 @@
                 <Widget HeightSizePolicy ="StretchToParent" WidthSizePolicy="Fixed" SuggestedWidth="370">
                   <Children>
 
-                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" StackLayout.LayoutMethod="VerticalBottomToTop">
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
 
                         <!--Kingdom Name-->
@@ -61,7 +61,7 @@
                             <Widget HeightSizePolicy ="CoverChildren" WidthSizePolicy="Fixed" SuggestedWidth="739" DoNotAcceptEvents="true" >
                               <Children>
 
-                                <ListPanel HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod = "VerticalBottomToTop" DoNotAcceptEvents="true">
+                                <ListPanel HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod = "VerticalTopToBottom" DoNotAcceptEvents="true">
                                   <Children>
 
                                     <!--Kingdom Info Text-->
@@ -164,7 +164,7 @@
                             </Widget>
 
                             <!--Event Log-->
-                            <ListPanel DataSource="{History}" HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod = "VerticalBottomToTop" MarginTop="34" MarginLeft="11" MarginRight="10" MarginBottom="55">
+                            <ListPanel DataSource="{History}" HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod = "VerticalTopToBottom" MarginTop="34" MarginLeft="11" MarginRight="10" MarginBottom="55">
                               <ItemTemplate>
                                 <EncyclopediaSubPageHistoryElement/>
                               </ItemTemplate>
