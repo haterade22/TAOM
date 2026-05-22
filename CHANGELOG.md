@@ -2,6 +2,34 @@
 
 ## 2026-05-22
 
+### migration(deps): DR1 — point TAOM.csproj at internalized TAOM.Dependencies (fixes launcher dep-conflict error)
+
+**Symptom:** Launcher showed *"TAOM.TAOM submodule could not be loaded correctly due to a dependency conflict"* on game launch — silent runtime no-op behind a soft warning.
+
+**Root cause:** `Main/TAOM.csproj` was still referencing external `Lib.Harmony 2.4.2` NuGet (compile-only, `IncludeAssets="compile"`) and the external `Bannerlord.UIExtenderEx` module via game-folder HintPath. At runtime, TAOM.dll's CLR type refs pointed at assembly names `0Harmony` and `Bannerlord.UIExtenderEx` — but neither DLL ships in `TAOM/bin/`. The merged `TAOM.Dependencies.dll` provides those types under its own assembly identity instead. ButterLib's module pre-check detects the unresolved type refs and reports the parent module as having a "dependency conflict."
+
+The TAOM.Dependencies project was rebuilt for v1.4.5 in commit `43206df` but the consumer csproj refactor that was supposed to follow (and was described as having happened on a prior 1.4 branch) was never committed to this repo's history. DR1 does that consumer-side refactor.
+
+**Changes:**
+
+- `Main/TAOM.csproj`:
+  - **Added** `<ProjectReference Include="..\Dependencies\TAOM.Dependencies.csproj"><Private>False</Private></ProjectReference>`. HarmonyLib + Bannerlord.UIExtenderEx type refs in compiled TAOM.dll now point at `TAOM.Dependencies` assembly identity.
+  - **Removed** external `<Reference Include="$(GameFolder)\Modules\Bannerlord.UIExtenderEx\...">` HintPath.
+  - **Replaced** `<PackageReference Include="Lib.Harmony" Version="2.4.2" IncludeAssets="compile" />` with `<PackageReference Include="Lib.Harmony" Version="2.4.2" ExcludeAssets="all" PrivateAssets="all" />` — suppresses the transitive `0Harmony 2.2.2.0` pulled in by `Harmony.Extensions` / `BUTR.Harmony.Analyzer`, which would otherwise cause CS0433 ambiguity ("type 'HarmonyPatch' exists in both 0Harmony and TAOM.Dependencies").
+  - **Removed** `<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />` — TAOM source has zero `using BUTR.Harmony.Extensions` / `using HarmonyLib.BUTR` imports (verified via grep across 110 Harmony-touching files), so the package was unused weight that was only pulling transitive 0Harmony.
+  - **Kept** `Bannerlord.MCM 5.11.3` NuGet (compile-only) + bundled `MCMv5.dll` runtime reference. MCM is NOT yet merged into TAOM.Dependencies — that's DR3, deferred to a separate session per the dependency-internalization plan.
+
+- `Main/_Module/SubModule.xml`:
+  - `<DependedModuleMetadata id="Native" version="e1.4.5.*" />` → `version="v1.4.5.*"`. Installed Native module declares `<Version value="v1.4.5"/>` (with `v` prefix), so the `e1.4.5.*` constraint never matched.
+
+- `Main/Properties/launchSettings.json`: debug launch args trimmed to drop external BUTR modules (`Bannerlord.Harmony`, `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx`, `Bannerlord.MBOptionScreen`) and add `TAOM.Dependencies`. The runtime needs zero external BUTR modules now that Harmony + UIExtenderEx + BUTR.Shared are merged into TAOM.Dependencies.dll.
+
+**Verification:** `dotnet build` 0 errors, 1 pre-existing warning. `dotnet test TAOM.Tests` 2,323/2,325 pass (2 skipped pre-existing, same as baseline). Deployed `TAOM/bin/` no longer contains `0Harmony.dll` or `Bannerlord.UIExtenderEx.dll`; `TAOM.Dependencies/bin/` contains the merged `TAOM.Dependencies.dll` (2.8 MB, 1648 classes including `HarmonyLib.*` + `Bannerlord.UIExtenderEx.*` + `Bannerlord.BUTR.Shared.*`).
+
+**Out of scope for DR1 (followups):** MCM internalization (DR3) and a deep-dive on why prior sessions left MCM out of TAOM.Dependencies. ButterLib audit (DR4) — preliminary grep shows zero direct usage in TAOM, but UIExtenderEx may consume BUTR.Shared transitively (already in the merged DLL).
+
+---
+
 ### migration(refactor): 10-agent behavioral audit + 5 confirmed runtime fixes
 
 Compile-clean ≠ runtime-correct. Per empirical evidence from the April 2026 v1.4.0 migration attempt (which compiled but failed at runtime), launched a 10-parallel-agent behavioral audit against decompiled vanilla 1.4.5 source. Each agent owned a subsystem (Army, Diplomacy, Battle, Equipment, CulturalFeats, Banner/WotR, UI/Mixin, Mission AI, Reflection sites, CharacterCreation/RaceAge).
