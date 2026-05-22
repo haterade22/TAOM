@@ -2,7 +2,7 @@
 <Module>
 	<Id value="TAOM.Dependencies" />
 	<Name value="TAOM Dependencies" />
-	<Version value="v0.1.0" />
+	<Version value="v0.2.0" />
 	<DefaultModule value="false" />
 	<ModuleCategory value="Singleplayer" />
 	<ModuleType value="Community" />
@@ -29,5 +29,11 @@
 			<Assemblies />
 			<Tags />
 		</SubModule>
+		<!--
+		DR3 source-merge in progress (2026-05-22): MCM + MBOptionScreen + ButterLib
+		being source-merged into TAOM.Dependencies.dll alongside Harmony + UIExtenderEx.
+		Additional SubModule entries (MCMv5, ButterLib, etc.) will land here once the
+		source-merge build is green. See docs/migration/dr3-mcm-internalization-plan.md.
+		-->
 	</SubModules>
 </Module>
