@@ -215,7 +215,7 @@
                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                    VerticalAlignment="Top"
                                    MarginTop="2" MarginBottom="2"
-                                   StackLayout.LayoutMethod="VerticalBottomToTop">
+                                   StackLayout.LayoutMethod="VerticalTopToBottom">
                           <Children>
 
                             <!-- ═══════ FACTION TITLE with faction-colored background ═══════ -->
@@ -236,11 +236,11 @@
                             </BrushWidget>
 
                             <ListPanel DataSource="{FactionPerks}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4">
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="4" MarginBottom="4">
                               <ItemTemplate>
                                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                            MarginTop="2" MarginBottom="2"
-                                           StackLayout.LayoutMethod="VerticalBottomToTop">
+                                           StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
                                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                                 Text="@PerkName" Brush="FactionMap.PerkName" />
@@ -285,7 +285,7 @@
                             </BrushWidget>
 
                             <ListPanel DataSource="{FactionBonuses}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4">
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="4" MarginBottom="4">
                               <ItemTemplate>
                                 <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                         MarginTop="1" MarginBottom="1">
@@ -314,7 +314,7 @@
                             </BrushWidget>
 
                             <ListPanel DataSource="{FactionStrengths}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4"
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="4" MarginBottom="4"
                                        IsVisible="@HasStrengths">
                               <ItemTemplate>
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
@@ -335,7 +335,7 @@
                             </BrushWidget>
 
                             <ListPanel DataSource="{FactionWeaknesses}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                       StackLayout.LayoutMethod="VerticalBottomToTop" MarginTop="4" MarginBottom="4"
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="4" MarginBottom="4"
                                        IsVisible="@HasWeaknesses">
                               <ItemTemplate>
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"

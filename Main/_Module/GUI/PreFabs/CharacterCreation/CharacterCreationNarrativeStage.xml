@@ -19,7 +19,7 @@
         <Widget DataSource="{SelectedOption}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Bottom" MarginRight="650" MarginBottom="50" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true">
           <Children>
 
-            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="100" StackLayout.LayoutMethod="VerticalBottomToTop">
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="100" StackLayout.LayoutMethod="VerticalTopToBottom">
               <Children>
                 <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="650" HorizontalAlignment="Center" MarginBottom="10" Brush="Stage.Selection.Description.Text" Text="@DescriptionText" />
                 <RichTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="650" HorizontalAlignment="Center" MarginBottom="10" Brush="Stage.PositiveEffect.Text" Text="@PositiveEffectText" />
@@ -60,14 +60,14 @@
                     <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" >
                       <Children>
 
-                        <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalBottomToTop" >
+                        <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalTopToBottom" >
                           <Children>
 
                             <!--Description-->
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="25" MarginLeft="20" MarginRight="20" HorizontalAlignment="Center" VerticalAlignment="Top" Brush="Stage.Description.Text" Text="@Description" ClipContents="false" />
 
                             <NavigationScopeTargeter ScopeID="ItemsScope" ScopeParent="..\ItemList" ScopeMovements="Vertical" HasCircularMovement="true" IsDefaultNavigationScope="true" />
-                            <NavigatableListPanel Id="ItemList" DataSource="{SelectionList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" MarginBottom="30" VerticalAlignment="Bottom" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="0" MaxIndex="1000" ParentPanel="..\..\..\..\ScrollablePanel" AutoScrollTopOffset="70" AutoScrollBottomOffset="70">
+                            <NavigatableListPanel Id="ItemList" DataSource="{SelectionList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" MarginBottom="30" VerticalAlignment="Bottom" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="0" MaxIndex="1000" ParentPanel="..\..\..\..\ScrollablePanel" AutoScrollTopOffset="70" AutoScrollBottomOffset="70">
                               <ItemTemplate>
                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="52" MarginBottom="8" Brush="TAOM.CharacterCreation.MenuOption.Button" Command.Click="ExecuteSelect" IsSelected="@IsSelected" MinHeight="10" UpdateChildrenStates="true">
                                   <Children>
