@@ -2,6 +2,10 @@
 
 ## 2026-05-22
 
+### fix(ui): stop "Press V" hint overlapping ability name in CareerSystem battle HUD
+
+`AbilityHUD.xml` had `Press V` bottom-anchored at `MarginBottom=14` inside a 110px parent while the ability name sat at `MarginTop=74`, so the two text rows collided (`Cap…Press V…rath` instead of `Captain's Wrath` + `Press V` on separate lines). Grew the parent to `SuggestedHeight=132` (panel grows upward since it's bottom-anchored, on-screen position unchanged) and re-anchored `Press V` to `VerticalAlignment=Top MarginTop=96`. New stack top→bottom: portrait → name → `Press V` → charge bar.
+
 ### data(mordor): unify banner_key on 7 Mordor clans
 
 Set shared Mordor banner `11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0` on Khôrahîm, Wâwrim, Ârki, Îkhon, Zarûnik, Ûgrakhûr, Brughash. Khôrahîm + Wâwrim go through `spclans.xslt` (vanilla IDs `clan_empire_south_8/9` renamed by TAOM); the other five are direct edits to TAOM-custom `clan_empire_south_10/11/13/14/15` in `characters/clans.xml`. Akheth (`_12`) intentionally retained its distinct banner.
