@@ -23,20 +23,32 @@
 	</DependedModuleMetadatas>
 	<SubModules>
 		<!--
-		DR3 (2026-05-22): TAOM.Dependencies bundles the entire BUTR stack
-		(Harmony 2.4.2 / UIExtenderEx 2.13.1 / ButterLib 2.10.4 / MCM v5.11.4
-		with builds up to v1.4.1 — covers Bannerlord 1.4.5 via BUTR meta-loader
-		version dispatch). User's launcher needs ONLY TAOM and TAOM.Dependencies
-		enabled; no external Bannerlord.* modules required.
+		DR3 (2026-05-22): TAOM.Dependencies bundles the entire BUTR stack as
+		runtime DLLs. Version pins:
+		  - Lib.Harmony 2.4.2 (NuGet → 0Harmony.dll, deployed automatically)
+		  - Bannerlord.UIExtenderEx 2.13.1 (NuGet → Bannerlord.UIExtenderEx.dll)
+		  - Bannerlord.MCM 5.11.3 (NuGet → MCMv5.dll — API only)
+		  - ButterLib 2.10.4 + Implementation.1.4.{0,1}.dll (vendored from
+		    Steam Workshop 2859232415)
+		  - MBOptionScreen v5.11.4 + .v1.4.{0,1}.dll + ModuleLoader (vendored
+		    from Steam Workshop 2859238197)
+
+		Covers Bannerlord 1.4.5 via BUTR meta-loader version dispatch (picks
+		Implementation.1.4.1.dll + MBOptionScreen.v1.4.1.dll at runtime).
+
+		End-user launcher needs ONLY TAOM and TAOM.Dependencies enabled —
+		no external Bannerlord.Harmony / .UIExtenderEx / .ButterLib /
+		.MBOptionScreen modules required.
 
 		Load order (matches BUTR's documented init sequence):
-		  1. Bannerlord.Harmony.SubModule       — Harmony state init
-		  2. Bannerlord.UIExtenderEx.SubModule  — depends on Harmony
-		  3. TAOM.Dependencies.SubModule        — TAOM-specific init (NativeSkinFixes)
-		  4. ButterLib + ButterLib Impl Loader  — depends on Harmony
-		  5. MCMv5 + MCMv5 Basic Impl
-		  6. MBOptionScreen Module Loader       — picks correct MBOptionScreen.v1.4.x.dll
-		     based on installed Bannerlord version
+		  0. 0Harmony.dll auto-loads (no SubModule — Lib.Harmony is pure
+		     managed library; CLR loads on first HarmonyLib type touch)
+		  1. Bannerlord.UIExtenderEx.SubModule — depends on Harmony
+		  2. TAOM.Dependencies.SubModule       — TAOM-specific init (NativeSkinFixes)
+		  3. ButterLib + ButterLib Impl Loader — depends on Harmony
+		  4. MCMv5 + MCMv5 Basic Impl
+		  5. MBOptionScreen Module Loader      — picks correct
+		     MBOptionScreen.v1.4.x.dll based on installed Bannerlord version
 
 		See docs/migration/dr3-maintenance.md for update procedure when
 		Bannerlord or BUTR dependencies release new versions.

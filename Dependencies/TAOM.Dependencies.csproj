@@ -38,7 +38,11 @@
 		<!-- DR3 (2026-05-22): replaced source-merge of Harmony decompile with PackageReferences.
 		     These DLLs deploy to bin/ alongside TAOM.Dependencies.dll and will be ILRepack'd into
 		     the merged output in a follow-up. Until then they ship as separate runtime DLLs. -->
-		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
+		<!-- DR3 (2026-05-22): version pins MUST match Main/TAOM.csproj's PackageReferences
+		     (which use IncludeAssets="compile"). Drift between compile-time (Main) and
+		     runtime (Dependencies) Harmony version creates real risk of MissingMethodException
+		     on features only in the newer version. /deep-review caught this — both now 2.4.2. -->
+		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
 		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.1" />
 		<PackageReference Include="Bannerlord.MCM" Version="5.11.3" />
 	</ItemGroup>

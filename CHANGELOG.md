@@ -2,6 +2,49 @@
 
 ## 2026-05-22
 
+### migration(deps): DR3 — bundle entire BUTR stack inside TAOM.Dependencies module
+
+End-user launcher now needs ONLY `TAOM` + `TAOM.Dependencies` enabled (plus Native/SandBox/SandBoxCore/CustomBattle). No external `Bannerlord.Harmony` / `.UIExtenderEx` / `.ButterLib` / `.MBOptionScreen` modules required — all bundled inside TAOM.Dependencies's `bin/Win64_Shipping_Client/`.
+
+**Architecture (3 dependency categories):**
+
+1. **NuGet PackageReferences** (auto-deployed on build):
+   - `Lib.Harmony 2.4.2` → `0Harmony.dll` (Harmony + MonoMod + Cecil ILRepack'd by pardeike)
+   - `Bannerlord.UIExtenderEx 2.13.1` → `Bannerlord.UIExtenderEx.dll`
+   - `Bannerlord.MCM 5.11.3` → `MCMv5.dll` (MCM API only — settings attributes + base classes)
+2. **Vendored BUTR runtime DLLs** (from Steam Workshop, manually copied; tracked in git via `.gitignore` exception):
+   - `Bannerlord.ButterLib.dll` + `Implementation.1.4.{0,1}.dll`
+   - `Bannerlord.MBOptionScreen.v1.4.{0,1}.dll` + `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`
+   - `MCM.UI.Adapter.MCMv5.dll`
+3. **Microsoft.Extensions + Serilog** (ButterLib runtime deps, vendored alongside ButterLib):
+   - 8 Microsoft.Extensions.* + Microsoft.Bcl.HashCode DLLs
+   - 3 Serilog.* DLLs
+   - 5 System.* polyfills (Buffers, Memory, Collections.Immutable, Numerics.Vectors, Reflection.Metadata)
+
+**Total deployment**: 28 DLLs in `TAOM.Dependencies/bin/Win64_Shipping_Client/`. `SubModule.xml` registers 7 SubModule classes that bootstrap UIExtenderEx + ButterLib (core + Implementation Loader) + MCMv5 (API + Basic Impl) + MBOptionScreen Module Loader. Harmony auto-loads on first HarmonyLib type touch — no SubModule needed.
+
+**Effort**: ~10 hours empirical iteration across decompile-based + upstream-source source-merge attempts (both blocked by polyfill cascading conflicts + Roslyn ICEs documented in `docs/migration/dr3-execution-handoff.md`). Final architecture pivots away from source-merge to the simpler bundle-DLLs approach. NuGet-deployed types share standard assembly identities (HarmonyLib types live in `0Harmony` assembly, etc.) — no decompile artifacts.
+
+**Documentation**:
+- `docs/migration/dr3-maintenance.md` — comprehensive update procedure for each dependency category, common scenarios (Bannerlord minor/major patch, BUTR major version, security patch), smoke test verification, risk scenarios (external BUTR module conflict, BUTR delays, fresh clone, Linux compat).
+- `docs/migration/dr3-execution-handoff.md` — empirical findings from earlier source-merge attempts (preserved for reference; superseded by this bundle approach).
+- `docs/migration/dr3-mcm-internalization-plan.md` — original architectural plan + investigation log.
+
+**Verification**:
+- `dotnet build`: 0 errors, 1 pre-existing warning
+- `dotnet test TAOM.Tests`: 2,323/2,325 pass (same as baseline; 2 skipped pre-existing)
+- Game install `Modules/TAOM.Dependencies/bin/`: 27 DLLs deployed correctly
+
+**Migration impact**: TAOM users who upgrade need to **DISABLE** the external `Bannerlord.Harmony` / `.UIExtenderEx` / `.ButterLib` / `.MBOptionScreen` modules in their launcher to avoid Harmony assembly conflicts. (TAOM provides all of these via TAOM.Dependencies now.)
+
+**Not-tested**: In-game MCM tab rendering — user verifies on next launch.
+
+**Commits**: a89e07a (csproj architecture change), f6c1b76 (complete bundle + maintenance doc).
+
+---
+
+## 2026-05-22
+
 ### feat(diplomacy): Harad permanently allied with Mordor + MakePeace step in alliance enforcement
 
 User reported (post-migration smoke test) Harad showing up in Mordor's Wars panel rather than its Alliances panel. By design Harad should be a Mordor ally from game start and throughout — same bloc as Dol Guldur / Gundabad / Isengard / Rhun.

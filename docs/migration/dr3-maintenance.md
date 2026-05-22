@@ -154,6 +154,68 @@ Process:
 3. `dotnet restore`.
 4. Build + test.
 
+## Risk scenarios + mitigations
+
+### External Bannerlord.Harmony module conflict (HIGH)
+
+**Symptom:** User has `Bannerlord.Harmony` module ALSO enabled in their launcher alongside TAOM.Dependencies. Both ship `0Harmony.dll`.
+
+**Risk:** Two Harmony assemblies load into the AppDomain. `HarmonySharedState` is designed for cross-assembly compat (per `~/.claude/.../memory/harmony-fork-research.md`), but version mismatch (e.g., external is 2.2.2, ours is 2.4.2) can produce unpredictable patch behavior — patches from one Harmony may not be visible to the other's `GetAllPatchedMethods()`.
+
+**Mitigation:** When users install TAOM, instruct them to **disable** the external `Bannerlord.Harmony` / `Bannerlord.ButterLib` / `Bannerlord.UIExtenderEx` / `Bannerlord.MBOptionScreen` modules in the launcher. TAOM.Dependencies provides them. Add this to TAOM's README or launcher tooltip.
+
+### BUTR ships behind Bannerlord (HIGH)
+
+**Symptom:** Bannerlord 1.5.0 releases. BUTR hasn't shipped 1.5.x builds yet. Our bundled `Implementation.1.4.1.dll` is the closest version the loader can pick.
+
+**Risk:** The fallback impl makes API calls that broke between 1.4.x → 1.5.0. ButterLib / MCM crashes at startup.
+
+**Mitigation:** **Do not upgrade Bannerlord until BUTR ships matching builds.** Use the `Bannerlord.dual-dll-setup.md` procedure (Steam backup of 1.4.5 install) to roll back if you accidentally updated.
+
+### Fresh clone on non-Steam machine (HIGH)
+
+**Symptom:** Contributor clones repo on a machine without Steam (or with Steam but no Bannerlord installed + no Workshop subscription). They run `./build.ps1`, get past compilation, but `Dependencies/_Module/bin/Win64_Shipping_Client/` is missing the bundled BUTR DLLs (they're tracked in git so this WORKS for a fresh clone — but if they delete the dir, they can't easily rebuild it).
+
+**Risk:** Build appears to succeed but produces a broken module folder. Player can't run.
+
+**Mitigation:**
+- Bundled BUTR DLLs are committed to git per `.gitignore` exception (see Section X).
+- If the bundled DLLs are missing for any reason (manual delete, corrupted clone), recover via either:
+  - **Steam Workshop:** Re-subscribe to BUTR modules. Steam re-downloads to `E:\Steam\steamapps\workshop\content\261550\`. Copy DLLs from there.
+  - **NexusMods (no Steam required):**
+    - ButterLib: https://www.nexusmods.com/mountandblade2bannerlord/mods/2018 → download → unzip → copy `Modules/Bannerlord.ButterLib/bin/Win64_Shipping_Client/*.dll`
+    - MCM (MBOptionScreen): https://www.nexusmods.com/mountandblade2bannerlord/mods/612 → download → unzip → copy `Modules/Bannerlord.MBOptionScreen/bin/Win64_Shipping_Client/*.dll`
+    - Harmony: https://www.nexusmods.com/mountandblade2bannerlord/mods/2006 → download → unzip (NOTE: We use the NuGet 0Harmony.dll, not the Workshop version)
+    - UIExtenderEx: https://www.nexusmods.com/mountandblade2bannerlord/mods/2102 → download → unzip (we use NuGet)
+- Or, ask a maintainer for a pre-built `Dependencies/_Module/bin/` archive.
+
+### Linux compatibility break (MED)
+
+**Symptom:** TAOM is built on/for Linux. BUTR.CrashReport's ImGui renderer references `cimgui.dll` + `glfw3.dll` (Windows native).
+
+**Risk:** Loading TAOM.Dependencies on Linux fails when ButterLib tries to initialize crash report renderer.
+
+**Mitigation:** Currently TAOM is Windows-only. We do NOT bundle `cimgui.dll` or `glfw3.dll`. ButterLib's crash report renderer is opt-in (per its config); the base ButterLib initializes fine without it. If Linux support is later added, OS-specific gating will be needed.
+
+### Bundled Implementation falls back wrong version (MED)
+
+**Symptom:** Bannerlord version is 1.4.5. BUTR's meta-loader picks our `Implementation.1.4.1.dll` (closest match ≤ 1.4.5).
+
+**Risk:** If 1.4.1 → 1.4.5 has an API break in the methods Implementation calls, runtime crash.
+
+**Mitigation:** Test smoke (see "Verification" above) catches this. If MCM tab fails to render or settings crash on access, check `mb.log` for `TypeLoadException` / `MissingMethodException`. Fix by:
+- Updating SubModule.xml's `LoaderFilter` to specifically reference the version that's known-working
+- Or removing the older Implementation.*.dll files so the loader is forced to pick a specific one
+
+## Documentation links
+
+For the wider TAOM team:
+
+- **CLAUDE.md** — Critical Rules section (when touching TAOM.Dependencies): see this maintenance doc first.
+- **docs/migration/dr3-execution-handoff.md** — Empirical findings from the 9 hours of source-merge attempts that motivated this architecture.
+- **docs/migration/dr3-mcm-internalization-plan.md** — Original DR3 plan + investigation log.
+- **docs/migration/dual-dll-setup.md** — Steam DLL backup/swap procedure (for rolling back Bannerlord versions during dependency-stale events).
+
 ## Reference: file inventory
 
 After a fresh build, `Dependencies/_Module/bin/Win64_Shipping_Client/` should contain exactly these files:
