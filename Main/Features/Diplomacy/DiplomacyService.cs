@@ -111,7 +111,7 @@ public class DiplomacyService : IDiplomacyService
 
     public void EnforcePermanentAlliances()
     {
-        int restored = 0, stillMissing = 0, ok = 0;
+        int restored = 0, stillMissing = 0, ok = 0, warsEnded = 0;
         foreach (var rel in _permanentRelationships)
         {
             if (_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
@@ -119,6 +119,21 @@ public class DiplomacyService : IDiplomacyService
                 ok++;
                 continue;
             }
+
+            // Vanilla 1.4.5 StartAlliance does NOT end an active war between the
+            // two kingdoms (verified via AllianceCampaignBehavior decompile).
+            // Without this peace step, loading an existing save with a newly-promoted
+            // Permanent pair would leave them in allied-AND-at-war state — alliance
+            // object created but StanceLink.IsAtWar still true.
+            if (_allianceAdapter.AreAtWar(rel.KingdomA, rel.KingdomB))
+            {
+                _logger.LogWarning(
+                    $"[Diplomacy] Ending pre-existing war before restoring permanent alliance: " +
+                    $"{rel.KingdomA} <-> {rel.KingdomB}");
+                _allianceAdapter.MakePeace(rel.KingdomA, rel.KingdomB);
+                warsEnded++;
+            }
+
             _logger.LogWarning($"Permanent alliance missing, restoring: {rel.KingdomA} <-> {rel.KingdomB}");
             _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
 
@@ -129,7 +144,8 @@ public class DiplomacyService : IDiplomacyService
         }
         _logger.LogInfo(
             $"[Diplomacy] EnforcePermanentAlliances summary: {ok} already-ok, " +
-            $"{restored} restored, {stillMissing} STILL MISSING (vanilla StartAlliance rejected the call)");
+            $"{restored} restored ({warsEnded} of which required ending an active war first), " +
+            $"{stillMissing} STILL MISSING (vanilla StartAlliance rejected the call)");
     }
 
     private static (string, string) MakeKey(string a, string b)

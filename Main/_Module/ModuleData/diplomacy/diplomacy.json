@@ -25,7 +25,7 @@
     { "kingdomA": "isengard", "kingdomB": "gundabad", "tier": "Permanent" },
     { "kingdomA": "isengard", "kingdomB": "dolguldur", "tier": "Permanent" },
 
-    { "kingdomA": "empire_s", "kingdomB": "aserai", "tier": "Natural" },
+    { "kingdomA": "empire_s", "kingdomB": "aserai", "tier": "Permanent" },
     { "kingdomA": "empire_s", "kingdomB": "khuzait", "tier": "Permanent" },
     { "kingdomA": "khuzait", "kingdomB": "isengard", "tier": "Permanent" },
     { "kingdomA": "khuzait", "kingdomB": "gundabad", "tier": "Permanent" },

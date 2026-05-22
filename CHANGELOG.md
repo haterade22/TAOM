@@ -2,6 +2,22 @@
 
 ## 2026-05-22
 
+### feat(diplomacy): Harad permanently allied with Mordor + MakePeace step in alliance enforcement
+
+User reported (post-migration smoke test) Harad showing up in Mordor's Wars panel rather than its Alliances panel. By design Harad should be a Mordor ally from game start and throughout — same bloc as Dol Guldur / Gundabad / Isengard / Rhun.
+
+**Data change:** `Main/_Module/ModuleData/diplomacy/diplomacy.json` — `empire_s ↔ aserai` promoted from tier `Natural` → `Permanent`. This puts Harad in the same enforced bucket as the other Evil-bloc kingdoms (auto-formed at `EstablishInitialAlliances`, re-enforced on every session launch, can't be broken by vanilla AI declaring war).
+
+**Code change:** `Main/Features/Diplomacy/DiplomacyService.EnforcePermanentAlliances` now ends any pre-existing war between the two kingdoms before calling `StartAlliance`. Vanilla 1.4.5's `AllianceCampaignBehavior.StartAlliance` (verified via decompile at `AllianceCampaignBehavior.cs:327-364`) does NOT end an active war — it just creates the `Alliance` object and dispatches `OnAllianceStarted`. Without an explicit `MakePeace` step, loading an existing save where two kingdoms were at war and then newly promoted to Permanent would leave them in allied-AND-at-war contradictory state (alliance object created, `StanceLink.IsAtWar` still true).
+
+New adapter surface: `IAllianceAdapter.MakePeace(kingdomAId, kingdomBId)` wrapping `MakePeaceAction.Apply`. Per ADR-007: TAOM-owned, no sealed types in the interface.
+
+**Reload scope:** `DiplomacyConfigProvider` and `DiplomacyService` are both `Reuse.Singleton` — the config is cached for the entire Bannerlord process. Picking up the new Harad tier requires a Bannerlord restart, not just a save reload. After restart, loading an existing campaign will trigger `EnforcePermanentAlliances` on `OnSessionLaunchedEvent`, which will detect the new permanent pair, end the Mordor↔Harad war via `MakePeace`, then create the alliance.
+
+**Diagnostic instrumentation** (kept from `97f564d`): both `EstablishInitialAlliances` and `EnforcePermanentAlliances` now emit a one-line summary at the end (`X created, Y already-allied, Z silent-noop / X already-ok, Y restored, Z STILL MISSING`) plus a per-pair `AreAllied` probe right after the `StartAlliance` call. The user-reported smoke-test confirmed the system works (Mordor properly allied with all 4 originally-Permanent Evil-bloc kingdoms); the summary stays as a future-debug aid.
+
+---
+
 ### migration(ui): mass-flip remaining 22 TAOM prefab files (VerticalBottomToTop → VerticalTopToBottom)
 
 Live in-game observation confirmed the audit-deferred mass swap is now safe. After the CC stages fix landed, the user reported the same inversion happening "across the board" — Party screen, Encyclopedia subpages, Custom Battle screens, Nameplates, MomentumView, Career screen, GameMenu, FacGen PreBuild. The earlier conservatism (per-site review before mass swap) was justified pre-test; with in-game confirmation, the blanket flip is the right call.

@@ -6,6 +6,9 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace TAOM.Adapters;
 
+// MakePeaceAction is in TaleWorlds.CampaignSystem.Actions — same namespace as
+// DeclareWarAction. No extra using needed.
+
 public class AllianceAdapter : IAllianceAdapter
 {
     public IReadOnlyList<string> GetAllKingdomIds()
@@ -53,6 +56,18 @@ public class AllianceAdapter : IAllianceAdapter
         if (!kingdomA.IsAtWarWith(kingdomB))
         {
             DeclareWarAction.ApplyByDefault(kingdomA, kingdomB);
+        }
+    }
+
+    public void MakePeace(string kingdomAId, string kingdomBId)
+    {
+        var kingdomA = FindKingdom(kingdomAId);
+        var kingdomB = FindKingdom(kingdomBId);
+        if (kingdomA == null || kingdomB == null) return;
+
+        if (kingdomA.IsAtWarWith(kingdomB))
+        {
+            MakePeaceAction.Apply(kingdomA, kingdomB);
         }
     }
 
