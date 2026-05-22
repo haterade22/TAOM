@@ -21,7 +21,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -45,7 +45,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -68,7 +68,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -91,7 +91,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -114,7 +114,7 @@
 			<Trait id="Honor" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -139,7 +139,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -164,7 +164,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -189,7 +189,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -213,7 +213,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -237,7 +237,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -260,7 +260,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -283,7 +283,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -306,7 +306,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gondor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gondor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gondor" />
 		</Equipments>
 	</NPCCharacter>
@@ -332,7 +332,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -357,7 +357,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -381,7 +381,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -405,7 +405,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -429,7 +429,7 @@
 			<Trait id="Honor" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -455,7 +455,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -481,7 +481,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -507,7 +507,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -532,7 +532,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -557,7 +557,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -581,7 +581,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -605,7 +605,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -629,7 +629,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -653,7 +653,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -677,7 +677,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mordor" />
 		</Equipments>
 	</NPCCharacter>
@@ -703,7 +703,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -728,7 +728,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -752,7 +752,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -776,7 +776,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -800,7 +800,7 @@
 			<Trait id="Honor" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -826,7 +826,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -852,7 +852,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -878,7 +878,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -903,7 +903,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -928,7 +928,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_gundabad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_gundabad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_gundabad" />
 		</Equipments>
 	</NPCCharacter>
@@ -954,7 +954,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -979,7 +979,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1003,7 +1003,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1027,7 +1027,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1051,7 +1051,7 @@
 			<Trait id="Honor" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1077,7 +1077,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1103,7 +1103,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1129,7 +1129,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1154,7 +1154,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1179,7 +1179,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_isengard" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_isengard" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_isengard" />
 		</Equipments>
 	</NPCCharacter>
@@ -1205,7 +1205,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1230,7 +1230,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1254,7 +1254,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1278,7 +1278,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1302,7 +1302,7 @@
 			<Trait id="Honor" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1328,7 +1328,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1354,7 +1354,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1380,7 +1380,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1405,7 +1405,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1430,7 +1430,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1454,7 +1454,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1478,7 +1478,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_erebor" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_erebor" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_erebor" />
 		</Equipments>
 	</NPCCharacter>
@@ -1503,7 +1503,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1527,7 +1527,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1550,7 +1550,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1573,7 +1573,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1596,7 +1596,7 @@
 			<Trait id="Honor" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1621,7 +1621,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1646,7 +1646,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1671,7 +1671,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1695,7 +1695,7 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1720,7 +1720,7 @@
 			<Trait id="Mercy" value="0" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rohan" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rohan" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rohan" />
 		</Equipments>
 	</NPCCharacter>
@@ -1747,7 +1747,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1771,7 +1771,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1795,7 +1795,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1819,7 +1819,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1843,7 +1843,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1867,7 +1867,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1891,7 +1891,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1915,7 +1915,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1939,7 +1939,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1963,7 +1963,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rivendell" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rivendell" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rivendell" />
 		</Equipments>
 	</NPCCharacter>
@@ -1989,7 +1989,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2013,7 +2013,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2037,7 +2037,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2061,7 +2061,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2085,7 +2085,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2109,7 +2109,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2133,7 +2133,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2157,7 +2157,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2181,7 +2181,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2205,7 +2205,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mirkwood" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_mirkwood" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_mirkwood" />
 		</Equipments>
 	</NPCCharacter>
@@ -2231,7 +2231,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2255,7 +2255,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2279,7 +2279,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2303,7 +2303,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2327,7 +2327,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2351,7 +2351,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2375,7 +2375,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2399,7 +2399,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2423,7 +2423,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2447,7 +2447,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_lothlorien" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_lothlorien" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_lothlorien" />
 		</Equipments>
 	</NPCCharacter>
@@ -2473,7 +2473,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2497,7 +2497,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2521,7 +2521,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2545,7 +2545,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2569,7 +2569,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2593,7 +2593,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2617,7 +2617,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2641,7 +2641,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2665,7 +2665,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2689,7 +2689,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dolguldur" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dolguldur" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dolguldur" />
 		</Equipments>
 	</NPCCharacter>
@@ -2714,7 +2714,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2737,7 +2737,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2760,7 +2760,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2783,7 +2783,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2806,7 +2806,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2829,7 +2829,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2852,7 +2852,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2875,7 +2875,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2898,7 +2898,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2921,7 +2921,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_dunland" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_dunland" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_dunland" />
 		</Equipments>
 	</NPCCharacter>
@@ -2946,7 +2946,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -2969,7 +2969,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -2992,7 +2992,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3015,7 +3015,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3038,7 +3038,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3061,7 +3061,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3084,7 +3084,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3107,7 +3107,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3130,7 +3130,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3153,7 +3153,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3178,7 +3178,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3201,7 +3201,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3224,7 +3224,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3247,7 +3247,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3270,7 +3270,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3293,7 +3293,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3316,7 +3316,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3339,7 +3339,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3362,7 +3362,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3385,7 +3385,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_rhun" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_rhun" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_rhun" />
 		</Equipments>
 	</NPCCharacter>
@@ -3410,7 +3410,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3433,7 +3433,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3456,7 +3456,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3479,7 +3479,7 @@
 			<Trait id="Generosity" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3502,7 +3502,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3525,7 +3525,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3548,7 +3548,7 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3571,7 +3571,7 @@
 			<Trait id="Mercy" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3594,7 +3594,7 @@
 			<Trait id="Honor" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3617,7 +3617,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_umbar" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_umbar" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_umbar" />
 		</Equipments>
 	</NPCCharacter>
@@ -3642,7 +3642,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3665,7 +3665,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3688,7 +3688,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3711,7 +3711,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3734,7 +3734,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3757,7 +3757,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3780,7 +3780,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3803,7 +3803,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3826,7 +3826,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3849,7 +3849,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3874,7 +3874,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3897,7 +3897,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3920,7 +3920,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3943,7 +3943,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3966,7 +3966,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -3989,7 +3989,7 @@
 			<Trait id="Honor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -4012,7 +4012,7 @@
 			<Trait id="Valor" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -4035,7 +4035,7 @@
 			<Trait id="Mercy" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -4058,7 +4058,7 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>
@@ -4081,7 +4081,7 @@
 			<Trait id="Calculating" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_harad" civilian="true" />
+			<EquipmentSet id="npc_companion_equipment_template_harad" equipmentType="Civilian" />
 			<EquipmentSet id="npc_companion_equipment_template_harad" />
 		</Equipments>
 	</NPCCharacter>

@@ -198,7 +198,7 @@ class Troop:
             lines.append(f'                <equipment slot="Leg" id="Item.{self.leg}" />')
 
         lines.append('            </EquipmentRoster>')
-        lines.append(f'            <EquipmentSet id="{self.civilian_template}" civilian="true" />')
+        lines.append(f'            <EquipmentSet id="{self.civilian_template}" equipmentType="Civilian" />')
 
         if self.horse:
             lines.append(f'            <equipment slot="Horse" id="Item.{self.horse}" />')

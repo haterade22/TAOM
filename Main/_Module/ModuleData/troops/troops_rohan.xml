@@ -71,7 +71,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.steppe_war_horse" />
@@ -154,7 +154,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_vlandia_horse" />
@@ -237,7 +237,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_battania" />
@@ -320,7 +320,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_northern" />
@@ -403,7 +403,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_empire_horse" />
@@ -486,7 +486,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_aserai_horse" />
@@ -566,7 +566,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_southern" />
@@ -640,7 +640,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.steppe_war_horse" />
@@ -720,7 +720,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_vlandia_horse" />
@@ -800,7 +800,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_battania" />
@@ -880,7 +880,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_northern" />
@@ -963,7 +963,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_empire_horse" />
@@ -1046,7 +1046,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_aserai_horse" />
@@ -1132,7 +1132,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_southern" />
@@ -1206,7 +1206,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.steppe_war_horse" />
@@ -1286,7 +1286,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_vlandia_horse" />
@@ -1366,7 +1366,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_battania" />
@@ -1446,7 +1446,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_northern" />
@@ -1526,7 +1526,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_empire_horse" />
@@ -1606,7 +1606,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t3_aserai_horse" />
@@ -1683,7 +1683,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.noble_horse_southern" />
@@ -1757,7 +1757,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1834,7 +1834,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1911,7 +1911,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1985,7 +1985,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2050,7 +2050,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2121,7 +2121,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="empire_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2194,7 +2194,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="empire_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2265,7 +2265,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2333,7 +2333,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2401,7 +2401,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2466,7 +2466,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2534,7 +2534,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2608,7 +2608,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="empire_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2682,7 +2682,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="empire_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2756,7 +2756,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2827,7 +2827,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -5864,7 +5864,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -5931,7 +5931,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -6002,7 +6002,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -6075,7 +6075,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 

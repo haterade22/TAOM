@@ -146,7 +146,8 @@ def main():
 
             # Skip if this lord has inline equipment BUT only skip the
             # battle template (keep processing civilian refs)
-            is_civilian = 'civilian="true"' in line
+            # v1.4.3+: read accepts both new equipmentType="Civilian" and legacy civilian="true".
+            is_civilian = 'equipmentType="Civilian"' in line or 'civilian="true"' in line
             if lord['has_inline'] and not is_civilian:
                 skipped_inline += 1
                 continue

@@ -150,9 +150,20 @@ Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopT
 | Total C# fixes | **4 files** (TaomBattleRewardModel, TaomAllianceModel, ChildCreatorAdapter, SpecialResourcesBehavior) |
 | Predicted vs actual scope | Predicted ~96 adapter audits, 38 GameModel audits, 70 Harmony patch audits — **actual: 4 fixes total** |
 
-### S5a — Mass XML migration (PENDING)
+### S5a — Mass XML migration (COMPLETE 2026-05-22)
 
-Tool ready (`tools/migrate_equipment_type_1_4_3.py`, revised for vanilla 1.4.5 conventions). Dry-run identified 3,372 `civilian="true"` → `equipmentType="Civilian"` migrations across 51 files + 160 deprecated `EquipmentFlags` hits in 1 file. Ready to `--apply`.
+| Task | Status |
+|---|---|
+| Migrate `<EquipmentSet civilian="true">` → `equipmentType="Civilian"` across 16 XML files (1,628 occurrences) | ✅ |
+| Migrate same pattern in `lords.xslt` (389 occurrences) | ✅ |
+| Manually rewrite `taom_child_equipment_templates.xml` — 60 IsNobleTemplate renames + 40 IsCivilianTemplate drops + 60 IsNoncombatantTemplate drops (total 160) | ✅ |
+| Update 8 Python XML generators to emit new format | ✅ |
+| Validation: `validate_equipment_flags_1_4_3.py` returns 0 hits | ✅ |
+| Validation: migrate dry-run reports 0 files needing changes | ✅ |
+| Build + test gate: `dotnet build` 0 errors + `dotnet test` 2,323/2,325 pass | ✅ |
+| Migration tool revised to use regex-on-text (preserves all formatting; 130K-line lxml-write reformat reverted) | ✅ |
+
+**Diff summary:** 26 files modified, ~2,150 line changes total. All formatting preserved. The deprecated `civilian="true"` count went from 3,372 (raw grep including legitimate inline `<EquipmentRoster civilian="true">`) to 2,017 actual migrations (1,628 EquipmentSet + 389 XSLT). The 1,097 inline `<EquipmentRoster civilian="true">` remain untouched per vanilla 1.4.5 convention.
 
 ### S5b — Equipment roster authoring (PENDING)
 

@@ -57,7 +57,8 @@ def replace_template(match, line):
     if vanilla_prefix is None:
         return None  # No replacement needed
 
-    is_civilian = 'civilian="true"' in line
+    # v1.4.3+: read accepts both new equipmentType="Civilian" and legacy civilian="true".
+    is_civilian = 'equipmentType="Civilian"' in line or 'civilian="true"' in line
 
     if is_civilian:
         new_id = f'{vanilla_prefix}civ_template_default'

@@ -261,8 +261,9 @@ def build_roster(roster_id, culture_id, equipment_sets):
         is_civilian = eq_set.get("civilian", False)
         if is_civilian:
             lines.append(f'\t\t<EquipmentSet')
-            lines.append(f'\t\t\tcivilian="true">')
+            lines.append(f'\t\t\tequipmentType="Civilian">')
         else:
+            # v1.4.3+: Battle is the implicit default — vanilla omits equipmentType for battle sets.
             lines.append(f'\t\t<EquipmentSet>')
 
         for eq in eq_set["items"]:

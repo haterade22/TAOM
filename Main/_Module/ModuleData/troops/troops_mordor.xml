@@ -1990,7 +1990,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2228,7 +2228,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2475,7 +2475,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!--Black Uruk Sword & Shield -->
@@ -3002,7 +3002,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3234,7 +3234,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3775,7 +3775,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- Harad Line -->
@@ -3846,7 +3846,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3934,7 +3934,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -4059,7 +4059,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- DISABLED 2026-05-14: Cave troll WIP; not ready for live game yet. Re-enable by uncommenting.

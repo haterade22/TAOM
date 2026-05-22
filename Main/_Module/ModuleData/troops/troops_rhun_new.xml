@@ -34,7 +34,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -71,7 +71,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -107,7 +107,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -157,7 +157,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -195,7 +195,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -233,7 +233,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -270,7 +270,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -308,7 +308,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -344,7 +344,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- ========== FAR-RHUN TROOP TREE ========== -->
@@ -383,7 +383,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -419,7 +419,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -456,7 +456,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t2_khuzait_horse" />
             <equipment slot="HorseHarness" id="Item.steppe_harness" />
         </Equipments>
@@ -494,7 +494,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -532,7 +532,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -570,7 +570,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -609,7 +609,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -646,7 +646,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
         </Equipments>
@@ -683,7 +683,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -718,7 +718,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -757,7 +757,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t2_khuzait_horse" />
             <equipment slot="HorseHarness" id="Item.steppe_harness" />
         </Equipments>
@@ -797,7 +797,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t2_khuzait_horse" />
             <equipment slot="HorseHarness" id="Item.steppe_harness" />
         </Equipments>
@@ -837,7 +837,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -876,7 +876,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -916,7 +916,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -955,7 +955,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -995,7 +995,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -1032,7 +1032,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -1070,7 +1070,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -1115,7 +1115,7 @@
                 <equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1157,7 +1157,7 @@
                 <equipment slot="Body" id="Item.sk_rh_loke_scalemail_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1206,7 +1206,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_scale_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1252,7 +1252,7 @@
                 <equipment slot="Body" id="Item.sk_rh_drag_scalemail_light_b" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1299,7 +1299,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_scale_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1346,7 +1346,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_scale_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1395,7 +1395,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_scale_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1440,7 +1440,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_scale_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1485,7 +1485,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_scale_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1532,7 +1532,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_scale_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- ========== EASTERLING TROOP TREE ========== -->
@@ -1569,7 +1569,7 @@
                 <equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1604,7 +1604,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1640,7 +1640,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1678,7 +1678,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1715,7 +1715,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1751,7 +1751,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1788,7 +1788,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1826,7 +1826,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -1866,7 +1866,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1901,7 +1901,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1936,7 +1936,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1971,7 +1971,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
         </Equipments>
@@ -2009,7 +2009,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- ========== LOKE-RIM TROOP TREE ========== -->
@@ -2048,7 +2048,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_hplate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2096,7 +2096,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_hplate_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2145,7 +2145,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_hplate_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2202,7 +2202,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
         </Equipments>
@@ -2252,7 +2252,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2301,7 +2301,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2358,7 +2358,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -2417,7 +2417,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2468,7 +2468,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2528,7 +2528,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2583,7 +2583,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -2640,7 +2640,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2689,7 +2689,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2736,7 +2736,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- ========== DRAGON-WRATH TROOP TREE ========== -->
@@ -2775,7 +2775,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2823,7 +2823,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2872,7 +2872,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2919,7 +2919,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -2969,7 +2969,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3018,7 +3018,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3075,7 +3075,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -3134,7 +3134,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3177,7 +3177,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3226,7 +3226,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3281,7 +3281,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -3338,7 +3338,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3379,7 +3379,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3426,7 +3426,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3470,7 +3470,7 @@
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t2" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t2" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3508,7 +3508,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t2" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t2" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3545,7 +3545,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3584,7 +3584,7 @@
                 <equipment slot="Horse" id="Item.khuzait_horse" />
                 <equipment slot="HorseHarness" id="Item.light_harness" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3621,7 +3621,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3661,7 +3661,7 @@
                 <equipment slot="Horse" id="Item.khuzait_war_horse" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3697,7 +3697,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3734,7 +3734,7 @@
                 <equipment slot="Horse" id="Item.khuzait_charger" />
                 <equipment slot="HorseHarness" id="Item.half_scale_barding" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3774,7 +3774,7 @@
                 <equipment slot="Horse" id="Item.khuzait_charger" />
                 <equipment slot="HorseHarness" id="Item.half_scale_barding" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3812,7 +3812,7 @@
                 <equipment slot="Horse" id="Item.khuzait_charger" />
                 <equipment slot="HorseHarness" id="Item.full_scale_barding" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- ========== RHUN MILITIA TROOPS (for settlements) ========== -->
@@ -3856,7 +3856,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3901,7 +3901,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3936,7 +3936,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3971,7 +3971,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4009,7 +4009,7 @@
                 <equipment slot="Body" id="Item.sk_rh_drag_chest_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4046,7 +4046,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4082,7 +4082,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4120,7 +4120,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_light_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4156,7 +4156,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4194,7 +4194,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_med_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_light_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4230,7 +4230,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4269,7 +4269,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4303,7 +4303,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4342,7 +4342,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4379,7 +4379,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_c" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4417,7 +4417,7 @@
                 <equipment slot="Body" id="Item.sk_dg_khml_hplate_light_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4454,7 +4454,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_light_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4492,7 +4492,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_med_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4528,7 +4528,7 @@
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_light_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -4568,7 +4568,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4606,7 +4606,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_light_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_light_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -4646,7 +4646,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4684,7 +4684,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_med_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -4722,7 +4722,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -4760,7 +4760,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -4798,7 +4798,7 @@
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>
@@ -4838,7 +4838,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
-            <EquipmentSet id="aserai_troop_civilian_template_t3" civilian="true" />
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
             <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
         </Equipments>

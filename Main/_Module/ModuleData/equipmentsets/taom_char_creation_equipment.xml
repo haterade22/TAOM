@@ -522,7 +522,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -564,7 +564,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -606,7 +606,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -648,7 +648,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -693,7 +693,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -738,7 +738,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -780,7 +780,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -822,7 +822,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -861,7 +861,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -900,7 +900,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -942,7 +942,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -984,7 +984,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -1026,7 +1026,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -1068,7 +1068,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -1107,7 +1107,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -1146,7 +1146,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_sword_a01" />
@@ -1177,7 +1177,7 @@
 				id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gondor_lossarnach_1h_axe_a" />
@@ -1694,7 +1694,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1733,7 +1733,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1772,7 +1772,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1811,7 +1811,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1853,7 +1853,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1895,7 +1895,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1934,7 +1934,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -1973,7 +1973,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2009,7 +2009,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2045,7 +2045,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2084,7 +2084,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2123,7 +2123,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2162,7 +2162,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2201,7 +2201,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2237,7 +2237,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2273,7 +2273,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_sword_a01" />
@@ -2301,7 +2301,7 @@
 				id="Item.sk_uruk_mordor_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_mordor_set1_axe_a01" />
@@ -2830,7 +2830,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -2872,7 +2872,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -2914,7 +2914,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -2956,7 +2956,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3001,7 +3001,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3046,7 +3046,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3088,7 +3088,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3130,7 +3130,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3169,7 +3169,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3208,7 +3208,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3250,7 +3250,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3292,7 +3292,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3334,7 +3334,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3376,7 +3376,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3415,7 +3415,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3454,7 +3454,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_iron_sword_a" />
@@ -3485,7 +3485,7 @@
 				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.sm_dwarf_erebor_1h_axe_a" />
@@ -4014,7 +4014,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4056,7 +4056,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4098,7 +4098,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4140,7 +4140,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4185,7 +4185,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4230,7 +4230,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4272,7 +4272,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4314,7 +4314,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4353,7 +4353,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4392,7 +4392,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4434,7 +4434,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4476,7 +4476,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4518,7 +4518,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4560,7 +4560,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4599,7 +4599,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4638,7 +4638,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -4669,7 +4669,7 @@
 				id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -5198,7 +5198,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5240,7 +5240,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5282,7 +5282,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5324,7 +5324,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5369,7 +5369,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5414,7 +5414,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5456,7 +5456,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5498,7 +5498,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5537,7 +5537,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5576,7 +5576,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5618,7 +5618,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5660,7 +5660,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5702,7 +5702,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5744,7 +5744,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5783,7 +5783,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5822,7 +5822,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -5853,7 +5853,7 @@
 				id="Item.mirkwood_boots" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.mirkwood_sword_a01" />
@@ -6382,7 +6382,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6424,7 +6424,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6466,7 +6466,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6508,7 +6508,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6553,7 +6553,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6598,7 +6598,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6640,7 +6640,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6682,7 +6682,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6721,7 +6721,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6760,7 +6760,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6802,7 +6802,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6844,7 +6844,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6886,7 +6886,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6928,7 +6928,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -6967,7 +6967,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -7006,7 +7006,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_1h_sword_a" />
@@ -7037,7 +7037,7 @@
 				id="Item.sk_uruk_hai_shoes_a1" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.isengard_2h_axe_a" />
@@ -7566,7 +7566,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7608,7 +7608,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7650,7 +7650,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7692,7 +7692,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7734,7 +7734,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7776,7 +7776,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7815,7 +7815,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7854,7 +7854,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7893,7 +7893,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7932,7 +7932,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -7974,7 +7974,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -8016,7 +8016,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -8055,7 +8055,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -8094,7 +8094,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -8133,7 +8133,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -8172,7 +8172,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_sword_a01" />
@@ -8203,7 +8203,7 @@
 				id="Item.sk_gb_uruk_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_gundabad_axe_a01" />
@@ -8732,7 +8732,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -8774,7 +8774,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -8816,7 +8816,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -8858,7 +8858,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -8900,7 +8900,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -8942,7 +8942,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -8981,7 +8981,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9020,7 +9020,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9059,7 +9059,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9098,7 +9098,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9137,7 +9137,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9176,7 +9176,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9212,7 +9212,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9248,7 +9248,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9287,7 +9287,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9326,7 +9326,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -9357,7 +9357,7 @@
 				id="Item.sk_dg_uruk_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_dol_goldur_1h_mace_a01" />
@@ -9886,7 +9886,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -9928,7 +9928,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -9970,7 +9970,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10012,7 +10012,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10057,7 +10057,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10102,7 +10102,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10144,7 +10144,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10186,7 +10186,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10225,7 +10225,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10264,7 +10264,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10306,7 +10306,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10348,7 +10348,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10390,7 +10390,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10432,7 +10432,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10471,7 +10471,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10510,7 +10510,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -10541,7 +10541,7 @@
 				id="Item.sk_rh_loke_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.rhun_1h_sword_a_t1" />
@@ -11070,7 +11070,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11112,7 +11112,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11154,7 +11154,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11196,7 +11196,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11241,7 +11241,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11286,7 +11286,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11328,7 +11328,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11370,7 +11370,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11409,7 +11409,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11448,7 +11448,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11490,7 +11490,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11532,7 +11532,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11571,7 +11571,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11610,7 +11610,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11649,7 +11649,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11688,7 +11688,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -11719,7 +11719,7 @@
 				id="Item.haradrim_boots" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_3_t3" />
@@ -12248,7 +12248,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12290,7 +12290,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12332,7 +12332,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12374,7 +12374,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12419,7 +12419,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12464,7 +12464,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12506,7 +12506,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12548,7 +12548,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12587,7 +12587,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12626,7 +12626,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12668,7 +12668,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12710,7 +12710,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12752,7 +12752,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12794,7 +12794,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12833,7 +12833,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12872,7 +12872,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -12903,7 +12903,7 @@
 				id="Item.haradrim02_boots" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.aserai_sword_5_t4" />
@@ -13432,7 +13432,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13474,7 +13474,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13516,7 +13516,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13558,7 +13558,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13603,7 +13603,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13648,7 +13648,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13690,7 +13690,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13732,7 +13732,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13771,7 +13771,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13810,7 +13810,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13852,7 +13852,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13894,7 +13894,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13936,7 +13936,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -13978,7 +13978,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -14017,7 +14017,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -14056,7 +14056,7 @@
 				id="Item.light_harness" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />
@@ -14087,7 +14087,7 @@
 				id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet
-			civilian="true">
+			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
 				id="Item.wm_rivendell_sword_a01" />

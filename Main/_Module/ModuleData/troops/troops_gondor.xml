@@ -64,7 +64,7 @@
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -141,7 +141,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -223,7 +223,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -311,7 +311,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -397,7 +397,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -473,7 +473,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -555,7 +555,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -637,7 +637,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -717,7 +717,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_los_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -756,7 +756,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
         <equipment slot="Body" id="Item.sk_gd_leb_chainmail_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -792,7 +792,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -831,7 +831,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -870,7 +870,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -907,7 +907,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -945,7 +945,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -983,7 +983,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1020,7 +1020,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1061,7 +1061,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1098,7 +1098,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1135,7 +1135,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1172,7 +1172,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1207,7 +1207,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1246,7 +1246,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1283,7 +1283,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1320,7 +1320,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1357,7 +1357,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1392,7 +1392,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1433,7 +1433,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1470,7 +1470,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1507,7 +1507,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1544,7 +1544,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1579,7 +1579,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1617,7 +1617,7 @@
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1653,7 +1653,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1690,7 +1690,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1727,7 +1727,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1764,7 +1764,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1799,7 +1799,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1836,7 +1836,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Body" id="Item.sk_gd_bel_inf_chainmail_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1874,7 +1874,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1913,7 +1913,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1952,7 +1952,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -1989,7 +1989,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2026,7 +2026,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2063,7 +2063,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2101,7 +2101,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2139,7 +2139,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2175,7 +2175,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2216,7 +2216,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2254,7 +2254,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2291,7 +2291,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.noble_horse_imperial" />
       <equipment slot="HorseHarness" id="Item.gondor_swan_horse_armor_1" />
     </Equipments>
@@ -2330,7 +2330,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.noble_horse_imperial" />
       <equipment slot="HorseHarness" id="Item.gondor_swan_horse_armor_2" />
     </Equipments>
@@ -2369,7 +2369,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.noble_horse_imperial" />
       <equipment slot="HorseHarness" id="Item.gondor_swan_horse_armor_2" />
     </Equipments>
@@ -2408,7 +2408,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.noble_horse_imperial" />
       <equipment slot="HorseHarness" id="Item.gondor_swan_horse_armor_2" />
     </Equipments>
@@ -2454,7 +2454,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.noble_horse_imperial" />
       <equipment slot="HorseHarness" id="Item.gondor_swan_horse_armor_2" />
     </Equipments>
@@ -2493,7 +2493,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2539,7 +2539,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2594,7 +2594,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2647,7 +2647,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2688,7 +2688,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2725,7 +2725,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2762,7 +2762,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2799,7 +2799,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2834,7 +2834,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2876,7 +2876,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2914,7 +2914,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2952,7 +2952,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -2990,7 +2990,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3026,7 +3026,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3062,7 +3062,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_spear" />
         <equipment slot="Body" id="Item.sk_gd_pin_chainmail_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3098,7 +3098,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3136,7 +3136,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3174,7 +3174,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3210,7 +3210,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3247,7 +3247,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3284,7 +3284,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3319,7 +3319,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3360,7 +3360,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3398,7 +3398,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3435,7 +3435,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -3474,7 +3474,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -3513,7 +3513,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -3550,7 +3550,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -3589,7 +3589,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3626,7 +3626,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3661,7 +3661,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3704,7 +3704,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3743,7 +3743,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3782,7 +3782,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3822,7 +3822,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3861,7 +3861,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -3976,7 +3976,7 @@
         <equipment slot="Gloves" id="Item.ithilien_bracers" />
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4013,7 +4013,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4050,7 +4050,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4086,7 +4086,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4122,7 +4122,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4160,7 +4160,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4197,7 +4197,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4235,7 +4235,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4271,7 +4271,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4309,7 +4309,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -4347,7 +4347,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -4389,7 +4389,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4426,7 +4426,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4462,7 +4462,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4498,7 +4498,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4532,7 +4532,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4569,7 +4569,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4607,7 +4607,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4643,7 +4643,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_sere_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4685,7 +4685,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4723,7 +4723,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4762,7 +4762,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4801,7 +4801,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4838,7 +4838,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4877,7 +4877,7 @@
         <equipment slot="Body" id="Item.sk_gd_har_inf_chainmail_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4915,7 +4915,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4952,7 +4952,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -4989,7 +4989,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5027,7 +5027,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5063,7 +5063,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5100,7 +5100,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5139,7 +5139,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5176,7 +5176,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5218,7 +5218,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5255,7 +5255,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5292,7 +5292,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5329,7 +5329,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5364,7 +5364,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5402,7 +5402,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5440,7 +5440,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5476,7 +5476,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5517,7 +5517,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5555,7 +5555,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5593,7 +5593,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5629,7 +5629,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5667,7 +5667,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5705,7 +5705,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5741,7 +5741,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5781,7 +5781,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5819,7 +5819,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5855,7 +5855,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5892,7 +5892,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5927,7 +5927,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -5964,7 +5964,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6001,7 +6001,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6036,7 +6036,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_cair_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6077,7 +6077,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6115,7 +6115,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6153,7 +6153,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6191,7 +6191,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6228,7 +6228,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6267,7 +6267,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6304,7 +6304,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6345,7 +6345,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6383,7 +6383,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6421,7 +6421,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6459,7 +6459,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6495,7 +6495,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6534,7 +6534,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6571,7 +6571,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6610,7 +6610,7 @@
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_b" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6646,7 +6646,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6684,7 +6684,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6721,7 +6721,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6759,7 +6759,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6795,7 +6795,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6832,7 +6832,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_2" />
     </Equipments>
@@ -6871,7 +6871,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -6908,7 +6908,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
       <equipment slot="Horse" id="Item.t2_empire_horse" />
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_4" />
     </Equipments>
@@ -6947,7 +6947,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -6985,7 +6985,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -7023,7 +7023,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -7059,7 +7059,7 @@
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -7096,7 +7096,7 @@
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -7129,7 +7129,7 @@
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -7163,7 +7163,7 @@
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 
@@ -7198,7 +7198,7 @@
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_b" />
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" civilian="true" />
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
   </NPCCharacter>
 

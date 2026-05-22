@@ -499,7 +499,7 @@ def generate_npc_xml(kingdom, idx, config):
 {traits_xml}
 \t\t</Traits>
 \t\t<Equipments>
-\t\t\t<EquipmentSet id="npc_companion_equipment_template_{kingdom}" civilian="true" />
+\t\t\t<EquipmentSet id="npc_companion_equipment_template_{kingdom}" equipmentType="Civilian" />
 \t\t\t<EquipmentSet id="npc_companion_equipment_template_{kingdom}" />
 \t\t</Equipments>
 \t</NPCCharacter>'''
@@ -559,7 +559,7 @@ def generate_equipment_roster(kingdom, items):
         sets.append(f'\t\t<EquipmentSet>\n{random_set(rng, battle=True)}\n\t\t</EquipmentSet>')
     # 3 civilian sets
     for i in range(3):
-        sets.append(f'\t\t<EquipmentSet civilian="true">\n{random_set(rng, battle=False)}\n\t\t</EquipmentSet>')
+        sets.append(f'\t\t<EquipmentSet equipmentType="Civilian">\n{random_set(rng, battle=False)}\n\t\t</EquipmentSet>')
 
     sets_xml = '\n'.join(sets)
     return f'''\t<EquipmentRoster id="npc_companion_equipment_template_{kingdom}" culture="Culture.{culture}">

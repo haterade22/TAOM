@@ -69,7 +69,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -280,7 +280,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -374,7 +374,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -451,7 +451,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -525,7 +525,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.camel" />
@@ -602,7 +602,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -673,7 +673,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -750,7 +750,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -824,7 +824,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.war_camel" />
@@ -904,7 +904,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -978,7 +978,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1052,7 +1052,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1126,7 +1126,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.war_camel" />
@@ -1203,7 +1203,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1271,7 +1271,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1342,7 +1342,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1417,7 +1417,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1499,7 +1499,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1579,7 +1579,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1662,7 +1662,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1742,7 +1742,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1822,7 +1822,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1899,7 +1899,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
             <equipment
                 slot="Horse"
                 id="Item.t2_khuzait_horse" />
@@ -1974,7 +1974,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2042,7 +2042,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t1"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2103,7 +2103,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2165,7 +2165,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 

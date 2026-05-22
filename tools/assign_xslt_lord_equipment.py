@@ -213,7 +213,7 @@ def main():
             # Insert Equipments block before the passthrough
             new_lines.append(f'{indent}<Equipments>\n')
             new_lines.append(f'{indent}    <EquipmentSet id="{bat_id}" />\n')
-            new_lines.append(f'{indent}    <EquipmentSet id="{civ_id}" civilian="true" />\n')
+            new_lines.append(f'{indent}    <EquipmentSet id="{civ_id}" equipmentType="Civilian" />\n')
             new_lines.append(f'{indent}</Equipments>\n')
 
             # Modify the passthrough line to exclude Equipments

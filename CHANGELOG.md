@@ -2,6 +2,43 @@
 
 ## 2026-05-22
 
+### migration(s5a): mass XML migration to v1.4.3 equipmentType convention
+
+Mechanical migration of the deprecated equipment-system attributes per the v1.4.3 dev migration spec. Surgical diff (~2,150 line changes total) — formatting, attribute order, comments, self-closing style all preserved.
+
+**Migrated:**
+- **1,628 `<EquipmentSet civilian="true">` → `equipmentType="Civilian"`** across 16 XML files (`troops_*.xml`, `characters/*.xml`, `equipmentsets/*.xml`, `taom_wanderers.xml`).
+- **389 `<EquipmentSet ... civilian="true" />` in `lords.xslt`** — same migration on the XSLT template.
+- **160 deprecated `EquipmentFlags` references in `taom_child_equipment_templates.xml`**:
+  - 60× `IsNobleTemplate=*` → `IsLordTemplate=*` (1:1 rename, preserving true/false value).
+  - 40× `IsCivilianTemplate="true"` dropped (the new `equipmentType="Civilian"` on parent `<EquipmentSet>` is the new way to encode "civilian template").
+  - 60× `IsNoncombatantTemplate="true"` dropped (same reason).
+
+**Left intentionally untouched (per dev spec):**
+- `<EquipmentRoster civilian="true">` inline rosters inside `<NPCCharacter>/<Equipments>` blocks. Vanilla 1.4.5 still uses this 1,097× in `spnpccharacters.xml` — it remains valid in 1.4.3+. The migration tool filters by element name (`<EquipmentSet>` only).
+- `equipmentType="Battle"` on bare sets. Vanilla 1.4.5 OMITS the attribute when the set is Battle (implicit default). Adding it explicitly would diverge from vanilla style.
+
+**Migration tool improvement:**
+- `tools/migrate_equipment_type_1_4_3.py` rewritten to use regex-on-text instead of lxml `tree.write()`. Initial version produced a 130K-line diff because lxml serializes from scratch (reformats whitespace, collapses multi-line tags, changes self-closing style, re-emits the XML declaration with single-quote attribute values). New version reads the file as text, finds opening `<EquipmentSet>` tags via regex, replaces `civilian="true"` in-place — surgical 1,628-line diff.
+- Sanity-check: regex replacement count must match lxml-detected count. Mismatch → don't write (would imply tag-detection drift, e.g. multi-line opening tag the regex missed).
+
+**8 Python generators updated to emit new format:**
+- `tools/assign_xslt_lord_equipment.py`, `tools/generate_rhun_troops.py`, `tools/generate_gondor_troops.py`, `tools/generate_char_creation_equipment.py`, `tools/generate_batch2_wanderers.py` (×2 sites), `tools/extract_wanderers.py` (×2 sites) — write-side emit `equipmentType="Civilian"`.
+- `scripts/replace_equipment_templates.py`, `tools/assign_lord_equipment.py` — read-side detector now accepts BOTH new and legacy forms for backward compat (will never see the legacy form post-S5a, but accepts it defensively).
+
+**Validation gates:**
+- `python tools/validate_equipment_flags_1_4_3.py` — 0 deprecated flag occurrences remaining (was 160).
+- `python tools/migrate_equipment_type_1_4_3.py --dry-run` — 0 files needing migration (was 16).
+- `dotnet build Main/TAOM.csproj` — 0 errors, 1 warning.
+- `dotnet test TAOM.Tests` — 2,323 / 2,325 pass.
+
+Refs: #210
+Research: `docs/migration/v1.4.x-equipment-overhaul.md` + `docs/migration/templates/equipment-rosters.md`
+Not-tested: live game launch (S6 smoke test deferred to a follow-up session).
+Pending: S5b (~96 missing equipment rosters across 12 cultures for the v1.4.3 mandatory roster contract).
+
+## 2026-05-22
+
 ### migration(v1.4.5): S1–S5 complete — `bannerlord-1.4.5` builds + tests green against 1.4.5
 
 After S0 Foundation, the actual code migration completed in **4 file fixes**:

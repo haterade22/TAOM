@@ -24,6 +24,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 from typing import List, Tuple
@@ -34,6 +35,46 @@ try:
 except ImportError:
     import xml.etree.ElementTree as LET  # type: ignore
     HAVE_LXML = False
+
+
+# Regex-based attribute migration. Preserves all original formatting (whitespace,
+# attribute order, comments, XML declaration, self-closing style). Only mutates
+# the `civilian="true"` attribute inside opening <EquipmentSet> tags.
+#
+# Why regex instead of lxml.tree.write?  lxml serializes from scratch — it
+# reformats attribute spacing, collapses multi-line tags, changes self-closing
+# style, and re-emits the XML declaration with single-quote attribute values.
+# That produces an unreviewable 130K-line diff for what should be a 1,628-line
+# attribute change. Regex-on-text is the surgical option.
+#
+# Tolerant of: civilian = "true" (extra whitespace), single-quote variants,
+# multi-line opening tags. Does NOT touch <EquipmentRoster civilian="true">
+# (still valid in 1.4.5 per the spec — vanilla uses this 1,097x in
+# spnpccharacters.xml).
+EQUIPMENTSET_TAG_RE = re.compile(r'<EquipmentSet\b[^>]*>', re.DOTALL)
+CIVILIAN_ATTR_RE = re.compile(r'''civilian\s*=\s*"true"''')
+CIVILIAN_ATTR_SINGLEQUOTE_RE = re.compile(r"""civilian\s*=\s*'true'""")
+
+
+def apply_text_migration(content: str) -> Tuple[str, int]:
+    """Return (new_content, count_of_replacements)."""
+    count = 0
+
+    def replace_in_tag(match: re.Match) -> str:
+        nonlocal count
+        full_tag = match.group(0)
+        # Only mutate if civilian="true" appears INSIDE the EquipmentSet tag.
+        new_tag = full_tag
+        if CIVILIAN_ATTR_RE.search(new_tag):
+            new_tag = CIVILIAN_ATTR_RE.sub('equipmentType="Civilian"', new_tag)
+            count += 1
+        elif CIVILIAN_ATTR_SINGLEQUOTE_RE.search(new_tag):
+            new_tag = CIVILIAN_ATTR_SINGLEQUOTE_RE.sub("equipmentType='Civilian'", new_tag)
+            count += 1
+        return new_tag
+
+    new_content = EQUIPMENTSET_TAG_RE.sub(replace_in_tag, content)
+    return new_content, count
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -103,6 +144,9 @@ def _parse_etree(path: Path):
 
 
 def process_file(path: Path, *, apply: bool, report_missing_culture: bool) -> Tuple[int, int, List[str]]:
+    # Parse via lxml for accurate detection (counts EquipmentSet vs EquipmentRoster,
+    # detects culture-missing EquipmentRosters). The IN-MEMORY mutation in
+    # migrate_tree is used only for the count — we DO NOT serialize it.
     try:
         if HAVE_LXML:
             tree = _parse_lxml(path)
@@ -114,16 +158,27 @@ def process_file(path: Path, *, apply: bool, report_missing_culture: bool) -> Tu
     sets_changed, missing_culture, warnings = migrate_tree(tree, file_path=path)
 
     if apply and sets_changed > 0:
+        # Write via text-substitution to preserve all formatting (whitespace,
+        # attribute order, comments, self-closing style, XML declaration).
+        # Do NOT use tree.write() — it reformats from scratch and produces a
+        # 130K-line diff for what should be a 1.6K-line change.
         try:
-            if HAVE_LXML:
-                tree.write(
-                    str(path),
-                    pretty_print=False,
-                    xml_declaration=True,
-                    encoding="utf-8",
+            with open(path, "r", encoding="utf-8", newline="") as f:
+                raw = f.read()
+            new_raw, regex_count = apply_text_migration(raw)
+            # Sanity check: regex count should match the lxml-detected count.
+            # A mismatch implies tag-detection drift (e.g., regex missed
+            # a multi-line EquipmentSet opening tag).
+            if regex_count != sets_changed:
+                warnings.append(
+                    f"{path}: COUNT MISMATCH — lxml detected {sets_changed} "
+                    f"<EquipmentSet civilian='true'> but regex replaced {regex_count}. "
+                    f"Inspect manually before re-running."
                 )
-            else:
-                tree.write(str(path), xml_declaration=True, encoding="utf-8")
+                # Don't write a partial migration on count mismatch.
+                return sets_changed, missing_culture, warnings
+            with open(path, "w", encoding="utf-8", newline="") as f:
+                f.write(new_raw)
         except Exception as e:
             warnings.append(f"{path}: WRITE FAILED ({type(e).__name__}): {e}")
 

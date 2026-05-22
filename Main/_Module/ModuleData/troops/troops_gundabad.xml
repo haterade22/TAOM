@@ -190,7 +190,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -473,7 +473,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -696,7 +696,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -907,7 +907,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1116,7 +1116,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1325,7 +1325,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1566,7 +1566,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -1804,7 +1804,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2060,7 +2060,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2196,7 +2196,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2274,7 +2274,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2436,7 +2436,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2510,7 +2510,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2584,7 +2584,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2656,7 +2656,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2728,7 +2728,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -2915,7 +2915,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3099,7 +3099,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3171,7 +3171,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3289,7 +3289,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3358,7 +3358,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3433,7 +3433,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3560,7 +3560,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3632,7 +3632,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3707,7 +3707,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -3831,7 +3831,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 

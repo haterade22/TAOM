@@ -5395,7 +5395,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -5502,7 +5502,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -6063,7 +6063,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -7567,7 +7567,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -7708,7 +7708,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -7918,7 +7918,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 
@@ -7987,7 +7987,7 @@
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
-                civilian="true" />
+                equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
 

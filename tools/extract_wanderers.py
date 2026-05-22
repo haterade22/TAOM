@@ -227,7 +227,7 @@ def generate_equipment_roster(kingdom, config):
     civ_bodies = items["civ_bodies"]
     civ_boots = items["civ_boots"]
     for i, civ_body in enumerate(civ_bodies[:3]):
-        lines.append('\t\t<EquipmentSet civilian="true">')
+        lines.append('\t\t<EquipmentSet equipmentType="Civilian">')
         if weapons:
             lines.append(f'\t\t\t<Equipment slot="Item0" id="Item.{weapons[0]}" />')
         lines.append(f'\t\t\t<Equipment slot="Body" id="Item.{civ_body}" />')
@@ -320,7 +320,7 @@ def format_npc_xml(npc, equip_template):
 
     # Equipment
     lines.append('\t\t<Equipments>')
-    lines.append(f'\t\t\t<EquipmentSet id="{equip_template}" civilian="true" />')
+    lines.append(f'\t\t\t<EquipmentSet id="{equip_template}" equipmentType="Civilian" />')
     lines.append(f'\t\t\t<EquipmentSet id="{equip_template}" />')
     lines.append('\t\t</Equipments>')
 
