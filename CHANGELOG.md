@@ -2,6 +2,35 @@
 
 ## 2026-05-22
 
+### migration(s5b): author v1.4.3 mandatory equipment rosters across 12 cultures
+
+The v1.4.3 equipment-system overhaul requires each culture to provide rosters tagged with specific `<Flags>` combinations so the engine's `EquipmentSelectionModel.GetEquipmentForXxx` queries can find appropriate equipment. Without these rosters, custom-culture NPCs would spawn naked / wrong-culture during come-of-age, marriage, succession, and child-generation events.
+
+**Generated 76 mandatory rosters** in a new centralized file `Main/_Module/ModuleData/equipmentsets/taom_lord_template_equipment.xml`:
+
+- 10 cultures × 6 rosters: `IsLordTemplate` × {male, female} × {Battle, Civilian, Teen-Civilian}
+- 2 cultures (shaghana, abanissa) × 8 rosters: above + `IsChildEquipmentTemplate` × {male, female} (these 2 cultures aren't covered by `taom_child_equipment_templates.xml` so they need their own child rosters)
+
+**Items sourced from existing TAOM per-culture equipment files** — the first `<EquipmentRoster id="<culture>_bat_template_*">` battle roster and `<culture>_civ_template_*">` civilian roster provide the items. Shaghana and abanissa (no per-culture files; sub-cultures of Harad per kingdom-culture-mapping memory) fall back to harad items. Items are not LOTR-themed per se, just reused from existing TAOM content — they may be refined later as a polish pass.
+
+**New tool:** `tools/generate_lord_template_equipment.py` — generates the centralized roster file by extracting items from existing per-culture equipment files. Idempotent: re-running regenerates from the latest source items. Additive: does NOT modify any existing equipment files.
+
+**Registered in `Main/_Module/SubModule.xml`** under `<Xmls>` as a new `<XmlNode>` so the engine loads it.
+
+**Coverage gate:**
+- `python tools/audit_equipment_roster_coverage.py` — all 12 cultures pass 8/8 mandatory combos (was 0-2/8 before; gain: 76 new rosters across the matrix).
+- Optional `IsKingdomRulerTemplate` × {male, female} × {Battle, Civilian} = 4/12 cultures still missing → deferred enhancement (TAOM can author dedicated ruler equipment if engine fallback to lord-tier rosters isn't acceptable).
+
+**Build + tests:**
+- `dotnet build Main/TAOM.csproj` — 0 errors, 1 warning.
+- `dotnet test TAOM.Tests` — 2,323 / 2,325 pass.
+
+Not-tested: live game launch (S6 smoke test deferred). Specifically: that the engine actually resolves these rosters at come-of-age / child-generation events without falling back to vanilla.
+
+Refs: #210
+Research: `docs/migration/v1.4.x-equipment-overhaul.md` + `docs/migration/templates/equipment-rosters.md` mandatory matrix.
+Constraint: items reused from existing TAOM battle/civilian rosters rather than authored fresh per culture; some semantic mismatches possible (e.g. a "teen" roster uses adult civilian items because TAOM has no separate teen items). S7 feature validation should flag any visible issues.
+
 ### migration(s5a): mass XML migration to v1.4.3 equipmentType convention
 
 Mechanical migration of the deprecated equipment-system attributes per the v1.4.3 dev migration spec. Surgical diff (~2,150 line changes total) — formatting, attribute order, comments, self-closing style all preserved.

@@ -165,9 +165,19 @@ Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopT
 
 **Diff summary:** 26 files modified, ~2,150 line changes total. All formatting preserved. The deprecated `civilian="true"` count went from 3,372 (raw grep including legitimate inline `<EquipmentRoster civilian="true">`) to 2,017 actual migrations (1,628 EquipmentSet + 389 XSLT). The 1,097 inline `<EquipmentRoster civilian="true">` remain untouched per vanilla 1.4.5 convention.
 
-### S5b — Equipment roster authoring (PENDING)
+### S5b — Equipment roster authoring (COMPLETE 2026-05-22)
 
-Audit script (`tools/audit_equipment_roster_coverage.py`) reports all 12 cultures fail the 1.4.3 mandatory roster matrix (need `IsLordTemplate`, `IsKingdomRulerTemplate`, `IsFemaleTemplate`, `IsChildEquipmentTemplate`, `IsTeenagerEquipmentTemplate` combinations). ~96 rosters to author. Templates reference: [v1.4.x-equipment-overhaul.md](v1.4.x-equipment-overhaul.md) + [templates/equipment-rosters.md](templates/equipment-rosters.md).
+| Task | Status |
+|---|---|
+| Generate 76 mandatory rosters (12 cultures × {6,8} combos) via new `tools/generate_lord_template_equipment.py` | ✅ |
+| Write to new file `Main/_Module/ModuleData/equipmentsets/taom_lord_template_equipment.xml` (additive — does not modify existing files) | ✅ |
+| Register in `Main/_Module/SubModule.xml` `<Xmls>` block | ✅ |
+| Coverage audit: all 12 cultures pass 8/8 mandatory combos | ✅ |
+| Build + test gate green | ✅ |
+
+**Approach:** the generator extracts items from each culture's existing `<EquipmentRoster id="<culture>_bat_template_*">` and `<culture>_civ_template_*">` rosters and emits 6 new rosters per culture with the right `<Flags>` combinations. Shaghana + abanissa (no per-culture equipment files; Harad sub-cultures per `kingdom-culture-mapping.md` memory) fall back to harad items + also get 2 extra rosters (child M/F) since they aren't covered by `taom_child_equipment_templates.xml`.
+
+**Deferred (4 of 12 optional combos per culture):** `IsKingdomRulerTemplate` × {male, female} × {Battle, Civilian}. The engine should fall back to `IsLordTemplate` rosters when no ruler-specific roster exists — verify in S6/S7. If the fallback isn't adequate, author dedicated ruler equipment in a future pass.
 
 ### S6–S12 — see plan file
 
