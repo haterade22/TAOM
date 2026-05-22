@@ -1,8 +1,0 @@
-namespace Microsoft.Cci.Pdb;
-
-internal enum CV_DISCARDED : uint
-{
-	CV_DISCARDED_UNKNOWN,
-	CV_DISCARDED_NOT_SELECTED,
-	CV_DISCARDED_NOT_REFERENCED
-}

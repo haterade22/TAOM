@@ -24,25 +24,6 @@
 		<Compile Remove="_Module\bin\**" />
 		<EmbeddedResource Remove="_Module\bin\**" />
 		<None Remove="_Module\bin\**" />
-		<!-- Exclude Harmony's AssemblyInfo — conflicts with TAOM.Dependencies assembly identity -->
-		<Compile Remove="ThirdParty\Harmony\Properties\AssemblyInfo.cs" />
-		<!-- Exclude decompiled Unsafe polyfills — they were IL intrinsics that can't be expressed in C#.
-		     UnsafeRaw delegates to Unsafe and vice versa, causing infinite recursion at runtime.
-		     The System.Runtime.CompilerServices.Unsafe NuGet provides proper IL implementations. -->
-		<Compile Remove="ThirdParty\Harmony\System.Runtime.CompilerServices\Unsafe.cs" />
-		<Compile Remove="ThirdParty\Harmony\MonoMod.Backports.ILHelpers\UnsafeRaw.cs" />
-		<!-- Dead code identified by audit — unused in Harmony/TAOM runtime paths -->
-		<Compile Remove="ThirdParty\Harmony\System.Collections\HashHelpers.cs" />
-		<Compile Remove="ThirdParty\Harmony\System.IO\StreamExtensions.cs" />
-	</ItemGroup>
-
-	<!-- Harmony native exception helpers (Linux/macOS only, but resource stream calls expect them) -->
-	<ItemGroup>
-		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_linux_x86_64.so" LogicalName="exhelper_linux_x86_64.so" />
-		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_linux_arm64.so" LogicalName="exhelper_linux_arm64.so" />
-		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_macos_x86_64.dylib" LogicalName="exhelper_macos_x86_64.dylib" />
-		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_macos_arm64.dylib" LogicalName="exhelper_macos_arm64.dylib" />
-		<EmbeddedResource Include="ThirdParty\Harmony\ILRepack.List" LogicalName="ILRepack.List" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -53,6 +34,13 @@
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
 		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
 		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />
+
+		<!-- DR3 (2026-05-22): replaced source-merge of Harmony decompile with PackageReferences.
+		     These DLLs deploy to bin/ alongside TAOM.Dependencies.dll and will be ILRepack'd into
+		     the merged output in a follow-up. Until then they ship as separate runtime DLLs. -->
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
+		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.1" />
+		<PackageReference Include="Bannerlord.MCM" Version="5.11.3" />
 	</ItemGroup>
 
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
