@@ -33,15 +33,15 @@ public static class AllianceCampaignBehavior_EndAlliance_Patch
 
         if (_hook.ShouldPreventAllianceEnd(kingdom1.StringId, kingdom2.StringId))
         {
-            // Phase 9b #152 — Vanilla callers (OnAllianceTimerExpired, OnWarDeclared) call EndAlliance
-            // then AddAllianceDecision in sequence. When we skip EndAlliance, the subsequent
-            // AddAllianceDecision queues a "propose new alliance" for kingdoms that are still allied.
-            // Mitigation: vanilla AddAllianceDecision (decompiled) checks IsAlliedWith before
-            // queuing the decision, so the duplicate is filtered at that layer. We log for
-            // diagnostic visibility — if downstream "duplicate proposal" reports surface, the
-            // mitigation has gapped and we need a Patch15 on AddAllianceDecision to filter.
+            // Audit Agent 2 (2026-05-22) — corrected v1.4.5 behavior:
+            // The earlier "Phase 9b #152" comment claimed vanilla AddAllianceDecision
+            // short-circuits on IsAlliedWith. Verified against the v1.4.5 decompile: NOT
+            // TRUE — vanilla just removes any existing StartAllianceDecision then adds a
+            // fresh one. The companion AllianceCampaignBehavior_AddAllianceDecision_Patch
+            // now provides that gate explicitly so duplicate decisions don't accumulate
+            // on Permanent-lore pairs after their alliance's natural EndTime passes.
             _logger?.LogDebug($"[Diplomacy] EndAlliance blocked: {kingdom1.StringId} ↔ {kingdom2.StringId}. " +
-                              "Downstream AddAllianceDecision is expected to short-circuit on IsAlliedWith.");
+                              "Companion AddAllianceDecision_Patch will suppress the redundant downstream queuing.");
             return false;
         }
 

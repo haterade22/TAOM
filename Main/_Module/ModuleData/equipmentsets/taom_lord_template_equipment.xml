@@ -92,6 +92,62 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_gondor_ruler_battle_male" culture="Culture.gondor">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_gondor_ruler_battle_female" culture="Culture.gondor">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_gondor_ruler_civilian_male" culture="Culture.gondor">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_gondor_ruler_civilian_female" culture="Culture.gondor">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== MORDOR ==================== -->
   <EquipmentRoster id="taom_mordor_lord_battle_male" culture="Culture.mordor">
@@ -178,6 +234,62 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_mordor_ruler_battle_male" culture="Culture.mordor">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+    			<Equipment slot="Item1" id="Item.sm_mordor_shield_tower_a" />
+    			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_mordor_ruler_battle_female" culture="Culture.mordor">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+    			<Equipment slot="Item1" id="Item.sm_mordor_shield_tower_a" />
+    			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_mordor_ruler_civilian_male" culture="Culture.mordor">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+    			<Equipment slot="Item1" id="Item.sm_mordor_shield_tower_a" />
+    			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_mordor_ruler_civilian_female" culture="Culture.mordor">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+    			<Equipment slot="Item1" id="Item.sm_mordor_shield_tower_a" />
+    			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== EREBOR ==================== -->
   <EquipmentRoster id="taom_erebor_lord_battle_male" culture="Culture.erebor">
@@ -251,6 +363,54 @@
     			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_erebor_ruler_battle_male" culture="Culture.erebor">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+    			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_erebor_ruler_battle_female" culture="Culture.erebor">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+    			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_erebor_ruler_civilian_male" culture="Culture.erebor">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+    			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_erebor_ruler_civilian_female" culture="Culture.erebor">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+    			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
 
   <!-- ==================== RIVENDELL ==================== -->
@@ -338,6 +498,62 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_rivendell_ruler_battle_male" culture="Culture.rivendell">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_rivendell_ruler_battle_female" culture="Culture.rivendell">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_rivendell_ruler_civilian_male" culture="Culture.rivendell">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_rivendell_ruler_civilian_female" culture="Culture.rivendell">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== LOTHLORIEN ==================== -->
   <EquipmentRoster id="taom_lothlorien_lord_battle_male" culture="Culture.lothlorien">
@@ -423,6 +639,62 @@
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_lothlorien_ruler_battle_male" culture="Culture.lothlorien">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_lothlorien_ruler_battle_female" culture="Culture.lothlorien">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_lothlorien_ruler_civilian_male" culture="Culture.lothlorien">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_lothlorien_ruler_civilian_female" culture="Culture.lothlorien">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+    			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
 
   <!-- ==================== MIRKWOOD ==================== -->
@@ -510,6 +782,62 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_mirkwood_ruler_battle_male" culture="Culture.mirkwood">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
+    			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_mirkwood_ruler_battle_female" culture="Culture.mirkwood">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
+    			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_mirkwood_ruler_civilian_male" culture="Culture.mirkwood">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
+    			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_mirkwood_ruler_civilian_female" culture="Culture.mirkwood">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
+    			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
+    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== ISENGARD ==================== -->
   <EquipmentRoster id="taom_isengard_lord_battle_male" culture="Culture.isengard">
@@ -589,6 +917,58 @@
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_isengard_ruler_battle_male" culture="Culture.isengard">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_isengard_ruler_battle_female" culture="Culture.isengard">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_isengard_ruler_civilian_male" culture="Culture.isengard">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_isengard_ruler_civilian_female" culture="Culture.isengard">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
 
   <!-- ==================== GUNDABAD ==================== -->
@@ -676,6 +1056,62 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_gundabad_ruler_battle_male" culture="Culture.gundabad">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_gundabad_ruler_battle_female" culture="Culture.gundabad">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_gundabad_ruler_civilian_male" culture="Culture.gundabad">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_gundabad_ruler_civilian_female" culture="Culture.gundabad">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== DOLGULDUR ==================== -->
   <EquipmentRoster id="taom_dolguldur_lord_battle_male" culture="Culture.dolguldur">
@@ -762,6 +1198,62 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_dolguldur_ruler_battle_male" culture="Culture.dolguldur">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_dolguldur_ruler_battle_female" culture="Culture.dolguldur">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_dolguldur_ruler_civilian_male" culture="Culture.dolguldur">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_dolguldur_ruler_civilian_female" culture="Culture.dolguldur">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+    			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+    			<Equipment slot="Horse" id="Item.warg_brown" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== UMBAR ==================== -->
   <EquipmentRoster id="taom_umbar_lord_battle_male" culture="Culture.umbar">
@@ -829,6 +1321,50 @@
     			<Equipment slot="Leg" id="Item.haradrim_boots" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_umbar_ruler_battle_male" culture="Culture.umbar">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_umbar_ruler_battle_female" culture="Culture.umbar">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_umbar_ruler_civilian_male" culture="Culture.umbar">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_umbar_ruler_civilian_female" culture="Culture.umbar">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
 
   <!-- ==================== SHAGHANA ==================== -->
@@ -936,6 +1472,58 @@
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsChildEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
+  <EquipmentRoster id="taom_shaghana_ruler_battle_male" culture="Culture.shaghana">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_shaghana_ruler_battle_female" culture="Culture.shaghana">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_shaghana_ruler_civilian_male" culture="Culture.shaghana">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_shaghana_ruler_civilian_female" culture="Culture.shaghana">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
 
   <!-- ==================== ABANISSA ==================== -->
   <EquipmentRoster id="taom_abanissa_lord_battle_male" culture="Culture.abanissa">
@@ -1041,6 +1629,906 @@
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsChildEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_abanissa_ruler_battle_male" culture="Culture.abanissa">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_abanissa_ruler_battle_female" culture="Culture.abanissa">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_abanissa_ruler_civilian_male" culture="Culture.abanissa">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_abanissa_ruler_civilian_female" culture="Culture.abanissa">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- ==================== VLANDIA ==================== -->
+  <EquipmentRoster id="taom_vlandia_lord_battle_male" culture="Culture.vlandia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_lord_battle_female" culture="Culture.vlandia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_lord_civilian_male" culture="Culture.vlandia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_lord_civilian_female" culture="Culture.vlandia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_lord_teen_male" culture="Culture.vlandia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_lord_teen_female" culture="Culture.vlandia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_ruler_battle_male" culture="Culture.vlandia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_ruler_battle_female" culture="Culture.vlandia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_ruler_civilian_male" culture="Culture.vlandia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_vlandia_ruler_civilian_female" culture="Culture.vlandia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+    			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- ==================== EMPIRE ==================== -->
+  <EquipmentRoster id="taom_empire_lord_battle_male" culture="Culture.empire">
+    <EquipmentSet>
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+            <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_lord_battle_female" culture="Culture.empire">
+    <EquipmentSet>
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+            <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_lord_civilian_male" culture="Culture.empire">
+    <EquipmentSet equipmentType="Civilian">
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+                <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_lord_civilian_female" culture="Culture.empire">
+    <EquipmentSet equipmentType="Civilian">
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+                <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_lord_teen_male" culture="Culture.empire">
+    <EquipmentSet equipmentType="Civilian">
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+                <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_lord_teen_female" culture="Culture.empire">
+    <EquipmentSet equipmentType="Civilian">
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+                <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_ruler_battle_male" culture="Culture.empire">
+    <EquipmentSet>
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+            <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_ruler_battle_female" culture="Culture.empire">
+    <EquipmentSet>
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+            <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_ruler_civilian_male" culture="Culture.empire">
+    <EquipmentSet equipmentType="Civilian">
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+                <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_empire_ruler_civilian_female" culture="Culture.empire">
+    <EquipmentSet equipmentType="Civilian">
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
+                <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
+                <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
+                <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
+                <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
+                <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <Equipment slot="Horse" id="Item.charger" />
+            </EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- ==================== ASERAI ==================== -->
+  <EquipmentRoster id="taom_aserai_lord_battle_male" culture="Culture.aserai">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_lord_battle_female" culture="Culture.aserai">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_lord_civilian_male" culture="Culture.aserai">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_lord_civilian_female" culture="Culture.aserai">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_lord_teen_male" culture="Culture.aserai">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_lord_teen_female" culture="Culture.aserai">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_ruler_battle_male" culture="Culture.aserai">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_ruler_battle_female" culture="Culture.aserai">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_ruler_civilian_male" culture="Culture.aserai">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_aserai_ruler_civilian_female" culture="Culture.aserai">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- ==================== KHUZAIT ==================== -->
+  <EquipmentRoster id="taom_khuzait_lord_battle_male" culture="Culture.khuzait">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_lord_battle_female" culture="Culture.khuzait">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_lord_civilian_male" culture="Culture.khuzait">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_lord_civilian_female" culture="Culture.khuzait">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_lord_teen_male" culture="Culture.khuzait">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_lord_teen_female" culture="Culture.khuzait">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_ruler_battle_male" culture="Culture.khuzait">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_ruler_battle_female" culture="Culture.khuzait">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_ruler_civilian_male" culture="Culture.khuzait">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_khuzait_ruler_civilian_female" culture="Culture.khuzait">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.easterling_head" />
+    			<Equipment slot="Body" id="Item.easterling_torso" />
+    			<Equipment slot="Gloves" id="Item.easterling_glove" />
+    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- ==================== STURGIA ==================== -->
+  <EquipmentRoster id="taom_sturgia_lord_battle_male" culture="Culture.sturgia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_lord_battle_female" culture="Culture.sturgia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_lord_civilian_male" culture="Culture.sturgia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_lord_civilian_female" culture="Culture.sturgia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_lord_teen_male" culture="Culture.sturgia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_lord_teen_female" culture="Culture.sturgia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_ruler_battle_male" culture="Culture.sturgia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_ruler_battle_female" culture="Culture.sturgia">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_ruler_civilian_male" culture="Culture.sturgia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_sturgia_ruler_civilian_female" culture="Culture.sturgia">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+    			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
+    			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
+    			<Equipment slot="Body" id="Item.sturgia_cavalry_armor" />
+    			<Equipment slot="Cape" id="Item.scarf" />
+    			<Equipment slot="Gloves" id="Item.plated_strip_gauntlets" />
+    			<Equipment slot="Leg" id="Item.plated_strip_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- ==================== BATTANIA ==================== -->
+  <EquipmentRoster id="taom_battania_lord_battle_male" culture="Culture.battania">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_battle_female" culture="Culture.battania">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_civilian_male" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_civilian_female" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_teen_male" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_teen_female" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_child_male" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsChildEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_lord_child_female" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsChildEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_ruler_battle_male" culture="Culture.battania">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_ruler_battle_female" culture="Culture.battania">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_ruler_civilian_male" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_battania_ruler_civilian_female" culture="Culture.battania">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+    			<Equipment slot="Item1" id="Item.desert_round_shield" />
+    			<Equipment slot="Head" id="Item.haradrim_head" />
+    			<Equipment slot="Body" id="Item.haradrim_torso" />
+    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
+    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
 
 </EquipmentRosters>

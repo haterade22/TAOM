@@ -3,122 +3,122 @@ erebor,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 erebor,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 erebor,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 erebor,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-erebor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-erebor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+erebor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+erebor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 erebor,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 erebor,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-erebor,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-erebor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-erebor,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-erebor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+erebor,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+erebor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+erebor,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+erebor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 rivendell,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 rivendell,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 rivendell,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 rivendell,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-rivendell,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-rivendell,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+rivendell,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+rivendell,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 rivendell,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 rivendell,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-rivendell,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-rivendell,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-rivendell,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-rivendell,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+rivendell,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+rivendell,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+rivendell,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+rivendell,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 mirkwood,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 mirkwood,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 mirkwood,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 mirkwood,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-mirkwood,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,1,PASS,mandatory
-mirkwood,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,1,PASS,mandatory
+mirkwood,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,3,PASS,mandatory
+mirkwood,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,3,PASS,mandatory
 mirkwood,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 mirkwood,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-mirkwood,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-mirkwood,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-mirkwood,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-mirkwood,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+mirkwood,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+mirkwood,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+mirkwood,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+mirkwood,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 lothlorien,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 lothlorien,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 lothlorien,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 lothlorien,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-lothlorien,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-lothlorien,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+lothlorien,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+lothlorien,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 lothlorien,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 lothlorien,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-lothlorien,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-lothlorien,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-lothlorien,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-lothlorien,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+lothlorien,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+lothlorien,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+lothlorien,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+lothlorien,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 isengard,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 isengard,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 isengard,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 isengard,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-isengard,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-isengard,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+isengard,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+isengard,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 isengard,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 isengard,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-isengard,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-isengard,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-isengard,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-isengard,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+isengard,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+isengard,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+isengard,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+isengard,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 gundabad,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 gundabad,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 gundabad,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 gundabad,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-gundabad,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-gundabad,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+gundabad,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+gundabad,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 gundabad,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 gundabad,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-gundabad,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-gundabad,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-gundabad,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-gundabad,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+gundabad,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+gundabad,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+gundabad,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+gundabad,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 umbar,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 umbar,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 umbar,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 umbar,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-umbar,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-umbar,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+umbar,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+umbar,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 umbar,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 umbar,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-umbar,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-umbar,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-umbar,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-umbar,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+umbar,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+umbar,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+umbar,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+umbar,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 dolguldur,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 dolguldur,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 dolguldur,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 dolguldur,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-dolguldur,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-dolguldur,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+dolguldur,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+dolguldur,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 dolguldur,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 dolguldur,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-dolguldur,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-dolguldur,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-dolguldur,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-dolguldur,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+dolguldur,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+dolguldur,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+dolguldur,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+dolguldur,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 gondor,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 gondor,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 gondor,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 gondor,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-gondor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-gondor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+gondor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+gondor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 gondor,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 gondor,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-gondor,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-gondor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-gondor,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-gondor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+gondor,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+gondor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+gondor,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+gondor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 mordor,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 mordor,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 mordor,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
 mordor,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
-mordor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,2,PASS,mandatory
-mordor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,2,PASS,mandatory
+mordor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+mordor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
 mordor,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 mordor,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-mordor,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-mordor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-mordor,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-mordor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+mordor,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+mordor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+mordor,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+mordor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 shaghana,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 shaghana,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 shaghana,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
@@ -127,10 +127,10 @@ shaghana,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,1,PA
 shaghana,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,1,PASS,mandatory
 shaghana,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 shaghana,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-shaghana,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-shaghana,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-shaghana,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-shaghana,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+shaghana,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+shaghana,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+shaghana,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+shaghana,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
 abanissa,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
 abanissa,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
 abanissa,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
@@ -139,7 +139,7 @@ abanissa,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,1,PA
 abanissa,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,1,PASS,mandatory
 abanissa,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
 abanissa,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
-abanissa,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
-abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
-abanissa,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
-abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+abanissa,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+abanissa,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional

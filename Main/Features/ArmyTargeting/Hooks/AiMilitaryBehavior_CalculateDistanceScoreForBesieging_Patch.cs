@@ -20,11 +20,25 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
     private static IArmyTargetingSettingsProvider _settings;
     private static IModLogger _logger;
 
+    // Audit Agent 1 CRITICAL fix 2026-05-22: vanilla 1.4.5 method now has FOUR out params:
+    //   private void CalculateDistanceScoreForBesieging(
+    //       Settlement targetSettlement,
+    //       MobileParty mobileParty,
+    //       out MobileParty.NavigationType bestNavigationType,
+    //       out float bestDistanceScore,
+    //       out bool isFromPort,
+    //       out bool isTargetingPort)
+    // Harmony binds Postfix parameters positionally-by-name. Without the 3 extra params,
+    // the patch fails to bind silently — the entire border-proximity-floor feature was
+    // a runtime no-op since the v1.4.0 method-signature change.
     [HarmonyPostfix]
     public static void Postfix(
         Settlement targetSettlement,
         MobileParty mobileParty,
-        ref float bestDistanceScore)
+        ref MobileParty.NavigationType bestNavigationType,
+        ref float bestDistanceScore,
+        ref bool isFromPort,
+        ref bool isTargetingPort)
     {
         if (bestDistanceScore > 0f) return;
 

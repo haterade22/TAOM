@@ -47,10 +47,17 @@ MODULE_DATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 EQUIP_DIR = MODULE_DATA / "equipmentsets"
 OUTPUT_FILE = EQUIP_DIR / "taom_lord_template_equipment.xml"
 
-# 12 TAOM custom cultures from taom_spcultures.xml (is_main_culture="true").
+# 12 TAOM custom cultures (is_main_culture="true") + 6 XSLT-renamed vanilla cultures.
 # Mapping: culture_id -> per-culture equipment file stem (None = use fallback).
+#
+# v1.4.3 fixes equipment-assignment-on-age-up bug by querying GetEquipmentForHeroComeOfAge
+# against EquipmentSelectionModel. If a culture has no IsLordTemplate-tagged roster, the
+# engine falls back to generic_bat_dummy / generic_civ_dummy (vanilla Calradic gear).
+# To prevent that for TAOM's XSLT-renamed cultures (vlandia=Rohan, empire=Dunland, etc.),
+# generate rosters for them too — sourcing items from each TAOM per-culture equipment file.
 CULTURES: List[Tuple[str, Optional[str], Optional[str]]] = [
     # (culture_id, equipment_file_stem, fallback_for_missing_battle)
+    # === 12 TAOM custom cultures (taom_spcultures.xml) ===
     ("gondor", "gondor", None),
     ("mordor", "mordor", None),
     ("erebor", "erebor", None),
@@ -65,6 +72,15 @@ CULTURES: List[Tuple[str, Optional[str], Optional[str]]] = [
     # use harad equipment as fallback for both.
     ("shaghana", None, "harad"),
     ("abanissa", None, "harad"),
+    # === 6 XSLT-renamed vanilla cultures (spcultures.xslt) — Audit Agent 4 critical finding ===
+    # vanilla engine queries IsLordTemplate rosters by exact culture string match.
+    # Without these, Rohan/Dunland/Harad/etc heroes age-up to generic Calradic gear.
+    ("vlandia", "rohan", None),     # Rohan (named via spcultures.xslt)
+    ("empire", "dunland", None),    # Dunland
+    ("aserai", "harad", None),       # Harad
+    ("khuzait", "rhun", None),       # Easterlings
+    ("sturgia", "dale", None),       # Dale / North
+    ("battania", None, "harad"),     # Khand (no per-culture equipment file; closest stylistic match is Harad)
 ]
 
 
@@ -239,6 +255,35 @@ def generate() -> str:
                 equipment_set_xml=civilian_set_clean,
                 flags_attrs='IsLordTemplate="true" IsChildEquipmentTemplate="true" IsFemaleTemplate="true"',
             ))
+
+        # IsKingdomRulerTemplate rosters — Audit Agent 6+10 CRITICAL finding.
+        # v1.4.3 added NPCEquipmentsCampaignBehavior which fires GetEquipmentsForChangingRuler
+        # on every ruler change. Without IsKingdomRulerTemplate rosters, the new ruler's
+        # equipment is wiped (set to null). Generate ruler rosters for every culture.
+        sections.append(build_roster(
+            roster_id=f"taom_{culture}_ruler_battle_male",
+            culture=culture,
+            equipment_set_xml=battle_set_clean,
+            flags_attrs='IsKingdomRulerTemplate="true"',
+        ))
+        sections.append(build_roster(
+            roster_id=f"taom_{culture}_ruler_battle_female",
+            culture=culture,
+            equipment_set_xml=battle_set_clean,
+            flags_attrs='IsKingdomRulerTemplate="true" IsFemaleTemplate="true"',
+        ))
+        sections.append(build_roster(
+            roster_id=f"taom_{culture}_ruler_civilian_male",
+            culture=culture,
+            equipment_set_xml=civilian_set_clean,
+            flags_attrs='IsKingdomRulerTemplate="true"',
+        ))
+        sections.append(build_roster(
+            roster_id=f"taom_{culture}_ruler_civilian_female",
+            culture=culture,
+            equipment_set_xml=civilian_set_clean,
+            flags_attrs='IsKingdomRulerTemplate="true" IsFemaleTemplate="true"',
+        ))
 
     sections.append("")
     sections.append("</EquipmentRosters>")

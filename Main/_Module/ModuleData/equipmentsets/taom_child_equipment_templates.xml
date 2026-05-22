@@ -33,7 +33,7 @@
 			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_townsman_female" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
@@ -44,7 +44,7 @@
 			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_villager_male" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
@@ -55,7 +55,7 @@
 			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gondor_villager_female" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
@@ -66,7 +66,7 @@
 			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== EREBOR ==================== -->
@@ -101,7 +101,7 @@
 			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_erebor_townsman_female" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
@@ -112,7 +112,7 @@
 			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_erebor_villager_male" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
@@ -123,7 +123,7 @@
 			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_b" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_erebor_villager_female" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
@@ -134,7 +134,7 @@
 			<Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== RIVENDELL ==================== -->
@@ -169,7 +169,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_rivendell_townsman_female" culture="Culture.rivendell">
 		<EquipmentSet equipmentType="Civilian">
@@ -180,7 +180,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_rivendell_villager_male" culture="Culture.rivendell">
 		<EquipmentSet equipmentType="Civilian">
@@ -191,7 +191,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_rivendell_villager_female" culture="Culture.rivendell">
 		<EquipmentSet equipmentType="Civilian">
@@ -202,7 +202,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== MIRKWOOD ==================== -->
@@ -225,28 +225,28 @@
 			<Equipment slot="Body" id="Item.mirkwood_body" />
 			<Equipment slot="Leg" id="Item.mirkwood_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_townsman_female" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Body" id="Item.mirkwood_body" />
 			<Equipment slot="Leg" id="Item.mirkwood_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_villager_male" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Body" id="Item.mirkwood_body" />
 			<Equipment slot="Leg" id="Item.mirkwood_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_villager_female" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Body" id="Item.mirkwood_body" />
 			<Equipment slot="Leg" id="Item.mirkwood_boots" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== LOTHLORIEN (reuses rivendell items) ==================== -->
@@ -281,7 +281,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_lothlorien_townsman_female" culture="Culture.lothlorien">
 		<EquipmentSet equipmentType="Civilian">
@@ -292,7 +292,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_lothlorien_villager_male" culture="Culture.lothlorien">
 		<EquipmentSet equipmentType="Civilian">
@@ -303,7 +303,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_lothlorien_villager_female" culture="Culture.lothlorien">
 		<EquipmentSet equipmentType="Civilian">
@@ -314,7 +314,7 @@
 			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== ISENGARD ==================== -->
@@ -349,7 +349,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_isengard_townsman_female" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
@@ -360,7 +360,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_isengard_villager_male" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
@@ -371,7 +371,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_isengard_villager_female" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
@@ -382,7 +382,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
 			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== GUNDABAD ==================== -->
@@ -417,7 +417,7 @@
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gundabad_townsman_female" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
@@ -428,7 +428,7 @@
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gundabad_villager_male" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
@@ -439,7 +439,7 @@
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_gundabad_villager_female" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
@@ -450,7 +450,7 @@
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== MORDOR ==================== -->
@@ -485,7 +485,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mordor_townsman_female" culture="Culture.mordor">
 		<EquipmentSet equipmentType="Civilian">
@@ -496,7 +496,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mordor_villager_male" culture="Culture.mordor">
 		<EquipmentSet equipmentType="Civilian">
@@ -507,7 +507,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mordor_villager_female" culture="Culture.mordor">
 		<EquipmentSet equipmentType="Civilian">
@@ -518,7 +518,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 			<Equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== DOL GULDUR ==================== -->
@@ -553,7 +553,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
 			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_dolguldur_townsman_female" culture="Culture.dolguldur">
 		<EquipmentSet equipmentType="Civilian">
@@ -564,7 +564,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
 			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_dolguldur_villager_male" culture="Culture.dolguldur">
 		<EquipmentSet equipmentType="Civilian">
@@ -575,7 +575,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
 			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_dolguldur_villager_female" culture="Culture.dolguldur">
 		<EquipmentSet equipmentType="Civilian">
@@ -586,7 +586,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
 			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 	<!-- ==================== UMBAR (reuses gondor items) ==================== -->
@@ -621,7 +621,7 @@
 			<Equipment slot="Body" id="Item.boromir_jerkin" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_umbar_townsman_female" culture="Culture.umbar">
 		<EquipmentSet equipmentType="Civilian">
@@ -632,7 +632,7 @@
 			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_umbar_villager_male" culture="Culture.umbar">
 		<EquipmentSet equipmentType="Civilian">
@@ -643,7 +643,7 @@
 			<Equipment slot="Body" id="Item.boromir_jerkin" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_umbar_villager_female" culture="Culture.umbar">
 		<EquipmentSet equipmentType="Civilian">
@@ -654,7 +654,7 @@
 			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
-		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="false" />
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
 </EquipmentRosters>

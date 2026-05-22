@@ -2,6 +2,52 @@
 
 ## 2026-05-22
 
+### migration(refactor): 10-agent behavioral audit + 5 confirmed runtime fixes
+
+Compile-clean ≠ runtime-correct. Per empirical evidence from the April 2026 v1.4.0 migration attempt (which compiled but failed at runtime), launched a 10-parallel-agent behavioral audit against decompiled vanilla 1.4.5 source. Each agent owned a subsystem (Army, Diplomacy, Battle, Equipment, CulturalFeats, Banner/WotR, UI/Mixin, Mission AI, Reflection sites, CharacterCreation/RaceAge).
+
+**Outcome: 14 findings total — 5 confirmed real (fixed), 4 false positives (rejected), 5 deferred to S6 smoke test verification.**
+
+Full audit report: `docs/reviews/audit-v1.4.5-refactor-2026-05-22.md`.
+
+#### Confirmed fixes
+
+1. **CRITICAL — `Patch22_ArmyTargeting` silent dead feature.** Vanilla 1.4.5 `AiMilitaryBehavior.CalculateDistanceScoreForBesieging` added 3 `out` params (`bestNavigationType`, `isFromPort`, `isTargetingPort`). TAOM's Postfix only matched `(Settlement, MobileParty, ref float)` → Harmony silently failed to bind → entire border-proximity-floor feature has been a runtime no-op since v1.4.0. Added the 3 missing `ref` params; Harmony now binds. (Agent 1)
+
+2. **CRITICAL — 40 commoner-child rosters invisible to engine.** `taom_child_equipment_templates.xml` had 40 rosters with `IsLordTemplate="false"`. The v1.4.3 engine flag-match is exact-subset on TRUE attributes — `false` means "not in the set" → engine never queries for these rosters → naked commoner children at age-up events. Flipped all 40 to `IsLordTemplate="true"` via regex (preserves the 20 existing `true` rosters and the noble-vs-commoner semantic distinction is encoded by the parent `<EquipmentSet equipmentType="Civilian">` already). (Agent 4)
+
+3. **CRITICAL — no `IsKingdomRulerTemplate` rosters for any TAOM culture.** v1.4.3 added `NPCEquipmentsCampaignBehavior.OnRulingClanChanged` which calls `GetEquipmentsForChangingRuler` — returns null when no ruler roster exists → engine wipes new ruler's equipment. Every War of the Ring ruler change would have left lords naked. Extended `tools/generate_lord_template_equipment.py` to emit 4 ruler rosters per culture × 18 cultures = 72 new ruler rosters. Total rosters now 186 (was 76). (Agents 6 + 10)
+
+4. **CRITICAL — 6 XSLT cultures had no lord rosters.** `vlandia`/`empire`/`aserai`/`khuzait`/`sturgia`/`battania` (renamed in `spcultures.xslt` to Rohan/Dunland/Harad/Easterlings/Dale/Khand) had ZERO lord rosters → `Debug.FailedAssert` spam + fallback to vanilla generic Calradic gear at every age-up event for heroes of these cultures. Extended generator's CULTURES list to include the 6, mapping each to closest-styled TAOM equipment file (`rohan`/`dunland`/`harad`/`rhun`/`dale`; battania→harad fallback). (Agent 4)
+
+5. **HIGH — Alliance EndAlliance reentry duplicate-queue bug.** `AllianceCampaignBehavior.OnAllianceTimerExpired` daily-tick calls `EndAlliance(k1,k2)` then `AddAllianceDecision(k1,k2)` unconditionally on the next line. TAOM's Prefix blocks `EndAlliance` to preserve Permanent lore pairs but the duplicate `StartAllianceDecision` still queues, accumulating in `kingdom.UnresolvedDecisions` until vanilla side effects fire on an already-allied pair (undefined behavior). The existing TAOM comment claimed vanilla short-circuits on `IsAlliedWith` — verified false against v1.4.5 source. Created `AllianceCampaignBehavior_AddAllianceDecision_Patch.cs` — Prefix returns false when `kingdomToAddDecision.IsAllyWith(kingdomToOffer)`. Wired in `SubModule.cs`. (Agent 2)
+
+#### Rejected false positives (verified against vanilla 1.4.5)
+
+- Agent 5: `TaomPartyWageModel.cs` missing — file present at `Main/Features/TroopProgression/Models/`, CLAUDE.md doc stale (listed it under CulturalFeats).
+- Agent 9: `Mission.RegisterBlow` removed — still 7-param method at `Mission.cs:5400` in v1.4.5; TAOM's reflection lookup correctly resolves it.
+- Agent 1: empire-feat double-apply in `TaomArmyManagementModel` — TAOM's `ApplyArmyInfluenceAward` only applies TAOM-custom feats (Rivendell, Gondor), not vanilla `EmpireArmyInfluenceFeat`. Feat sets disjoint.
+- Agent 3: `PlayerBluntDamageChance` default stuck at 0.1 — already `0.30f` in `TaomSettings.cs` (likely fixed pre-migration).
+
+#### Deferred to S6 smoke test
+
+- Siege auto-resolve duration doubling (balance concern, not crash) — Agent 3
+- `TaomTargetScoreModel` safety-gate refactor (balance) — Agent 1
+- `TaomPartyHealingModel` cultural survival multipliers re-tune (data, not code) — Agent 3
+- `VerticalBottomToTop` mass swap (60+ sites need per-site visual review) — Agent 7
+- `TaomAgentStatCalculateModel` double-invoke verification (runtime check at S6) — Agent 8
+- NamedCompanions culture-routing audit (verify each of 18 companions resolves to a TAOM-authored roster) — Agent 10
+
+**Build + tests:**
+- `dotnet build Main/TAOM.csproj` — 0 errors, 1 warning
+- `dotnet test TAOM.Tests` — 2,323 / 2,325 pass
+
+**Process lesson:** 36% of audit-agent findings were false positives. Future audit-agent prompts must require paste-as-evidence (vanilla source + TAOM source) rather than paraphrased claims, to catch agent confusion before it propagates into fixes.
+
+Refs: #210
+
+## 2026-05-22
+
 ### migration(s5b): author v1.4.3 mandatory equipment rosters across 12 cultures
 
 The v1.4.3 equipment-system overhaul requires each culture to provide rosters tagged with specific `<Flags>` combinations so the engine's `EquipmentSelectionModel.GetEquipmentForXxx` queries can find appropriate equipment. Without these rosters, custom-culture NPCs would spawn naked / wrong-culture during come-of-age, marriage, succession, and child-generation events.
