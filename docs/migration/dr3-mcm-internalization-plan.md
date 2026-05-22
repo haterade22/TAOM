@@ -137,6 +137,53 @@ Option (ii) is the safest — TAOM ships 2 extra tiny module folders containing 
 
 ---
 
+## Empirical findings — decompile-based source-merge attempt (2026-05-22)
+
+Attempted full decompile of MCMv5.dll into `Dependencies/ThirdParty/MCM/` as a viability test. Results:
+
+| Step | Outcome |
+|---|---|
+| Decompile MCMv5.dll via ilspycmd | 340 C# files, ~20K LOC. Includes ILRepack'd internals: BUTR.DependencyInjection, HarmonyLib.BUTR.Extensions, Bannerlord.ModuleManager, MCM.LightInject (its own DI impl), Bannerlord.BUTR.Shared |
+| Identify cross-tree collisions | 3 files (DictionaryExtensions, WrappedMethodInfo, WrappedPropertyInfo) collide with UIExtenderEx's existing source-merge. Deleted from MCM tree. |
+| First build attempt | **64 errors, all `CS1525: Invalid expression term 'ref'`** — ilspy emitted `((Type)(ref var))` casts for value-type struct method calls it couldn't fully resolve (ApplicationVersion, PlatformDirectoryPath, PlatformFilePath). |
+| Mechanical fix: regex-replace `((Type)(ref var))` → `var` across all MCM files | Resolved the 64 errors. |
+| Second build attempt | **826 errors** of 7 categories: CS0111 (424, "already defines a member"), CS0121 (154, ambiguous call), CS0246 (112, type not found), CS0579 (92, duplicate attribute), CS0101 (32, namespace duplicate), CS0102 (8, duplicate member), CS0260 (4, missing partial). |
+
+The CS0111 errors are the killer: ilspy decompiled IL where ANY constructor/method had subtle differences that ilspy couldn't disambiguate, and emitted **multiple definitions of the same signature**. Each one is a per-site manual rewrite — there is no mechanical fix.
+
+**Conclusion:** Decompile-based source-merge is not viable at this scale. The decompiled output has too many decompile artifacts requiring per-site manual rewrites.
+
+## The actually-right path (multi-week effort)
+
+Pull the BUTR libraries' source code from their official GitHub repos:
+- https://github.com/BUTR/Bannerlord.MCM (MCMv5 source)
+- https://github.com/BUTR/Bannerlord.ButterLib (ButterLib source)
+- https://github.com/BUTR/Bannerlord.UIExtenderEx (UIExtenderEx upstream — for compatibility verification)
+
+This source compiles cleanly (it's the canonical upstream). Steps:
+
+1. **Per-library**: Clone the source at a specific commit/tag matching the Nexus DLL version (e.g., MCM v5.11.4)
+2. Put cleaned source into `Dependencies/ThirdParty/<Library>/`
+3. Identify BUTR.Shared/HarmonyLib.BUTR.Extensions duplicates across libraries; pick canonical version + delete others
+4. Update Dependencies.csproj with PackageReferences for any non-source deps (Microsoft.Extensions.*, Serilog, etc.)
+5. Build → fix any remaining (real) errors
+6. Per-library acceptance check: types compile, no missing references
+7. Add SubModule entries to Dependencies/_Module/SubModule.xml
+8. Per-library code review pass: identify and document quality issues, edge-case bugs, 1.4.5-incompatible patterns
+9. Integration test in-game
+
+**Realistic per-library effort: 3-8 hours.** With 5 libraries (MCM, MBOptionScreen, MCM.UI.Adapter, ButterLib, ButterLib.Implementation) plus BUTR.CrashReport: **20-50 hours total**. Spread across multiple focused sessions.
+
+Code review/improvement phase per user direction adds another 10-20 hours.
+
+## Out-of-scope work that surfaced during this investigation
+
+Items I noticed but did not action; future-DR3 sessions should consider:
+- MCM ships its own DI implementation (`MCM.LightInject`) — 6,590 LOC. Replaceable with Microsoft.Extensions.DependencyInjection if we want to consolidate DI across MCM + ButterLib.
+- ButterLib's `Bannerlord.ButterLib.Implementation.*.dll` versioned-impls pattern: we'd flatten to just 1.4.1 (the latest matching 1.4.5).
+- BUTR.CrashReport's ImGui renderer requires `cimgui.dll` + `glfw3.dll` (native). If we skip the ImGui renderer, no native DLLs needed.
+- Reflection-driven Settings discovery in MCM has performance overhead at game start — could be replaced with source generators if we own the source.
+
 ## Recommendation
 
 Two equally-valid paths:
