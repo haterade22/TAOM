@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
   <Id value="TAOM" />
   <Name value="TAOM" />
-  <Version value="v1.0.1" />
+  <Version value="v1.0.2" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
@@ -12,12 +12,14 @@
     <DependedModule Id="SandBoxCore" />
     <DependedModule Id="Sandbox" />
     <DependedModule Id="CustomBattle" />
+    <DependedModule Id="TAOM.Dependencies" />
   </DependedModules>
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="e1.3.0.*" />
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="e1.4.5.*" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>

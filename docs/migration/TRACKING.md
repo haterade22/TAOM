@@ -1,10 +1,215 @@
 # Migration Tracking
 
-Status tracker for Bannerlord 1.2.12 → 1.3.12 migration.
+**Current migration:** Bannerlord 1.3.15 → 1.4.5 (started 2026-05-21).
+**Status:** S0 (Foundation) in progress.
 
-**Last Updated:** 2026-04-02
+For detailed analysis see:
+- [v1.4.x-overview.md](v1.4.x-overview.md) — executive summary + session map
+- [v1.4.x-changes.md](v1.4.x-changes.md) — full changelog analysis
+- [v1.4.x-equipment-overhaul.md](v1.4.x-equipment-overhaul.md) — v1.4.3 equipment system deep dive
+- [v1.4.x-taom-impact.md](v1.4.x-taom-impact.md) — per-surface impact matrix
+- [dual-dll-setup.md](dual-dll-setup.md) — Steam update + DLL backup procedure
+
+Plan file: `C:\Users\mikew\.claude\plans\we-did-this-on-crystalline-piglet.md`
 
 ---
+
+## v1.3.15 → v1.4.5 Migration Status (CURRENT)
+
+**Branch:** `bannerlord-1.4.5` (created from `bannerlord-1.3.15` HEAD `2f6756d` on 2026-05-21).
+**1.3.15 DLL backup:** `E:\BannerlordBackup\1.3.15-bin\Win64_Shipping_Client\` (1.475 GB, 8,568 files, Version.xml = v1.3.15 confirmed).
+**Old decompile archived:** `E:\Decompiled_Bannerlord_v1.4_OLD\` (was stale 1.4.x dump).
+
+### S0 — Foundation
+
+| Task | Status | Owner |
+|---|---|---|
+| Read full v1.4.x changelog | ✅ Complete | 2026-05-21 |
+| Create `bannerlord-1.4.5` branch | ✅ Complete | 2026-05-21 |
+| Backup 1.3.15 DLLs to `E:\BannerlordBackup\1.3.15\bin\Win64_Shipping_Client\` | ✅ Complete | 2026-05-21 |
+| Archive stale `E:\Decompiled_Bannerlord\` to `_v1.4_OLD\` | ✅ Complete | 2026-05-21 |
+| Scaffold v1.4.x migration docs | ✅ Complete | 2026-05-21 |
+| User: disable Steam auto-update | ✅ Complete | User, 2026-05-22 |
+| User: Let Steam update Bannerlord to 1.4.5 | ✅ Complete | User, 2026-05-22 |
+| Reorganize backup to standard layout (1.3.15-bin → 1.3.15/bin/Win64_Shipping_Client) | ✅ Complete | 2026-05-22 |
+| Update `Directory.Build.props` for dual-DLL (BANNERLORD_OVERRIDE_DIR support) | ✅ Complete | 2026-05-22 |
+| Bulk decompile 1.4.5 → `E:\Decompiled_Bannerlord\` (6,146 core + 354 module .cs files) | ✅ Complete | 2026-05-22 |
+| Decompile SandBox + StoryMode modules → `E:\Decompiled_Bannerlord\Modules\` | ✅ Complete | 2026-05-22 |
+| Make `tools/taom-src.ps1` version-auto-detecting (reads Version.xml) | ✅ Complete | 2026-05-22 |
+| Write `tools/decompile_to_folder.ps1` (bulk ilspycmd wrapper) | ✅ Complete | 2026-05-22 |
+| Write `tools/migrate_equipment_type_1_4_3.py` | ✅ Complete + revised (Battle implicit) | 2026-05-22 |
+| Write `tools/audit_equipment_roster_coverage.py` | ✅ Complete | 2026-05-22 |
+| Write `tools/validate_equipment_flags_1_4_3.py` | ✅ Complete | 2026-05-22 |
+| TAOM Dependencies source location audit | ✅ Complete — lives in this repo at `Dependencies/TAOM.Dependencies.csproj` but de-tracked from git in commit 0b16cca. Restore via `git checkout 0b16cca -- Dependencies/`. | 2026-05-22 |
+| Verify April-2026 fixes still apply (Alliance, BattleReward, SpecialResources) | ⚠️ DRIFT FOUND — see "Open issues" below | 2026-05-22 |
+| Update `Main/_Module/SubModule.xml` Native dep version (e1.3.0.* → e1.4.5.*) | ✅ Complete | 2026-05-22 |
+| Generate `docs/migration/api-diff-1.3.15-to-1.4.5.md` | ✅ Complete (15 classes, top 3 risks flagged) | 2026-05-22 |
+| Audit `VerticalTopToBottom`/`VerticalBottomToTop` in TAOM prefabs | ✅ Complete — 5 prefab + 1 C# site found; may need swap | 2026-05-22 |
+| Author per-XML-type template docs (`docs/migration/templates/`) from vanilla 1.4.5 | ✅ Complete — 4 docs (README + characters + equipment-rosters + troops-and-parties) | 2026-05-22 |
+| Open GitHub tracking issue | ⏳ Pending | |
+
+### S0 — Key findings (from parallel agents)
+
+#### Equipment system (v1.4.3 overhaul)
+
+- **3,372 `civilian="true"` occurrences** mapped to **2,017 in troop files + ~1,355 elsewhere**. Migration tool revised — `equipmentType="Battle"` is IMPLICIT in vanilla, do not add explicit Battle to bare sets.
+- **Critical distinction surfaced:** `<EquipmentSet civilian="true">` is deprecated (zero vanilla 1.4.5 occurrences), but `<EquipmentRoster civilian="true">` inline inside `<NPCCharacter>/<Equipments>` is STILL valid (1,097 occurrences in vanilla `spnpccharacters.xml` alone). Migration tool correctly filters by `<EquipmentSet>` element only.
+- **160 deprecated `EquipmentFlags` hits in `taom_child_equipment_templates.xml`** — `IsNoncombatantTemplate` (60), `IsNobleTemplate` (60), `IsCivilianTemplate` (40). Single file, manual review with vanilla template mapping.
+- **`<Flags>` syntax confirmed** — single child element with per-flag boolean attributes (`<Flags IsLordTemplate="true" IsFemaleTemplate="true" />`), not multiple `<Flag>` children.
+- **`IsNobleTemplate` is RENAMED to `IsLordTemplate` (1:1)**, not removed as dev notes implied.
+- **All 12 TAOM custom cultures fail mandatory roster matrix** — expected pre-S5b authoring. The audit returns 0/96 mandatory + 0/48 optional rosters passing because current rosters use OLD flag names not in the new flag set.
+- **Already 1.4.5-compatible (no migration needed):** `taom_career_starting_equipment.xml`, `taom_education_equipment_templates.xml`.
+
+#### GameModel drift discovered
+
+⚠️ **`TaomBattleRewardModel`** — current TAOM file on `bannerlord-1.4.5` branch has 3-param `CalculateRenownGain` signature. v1.4.5 base has 5 params (`PartyBase, float, float, float, bool`). Either the April-2026 fix was reverted or the wrong file was committed. **S3 must add the 2 missing params** (`renownMultiplierForWinnerSide`, `includeDescriptions`) and pass through to `base.`.
+
+⚠️ **`TaomAllianceModel`** — opposite drift. Has the v1.4.0-fix `IFaction evaluatingFaction` param that 1.4.5 dropped. **S3 must drop that param** from the override signature. If the per-kingdom modifier needs the evaluating faction, look at `GetSupportScoreOfStartingAllianceForClan` (still has `Clan evaluatingClan`).
+
+✅ **`SpecialResourcesBehavior.OnHideoutCompleted`** — signature still matches 1.4.5 (3-param shape from April-2026 fix is correct).
+
+#### ChildCreatorAdapter critical rewrite
+
+🔥 **`Main/Adapters/ChildCreatorAdapter.cs:40`** — vanilla method **renamed and signature changed**:
+- 1.3.15: `MBList<MBEquipmentRoster> GetEquipmentRostersForInitialChildrenGeneration(Hero hero)`
+- 1.4.5: `Equipment GetEquipmentForInitialChildrenGeneration(Hero hero)` (single Equipment, gender + culture filtering moved inside the model)
+
+Rewrite recipe — replace the roster-loop with a direct `EquipmentHelper.AssignHeroEquipmentFromEquipment(hero, civilianEquipment)` plus a derived battle equipment via `Equipment.FillFrom(...)`.
+
+#### `OnRulingClanChanged` parameter flip — TAOM impact
+
+TAOM doesn't subscribe directly. `Patch24_BannerDriftGuard` reads `__instance.Kingdom?.RulingClan` synchronously inside a vanilla method, not from the event — UNAFFECTED. `Patch12_WarOfTheRing` has zero `RulingClan/RulerClan/OnRulingClanChanged` references in `Main/Features/Diplomacy/**` — UNAFFECTED.
+
+#### Other v1.4.5 surface
+
+- **`DefaultAllianceModel` gained 5 new public methods** (`CanMakeAlliance`, `GetSupportScoreOfStartingAllianceForClan`, `GetAllianceFactorForDeclaringWar/Peace`, `GetProposerClanForAllianceDecision`). TAOM's `MaxNumberOfAlliances => int.MaxValue` may not be sufficient — `CanMakeAlliance` adds score-threshold + player-support gates that can independently veto. S3 needs to evaluate.
+- **Naval DLC additions** in BattleReward / CombatSimulation / MilitaryPower / TargetScore models (new `Ship`/`Figurehead`/`IsTargetingPort` methods). Nothing breaks at compile time — TAOM doesn't override these — but vanilla will invoke them during any naval event. **Document naval as out-of-scope unless explicitly opted in.**
+- **TaleWorlds 12 cultures, not 10** — `taom_spcultures.xml` enumeration: erebor, rivendell, mirkwood, lothlorien, isengard, gundabad, umbar, dolguldur, gondor, mordor, shaghana, abanissa. CLAUDE.md's "10 custom cultures" line is stale.
+
+#### Prefab UI fix (v1.4.0) — 6 TAOM sites
+
+Vanilla 1.4.0 fixed inverted `VerticalTopToBottom` / `VerticalBottomToTop` ListPanel semantics. TAOM has 6 sites using `VerticalBottomToTop`:
+- `Main/Features/Messengers/UI/MessengerEncyclopediaPrefabExtension.cs:24` (string-injected)
+- `Main/_Module/GUI/Prefabs/FacGen/PreBuildCharacterSelection.xml` (lines 38, 40, 51, 59)
+
+Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopToBottom` if inverted.
+
+### S1 — TAOM Dependencies (COMPLETE 2026-05-22)
+
+| Task | Status |
+|---|---|
+| Restore Dependencies/ tree from git SHA `0b16cca` (1,444 files) | ✅ |
+| Build TAOM.Dependencies.csproj against 1.4.5 | ✅ 0 errors, 878 benign warnings |
+| Verify output deployed to `Dependencies/_Module/bin/{Win64,Gaming.Desktop.x64}_Shipping_Client/` | ✅ |
+| Verify Steam install path reflects rebuild | ✅ — `E:\...\Modules\TAOM.Dependencies\bin\Win64_Shipping_Client\TAOM.Dependencies.dll` synced |
+
+**Conclusion:** The internalized Harmony 2.4.2 fork is fully API-compatible with Bannerlord 1.4.5. No Harmony/MCM/UIExtenderEx version bumps needed.
+
+### S2 — Adapters (COMPLETE 2026-05-22)
+
+| Task | Status |
+|---|---|
+| `ChildCreatorAdapter.cs` rewrite — `GetEquipmentRostersForInitialChildrenGeneration` (returned `MBList<MBEquipmentRoster>`) → `GetEquipmentForInitialChildrenGeneration` (returns single `Equipment`); roster-loop removed | ✅ |
+| Remaining 95 adapters compile clean | ✅ |
+
+### S3 — GameModels (COMPLETE 2026-05-22)
+
+| Task | Status |
+|---|---|
+| `TaomBattleRewardModel.CalculateRenownGain` — added `renownMultiplierForWinnerSide` (float) + `includeDescriptions` (bool) params. **Behavior note:** vanilla bakes the multiplier into the `ExplainedNumber` base value, so TAOM's `ApplyRenownFeats` and career `ApplyFactor` (both `AddFactor` calls) scale proportionally with it. Consistent with vanilla perk scaling. | ✅ |
+| `TaomAllianceModel.GetScoreOfStartingAlliance` — dropped `IFaction evaluatingFaction` param | ✅ |
+| Remaining 36 GameModels compile clean | ✅ |
+| **Behavior gate: army/diplomacy reworks did NOT break our overrides** | ✅ at compile; ⏳ runtime |
+
+### S4 — Harmony patches (COMPILE-CLEAN, runtime pending S6)
+
+| Task | Status |
+|---|---|
+| 70 Harmony patches compile clean against 1.4.5 | ✅ |
+| Runtime binding verification (target methods exist) | ⏳ S6 smoke test |
+
+### S5 — Mixin / PrefabExtension (COMPILE-CLEAN, runtime pending S6)
+
+| Task | Status |
+|---|---|
+| 8 Mixin/Prefab surfaces compile clean | ✅ |
+| `VerticalBottomToTop` swap in 6 sites (v1.4.0 fixed inversion) | ⏳ S6 visual check; swap if inverted |
+
+### S5+ bonus fix
+
+| Task | Status |
+|---|---|
+| `SpecialResourcesBehavior.OnHideoutCompleted` — added 3rd param `HideoutEventComponent.HideoutBattleEndState` (v1.4.3 event signature change). **Accepted-permissive deferral:** TAOM earns the resource for any `winnerSide == Attacker` outcome regardless of `battleEndState` value (None, Retreated, Defeated, Victory, SendTroops). This preserves v1.3.15 behavior. If S7 feature validation reveals it's too permissive, gate on `battleEndState == Victory`. | ✅ |
+
+### Build + test gate
+
+| Gate | Result |
+|---|---|
+| `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | ✅ **0 errors, 1 warning** |
+| `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | ✅ **2,323 / 2,325 pass (2 skipped, 0 failed)** |
+| Total C# fixes | **4 files** (TaomBattleRewardModel, TaomAllianceModel, ChildCreatorAdapter, SpecialResourcesBehavior) |
+| Predicted vs actual scope | Predicted ~96 adapter audits, 38 GameModel audits, 70 Harmony patch audits — **actual: 4 fixes total** |
+
+### S5a — Mass XML migration (PENDING)
+
+Tool ready (`tools/migrate_equipment_type_1_4_3.py`, revised for vanilla 1.4.5 conventions). Dry-run identified 3,372 `civilian="true"` → `equipmentType="Civilian"` migrations across 51 files + 160 deprecated `EquipmentFlags` hits in 1 file. Ready to `--apply`.
+
+### S5b — Equipment roster authoring (PENDING)
+
+Audit script (`tools/audit_equipment_roster_coverage.py`) reports all 12 cultures fail the 1.4.3 mandatory roster matrix (need `IsLordTemplate`, `IsKingdomRulerTemplate`, `IsFemaleTemplate`, `IsChildEquipmentTemplate`, `IsTeenagerEquipmentTemplate` combinations). ~96 rosters to author. Templates reference: [v1.4.x-equipment-overhaul.md](v1.4.x-equipment-overhaul.md) + [templates/equipment-rosters.md](templates/equipment-rosters.md).
+
+### S6–S12 — see plan file
+
+Pending. S6 is the smoke-test gate; S7-S10 are feature validation; S11 is Codex; S12 is closeout.
+
+### Risk surface inventory (verified)
+
+| Surface | Count |
+|---|---|
+| TAOM features under `Main/Features/` | 45 |
+| Harmony patches | 70 (all attribute-based) |
+| GameModel overrides | 38 |
+| Reflection / private-API call sites | 79 (across 44 files) |
+| Adapters | 96 |
+| Mixin / UIExtenderEx surfaces | 8 |
+| Test files | 189 |
+| `civilian="true"` XML occurrences | 3,372 (across 51 files) |
+| Old `EquipmentFlags` references | 1 file (`taom_child_equipment_templates.xml`) |
+| `civilianTemplate`/`battleTemplate` attrs | 0 files ✓ |
+| Direct `OnRulingClanChanged` subscribers | 0 ✓ |
+| Critical adapter rewrites | 1 (`ChildCreatorAdapter`) |
+
+### Open issues (S0 surfaced, S2+ acts)
+
+| Issue | Owner | Severity |
+|---|---|---|
+| `TaomBattleRewardModel.CalculateRenownGain` has 3-param signature; v1.4.5 needs 5 (add `renownMultiplierForWinnerSide`, `includeDescriptions`) | S3 | 🔥 won't bind in 1.4.5 |
+| `TaomAllianceModel.GetScoreOfStartingAlliance` has extra `IFaction evaluatingFaction` param (1.4.0 fix); v1.4.5 dropped it again | S3 | 🔥 won't bind in 1.4.5 |
+| `ChildCreatorAdapter.cs:40` API renamed + return type changed (list → single Equipment); structural rewrite needed | S2 | 🔥 won't compile |
+| `DefaultAllianceModel` has 5 new public methods; `CanMakeAlliance` may veto despite `MaxNumberOfAlliances=int.MaxValue` | S3 | 🟡 feature break risk |
+| `taom_child_equipment_templates.xml` uses 160 deprecated `EquipmentFlags` values | S5a | 🟡 single-file manual review |
+| `taom_spcultures.xml` defines 12 cultures, but no `<Flags>` elements in 15 culture roster files — engine cannot resolve them by template | S5b | 🔥 missing rosters → naked NPCs |
+| 6 TAOM sites use `VerticalBottomToTop` ListPanel layout — v1.4.0 fixed inversion; visual order may be wrong now | S5 | 🟡 cosmetic but possible |
+| TAOM.Dependencies project source is de-tracked from git (since 0b16cca, April 2026); needs restore via `git checkout 0b16cca -- Dependencies/` | S1 | 🟡 blocks Dependencies rebuild |
+| GitHub tracking issue not yet opened | S0 (final) | 🟢 process |
+
+### Resolved open questions (from S0)
+
+| Question | Answer |
+|---|---|
+| Where does TAOM.Dependencies project source live? | In this repo at `Dependencies/TAOM.Dependencies.csproj`, but de-tracked from git in commit `0b16cca` (April 2026). Last-known-good csproj is recoverable via `git show 0b16cca:Dependencies/TAOM.Dependencies.csproj`. Bundles Harmony 2.4.2 internalized fork + polyfills. |
+| How many cultures does TAOM have? | 12 (not 10): erebor, rivendell, mirkwood, lothlorien, isengard, gundabad, umbar, dolguldur, gondor, mordor, shaghana, abanissa. CLAUDE.md is stale. |
+| Do any TAOM prefabs use `VerticalTopToBottom` / `VerticalBottomToTop`? | Yes — 6 sites (5 in `PreBuildCharacterSelection.xml`, 1 string-injected in `MessengerEncyclopediaPrefabExtension.cs`). All use `VerticalBottomToTop`. May need swap to `VerticalTopToBottom` after S6 smoke test. |
+| Is `equipmentType="Battle"` implicit or required? | IMPLICIT. Vanilla 1.4.5 omits the attribute on battle sets. Only `Civilian` and `Stealth` are explicit. Migration tool revised accordingly. |
+| Are `<EquipmentRoster civilian="true">` inline rosters also deprecated? | NO. Vanilla 1.4.5 still uses 1,097× in `spnpccharacters.xml`. Only `<EquipmentSet civilian="true">` is deprecated. |
+| Is `IsNobleTemplate` removed or renamed? | RENAMED 1:1 to `IsLordTemplate`. Dev migration notes mislabeled as "removed". |
+| Vanilla module Native dep version format? | TAOM uses BUTR schema `version="e1.4.5.*"`. Vanilla uses `DependentVersion="v1.4.5"` (different schema, same purpose). TAOM stays on BUTR since SubModule.xml references BUTR XmlSchema. |
+
+---
+
+## Historical: v1.2.12 → v1.3.12 Migration (COMPLETE)
+
+Tracker preserved from prior migration. **Last updated 2026-04-02.**
 
 ## Overall Progress
 

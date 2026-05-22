@@ -288,7 +288,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament");
     }
 
-    private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component)
+    // v1.4.3 added the 3rd param HideoutBattleEndState; we don't act on it (any attacker win
+    // with a player map event still earns the resource).
+    private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component, HideoutEventComponent.HideoutBattleEndState battleEndState)
     {
         if (winnerSide != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;

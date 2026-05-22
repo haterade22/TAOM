@@ -18,18 +18,16 @@ public class TaomAllianceModel : DefaultAllianceModel
     public override CampaignTime MaxDurationOfAlliance => CampaignTime.Years(100);
 
     public override ExplainedNumber GetScoreOfStartingAlliance(
-        Kingdom kingdomDeclaresAlliance,
-        Kingdom kingdomDeclaredAlliance,
-        IFaction evaluatingFaction,
-        out TextObject explanation,
+        Kingdom querierKingdom,
+        Kingdom queriedKingdom,
+        out TextObject explanationText,
         bool includeDescription = false)
     {
         var result = base.GetScoreOfStartingAlliance(
-            kingdomDeclaresAlliance, kingdomDeclaredAlliance,
-            evaluatingFaction, out explanation, includeDescription);
+            querierKingdom, queriedKingdom, out explanationText, includeDescription);
 
         float modifier = _diplomacyService.GetAllianceScoreModifier(
-            kingdomDeclaresAlliance.StringId, kingdomDeclaredAlliance.StringId);
+            querierKingdom.StringId, queriedKingdom.StringId);
 
         if (modifier != 0f)
         {

@@ -2,6 +2,8 @@
 
 Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 
+> **🚧 Active migration: v1.3.15 → v1.4.5** (started 2026-05-21 on branch `bannerlord-1.4.5`). Build target is currently v1.3.15; v1.4.5 install is live but no code has been migrated yet beyond S0 (Foundation). See [`docs/migration/v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md) and [`docs/migration/TRACKING.md`](docs/migration/TRACKING.md) before touching GameModels, adapters, or XML data files. **Until S6 reports green, the migration is in flight and any non-migration work must coordinate with the active sessions.**
+
 ## Commands
 
 | Task | Command |

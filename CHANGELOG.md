@@ -1,5 +1,72 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-22
+
+### migration(v1.4.5): S1–S5 complete — `bannerlord-1.4.5` builds + tests green against 1.4.5
+
+After S0 Foundation, the actual code migration completed in **4 file fixes**:
+
+1. **`Main/Features/CulturalFeats/Models/TaomBattleRewardModel.cs`** — `CalculateRenownGain` signature gained 2 params in v1.4.0:
+   - Old (3-param): `(PartyBase party, float renownValueOfBattle, float contributionShare)`
+   - New (5-param): `(PartyBase winnerParty, float renownValueOfBattleForWinnerSide, float contributionShareOfWinnerParty, float renownMultiplierForWinnerSide, bool includeDescriptions)`
+2. **`Main/Features/Diplomacy/Models/TaomAllianceModel.cs`** — `GetScoreOfStartingAlliance` dropped `IFaction evaluatingFaction` param (had been added in v1.4.0, removed in v1.4.5 — TAOM had swung past the target).
+3. **`Main/Adapters/ChildCreatorAdapter.cs`** — `GetEquipmentRostersForInitialChildrenGeneration` (returned `MBList<MBEquipmentRoster>`) renamed in v1.4.3 to `GetEquipmentForInitialChildrenGeneration` (returns single `Equipment`); gender + culture filtering moved inside the model. Rewrote `AssignEquipment` to mirror vanilla 1.4.5 `InitialChildGenerationCampaignBehavior`.
+4. **`Main/Features/SpecialResources/SpecialResourcesBehavior.cs`** — `OnHideoutCompleted` event delegate gained 3rd param `HideoutEventComponent.HideoutBattleEndState` in v1.4.3.
+
+**Build + test results:**
+- `dotnet build Main/TAOM.csproj`: ✅ 0 errors, 1 warning
+- `dotnet test TAOM.Tests`: ✅ **2,323 / 2,325 pass** (0 failed, 2 skipped — pre-existing)
+
+S1 (TAOM Dependencies) was a separate effort: restored from git SHA `0b16cca` (1,444 files), rebuilt clean against 1.4.5 (0 errors, 878 benign warnings). Internalized Harmony 2.4.2 fork confirmed fully API-compatible with 1.4.5.
+
+**Pending (S5a, S5b, S6–S12):**
+- S5a: 3,372 `<EquipmentSet civilian="true">` → `equipmentType="Civilian"` migrations across 51 files + 160 deprecated `EquipmentFlags` hits in `taom_child_equipment_templates.xml`
+- S5b: ~96 missing equipment rosters across 12 cultures (1.4.3 mandatory contract — IsLordTemplate/IsKingdomRulerTemplate combinations)
+- S6: smoke test (game launch + campaign loop)
+- S7–S10: per-feature validation
+- S11: Codex adversarial review
+- S12: closeout
+
+Not-tested: in-game runtime — pending S6.
+
+Constraint: vanilla 1.4.0 AI Army + Diplomacy rewrites + 1.4.3 Equipment system overhaul didn't break the compile, but may surface behavioral changes during S7–S10 feature validation. Cavalry auto-resolve bonus removal alone may rebalance several cav-heavy faction features.
+
+Research: `DefaultBattleRewardModel.CalculateRenownGain`, `DefaultAllianceModel.GetScoreOfStartingAlliance`, `EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration`, `CampaignEvents.OnHideoutBattleCompletedEvent` — all decompiled from live 1.4.5 install at `E:\Steam\...\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll`.
+
+### migration(v1.4.5): S0 Foundation complete — Bannerlord 1.3.15 → 1.4.5 migration started
+
+Started multi-week migration to Bannerlord 1.4.5 on branch `bannerlord-1.4.5` (from `bannerlord-1.3.15` HEAD `2f6756d`). S0 (Foundation) is complete; S1–S12 pending.
+
+**Decompile + tooling**
+- Fresh 1.4.5 decompile at `E:\Decompiled_Bannerlord\` (6,146 core + 354 module .cs files — SandBox, StoryMode). Stale 1.4.x dump archived to `E:\Decompiled_Bannerlord_v1.4_OLD\`.
+- `tools/taom-src.ps1` now auto-detects version from `Version.xml` (caches `~/.taom-src/<version>/` — supports v1.3.15 backup + v1.4.5 live install simultaneously).
+- New tools: `tools/decompile_to_folder.ps1`, `tools/migrate_equipment_type_1_4_3.py`, `tools/audit_equipment_roster_coverage.py`, `tools/validate_equipment_flags_1_4_3.py`.
+- `Directory.Build.props` extended with `BANNERLORD_OVERRIDE_DIR` for dual-DLL workflow.
+- `Main/_Module/SubModule.xml` Native dep bumped `e1.3.0.*` → `e1.4.5.*`.
+- 1.3.15 DLL backup at `E:\BannerlordBackup\1.3.15\bin\Win64_Shipping_Client\` (1.475 GB, 8,568 files).
+
+**Documentation** (all in `docs/migration/`)
+- `v1.4.x-overview.md`, `v1.4.x-changes.md` (full changelog analysis), `v1.4.x-equipment-overhaul.md` (v1.4.3 deep dive), `v1.4.x-taom-impact.md` (per-surface matrix).
+- `dual-dll-setup.md` — Steam update + DLL backup procedure.
+- `api-diff-1.3.15-to-1.4.5.md` — 15-class signature diff.
+- `templates/{README,characters,equipment-rosters,troops-and-parties}.md` — vanilla-1.4.5-derived "what right looks like" templates.
+
+**Issues surfaced for downstream sessions**
+- `TaomBattleRewardModel.CalculateRenownGain` has 3-param signature; 1.4.5 needs 5 (S3).
+- `TaomAllianceModel.GetScoreOfStartingAlliance` has extra `IFaction evaluatingFaction` param dropped in 1.4.5 (S3).
+- `ChildCreatorAdapter.cs:40` API renamed + return type changed — structural rewrite needed (S2).
+- 3,372 `<EquipmentSet civilian="true">` occurrences across 51 files need migration (S5a).
+- `taom_child_equipment_templates.xml` has 160 deprecated `EquipmentFlags` hits (S5a manual fix).
+- All 12 cultures (not 10) fail the 1.4.3 mandatory roster matrix — need IsLordTemplate / IsKingdomRulerTemplate combinations (S5b).
+- 6 sites use `VerticalBottomToTop` ListPanel layout — may need swap to `VerticalTopToBottom` after v1.4.0 fix (S5).
+- TAOM.Dependencies source de-tracked from git since `0b16cca` (April 2026); needs restore for S1.
+
+Not-tested: live game launch (will happen in S6 after compile is green).
+
+Save-compat: TBD — will validate in S6.
+
+Constraint: cannot stay on v1.3.15 indefinitely; player base will be forced to 1.4.5 once Steam locks the version.
+
 ## 2026-05-21
 
 ### data(clans): unify banner_key heraldry across Rohan + Isengard noble houses

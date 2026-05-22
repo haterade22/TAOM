@@ -1,0 +1,145 @@
+culture,required_combo,purpose,equipmentType,found_count,status,tier
+erebor,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+erebor,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+erebor,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+erebor,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+erebor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+erebor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+erebor,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+erebor,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+erebor,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+erebor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+erebor,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+erebor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+rivendell,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+rivendell,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+rivendell,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+rivendell,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+rivendell,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+rivendell,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+rivendell,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+rivendell,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+rivendell,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+rivendell,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+rivendell,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+rivendell,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+mirkwood,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+mirkwood,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+mirkwood,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+mirkwood,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+mirkwood,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+mirkwood,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+mirkwood,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+mirkwood,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+mirkwood,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+mirkwood,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+mirkwood,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+mirkwood,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+lothlorien,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+lothlorien,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+lothlorien,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+lothlorien,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+lothlorien,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+lothlorien,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+lothlorien,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+lothlorien,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+lothlorien,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+lothlorien,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+lothlorien,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+lothlorien,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+isengard,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+isengard,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+isengard,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+isengard,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+isengard,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+isengard,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+isengard,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+isengard,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+isengard,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+isengard,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+isengard,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+isengard,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+gundabad,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+gundabad,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+gundabad,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+gundabad,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+gundabad,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+gundabad,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+gundabad,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+gundabad,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+gundabad,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+gundabad,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+gundabad,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+gundabad,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+umbar,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+umbar,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+umbar,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+umbar,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+umbar,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+umbar,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+umbar,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+umbar,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+umbar,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+umbar,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+umbar,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+umbar,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+dolguldur,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+dolguldur,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+dolguldur,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+dolguldur,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+dolguldur,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+dolguldur,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+dolguldur,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+dolguldur,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+dolguldur,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+dolguldur,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+dolguldur,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+dolguldur,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+gondor,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+gondor,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+gondor,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+gondor,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+gondor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+gondor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+gondor,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+gondor,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+gondor,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+gondor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+gondor,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+gondor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+mordor,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+mordor,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+mordor,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+mordor,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+mordor,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+mordor,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+mordor,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+mordor,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+mordor,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+mordor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+mordor,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+mordor,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+shaghana,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+shaghana,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+shaghana,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+shaghana,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+shaghana,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+shaghana,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+shaghana,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+shaghana,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+shaghana,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+shaghana,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+shaghana,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+shaghana,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional
+abanissa,IsLordTemplate,Male lord battle,Battle,0,MISSING,mandatory
+abanissa,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,0,MISSING,mandatory
+abanissa,IsLordTemplate,Male lord civilian,Civilian,0,MISSING,mandatory
+abanissa,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,0,MISSING,mandatory
+abanissa,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,0,MISSING,mandatory
+abanissa,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,0,MISSING,mandatory
+abanissa,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,0,MISSING,mandatory
+abanissa,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,0,MISSING,mandatory
+abanissa,IsKingdomRulerTemplate,Male king battle,Battle,0,MISSING-OPTIONAL,optional
+abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,0,MISSING-OPTIONAL,optional
+abanissa,IsKingdomRulerTemplate,Male king civilian,Civilian,0,MISSING-OPTIONAL,optional
+abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,0,MISSING-OPTIONAL,optional

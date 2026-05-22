@@ -19,11 +19,20 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
     }
 
     public override ExplainedNumber CalculateRenownGain(
-        PartyBase party, float renownValueOfBattle, float contributionShare)
+        PartyBase winnerParty,
+        float renownValueOfBattleForWinnerSide,
+        float contributionShareOfWinnerParty,
+        float renownMultiplierForWinnerSide,
+        bool includeDescriptions)
     {
-        var result = base.CalculateRenownGain(party, renownValueOfBattle, contributionShare);
-        _feats.ApplyRenownFeats(CultureFeatAdapter.FromOrNull(party.Owner?.Culture ?? party.Culture), ref result);
-        _careerPassives.ApplyFactor((party.Owner ?? party.LeaderHero)?.StringId, ref result, PassiveEffectType.BattleRenownGain);
+        var result = base.CalculateRenownGain(
+            winnerParty,
+            renownValueOfBattleForWinnerSide,
+            contributionShareOfWinnerParty,
+            renownMultiplierForWinnerSide,
+            includeDescriptions);
+        _feats.ApplyRenownFeats(CultureFeatAdapter.FromOrNull(winnerParty.Owner?.Culture ?? winnerParty.Culture), ref result);
+        _careerPassives.ApplyFactor((winnerParty.Owner ?? winnerParty.LeaderHero)?.StringId, ref result, PassiveEffectType.BattleRenownGain);
         return result;
     }
 }

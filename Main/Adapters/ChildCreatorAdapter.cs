@@ -1,9 +1,6 @@
 using Helpers;
-using TAOM.Core.Infrastructure;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
 
 namespace TAOM.Adapters;
 
@@ -25,9 +22,12 @@ public class ChildCreatorAdapter : IChildCreatorAdapter
 
         // HeroCreator.CreateChild inherits the template's sex. When the service
         // fell back to the opposite-sex pool (zero-male clan), enforce the requested sex.
-        // IsFemale backing field lives on BasicCharacterObject (base class), not CharacterObject.
+        // Deep-review 2026-05-22: prior implementation reflected on
+        // BasicCharacterObject.<IsFemale>k__BackingField — silent no-op, because
+        // CharacterObject.IsFemale is an override that unconditionally returns
+        // HeroObject.IsFemale for heroes. Hero.IsFemale has a public setter; use it.
         if (hero.IsFemale != isFemale)
-            ReflectionHelper.SetFieldValue((BasicCharacterObject)hero.CharacterObject, "<IsFemale>k__BackingField", isFemale);
+            hero.IsFemale = isFemale;
 
         hero.UpdateHomeSettlement();
         hero.HeroDeveloper.InitializeHeroDeveloper();
@@ -37,15 +37,13 @@ public class ChildCreatorAdapter : IChildCreatorAdapter
 
     private static void AssignEquipment(Hero hero)
     {
-        var rosters = Campaign.Current.Models.EquipmentSelectionModel
-            .GetEquipmentRostersForInitialChildrenGeneration(hero);
-
-        if (rosters == null || rosters.Count == 0) return;
-
-        var roster = rosters.GetRandomElementInefficiently();
-        if (roster == null) return;
-
-        Equipment civilianEquipment = roster.GetRandomCivilianEquipment();
+        // v1.4.3 renamed GetEquipmentRostersForInitialChildrenGeneration (MBList<MBEquipmentRoster>)
+        // to GetEquipmentForInitialChildrenGeneration (single Equipment). Gender + culture
+        // filtering moved inside the model; the engine returns the civilian-shape Equipment
+        // and the caller derives battle from it via FillFrom. Mirrors vanilla 1.4.5
+        // InitialChildGenerationCampaignBehavior.
+        Equipment civilianEquipment = Campaign.Current.Models.EquipmentSelectionModel
+            .GetEquipmentForInitialChildrenGeneration(hero);
         if (civilianEquipment == null) return;
 
         EquipmentHelper.AssignHeroEquipmentFromEquipment(hero, civilianEquipment);

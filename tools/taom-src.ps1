@@ -1,13 +1,24 @@
 #Requires -Version 7
 <#
 .SYNOPSIS
-    Decompile and cache TaleWorlds v1.3.15 types via a single command.
+    Decompile and cache TaleWorlds types via a single command. Auto-detects version.
 .DESCRIPTION
     Mirrors the opensrc pattern (https://github.com/vercel-labs/opensrc) for TAOM's
-    closed-source TaleWorlds dependencies. Caches at $env:USERPROFILE\.taom-src\v1.3.15\
-    so repeated lookups are instant.
+    closed-source TaleWorlds dependencies. Caches at $env:USERPROFILE\.taom-src\<version>\
+    where <version> is auto-detected from Version.xml in the resolved bin dir
+    (e.g. v1.3.15, v1.4.5). Multiple versions can coexist.
+
+    Bin dir resolution order:
+      1. $env:BANNERLORD_OVERRIDE_DIR\bin\Win64_Shipping_Client (if set)
+      2. $env:BANNERLORD_GAME_DIR\bin\Win64_Shipping_Client (default)
 .EXAMPLE
+    # Cache from current $env:BANNERLORD_GAME_DIR (whatever version it is)
     pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel
+.EXAMPLE
+    # Cache from 1.3.15 backup (during dual-DLL migration window)
+    $env:BANNERLORD_OVERRIDE_DIR = "E:\BannerlordBackup\1.3.15"
+    pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel
+    Remove-Item Env:\BANNERLORD_OVERRIDE_DIR
 .EXAMPLE
     rg "GetCharacterWage" (pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
 #>
@@ -23,9 +34,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$Version    = 'v1.3.15'
 $CacheRoot  = Join-Path $env:USERPROFILE '.taom-src'
-$VersionDir = Join-Path $CacheRoot $Version
+# $Version and $VersionDir are resolved lazily once Get-BinDir runs (needs Version.xml).
+$script:Version    = $null
+$script:VersionDir = $null
 $SourcesPath = Join-Path $CacheRoot 'sources.json'
 $IndexPath   = Join-Path $CacheRoot 'dll-index.json'
 
@@ -35,6 +47,15 @@ function Write-Progress2 {
 }
 
 function Get-BinDir {
+    # Override takes precedence (used during dual-DLL migration window).
+    if ($env:BANNERLORD_OVERRIDE_DIR) {
+        $bin = Join-Path $env:BANNERLORD_OVERRIDE_DIR 'bin\Win64_Shipping_Client'
+        if (Test-Path $bin) {
+            Write-Progress2 "using override bin: $bin"
+            return $bin
+        }
+        Write-Progress2 "BANNERLORD_OVERRIDE_DIR set but bin not found at $bin; falling through to BANNERLORD_GAME_DIR"
+    }
     if (-not $env:BANNERLORD_GAME_DIR) {
         throw "BANNERLORD_GAME_DIR is not set. Set it to your Bannerlord install root (e.g. 'E:\Steam\steamapps\common\Mount & Blade II Bannerlord')."
     }
@@ -45,6 +66,23 @@ function Get-BinDir {
     return $bin
 }
 
+function Resolve-Version {
+    param([string]$BinDir)
+    if ($script:Version) { return }
+    $versionXml = Join-Path $BinDir 'Version.xml'
+    if (-not (Test-Path $versionXml)) {
+        throw "Version.xml not found at $versionXml. Cannot determine cache version."
+    }
+    $xml = [xml](Get-Content $versionXml -Raw)
+    $detected = $xml.Version.Singleplayer.Value
+    if (-not $detected) {
+        throw "Could not parse Version.xml at $versionXml. Expected <Version><Singleplayer Value='vX.Y.Z'/></Version>."
+    }
+    $script:Version = $detected
+    $script:VersionDir = Join-Path $CacheRoot $detected
+    Write-Progress2 "detected version $detected -> cache $($script:VersionDir)"
+}
+
 function Assert-Ilspycmd {
     if (-not (Get-Command ilspycmd -ErrorAction SilentlyContinue)) {
         throw "ilspycmd not found on PATH. Install with: dotnet tool install -g ilspycmd"
@@ -52,8 +90,11 @@ function Assert-Ilspycmd {
 }
 
 function Initialize-Cache {
-    if (-not (Test-Path $VersionDir)) {
-        New-Item -ItemType Directory -Path $VersionDir -Force | Out-Null
+    if (-not $script:VersionDir) {
+        throw "Initialize-Cache called before Resolve-Version. Call Get-BinDir + Resolve-Version first."
+    }
+    if (-not (Test-Path $script:VersionDir)) {
+        New-Item -ItemType Directory -Path $script:VersionDir -Force | Out-Null
     }
 }
 
@@ -123,16 +164,18 @@ function Invoke-Path {
     }
     $typeFqn = $typeArgs[0]
 
+    # Resolve bin first so we know which version's cache to look in.
+    $bin = Get-BinDir
+    Resolve-Version -BinDir $bin
     Initialize-Cache
 
-    $cacheFile = Join-Path $VersionDir ($typeFqn + '.cs')
+    $cacheFile = Join-Path $script:VersionDir ($typeFqn + '.cs')
     if (Test-Path $cacheFile) {
         Write-Output $cacheFile
         return
     }
 
     Assert-Ilspycmd
-    $bin = Get-BinDir
 
     $dllPath = $null
     $dllName = $null
@@ -201,7 +244,7 @@ function Invoke-Path {
     $entry = [ordered]@{
         type      = $typeFqn
         dll       = $dllName
-        version   = $Version
+        version   = $script:Version
         cached_at = (Get-Date).ToString('o')
     }
     $sources = @($sources | Where-Object { $_.type -ne $typeFqn }) + ,$entry
@@ -241,7 +284,9 @@ function Invoke-Remove {
     param([string[]]$RestArgs)
     if ($RestArgs.Count -lt 1) { throw "Usage: taom-src remove <FullyQualifiedType>" }
     $typeFqn = $RestArgs[0]
-    $cacheFile = Join-Path $VersionDir ($typeFqn + '.cs')
+    $bin = Get-BinDir
+    Resolve-Version -BinDir $bin
+    $cacheFile = Join-Path $script:VersionDir ($typeFqn + '.cs')
     if (Test-Path $cacheFile) {
         Remove-Item $cacheFile -Force
         Write-Progress2 "removed $cacheFile"
