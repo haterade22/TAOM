@@ -2,6 +2,38 @@
 
 ## 2026-05-22
 
+### fix(cc): author missing `as_elf_facegen` + `as_elf_female_facegen` — elves on parent menu render upright
+
+Mirkwood / Rivendell parents on the Character Creation parent-menu screen rendered as a horizontally-stretched / contorted mesh (no proper standing pose). Same failure-mode class as the 2026-05-04 "broken custom-race CC parents" bug, but with a different root cause: not a 1.2-vs-1.3 action-type-name mismatch, but a complete absence of the action_set the engine looks for.
+
+**Root cause.** LOTRLOME_Armory's `monsters.xml` defines `elf` with `monster_usage="human"` and `action_set="as_human_warrior"` (i.e. elves use the human skeleton, just retextured), but LOTRLOME never declared `as_elf_facegen` or `as_elf_female_facegen`. The 2026-05-04 fix added Bannerlord 1.3 action-type aliases to LOTRLOME's 12 pre-existing facegen sets (dwarf, uruk, orc, nazghul, hill_troll, cave_troll, pale_uruk, dg_uruk, goblin, saruman, berserker, uruk_hai) — but did not author the missing pair for elves, even though both the commit message and the CHANGELOG entry mentioned "elf". Elves silently fell through to a default that didn't bind correctly to the human skeleton.
+
+`Patch20_NarrativeHorseGuard`'s race-sync prefix on `CharacterCreationNarrativeStageView.RefreshAgentVisuals` (already in place from 2026-05-04) correctly tells the engine to look up `as_elf_facegen` — but until today there was no such action_set, so the lookup failed.
+
+**Fix.** Appended two slim action_set entries to both the live `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\action_sets.xml` and the tracked snapshot at [`docs/reference/lotrlome-armory-snapshot/action_sets.xml`](docs/reference/lotrlome-armory-snapshot/action_sets.xml):
+
+- `as_elf_facegen` with `base_set="as_human_warrior"` — declares all 14 male CC parent action types (7 × Bannerlord 1.2 names `act_character_creation_male_default_0..6` + 7 × Bannerlord 1.3 names `_default_standing` / `_side_to_side_1` / `_mother_front` / `_father_sitting` / `_side_to_side_2` / `_side_to_side_3` / `_hugging`), each pointing at `anim_father_0..6`. Inherits childhood / toddler / conversation / sit / stand actions from `as_human_warrior` because elves use the human skeleton.
+- `as_elf_female_facegen` with `base_set="as_elf_facegen"` — same 14 action types for the female mirror, pointing at `anim_mother_0..6`.
+
+**Audit.** Cross-checked every distinct `race="..."` value used by TAOM cultures / troops / character templates (`berserker`, `cave_troll`, `dg_uruk`, `dwarf`, `elf`, `goblin`, `human`, `orc`, `pale_uruk`, `uruk`, `uruk_hai`) against LOTRLOME's `_facegen` action_set list — `elf` was the only hole. The 10 other races already have both male + female facegens (patched on 2026-05-04 with the 1.3 aliases). `human` doesn't need a custom facegen — it resolves to the engine default.
+
+**Regression guard.** Per user choice: snapshot + doc only — no TAOM-side startup check or build-time injector. Updated [`docs/reference/lotrlome-armory-snapshot/README.md`](docs/reference/lotrlome-armory-snapshot/README.md) with an explicit per-race "Required facegen entries" checklist + a one-line `grep` sanity check the user can run after any LOTRLOME update. The implicit "etc." in the previous README is what hid the elf hole for 18 days; the new checklist names every required entry by ID.
+
+**Memory** `feedback_lotrlome_action_set_aliases.md` was extended to record the rule: the fix recipe for custom-race CC parents must both (a) **patch** existing facegen action_sets with 1.3 aliases AND (b) **create** missing facegen action_sets for any race a TAOM culture consumes that LOTRLOME's authors never anticipated as playable. Patching alone is insufficient.
+
+**Files changed:**
+- `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\action_sets.xml` — appended 51 lines (2 × action_set with 14 actions each + header comment).
+- [`docs/reference/lotrlome-armory-snapshot/action_sets.xml`](docs/reference/lotrlome-armory-snapshot/action_sets.xml) — same append, kept in lockstep with live.
+- [`docs/reference/lotrlome-armory-snapshot/README.md`](docs/reference/lotrlome-armory-snapshot/README.md) — added per-race facegen checklist + grep sanity check + bumped snapshot date to 2026-05-22.
+
+**Verification.** XML-only — no C# touched, no rebuild needed (`./build.ps1` is a no-op for this change). In-game smoke test: launch Bannerlord → New Sandbox → pick Mirkwood or Rivendell → advance through CC until the parent-menu youth options render both parents → confirm parents stand upright with proper anim cycling, no T-pose / stretched mesh. Repeat for every culture that uses `race="elf"` in its character templates.
+
+Not-tested: every other CC parent action type beyond the 14 declared here. If a vanilla CC stage references a parent-anim type we missed, the engine will fall through to `as_human_warrior`'s definition (or further down the inheritance chain) — same path the dwarf facegen uses for non-CC-parent actions. If a future Bannerlord patch renames the CC parent action types again, repeat this fix recipe for whatever names the 1.4+ engine looks up.
+
+### chore(shaders): hide Pre-compile Shaders main-menu option
+
+Feature isn't 100% reliable right now, so the `TaomPrecompileShaders` `InitialStateOption` is commented out in [`Main/SubModule.cs`](Main/SubModule.cs) via a `/* DISABLED 2026-05-22 ... */` block around the `AddInitialStateOption(...)` call. Everything else stays wired up: the `ShaderPrecompilation` service + IoC registration, `Patch21_ShaderPrecompilation` Harmony patch on `LoadingWindowViewModel.Update`, the `OnApplicationTick` in-game shader-progress reporter (`_shaderTickAccumulator` / `_lastShaderCount`), tests, docs, and localization strings — all of those are independently useful and remain active. Re-enable the menu button by removing the surrounding block-comment once the underlying reliability issue is fixed.
+
 ### tune(diplomacy): War of the Ring phase defaults to Day 2 / Day 14
 
 Phase 1 (Isengard + Dunland attack Rohan) now defaults to **Day 2** (was 30 in MCM / 1 in JSON). Phase 2 (full hostile-tier sweep, peace blocked between hostile tiers) now defaults to **Day 14** (was 45 in MCM / 1 in JSON). Both remain user-tunable via MCM → War of the Ring → Phase 1/2 Start Day (range 1–365).

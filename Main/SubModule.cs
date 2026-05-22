@@ -194,6 +194,11 @@ public class SubModule : MBSubModuleBase
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
 
+        // DISABLED 2026-05-22: Pre-compile Shaders main-menu button hidden — feature isn't 100% reliable yet.
+        // The service, IoC registration, Harmony Patch21_ShaderPrecompilation, and the OnApplicationTick
+        // in-game progress reporter (which uses _shaderTickAccumulator / _lastShaderCount) all remain
+        // wired up — only this menu entry is hidden. Re-enable by removing the surrounding block-comment.
+        /*
         if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
         {
             var shaderService = IoC.Resolve<IShaderPrecompilationService>();
@@ -220,6 +225,7 @@ public class SubModule : MBSubModuleBase
                 enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter. Run once after installing TAOM."),
                 isHidden:            null));
         }
+        */
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
