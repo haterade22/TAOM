@@ -153,6 +153,34 @@ The CS0111 errors are the killer: ilspy decompiled IL where ANY constructor/meth
 
 **Conclusion:** Decompile-based source-merge is not viable at this scale. The decompiled output has too many decompile artifacts requiring per-site manual rewrites.
 
+## Second attempt (2026-05-22, same session): upstream source via source-only NuGet
+
+Downloaded `https://github.com/Aragas/Bannerlord.MBOptionScreen/archive/refs/tags/v5.11.4.tar.gz` + `https://github.com/BUTR/Bannerlord.ButterLib/archive/refs/tags/v2.10.4.tar.gz` into `Dependencies/.vendor-source/` (gitignored). Discovered the **right** integration mechanism: BUTR ships source-only NuGet packages that source-include into the consuming assembly:
+- `Bannerlord.BUTR.Shared` (3.0.0.142) — contentFiles cs/netstandard2.0 → `Bannerlord.BUTR.Shared.*` namespaces
+- `Bannerlord.ModuleManager.Source` (5.0.221) — source-only NuGet (`.Source` suffix convention)
+- `BUTR.DependencyInjection` (2.0.0.52) — source-only NuGet
+- `LightInject.Source` (6.6.4) — source-only NuGet
+- `Harmony.Extensions` (3.2.0.77) — source-only NuGet
+
+This is exactly how Bannerlord.MCM's own csproj internalizes its dependencies (build/common.props pins these versions; src/MCM/MCM.csproj PackageReferences them with `IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"`).
+
+Per-step attempt + result:
+
+| Step | Errors after | Notes |
+|---|---|---|
+| Copy MCM src/MCM*/ folders into ThirdParty/MCM/ (182 files) | n/a | Source only — needs csproj wiring |
+| Add the 5 source-only NuGet PackageReferences + Newtonsoft.Json + DefineConstants (BANNERLORDMCM_PUBLIC, BANNERLORDMCM_NOT_SOURCE, BUTRDEPENDENCYINJECTION_PUBLIC) | 122 | UIExtenderEx's old decompiled BUTR/ collides with Bannerlord.BUTR.Shared NuGet |
+| Delete UIExtenderEx ThirdParty/UIExtenderEx/BUTR/ duplicates (now provided by NuGet) | 18 | Only LightInject IServiceFactory/Scope missing |
+| Hand-copy LightInject.cs from NuGet's `.cs.pp` template with `$rootnamespace$` → `MCM` substitution (SDK csproj doesn't process `.pp`) | **708** | Cascading namespace conflict surfaced |
+
+**The 708 errors were ALL in `Dependencies/ThirdParty/Harmony/MonoMod.Cil/ILPatternMatchingExt.cs`** — `error CS0234: The type or namespace name 'ThrowIfNull' does not exist in the namespace 'Helpers'`. Adding the `Bannerlord.BUTR.Shared` NuGet introduces the `Bannerlord.BUTR.Shared.Helpers` namespace, which under C# ambiguity resolution shadows our Harmony source-merge's `MonoMod.Utils.Helpers` class. The Harmony source's bare `Helpers.ThrowIfNull(...)` calls (706 occurrences) now resolve to the NAMESPACE rather than the CLASS.
+
+**Bisected confirmation**: removing the MCM source folder still left 354 errors — meaning the `Bannerlord.BUTR.Shared` NuGet **alone** breaks Harmony compilation. The DR3 source-merge isn't blocked by MCM's source; it's blocked by a fundamental tension between BUTR.Shared's source-include and Harmony's existing source-merge using bare `Helpers` lookups.
+
+**Fix path (deferred)**: sed-replace all bare `Helpers.X(...)` → `MonoMod.Utils.Helpers.X(...)` in Harmony source. Mechanical, ~706 occurrences. Then re-try with Bannerlord.BUTR.Shared NuGet active. Estimated 30-60 min when next picked up.
+
+**Reverted state for this session**: all DR3 changes rolled back (build clean, 0 errors). Vendored source download was cached in `.vendor-source/` (gitignored, but deleted to save disk).
+
 ## The actually-right path (multi-week effort)
 
 Pull the BUTR libraries' source code from their official GitHub repos:
