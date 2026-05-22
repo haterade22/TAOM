@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>0.1.0</Version>
+		<Deterministic>true</Deterministic>
+		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
+		<ModuleId>TAOM.Dependencies</ModuleId>
+		<ModuleName>TAOM.Dependencies</ModuleName>
+		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625;8374;8174</NoWarn>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>preview</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll"
+				   Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll;$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.CampaignSystem.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="_Module\bin\**" />
+		<EmbeddedResource Remove="_Module\bin\**" />
+		<None Remove="_Module\bin\**" />
+		<!-- Exclude Harmony's AssemblyInfo — conflicts with TAOM.Dependencies assembly identity -->
+		<Compile Remove="ThirdParty\Harmony\Properties\AssemblyInfo.cs" />
+		<!-- Exclude decompiled Unsafe polyfills — they were IL intrinsics that can't be expressed in C#.
+		     UnsafeRaw delegates to Unsafe and vice versa, causing infinite recursion at runtime.
+		     The System.Runtime.CompilerServices.Unsafe NuGet provides proper IL implementations. -->
+		<Compile Remove="ThirdParty\Harmony\System.Runtime.CompilerServices\Unsafe.cs" />
+		<Compile Remove="ThirdParty\Harmony\MonoMod.Backports.ILHelpers\UnsafeRaw.cs" />
+		<!-- Dead code identified by audit — unused in Harmony/TAOM runtime paths -->
+		<Compile Remove="ThirdParty\Harmony\System.Collections\HashHelpers.cs" />
+		<Compile Remove="ThirdParty\Harmony\System.IO\StreamExtensions.cs" />
+	</ItemGroup>
+
+	<!-- Harmony native exception helpers (Linux/macOS only, but resource stream calls expect them) -->
+	<ItemGroup>
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_linux_x86_64.so" LogicalName="exhelper_linux_x86_64.so" />
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_linux_arm64.so" LogicalName="exhelper_linux_arm64.so" />
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_macos_x86_64.dylib" LogicalName="exhelper_macos_x86_64.dylib" />
+		<EmbeddedResource Include="ThirdParty\Harmony\exhelper_macos_arm64.dylib" LogicalName="exhelper_macos_arm64.dylib" />
+		<EmbeddedResource Include="ThirdParty\Harmony\ILRepack.List" LogicalName="ILRepack.List" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.129">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
+		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />
+	</ItemGroup>
+
+	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
+		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
+		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
+		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+		<Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+	</Target>
+
+</Project>

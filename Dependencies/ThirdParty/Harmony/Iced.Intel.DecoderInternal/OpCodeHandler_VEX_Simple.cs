@@ -1,0 +1,20 @@
+namespace Iced.Intel.DecoderInternal;
+
+internal sealed class OpCodeHandler_VEX_Simple : OpCodeHandler
+{
+	private readonly Code code;
+
+	public OpCodeHandler_VEX_Simple(Code code)
+	{
+		this.code = code;
+	}
+
+	public override void Decode(Decoder decoder, ref Instruction instruction)
+	{
+		if ((decoder.state.vvvv_invalidCheck & decoder.invalidCheckMask) != 0)
+		{
+			decoder.SetInvalidInstruction();
+		}
+		instruction.InternalSetCodeNoCheck(code);
+	}
+}
