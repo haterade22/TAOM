@@ -37,13 +37,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring")]
     [SettingPropertyInteger("Phase 1 Start Day", 1, 365, Order = 1,
-        HintText = "Days after campaign start when Isengard and Dunland attack Rohan.")]
-    public int Phase1TriggerDay { get; set; } = 30;
+        HintText = "Days after campaign start when Isengard and Dunland attack Rohan. Default 2.")]
+    public int Phase1TriggerDay { get; set; } = 2;
 
     [SettingPropertyGroup("War of the Ring")]
     [SettingPropertyInteger("Phase 2 Start Day", 1, 365, Order = 2,
-        HintText = "Days after campaign start when all hostile kingdoms go to war. Peace is blocked.")]
-    public int Phase2TriggerDay { get; set; } = 45;
+        HintText = "Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 14.")]
+    public int Phase2TriggerDay { get; set; } = 14;
 
     [SettingPropertyGroup("War of the Ring/Test Mode")]
     [SettingPropertyBool("Enable Test Mode", Order = 0,

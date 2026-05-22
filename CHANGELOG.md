@@ -2,6 +2,14 @@
 
 ## 2026-05-22
 
+### tune(diplomacy): War of the Ring phase defaults to Day 2 / Day 14
+
+Phase 1 (Isengard + Dunland attack Rohan) now defaults to **Day 2** (was 30 in MCM / 1 in JSON). Phase 2 (full hostile-tier sweep, peace blocked between hostile tiers) now defaults to **Day 14** (was 45 in MCM / 1 in JSON). Both remain user-tunable via MCM → War of the Ring → Phase 1/2 Start Day (range 1–365).
+
+Also tightened `testMode` defaults in `war_of_the_ring.json` from 2/5 → 1/3 so test mode remains meaningfully faster than the new normal cadence.
+
+Existing saves are unaffected: phase state is persisted via `SyncData` (`WarOfTheRing_CurrentPhase`), so a save that already advanced past Phase 2 stays in Phase 2 regardless of config changes. The new defaults apply to fresh campaigns and to any save still in Peace phase.
+
 ### fix(diplomacy): split peace + alliance invariants in EnforcePermanentAlliances; close Dale↔Isengard gap; align MCM 5.11.4
 
 In-game encyclopedia showed Mordor simultaneously in the "Wars" list AND "Alliances" list with Harad — an impossible vanilla state. Root cause: `DiplomacyService.EnforcePermanentAlliances` short-circuited on `AreAllied=true` and never checked war state. Sequence at game start:
