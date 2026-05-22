@@ -2,6 +2,21 @@
 
 ## 2026-05-22
 
+### migration(ui): fix CC narrative + culture stage ListPanel direction (v1.4.0 layout-fix regression)
+
+**Symptom:** Character Creation Family/Youth/Adolescence stages rendered the "You were born into a family of..." prompt at the BOTTOM of the option list instead of the top. Same regression on the CultureStage faction-info panel (perks/bonuses/strengths/weaknesses lists appeared inverted).
+
+**Root cause:** v1.4.0 fixed a long-standing engine bug where `StackLayout.LayoutMethod="VerticalBottomToTop"` was actually rendering top-to-bottom (the inverse of what the name says). With the engine bug fixed, vanilla 1.4.5 also updated its own prefabs to use `VerticalTopToBottom` at the affected sites. TAOM's customized copies of `CharacterCreationNarrativeStage.xml` and `CharacterCreationCultureStage.xml` were authored against the broken engine and still used `VerticalBottomToTop`.
+
+**Changes:**
+
+- `Main/_Module/GUI/Prefabs/CharacterCreation/CharacterCreationNarrativeStage.xml`: 3 sites flipped `VerticalBottomToTop` → `VerticalTopToBottom`. Verified against vanilla 1.4.5's `Native/GUI/Prefabs/CharacterCreation/CharacterCreationNarrativeStage.xml` — TAOM and vanilla now match exactly on layout direction (TAOM's button-template customizations preserved).
+- `Main/_Module/GUI/Prefabs/CharacterCreation/CharacterCreationCultureStage.xml`: 6 sites flipped. These are TAOM-custom faction-info ListPanels (outer `ContentList`, `FactionPerks` list + per-item, `FactionBonuses`, `FactionStrengths`, `FactionWeaknesses`) — all want their children to render top-down in declaration order (section title, then items).
+
+**NOT touched** in this commit: the other 22 TAOM prefabs that still contain `VerticalBottomToTop` (Party screen, Encyclopedia subpages, Custom Battle screens, Nameplates, MomentumView, GameMenu, FacGen PreBuild, Career screen). Per-site review needed — vanilla 1.4.5 kept `VerticalBottomToTop` at 31 specific sites across Native/SandBox/SandBoxCore, so a blind mass-flip would break the legitimate cases. Tracked as a separate audit task; per-prefab diff against vanilla counterpart will drive each remaining fix.
+
+---
+
 ### migration(deps): DR1 — point TAOM.csproj at internalized TAOM.Dependencies (fixes launcher dep-conflict error)
 
 **Symptom:** Launcher showed *"TAOM.TAOM submodule could not be loaded correctly due to a dependency conflict"* on game launch — silent runtime no-op behind a soft warning.
