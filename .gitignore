@@ -55,3 +55,6 @@ tools/reports/
 # Serena MCP code-indexing cache
 .serena/cache/
 .serena/project.local.yml
+
+# DR3 source-merge: vendored upstream BUTR + Harmony + MonoMod + Cecil source (downloaded fresh from GitHub tags each session — see docs/migration/dr3-mcm-internalization-plan.md)
+Dependencies/.vendor-source/
