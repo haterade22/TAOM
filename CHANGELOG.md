@@ -2,6 +2,10 @@
 
 ## 2026-05-22
 
+### data(mordor): unify banner_key on 7 Mordor clans
+
+Set shared Mordor banner `11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0` on Khôrahîm, Wâwrim, Ârki, Îkhon, Zarûnik, Ûgrakhûr, Brughash. Khôrahîm + Wâwrim go through `spclans.xslt` (vanilla IDs `clan_empire_south_8/9` renamed by TAOM); the other five are direct edits to TAOM-custom `clan_empire_south_10/11/13/14/15` in `characters/clans.xml`. Akheth (`_12`) intentionally retained its distinct banner.
+
 ### migration(deps): DR3 — bundle entire BUTR stack inside TAOM.Dependencies module
 
 End-user launcher now needs ONLY `TAOM` + `TAOM.Dependencies` enabled (plus Native/SandBox/SandBoxCore/CustomBattle). No external `Bannerlord.Harmony` / `.UIExtenderEx` / `.ButterLib` / `.MBOptionScreen` modules required — all bundled inside TAOM.Dependencies's `bin/Win64_Shipping_Client/`.

@@ -254,6 +254,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_8}Khôrahîm</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -263,6 +264,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_9}Wâwrim</xsl:attribute>
       <xsl:attribute name="owner">Hero.lord_1_48_3</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
