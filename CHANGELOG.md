@@ -2,6 +2,24 @@
 
 ## 2026-05-22
 
+### fix(diplomacy): split peace + alliance invariants in EnforcePermanentAlliances; close Dale↔Isengard gap; align MCM 5.11.4
+
+In-game encyclopedia showed Mordor simultaneously in the "Wars" list AND "Alliances" list with Harad — an impossible vanilla state. Root cause: `DiplomacyService.EnforcePermanentAlliances` short-circuited on `AreAllied=true` and never checked war state. Sequence at game start:
+
+1. `EstablishInitialAlliances` (called from `OnNewGameCreatedPartialFollowUp`) creates the Mordor↔Harad alliance.
+2. Vanilla initial-state setup declares wars for the southern factions, sweeping Harad into Mordor's war list.
+3. `EnforcePermanentAlliances` (called from `OnSessionLaunched`) sees `AreAllied=true`, hits `continue`, never calls `MakePeace`.
+
+Fix: split the two invariants. For every Permanent pair, check **independently** (a) NOT at war (call `MakePeace` if so) and (b) Allied (call `StartAlliance` if not). The fix applies on next `OnSessionLaunched`, so a save-reload clears the corrupted state without requiring a new campaign. Added 2 regression tests:
+- `EnforcePermanentAlliances_AlliedButAlsoAtWar_MakesPeaceWithoutRestartingAlliance` — direct repro of the in-game bug
+- `EnforcePermanentAlliances_NotAlliedAndAtWar_MakesPeaceThenStartsAlliance` — fresh-state path; verifies peace-before-alliance ordering
+
+Also added missing diplomatic entry: `sturgia ↔ isengard Hostile` (Dale should be at war with Isengard, matching Erebor's hostile list). Without it the Phase-2 `DeclareHostileTierWars` would silently exclude that pair from the Day-1 war declaration sweep.
+
+Also bumped `Bannerlord.MCM` NuGet pin from 5.11.3 → 5.11.4 in both csprojs so the API library version matches the vendored MBOptionScreen UI version (was visible in-game as "Mod Configuration Menu 5.11.3" + "MCM UI 5.11.4" — now both 5.11.4).
+
+Verification: `dotnet build` 0 errors. `dotnet test TAOM.Tests` 2,325 passed (was 2,323 — +2 new regression tests). Deployed MCMv5.dll v5.11.4.0 confirmed at game install.
+
 ### fix(ui): stop "Press V" hint overlapping ability name in CareerSystem battle HUD
 
 `AbilityHUD.xml` had `Press V` bottom-anchored at `MarginBottom=14` inside a 110px parent while the ability name sat at `MarginTop=74`, so the two text rows collided (`Cap…Press V…rath` instead of `Captain's Wrath` + `Press V` on separate lines). Grew the parent to `SuggestedHeight=132` (panel grows upward since it's bottom-anchored, on-screen position unchanged) and re-anchored `Press V` to `VerticalAlignment=Top MarginTop=96`. New stack top→bottom: portrait → name → `Press V` → charge bar.

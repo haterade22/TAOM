@@ -111,27 +111,35 @@ public class DiplomacyService : IDiplomacyService
 
     public void EnforcePermanentAlliances()
     {
-        int restored = 0, stillMissing = 0, ok = 0, warsEnded = 0;
+        int restored = 0, stillMissing = 0, alreadyAllied = 0, warsEnded = 0, warsEndedWhileAllied = 0;
         foreach (var rel in _permanentRelationships)
         {
-            if (_allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB))
-            {
-                ok++;
-                continue;
-            }
+            // Two independent invariants for a Permanent pair:
+            //   1. NOT at war
+            //   2. Allied
+            // Vanilla initial-state setup can declare wars AFTER EstablishInitialAlliances
+            // ran during OnNewGameCreatedPartialFollowUp, producing an allied-AND-at-war
+            // state. Each invariant must be checked independently — short-circuiting on
+            // AreAllied=true (as the earlier impl did) skipped war cleanup for that case
+            // and left Mordor visibly at war with Harad in the encyclopedia while the
+            // alliance entry simultaneously listed them as allied.
+            var atWar = _allianceAdapter.AreAtWar(rel.KingdomA, rel.KingdomB);
+            var allied = _allianceAdapter.AreAllied(rel.KingdomA, rel.KingdomB);
 
-            // Vanilla 1.4.5 StartAlliance does NOT end an active war between the
-            // two kingdoms (verified via AllianceCampaignBehavior decompile).
-            // Without this peace step, loading an existing save with a newly-promoted
-            // Permanent pair would leave them in allied-AND-at-war state — alliance
-            // object created but StanceLink.IsAtWar still true.
-            if (_allianceAdapter.AreAtWar(rel.KingdomA, rel.KingdomB))
+            if (atWar)
             {
                 _logger.LogWarning(
-                    $"[Diplomacy] Ending pre-existing war before restoring permanent alliance: " +
+                    $"[Diplomacy] Permanent pair at war (allied={allied}), making peace: " +
                     $"{rel.KingdomA} <-> {rel.KingdomB}");
                 _allianceAdapter.MakePeace(rel.KingdomA, rel.KingdomB);
                 warsEnded++;
+                if (allied) warsEndedWhileAllied++;
+            }
+
+            if (allied)
+            {
+                alreadyAllied++;
+                continue;
             }
 
             _logger.LogWarning($"Permanent alliance missing, restoring: {rel.KingdomA} <-> {rel.KingdomB}");
@@ -143,8 +151,9 @@ public class DiplomacyService : IDiplomacyService
                 stillMissing++;
         }
         _logger.LogInfo(
-            $"[Diplomacy] EnforcePermanentAlliances summary: {ok} already-ok, " +
-            $"{restored} restored ({warsEnded} of which required ending an active war first), " +
+            $"[Diplomacy] EnforcePermanentAlliances summary: {alreadyAllied} already-allied " +
+            $"({warsEndedWhileAllied} of which were also at war — vanilla state corruption corrected), " +
+            $"{restored} alliances restored, {warsEnded} total wars ended, " +
             $"{stillMissing} STILL MISSING (vanilla StartAlliance rejected the call)");
     }
 

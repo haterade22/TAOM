@@ -33,7 +33,8 @@
 		    SubModule.cs registers an AssemblyResolve handler as belt-and-braces
 		    that returns the loaded 0Harmony for any requested version.
 		  - Bannerlord.UIExtenderEx 2.13.1 (NuGet → Bannerlord.UIExtenderEx.dll)
-		  - Bannerlord.MCM 5.11.3 (NuGet → MCMv5.dll — API only)
+		  - Bannerlord.MCM 5.11.4 (NuGet → MCMv5.dll — API only; aligned with
+		    vendored MBOptionScreen UI version)
 		  - ButterLib 2.10.4 + Implementation.1.4.{0,1}.dll (vendored from
 		    Steam Workshop 2859232415)
 		  - BUTR.CrashReport family v14.0.0.99 (6 DLLs, vendored from the same

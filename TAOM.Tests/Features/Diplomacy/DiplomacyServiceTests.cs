@@ -215,4 +215,37 @@ public class DiplomacyServiceTests
         _allianceAdapter.DidNotReceive().StartAlliance("rivendell", "lothlorien");
     }
 
+    [TestMethod]
+    public void EnforcePermanentAlliances_AlliedButAlsoAtWar_MakesPeaceWithoutRestartingAlliance()
+    {
+        // Bug observed 2026-05-22 (Mordor↔Harad in-game): vanilla initial-state setup
+        // declared war on a Permanent pair AFTER EstablishInitialAlliances created the
+        // alliance, leaving them simultaneously allied AND at war. Earlier impl
+        // short-circuited on AreAllied=true and never called MakePeace. Fix verifies
+        // the two invariants (peace, alliance) are checked independently.
+        // Uses empire_w↔vlandia which is the test fixture's Permanent pair.
+        _allianceAdapter.AreAllied("empire_w", "vlandia").Returns(true);
+        _allianceAdapter.AreAtWar("empire_w", "vlandia").Returns(true);
+
+        _sut.EnforcePermanentAlliances();
+
+        _allianceAdapter.Received(1).MakePeace("empire_w", "vlandia");
+        _allianceAdapter.DidNotReceive().StartAlliance("empire_w", "vlandia");
+    }
+
+    [TestMethod]
+    public void EnforcePermanentAlliances_NotAlliedAndAtWar_MakesPeaceThenStartsAlliance()
+    {
+        _allianceAdapter.AreAtWar("empire_w", "vlandia").Returns(true);
+        _allianceAdapter.AreAllied("empire_w", "vlandia").Returns(false, true);
+
+        _sut.EnforcePermanentAlliances();
+
+        Received.InOrder(() =>
+        {
+            _allianceAdapter.MakePeace("empire_w", "vlandia");
+            _allianceAdapter.StartAlliance("empire_w", "vlandia");
+        });
+    }
+
 }

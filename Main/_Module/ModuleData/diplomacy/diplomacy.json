@@ -48,6 +48,7 @@
     { "kingdomA": "sturgia", "kingdomB": "empire_s", "tier": "Hostile" },
     { "kingdomA": "sturgia", "kingdomB": "gundabad", "tier": "Hostile" },
     { "kingdomA": "sturgia", "kingdomB": "dolguldur", "tier": "Hostile" },
+    { "kingdomA": "sturgia", "kingdomB": "isengard", "tier": "Hostile" },
     { "kingdomA": "rivendell", "kingdomB": "empire_s", "tier": "Hostile" },
     { "kingdomA": "rivendell", "kingdomB": "gundabad", "tier": "Hostile" },
     { "kingdomA": "rivendell", "kingdomB": "dolguldur", "tier": "Hostile" },
