@@ -5,6 +5,32 @@ _Module/bin/
 TestResults/
 out/
 
+# DR3 (2026-05-22): exceptions for bundled BUTR runtime DLLs in
+# TAOM.Dependencies module. These are MAINTAINED-VENDOR — manually copied
+# from Steam Workshop downloads (see docs/migration/dr3-maintenance.md) so
+# the build is self-contained without external module dependencies. The
+# locally-built TAOM.Dependencies.dll + .pdb still get ignored (regenerated
+# on every build).
+# Note: gitignore exceptions need the PARENT dirs un-ignored first because
+# the top-level `bin/` rule matches everywhere.
+!Dependencies/_Module/bin/
+!Dependencies/_Module/bin/Win64_Shipping_Client/
+# But still ignore everything in that dir by default — only allow the
+# specific BUTR-vendored DLLs.
+Dependencies/_Module/bin/Win64_Shipping_Client/*
+!Dependencies/_Module/bin/Win64_Shipping_Client/Bannerlord.ButterLib*.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/Bannerlord.MBOptionScreen*.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/Bannerlord.ModuleLoader.*.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/MCM.UI.Adapter.*.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/Microsoft.Extensions.*.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/Microsoft.Bcl.HashCode.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/System.Buffers.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/System.Collections.Immutable.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/System.Memory.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/System.Numerics.Vectors.dll
+!Dependencies/_Module/bin/Win64_Shipping_Client/System.Reflection.Metadata.dll
+
 # Visual Studio
 .vs/
 *.user

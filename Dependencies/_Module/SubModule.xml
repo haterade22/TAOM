@@ -2,7 +2,7 @@
 <Module>
 	<Id value="TAOM.Dependencies" />
 	<Name value="TAOM Dependencies" />
-	<Version value="v0.2.0" />
+	<Version value="v0.3.0" />
 	<DefaultModule value="false" />
 	<ModuleCategory value="Singleplayer" />
 	<ModuleType value="Community" />
@@ -22,6 +22,45 @@
 		<DependedModuleMetadata id="CustomBattle" order="LoadAfterThis" optional="true" />
 	</DependedModuleMetadatas>
 	<SubModules>
+		<!--
+		DR3 (2026-05-22): TAOM.Dependencies bundles the entire BUTR stack
+		(Harmony 2.4.2 / UIExtenderEx 2.13.1 / ButterLib 2.10.4 / MCM v5.11.4
+		with builds up to v1.4.1 — covers Bannerlord 1.4.5 via BUTR meta-loader
+		version dispatch). User's launcher needs ONLY TAOM and TAOM.Dependencies
+		enabled; no external Bannerlord.* modules required.
+
+		Load order (matches BUTR's documented init sequence):
+		  1. Bannerlord.Harmony.SubModule       — Harmony state init
+		  2. Bannerlord.UIExtenderEx.SubModule  — depends on Harmony
+		  3. TAOM.Dependencies.SubModule        — TAOM-specific init (NativeSkinFixes)
+		  4. ButterLib + ButterLib Impl Loader  — depends on Harmony
+		  5. MCMv5 + MCMv5 Basic Impl
+		  6. MBOptionScreen Module Loader       — picks correct MBOptionScreen.v1.4.x.dll
+		     based on installed Bannerlord version
+
+		See docs/migration/dr3-maintenance.md for update procedure when
+		Bannerlord or BUTR dependencies release new versions.
+		-->
+
+		<!-- Note: 0Harmony.dll (Lib.Harmony NuGet) has NO SubModule class because
+		     HarmonyLib is a pure managed library. Mods reference HarmonyLib types
+		     directly via `using HarmonyLib;` and instantiate `new Harmony(id)` at
+		     OnSubModuleLoad. Bannerlord's CLR auto-loads 0Harmony.dll when first
+		     HarmonyLib type is touched; no SubModule registration needed. -->
+
+		<!-- UIExtenderEx bootstrap. Bannerlord.UIExtenderEx.dll is from
+		     Bannerlord.UIExtenderEx NuGet (deployed automatically). -->
+		<SubModule>
+			<Name value="UIExtenderEx" />
+			<DLLName value="Bannerlord.UIExtenderEx.dll" />
+			<SubModuleClassType value="Bannerlord.UIExtenderEx.SubModule" />
+			<Assemblies />
+			<Tags>
+				<Tag key="DumpXML" value="false" />
+			</Tags>
+		</SubModule>
+
+		<!-- TAOM.Dependencies bootstrap (NativeSkinFixes + any TAOM-specific init) -->
 		<SubModule>
 			<Name value="TAOM.Dependencies" />
 			<DLLName value="TAOM.Dependencies.dll" />
@@ -29,11 +68,71 @@
 			<Assemblies />
 			<Tags />
 		</SubModule>
-		<!--
-		DR3 source-merge in progress (2026-05-22): MCM + MBOptionScreen + ButterLib
-		being source-merged into TAOM.Dependencies.dll alongside Harmony + UIExtenderEx.
-		Additional SubModule entries (MCMv5, ButterLib, etc.) will land here once the
-		source-merge build is green. See docs/migration/dr3-mcm-internalization-plan.md.
-		-->
+
+		<!-- ButterLib core. -->
+		<SubModule>
+			<Name value="ButterLib" />
+			<DLLName value="Bannerlord.ButterLib.dll" />
+			<SubModuleClassType value="Bannerlord.ButterLib.ButterLibSubModule" />
+			<Assemblies>
+				<Assembly value="Microsoft.Bcl.HashCode.dll" />
+				<Assembly value="Serilog.dll" />
+				<Assembly value="Serilog.Extensions.Logging.dll" />
+				<Assembly value="Serilog.Sinks.File.dll" />
+			</Assemblies>
+			<Tags>
+				<Tag key="DedicatedServerType" value="none" />
+				<Tag key="IsNoRenderModeElement" value="false" />
+			</Tags>
+		</SubModule>
+
+		<!-- ButterLib implementation loader. Picks the correct versioned
+		     Implementation.1.4.x.dll based on installed Bannerlord version. -->
+		<SubModule>
+			<Name value="ButterLib Implementation Loader" />
+			<DLLName value="Bannerlord.ButterLib.dll" />
+			<SubModuleClassType value="Bannerlord.ButterLib.ImplementationLoaderSubModule" />
+			<Assemblies />
+			<Tags>
+				<Tag key="DedicatedServerType" value="none" />
+				<Tag key="IsNoRenderModeElement" value="false" />
+			</Tags>
+		</SubModule>
+
+		<!-- MCM (Mod Configuration Menu v5). MCMv5.dll is from Bannerlord.MCM NuGet. -->
+		<SubModule>
+			<Name value="MCMv5" />
+			<DLLName value="MCMv5.dll" />
+			<SubModuleClassType value="MCM.MCMSubModule" />
+			<Assemblies />
+			<Tags>
+				<Tag key="DedicatedServerType" value="none" />
+				<Tag key="IsNoRenderModeElement" value="false" />
+			</Tags>
+		</SubModule>
+		<SubModule>
+			<Name value="MCMv5 Basic Implementation" />
+			<DLLName value="MCMv5.dll" />
+			<SubModuleClassType value="MCM.Internal.MCMImplementationSubModule" />
+			<Assemblies />
+			<Tags>
+				<Tag key="DedicatedServerType" value="none" />
+				<Tag key="IsNoRenderModeElement" value="false" />
+			</Tags>
+		</SubModule>
+
+		<!-- Bannerlord Module Loader for MBOptionScreen. Picks correct
+		     MBOptionScreen.v1.4.x.dll based on installed Bannerlord version.
+		     This is the UI screen that renders mod options. Do NOT rename. -->
+		<SubModule>
+			<Name value="Bannerlord Module Loader" />
+			<DLLName value="Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll" />
+			<SubModuleClassType value="Bannerlord.ModuleLoader.Bannerlord_MBOptionScreen" />
+			<Tags>
+				<Tag key="LoaderFilter" value="Bannerlord.MBOptionScreen.*.dll" />
+				<Tag key="LoaderSubModuleOrder" value="MCM.UI.MCMUIAdapterSubModule" />
+				<Tag key="LoaderSubModuleOrder" value="MCM.UI.MCMUISubModule" />
+			</Tags>
+		</SubModule>
 	</SubModules>
 </Module>

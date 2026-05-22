@@ -1,0 +1,229 @@
+# DR3 — Dependency Maintenance Guide
+
+**When to use:** Bannerlord ships a new minor/patch version. BUTR releases new versions of Harmony, UIExtenderEx, ButterLib, MCM, or MBOptionScreen. Microsoft.Extensions or Serilog needs a security update.
+
+This guide explains exactly which files to update and how to verify the change is safe.
+
+## Architecture summary
+
+`TAOM.Dependencies` module bundles the entire BUTR + supporting stack. **End-user impact: the launcher needs ONLY `TAOM` + `TAOM.Dependencies` enabled** — no external `Bannerlord.Harmony` / `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen` modules required.
+
+The dependencies fall into three categories:
+
+### Category 1 — NuGet packages (deploy automatically on build)
+
+These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csproj`:
+
+| Package | Version pin | What it provides |
+|---|---|---|
+| `Lib.Harmony` | `2.2.2` | `0Harmony.dll` (Harmony 2.x + MonoMod + Cecil + Iced ILRepack'd) |
+| `Bannerlord.UIExtenderEx` | `2.13.1` | `Bannerlord.UIExtenderEx.dll` |
+| `Bannerlord.MCM` | `5.11.3` | `MCMv5.dll` (the MCM API — settings attributes, base classes) |
+| `System.Runtime.CompilerServices.Unsafe` | `6.0.0` | `System.Runtime.CompilerServices.Unsafe.dll` (Harmony dep) |
+| `Harmony.Extensions` | `3.2.0.77` | Source-only extension methods |
+| `BUTR.Harmony.Analyzer` | `1.0.1.50` | Roslyn analyzer (compile-time only) |
+| `Bannerlord.BuildResources` | `1.1.0.129` | MSBuild tasks for module deployment |
+
+**Update procedure:**
+1. Open `Dependencies/TAOM.Dependencies.csproj` in an editor.
+2. Bump the `Version=` attribute of the relevant `<PackageReference>`.
+3. Run `dotnet restore Dependencies/TAOM.Dependencies.csproj`.
+4. Run `./build.ps1 -RunTests` — must pass.
+5. Run smoke test (see "Verification" below).
+
+### Category 2 — Bundled BUTR runtime DLLs (manually copied from Steam Workshop)
+
+These DLLs are NOT on NuGet. They're distributed as Bannerlord modules via Steam Workshop or NexusMods. We bundle them in `Dependencies/_Module/bin/Win64_Shipping_Client/`:
+
+| Module / DLL | Source (Steam Workshop ID) | Where to copy from |
+|---|---|---|
+| `Bannerlord.ButterLib.dll` | `2859232415` | `E:\Steam\steamapps\workshop\content\261550\2859232415\bin\Win64_Shipping_Client\` |
+| `Bannerlord.ButterLib.Implementation.1.4.0.dll` | `2859232415` | same as above |
+| `Bannerlord.ButterLib.Implementation.1.4.1.dll` | `2859232415` | same as above |
+| `Bannerlord.MBOptionScreen.v1.4.0.dll` | `2859238197` | `E:\Steam\steamapps\workshop\content\261550\2859238197\bin\Win64_Shipping_Client\` |
+| `Bannerlord.MBOptionScreen.v1.4.1.dll` | `2859238197` | same as above |
+| `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll` | `2859238197` | same as above |
+| `MCM.UI.Adapter.MCMv5.dll` | `2859238197` | same as above |
+
+**Steam Workshop folder mapping (Bannerlord app ID = 261550):**
+- `2859188632` — Bannerlord.Harmony (we DON'T bundle this DLL — we use Lib.Harmony NuGet instead)
+- `2859222409` — Bannerlord.UIExtenderEx (we DON'T bundle this DLL — we use Bannerlord.UIExtenderEx NuGet)
+- `2859232415` — Bannerlord.ButterLib (BUNDLED — no NuGet equivalent for runtime)
+- `2859238197` — Bannerlord.MBOptionScreen (MCM screen UI — BUNDLED)
+
+**Update procedure when Bannerlord ships new minor version (e.g., 1.5.0):**
+
+1. **Confirm BUTR has shipped matching versions.** Steam Workshop auto-updates the BUTR modules when they ship 1.5.x-compatible builds. Check the Workshop folders for new `Implementation.1.5.x.dll` and `MBOptionScreen.v1.5.x.dll` files.
+2. **Copy the new versioned DLLs** into `Dependencies/_Module/bin/Win64_Shipping_Client/`:
+   ```pwsh
+   Copy-Item "E:\Steam\steamapps\workshop\content\261550\2859232415\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.*.dll" `
+             -Destination "Dependencies\_Module\bin\Win64_Shipping_Client\"
+   Copy-Item "E:\Steam\steamapps\workshop\content\261550\2859238197\bin\Win64_Shipping_Client\Bannerlord.MBOptionScreen.v1.5.*.dll" `
+             -Destination "Dependencies\_Module\bin\Win64_Shipping_Client\"
+   ```
+3. **Also copy the loader + adapter** (these typically don't change per game version, but verify):
+   ```pwsh
+   Copy-Item "E:\Steam\steamapps\workshop\content\261550\2859238197\bin\Win64_Shipping_Client\Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll" `
+             -Destination "Dependencies\_Module\bin\Win64_Shipping_Client\" -Force
+   Copy-Item "E:\Steam\steamapps\workshop\content\261550\2859238197\bin\Win64_Shipping_Client\MCM.UI.Adapter.MCMv5.dll" `
+             -Destination "Dependencies\_Module\bin\Win64_Shipping_Client\" -Force
+   ```
+4. **Update Main/_Module/SubModule.xml** — bump `<DependedModuleMetadata id="Native" version="v1.5.0.*" />` to the new version.
+5. **Re-evaluate any older Implementation.1.4.x.dll files** — you can leave them for fallback compatibility OR delete them to slim the deployment. If deleting, also remove the version from `.gitignore` exception list.
+6. **Rebuild + test:** `./build.ps1 -RunTests`. Run smoke test.
+
+### Category 3 — Microsoft.Extensions + Serilog runtime DLLs (bundled with ButterLib, same source as Category 2)
+
+These ship alongside ButterLib in its Steam Workshop folder:
+
+| DLL | Purpose |
+|---|---|
+| `Microsoft.Bcl.HashCode.dll` | HashCode polyfill for net472 |
+| `Microsoft.Extensions.DependencyInjection.dll` + `.Abstractions.dll` | DI container for ButterLib |
+| `Microsoft.Extensions.Logging.dll` + `.Abstractions.dll` | Logging abstractions |
+| `Microsoft.Extensions.Options.dll`, `.Primitives.dll` | Configuration system |
+| `Serilog.dll`, `Serilog.Extensions.Logging.dll`, `Serilog.Sinks.File.dll` | ButterLib's structured logging backend |
+| `System.Buffers.dll`, `System.Memory.dll`, `System.Numerics.Vectors.dll`, `System.Collections.Immutable.dll`, `System.Reflection.Metadata.dll` | .NET runtime polyfills for net472 |
+
+**Update procedure:** copied alongside ButterLib in the Category 2 step above. Their versions are pinned by ButterLib's distribution; we don't manage them independently.
+
+## Verification (smoke test after any dependency update)
+
+1. **Close Bannerlord** if running (DLLs are file-locked).
+2. **Rebuild:** `./build.ps1 -RunTests`
+   - Both build and test must be green.
+3. **Verify TAOM.Dependencies bin deployment:**
+   ```pwsh
+   Get-ChildItem "$env:BANNERLORD_GAME_DIR\Modules\TAOM.Dependencies\bin\Win64_Shipping_Client\" | Select-Object Name, LastWriteTime
+   ```
+   - Should show ~25 DLLs with timestamps matching the build.
+4. **Launch Bannerlord** via Steam.
+5. **Check the launcher's enabled modules:** Only `TAOM` + `TAOM.Dependencies` (plus Native/SandBox/SandBoxCore/CustomBattle) should be required. `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen` should NOT be required.
+6. **Confirm in-game:**
+   - Mod loads (no "TAOM.TAOM submodule could not be loaded" warning).
+   - Options screen has a **Mod Options** tab.
+   - Mod Options tab lists TAOM's settings (BattleBalance, RevoltTuning, etc.).
+   - Click into a setting category and verify values render correctly.
+   - Change a value, exit Options, re-enter — value persists.
+
+If any of these fail, the most common causes are:
+- Workshop folder didn't have the expected version (Bannerlord 1.4.5 has BUTR 1.4.1 builds; if you're on 1.5.0 and BUTR hasn't shipped 1.5.x yet, MCM/ButterLib won't load).
+- DLL got corrupted on copy (re-copy from Workshop).
+- SubModule.xml version constraint doesn't match installed Bannerlord (check `Main/_Module/SubModule.xml`'s `DependedModuleMetadata id="Native" version=` line).
+
+## Common scenarios
+
+### Scenario A: Bannerlord ships 1.4.6 (minor patch within 1.4 line)
+
+Most likely: nothing needs to change. BUTR 1.4.1 builds typically work across all 1.4.x patches. Just bump `Main/_Module/SubModule.xml`'s Native version constraint to `v1.4.6.*` and run the smoke test.
+
+### Scenario B: Bannerlord ships 1.5.0 (new minor version)
+
+1. Wait for BUTR to ship matching builds (check NexusMods or BUTR Discord).
+2. Steam Workshop auto-updates the BUTR modules — verify new DLLs appear in `261550/<module-id>/bin/`.
+3. Copy `Bannerlord.ButterLib.Implementation.1.5.0.dll` + `Bannerlord.MBOptionScreen.v1.5.0.dll` into our bin/.
+4. Bump SubModule.xml Native version constraint.
+5. Test + commit.
+
+### Scenario C: Security patch in Microsoft.Extensions
+
+1. ButterLib's Workshop release will ship updated Microsoft.Extensions DLLs.
+2. Re-copy ALL the Microsoft.Extensions.* and Serilog.* DLLs from the ButterLib Workshop folder.
+3. No NuGet bump needed (we don't reference these as packages — only as bundled DLLs).
+4. Test + commit.
+
+### Scenario D: BUTR releases new MCM or ButterLib major version (e.g., MCM v6)
+
+This is a larger change. New major versions can:
+- Change SubModule class names (e.g., `MCM.MCMv6SubModule` instead of `MCM.MCMSubModule`).
+- Change runtime dependencies (e.g., require new Microsoft.Extensions version).
+- Add new SubModule classes (e.g., new screen renderer).
+
+Process:
+1. Read the BUTR release notes for the new version.
+2. Read the new `SubModule.xml` from the BUTR module's release.
+3. Update `Dependencies/_Module/SubModule.xml` to match (add/rename/remove `<SubModule>` entries).
+4. Bump NuGet version pins in `Dependencies/TAOM.Dependencies.csproj` if the new version is on NuGet.
+5. Copy the new bundled DLLs from Workshop.
+6. Test thoroughly — major versions often have breaking API changes that ripple into TAOM source.
+
+### Scenario E: We need a Lib.Harmony version bump (e.g., security patch in 0Harmony)
+
+1. Update `Dependencies/TAOM.Dependencies.csproj`'s `<PackageReference Include="Lib.Harmony" Version="X.Y.Z" />`.
+2. Update `Main/TAOM.csproj`'s `<PackageReference Include="Lib.Harmony" Version="X.Y.Z" IncludeAssets="compile" />` (must match).
+3. `dotnet restore`.
+4. Build + test.
+
+## Reference: file inventory
+
+After a fresh build, `Dependencies/_Module/bin/Win64_Shipping_Client/` should contain exactly these files:
+
+```
+0Harmony.dll                                                  (NuGet — Lib.Harmony)
+Bannerlord.UIExtenderEx.dll                                   (NuGet — Bannerlord.UIExtenderEx)
+MCMv5.dll                                                     (NuGet — Bannerlord.MCM)
+System.Runtime.CompilerServices.Unsafe.dll                    (NuGet — Lib.Harmony transitive)
+TAOM.Dependencies.dll                                         (built from our source)
+TAOM.Dependencies.pdb                                         (built from our source)
+Bannerlord.ButterLib.dll                                      (vendored from Workshop 2859232415)
+Bannerlord.ButterLib.Implementation.1.4.0.dll                 (vendored)
+Bannerlord.ButterLib.Implementation.1.4.1.dll                 (vendored)
+Bannerlord.MBOptionScreen.v1.4.0.dll                          (vendored from Workshop 2859238197)
+Bannerlord.MBOptionScreen.v1.4.1.dll                          (vendored)
+Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll         (vendored)
+MCM.UI.Adapter.MCMv5.dll                                      (vendored)
+Microsoft.Bcl.HashCode.dll                                    (vendored — ButterLib dep)
+Microsoft.Extensions.DependencyInjection.dll                  (vendored — ButterLib dep)
+Microsoft.Extensions.DependencyInjection.Abstractions.dll     (vendored — ButterLib dep)
+Microsoft.Extensions.Logging.dll                              (vendored — ButterLib dep)
+Microsoft.Extensions.Logging.Abstractions.dll                 (vendored — ButterLib dep)
+Microsoft.Extensions.Options.dll                              (vendored — ButterLib dep)
+Microsoft.Extensions.Primitives.dll                           (vendored — ButterLib dep)
+Serilog.dll                                                   (vendored — ButterLib dep)
+Serilog.Extensions.Logging.dll                                (vendored — ButterLib dep)
+Serilog.Sinks.File.dll                                        (vendored — ButterLib dep)
+System.Buffers.dll                                            (vendored — ButterLib dep)
+System.Collections.Immutable.dll                              (vendored — ButterLib dep)
+System.Memory.dll                                             (vendored — ButterLib dep)
+System.Numerics.Vectors.dll                                   (vendored — ButterLib dep)
+System.Reflection.Metadata.dll                                (vendored — ButterLib dep)
+```
+
+Total: ~28 DLLs.
+
+## Future improvement: ILRepack consolidation
+
+The current architecture ships ~28 separate DLLs in TAOM.Dependencies's bin folder. A future improvement is to use [`ILRepack.Lib.MSBuild.Task`](https://www.nuget.org/packages/ILRepack.Lib.MSBuild.Task/) to merge all of these into a single `TAOM.Dependencies.dll`. Steps:
+
+1. Add `<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.34.2" PrivateAssets="all" />` to Dependencies csproj.
+2. Add an MSBuild `Target` that runs after Build:
+   ```xml
+   <Target Name="ILRepack" AfterTargets="Build">
+     <ItemGroup>
+       <InputAssemblies Include="$(OutputPath)0Harmony.dll" />
+       <InputAssemblies Include="$(OutputPath)Bannerlord.UIExtenderEx.dll" />
+       <InputAssemblies Include="$(OutputPath)Bannerlord.ButterLib*.dll" />
+       <InputAssemblies Include="$(OutputPath)Bannerlord.MBOptionScreen*.dll" />
+       <InputAssemblies Include="$(OutputPath)MCMv5.dll" />
+       <InputAssemblies Include="$(OutputPath)MCM.UI.Adapter.MCMv5.dll" />
+       <InputAssemblies Include="$(OutputPath)Microsoft.Extensions.*.dll" />
+       <InputAssemblies Include="$(OutputPath)Serilog*.dll" />
+       <InputAssemblies Include="$(OutputPath)System.*.dll" />
+       <InputAssemblies Include="$(OutputPath)Microsoft.Bcl.HashCode.dll" />
+     </ItemGroup>
+     <ILRepack
+       Parallel="true"
+       Internalize="false"
+       InputAssemblies="@(InputAssemblies)"
+       OutputFile="$(OutputPath)TAOM.Dependencies.dll"
+       ... />
+   </Target>
+   ```
+3. Test thoroughly — ILRepack can cause issues with reflection (types end up under different assembly identity), assembly identity collisions, signing key conflicts.
+
+Not done in DR3 because:
+- The bundled-DLL approach already achieves the user-visible goal (no external BUTR modules in launcher).
+- ILRepack adds build-time complexity and a real risk of subtle runtime issues (e.g., HarmonySharedState's cross-assembly hash table doesn't expect merged Harmony).
+- Each iteration requires full game launch to validate.
+
+If ILRepack consolidation is later desired, do it as a focused project with thorough in-game testing of each module's functionality.
