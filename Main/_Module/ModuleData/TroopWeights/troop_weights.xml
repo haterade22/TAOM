@@ -53,18 +53,31 @@
     <!-- Royal elite (Weight 3.0) -->
     <TroopWeight id="erebor_oathsworn_royal_legionary" weight="3.0" />
     <TroopWeight id="erebor_noble_royal_warden" weight="3.0" />
+    <TroopWeight id="iron_hills_noble_royal_warden" weight="3.0" />
     <!-- Elite tier (Weight 2.0) -->
     <TroopWeight id="erebor_oathsworn" weight="2.0" />
     <TroopWeight id="erebor_oathsworn_legionary" weight="2.0" />
     <TroopWeight id="erebor_noble_gate_warden" weight="2.0" />
     <TroopWeight id="erebor_noble_shield_breaker" weight="2.0" />
+    <!-- Iron Hills Noble line (#212 KEYforce revamp) — T5–T8 -->
+    <TroopWeight id="iron_hills_noble_sharpshooter" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_veteran_sharpshooter" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_infantry" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_guard" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_shield_guard" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_gate_warden" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_hammer_guard" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_anvilguard" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_ironbreaker" weight="2.0" />
 
     <!-- ===== MORDOR ===== -->
-    <TroopWeight id="mordor_black_numenorean" weight="2.0" />
     <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />
     <TroopWeight id="mordor_uruk_captain" weight="2.0" />
-    <TroopWeight id="mordor_uruk_darkblade" weight="2.0" />
-    <TroopWeight id="mordor_uruk_deathwarden" weight="2.0" />
+    <!-- New Mordor uruk + warg elites (#212 KEYforce revamp) — T5–T6 -->
+    <TroopWeight id="mordor_uruk_heavy_archer" weight="2.0" />
+    <TroopWeight id="mordor_uruk_crossbow" weight="2.0" />
+    <TroopWeight id="mordor_uruk_heavy_crossbow" weight="2.0" />
+    <TroopWeight id="mordor_warg_beastmaster" weight="2.0" />
 
     <!-- ===== DOL GULDUR ===== -->
     <!-- Khamul's Shadow Line (Weight 2.0) -->
@@ -80,8 +93,6 @@
     <TroopWeight id="dg_uruk_black_guard" weight="2.0" />
     <TroopWeight id="dg_uruk_black_slayer" weight="2.0" />
     <TroopWeight id="dg_uruk_black_sharpshooter" weight="2.0" />
-    <TroopWeight id="dg_uruk_black_howler" weight="2.0" />
-    <TroopWeight id="dg_uruk_rage_bearer" weight="2.0" />
     <!-- Warg Riders (Weight 2.0) -->
     <TroopWeight id="dg_warg_red_fang" weight="2.0" />
     <TroopWeight id="dg_fell_warg_rider" weight="2.0" />
@@ -92,7 +103,7 @@
     <!-- ===== GUNDABAD ===== -->
     <TroopWeight id="gundabad_chosen_of_tharzog" weight="2.0" />
     <TroopWeight id="gundabad_warg_tamer" weight="2.0" />
-    <TroopWeight id="gundabad_warg_warrior" weight="2.0" />
+    <TroopWeight id="gundabad_bolgs_ironfang" weight="6.0" />
 
     <!-- ===== ISENGARD ===== -->
     <!-- Orthanc Guard Line (Weight 2.0) -->

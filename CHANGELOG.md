@@ -1,5 +1,65 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-23
+
+### feat(troops): KEYforce troop tree revamp — Mordor/Isengard/Dol Guldur/Gundabad/Erebor (#212)
+
+Follow-up to #211 (Armory item authoring). KEYforce's per-culture spec files at `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` define unit progression trees with per-tier armor + weapon loadouts. #211 authored items but deferred troop tree work; this issue closes that gap for 5 cultures (Rhun handled in a separate session).
+
+**Per-culture summary:**
+
+| Culture | New troops | Deleted | Refits | Validator |
+|---------|-----------|---------|--------|-----------|
+| **Gundabad** | 1 (`gundabad_bolgs_ironfang` T8) | 4 (`champion`, `pike_warrior`, `veteran_pike_warrior`, `warg_warrior`) | 16 (renames + equipment per spec) | PASS — 27 troops, 93 armor refs, 0 missing |
+| **Mordor** | 21 (10 orc + 6 Nurn Warg + 5 Black Uruk variants) | 14 (10 old uruk extras + 3 orc stubs + `mordor_black_numenorean` per user) | 9 (kept Black Uruk troops refitted to spec) | PASS — 35 troops, 123 armor refs, 0 missing |
+| **Isengard** | 13 orc-race troops (Section 1 entirely missing — `isengard_orc_*` line) | 0 (per user: keep `orthanc_*` lore-canonical line) | 30 (Uruk-Hai Legion + Scouts) | PASS — 51 troops, 126 armor refs, 0 missing |
+| **Dol Guldur** | 0 (Khamul human line already complete in file) | 12 (6 old Khamul stubs + 6 berserker line) | 17 (Uruk line + Fell Warg Riders) | PASS — 50 troops, 157 armor refs, 0 missing |
+| **Erebor** | 13 (Iron Hills Noble line: archer/infantry/shock branches) | 0 | 41 (Erebor Regular/Noble/Oathsworn + Iron Hills + Ironpass) | PASS — 58 troops, 218 armor refs, 0 missing |
+
+**Total: 48 new troops, 30 deletions, 113 equipment refits.** Build clean (0 errors). All 7 culture troop trees pass cross-reference validation.
+
+**Race attributes per CLAUDE.md `troops.md` table + user direction (2026-05-23):**
+- Mordor orc line + Nurn Warg Riders: `race="orc"`
+- Mordor Black Uruks: `race="uruk"`
+- Isengard new orc line: `race="orc"`
+- Isengard Uruk-Hai + Scouts: existing `race="uruk_hai"` / `"berserker"` (preserved for save compat)
+- Dol Guldur Uruk + Warg: `race="dg_uruk"`
+- Dol Guldur Khamul humans: no race attribute (vanilla human)
+- Gundabad Pale Uruk: `race="pale_uruk"`
+- Erebor + Iron Hills: `race="dwarf"`
+
+**Per-culture apply scripts (all idempotent, `--dry-run` / `--apply` flags):**
+- `tools/apply_gundabad_troop_revamp.py`
+- `tools/apply_mordor_troop_revamp.py`
+- `tools/apply_isengard_troop_revamp.py`
+- `tools/apply_dolguldur_troop_revamp.py`
+- `tools/apply_erebor_troop_revamp.py`
+
+**Downstream cleanup (per CLAUDE.md `troops.md` checklist):**
+- `tools/cleanup_deleted_troops_212.py` — removed 26 refs to deleted troops across `taom_partyTemplates.xml` (13), `troop_weights.xml` (5), `troop_resource_costs.xml` (8)
+- `tools/expand_party_templates_212.py` — added 47 new `PartyTemplateStack` entries to `kingdom_hero_party_<culture>_template` blocks (Mordor 21, Isengard 13, Erebor 13)
+- `VolunteerRecruitmentService.cs` — added `InitializeGundabadCulture()` fallback pool (Gundabad had no recruitment entries before); appended `iron_hills_noble` (T2 entry of new Erebor noble line) to `InitializeEreborCulture` so players can recruit it in villages
+- `troop_weights.xml` — added 13 elite-tier weights: 9 `iron_hills_noble_*` (incl. `royal_warden` at 3.0), 4 new Mordor uruk/warg elites (T5–T6 at 2.0)
+- `troop_resource_costs.xml` — added 4 new Mordor uruk/warg ranged + cavalry entries (`uruk_crossbow`, `uruk_heavy_crossbow`, `uruk_heavy_archer`, `warg_beastmaster`) gated by `war_spoils`
+
+**Decisions:**
+- "Delete if not in `.txt` file" applied strictly to TAOM-fabricated extras (Mordor uruk_feller/ravager/executioner/etc — 10 troops; old DG initiate/disciple stubs — 6 troops; berserker line not in spec — 6 troops; Gundabad duplicates of repurposed roles — 4 troops). Total 30 deletions.
+- **Exceptions (per user direction)**: Isengard `orthanc_*` line kept (4 troops — Tolkien-canonical Orthanc tower elite uruks). `mordor_black_numenorean` deleted (user explicitly removed).
+- DG `dg_uruk_veteran_warrior` repurposed in-place (level 21→16) rather than renamed, to preserve save compat per `troops.md` rule.
+
+**Out of scope:**
+- Rhun (user is handling in a separate session).
+- Lossarnach pauldrons (Gondor #99 known limitation).
+- Full localization XML entries for the 47 new troop display names (game falls back to display name in NPCCharacter XML).
+- Patrol-level / vassal-reward templates for new troops (only `kingdom_hero_party_*` templates expanded this pass).
+- Dol Guldur Khamul human troops still need party-template wiring — they're already in `kingdom_hero_party_dolguldur_template` per the audit.
+
+**Known limitations (pre-existing — not regressions from #212; tracked for follow-up):**
+- Mordor and Isengard have no `VolunteerRecruitmentService` pools at all (no `InitializeMordor*` / `InitializeIsengard*` methods). New troops are fielded by AI lords via party templates but are not recruitable from villages. This was the same state before #212; closing the gap would be a separate follow-up issue.
+- Pre-existing Mordor uruk troops (`archer`, `shieldbearer`, `infantry` at L26) lack `war_spoils` resource cost. Same baseline as before #212.
+
+Issue: #212.
+
 ## 2026-05-22
 
 ### feat(armory): KEYforce multi-culture armor revamp — Mordor/Isengard/Dol Guldur/Erebor/Rhun (#211)
