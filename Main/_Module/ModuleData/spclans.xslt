@@ -188,8 +188,9 @@
   <!-- ==================== MORDOR CLANS (Empire South) ==================== -->
   <xsl:template match="Faction[@id='clan_empire_south_1']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_1}Dôlgubêth</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.328.166.1528.1528.764.764.1.0.0.19012.149.116.700.700.755.705.1.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -197,8 +198,9 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_2']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_2}Goearnediad</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.116.166.1528.1528.764.764.1.0.0.19002.31.116.500.500.674.751.1.0.0.427.31.116.654.579.816.750.0.0.90</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -206,8 +208,9 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_3']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_3}Melkondili</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.2000.166.1528.1528.764.764.1.0.0.19015.142.116.800.800.759.755.1.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -215,8 +218,9 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_4']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_4}Môrgukar</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.211.166.1528.1528.764.764.1.0.0.19011.2000.171.900.900.756.818.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -224,9 +228,10 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_5']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_5}Bolgrûkig</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_ES2</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.149.166.1528.1528.764.764.1.0.0.18000.172.171.650.600.764.743.0.0.10</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -234,8 +239,9 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_6']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_6}Kâm Lagúrz</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.96.166.1528.1528.764.764.1.0.0.19008.191.171.1000.1000.764.824.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -243,8 +249,9 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_7']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_7}Bragzûkish</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.149.166.1528.1528.764.764.1.0.0.19003.172.171.650.600.764.743.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -252,8 +259,9 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_8']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_8}Khôrahîm</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
@@ -261,9 +269,10 @@
 
   <xsl:template match="Faction[@id='clan_empire_south_9']">
     <xsl:copy>
-      <xsl:apply-templates select="@*[local-name() != 'name']"/>
+      <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_9}Wâwrim</xsl:attribute>
       <xsl:attribute name="owner">Hero.lord_1_48_3</xsl:attribute>
+      <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>

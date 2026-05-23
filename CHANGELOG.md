@@ -2,6 +2,58 @@
 
 ## 2026-05-22
 
+### feat(armory): KEYforce multi-culture armor revamp — Mordor/Isengard/Dol Guldur/Erebor/Rhun (#211)
+
+Mesh-first authoring pass following the Gondor (#99) pipeline. KEYforce shipped updated specs for 7 cultures; this pass closed all Armory item gaps where meshes are available. Total **277 new Armory items** across 5 cultures (Gundabad was already complete at 101/101).
+
+| Culture | New items | Notes |
+|---------|-----------|-------|
+| Mordor | 103 | Generic orc pool — sk_gn_orc_* helmets (9 shapes) + sk_md_orc_* paint helmets/chests/pauldrons/bracers/boots. Black Uruk pool (90 sk_uruk_mordor_*) already authored. |
+| Isengard | 15 | sk_is_orc_* paint helmets (per spec — Pik/Rdr/Sct excluded, no IS variants) + clo_urukscout_* cloth overlays. Uruk-Hai Legion (137) + scout base (4) already authored. |
+| Dol Guldur | 14 | sk_dg_orc_* paint helmets. Brt + Vgd excluded per spec (no DG variants). 113 sk_dg_uruk_* + 194 sk_dg_khml_* already authored. |
+| Gundabad | 0 | Already complete (101/101 sk_gb_uruk_* items match spec exactly). |
+| Erebor | 123 | sk_dwarf_iron_* Iron Hills — was completely unauthored. 174 sk_dwarf_erebor_* core already shipped. Auto-classified per ID pattern (helmet/chest/pauldron/bracer/boots × light/medium/heavy/elite/lord). |
+| Rhun | 22 | Final Loke-Rim elite helmets (21) + 1 heavy hood. 564/586 spec items already in Armory; this closes the gap. |
+
+**New tooling (one per culture):**
+- `tools/generate_mordor_armor.py`
+- `tools/generate_isengard_armor.py`
+- `tools/generate_dolguldur_armor.py`
+- `tools/generate_erebor_armor.py` (parses spec file directly)
+- `tools/generate_rhun_armor.py`
+
+All idempotent, default to Steam install path, reuse the `STAT_TIERS` table from `tools/generate_gondor_armor.py` for stat consistency across cultures.
+
+**Decision per user direction**: "use the spec as a guide, but create variations within that guide to use all meshes. It is important all armor is showed off." → mesh-first authoring: every shipped mesh has a corresponding item; spec items without meshes are deferred to artist's next pass.
+
+**Verification:**
+- Build: 0 errors.
+- Troop tree validation (`tools/validate_all_troop_refs.py` — new generic multi-culture validator): all 7 cultures PASS. 504 troops, 1,112 armor refs, 0 missing.
+
+| Culture | Troops | sk_*/clo_*/urukscout_* refs | Missing |
+|---------|--------|----------------------------|---------|
+| gondor | 179 | 155 | 0 |
+| mordor | 29 | 87 | 0 |
+| isengard | 39 | 137 | 0 |
+| dolguldur | 63 | 190 | 0 |
+| gundabad | 31 | 99 | 0 |
+| erebor | 46 | 169 | 0 |
+| rhun_new | 117 | 275 | 0 |
+
+**Patches applied during validation:**
+- Dol Guldur: added 2 missing items referenced by troops_dolguldur.xml — `sk_dg_uruk_bracer_elite_j` (spec-canonical Archer line per spec line 124) and `sk_dg_uruk_pauldron_med_c` (variant of med_a/b for troop-XML reference). Pre-existing broken refs, not introduced by this revamp.
+
+**Post-review correction (`/deep-review` data-flow agent caught):**
+- Erebor `sk_dwarf_iron_*` items were initially authored to `LOTRLOME_items/erebor/` but the canonical home is `LOTRLOME_items/iron_hills/` (where 125 pre-existing Iron Hills items already lived). 118 of the 123 authored items duplicated existing IDs across the two folders, which would have caused engine shadowing/warnings at runtime. Rolled back via `tools/rollback_erebor_iron_misfile.py --apply` and re-ran `generate_erebor_armor.py` against `iron_hills/`. Net: 5 new items added to `iron_hills/shoulder_armors.xml` (the 5 spec items not previously authored), 118 duplicates avoided. Generator's `DEFAULT_ARMORY_BASE` now correctly targets `iron_hills/`. RCA: `docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md`.
+
+**Out of scope (deferred to future passes):**
+- Troop equipment refits per culture (items authored, troop loadouts not re-wired in this commit).
+- Dol Guldur Khamul human T4–T9 troop line (armor items exist; troop tree authoring pending).
+- Lossarnach pauldrons (#99 known limitation).
+- Goblin / Guldur elite / Half-orc — spec explicitly says "DO NOT IMPLEMENT — future content".
+
+Issue: #211.
+
 ### fix(cc): author missing `as_elf_facegen` + `as_elf_female_facegen` — elves on parent menu render upright
 
 Mirkwood / Rivendell parents on the Character Creation parent-menu screen rendered as a horizontally-stretched / contorted mesh (no proper standing pose). Same failure-mode class as the 2026-05-04 "broken custom-race CC parents" bug, but with a different root cause: not a 1.2-vs-1.3 action-type-name mismatch, but a complete absence of the action_set the engine looks for.
