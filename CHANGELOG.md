@@ -2,6 +2,17 @@
 
 ## 2026-05-23
 
+### chore(build): vendor warg + native DLLs in Main/_Module/bin, drop redundant MCMv5 ref
+
+Adds `BehaviorTrees.dll`, `BehaviorTreeWrapper.dll`, `MinHook.x64.dll`, and `TAOM.NativeSkinFixes.dll` to the repo via `.gitignore` allowlist (same pattern as `Dependencies/_Module/bin/`). Fresh clones and CI can now build — previously these vendored DLLs were caught by the top-level `bin/` ignore and had to be sideloaded by hand on every machine. The `Bannerlord.BuildResources` `PostBuildCopyToModules` target already mirrors the folder into the Steam install on every build, so commits to these DLLs (e.g., when `TAOM.NativeSkinFixes.dll` is recompiled externally) now propagate to teammates automatically.
+
+Removes the vestigial `<Reference Include="MCMv5">` HintPath block from `Main/TAOM.csproj`. No C# code uses the `MCMv5.` namespace — `using MCM.*` calls in `Main/Features/TaomSettings.cs` are served at compile time by the `Bannerlord.MCM` NuGet (`IncludeAssets="compile"`) and at runtime by `TAOM.Dependencies` (`Bannerlord.MBOptionScreen*.dll` + `MCM.UI.Adapter.MCMv5.dll`). `MCMv5.dll` correspondingly removed from `Main/_Module/bin/Win64_Shipping_Client/` (repo + install + editor mirror). Build verified clean (0 errors).
+
+CLAUDE.md "Key Paths" row updated: "BT DLLs" → "Vendored Main-module DLLs" covering all 4 vendored DLLs + the rebuild workflow + the MCMv5-is-elsewhere guidance.
+
+Not-tested: install-side smoke (MCM settings open + warg battle) — recommend before merge.
+Save-compat: none — no field/save changes.
+
 ### feat(troops): KEYforce troop tree revamp — Mordor/Isengard/Dol Guldur/Gundabad/Erebor (#212)
 
 Follow-up to #211 (Armory item authoring). KEYforce's per-culture spec files at `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` define unit progression trees with per-tier armor + weapon loadouts. #211 authored items but deferred troop tree work; this issue closes that gap for 5 cultures (Rhun handled in a separate session).

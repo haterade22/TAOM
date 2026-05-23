@@ -54,10 +54,6 @@
 			<HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="MCMv5">
-			<HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

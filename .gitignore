@@ -35,6 +35,23 @@ Dependencies/_Module/bin/Win64_Shipping_Client/*
 !Dependencies/_Module/bin/Win64_Shipping_Client/System.Numerics.Vectors.dll
 !Dependencies/_Module/bin/Win64_Shipping_Client/System.Reflection.Metadata.dll
 
+# Vendored runtime DLLs for Main module. Top-level `bin/` + `_Module/bin/`
+# rules above ignore everything by default — un-ignore the specific DLLs
+# we ship. TAOM.dll + TAOM.pdb stay ignored (build outputs, regenerated
+# by `dotnet build`). MCMv5.dll is provided by TAOM.Dependencies + the
+# Bannerlord.MCM NuGet — NOT vendored here. TAOM.NativeSkinFixes.dll is
+# TAOM-owned C++ rebuilt outside this repo; drop the new .dll here and
+# commit when it changes.
+!Main/_Module/bin/
+!Main/_Module/bin/Win64_Shipping_Client/
+Main/_Module/bin/Win64_Shipping_Client/*
+!Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll
+!Main/_Module/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll
+!Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll
+!Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll
+# Gaming.Desktop sibling: build outputs only — stays ignored.
+Main/_Module/bin/Gaming.Desktop.x64_Shipping_Client/
+
 # Visual Studio
 .vs/
 *.user
