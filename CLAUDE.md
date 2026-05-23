@@ -620,12 +620,30 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | Item | Details |
 |------|---------|
 | **Armory dependency** | `LOTRLOME_Armory` (NOT `Armory_2` — it will be deleted) |
-| **Item definitions** | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\<culture>\` |
-| **Item files per culture** | `body_armors.xml`, `head_armors.xml`, `leg_armors.xml`, `shoulder_armors.xml`, `arm_armors.xml` |
+| **Item definitions** | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\<folder>\` |
+| **Item files per folder** | `body_armors.xml`, `head_armors.xml`, `leg_armors.xml`, `shoulder_armors.xml`, `arm_armors.xml` |
 | **Global items** | `LOTRLOME_items\LOTRAOM_weapons.xml`, `LOTRAOM_shields.xml`, `LOTRAOM_horses.xml` |
 | **Gondor prefix** | `sk_gd_ano_` (Anorien), `sk_gd_mns_` (Minas Tirith), `sk_gd_osg_` (Osgiliath), `sk_gd_cair_` (Cair Andros), `sk_gd_ith_` (Ithilien) |
+| **KEYforce spec drops** | `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` — per-culture item lists + unit progression specs |
 
-**Validation:** When adding/changing equipment, always verify item IDs exist in Armory. Characters appear in underwear when items are missing. Cross-reference with `grep -o 'id="[^"]*"' <armory-file>` to get valid IDs.
+### Armory folder canonical home per item-id prefix
+
+**MANDATORY: before authoring a new item, grep ALL `LOTRLOME_items/*/` subfolders for the prefix.** The first folder that already contains items with that prefix is the canonical home. Adding items to a different folder creates runtime duplicate-ID warnings (engine silently shadows one entry). Even when the spec file is named after culture X, the canonical folder may be a sub-culture (e.g., dwarf items live in `iron_hills/`, not `erebor/`).
+
+| Item prefix | Canonical folder | Notes |
+|-------------|------------------|-------|
+| `sk_gd_*` | `gondor/` | All Gondor regional items (Anorien through Lamedon) |
+| `sk_md_orc_*`, `sk_gn_orc_*`, `sk_uruk_mordor_*`, `ar_ardunian_*` | `mordor/` | Generic orc pool shared across factions also lives here |
+| `sk_uruk_hai_*`, `sk_is_orc_*`, `urukscout_*`, `clo_urukscout_*` | `isengard/` | |
+| `sk_dg_uruk_*`, `sk_dg_orc_*` | `dol_guldur/` | |
+| `sk_dg_khml_*` (Khamul) | `rhun/` | Cross-faction with Dol Guldur — lives in `rhun/` |
+| `sk_gb_uruk_*` | `gundabad/` | |
+| `sk_dwarf_erebor_*` | `erebor/` | Core dwarven set |
+| `sk_dwarf_iron_*` | **`iron_hills/`** | NOT `erebor/` — caught in #211 deep-review (RCA: `docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md`) |
+| `sk_dwarf_dain_*` | `erebor/` | Dain's set |
+| `sk_rh_loke_*`, `sk_rh_drag_*` | `rhun/` | Loke-Rim + Dragon-Wrath |
+
+**Validation:** When adding/changing equipment, always verify item IDs exist in Armory. Characters appear in underwear when items are missing. Run `python tools/validate_all_troop_refs.py` to cross-check every `sk_*/ar_*/clo_urukscout_*/urukscout_*` reference across all 7 troop XML files in one pass.
 
 ## Rebalancing Tools
 
@@ -639,4 +657,11 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | `tools/generate_gondor_armor.py` | Phase-1 Gondor armor item author (Anorien/MT/Osg/Cair/Ith) — writes to `lotraom-assets` | `--dry-run`, `--apply`, `--armory-path` |
 | `tools/generate_gondor_armor_phase2.py` | Phase-2 author for 8 missing Gondor families (Lossarnach/PG/Har/Anf/Sere/Leb/Bel/Lam) — defaults to Steam install (issue #99) | `--dry-run`, `--apply`, `--armory-path` |
 | `tools/apply_gondor_troop_revamp.py` | Mechanical EquipmentRoster swap for 107 Gondor troops + delete orphan blocks (issue #99) | `--dry-run`, `--apply` |
-| `tools/validate_gondor_refs.py` | Underwear-bug gate: cross-checks every `sk_gd_*`/`sk_dg_*` reference in `troops_gondor.xml` against Armory IDs | (no flags) |
+| `tools/validate_gondor_refs.py` | Underwear-bug gate (Gondor-only legacy): cross-checks `sk_gd_*` refs in `troops_gondor.xml` against Armory | (no flags) |
+| `tools/generate_mordor_armor.py` | Mordor generic orc pool author — `sk_gn_orc_*` (9 helmet shapes) + `sk_md_orc_*` paint chests/pauldrons/bracers/boots (issue #211) | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/generate_isengard_armor.py` | Isengard `sk_is_orc_*` paint helmets + `clo_urukscout_*` cloth overlays (issue #211) | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/generate_dolguldur_armor.py` | Dol Guldur `sk_dg_orc_*` paint helmets (Brt+Vgd excluded per spec; issue #211) | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/generate_erebor_armor.py` | Erebor Iron Hills `sk_dwarf_iron_*` author — parses spec at runtime; **defaults to `iron_hills/` folder** (NOT `erebor/`; issue #211) | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/generate_rhun_armor.py` | Rhun final Loke-Rim elite helmets — closes the 22-item gap (issue #211) | `--dry-run`, `--apply`, `--armory-path` |
+| `tools/validate_all_troop_refs.py` | **Generic multi-culture validator** (preferred over `validate_gondor_refs.py`) — cross-checks `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs (issue #211) | (no flags) |
+| `tools/rollback_erebor_iron_misfile.py` | One-off cleanup script: removes mis-filed `sk_dwarf_iron_*` items from `erebor/` (used once during #211 deep-review RCA) | `--dry-run`, `--apply` |

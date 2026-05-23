@@ -61,13 +61,15 @@ This pass extends the same pipeline to 5 more cultures via one Python generator 
 | `LOTRLOME_Armory/.../mordor/{head,body,shoulder,arm,leg}_armors.xml` | 103 new generic orc items |
 | `LOTRLOME_Armory/.../isengard/{head,body}_armors.xml` | 15 new paint + scout items |
 | `LOTRLOME_Armory/.../dol_guldur/head_armors.xml` | 14 new DG-paint helmets |
-| `LOTRLOME_Armory/.../erebor/*.xml` | 123 new Iron Hills items |
+| `LOTRLOME_Armory/.../iron_hills/*.xml` | 125 pre-existing + 5 new Iron Hills items (`sk_dwarf_iron_*` — **NOT in `erebor/` folder, see Deep-Review Correction below**) |
 | `LOTRLOME_Armory/.../rhun/head_armors.xml` | 22 new Loke-Rim elite helmets |
 | `tools/generate_mordor_armor.py` | Mordor generator |
 | `tools/generate_isengard_armor.py` | Isengard generator |
 | `tools/generate_dolguldur_armor.py` | Dol Guldur generator |
-| `tools/generate_erebor_armor.py` | Erebor generator (parses spec at runtime) |
+| `tools/generate_erebor_armor.py` | Erebor generator (parses spec at runtime; targets `iron_hills/` folder) |
 | `tools/generate_rhun_armor.py` | Rhun generator (closes 22-item gap) |
+| `tools/validate_all_troop_refs.py` | Multi-culture cross-reference gate (replaces Gondor-only `validate_gondor_refs.py`) |
+| `tools/rollback_erebor_iron_misfile.py` | One-off cleanup script used during deep-review RCA |
 
 ## Dependencies
 
@@ -99,7 +101,21 @@ Same pattern — append to the per-culture generator's `ArmorItem` list, re-run 
 
 No runtime impact. Pure data addition. ~277 new items add ~15 KB total to per-culture item indexes — negligible vs the multi-MB Bannerlord item system.
 
+## Deep-Review Correction (2026-05-22)
+
+`/deep-review` Agent 5 (data flow) caught one HIGH issue post-implementation: the Erebor generator initially wrote 123 `sk_dwarf_iron_*` items to `LOTRLOME_items/erebor/`, but the canonical home for that prefix is `LOTRLOME_items/iron_hills/` (125 pre-existing items). 118 IDs ended up in both folders → would have caused runtime engine warnings/shadowing.
+
+**Fix (in-session):**
+1. `tools/rollback_erebor_iron_misfile.py --apply` removed all 123 mis-filed items from `erebor/*.xml`.
+2. `generate_erebor_armor.py` `DEFAULT_ARMORY_BASE` re-targeted to `iron_hills/`.
+3. Re-running the generator added the 5 unique spec items to `iron_hills/shoulder_armors.xml` (the items not previously in the folder).
+
+**Net result:** 0 duplicates across folders, 5 new items shipped (not 123 as originally claimed). Verified via `tools/validate_all_troop_refs.py` — 7/7 cultures PASS.
+
+**Codified lesson:** CLAUDE.md "Equipment & Armory" now includes a per-prefix canonical-folder table. Memory: `feedback_multi_folder_id_uniqueness.md`. RCA: `docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md`.
+
 ## GitHub Issue
 
 - **Issue:** [#211 — feat(armory): KEYforce multi-culture armor revamp](https://github.com/haterade22/TAOM/issues/211)
 - **Status:** Closed (after this commit)
+- **RCA:** [docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md](../reviews/rca-multi-culture-armor-revamp-2026-05-22.md)
