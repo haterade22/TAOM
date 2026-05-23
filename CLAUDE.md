@@ -665,3 +665,10 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | `tools/generate_rhun_armor.py` | Rhun final Loke-Rim elite helmets — closes the 22-item gap (issue #211) | `--dry-run`, `--apply`, `--armory-path` |
 | `tools/validate_all_troop_refs.py` | **Generic multi-culture validator** (preferred over `validate_gondor_refs.py`) — cross-checks `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs (issue #211) | (no flags) |
 | `tools/rollback_erebor_iron_misfile.py` | One-off cleanup script: removes mis-filed `sk_dwarf_iron_*` items from `erebor/` (used once during #211 deep-review RCA) | `--dry-run`, `--apply` |
+| `tools/apply_mordor_troop_revamp.py` | Mechanical EquipmentRoster swap + 21 new orc/Nurn Warg/Black Uruk troops + 14 deletes (issue #212) | `--dry-run`, `--apply` |
+| `tools/apply_isengard_troop_revamp.py` | EquipmentRoster swap + 13 new `isengard_orc_*` troops (Section 1 of spec); `orthanc_*` line preserved (issue #212) | `--dry-run`, `--apply` |
+| `tools/apply_dolguldur_troop_revamp.py` | EquipmentRoster swap (17 refits) + 12 deletes (old Khamul stubs + berserker line); flexible indent regex (issue #212) | `--dry-run`, `--apply` |
+| `tools/apply_gundabad_troop_revamp.py` | EquipmentRoster swap + 1 new `gundabad_bolgs_ironfang` T8 + 4 deletes (issue #212) | `--dry-run`, `--apply` |
+| `tools/apply_erebor_troop_revamp.py` | EquipmentRoster swap (41 refits) + 13 new `iron_hills_noble_*` troops; 0 deletes (issue #212) | `--dry-run`, `--apply` |
+| `tools/cleanup_deleted_troops_212.py` | Sweep deleted-troop refs from `taom_partyTemplates.xml`, `troop_weights.xml`, `troop_resource_costs.xml` (issue #212) | `--dry-run`, `--apply` |
+| `tools/expand_party_templates_212.py` | Insert new troops into `kingdom_hero_party_<culture>_template` blocks via positional splice (issue #212) | `--dry-run`, `--apply` |
