@@ -2,6 +2,42 @@
 
 ## 2026-05-23
 
+### feat(troops): Rhun recruitment + Easterling → Loke-Rim + conditional-pool API (#215, commit bce0824)
+
+Per-settlement Rhûn volunteer pools (the last major TAOM culture without recruitment overrides — every Rhun notable previously fell through to vanilla `DefaultVolunteerModel.GetBasicVolunteer()` and produced an `easterling_recruit`). Easterling line retired and replaced by Loke-Rim throughout. Wainrider elite cavalry get proper tier-4 Rhun barding. Gondor recruitment moved to JSON config with a new conditional-pool API for ownership-gated pools. Ithil Guard line re-equipped.
+
+**`VolunteerRecruitmentService` additions:**
+- `InitializeRhunSettlements` + `InitializeRhunCulture`: 6 themed pools (Dragon-Wrath / Balcoth / Far-Rhun / Wain / mixed / Kharaghul) across 20 Rhûn settlements + `khuzait` culture fallback. Castle entries cover bound villages via `VolunteerContextAdapter` `BoundSettlementId` resolution.
+- `AddSettlementConditional` + `ConditionalSettlementMap` + `ResolveConditionalPool`: new API for state-sensitive pools. Predicate evaluated at lookup time. Conditional resolves BEFORE regular settlement; falls through cleanly on predicate=false.
+- `EnsureGondorJsonLoaded`: idempotent (`Interlocked.CompareExchange`) instance-side JSON loader. Hand-written Gondor pools kept as safety net; JSON overwrites matching keys at runtime. Tests where the JSON file is absent fall back to hand-written behaviour automatically.
+
+**New: `GondorRecruitmentJsonLoader`** — parses `Main/_Module/ModuleData/recruitment_pools/gondor.json` (23 chance groups). Percentages → integer weights via *10000 (preserves 33.3334% → 333334 precision). Rejects NaN/Infinity/negative/blank entries with warning. Fail-closed on unrecognised condition strings; only the Ithil Guard rule ("town_ES2 + Gondor-owned" substring match) currently recognised.
+
+**`VolunteerContext` + `VolunteerContextAdapter`:** + `OwnerCultureId` field populated from `Settlement.OwnerClan?.Culture?.StringId` (read live so kingdom flips take effect for the next pick). Existing 4-arg ctor still works (defaults `OwnerCultureId=null`, predicate evaluates false, conditional pool can't fire — safe).
+
+**Easterling line orphan** (13 troops in `troops_rhun_new.xml`): `easterling_recruit` flipped to `is_basic_troop="false"`; NPCCharacter blocks preserved per `.claude/rules/troops.md` "Never delete troops". All references stripped:
+- `spcultures.xslt` khuzait `basic_troop` → `loke_rim_initiate`, `elite_basic_troop` → `loke_rim_cavalry`
+- `npcs_rhun.xml` `villager_rhun` upgrade_target → `loke_rim_initiate`
+- `taom_partyTemplates.xml` — 8 Rhun party templates rewired via role-preserving Easterling→Loke-Rim map (recruit→initiate, militia→footman, bowman→bowman, footman_new→infantry, skirmisher_new→archer, swordsman_new→shieldguard, halberdier_new→maceman, cavalry_new→cavalry, archer_new→marksman, veteran_*→gilded_*)
+
+**Wainrider equipment:** Khan's Chosen / Swift-Chariot / Warlord Chariot HorseHarness → `lrd_horse_armour_4` (tier-4 Kataphrakt for level 41-46 cavalry). `khuzait_charger` retained.
+
+**Ithil Guard line equipment** (`troops_gondor.xml`):
+- 4 melee troops (watcher/veteran/sergeant/captain): each gains 2 new EquipmentRoster blocks (`wm_gondor_lamedon_2h_sword_e` 2H sword + `wm_gondor_swanknight_speara` Belfalas Banner Spear 2H polearm) alongside existing 1H+shield roster — engine randomises per spawn for visual + tactical variety.
+- 3 archer troops (longbowman/sharpshooter/moon_guard) standardised on `gondor_steel_bow` + `piercing_arrows` ×2 (vanilla damage=4 vs prior `bodkin_arrows_a` damage=3).
+
+**38 new tests** (Rhun pools + boundary rolls + JSON loader hardening + conditional pool both states + parser edge cases incl. NaN/negative/malformed/missing-file + integration test against real JSON). Full suite **2418/2420** (2 unrelated skips).
+
+**Save-compat:** Easterling NPCCharacter blocks preserved; existing parties keep their Easterling troops, new spawns are Loke-Rim only.
+**Constraint:** `IModLogger` has no `IsDebugEnabled` — hot-path LogDebug interpolation in `GetVolunteerTroopId` is pre-existing (not introduced this PR), deferred per RCA.
+**Research:** `Settlement.OwnerClan?.Culture?.StringId` verified against installed v1.4.5 `TaleWorlds.CampaignSystem.Settlement`; `BasePath.Name` returns `"../../"` on desktop.
+
+**Deep-review caught 1 HIGH (data flow agent):** `wain_cavalry` referenced in `InitializeRhunSettlements` Wain pool didn't exist (typo from spec "Wain Cavalry"); actual ID is `wainrider_cavalry`. Fixed + test updated. Sibling-naming-symmetry is a false-positive signal — codified in `feedback_verify_troop_ids_against_canonical_xml.md`.
+
+Feature doc: [`docs/features/volunteer-recruitment.md`](docs/features/volunteer-recruitment.md). RCA: [`docs/reviews/rca-rhun-gondor-recruitment-2026-05-23.md`](docs/reviews/rca-rhun-gondor-recruitment-2026-05-23.md).
+
+**Pre-existing horse-armor audit gap (flagged, NOT fixed this PR):** 8 Rhun cavalry troops at level 21-26 still use `lrd_horse_armour_4` despite the new "tier-4 → level 31+ only" rule (`balcoth_horse_archer`, `far_rhun_cavalry`, `far_rhun_horse_master`, `kharaghul_raider`, `kharaghul_horse_scout`, `kharaghul_horse_archer`, `kharaghul_horse_master`, `darkhun_horseman`, `darkhun_cavalry`). Will be addressed in a follow-up.
+
 ### chore(build): vendor warg + native DLLs in Main/_Module/bin, drop redundant MCMv5 ref
 
 Adds `BehaviorTrees.dll`, `BehaviorTreeWrapper.dll`, `MinHook.x64.dll`, and `TAOM.NativeSkinFixes.dll` to the repo via `.gitignore` allowlist (same pattern as `Dependencies/_Module/bin/`). Fresh clones and CI can now build — previously these vendored DLLs were caught by the top-level `bin/` ignore and had to be sideloaded by hand on every machine. The `Bannerlord.BuildResources` `PostBuildCopyToModules` target already mirrors the folder into the Steam install on every build, so commits to these DLLs (e.g., when `TAOM.NativeSkinFixes.dll` is recompiled externally) now propagate to teammates automatically.
