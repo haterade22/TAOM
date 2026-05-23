@@ -12,6 +12,13 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     private static readonly Dictionary<string, List<VolunteerChance>> SettlementMap = new();
     private static readonly Dictionary<string, List<VolunteerChance>> ClanMap = new();
     private static readonly Dictionary<string, List<VolunteerChance>> CultureMap = new();
+    // Conditional pools: checked BEFORE the regular SettlementMap. Predicate receives the live VolunteerContext.
+    // Used for state-sensitive pools like Ithil Guard at town_ES2 (only when Gondor-owned).
+    private static readonly Dictionary<string, (Func<VolunteerContext, bool> Condition, List<VolunteerChance> Pool)> ConditionalSettlementMap = new();
+    // Idempotent guard for instance-side JSON loading. Hand-written Gondor pools (InitializeGondorSettlements + InitializeGondorClans)
+    // stay as a safety net; JSON entries OVERWRITE matching settlement keys when present (in-game). Tests where the JSON file
+    // is missing fall back to hand-written behaviour automatically.
+    private static int _gondorJsonLoadAttempted;
 
     static VolunteerRecruitmentService()
     {
@@ -31,17 +38,52 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeShaghânaCulture();
         InitializeAbanissaClans();
         InitializeAbanissaCulture();
+        InitializeRhunSettlements();
+        InitializeRhunCulture();
+        InitializeGundabadCulture();
+    }
+
+    // --- Gundabad Culture Fallback ---
+    // Settlements/clans absent — Gundabad in TAOM is hostile faction; volunteer recruitment
+    // falls back to culture pool. Per #212 KEYforce troop revamp (Pale Uruk T2–T8).
+    private static void InitializeGundabadCulture()
+    {
+        CultureMap["gundabad"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("gundabad_snaga", 7),
+            new VolunteerChance("gundabad_grunt", 2),
+            new VolunteerChance("gundabad_fighter", 1)
+        };
     }
 
     public VolunteerRecruitmentService(IRandomProvider random, IModLogger logger)
     {
         _random = random;
         _logger = logger;
+        EnsureGondorJsonLoaded();
+    }
+
+    // Loads the Gondor recruitment-pools JSON once per process. Idempotent. Failures are logged and swallowed —
+    // the hand-written InitializeGondorSettlements/InitializeGondorClans remain as the safety net.
+    private void EnsureGondorJsonLoaded()
+    {
+        if (System.Threading.Interlocked.CompareExchange(ref _gondorJsonLoadAttempted, 1, 0) != 0)
+            return;
+        try
+        {
+            GondorRecruitmentJsonLoader.Load(AddSettlement, AddSettlementConditional, _logger);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"VolunteerRecruitmentService: Gondor JSON loader threw {ex.GetType().Name}: {ex.Message}");
+        }
     }
 
     public string GetVolunteerTroopId(VolunteerContext context)
     {
-        var pool = ResolvePool(context.SettlementId, SettlementMap)
+        var pool = ResolveConditionalPool(context.SettlementId, context)
+                ?? ResolveConditionalPool(context.BoundSettlementId, context)
+                ?? ResolvePool(context.SettlementId, SettlementMap)
                 ?? ResolvePool(context.BoundSettlementId, SettlementMap)
                 ?? ResolvePool(context.OwnerClanId, ClanMap)
                 ?? ResolvePool(context.CultureId, CultureMap);
@@ -52,6 +94,13 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         var troop = PickWeighted(pool);
         _logger.LogDebug($"Volunteer: settlement={context.SettlementId} clan={context.OwnerClanId} culture={context.CultureId} → {troop}");
         return troop;
+    }
+
+    private static List<VolunteerChance> ResolveConditionalPool(string key, VolunteerContext context)
+    {
+        if (key == null) return null;
+        if (!ConditionalSettlementMap.TryGetValue(key, out var entry)) return null;
+        return entry.Condition(context) ? entry.Pool : null;
     }
 
     private static List<VolunteerChance> ResolvePool(string key, Dictionary<string, List<VolunteerChance>> map)
@@ -238,7 +287,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         {
             new VolunteerChance("erebor_reg_miner", 5),
             new VolunteerChance("erebor_noble", 3),
-            new VolunteerChance("iron_hills_reg_recruit", 2)
+            new VolunteerChance("iron_hills_reg_recruit", 2),
+            // T2 entry-point of the Iron Hills Noble line added in #212 KEYforce revamp.
+            // Without this, the 13-troop noble line is fielded by AI but not recruitable in villages.
+            new VolunteerChance("iron_hills_noble", 2)
         };
     }
 
@@ -322,6 +374,114 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         };
     }
 
+    // --- Rhun Settlement Mappings ---
+    // Six regional pools themed by sub-faction (Dragon-Wrath / Balcoth / Far-Rhun / Wain / mixed / Kharaghul).
+    // Castle entries cover all bound villages via VolunteerContextAdapter's BoundSettlementId fallback.
+
+    private static void InitializeRhunSettlements()
+    {
+        // Dragon-Wrath pool: Khûndol + Mârdûn + Tarlat Arlan + Khûsar
+        (string, int)[] dragonWrathPool =
+        {
+            ("dragon_wrath_acolyte",  3),
+            ("dragon_wrath_archer",   1),
+            ("dragon_wrath_infantry", 1),
+            ("dragon_wrath_lancer",   1),
+            ("darkhun_recruit",       2),
+            ("black_sun_trainee",     1),
+            ("loke_rim_initiate",     1),
+        };
+        AddSettlement("town_RU7",   dragonWrathPool);
+        AddSettlement("castle_RU1", dragonWrathPool);
+        AddSettlement("castle_RU2", dragonWrathPool);
+        AddSettlement("castle_RU3", dragonWrathPool);
+
+        // Balcoth pool: Ûrushban + Nîrakh + Vorgavuld + Castle RU9
+        (string, int)[] balcothPool =
+        {
+            ("balcoth_volunteer", 5),
+            ("balcoth_archer",    2),
+            ("balcoth_axeman",    1),
+            ("loke_rim_initiate", 2),
+        };
+        AddSettlement("town_RU4",    balcothPool);
+        AddSettlement("castle_RU10", balcothPool);
+        AddSettlement("town_RU3",    balcothPool);
+        AddSettlement("castle_RU9",  balcothPool);
+
+        // Far-Rhun pool: Sârt + Ulbarath + Chêya
+        (string, int)[] farRhunPool =
+        {
+            ("far_rhun_levy",     4),
+            ("far_rhun_footman",  2),
+            ("far_rhun_horseman", 3),
+            ("loke_rim_initiate", 1),
+        };
+        AddSettlement("town_RU5",    farRhunPool);
+        AddSettlement("castle_RU11", farRhunPool);
+        AddSettlement("castle_RU12", farRhunPool);
+
+        // Wain pool: Tôrcâin + Kârashûn + Kelepar + Rûartar
+        (string, int)[] wainPool =
+        {
+            ("loke_rim_initiate",  1),
+            ("wain_youngblood",    5),
+            ("wain_glaiveman",     2),
+            ("wainrider_cavalry",  2),
+        };
+        AddSettlement("castle_RU7", wainPool);
+        AddSettlement("castle_RU8", wainPool);
+        AddSettlement("town_RU6",   wainPool);
+        AddSettlement("castle_RU6", wainPool);
+
+        // Mixed pool: Mistrand + Lest + Samârnûl (identical to culture fallback by design — explicit > implicit)
+        (string, int)[] mixedPool =
+        {
+            ("balcoth_volunteer",    1),
+            ("black_sun_trainee",    1),
+            ("darkhun_recruit",      1),
+            ("dragon_wrath_acolyte", 1),
+            ("far_rhun_levy",        1),
+            ("kharaghul_youth",      1),
+            ("loke_rim_initiate",    1),
+            ("sagarun_deckhand",     1),
+            ("wain_youngblood",      2),
+        };
+        AddSettlement("town_RU1",   mixedPool);
+        AddSettlement("town_RU2",   mixedPool);
+        AddSettlement("castle_RU4", mixedPool);
+
+        // Kharaghul pool: Iôrig + Ulathar
+        (string, int)[] kharaghulPool =
+        {
+            ("loke_rim_initiate",     1),
+            ("kharaghul_youth",       5),
+            ("kharaghul_raider",      2),
+            ("kharaghul_horse_scout", 2),
+        };
+        AddSettlement("town_RU8",   kharaghulPool);
+        AddSettlement("castle_RU5", kharaghulPool);
+    }
+
+    // --- Rhun Culture Fallback ---
+    // Engine culture id is "khuzait" (per .claude/rules/xml-data.md — XSLT cultures use vanilla engine IDs).
+
+    private static void InitializeRhunCulture()
+    {
+        CultureMap["khuzait"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("balcoth_volunteer",    1),
+            new VolunteerChance("black_sun_trainee",    1),
+            new VolunteerChance("darkhun_recruit",      1),
+            new VolunteerChance("dragon_wrath_acolyte", 1),
+            new VolunteerChance("far_rhun_levy",        1),
+            new VolunteerChance("kharaghul_youth",      1),
+            new VolunteerChance("loke_rim_initiate",    1),
+            new VolunteerChance("sagarun_deckhand",     1),
+            new VolunteerChance("wain_youngblood",      2),
+        };
+    }
+
     // --- Helpers ---
 
     private static void AddSettlement(string settlementId, params (string troopId, int weight)[] entries)
@@ -329,6 +489,21 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     private static void AddClan(string clanId, params (string troopId, int weight)[] entries)
         => ClanMap[clanId] = BuildPool(clanId, entries);
+
+    // internal for test reach — see VolunteerRecruitmentServiceTests
+    internal static void AddSettlementConditional(
+        string settlementId,
+        Func<VolunteerContext, bool> condition,
+        params (string troopId, int weight)[] entries)
+    {
+        if (condition == null)
+            throw new ArgumentNullException(nameof(condition), $"Conditional pool for '{settlementId}' needs a predicate.");
+        ConditionalSettlementMap[settlementId] = (condition, BuildPool(settlementId, entries));
+    }
+
+    // Internal accessor for tests — clears the conditional map between test scenarios that re-seed it.
+    internal static bool TryRemoveConditionalSettlement(string settlementId)
+        => ConditionalSettlementMap.Remove(settlementId);
 
     internal static List<VolunteerChance> BuildPool(string ownerId, (string troopId, int weight)[] entries)
     {

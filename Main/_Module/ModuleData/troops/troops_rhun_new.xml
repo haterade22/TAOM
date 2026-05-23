@@ -1535,14 +1535,14 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <!-- ========== EASTERLING TROOP TREE ========== -->
+    <!-- ========== EASTERLING TROOP TREE (orphaned 2026-05-23 — replaced by Loke-Rim line; kept for save-compat per .claude/rules/troops.md) ========== -->
     <NPCCharacter
         id="easterling_recruit"
         default_group="Infantry"
         level="6"
         name="{=aom_easterling_recruit_name}[Rhûn] Easterling Recruit"
         occupation="Soldier"
-        is_basic_troop="true"
+        is_basic_troop="false"
         culture="Culture.khuzait">
         <face>
             <face_key_template value="BodyProperty.fighter_khuzait" />
@@ -3732,7 +3732,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
                 <equipment slot="Horse" id="Item.khuzait_charger" />
-                <equipment slot="HorseHarness" id="Item.half_scale_barding" />
+                <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -3772,7 +3772,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
                 <equipment slot="Horse" id="Item.khuzait_charger" />
-                <equipment slot="HorseHarness" id="Item.half_scale_barding" />
+                <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -3810,7 +3810,7 @@
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
                 <equipment slot="Horse" id="Item.khuzait_charger" />
-                <equipment slot="HorseHarness" id="Item.full_scale_barding" />
+                <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>

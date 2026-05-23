@@ -878,8 +878,8 @@
 			<xsl:attribute name="color2">0xFFD4A947</xsl:attribute>
 
 			<!-- Troop references -->
-			<xsl:attribute name="basic_troop">NPCCharacter.easterling_recruit</xsl:attribute>
-			<xsl:attribute name="elite_basic_troop">NPCCharacter.easterling_cavalry_new</xsl:attribute>
+			<xsl:attribute name="basic_troop">NPCCharacter.loke_rim_initiate</xsl:attribute>
+			<xsl:attribute name="elite_basic_troop">NPCCharacter.loke_rim_cavalry</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>

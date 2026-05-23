@@ -28,7 +28,10 @@ public class VolunteerContextAdapter : IVolunteerContextAdapter
 
         string cultureId = hero.Culture?.StringId;
 
-        return new VolunteerContext(settlementId, boundSettlementId, ownerClanId, cultureId);
+        // Owner culture is read live (no caching) so kingdom flips take effect for the next volunteer pick.
+        string ownerCultureId = settlement.OwnerClan?.Culture?.StringId;
+
+        return new VolunteerContext(settlementId, boundSettlementId, ownerClanId, cultureId, ownerCultureId);
     }
 
     public CharacterObject ResolveCharacter(string characterId)

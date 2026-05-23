@@ -16,12 +16,12 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<!-- Villager (upgrades to easterling_recruit) -->
+	<!-- Villager (upgrades to loke_rim_initiate) -->
 	<NPCCharacter id="villager_rhun" default_group="Infantry" level="1" name="{=aom_rh_villager}Villager" occupation="Villager" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<upgrade_targets>
-			<upgrade_target id="NPCCharacter.easterling_recruit" />
+			<upgrade_target id="NPCCharacter.loke_rim_initiate" />
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
