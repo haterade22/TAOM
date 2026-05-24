@@ -25,8 +25,6 @@ public class FactionSelectionVM : ViewModel
     private string _bannerColorHex = "#FFFFFFFF";
     private string _bannerImage = "";
     private string _bannerSide = "neutral";
-    private string _specialUnitName = "";
-    private string _specialUnitDesc = "";
     private bool _hasSpecialUnit;
     private string _factionImageId = "";
     private string _selectedFactionSide = "neutral";
@@ -53,6 +51,7 @@ public class FactionSelectionVM : ViewModel
         FactionTraits = new MBBindingList<FactionTraitItemVM>();
         FactionBonuses = new MBBindingList<FactionBonusItemVM>();
         FactionPerks = new MBBindingList<FactionPerkItemVM>();
+        FactionSpecialUnits = new MBBindingList<FactionSpecialUnitItemVM>();
         FactionStrengths = new MBBindingList<FactionBonusItemVM>();
         FactionWeaknesses = new MBBindingList<FactionBonusItemVM>();
         FactionLandmarks = new MBBindingList<LandmarkItemVM>();
@@ -72,8 +71,7 @@ public class FactionSelectionVM : ViewModel
     [DataSourceProperty] public MBBindingList<FactionTraitItemVM> FactionTraits { get; }
     [DataSourceProperty] public MBBindingList<FactionBonusItemVM> FactionBonuses { get; }
     [DataSourceProperty] public MBBindingList<FactionPerkItemVM> FactionPerks { get; }
-    [DataSourceProperty] public string SpecialUnitName { get => _specialUnitName; set { if (value != _specialUnitName) { _specialUnitName = value; OnPropertyChangedWithValue(value); } } }
-    [DataSourceProperty] public string SpecialUnitDesc { get => _specialUnitDesc; set { if (value != _specialUnitDesc) { _specialUnitDesc = value; OnPropertyChangedWithValue(value); } } }
+    [DataSourceProperty] public MBBindingList<FactionSpecialUnitItemVM> FactionSpecialUnits { get; }
     [DataSourceProperty] public bool HasSpecialUnit { get => _hasSpecialUnit; set { if (value != _hasSpecialUnit) { _hasSpecialUnit = value; OnPropertyChangedWithValue(value); } } }
     [DataSourceProperty] public string FactionImageId { get => _factionImageId; set { if (value != _factionImageId) { _factionImageId = value; OnPropertyChangedWithValue(value); } } }
     [DataSourceProperty] public MBBindingList<FactionBonusItemVM> FactionStrengths { get; }

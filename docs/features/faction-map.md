@@ -81,9 +81,10 @@ One entry per faction id. Fields:
 | `traits` | string[] | Short trait strings shown in the info panel |
 | `bonuses` | array | `{ "text": "...", "positive": true/false }` gameplay bonus notes |
 | `perks` | array | `{ "name": "...", "description": "..." }` |
-| `special_unit` | object | `{ "name": "...", "description": "..." }` |
+| `special_units` | array | `[ { "name": "...", "description": "..." }, ... ]`. Supports >1 entry for factions with multiple iconic units (e.g. Mordor: Black Uruks + Trolls). |
+| `special_unit` | object | **DEPRECATED but still accepted** for backward-compat. Legacy single-object form is coerced into a 1-entry array by `FactionDataParser.ParseSpecialUnits`. Prefer `special_units` in new content. |
 | `strengths` / `weaknesses` | string[] | Displayed in info panel |
-| `difficulty` | int | 1–5 scale; 0 omits difficulty line |
+| `difficulty` | int | 1–7 scale; 0 omits difficulty line. `1=Very Easy`, `2=Easy`, `3=Medium`, `4=Medium-Hard`, `5=Hard`, `6=Very Hard`, `7=Extreme`. |
 
 ### `regions.json`
 One entry per region id (matching faction id). Fields:
@@ -117,8 +118,9 @@ One entry per region id (matching faction id). Fields:
 | `Main/Features/FactionMap/Widgets/FactionImageWidget.cs` | Faction art display |
 | `Main/Features/FactionMap/Widgets/BannerWidget.cs` | Banner at capital position |
 | `Main/Features/FactionMap/Widgets/MapContainerWidget.cs` | Root container widget |
-| `Main/Features/FactionMap/Models/FactionData.cs` | POCO for faction lore data |
+| `Main/Features/FactionMap/Models/FactionData.cs` | POCO for faction lore data (`SpecialUnits[]` field, see schema below) |
 | `Main/Features/FactionMap/Models/RegionData.cs` | POCO for region bbox and capital position |
+| `Main/Features/FactionMap/ViewModels/FactionSpecialUnitItemVM.cs` | Per-unit item VM bound to the prefab's special-units `ListPanel` (`UnitName` / `UnitDescription` props) |
 | `Main/_Module/ModuleData/factionmap/factions.json` | Live faction lore data |
 | `Main/_Module/ModuleData/factionmap/regions.json` | Live region bounding box data |
 | `TAOM.Tests/Features/FactionMap/FactionRegistryServiceTests.cs` | Registry lookup |
@@ -137,7 +139,8 @@ One entry per region id (matching faction id). Fields:
 
 ## Tests
 - `FactionRegistryServiceTests.cs` — verifies `GetRegion`, `GetFaction`, `GetFactionForRegion`, and `GetAllRegionKeys` return correct data after `Initialize`.
-- `FactionSelectionServiceTests.cs` — verifies `FactionSelectionResult` fields for known and unknown regions; verifies `MakeDarkPanelHex` and `MakeAccentColorHex` color derivation; verifies all 5 difficulty text mappings.
+- `FactionSelectionServiceTests.cs` — verifies `FactionSelectionResult` fields for known and unknown regions; verifies `MakeDarkPanelHex` and `MakeAccentColorHex` color derivation; verifies all 7 difficulty text mappings (Very Easy → Extreme).
+- `FactionConfigProviderTests.cs` additionally covers: `LoadFactions_ParsesValidJson` (new `special_units` array form), `LoadFactions_LegacySingleSpecialUnitForm_CoercedToArray` (backward-compat for `special_unit` singular), `LoadFactions_MultipleSpecialUnits_ParsesAllEntries` (Mordor case — 2 units).
 - `FactionHoverServiceTests.cs` — verifies that `UpdateHover` returns `null` when faction unchanged, `ShouldShow=false` when cleared, and a `HoverStateChange` with correct color when changed.
 - `FactionConfigProviderTests.cs` — verifies JSON parsing for all faction and region fields; verifies missing file returns empty dictionaries.
 - `CultureResolverServiceTests.cs` — culture id to `CultureObject` resolution.

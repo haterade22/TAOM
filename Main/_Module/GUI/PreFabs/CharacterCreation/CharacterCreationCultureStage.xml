@@ -140,7 +140,7 @@
                                     DoNotAcceptEvents="true" />
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                                    MarginBottom="8"
+                                    MarginBottom="2"
                                     Text="@DifficultyText"
                                     Brush="FactionMap.Difficulty"
                                     DoNotAcceptEvents="true"
@@ -251,7 +251,7 @@
                               </ItemTemplate>
                             </ListPanel>
 
-                            <!-- ═══════ SECTION: Special Unit ═══════ -->
+                            <!-- ═══════ SECTION: Special Units ═══════ -->
                             <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
                                          SuggestedHeight="26" MarginTop="2"
                                          Brush="FactionMap.SectionBar"
@@ -259,18 +259,25 @@
                               <Children>
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Special Unit" Brush="FactionMap.SectionTitle" />
+                                            Text="Special Units" Brush="FactionMap.SectionTitle" />
                               </Children>
                             </BrushWidget>
 
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Text="@SpecialUnitName" Brush="FactionMap.UnitName"
-                                        MarginTop="4"
-                                        IsVisible="@HasSpecialUnit" />
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Text="@SpecialUnitDesc" Brush="FactionMap.UnitDesc"
-                                        MarginTop="1" MarginBottom="4"
-                                        IsVisible="@HasSpecialUnit" />
+                            <ListPanel DataSource="{FactionSpecialUnits}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="4" MarginBottom="4">
+                              <ItemTemplate>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                           MarginTop="2" MarginBottom="2"
+                                           StackLayout.LayoutMethod="VerticalTopToBottom">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Text="@UnitName" Brush="FactionMap.UnitName" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Text="@UnitDescription" Brush="FactionMap.UnitDesc" MarginTop="1" />
+                                  </Children>
+                                </ListPanel>
+                              </ItemTemplate>
+                            </ListPanel>
 
                             <!-- ═══════ SECTION: Bonuses ═══════ -->
                             <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"

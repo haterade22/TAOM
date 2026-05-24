@@ -164,10 +164,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Gundabad War Troll",
-      "description": "Devastating Siege Beast"
-    },
+    "special_units": [
+      {
+        "name": "Gundabad War Troll",
+        "description": "Devastating Siege Beast"
+      }
+    ],
     "perks": [
       {
         "name": "Orc Capital",
@@ -218,10 +220,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Noldor Blade-master",
-      "description": "Legendary Elven Warrior"
-    },
+    "special_units": [
+      {
+        "name": "Noldor Blade-master",
+        "description": "Legendary Elven Warrior"
+      }
+    ],
     "perks": [
       {
         "name": "Council of the Wise",
@@ -242,7 +246,7 @@
       "Fading People",
       "Cannot Expand"
     ],
-    "difficulty": 4
+    "difficulty": 1
   },
   "kingdom_of_moria": {
     "name": "Kingdom of Moria",
@@ -296,10 +300,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Galadhrim Guard",
-      "description": "Elite Elven Defender"
-    },
+    "special_units": [
+      {
+        "name": "Galadhrim Guard",
+        "description": "Elite Elven Defender"
+      }
+    ],
     "perks": [
       {
         "name": "Power of Nenya",
@@ -320,7 +326,7 @@
       "Cannot Expand",
       "Fading Power"
     ],
-    "difficulty": 4
+    "difficulty": 3
   },
   "wildmen_of_enedwaith": {
     "name": "Wildmen of Enedwaith",
@@ -367,10 +373,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Dunlending Berserker",
-      "description": "Fearless Melee Fighter"
-    },
+    "special_units": [
+      {
+        "name": "Dunlending Berserker",
+        "description": "Fearless Melee Fighter"
+      }
+    ],
     "perks": [
       {
         "name": "Grudge of Dunland",
@@ -391,7 +399,7 @@
       "Poor Economy",
       "Isolated"
     ],
-    "difficulty": 4
+    "difficulty": 5
   },
   "dominion_of_isengard": {
     "name": "Dominion of Isengard",
@@ -424,10 +432,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Uruk-hai Berserker",
-      "description": "Devastating Shock Infantry"
-    },
+    "special_units": [
+      {
+        "name": "Uruk-hai Berserker",
+        "description": "Devastating Shock Infantry"
+      }
+    ],
     "perks": [
       {
         "name": "Saruman's Industry",
@@ -448,7 +458,7 @@
       "Surrounded",
       "Treacherous Leader"
     ],
-    "difficulty": 4
+    "difficulty": 6
   },
   "kingdom_of_lasgalen": {
     "name": "Kingdom of Lasgalen",
@@ -478,10 +488,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Mirkwood Sentinel",
-      "description": "Elite Forest Archer"
-    },
+    "special_units": [
+      {
+        "name": "Mirkwood Sentinel",
+        "description": "Elite Forest Archer"
+      }
+    ],
     "perks": [
       {
         "name": "Woodland Realm",
@@ -532,10 +544,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Iron Guard of Erebor",
-      "description": "Elite Dwarven Heavy Infantry"
-    },
+    "special_units": [
+      {
+        "name": "Iron Guard of Erebor",
+        "description": "Elite Dwarven Heavy Infantry"
+      }
+    ],
     "perks": [
       {
         "name": "Dragon's Hoard",
@@ -556,7 +570,7 @@
       "Slow Movement",
       "Few Allies"
     ],
-    "difficulty": 3
+    "difficulty": 2
   },
   "kingdom_of_dale": {
     "name": "Kingdom of Dale",
@@ -586,10 +600,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Black Arrow Rangers",
-      "description": "Elite Longbowmen"
-    },
+    "special_units": [
+      {
+        "name": "Black Arrow Rangers",
+        "description": "Elite Longbowmen"
+      }
+    ],
     "perks": [
       {
         "name": "Bard's Legacy",
@@ -667,10 +683,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Shadow Warg Rider",
-      "description": "Fast Shock Cavalry"
-    },
+    "special_units": [
+      {
+        "name": "Shadow Warg Rider",
+        "description": "Fast Shock Cavalry"
+      }
+    ],
     "perks": [
       {
         "name": "Necromancer's Shadow",
@@ -691,7 +709,7 @@
       "No Trade",
       "Small Territory"
     ],
-    "difficulty": 5
+    "difficulty": 4
   },
   "kingdom_of_dorwinion": {
     "name": "Kingdom of Dorwinion",
@@ -745,10 +763,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Rohirrim Royal Guard",
-      "description": "Elite Heavy Cavalry"
-    },
+    "special_units": [
+      {
+        "name": "Rohirrim Royal Guard",
+        "description": "Elite Heavy Cavalry"
+      }
+    ],
     "perks": [
       {
         "name": "Horse-lords",
@@ -762,14 +782,16 @@
     "strengths": [
       "Superior Cavalry",
       "Fast Armies",
-      "Strong Alliance"
+      "Strong Alliance",
+      "Strong in specific terrain - Plains"
     ],
     "weaknesses": [
       "Weak Infantry",
-      "Open Plains Vulnerable",
-      "Enemies on All Sides"
+      "Decent Archers",
+      "Enemies very close and can overwhelm",
+      "No real support from Alliances"
     ],
-    "difficulty": 2
+    "difficulty": 3
   },
   "clans_of_druwaith_iaur": {
     "name": "Clans of Druwaith Iaur",
@@ -807,41 +829,36 @@
     ],
     "bonuses": [
       {
-        "text": "Heavy infantry defense +15%",
+        "text": "Defense Boost",
         "positive": true
-      },
-      {
-        "text": "Siege defense bonus +20%",
-        "positive": true
-      },
-      {
-        "text": "Cavalry recruitment -10% slower",
-        "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Tower Guard of Minas Tirith",
-      "description": "Elite Heavy Infantry"
-    },
+    "special_units": [
+      {
+        "name": "Varies",
+        "description": "Elite Units in Specific Regions"
+      }
+    ],
     "perks": [
       {
         "name": "Dunedain Blood",
         "description": "Lords gain experience 10% faster"
       },
       {
-        "name": "White City Walls",
-        "description": "Settlement defense +25%"
+        "name": "Gondor's Courage",
+        "description": "Increased morale for troops"
       }
     ],
     "strengths": [
-      "Strong Infantry",
-      "Siege Defense",
-      "Experienced Leaders"
+      "Balanced Units",
+      "Good Morale",
+      "Good Army Leaders",
+      "Excellent Troop Variety"
     ],
     "weaknesses": [
-      "Slow Cavalry",
-      "Stretched Borders",
-      "No King"
+      "Troops based on Regions",
+      "Harder to recruit special units due to regions",
+      "Numerous Borders which can all be pressured"
     ],
     "difficulty": 2
   },
@@ -869,39 +886,51 @@
         "positive": true
       },
       {
-        "text": "Troop morale -15%",
-        "positive": false
-      },
-      {
         "text": "Trade income -25%",
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Black Uruk-hai",
-      "description": "Elite Orc Shock Infantry"
-    },
+    "special_units": [
+      {
+        "name": "Black Uruks",
+        "description": "Elite Uruk Lines"
+      },
+      {
+        "name": "Trolls",
+        "description": "BAM BAM"
+      }
+    ],
     "perks": [
       {
         "name": "Dark Lord's Will",
         "description": "Armies never retreat from battle"
       },
       {
-        "name": "Forge of Doom",
-        "description": "Weapon production +30%"
+        "name": "Sauron's Hordes",
+        "description": "Increased party size by 10%"
+      },
+      {
+        "name": "Grond's Hammer",
+        "description": "Increased siege speed by 10%"
       }
     ],
     "strengths": [
-      "Massive Armies",
+      "You have Sauron",
+      "Did we mention Sauron?",
+      "More Sauron",
+      "Huge Armies",
       "Cheap Troops",
-      "Industrial Power"
+      "Creatures",
+      "Inspire Fear",
+      "No Retreat",
+      "Forced Alliances"
     ],
     "weaknesses": [
-      "Low Morale",
-      "Poor Economy",
-      "Hated by All"
+      "Weak Troops",
+      "Special Units replenish very slowly",
+      "Poor Economy"
     ],
-    "difficulty": 3
+    "difficulty": 2
   },
   "golden_realm_of_rhun": {
     "name": "Golden-Realm of Rhun",
@@ -930,10 +959,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Easterling Kataphract",
-      "description": "Elite Armored Cavalry"
-    },
+    "special_units": [
+      {
+        "name": "Easterling Kataphract",
+        "description": "Elite Armored Cavalry"
+      }
+    ],
     "perks": [
       {
         "name": "Eastern Hordes",
@@ -954,7 +985,7 @@
       "Divided Clans",
       "Distant from Allies"
     ],
-    "difficulty": 3
+    "difficulty": 2
   },
   "kingdom_of_zigalnara": {
     "name": "Kingdom of Zigalnara",
@@ -1006,10 +1037,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Variag Horse Archer",
-      "description": "Elite Mounted Skirmisher"
-    },
+    "special_units": [
+      {
+        "name": "Variag Horse Archer",
+        "description": "Elite Mounted Skirmisher"
+      }
+    ],
     "perks": [
       {
         "name": "Steppe Nomads",
@@ -1030,7 +1063,7 @@
       "No Siege Equipment",
       "Low Loyalty"
     ],
-    "difficulty": 4
+    "difficulty": 2
   },
   "stronghold_of_ered_gwaer": {
     "name": "Stronghold of Ered Gwaer",
@@ -1072,10 +1105,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Mumakil War Tower",
-      "description": "Devastating War Beast"
-    },
+    "special_units": [
+      {
+        "name": "Mumakil War Tower",
+        "description": "Devastating War Beast"
+      }
+    ],
     "perks": [
       {
         "name": "Desert Warfare",
@@ -1125,10 +1160,12 @@
         "positive": false
       }
     ],
-    "special_unit": {
-      "name": "Corsair Captain",
-      "description": "Elite Raider"
-    },
+    "special_units": [
+      {
+        "name": "Corsair Captain",
+        "description": "Elite Raider"
+      }
+    ],
     "perks": [
       {
         "name": "Black Numenorean Blood",
@@ -1149,7 +1186,7 @@
       "Hated by Gondor",
       "Internal Rivalries"
     ],
-    "difficulty": 4
+    "difficulty": 2
   },
   "taskralan_of_shaghana": {
     "name": "Taskralan of Shaghana",

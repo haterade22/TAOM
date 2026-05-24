@@ -39,7 +39,7 @@ public class FactionSelectionServiceTests
             Image = "faction_gondor",
             Traits = new[] { "Stalwart Defenders" },
             Bonuses = new[] { new FactionBonus { Text = "+10%", Positive = true } },
-            SpecialUnit = new FactionSpecialUnit { Name = "Swan Knights", Description = "Elite" },
+            SpecialUnits = new[] { new FactionSpecialUnit { Name = "Swan Knights", Description = "Elite" } },
             Perks = new[] { new FactionPerk { Name = "White Tower", Description = "+15%" } },
             Strengths = new[] { "Infantry" },
             Weaknesses = new[] { "Cavalry" },
@@ -64,7 +64,8 @@ public class FactionSelectionServiceTests
         Assert.AreEqual("banner_kingdom_of_gondor", result.BannerImage);
         Assert.AreEqual(1, result.Traits.Length);
         Assert.AreEqual(1, result.Bonuses.Length);
-        Assert.IsNotNull(result.SpecialUnit);
+        Assert.AreEqual(1, result.SpecialUnits.Length);
+        Assert.AreEqual("Swan Knights", result.SpecialUnits[0].Name);
     }
 
     [TestMethod]
@@ -177,11 +178,13 @@ public class FactionSelectionServiceTests
     [TestMethod]
     public void FormatDifficultyText_ValidDifficulty_ReturnsFormattedString()
     {
-        Assert.AreEqual("Difficulty: Easy", _sut.FormatDifficultyText(1));
-        Assert.AreEqual("Difficulty: Normal", _sut.FormatDifficultyText(2));
-        Assert.AreEqual("Difficulty: Hard", _sut.FormatDifficultyText(3));
-        Assert.AreEqual("Difficulty: Very Hard", _sut.FormatDifficultyText(4));
-        Assert.AreEqual("Difficulty: Extreme", _sut.FormatDifficultyText(5));
+        Assert.AreEqual("Difficulty: Very Easy", _sut.FormatDifficultyText(1));
+        Assert.AreEqual("Difficulty: Easy", _sut.FormatDifficultyText(2));
+        Assert.AreEqual("Difficulty: Medium", _sut.FormatDifficultyText(3));
+        Assert.AreEqual("Difficulty: Medium-Hard", _sut.FormatDifficultyText(4));
+        Assert.AreEqual("Difficulty: Hard", _sut.FormatDifficultyText(5));
+        Assert.AreEqual("Difficulty: Very Hard", _sut.FormatDifficultyText(6));
+        Assert.AreEqual("Difficulty: Extreme", _sut.FormatDifficultyText(7));
     }
 
     [TestMethod]
@@ -217,7 +220,7 @@ public class FactionSelectionServiceTests
     [TestMethod]
     public void FormatDifficultyText_OutOfRange_ReturnsEmpty()
     {
-        Assert.AreEqual("", _sut.FormatDifficultyText(6));
+        Assert.AreEqual("", _sut.FormatDifficultyText(8));
         Assert.AreEqual("", _sut.FormatDifficultyText(100));
         Assert.AreEqual("", _sut.FormatDifficultyText(-1));
     }

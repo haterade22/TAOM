@@ -87,7 +87,7 @@ public class FactionConfigProviderTests
                 ""image"": ""faction_gondor"",
                 ""traits"": [""Stalwart Defenders""],
                 ""bonuses"": [{""text"": ""Infantry +10%"", ""positive"": true}],
-                ""special_unit"": {""name"": ""Swan Knights"", ""description"": ""Elite cavalry""},
+                ""special_units"": [{""name"": ""Swan Knights"", ""description"": ""Elite cavalry""}],
                 ""perks"": [{""name"": ""White Tower"", ""description"": ""Defense +15%""}],
                 ""strengths"": [""Strong Infantry""],
                 ""weaknesses"": [""Few Cavalry""],
@@ -107,12 +107,53 @@ public class FactionConfigProviderTests
         Assert.AreEqual(1, gondor.Traits.Length);
         Assert.AreEqual(1, gondor.Bonuses.Length);
         Assert.IsTrue(gondor.Bonuses[0].Positive);
-        Assert.IsNotNull(gondor.SpecialUnit);
-        Assert.AreEqual("Swan Knights", gondor.SpecialUnit.Name);
+        Assert.AreEqual(1, gondor.SpecialUnits.Length);
+        Assert.AreEqual("Swan Knights", gondor.SpecialUnits[0].Name);
         Assert.AreEqual(1, gondor.Perks.Length);
         Assert.AreEqual(1, gondor.Strengths.Length);
         Assert.AreEqual(1, gondor.Weaknesses.Length);
         Assert.AreEqual(2, gondor.Difficulty);
+    }
+
+    [TestMethod]
+    public void LoadFactions_LegacySingleSpecialUnitForm_CoercedToArray()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "factionmap", "factions.json"), @"{
+            ""kingdom_of_gondor"": {
+                ""name"": ""Kingdom of Gondor"",
+                ""special_unit"": {""name"": ""Swan Knights"", ""description"": ""Elite cavalry""}
+            }
+        }");
+
+        var result = _sut.LoadFactions();
+
+        var gondor = result["kingdom_of_gondor"];
+        Assert.AreEqual(1, gondor.SpecialUnits.Length);
+        Assert.AreEqual("Swan Knights", gondor.SpecialUnits[0].Name);
+        Assert.AreEqual("Elite cavalry", gondor.SpecialUnits[0].Description);
+    }
+
+    [TestMethod]
+    public void LoadFactions_MultipleSpecialUnits_ParsesAllEntries()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "factionmap", "factions.json"), @"{
+            ""dominion_of_mordor"": {
+                ""name"": ""Dominion of Mordor"",
+                ""special_units"": [
+                    {""name"": ""Black Uruks"", ""description"": ""Elite Uruk Lines""},
+                    {""name"": ""Trolls"", ""description"": ""BAM BAM""}
+                ]
+            }
+        }");
+
+        var result = _sut.LoadFactions();
+
+        var mordor = result["dominion_of_mordor"];
+        Assert.AreEqual(2, mordor.SpecialUnits.Length);
+        Assert.AreEqual("Black Uruks", mordor.SpecialUnits[0].Name);
+        Assert.AreEqual("Elite Uruk Lines", mordor.SpecialUnits[0].Description);
+        Assert.AreEqual("Trolls", mordor.SpecialUnits[1].Name);
+        Assert.AreEqual("BAM BAM", mordor.SpecialUnits[1].Description);
     }
 
     [TestMethod]
@@ -140,7 +181,7 @@ public class FactionConfigProviderTests
         Assert.IsFalse(faction.Playable);
         Assert.AreEqual(0, faction.Traits.Length);
         Assert.AreEqual(0, faction.Bonuses.Length);
-        Assert.IsNull(faction.SpecialUnit);
+        Assert.AreEqual(0, faction.SpecialUnits.Length);
         Assert.AreEqual(0, faction.Difficulty);
     }
 

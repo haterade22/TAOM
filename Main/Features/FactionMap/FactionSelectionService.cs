@@ -68,11 +68,13 @@ public class FactionSelectionService : IFactionSelectionService
     {
         return difficulty switch
         {
-            1 => "Difficulty: Easy",
-            2 => "Difficulty: Normal",
-            3 => "Difficulty: Hard",
-            4 => "Difficulty: Very Hard",
-            5 => "Difficulty: Extreme",
+            1 => "Difficulty: Very Easy",
+            2 => "Difficulty: Easy",
+            3 => "Difficulty: Medium",
+            4 => "Difficulty: Medium-Hard",
+            5 => "Difficulty: Hard",
+            6 => "Difficulty: Very Hard",
+            7 => "Difficulty: Extreme",
             _ => "",
         };
     }
@@ -98,7 +100,7 @@ public class FactionSelectionService : IFactionSelectionService
             Traits = faction.Traits ?? Array.Empty<string>(),
             Bonuses = faction.Bonuses ?? Array.Empty<FactionBonus>(),
             Perks = faction.Perks ?? Array.Empty<FactionPerk>(),
-            SpecialUnit = faction.SpecialUnit,
+            SpecialUnits = faction.SpecialUnits ?? Array.Empty<FactionSpecialUnit>(),
             Strengths = faction.Strengths ?? Array.Empty<string>(),
             Weaknesses = faction.Weaknesses ?? Array.Empty<string>(),
             BannerPosX = hasBanner ? region!.CapitalX : -1f,

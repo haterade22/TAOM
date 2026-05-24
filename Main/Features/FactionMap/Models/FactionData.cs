@@ -12,7 +12,7 @@ public class FactionData
     public string Image { get; set; } = "";
     public string[] Traits { get; set; } = Array.Empty<string>();
     public FactionBonus[] Bonuses { get; set; } = Array.Empty<FactionBonus>();
-    public FactionSpecialUnit? SpecialUnit { get; set; }
+    public FactionSpecialUnit[] SpecialUnits { get; set; } = Array.Empty<FactionSpecialUnit>();
     public FactionPerk[] Perks { get; set; } = Array.Empty<FactionPerk>();
     public string Side { get; set; } = "neutral";
     public string[] Strengths { get; set; } = Array.Empty<string>();

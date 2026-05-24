@@ -17,7 +17,7 @@ public class FactionSelectionResult
     public string[] Traits { get; set; } = System.Array.Empty<string>();
     public FactionBonus[] Bonuses { get; set; } = System.Array.Empty<FactionBonus>();
     public FactionPerk[] Perks { get; set; } = System.Array.Empty<FactionPerk>();
-    public FactionSpecialUnit? SpecialUnit { get; set; }
+    public FactionSpecialUnit[] SpecialUnits { get; set; } = System.Array.Empty<FactionSpecialUnit>();
     public string[] Strengths { get; set; } = System.Array.Empty<string>();
     public string[] Weaknesses { get; set; } = System.Array.Empty<string>();
     public float BannerPosX { get; set; } = -1f;

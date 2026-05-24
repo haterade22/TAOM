@@ -35,18 +35,12 @@ public static class FactionDisplayHelper
         vm.OnPropertyChanged(nameof(FactionSelectionVM.HasStrengths));
         vm.OnPropertyChanged(nameof(FactionSelectionVM.HasWeaknesses));
 
-        if (result.SpecialUnit != null && !string.IsNullOrEmpty(result.SpecialUnit.Name))
+        foreach (var unit in result.SpecialUnits)
         {
-            vm.SpecialUnitName = result.SpecialUnit.Name;
-            vm.SpecialUnitDesc = result.SpecialUnit.Description;
-            vm.HasSpecialUnit = true;
+            if (string.IsNullOrEmpty(unit.Name)) continue;
+            vm.FactionSpecialUnits.Add(new FactionSpecialUnitItemVM(unit.Name, unit.Description));
         }
-        else
-        {
-            vm.SpecialUnitName = "";
-            vm.SpecialUnitDesc = "";
-            vm.HasSpecialUnit = false;
-        }
+        vm.HasSpecialUnit = vm.FactionSpecialUnits.Count > 0;
 
         vm.SelectedFactionSide = result.Side;
         vm.Difficulty = result.Difficulty;
@@ -113,6 +107,7 @@ public static class FactionDisplayHelper
         vm.FactionTraits.Clear();
         vm.FactionBonuses.Clear();
         vm.FactionPerks.Clear();
+        vm.FactionSpecialUnits.Clear();
         vm.FactionStrengths.Clear();
         vm.FactionWeaknesses.Clear();
         vm.FactionLandmarks.Clear();

@@ -86,7 +86,7 @@ public class FactionConfigProvider : IFactionConfigProvider
 
                 var bonuses = FactionDataParser.ParseBonuses(obj["bonuses"] as JArray);
                 var perks = FactionDataParser.ParsePerks(obj["perks"] as JArray);
-                var specialUnit = FactionDataParser.ParseSpecialUnit(obj["special_unit"] as JObject);
+                var specialUnits = FactionDataParser.ParseSpecialUnits(obj["special_units"] as JArray, obj["special_unit"] as JObject);
 
                 result[prop.Name] = new FactionData
                 {
@@ -99,7 +99,7 @@ public class FactionConfigProvider : IFactionConfigProvider
                     Side = obj.Value<string>("side") ?? "neutral",
                     Traits = obj["traits"]?.ToObject<string[]>() ?? Array.Empty<string>(),
                     Bonuses = bonuses,
-                    SpecialUnit = specialUnit,
+                    SpecialUnits = specialUnits,
                     Perks = perks,
                     Strengths = obj["strengths"]?.ToObject<string[]>() ?? Array.Empty<string>(),
                     Weaknesses = obj["weaknesses"]?.ToObject<string[]>() ?? Array.Empty<string>(),
