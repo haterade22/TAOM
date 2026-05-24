@@ -44,6 +44,7 @@ using TAOM.Features.EquipPresets;
 using TAOM.Features.EditorCacheRebuild;
 using TAOM.Features.CulturalFeats;
 using TAOM.Features.CultureMarketplace;
+using TAOM.Features.MissionDiagnostic;
 
 namespace TAOM;
 
@@ -101,6 +102,7 @@ public static class IoC
         EditorCacheRebuildIoC.RegisterEditorCacheRebuildFeature(container);
         CulturalFeatsIoC.RegisterCulturalFeatsFeature(container);
         CultureMarketplaceIoC.RegisterCultureMarketplaceFeature(container);
+        MissionDiagnosticIoC.RegisterMissionDiagnosticFeature(container);
 
         _container = container;
 

@@ -2,7 +2,46 @@
 
 ## 2026-05-24
 
-### Fix(localization): translate_with_claude.py write_back O(N×file) perf + SP lang_name alignment
+### Feat(diagnostic): MissionDiagnostic feature — comprehensive crash-investigation logging in `taom_debug_*.log`
+
+Follow-up to the BehaviorTrees inlining (#217). Two users still crashing on first battle on `bannerlord-1.4.5` with NRE in `Mission.CheckMissionEnded`, root cause still unidentified after Codex caught the original RCA was wrong. This adds in-process logging so the NEXT user crash report tells us the offender directly instead of requiring debugger inspection.
+
+**What it captures:**
+
+1. **Session snapshot** (one-time, on `OnGameStart`):
+   - OS / CLR / machine / core count
+   - Bannerlord (Native) version
+   - All active modules + versions (via `ModuleHelper.GetActiveModules()`)
+   - All loaded BUTR/MCM/Bannerlord.*/Harmony assemblies + versions (catches version drift on community DLLs)
+   - Campaign state: in-game time, MainHero name + culture + kingdom
+
+2. **Mission start snapshot** (every battle, on first `OnMissionTick`):
+   - Scene name + `MissionBehaviors.Count` + `MissionLogics.Count` + null-slot count
+   - Every `MissionBehavior` dumped: index, full type name, `BehaviorType`, `IsMissionLogic`, assembly
+   - **Auto-flags any class returning `BehaviorType=Logic` while not inheriting `MissionLogic`** at ERROR level with the explicit `← OFFENDER` marker + assembly name. This is the null-cast pattern that NREs `CheckMissionEnded` every tick. If a user uploads a crash log, the offender's class + DLL is now in the log file.
+
+3. **Action-set scan** (first 5 seconds of every mission):
+   - For each unique `(actionSetName, raceName)` combo observed on a spawned Agent, log once at INFO level. Catches cases like an elf-race agent ending up with `as_human_warrior` — useful for the action-set theory.
+   - Self-disables after 5s; no per-frame cost beyond that.
+
+**Implementation:**
+
+- `Main/Features/MissionDiagnostic/IMissionDiagnosticService.cs` — interface
+- `Main/Features/MissionDiagnostic/MissionDiagnosticService.cs` — gathers + writes logs via `IModLogger`
+- `Main/Features/MissionDiagnostic/Hooks/MissionDiagnosticBehavior.cs` — `: MissionLogic` boundary (per `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance`)
+- `Main/Features/MissionDiagnostic/MissionDiagnosticIoC.cs` — DI registration
+- `Main/IoC.cs` — added registration call
+- `Main/SubModule.cs` — added session-snapshot call in `OnGameStart`; added `MissionDiagnosticBehavior` to mission init (LAST so it sees all behaviors added by TAOM AND other mods)
+
+**Best-effort design:** every log path is wrapped in try/catch — a diagnostic failure NEVER blocks gameplay. Failures log a single WARNING with the exception type and message.
+
+**No regression test:** the feature exists to capture data the test harness can't simulate (real Bannerlord runtime + real mod stack). Verified via build + smoke test on author's machine.
+
+**Verified:** `dotnet build` clean, `dotnet test` 2416 passing (same as before — diagnostic has no testable surface), 1 pre-existing unrelated failure (`GetVolunteerTroopId_EreborCulture_HighRoll`), 2 skipped.
+
+---
+
+### Feat(behaviortrees): inline vendored BehaviorTreeWrapper + BehaviorTrees into TAOM.dll for full source ownership; fix v1.4.5 double-tick regression
 
 Two findings from `/deep-review` on the localization-pipeline session:
 

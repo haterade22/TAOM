@@ -232,6 +232,15 @@ public class SubModule : MBSubModuleBase
     {
         base.OnGameStart(game, gameStarterObject);
 
+        // Session-level diagnostic snapshot: OS / CLR / mod list / mod-stack
+        // assembly versions / campaign context. Runs once per session and is
+        // idempotent so OnGameStart on save-load doesn't spam.
+        try
+        {
+            IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>()?.LogSessionSnapshot();
+        }
+        catch { /* diagnostic is best-effort, never break OnGameStart */ }
+
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
             var racePersistenceService = IoC.Resolve<IRacePersistenceService>();
@@ -544,6 +553,17 @@ public class SubModule : MBSubModuleBase
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
             mission.AddMissionBehavior(new AgentColorStoreCleanupBehavior(colorStore));
+
+        // MissionDiagnostic: added LAST so it sees all behaviors added by TAOM AND
+        // every other mod in the load chain. Dumps MissionBehaviors + MissionLogics
+        // on first OnMissionTick to taom_debug_*.log so user-uploaded crash logs
+        // contain enough data to identify mod-conflict bugs (BehaviorType=Logic +
+        // !MissionLogic null-cast offenders) and action-set anomalies.
+        var diagSvc = IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>();
+        var raceMgr = IoC.Resolve<Core.Domain.IRaceManager>();
+        var diagLogger = IoC.Resolve<IModLogger>();
+        if (diagSvc != null && raceMgr != null && diagLogger != null)
+            mission.AddMissionBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
 
         var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
         if (careerAbilityService != null && Campaign.Current != null)
