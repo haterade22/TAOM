@@ -133,20 +133,20 @@ public class WargAttackService : IWargAttackService
 
         if (warg.MovementVelocity.Y >= 4)
         {
-            // 2026-05-24: running attack was missing 0/5 hits in user testing — the
-            // single-bone [23] sweep (mouth/head) passes through targets faster than
-            // the per-frame collision check can sample at 4+ m/s. Widening to match
-            // the stand-attack bone set [23 mouth/head, 37 + 43 likely front paws]
-            // since the warg's paws extend forward during a charge and usually hit
-            // the target FIRST. Collision radius bumped 0.4 → 0.7m to give discrete
-            // sampling more chance at high velocity. See issue #219 for diagnostic
-            // trace that drove this change.
+            // Running attack — aggressive collision window for fast bones (#219).
+            // At 10 m/s the warg covers 16.7cm/frame at 60fps, so a 0.7m bone sphere
+            // overlaps a target for ~5-6 frames. Within those 5-6 frames the bone
+            // pose also has to be extended forward (animation-dependent). The two
+            // narrow windows (spatial + temporal) rarely align — 0/7 hits in the
+            // previous test. Bumping collisionR 0.7→1.5m + widening progress
+            // 0.1-0.7→0.0-0.9 maximizes overlap so the per-frame sample is far more
+            // likely to catch at least ONE bone pair within range.
             boneIds = new List<sbyte> { 23, 37, 43 };
             actionName = "act_warg_attack_running";
             action = ActionIndexCache.Create(actionName);
-            actionProgressMin = 0.1f;
-            actionProgressMax = 0.7f;
-            boneCollisionRadius = 0.7f;
+            actionProgressMin = 0.0f;
+            actionProgressMax = 0.9f;
+            boneCollisionRadius = 1.5f;
         }
         else
         {
@@ -155,10 +155,9 @@ public class WargAttackService : IWargAttackService
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.1f;
             actionProgressMax = 0.5f;
-            // 2026-05-24: stand-attack collision radius bumped 0.3 → 0.5m for parity
-            // with the wider running-attack sweep. User-reported hit rate was 1/2 at
-            // 0.3 — bumping to 0.5 should bring it closer to 100% without false hits
-            // (target detection range is still capped at 3.5m via WargConfig).
+            // Stand attack — collision radius already adequate at low velocity
+            // (1/2 hits at 0.5m in #219 testing). Keep tighter to avoid false-positive
+            // hits when warg is stationary near an ally.
             boneCollisionRadius = 0.5f;
         }
 
