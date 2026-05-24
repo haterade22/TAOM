@@ -1,12 +1,782 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Türkçe" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_cc_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_cc_taom_parent_gondor_1_text" text="Gondor'un Asil Hanedanları" />
+    <string id="taom_cc_taom_parent_gondor_1_desc" text="Ailen Gondor'un asil hanedanlarından birine aitti, Beyaz Ağaç'ı korumak için and içmişti. Baban Kâhya'ya hizmet ederken cesurca savaşan bir şövalyeydi, annen ise ailenin topraklarını ve işlerini yönetiyordu." />
+    <string id="taom_cc_taom_parent_gondor_2_text" text="Beyaz Şehir'in Tüccarları" />
+    <string id="taom_cc_taom_parent_gondor_2_desc" text="Ailen Minas Tirith'te kaliteli eşya ve mallarla ticaret yapan müreffeh tüccarlardı. Şehrin tüccar loncalarındaki nüfuzları hanenize zenginlik ve saygı getirdi." />
+    <string id="taom_cc_taom_parent_gondor_3_text" text="Pelennor'un Çiftçileri" />
+    <string id="taom_cc_taom_parent_gondor_3_desc" text="Ailen Pelennor Tarlaları'nın verimli toprağını işler, Minas Tirith için azık sağlardı. Ayrıca savaş zamanlarında şehrin savunmasında duran çağrılı askerler olarak da hizmet ederlerdi." />
+    <string id="taom_cc_taom_parent_gondor_4_text" text="Minas Tirith'in Zanaatkârları" />
+    <string id="taom_cc_taom_parent_gondor_4_desc" text="Ailen Minas Tirith'te Beyaz Şehir'in salonlarını süsleyen zarif zırhlar, silahlar ve duvar halıları yaratan usta zanaatkârlardı. Sanatları Gondor'un her yerinde ünlüydü." />
+    <string id="taom_cc_taom_parent_gondor_5_text" text="Ithilien'in Koruculaları" />
+    <string id="taom_cc_taom_parent_gondor_5_desc" text="Ailen gizlilik ve okçuluk sanatlarında usta olan Ithilien Koruculaları'nın üyeleriydi. Vahşi doğada devriye gezer, Gondor'un sınırlarını Mordor güçlerinden korurlar." />
+    <string id="taom_cc_taom_parent_gondor_6_text" text="Osgiliath'ın Sokak Serserileri" />
+    <string id="taom_cc_taom_parent_gondor_6_desc" text="Ailen Osgiliath'ın harabeleri arasında, kurnazlık ve beceriklilikle hayatta kalarak yaşıyordu. Bulabildiklerini toplar ve ara sıra düzensiz birlikler olarak Gondor'un sancakları altında hizmet ederlerdi." />
+    <string id="taom_cc_taom_parent_mordor_1_text" text="Kara Kule'nin Hizmetkârları" />
+    <string id="taom_cc_taom_parent_mordor_1_desc" text="Ailen doğrudan Kara Kule'nin emrinde hizmet ediyordu. Baban acımasız bir uygulayıcıydı, annen ise Sauron'un iradesini sıradan halk arasında aşılamak için çalışırdı." />
+    <string id="taom_cc_taom_parent_mordor_2_text" text="Kara Yol'un Tüccarları" />
+    <string id="taom_cc_taom_parent_mordor_2_desc" text="Ailen Mordor içindeki ticaret ve ikmal yönetimi yaparak Sauron'un ordularının savaş için donatılmasını sağlıyordu. İşleri entrika ve şiddetle gölgeliydi." />
+    <string id="taom_cc_taom_parent_mordor_3_text" text="Barad-dûr'un Köleleri" />
+    <string id="taom_cc_taom_parent_mordor_3_desc" text="Ailen, Kara Lord'un savaş makinesini beslemek için Mordor'un dökümhanelerinde ve taş ocaklarında çalışan köleleştirilmiş işçilerdi. Dayanıklılıkları hayatta kalma iradelerinin bir kanıtı oldu." />
+    <string id="taom_cc_taom_parent_mordor_4_text" text="Ork İş Başıları" />
+    <string id="taom_cc_taom_parent_mordor_4_desc" text="Ailen hem Orkların hem İnsanların emeğini denetlemekle görevliydi, Sauron'un emirlerinin acımasız bir verimlilikle yerine getirilmesini sağlarlardı." />
+    <string id="taom_cc_taom_parent_mordor_5_text" text="Gorgoroth'un Avcıları" />
+    <string id="taom_cc_taom_parent_mordor_5_desc" text="Ailen Gorgoroth'un volkanik ovalarında dolaşır, Mordor ordularını beslemek için av takip eder ve avlanırdı. Vahşi doğadaki becerileri eşsizdi." />
+    <string id="taom_cc_taom_parent_mordor_6_text" text="Uruk Gözetmenleri" />
+    <string id="taom_cc_taom_parent_mordor_6_desc" text="Aileniz Uruk-hai lejyonlarının gözetmenleri olarak hizmet etti, Sauron'un saflarında disiplini sağlayıp düzeni korudu." />
+    <string id="taom_cc_taom_parent_erebor_1_text" text="Yalnız Dağ Asilzadesi" />
+    <string id="taom_cc_taom_parent_erebor_1_desc" text="Aileniz Erebor'un asil soyundandı, Kral Dain'in akrabasıydı, güçlü baltalar kuşanır ve Yalnız Dağ'ın onurunu savunmaları için savaşçılara ilham verirdi." />
+    <string id="taom_cc_taom_parent_erebor_2_text" text="Usta Demirci" />
+    <string id="taom_cc_taom_parent_erebor_2_desc" text="Aileniz Erebor'un alevli salonlarında efsanevi silahlar dövdü, Orta Dünya'nın her yanında arzu edilen kılıçlar ve zırhlar üreterek bunları zenginlik için takas etti." />
+    <string id="taom_cc_taom_parent_erebor_3_text" text="Maden Kazıcısı" />
+    <string id="taom_cc_taom_parent_erebor_3_desc" text="Aileniz Erebor'un en derin madenlerinde çalıştı, mithril ve değerli taşlar çıkardı ve dağı istilacılara karşı tahkim etmeyi öğrendi." />
+    <string id="taom_cc_taom_parent_erebor_4_text" text="Demirbaşmak Savaşçısı" />
+    <string id="taom_cc_taom_parent_erebor_4_desc" text="Aileniz Dain Demirbaşmak'ın savaşçılarıyla birlikte savaştı, balta ve kalkanı ustaca kullanıp Erebor'un kapılarını korumak için tatar yayları kullandı." />
+    <string id="taom_cc_taom_parent_erebor_5_text" text="Hazine Muhafızı" />
+    <string id="taom_cc_taom_parent_erebor_5_desc" text="Aileniz Erebor'un uçsuz bucaksız hazinelerini korudu, zenginliklerini yönetti ve dağın servetini düşmanlardan korumak için savunma planları yaptı." />
+    <string id="taom_cc_taom_parent_erebor_6_text" text="Dağ İzcisi" />
+    <string id="taom_cc_taom_parent_erebor_6_desc" text="Aileniz Erebor çevresindeki vahşi topraklarda devriye gezdi, Orkları izleyip Yalnız Dağ'ın sınırlarını korumak için yay kullandı." />
+    <string id="taom_cc_taom_parent_rivendell_1_text" text="İmladris Asilzadeleri" />
+    <string id="taom_cc_taom_parent_rivendell_1_desc" text="Aileniz İmladris'in saygın Elfleri olup Elrond'a hizmet etmeye ant içmişti. Çağların bilgeliğini ve ihtiyaç zamanında Rivendell'i savunma gücünü taşıyorlardı." />
+    <string id="taom_cc_taom_parent_rivendell_2_text" text="Rivendell Zanaatkârları" />
+    <string id="taom_cc_taom_parent_rivendell_2_desc" text="Aileniz yetenekli zanaatkârlar ve bilgin ustalarıydı, Elf işçiliğinin harikalarını yaratıp Orta Dünya'nın kadim bilgisini koruyorlardı." />
+    <string id="taom_cc_taom_parent_rivendell_3_text" text="Gizli Vadi Çiftçileri" />
+    <string id="taom_cc_taom_parent_rivendell_3_desc" text="Aileniz Rivendell'in bereketli tarlalarına baktı, halkının ve misafirlerinin huzurlu sığınaklarında iyi beslenip güçlü kalmalarını sağladı." />
+    <string id="taom_cc_taom_parent_rivendell_4_text" text="Vadi Muhafızları" />
+    <string id="taom_cc_taom_parent_rivendell_4_desc" text="Aileniz iz sürücüler ve koruyucular olarak hizmet etti, İmladris'in sınırlarında devriye gezerek vadinin kötülükten arınmış bir kutsal alan olarak kalmasını sağladı." />
+    <string id="taom_cc_taom_parent_rivendell_5_text" text="Elf Bilginleri" />
+    <string id="taom_cc_taom_parent_rivendell_5_desc" text="Aileniz bilgi, şifa ve büyü bilginleriydi, Elflerin kadim bilgisini koruyup Orta Dünya'nın özgür halklarına yardım ediyordu." />
+    <string id="taom_cc_taom_parent_rivendell_6_text" text="Vahşi Toprakların Gezginleri" />
+    <string id="taom_cc_taom_parent_rivendell_6_desc" text="Aileniz Rivendell'in ötesine yolculuk etmesiyle tanınırdı, ihtiyaç içindeki olanlara yardım edip vadinin ötesindeki değişen dünya hakkında bilgi edinirdi." />
+    <string id="taom_cc_taom_parent_mirkwood_1_text" text="Orman Diyarı Asilzadelerinin Soyundan Gelenler" />
+    <string id="taom_cc_taom_parent_mirkwood_1_desc" text="Aileniz Orman Diyarı'nın asil soylarından geliyordu, Kral Thranduil'in sarayının yakın danışmanları ve koruyucuları olarak hizmet ediyordu." />
+    <string id="taom_cc_taom_parent_mirkwood_2_text" text="Orman Yolu Tüccarları" />
+    <string id="taom_cc_taom_parent_mirkwood_2_desc" text="Aileniz Mirkwood'un tehlikeli yollarında seyahat eden tüccarlardı, Elf Kralı'nın salonlarına mal ve ticaret getiriyordu." />
+    <string id="taom_cc_taom_parent_mirkwood_3_text" text="Orman Diyarı Çiftçileri" />
+    <string id="taom_cc_taom_parent_mirkwood_3_desc" text="Aileniz Orman Diyarı'nın kenarlarında yaşıyordu, toprağı ekip gölgeli ormanın sunduğu az şeyi topluyordu." />
+    <string id="taom_cc_taom_parent_mirkwood_4_text" text="Orman Salonları Zanaatkârları" />
+    <string id="taom_cc_taom_parent_mirkwood_4_desc" text="Aileniz Orman Diyarı'nın zanaatkârlarıydı, ormanın kaynaklarından enfes silahlar ve aletler üretiyordu." />
+    <string id="taom_cc_taom_parent_mirkwood_5_text" text="Derin Ormanların Avcıları" />
+    <string id="taom_cc_taom_parent_mirkwood_5_desc" text="Aileniz Mirkwood'un gölgeli derinliklerine cesaretle giren yetenekli avcılardı, yiyecek sağlayıp içinde gizlenen yaratıklara karşı koyuyordu." />
+    <string id="taom_cc_taom_parent_mirkwood_6_text" text="Orman Diyarı Korucuları" />
+    <string id="taom_cc_taom_parent_mirkwood_6_desc" text="Aileniz korucular olarak hizmet etti, Orman Diyarı'nın sınırlarını koruyup orman yollarını davetsiz misafirlerden ve tehditlerden muhafaza etti." />
+    <string id="taom_cc_taom_parent_lothlorien_1_text" text="Caras Galadhon Asilzadeleri" />
+    <string id="taom_cc_taom_parent_lothlorien_1_desc" text="Aileniz doğrudan Leydi Galadriel ve Lord Celeborn'un rehberliğinde hizmet etti, Lothlorien'in kalbini sarsılmaz bir bağlılıkla savundu." />
+    <string id="taom_cc_taom_parent_lothlorien_2_text" text="Altın Orman'ın Zanaatkarları" />
+    <string id="taom_cc_taom_parent_lothlorien_2_desc" text="Aileniz usta zanaatkarlardı, Altın Orman'ın güzelliğini zırhtan müzik aletlerine kadar yaratımlarına dokuyorlardı." />
+    <string id="taom_cc_taom_parent_lothlorien_3_text" text="Mallorn Ağaçlarının Koruyucuları" />
+    <string id="taom_cc_taom_parent_lothlorien_3_desc" text="Aileniz kutsal Mallorn ağaçlarını korudu, Lothlórien'in ihtişamının her türlü tehdide karşı sürmesini sağladı." />
+    <string id="taom_cc_taom_parent_lothlorien_4_text" text="Dimrill Vadisi Korucu'ları" />
+    <string id="taom_cc_taom_parent_lothlorien_4_desc" text="Aileniz Lothlórien'in sınırlarında devriye gezdi, geçitleri korudu ve Orklar ile diğer istilacılara karşı savunma yaptı." />
+    <string id="taom_cc_taom_parent_lothlorien_5_text" text="Altın Orman'ın Şifacıları" />
+    <string id="taom_cc_taom_parent_lothlorien_5_desc" text="Aileniz yaralılara baktı ve Altın Orman'daki kadim şifa bilgeliğini korudu." />
+    <string id="taom_cc_taom_parent_lothlorien_6_text" text="Galadhrim Gezginleri" />
+    <string id="taom_cc_taom_parent_lothlorien_6_desc" text="Aileniz Lothlórien'in ötesindeki topraklarda dolaştı, müttefiklere yardım etti ve Altın Orman'ın ihtişamını yaydı." />
+    <string id="taom_cc_taom_parent_isengard_1_text" text="Saruman'ın Hizmetkarları" />
+    <string id="taom_cc_taom_parent_isengard_1_desc" text="Aileniz Beyaz Saruman'ın emirleri altında çalıştı, onun topraklarını yönetti ve fetih planlarında yardımcı oldu." />
+    <string id="taom_cc_taom_parent_isengard_2_text" text="Orthanc'ın Zanaatkarları" />
+    <string id="taom_cc_taom_parent_isengard_2_desc" text="Aileniz Orthanc'ın gölgesinde alet ve silah üretti, Saruman'ın iradesinin aletlerini dövdü." />
+    <string id="taom_cc_taom_parent_isengard_3_text" text="Deeping Mağaralarının İşçileri" />
+    <string id="taom_cc_taom_parent_isengard_3_desc" text="Aileniz Isengard'ın derin çukurlarında çalıştı, Saruman'ın hırslarını beslemek için taş ve maden çıkardı." />
+    <string id="taom_cc_taom_parent_isengard_4_text" text="Uruk-Hai Savaşçıları" />
+    <string id="taom_cc_taom_parent_isengard_4_desc" text="Aileniz Saruman tarafından yetiştirilen ilk Uruk-Hai'ler arasındaydı, savaş ve hakimiyet için dövülmüş savaşçılar." />
+    <string id="taom_cc_taom_parent_isengard_5_text" text="Wold'un Kâşifleri" />
+    <string id="taom_cc_taom_parent_isengard_5_desc" text="Aileniz kâşif ve iz sürücüydü, Saruman'ın güçlerinin Rohan ovalarında görünmeden hareket etmesini sağladı." />
+    <string id="taom_cc_taom_parent_isengard_6_text" text="Isengard Haydutları" />
+    <string id="taom_cc_taom_parent_isengard_6_desc" text="Aileniz gölgelerde faaliyet gösterdi, istihbarat topladı ve Saruman'ın düşmanlarını baltaladı." />
+    <string id="taom_cc_taom_parent_gundabad_1_text" text="Gundabad Soyluları" />
+    <string id="taom_cc_taom_parent_gundabad_1_desc" text="Aileniz Gundabad'ın soylu seçkinleri arasındaydı, atalarının yurdunu geri almaya ve istilacılardan korumaya adadılar." />
+    <string id="taom_cc_taom_parent_gundabad_2_text" text="Gundabad Demircileri" />
+    <string id="taom_cc_taom_parent_gundabad_2_desc" text="Aileniz yetenekli demircilerdi, Gundabad'ın savunucularını donatmak için alet ve silah üretti." />
+    <string id="taom_cc_taom_parent_gundabad_3_text" text="Gundabad Madencileri" />
+    <string id="taom_cc_taom_parent_gundabad_3_desc" text="Aileniz Gundabad'ın madenlerinde yorulmadan çalıştı, gizli zenginliklerini ortaya çıkardı." />
+    <string id="taom_cc_taom_parent_gundabad_4_text" text="Gri Dağlar Savaşçıları" />
+    <string id="taom_cc_taom_parent_gundabad_4_desc" text="Aileniz Gri Dağlar'da Orklar ve diğer tehditlere karşı savaştı, soydaşlarının onurunu ayakta tuttu." />
+    <string id="taom_cc_taom_parent_gundabad_5_text" text="Gundabad Korucu'ları" />
+    <string id="taom_cc_taom_parent_gundabad_5_desc" text="Aileniz korucular olarak hizmet etti, Gundabad çevresindeki vahşi topraklarda devriye gezdi ve sınırlarını zarardan korudu." />
+    <string id="taom_cc_taom_parent_gundabad_6_text" text="Dağların Sürgünleri" />
+    <string id="taom_cc_taom_parent_gundabad_6_desc" text="Aileniz Gundabad toplumunun kenarında yaşadı, acımasız dağ geçitlerinde kurnazlık ve acımasızlık sayesinde hayatta kaldı." />
+    <string id="taom_cc_taom_parent_dolguldur_1_text" text="Büyücü'nün Hizmetkarları" />
+    <string id="taom_cc_taom_parent_dolguldur_1_desc" text="Aileniz doğrudan Büyücü'nün emrinde hizmet etti, onun karanlık buyruklarını yerine getirdi ve iradesini bölge genelinde uyguladı." />
+    <string id="taom_cc_taom_parent_dolguldur_2_text" text="Gölgeli Çelik Ustalar" />
+    <string id="taom_cc_taom_parent_dolguldur_2_desc" text="Aileniz Dol Guldur'un karanlık büyüsüyle işlenmiş silah ve zırh dövdü, ordularını fetih için donattı." />
+    <string id="taom_cc_taom_parent_dolguldur_3_text" text="Gölgeli Salonların Madencileri" />
+    <string id="taom_cc_taom_parent_dolguldur_3_desc" text="Aileniz Dol Guldur'un mağaralarının derinliklerinde çalıştı, savaş makinesini beslemek için kaynaklar çıkardı." />
+    <string id="taom_cc_taom_parent_dolguldur_4_text" text="Büyülü Ormanın Savaşçıları" />
+    <string id="taom_cc_taom_parent_dolguldur_4_desc" text="Aileniz Dol Guldur'un gölgesini çevre topraklara yaymak için savaşan azılı savaşçılardı." />
+    <string id="taom_cc_taom_parent_dolguldur_5_text" text="Karanlık Ormanın Avcıları" />
+    <string id="taom_cc_taom_parent_dolguldur_5_desc" text="Aileniz ormanın çarpık yaratıklarını avlıyor ve Ölümsüzlük Büyücüsü'nün topraklarına izinsiz girmeye cüret edenleri takip ediyordu." />
+    <string id="taom_cc_taom_parent_dolguldur_6_text" text="Dol Guldur'un Haydutları" />
+    <string id="taom_cc_taom_parent_dolguldur_6_desc" text="Aileniz casus ve sabotajcılardı, Dol Guldur'un etkisini aldatma ve korku yayarak genişletiyordu." />
+    <string id="taom_cc_taom_parent_umbar_1_text" text="Korsan Kaptanları" />
+    <string id="taom_cc_taom_parent_umbar_1_desc" text="Aileniz Umbar Korsanları arasında liderlerdi, gemilere komuta ediyor ve Gondor kıyılarını basıyordu." />
+    <string id="taom_cc_taom_parent_umbar_2_text" text="Kara Gelgitin Tüccarları" />
+    <string id="taom_cc_taom_parent_umbar_2_desc" text="Aileniz denizler aşırı ticaret yapıyor, genellikle Korsanların girişimlerini finanse etmek için malları kaçakçılık yoluyla taşıyordu." />
+    <string id="taom_cc_taom_parent_umbar_3_text" text="Umbar'ın Gemi Ustaları" />
+    <string id="taom_cc_taom_parent_umbar_3_desc" text="Aileniz Korsanları savaşa taşıyan gemileri inşa ediyor, hız ve gizlilik gemileri üretiyordu." />
+    <string id="taom_cc_taom_parent_umbar_4_text" text="Kıyıların Korsanları" />
+    <string id="taom_cc_taom_parent_umbar_4_desc" text="Aileniz Gondor kıyılarını ve ötesini basan Korsanlardı, düşmanlarının yüreğine korku salıyordu." />
+    <string id="taom_cc_taom_parent_umbar_5_text" text="Açık Denizlerin Kılavuzları" />
+    <string id="taom_cc_taom_parent_umbar_5_desc" text="Aileniz yetenekli kılavuzlardı, tehlikeli denizlerin haritasını çıkarıyor ve Korsanları zafere götürüyordu." />
+    <string id="taom_cc_taom_parent_umbar_6_text" text="Umbar'ın Kaçakçıları" />
+    <string id="taom_cc_taom_parent_umbar_6_desc" text="Aileniz gölgelerde hareket ediyor, Korsanların hayatta kalması için hayati önem taşıyan malları ve bilgileri kaçırıyordu." />
+    <string id="taom_cc_taom_parent_empire_1_text" text="Eski Reislerin Soyundan Gelenler" />
+    <string id="taom_cc_taom_parent_empire_1_desc" text="Aileniz Dunlending氏族ları arasında reis olarak hüküm sürüyor, soy ve güç yoluyla saygı kazanıyordu. Babanız çatışma zamanlarında savaşçıları toplarken, anneniz氏族ın işlerini yönetiyordu." />
+    <string id="taom_cc_taom_parent_empire_2_text" text="氏族 Tüccarları" />
+    <string id="taom_cc_taom_parent_empire_2_desc" text="Aileniz Dunlending氏族ları ile dış dünya arasında mal ticareti yapıyordu. Toprak ve insanlar hakkındaki bilgileri hanenize refah getiriyordu." />
+    <string id="taom_cc_taom_parent_empire_3_text" text="Özgür氏族 Halkı" />
+    <string id="taom_cc_taom_parent_empire_3_desc" text="Aileniz Dunland'ın özgür halkıydı, tepeler arasında toprak işliyor ve koyun gütüyordu. Savaş geldiğinde reislerin çağrısına cevap veriyorlardı." />
+    <string id="taom_cc_taom_parent_empire_4_text" text="Yetenekli Zanaatkarlar" />
+    <string id="taom_cc_taom_parent_empire_4_desc" text="Aileniz Dunlending氏族larının zanaatkarlarıydı, tepelerin kaynaklarından silahlar, aletler ve süslemeler yapıyordu." />
+    <string id="taom_cc_taom_parent_empire_5_text" text="Orman Toplayıcıları" />
+    <string id="taom_cc_taom_parent_empire_5_desc" text="Aileniz Dunland'ın vahşi topraklarında yaşıyor, Sisli Dağlar'ın sınırındaki yoğun ormanlarda av ve ot topluyordu." />
+    <string id="taom_cc_taom_parent_empire_6_text" text="Göçebeler ve Sürgünler" />
+    <string id="taom_cc_taom_parent_empire_6_desc" text="Aileniz başıboşlardı,氏族lardan kovulmuş ya da onların erişiminin ötesinde yaşamayı seçmişlerdi. Zekalarıyla ve bazen daha az dürüst yollarla hayatta kalıyorlardı." />
+    <string id="taom_cc_taom_parent_vlandia_1_text" text="Marşalin Hizmetkarları" />
+    <string id="taom_cc_taom_parent_vlandia_1_desc" text="Aileniz Riddermark'ın marşallarına hizmet ediyor, Rohan'ın sınırlarının savunmasında onlarla birlikte sürüyordu. Babanız yetenekli bir süvari ve savaşçıydı." />
+    <string id="taom_cc_taom_parent_vlandia_2_text" text="Edoras Tüccarları" />
+    <string id="taom_cc_taom_parent_vlandia_2_desc" text="Aileniz Edoras'ın büyük salon şehrinde tüccardı, Riddermark'ın her yerinden ve ötesinden Rohan halkına mallar getiriyordu." />
+    <string id="taom_cc_taom_parent_vlandia_3_text" text="Westfold'un Özgür Toprak Sahipleri" />
+    <string id="taom_cc_taom_parent_vlandia_3_desc" text="Aileniz Westfold'un özgür çiftçileriydi, verimli ovalarda at ve ürün yetiştiriyordu. Kral çağırdığında atlı asker olarak hizmet ediyorlardı." />
+    <string id="taom_cc_taom_parent_vlandia_4_text" text="Aldburg'un Demircileri" />
+    <string id="taom_cc_taom_parent_vlandia_4_desc" text="Aileniz Aldburg'da ünlü demircilerdi, Rohirrim'i savaşa hazırlayan kılıçları ve zırhları dövüyordu." />
+    <string id="taom_cc_taom_parent_vlandia_5_text" text="Eastfold'un Avcıları" />
+    <string id="taom_cc_taom_parent_vlandia_5_desc" text="Aileniz Eastfold'da avcı ve izci idi, yay kullanmada yetenekli ve vahşi doğanın yollarında bilgiliydi." />
+    <string id="taom_cc_taom_parent_vlandia_6_text" text="Wold'un Gezginleri" />
+    <string id="taom_cc_taom_parent_vlandia_6_desc" text="Ailen Rohan ile Kahverengi Topraklar arasındaki vahşi otlaklardan Wold'da dolaştı. Zekalarıyla ve zaman zaman keşif görevleriyle hayatta kaldılar." />
+    <string id="taom_cc_taom_parent_sturgia_1_text" text="Dale Kralının Hizmetkarları" />
+    <string id="taom_cc_taom_parent_sturgia_1_desc" text="Ailen doğrudan Dale Kralının sarayı altında hizmet etti, krallığın işlerini yönetti ve halkını savundu." />
+    <string id="taom_cc_taom_parent_sturgia_2_text" text="Kentli Tüccarlar" />
+    <string id="taom_cc_taom_parent_sturgia_2_desc" text="Ailen Dale'in tüccarlarıydı, şehri Kuzey'de ünlü kılan kaliteli eşyalar ve oyuncaklarla ticaret yapıyordu." />
+    <string id="taom_cc_taom_parent_sturgia_3_text" text="Özgür Çiftçiler" />
+    <string id="taom_cc_taom_parent_sturgia_3_desc" text="Ailen Dale ve Esgaroth çevresindeki topraklarda çiftçilikle uğraşıyor, tarlaları işliyor ve Uzun Göl'de balık tutuyordu." />
+    <string id="taom_cc_taom_parent_sturgia_4_text" text="Kentli Zanaatkarlar" />
+    <string id="taom_cc_taom_parent_sturgia_4_desc" text="Ailen Dale'de zanaatkar olarak çalışıyordu, uzak diyarlardan tüccarları çeken oyuncakçılık ve metalişçilikte ünlüydü." />
+    <string id="taom_cc_taom_parent_sturgia_5_text" text="Orman Avcıları" />
+    <string id="taom_cc_taom_parent_sturgia_5_desc" text="Ailen Dale çevresindeki ormanlarda avcı ve ormancıydı, şehrin pazarları için kürk ve av hayvanları sağlıyordu." />
+    <string id="taom_cc_taom_parent_sturgia_6_text" text="Serseriler" />
+    <string id="taom_cc_taom_parent_sturgia_6_desc" text="Ailen Dale'de toplumun kenarlarında yaşıyor, ufak tefek işler ve bazen daha az saygın yollarla hayatta kalıyordu." />
+    <string id="taom_cc_taom_parent_aserai_1_text" text="Kara Yılan'ın Müttefikleri" />
+    <string id="taom_cc_taom_parent_aserai_1_desc" text="Ailen Kara Yılan'a sadıktı, Karanlık Lord'un emriyle kuzey topraklarına savaş çeteleri yönlendiriyordu." />
+    <string id="taom_cc_taom_parent_aserai_2_text" text="Çöl Savaşçıları" />
+    <string id="taom_cc_taom_parent_aserai_2_desc" text="Ailen Haradrim'in acımasız savaşçılarıydı, gençlikten itibaren Güney'in kavurucu çöllerinde savaşmak için eğitilmişti." />
+    <string id="taom_cc_taom_parent_aserai_3_text" text="Güneyin Tüccarları" />
+    <string id="taom_cc_taom_parent_aserai_3_desc" text="Ailen güney yolları boyunca ticaret yapıyor, Harad pazarlarına egzotik mallar ve baharatlar getiriyordu." />
+    <string id="taom_cc_taom_parent_aserai_4_text" text="Çöl Çiftçileri" />
+    <string id="taom_cc_taom_parent_aserai_4_desc" text="Ailen Harad'ın vahaları ve sulanan topraklarında çalışıyor, beceri ve sabırla kurak topraktan hayat çıkarıyordu." />
+    <string id="taom_cc_taom_parent_aserai_5_text" text="Göçebe Kabile Halkı" />
+    <string id="taom_cc_taom_parent_aserai_5_desc" text="Ailen uçsuz bucaksız çöllerde dolaşıyor, su kaynakları arasındaki kadim yolları izliyor ve yerleşik halklarla ticaret yapıyordu." />
+    <string id="taom_cc_taom_parent_aserai_6_text" text="Çöl Haydutları" />
+    <string id="taom_cc_taom_parent_aserai_6_desc" text="Ailen Haradrim toplumunun kenarlarında hayatta kalıyor, kervanları basıyor ve sonsuz kumlarda kurnazlıkla yaşıyordu." />
+    <string id="taom_cc_taom_parent_battania_1_text" text="Khand'ın At-Lordları" />
+    <string id="taom_cc_taom_parent_battania_1_desc" text="Ailen Variag at klanlarının lordlarıydı, Khand'ın bozkırlarında acımasız atlı savaşçılara komuta ediyordu." />
+    <string id="taom_cc_taom_parent_battania_2_text" text="Göçebe Şifacılar" />
+    <string id="taom_cc_taom_parent_battania_2_desc" text="Ailen Variag klanlarının şifacıları ve bilge kişileriydi, hastalara bakıyor ve kadim ilaçları koruyordu." />
+    <string id="taom_cc_taom_parent_battania_3_text" text="Klan Savaşçıları" />
+    <string id="taom_cc_taom_parent_battania_3_desc" text="Ailen Variag klanlarının savaşçılarıydı, atlı savaşta ustaydı ve reislerine son derece sadıktı." />
+    <string id="taom_cc_taom_parent_battania_4_text" text="Bozkırların Demircileri" />
+    <string id="taom_cc_taom_parent_battania_4_desc" text="Ailen Variag halkının demircileriydi, doğu dağlarının metallerinden silahlar ve at teçhizatı dövüyordu." />
+    <string id="taom_cc_taom_parent_battania_5_text" text="Bozkır Avcıları" />
+    <string id="taom_cc_taom_parent_battania_5_desc" text="Ailen Khand'ın uçsuz bucaksız bozkırlarında avlanıyor, av takip ediyor ve sürüleri yırtıcılardan koruyordu." />
+    <string id="taom_cc_taom_parent_battania_6_text" text="Khand'ın Ozanları" />
+    <string id="taom_cc_taom_parent_battania_6_desc" text="Ailen gezgin ozanlar ve hikaye anlatıcılarıydı, Variag halkının sözlü geleneklerini şarkı ve hikayelerle canlı tutuyordu." />
+    <string id="taom_cc_taom_parent_khuzait_1_text" text="Reisinin Akrabaları" />
+    <string id="taom_cc_taom_parent_khuzait_1_desc" text="Ailen Doğulu reisinin yakın akrabasıydı, güç mevkilerinde bulunuyor ve savaşçı klanlar arasında saygı görüyordu." />
+    <string id="taom_cc_taom_parent_khuzait_2_text" text="Doğunun Tüccarları" />
+    <string id="taom_cc_taom_parent_khuzait_2_desc" text="Aileniz doğu yollarında ticaret yaparak uzak diyarlardan mallar getirip Rhûn pazarlarına taşırdı." />
+    <string id="taom_cc_taom_parent_khuzait_3_text" text="Göçebe Kabile Halkı" />
+    <string id="taom_cc_taom_parent_khuzait_3_desc" text="Aileniz doğu ovalarının göçebeleriydi, mevsimlerle birlikte hareket eder ve topraktan geçinirdi." />
+    <string id="taom_cc_taom_parent_khuzait_4_text" text="Bozkır Çiftçileri" />
+    <string id="taom_cc_taom_parent_khuzait_4_desc" text="Aileniz Rhûn iç denizinin yakınındaki verimli vadilerde çalışır, tahıl yetiştirir ve hayvancılık yapardı." />
+    <string id="taom_cc_taom_parent_khuzait_5_text" text="Ruh Çağıranlar" />
+    <string id="taom_cc_taom_parent_khuzait_5_desc" text="Aileniz Doğulular klanlarının şamanları ve ruh konuşucularıydı, toprak ve gökyüzünün ruhlarıyla iletişim kurardı." />
+    <string id="taom_cc_taom_parent_khuzait_6_text" text="Sınır Ötesi Gözcüler" />
+    <string id="taom_cc_taom_parent_khuzait_6_desc" text="Aileniz Doğulu ordusu için gözcü ve keşifçi olarak hizmet eder, istihbarat toplamak için ana gücün çok ilerisinde dolaşırdı." />
+    <string id="taom_cc_taom_childhood_leadership_text" text="liderlik yetenekleriniz." />
+    <string id="taom_cc_taom_childhood_leadership_desc" text="Kadim harabelerinin gölgesinde, genç yoldaşlarınız rehberlik için size bakardı. İster ormanda güvenli bir yol çizerken ister hayali düşmanlara karşı cesaret verirken, doğal liderliğiniz eski kralların sancakları gibi parlardı." />
+    <string id="taom_cc_taom_childhood_fighting_text" text="dövüş yetenekleriniz." />
+    <string id="taom_cc_taom_childhood_fighting_desc" text="Gücünüz köy çocukları arasında hikayelere konu olurdu. Deneyimli bir savaşçı gibi yük taşıma ve bir mancınık gücüyle taş fırlatma yeteneğinize hayran kalırlardı. O zamanlar bile efsane kahramanlarıyla kıyaslanırdınız." />
+    <string id="taom_cc_taom_childhood_history_text" text="tarih bilginiz." />
+    <string id="taom_cc_taom_childhood_history_desc" text="Hiçbir hareketi kaçırmayan keskin gözleriniz ve çoğunu geride bırakan hızlı ayaklarınızla, genellikle bir geyik izini veya gizli bir süs eşyasının parıltısını ilk fark edendiniz. Arkadaşlarınız sizi sessiz ve gözlemci, kuzeyden gelen korucularla kıyaslardı." />
+    <string id="taom_cc_taom_childhood_convince_text" text="başkalarını ikna etme yeteneğiniz." />
+    <string id="taom_cc_taom_childhood_convince_desc" text="Diğerleri oynarken siz pazarda oyalanır, tüccarların fiyat pazarlığı yapmasını ve kar hesaplamasını seyrederdiniz. Ticaret sanatına büyülenmiş, kendinizi sık sık bir Gondor kâhyası veya mücevher sayan bir cüce zanaatkarı olarak hayal ederdiniz." />
+    <string id="taom_cc_taom_childhood_charge_text" text="durumu kontrol altına alma yeteneğiniz." />
+    <string id="taom_cc_taom_childhood_charge_desc" text="Başkalarını anlamak için doğal bir yeteneğiniz vardı, sık sık tartışmaları yatıştırır ve kolayca arkadaş kazanırdınız. Büyükleriniz bir elf lordunun karizmasına sahip olduğunuzu söylerken, akranlarınız size sarsılmaz bir bağlılıkla uyardı." />
+    <string id="taom_cc_taom_childhood_horses_text" text="atlardaki yeteneğiniz." />
+    <string id="taom_cc_taom_childhood_horses_desc" text="Hayvanlarla, özellikle atlarla derin bir bağ hissederdiniz. Ahır görevlileri en huysuz atı bile nasıl sakinleştirebildiğinize hayret ederdi ve yaraları iyileştirme beceriniz bir gün Rohan'ın at ustalarıyla yarışabileceğiniz fısıltılarına sebep olurdu." />
+    <string id="taom_cc_taom_youth_gondor_1_text" text="Kuğu Şövalyeleriyle eğitim gördünüz." />
+    <string id="taom_cc_taom_youth_gondor_1_desc" text="Dol Amroth Kuğu Şövalyelerinin saflarına katıldınız, Gondor'un en seçkinlerinin sancakları altında süvari savaşı ve şövalyelik sanatını öğrendiniz." />
+    <string id="taom_cc_taom_youth_gondor_2_text" text="Minas Tirith'te nöbet tuttunuz." />
+    <string id="taom_cc_taom_youth_gondor_2_desc" text="Minas Tirith garnizonunda hizmet ettiniz, Beyaz Şehir'in surlarını savundunuz ve kıdemli komutanlarından kuşatma savunması sanatını öğrendiniz." />
+    <string id="taom_cc_taom_youth_gondor_3_text" text="Ithilien Korucularıyla süvari oldunuz." />
+    <string id="taom_cc_taom_youth_gondor_3_desc" text="Ithilien'in vahşi topraklarında devriye gezdiniz, gölgelerden düşmana saldırdınız ve Faramir'in birliği geleneğinde bir korucu olarak yeteneklerinizi geliştirdiniz." />
+    <string id="taom_cc_taom_youth_gondor_4_text" text="Kule Muhafızlarıyla eğitim gördünüz." />
+    <string id="taom_cc_taom_youth_gondor_4_desc" text="Gondor'un seçkin Kule Muhafızlarına katıldınız, Kaleyi ve Beyaz Ağacı korumak için disiplinli piyade savaşı eğitimi aldınız." />
+    <string id="taom_cc_taom_youth_gondor_5_text" text="Osgiliath harabelerinde aklınızla yaşadınız." />
+    <string id="taom_cc_taom_youth_gondor_5_desc" text="Osgiliath'ın çekişmeli harabelerinde zorlukla geçindiniz, sokak savaşının ölümcül ekonomisini ve iyi atılmış bir taşın değerini öğrendiniz. O yarı batık kırık taş labirentinde hayatta kalmak sizi hiçten her şeyi doğaçlayabilen birine dönüştürdü." />
+    <string id="taom_cc_taom_youth_mordor_1_text" text="Warg Atlılarıyla eğitim gördünüz." />
+    <string id="taom_cc_taom_youth_mordor_1_desc" text="Mordor'un seçkin Warg Atlılarıyla eğitim almak için seçildiniz, korkunç yaratıkları kontrol etmeyi ve düşmanın kalbine dehşet salınmayı öğrendiniz." />
+    <string id="taom_cc_taom_youth_mordor_2_text" text="Mordor kalelerinin kulelerinde görev yaptınız." />
+    <string id="taom_cc_taom_youth_mordor_2_desc" text="Mordor'un kara kalelerinin gözetleme kulelerinde ve surlarında konuşlandırıldınız, ufku hareket açısından taradınız ve yaklaşan herkese ateş yönlendirdiniz. Bu görev hem düşünebilen hem de ateş edebilenlere uygundu." />
+    <string id="taom_cc_taom_youth_mordor_3_text" text="Kara Gözcülerle süvari oldunuz." />
+    <string id="taom_cc_taom_youth_mordor_3_desc" text="Kara Gözcülere katıldınız, istihbarat toplamak ve düşmanın kanatlarını taciz etmek için çorak topraklarda hızla sürdünüz." />
+    <string id="taom_cc_taom_youth_mordor_4_text" text="Kara Lord'un Ork lejyonlarında yürüdünüz." />
+    <string id="taom_cc_taom_youth_mordor_4_desc" text="Sauron'un piyade birliklerinin amansız dizilişlerinde talim yaptınız, tek bir zırhlı yumruk gibi hareket eden saflar içinde omuz saldırısı ve kılıç ve baltayla kesmeyi öğrendiniz. Zayıflık cezalandırılır, güç demirle ödüllendirilirdi." />
+    <string id="taom_cc_taom_youth_mordor_5_text" text="Gölge Çatışmacılarına katıldı." />
+    <string id="taom_cc_taom_youth_mordor_5_desc" text="Bir Gölge Çatışmacısı oldun, düşmanı fırlatma silahları ve hızlı saldırılarla taciz ediyor, sonra karanlığa geri çekiliyordun." />
+    <string id="taom_cc_taom_youth_mordor_6_text" text="Sauron'un savaş ordusunun kenarlarında yaşadı." />
+    <string id="taom_cc_taom_youth_mordor_6_desc" text="Ne asker ne de köledin, Mordor'un büyük ordusunun gölgeli sınırlarında dolaşıyordun — elinize geçeni çalıyor, bilgi ticareti yapıyor ve hangi subayların rüşvet yiyebileceğini, hangilerinden kaçınmanın daha iyi olduğunu öğreniyordun. Kurnazlık güvendiğin tek para birimiydi." />
+    <string id="taom_cc_taom_youth_erebor_1_text" text="Erebor Kraliyet Muhafızlarında görev yaptı." />
+    <string id="taom_cc_taom_youth_erebor_1_desc" text="Dağın Altındaki Kral'a sadakatini taahhüt ettin, seçkin Kraliyet Muhafızlarında görev yaparak krallığı savunmak için balta ve çekiç kullanmayı öğrendin." />
+    <string id="taom_cc_taom_youth_erebor_2_text" text="Erebor kapılarını savundu." />
+    <string id="taom_cc_taom_youth_erebor_2_desc" text="Erebor'un garnizonunun bir parçası olarak, tüm gelenlere karşı tüfekleri kullandın ve kapıları tuttun, cüce kuşatma savunması sanatını öğrendin." />
+    <string id="taom_cc_taom_youth_erebor_3_text" text="Demir Muhafızlarla eğitim gördü." />
+    <string id="taom_cc_taom_youth_erebor_3_desc" text="Erebor'un şok birlikleri olan Demir Muhafızlara katıldın, fırlatma baltaları atmayı ve dağ salonlarının dar koridorlarında savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_erebor_4_text" text="Yalnız Dağ'ın eteklerini keşfetti." />
+    <string id="taom_cc_taom_youth_erebor_4_desc" text="Erebor çevresindeki vahşi topraklara girerek Orkları ve kurtları izledin ve dağın yaklaşımlarını korudun." />
+    <string id="taom_cc_taom_youth_erebor_5_text" text="Öncü birlikte durdu." />
+    <string id="taom_cc_taom_youth_erebor_5_desc" text="Erebor'un öncü birliğinin bir parçası olarak eğitim gördün, disiplinli cüce savaş düzenlerinde iki elli balta ve mızrak ustalaştın." />
+    <string id="taom_cc_taom_youth_erebor_6_text" text="Kervan muhafızlarıyla çalıştı." />
+    <string id="taom_cc_taom_youth_erebor_6_desc" text="Erebor ve Dale arasındaki ticaret kervanlarına eşlik ettin, ticaret yollarını ve değerli yükü savunma sanatını öğrendin." />
+    <string id="taom_cc_taom_youth_rivendell_1_text" text="Imladris Muhafızlarıyla eğitim gördü." />
+    <string id="taom_cc_taom_youth_rivendell_1_desc" text="Rivendell'in sancakları altında görev yaptın, Son Huzurlu Ev'i savunmak için atlı dövüş ve zarif Elf dövüş sanatlarında eğitim gördün." />
+    <string id="taom_cc_taom_youth_rivendell_2_text" text="Elrond'un salonlarında nöbet tuttu." />
+    <string id="taom_cc_taom_youth_rivendell_2_desc" text="Elrond'un salonlarında nöbetçi olarak görev yaptın, araziyi okumayı ve tehditleri gizli vadiye ulaşmadan önce öngörmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_rivendell_3_text" text="Sınır bekçileriyle Trollshaws'da dolaştı." />
+    <string id="taom_cc_taom_youth_rivendell_3_desc" text="Rivendell'in sınırlarının çok ötesinde vahşi Trollshaws ve üst Anduin vadilerine devriye gezen bekçilere katıldın, düşmanları izlemeyi ve eski orman boyunca karanlık hareketin izlerini okumayı öğrendin." />
+    <string id="taom_cc_taom_youth_rivendell_4_text" text="Elf piyade sanatında eğitim gördü." />
+    <string id="taom_cc_taom_youth_rivendell_4_desc" text="Rivendell savaşçılarının saflarında durdun, Yüksek Elflerin hassas ve ölümcül tarzında mızrak ve kılıç ustalaştın." />
+    <string id="taom_cc_taom_youth_rivendell_5_text" text="Bilge ustalarıyla yolculuk etti." />
+    <string id="taom_cc_taom_youth_rivendell_5_desc" text="Rivendell'in bilge ustalarına yolculuklarında eşlik ettin, özgür halklar arasında diplomasi, ikna ve liderlik sanatını öğrendin." />
+    <string id="taom_cc_taom_youth_mirkwood_1_text" text="Orman Süvarileriyle eğitim gördü." />
+    <string id="taom_cc_taom_youth_mirkwood_1_desc" text="Hızlı Elf atlarıyla karanlık ormanları aştın, Thranduil'in krallığının kadim ağaçları arasında attan savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_mirkwood_2_text" text="Karanlık açıklıklarda devriye gezdi." />
+    <string id="taom_cc_taom_youth_mirkwood_2_desc" text="Mirkwood açıklıklarında devriye gezen bekçilere katıldın, örümceklere, Orklara ve Dol Guldur'un sürünen gölgesine karşı gözcülük yapıyordun." />
+    <string id="taom_cc_taom_youth_mirkwood_3_text" text="Elf Mızrak Muhafızlarıyla durdu." />
+    <string id="taom_cc_taom_youth_mirkwood_3_desc" text="Orman Krallığının Mızrak Muhafızları arasında yerini aldın, orman örtüsünün altında disiplinli düzenlerde savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_mirkwood_4_text" text="Mirkwood örümcekleri için tuzak kurdu." />
+    <string id="taom_cc_taom_youth_mirkwood_4_desc" text="Dev örümcekleri Orman Krallığının kalbinden uzak tutmakla görevli avcılar arasındaydın, karanlık çalılıkta tuzak ve pusu kurmayı, yaratıklar sana yaklaşmadan önce bıçak ve fırlatılan bıçakla vurmayı öğrendin." />
+    <string id="taom_cc_taom_youth_mirkwood_5_text" text="Orman Kralının salonlarında hizmet etti." />
+    <string id="taom_cc_taom_youth_mirkwood_5_desc" text="Thranduil'in sarayına kabul edildin, yıldızların ilk çağından beri şarkı söyleyen ustalardan diplomatik sanatları ve Orman Elflerinin şarkılarını öğrendin. Elf Kralının salonu kılıçtan olduğu kadar dilden de çok şey talep ediyordu." />
+    <string id="taom_cc_taom_youth_lothlorien_1_text" text="Galadhrim süvarileriyle eğitim gördü." />
+    <string id="taom_cc_taom_youth_lothlorien_1_desc" text="Lothlorien'in seçkin süvarilerine katıldın, Altın Orman boyunca hızlı atlar sürüyor ve Galadhrim'in zarafetiyle savaşmayı öğreniyordun." />
+    <string id="taom_cc_taom_youth_lothlorien_2_text" text="Altın Orman'ın flet'lerinde nöbet tuttu." />
+    <string id="taom_cc_taom_youth_lothlorien_2_desc" text="Mallorn dalları arasındaki yüksek platformlarda uzun, sakin nöbetleri tuttun, gümüş yayın örtülü sınırların eşiğinde gerili. Hiçbir şey Galadhrim bekçilerinden görünmeden geçemezdi — ve sen de böyle kalmasını niyetindeydin." />
+    <string id="taom_cc_taom_youth_lothlorien_3_text" text="Caras Galadhon okçularına katıldı." />
+    <string id="taom_cc_taom_youth_lothlorien_3_desc" text="Lothlorien'in ünlü okçularıyla eğitim gördün, mallorn ağaçlarının arasındaki platformlardan ölümcül isabetli oklar göndermeyi öğrendin." />
+    <string id="taom_cc_taom_youth_lothlorien_4_text" text="Ağaç bekçilerine katıldı." />
+    <string id="taom_cc_taom_youth_lothlorien_4_desc" text="Ağaç bekçisi oldun, kadim Elf geleneğiyle mızrak ve kılıçla Lothlorien'in kalbini savundun." />
+    <string id="taom_cc_taom_youth_lothlorien_5_text" text="Hanımefendi'nin öğrencisi olarak ayna yollarında yürüdü." />
+    <string id="taom_cc_taom_youth_lothlorien_5_desc" text="Altın Orman'ın derin sanatlarını Galadriel'in danışmanlarına en yakın olanların yanında çalıştın, güç şarkılarını ve kılıç kaldırmadan lordların iradesini değiştirebilecek sessiz ikna sanatını öğrendin. Kolay adlandırılmayan hediyelerle ayrıldın." />
+    <string id="taom_cc_taom_youth_isengard_1_text" text="Saruman'ın Kurt Binicilerine katıldı." />
+    <string id="taom_cc_taom_youth_isengard_1_desc" text="Saruman'ın güçleri için binici olarak eğitim gördün, Kurtları kontrol etmeyi ve ovalarda yıkıcı hızla saldırmayı öğrendin." />
+    <string id="taom_cc_taom_youth_isengard_2_text" text="Orthanç çukurlarını korudu." />
+    <string id="taom_cc_taom_youth_isengard_2_desc" text="Orthanç'ta görevlendirildin, tatar kullanarak ve üreme çukurlarını Saruman'ın iradesine karşı çıkacak herkesten savunarak nöbet tuttun." />
+    <string id="taom_cc_taom_youth_isengard_3_text" text="Uruk-hai piyadesi arasında savaştı." />
+    <string id="taom_cc_taom_youth_isengard_3_desc" text="Vahşi Uruk-hai'lerle eğitim gördün, onların acımasız yakın dövüş tarzını öğrendin ve yorucu talimlerle dayanıklılık kazandın." />
+    <string id="taom_cc_taom_youth_isengard_4_text" text="Saruman'ın casusları için keşif yaptı." />
+    <string id="taom_cc_taom_youth_isengard_4_desc" text="Keşifçi ve casus olarak gönderildin, Saruman'ın savaş makinesi için istihbarat toplamak üzere diyarlarda dolaştın." />
+    <string id="taom_cc_taom_youth_isengard_5_text" text="Isengard mızraklılarının saflarına katıldı." />
+    <string id="taom_cc_taom_youth_isengard_5_desc" text="Isengard'ın müthiş mızraklılarının bir üyesi oldun, her süvari hücumunu kırabilecek sıkı dizilişlerde savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_isengard_6_text" text="Saruman'ın savaş çeteleri içinde yolunu savaşarak açtı." />
+    <string id="taom_cc_taom_youth_isengard_6_desc" text="Isengard'ın acımasız savaş çetelerinde kendini kanıtladın, seni hayatta tutan her silah tarzını öğrendin ve işe yaramayanı geride bıraktın. Saruman yalnızca sonuçları önemsiyordu ve savaş çeteleri bu felsefeyi merhametsizce uyguluyordu." />
+    <string id="taom_cc_taom_youth_gundabad_1_text" text="Gundabad'ın Kurt binicileriyle sürdü." />
+    <string id="taom_cc_taom_youth_gundabad_1_desc" text="Gundabad Dağı'nın Kurt binicileriyle eğitim gördün, vahşi yaratıkları sinsi dağ geçitlerinde kontrol etmeyi ve sırtlarından mızrak ve süngüyle saldırmayı öğrendin." />
+    <string id="taom_cc_taom_youth_gundabad_2_text" text="Gundabad demirhanelerini korudu." />
+    <string id="taom_cc_taom_youth_gundabad_2_desc" text="Gundabad'ın garnizonunda hizmet ettin, yay ve mızrakla demirhane ve tünelleri izinsiz girenlere karşı savundun." />
+    <string id="taom_cc_taom_youth_gundabad_3_text" text="Çılgın savaşçılarla eğitim gördü." />
+    <string id="taom_cc_taom_youth_gundabad_3_desc" text="Gundabad'ın çılgın savaşçıları arasındaydın, pervasız öfke ve ezici güçle savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_gundabad_4_text" text="Dağ geçitlerinde keşif yaptı." />
+    <string id="taom_cc_taom_youth_gundabad_4_desc" text="Gundabad çevresindeki sinsi dağ yollarında dolaştın, düşmanları izleyerek ve soydaşların için güvenli geçiş sağlayarak vakit geçirdin." />
+    <string id="taom_cc_taom_youth_gundabad_5_text" text="Gundabad'ın mızrak lejyonlarında cepheyi tuttu." />
+    <string id="taom_cc_taom_youth_gundabad_5_desc" text="Gundabad Dağı'nın ağır mızrak dizilişleriyle talim yaptın ve yürüdün, hücumlara karşı direnmeyi ve cephe takviye edilene kadar acımasız kuzey koşullarında mevzide kalmayı öğrendin." />
+    <string id="taom_cc_taom_youth_gundabad_6_text" text="Geçitlerin çapulcu çeteleriyle koştu." />
+    <string id="taom_cc_taom_youth_gundabad_6_desc" text="Dağ klanlarının yapısının dışında yaşadın, savaş çetelerini takip eden ve her çatışmanın ardından geri kalanları toplayan hızlı parmaklı fırsatçılarla birlikte hareket ettin. Fırlatma silahları ve hızlı bir çift bacak, başka hiçbir şey işe yaramazken seni hayatta tuttu." />
+    <string id="taom_cc_taom_youth_dolguldur_1_text" text="Ölümsüz Büyücü'nün binicilerine hizmet etti." />
+    <string id="taom_cc_taom_youth_dolguldur_1_desc" text="Dol Guldur'un hizmetinde sürdün, karanlık atları yöneterek Mirkwood'un güney bölgelerinde dehşet saçtın." />
+    <string id="taom_cc_taom_youth_dolguldur_2_text" text="Gölge salonlarını korudu." />
+    <string id="taom_cc_taom_youth_dolguldur_2_desc" text="Dol Guldur'un karanlık salonlarını savundun, yay ve kılıçla Ölümsüz Büyücü'nün topraklarında nöbet tuttun." />
+    <string id="taom_cc_taom_youth_dolguldur_3_text" text="Karanlık savaş sanatlarında eğitim gördü." />
+    <string id="taom_cc_taom_youth_dolguldur_3_desc" text="Karanlık savaş sanatlarında yeteneklerini geliştirdin, Dol Guldur'un gölgeli koridorlarında kurnazlık ve hileyeyle savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_dolguldur_4_text" text="Yozlaşmış Yeşilağaç'ta izinsiz girenleri avladı." />
+    <string id="taom_cc_taom_youth_dolguldur_4_desc" text="Ölümsüz Büyücü'nün topraklarına yaklaşanları izlemek ve ortadan kaldırmak için güney Mirkwood'un bükülmüş bitki örtüsüne gönderildin, yozlaşmış ormanda ses çıkarmadan veya iz bırakmadan avını takip etmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_dolguldur_5_text" text="Dol Guldur'un gölge lejyonlarında yürüdü." />
+    <string id="taom_cc_taom_youth_dolguldur_5_desc" text="Dol Guldur'un demir disiplinli karanlık lejyonlarında talim yaptın, Ölümsüz Büyücü'nün kalesinin yozlaşması adımlarına ve sessizliğine işlerken diziliş halinde ağır silahlar kullanmayı öğrendin." />
+    <string id="taom_cc_taom_youth_dolguldur_6_text" text="Büyücü'nün habercisi olarak karanlıkta hareket etti." />
+    <string id="taom_cc_taom_youth_dolguldur_6_desc" text="Kimsenin yazmaya cesaret edemediği mesajları bozulmuş ormanın içinden taşıdın, yüzlerini asla göstermeyen ajanlara elden teslim ettin. Bu iş sessizlik, sabır ve gölge gerektirdiğinde uyarı vermeden vurmayı gerektiriyordu." />
+    <string id="taom_cc_taom_youth_umbar_1_text" text="Korsan Filosu'nda hizmet etti." />
+    <string id="taom_cc_taom_youth_umbar_1_desc" text="Umbar Korsan Filosu'na katıldın, gemilerde savaşmayı ve Gondor'un sahil savunmalarına karşı çıkarma birliklerine liderlik etmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_umbar_2_text" text="Umbar limanlarını korudu." />
+    <string id="taom_cc_taom_youth_umbar_2_desc" text="Umbar'ın liman garnizonlarında görev yaptın, rıhtımları savunarak sahil savunması sanatını öğrendin." />
+    <string id="taom_cc_taom_youth_umbar_3_text" text="Korsanlarla Gondor sahillerine akınlar düzenledi." />
+    <string id="taom_cc_taom_youth_umbar_3_desc" text="Düşman rıhtımlarına ilk saldıranlardan oldun, mızraklar fırlatarak ve savunucuları keserek elde ettiklerinle birlikte Kara gemilere geri çekilmeyi öğrendin. Akınlar hızlı ve acımasızdı, tereddüt etmenin hayatlara mal olduğunu öğrendin." />
+    <string id="taom_cc_taom_youth_umbar_4_text" text="Korsan izci olarak Belfalas Körfezi'nde seyretti." />
+    <string id="taom_cc_taom_youth_umbar_4_desc" text="Korsan filosunun direk başlarında ve izci teknelerinde görev yaptın, gelgitleri okuyarak açık sularda av tespit ederken sallanan bir güverteden yay atmayı öğrendin. Ne gördüğün bir akının gerçekleşip gerçekleşmeyeceğine karar veriyordu." />
+    <string id="taom_cc_taom_youth_umbar_5_text" text="Kara Númenorluların mızrak hattında durdu." />
+    <string id="taom_cc_taom_youth_umbar_5_desc" text="Umbar piyadesinin disiplinli kara birliklerinde talim yaptın, arkandaki gemiler boşalırken mızrak ve kalkanla sahil başını tutmayı öğrendin. Kara Númenorlu subaylar hassasiyet bekliyordu ve bunu elde ediyorlardı." />
+    <string id="taom_cc_taom_youth_umbar_6_text" text="Umbar rıhtımının haydutlarıyla koştu." />
+    <string id="taom_cc_taom_youth_umbar_6_desc" text="Liman şehrinin sert kenar mahallelerinde hayatta kaldın, beyan edilemeyen malları taşıyarak hiçbir okulda öğretilemeyecek beceriler edinerek. Korsan dünyasında kimsenin fark etmediği fırsatları görecek kadar zeki olanlar için bir yer vardı." />
+    <string id="taom_cc_taom_youth_empire_1_text" text="Tepe Süvarileriyle birlikte sürdü." />
+    <string id="taom_cc_taom_youth_empire_1_desc" text="Sağlam tepe midillilerine binerek Dunland'ın Tepe Süvarileriyle birlikte sürdün, yaylaların engebeli arazisinde savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_empire_2_text" text="Kabile Uzun Evi'nde hizmet etti." />
+    <string id="taom_cc_taom_youth_empire_2_desc" text="Dunland'ın kabile uzun evlerinde taktikler ve komuta sanatını öğrendin, klanın için akınlar ve savunmalar planlayarak." />
+    <string id="taom_cc_taom_youth_empire_3_text" text="Sınır Nöbeti'yle nöbet tuttu." />
+    <string id="taom_cc_taom_youth_empire_3_desc" text="Dunland'ın Sınır Nöbeti'ne katıldın, mızraklar fırlatarak ve kılıçla savaşarak klanının topraklarını savundun." />
+    <string id="taom_cc_taom_youth_empire_4_text" text="Yaylaları keşfetti." />
+    <string id="taom_cc_taom_youth_empire_4_desc" text="İzci olarak yaylaları ve ormanları dolaştın, araziyi okumayı ve at sırtından ok atmayı öğrendin." />
+    <string id="taom_cc_taom_youth_empire_5_text" text="Mızrak Kardeşleri'ne katıldı." />
+    <string id="taom_cc_taom_youth_empire_5_desc" text="Dunland'ın Mızrak Kardeşleri'nden biri oldun, mızrak ve kalkanla sıkı dizilişlerde savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_empire_6_text" text="Kabile Çarpışkancısı olarak at-lordlarını taciz etti." />
+    <string id="taom_cc_taom_youth_empire_6_desc" text="Kabile Çarpışkancısı olarak, geçitlerde Rohirrim öncü birliklerine pusu kurmayı, mızraklar fırlatarak onlar karşılık veremeden sırt çizgisine kayboluşu öğrendin. At-lordlarına karşı eski kin her atışta yaşıyordu." />
+    <string id="taom_cc_taom_youth_vlandia_1_text" text="Mark Süvarileri'yle eğitim gördü." />
+    <string id="taom_cc_taom_youth_vlandia_1_desc" text="Rohirrim arasında binici olarak yeteneğini kanıtladın, Eorl Genç'in geleneklerinde mızrakla hücum etmeyi ve at sırtından savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_vlandia_2_text" text="Edoras şehir muhafızlığında hizmet etti." />
+    <string id="taom_cc_taom_youth_vlandia_2_desc" text="Edoras'ın kapılarında ve surlarında nöbet tuttun, Altın Salon'un hizmetinde taktikler ve disiplin öğrendin." />
+    <string id="taom_cc_taom_youth_vlandia_3_text" text="Westfold'un çarpışkancılarına katıldı." />
+    <string id="taom_cc_taom_youth_vlandia_3_desc" text="Westfold çarpışkancılarına katıldın, açık ovalarda fırlatma silahları ve kılıçla savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_vlandia_4_text" text="Wold'un izcileriyle sürdü." />
+    <string id="taom_cc_taom_youth_vlandia_4_desc" text="Wold'un izcileriyle birlikte sürdün, Doğu'dan gelen tehditleri izlemek için ovalarla uzaklara sefer yaptın." />
+    <string id="taom_cc_taom_youth_vlandia_5_text" text="Eastfold'un mızrakçıları arasında durdu." />
+    <string id="taom_cc_taom_youth_vlandia_5_desc" text="Eastfold'un bir mızrakçısı olarak, düşmanın hücumuna karşı kalkan duvarını tutmayı öğrendin." />
+    <string id="taom_cc_taom_youth_vlandia_6_text" text="Rohan'ın ordu hizmetçileriyle seyahat etti." />
+    <string id="taom_cc_taom_youth_vlandia_6_desc" text="Doğrudan silah almak yerine, ordu hizmetçileriyle seyahat ettin, yürüyüşte hayatta kalmayı ve savaşın kaosundan kazanç elde etmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_sturgia_1_text" text="Dale Kraliyet Muhafızları'nda hizmet etti." />
+    <string id="taom_cc_taom_youth_sturgia_1_desc" text="Dale Kralı'na bağlılığını sunarak Kraliyet Muhafızları'nda görev yaptın ve Kuzey İnsanları'nın savaş geleneklerini öğrendin." />
+    <string id="taom_cc_taom_youth_sturgia_2_text" text="Dale kapılarını savundum." />
+    <string id="taom_cc_taom_youth_sturgia_2_desc" text="Garnizonun bir üyesi olarak, Dale'in yeniden inşa edilmiş kapılarını savundun ve şehrin düşüşüne ve yeniden yükselişine tanık olmuş gazilerden kuşatma savunması sanatını öğrendin." />
+    <string id="taom_cc_taom_youth_sturgia_3_text" text="Uzun Göl kıyısının milisinde savaştım." />
+    <string id="taom_cc_taom_youth_sturgia_3_desc" text="Dale ile güney arasındaki ticaret yolunu çevreleyen yerleşimlerin savunmasında, fırlatma silahları ve kılıçla savaşmayı öğrenerek göl kıyısı milisiyle eğitim gördün. Ticaret ve savaş, günlük yaşamın eşit derecede parçasıydı." />
+    <string id="taom_cc_taom_youth_sturgia_4_text" text="Dale'in doğusundaki ormanda av ve Orkları takip ettim." />
+    <string id="taom_cc_taom_youth_sturgia_4_desc" text="Uzun Göl'ün doğusundaki karanlık ormanlarda dolaştın, pazar için av avladın ve dağlardan inen Ork yollarını gözetledin. Orman sana araziyi okumayı ve yayını her zaman gergin tutmayı öğretti." />
+    <string id="taom_cc_taom_youth_sturgia_5_text" text="Kalkan duvarına katıldım." />
+    <string id="taom_cc_taom_youth_sturgia_5_desc" text="Dale'in kalkan duvarında yerini aldın, mızrak ve kalkanla şehri tehdit eden her türlü düşmana karşı sağlam durmayı öğrendin." />
+    <string id="taom_cc_taom_youth_sturgia_6_text" text="Kuzey'in tüccar kervanlarıyla seyahat ettim." />
+    <string id="taom_cc_taom_youth_sturgia_6_desc" text="Dale, Erebor ve güney krallıkları arasında hareket eden kervanlarla gittin, ticaret sanatlarını, yolda hayatta kalmayı ve bazı tüccarları çok başarılı, bazılarını ise çok üzgün yapan fırsatçılığı öğrendin." />
+    <string id="taom_cc_taom_youth_aserai_1_text" text="Savaş filleriyle eğitim gördüm." />
+    <string id="taom_cc_taom_youth_aserai_1_desc" text="Harad'ın kudretli savaş filleriyle birlikte eğitim gördün, kavurucu güney güneşinin altında yüksek sırtlarından binmeyi ve savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_aserai_2_text" text="Harad'ın çöl şehirlerinin surlarını bekledim." />
+    <string id="taom_cc_taom_youth_aserai_2_desc" text="Harad'ın tahkimatlı şehirlerinin güneşte kavrulmuş burçlarında nöbetçi olarak görev yaptın, titreyen ufukta düşman hareketlerini aramayı ve çöl kenarından gelen akıncılara karşı ok ateşi yönlendirmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_aserai_3_text" text="Çöl süvarilerle birlikte at sürdüm." />
+    <string id="taom_cc_taom_youth_aserai_3_desc" text="Harad'ın hızlı süvarileriyle birleştin, uçsuz bucaksız çölü at sırtında keşfetttin ve sıcak pusunun içine geri kaybolmadan önce düşmanın yanlarına saldırdın." />
+    <string id="taom_cc_taom_youth_aserai_4_text" text="Kara Yılan'ın piyadeleriyle talim yaptım." />
+    <string id="taom_cc_taom_youth_aserai_4_desc" text="Kara Yılan sancağı altında hizmet eden disiplinli mızrak oluşumlarında eğitim gördün, acımasız çöl sıcağında mevzi tutmayı ve savaşı kuzeye taşımaya yemin etmiş savaşçılarla adım adım ilerlemeyi öğrendin." />
+    <string id="taom_cc_taom_youth_aserai_5_text" text="Harad'ın cirit atlıcısı olarak düşmanları taciz ettim." />
+    <string id="taom_cc_taom_youth_aserai_5_desc" text="Gevşek Haradrim çatışma tarzıyla savaştın, kılıç ve kalkanla yaklaşmadan önce düşmanı yumuşatmak için cirit fırlattın. Sıcak ve kum senin tarafındaydı ve ikisini de kullanmayı öğrendin." />
+    <string id="taom_cc_taom_youth_aserai_6_text" text="Güneş Diyarları'nın göçebe kabileleriyle dolaştım." />
+    <string id="taom_cc_taom_youth_aserai_6_desc" text="Derin çölün gezgin halkıyla sürüklendin, su işaretlerini okumayı ve kumul denizinde yıldız ışığıyla yol bulmayı öğrendin. Para azaldığında hayatta kalmak için başka yollar buldun ve uçsuz bucaksız boş Güneş Diyarları sana bunları mükemmelleştirmek için alan verdi." />
+    <string id="taom_cc_taom_youth_battania_1_text" text="Kuzey Korucularıyla at sürdüm." />
+    <string id="taom_cc_taom_youth_battania_1_desc" text="Dunedain Korucuları'nın birliğine alındın, Arnor kalıntıları arasında sert bir şekilde at sürmeyi ve Isildur'un Varislerinin disiplinli vahşetiyle savaşmayı öğrendin. Korucular uzağa gitti ve yolda karşılaştıkları kimseye pek bir şey anlatmadı." />
+    <string id="taom_cc_taom_youth_battania_2_text" text="Eriador'un kavşak noktalarını bekledim." />
+    <string id="taom_cc_taom_youth_battania_2_desc" text="Kuzey Krallığı'nın yıkılmakta olan gözetleme kulelerini ve eski yol kavşaklarını gözetttin, araziyi okumayı ve bela gelmeden önce Ork hareketlerinin işaretlerini görmeyi öğrendin. Korucular resmi görev yerleri tutmadı, sadece görev tuttular." />
+    <string id="taom_cc_taom_youth_battania_3_text" text="Dunedain izci olarak Arnor'un vahşi topraklarında dolaştım." />
+    <string id="taom_cc_taom_youth_battania_3_desc" text="Eski krallığın otlarla kaplı kalıntıları ve fundalıkları arasında bir korucu izci olarak hareket ettin, vahşi topraklardan geçinmeyi ve taşlarında hafıza taşıyan arazi boyunca hem hayvanı hem de düşmanı takip etmeyi öğrendin. Hız ve sessizlik senin tek aletlerindi." />
+    <string id="taom_cc_taom_youth_battania_4_text" text="Ork savaş çetelelerine karşı Korucu saflarında durdum." />
+    <string id="taom_cc_taom_youth_battania_4_desc" text="Kuzey yerleşimlerini hayatta tutan yakın çatışmalarda savaştın, halk ile karanlık arasında son savunma hattı olduklarını bilen adamların kararlılığıyla kılıç ve mızrak kullanmayı öğrendin. Kuzey'de takviye yoktu." />
+    <string id="taom_cc_taom_youth_battania_5_text" text="Kuzey köyleri arasında görünmeden hareket ettim." />
+    <string id="taom_cc_taom_youth_battania_5_desc" text="Dunedain muhbirlerinin gizli ağını hayatta tuttun, takma isimlerle yerleşimler arasında geçerek Ork hareketleri, karanlık yabancılar ve halka yönelik tehditler hakkında haber topladın. Korucular sıradan gibi görünebilenlere güvendi ve sende bu yetenek vardı." />
+    <string id="taom_cc_taom_youth_battania_6_text" text="Kuzey Krallığı kalıntılarında takip ve pusu yaptım." />
+    <string id="taom_cc_taom_youth_battania_6_desc" text="Harap olmuş Arnor'un eski kalıntılarında ve çalılıklarında pusu kurmayı, izleri okumayı ve kırık araziden kendi avantajına kullanmayı öğrendin. Siper arkasından iyi yerleştirilmiş bir ok, açıkta on düzine adama değerdi ve her atışını değerlendirdin." />
+    <string id="taom_cc_taom_youth_khuzait_1_text" text="Khelek Savaşçılarıyla at sürdüm." />
+    <string id="taom_cc_taom_youth_khuzait_1_desc" text="Khelek Savaşçıları arasında binici olarak değerini kanıtladın, doğu savaş süvarilerinin geleneğinde Rhun'un geniş bozkırlarında atlı çarpışmayı öğrendin." />
+    <string id="taom_cc_taom_youth_khuzait_2_text" text="Rhun yerleşimlerini korudum." />
+    <string id="taom_cc_taom_youth_khuzait_2_desc" text="Rhun'un yerleşimlerinin surlarında devriye gezdtin, okçuluğu ve vahşi doğu bozkırlarından gelen akıncılara karşı savunma sanatını öğrendin." />
+    <string id="taom_cc_taom_youth_khuzait_3_text" text="Uruk-thar saflarına katıldım." />
+    <string id="taom_cc_taom_youth_khuzait_3_desc" text="Uruk-thar'ın bir üyesi olarak, Doğulu çatışma geleneğinde fırlatma silahları ve kılıçla savaşmayı öğrendin." />
+    <string id="taom_cc_taom_youth_khuzait_4_text" text="Rhûn Denizi kıyılarında atlı keşifçi olarak dolaştım." />
+    <string id="taom_cc_taom_youth_khuzait_4_desc" text="İç denizin kıyıları boyunca doğu sütunlarının çok önünde at sürdün, tehdit ve fırsatlar için araziyi okudun. Bozkır sana bir atlının mesafe gözünü ve bir okçunun doğru an için sabrını verdi." />
+    <string id="taom_cc_taom_youth_khuzait_5_text" text="Doğulu mızrak dizilişinde safları tuttum." />
+    <string id="taom_cc_taom_youth_khuzait_5_desc" text="Disiplinli Doğulu mızrak hattında soydaşlarınla omuz omuza durdun, süvariye karşı direnmeyi ve daha önce batıya yürümüş kızıl şafak sancakları altında düzenli saflar halinde ilerlemeyi öğrendin." />
+    <string id="taom_cc_taom_youth_khuzait_6_text" text="Karash çeteleriyle seyahat ettim." />
+    <string id="taom_cc_taom_youth_khuzait_6_desc" text="Resmi Doğulu klan yapısının dışında yaşadın, orduları takip eden ve onların geçişinden kar eden Karash çeteleriyle hareket ettin. Kurnazlık ve fırlatma silahları seni büyük doğu ordusunun kenarlarında doyurdu." />
+    <string id="taom_cc_taom_education_gondor_1_text" text="Soylu evlerin oğullarıyla talim yaptım." />
+    <string id="taom_cc_taom_education_gondor_1_desc" text="Minas Tirith'in avlularında Gondor'un soylu ailelerinin çocuklarıyla birlikte eğitim alarak büyüdün. Kâhya'ya bağlı şövalyelerin altında kılıç ve mızrakla dövüşmeyi öğrendin ve Pelennor'da binicilik pratiği yaparak uzun saatler geçirdin." />
+    <string id="taom_cc_taom_education_gondor_2_text" text="Minas Tirith çarşılarında çıraklık yaptım." />
+    <string id="taom_cc_taom_education_gondor_2_desc" text="Gençliğini Beyaz Şehir'in katlı pazar salonlarında ayak işleri yaparak ve hesap öğrenerek geçirdin. Ticaret sanatını çabucak öğrendin, Beyaz Kule'nin gölgesinde tüccarlara dalkavukluk ederek ve para sayarak." />
+    <string id="taom_cc_taom_education_gondor_3_text" text="Pelennor tarlalarında çalıştım." />
+    <string id="taom_cc_taom_education_gondor_3_desc" text="Şehir surlarının dışındaki bereketli tarım arazilerinde şafaktan alacakaranlığa kadar didindi, demetler taşıdın ve Pelennor'da öküz sürdün. Toplanma çağrıldığında eline bir mızrak verildi ve sınır savaşlarının huysuz bir gazisi tarafından diziliş eğitimi aldın." />
+    <string id="taom_cc_taom_education_gondor_4_text" text="Beyaz Şehir'in bir zırhçısının yanında çırak oldum." />
+    <string id="taom_cc_taom_education_gondor_4_desc" text="Minas Tirith'in demircilik mahallesinde usta bir zırhçının sert bakışları altında körük üfleyerek ve ağızlar bileğileyerek zanaatını öğrendin. Büyüdüğünde ellerin çekiç işinden nasırlaşmıştı ve bir kılıcın temperini çınlamasından anlayabiliyordun." />
+    <string id="taom_cc_taom_education_gondor_5_text" text="Ithilien'in vahşi topraklarında dolaştım." />
+    <string id="taom_cc_taom_education_gondor_5_desc" text="Gençken Ithilien Korucularını gölge gibi takip ettin, Anduin'in doğusundaki büyümüş bahçelerde sessizce hareket etmeyi öğrendin. Düzgün çekebilecek kadar uzun olmadan önce ilk yayını gerdirdin ve çamurdaki ayak izlerini okumayı öğrendin." />
+    <string id="taom_cc_taom_education_gondor_6_text" text="Osgiliath harabeleri arasında çöp topladım." />
+    <string id="taom_cc_taom_education_gondor_6_desc" text="Osgiliath'ın parçalanmış taşları arasında dolaşarak büyüdün, askerlere enkaz satarak ve karakollar arasında para karşılığı mesaj taşıyarak. Harap şehir sana çeviklik ve kurnazlık öğretti — atılan bir taş senin iki katın büyüklüğünde birini kovabilirdi." />
+    <string id="taom_cc_taom_education_mordor_1_text" text="Barad-dur'un dövüş çukurlarında savaştım." />
+    <string id="taom_cc_taom_education_mordor_1_desc" text="Elinde bir silah tutabilir tutmaz Kara Kule'nin çukur dövüşü avlularına atıldın. Yaşlı savaşçılar hiç merhamet göstermedi ve tereddüdün acı anlamına geldiğini çabucak öğrendin. Acı sana ilk vurmayı ve sert vurmayı öğretti." />
+    <string id="taom_cc_taom_education_mordor_2_text" text="Kara Yol boyunca ikmal trenlerini taşıdım." />
+    <string id="taom_cc_taom_education_mordor_2_desc" text="Mordor'un gölgeli yollarında mal taşıdın, geçiş görevlilerini ve yozlaşmış nezaretçileri pazarlık ve blöf yaparak geçmeyi öğrendin. Tehlike aklını keskinleştirdi ve bilginin Kara Diyar'da demirden daha değerli olduğunu keşfettin." />
+    <string id="taom_cc_taom_education_mordor_3_text" text="Kara Diyar'ın dökümhanelerinde çalıştım." />
+    <string id="taom_cc_taom_education_mordor_3_desc" text="Barad-dur'u çevreleyen dumanlı dökümhanelerde taş taşıdın ve körük çektin, ilk ışıktan önce başlayıp karanlık bastıktan çok sonrasına kadar sıcak ve külü göğüsledin. İş daha zayıf gençleri kırdı, ama sen hiçbir görevlinin söndüremeyeceği kasvetli bir dayanıklılık buldun." />
+    <string id="taom_cc_taom_education_mordor_4_text" text="Ork iş çeteleri arasında düzeni sağladım." />
+    <string id="taom_cc_taom_education_mordor_4_desc" text="Eline bir sopa ve avlunun bir köşesi verildi ve iş çetelerini düzende tutman söylendi. Bir kalabalığı nasıl okuyacağını ve öldürmeden itaat sağlamak için nereye vuracağını hızla öğrendin. Strateji ve zorbalık ikinci doğan oldu." />
+    <string id="taom_cc_taom_education_mordor_5_text" text="Gorgoroth ovalarında avlandım." />
+    <string id="taom_cc_taom_education_mordor_5_desc" text="Gorgoroth'un harap olmuş volkanik düzlüklerinde av takip ettin, kül izlerini okumayı ve uzaktaki ateşlerin parıltısına göre yön bulmayı öğrendin. Avlanacak çok az şey vardı ve olan az şey karşılık veriyordu. Eve zayıf ve keskin gözlü döndün." />
+    <string id="taom_cc_taom_education_mordor_6_text" text="Kara Kapı'nın ötesindeki sürgünlerle koştum." />
+    <string id="taom_cc_taom_education_mordor_6_desc" text="Kara Efendi'nin diyarının kenarlarında hayatta kaldın, devriyelerden sıyrılıp hırsızlık ve aldatmayla yaşayan hızlı parmaklı çetelerle koşarak. Morannon'un gölgesinde her gölgeyi ve her rüşvet fiyatını öğrendin." />
+    <string id="taom_cc_taom_education_erebor_1_text" text="Kral'ın balta-kardeşleriyle büyük salonda talim yaptım." />
+    <string id="taom_cc_taom_education_erebor_1_desc" text="Dain'in hanedanının genç savaşçılarıyla birlikte, Yalnız Dağ'ın derinliklerindeki yankılanan talim salonlarında iki elli baltayı sallamayı öğrenerek dövüş pratiği yaptın. Her yara bir dersti; her ders bir gurur noktasıydı." />
+    <string id="taom_cc_taom_education_erebor_2_text" text="Erebor'un dökümhanelerinde çırak oldum." />
+    <string id="taom_cc_taom_education_erebor_2_desc" text="Gençliğini demircinin tezgahında geçirdin, Yalnız Dağ'ın alazlı kalbinde metal işlemeyi öğrendin. Zanaat ve ticaretin değerlerinde ustalaştın, dökümhanede ışık sönerken bitmiş kılıçları Dale pazarlarına taşıdın." />
+    <string id="taom_cc_taom_education_erebor_3_text" text="Yalnız Dağ'ın derin madenlerinde çalıştım." />
+    <string id="taom_cc_taom_education_erebor_3_desc" text="Traş olacak yaşa gelmeden önce Erebor'un en alt galerilerinde kazma salladın, dağın gizli geçitlerini ve tünel ve desteklerin mühendisliğini öğrendin. Derin taş sana açık gökyüzü kadar tanıdık geldi." />
+    <string id="taom_cc_taom_education_erebor_4_text" text="Demiraya kalkan duvarıyla talim yaptım." />
+    <string id="taom_cc_taom_education_erebor_4_desc" text="Dain Demiraya'nın savaşçılarının disiplinli yakın mesafe stilinde eğitim aldın, dar tünel dizilişlerinde kalkan tutmayı ve balta sallamayı öğrendin. Kısa adımın, daha uzun halkın tökezlediği koridorlarda bir avantajdı." />
+    <string id="taom_cc_taom_education_erebor_5_text" text="Hazine mahzenlerinde para saydım." />
+    <string id="taom_cc_taom_education_erebor_5_desc" text="Erken yaştan itibaren Erebor'un uçsuz bucaksız zenginliğini sayma işine yardım ettin, defter tutmayı ve bir dağ krallığını tedarik etmenin lojistiğini anlamayı öğrendin. İş seni metodik yaptı ve sana kaynaklar için bir stratejistin gözünü verdi." />
+    <string id="taom_cc_taom_education_erebor_6_text" text="Etek tepelerinde ve orman yollarında devriye gezdim." />
+    <string id="taom_cc_taom_education_erebor_6_desc" text="Erebor'un etrafındaki yamaçlarda dış nöbetin bir parçası olarak dolaştın, Ork baskın birliklerini izlemeyi ve çam ormanında gizlenip ateş etmeyi öğrendin. Dağ havası duyularını keskinleştirdi ve mesafe senin müttefikin oldu." />
+    <string id="taom_cc_taom_education_rivendell_1_text" text="Imladris'in binicilik meydanlarında eğitim gördüm." />
+    <string id="taom_cc_taom_education_rivendell_1_desc" text="Rivendell'in sessiz talim alanlarında atlı savaş sanatlarını uyguladın, Elf geleneğinin gerektirdiği akıcı zarafetle binmeyi ve savaşmayı öğrendin. Büyük kütüphane asla uzakta değildi ve kılıç ile ilim eğitiminiz el ele gitti." />
+    <string id="taom_cc_taom_education_rivendell_2_text" text="Elrond'un salonlarında zanaat ve ilim öğrendim." />
+    <string id="taom_cc_taom_education_rivendell_2_desc" text="Oluşum yıllarını Rivendell'de korunan zanaat sanatlarını ve tarihleri öğrenerek geçirdin, usta zanaatkarlar ve bilginlerle birlikte çalıştın. Uzun akşam sohbetleri dilini ve dünyanın derin geçmişine dair anlayışını keskinleştirdi." />
+    <string id="taom_cc_taom_education_rivendell_3_text" text="Gizli Vadi'nin bahçelerine ve meyve bahçelerine baktım." />
+    <string id="taom_cc_taom_education_rivendell_3_desc" text="Imladris'in teraslı bahçelerinde çalıştın, aynı tarhları bir çağ boyunca ekmiş Elflerden sabır ve özen öğrendin. Sıralar arasında kılıç oyunu pratik yaptın, canlı şeylere bakmaktan ölçülü güç için bir içgüdü edindin." />
+    <string id="taom_cc_taom_education_rivendell_4_text" text="Imladris'in sınır nöbetlerinde yürüdüm." />
+    <string id="taom_cc_taom_education_rivendell_4_desc" text="Elf bekçilerle birlikte vadinin gizli patikalarındaki uzun devriyelerine eşlik ettin, ormanı okumayı ve avın seni duymadan ok atmayı öğrendin. Vadinin huzuru zorlu kazanılmıştı ve sen onu korumaya yardım ettin." />
+    <string id="taom_cc_taom_education_rivendell_5_text" text="Elrond'un salonlarında şifa sanatlarını öğrendim." />
+    <string id="taom_cc_taom_education_rivendell_5_desc" text="Rivendell'in şifa odalarında hizmet ettin, Elrond'un şifacılarının rehberliğinde bitki bilgisi ve iyileştirme sanatlarını öğrendin. Yorgun yolculara ve yaralı Elflere bakmak sana hem bilgi hem de onunla gelen empatiyi kazandırdı." />
+    <string id="taom_cc_taom_education_rivendell_6_text" text="Vadinin ötesindeki vahşi yollarda dolaştım." />
+    <string id="taom_cc_taom_education_rivendell_6_desc" text="Elimden geldiğince sık Rivendell'in sınırlarının ötesine süzüldün, Trol Topraklarını ve Sisli Dağlar'ın vadilerini keşfettin. Risk alma zevki geliştirdin ve kılıcın sadece bela getireceği yerde kurnazlıkla hayatta kalabileceğini keşfettin." />
+    <string id="taom_cc_taom_education_mirkwood_1_text" text="Thranduil'in sarayının muhafız birliğiyle talim yaptım." />
+    <string id="taom_cc_taom_education_mirkwood_1_desc" text="Orman Kralı'nın hanedanının genç savaşçılarıyla birlikte eğitim gördün, dağ salonlarının altındaki büyük kayınlar arasında hareket etmeyi ve savaşmayı öğrendin. Saray talepkardı ve kılıcınla olduğu kadar sözlerinle de keskin olman bekleniyordu." />
+    <string id="taom_cc_taom_education_mirkwood_2_text" text="Orman Yolu boyunca mal taşıdım." />
+    <string id="taom_cc_taom_education_mirkwood_2_desc" text="Ticaret mallarına Mirkwood'un gölgeleri içinde eşlik ettin, ormanı okumayı ve tehlikeli bir yolculuğun sonunda pazarlık yapmayı öğrendin. Yol asla güvenli değildi ve hayatta kalan tüccarlar çekici, çabuk ve tetikte olanlardı." />
+    <string id="taom_cc_taom_education_mirkwood_3_text" text="Orman kenarlarında toplayıcılık ve çiftçilik yaptım." />
+    <string id="taom_cc_taom_education_mirkwood_3_desc" text="Orman Diyarı'nın kenarlarındaki açıklıklara ve ekili alanlara bakarak büyüdün, gölgeli ormanın vereceğini hasat ettin. Zor ve tehlikeli bir işti ve karanlık şeyler yaklaşınca hızlı hareket etmeyi öğrendin." />
+    <string id="taom_cc_taom_education_mirkwood_4_text" text="Elf Kralı'nın salonlarında yay ve ağaç işçiliği yaptım." />
+    <string id="taom_cc_taom_education_mirkwood_4_desc" text="Zanaatını Mirkwood'un Elf yay yapıcılarından öğrendin, sırıkları şekillendirip ünlü Orman yaylarını kirişledin. İş eşit ölçülerde sabır ve hassasiyet gerektiriyordu ve bir silahı kullanabildiğin kadar kolayca şekillendirebilen ellerle ayrıldın." />
+    <string id="taom_cc_taom_education_mirkwood_5_text" text="Gölgeli ormanın derinliklerinde avlandım." />
+    <string id="taom_cc_taom_education_mirkwood_5_desc" text="Orman avcılarını Mirkwood'un en karanlık kısımlarına kadar takip ettin, geyik ve yaban domuzunu bozulmuş çalılıklar arasından izledin. Her av ormanın yaratıklarıyla karşılaşma riskini taşıyordu ve bir sesi net duymadan önce ateş etmeyi öğrendin." />
+    <string id="taom_cc_taom_education_mirkwood_6_text" text="Orman sınır nöbetiyle koştum." />
+    <string id="taom_cc_taom_education_mirkwood_6_desc" text="Thranduil'in resmi sınırlarının dışında dolaşan devriyelerle düzensiz arkadaşlık ettin, Orman Diyarı'nın kenarlarını test eden örümcek-soylu ve Ork izci kolları için tuzak ve pusu kurmayı öğrendin. Kurnazlık seni cesaretin tek başına yapamayacağı yerde hayatta tuttu." />
+    <string id="taom_cc_taom_education_lothlorien_1_text" text="Caras Galadhon'un bekçileriyle eğitim gördüm." />
+    <string id="taom_cc_taom_education_lothlorien_1_desc" text="Caras Galadhon'un gümüş avlularında savaşçı sanatlarını pratik yaptın, Hanımefendi'nin gücünün ışığı altında Galadhrim'in geniş kılıç stilini öğrendin. Her sabah talimle başlıyor ve her akşam yıldız ışığı ve uzun anılarla bitiyordu." />
+    <string id="taom_cc_taom_education_lothlorien_2_text" text="Mallorn şehrinde dokuma ve zanaat yaptım." />
+    <string id="taom_cc_taom_education_lothlorien_2_desc" text="Lothlórien'in tekstil ve zanaat sanatlarını öğrendin, gümüş ve altın kumaş üreten ünlü Elf dokumacılarla çalıştın. İş alışılmadık hassasiyet gerektiriyordu ve Altın Orman'da güzellik ve iknanın ayrılmaz olduğunu buldun." />
+    <string id="taom_cc_taom_education_lothlorien_3_text" text="Mallorn ağaçlarının platformlarından nöbet tuttum." />
+    <string id="taom_cc_taom_education_lothlorien_3_desc" text="Mallorn dalları arasındaki yüksek platformlarda uzun sessiz nöbetler tuttun, aşağıdaki ormanı okumayı ve gümüş uçlu okları ölümcül bir sakinlikle atmayı öğrendin. O nöbetlerin sonsuz sabrı gözünü şekillendirdi ve elini durdurdu." />
+    <string id="taom_cc_taom_education_lothlorien_4_text" text="Altın Orman'ın gümüş sınırlarında devriye gezdim." />
+    <string id="taom_cc_taom_education_lothlorien_4_desc" text="Lothlórien'in dış sınırlarında yürüdün, Dimrill Vadisi geçitlerinde Ork istilasının işaretlerini tespit etmeyi öğrendin. Sessiz gözlemin ardından ani eylemin geldiği uzun günler seni orman kadar sabırlı ve ok kadar hızlı bir avcıya dönüştürdü." />
+    <string id="taom_cc_taom_education_lothlorien_5_text" text="Altın Orman'ın şifa sanatlarını öğrendim." />
+    <string id="taom_cc_taom_education_lothlorien_5_desc" text="Lothlórien'in şifacıları arasında çıraklık yaptın, athelas toplayıp yüzyıllardır bu sanatı icra edenlerin öğretisi altında bitki ve yara bilgisini öğrendin. Hanımefendi'nin lütfu o sınırlar içindeki tüm şifaya dokunuyordu." />
+    <string id="taom_cc_taom_education_lothlorien_6_text" text="Özel işlerle ormanın ötesinde dolaştım." />
+    <string id="taom_cc_taom_education_lothlorien_6_desc" text="Huzursuz bir meraktan dolayı sık sık Lothlórien'in peçeli sınırlarının ötesine tek başına süzüldün, Anduin'in kıyılarını ve ötesindeki kahverengi toprakları keşfettin. Görünmeden geçmeyi ve doğrudan yolların sana kapalı olduğu yerde aldatmayı kullanmayı öğrendin." />
+    <string id="taom_cc_taom_education_isengard_1_text" text="Orthanc'ın savaş alanında eğitim gördüm." />
+    <string id="taom_cc_taom_education_isengard_1_desc" text="Isengard'ın sıkıştırılmış topraklı avlularında acımasız talimlerden geçirildin, Uruk-hai çavuşlarının gözleri altında mızrak ve iki elli kılıç kullanmayı öğrendin. Saruman'ın kuvvetleri merhametsizce eğitim yapıyordu ve yumuşaklık hızla içinden sürüldü." />
+    <string id="taom_cc_taom_education_isengard_2_text" text="Orthanc'ın altındaki makine atölyelerinde çıraklık yaptı." />
+    <string id="taom_cc_taom_education_isengard_2_desc" text="Saruman'ın savaş makinesini besleyen dumanlı atölyelerde metal işlemeyi ve malzeme yönetimini öğrendin, baskı altında zanaat ve tedarik sanatlarını edinerek. İş sürekli ve yaratıcıydı ve Saruman yaratıcılığı ödüllendiriyordu." />
+    <string id="taom_cc_taom_education_isengard_3_text" text="Isengard çukurlarında kazdı ve yük taşıdı." />
+    <string id="taom_cc_taom_education_isengard_3_desc" text="Yeterince güçlü olur olmaz çukurlarda çalışmaya başladın, Saruman'ın sonsuz inşaatını beslemek için kaya kırdın ve döküntü taşıdın. Bu iş dayanıklılığını çoğu insanın bedeninin kaldırabileceğinin ötesine geliştirdi." />
+    <string id="taom_cc_taom_education_isengard_4_text" text="Uruk-hai piyadesiyle birlikte eğitim gördü." />
+    <string id="taom_cc_taom_education_isengard_4_desc" text="Isengard'ın yetiştirdiği savaşçılarla birlikte talimler yaptın, mızrakla dayanıp tutmayı ve sıkı dizilişte kılıçla kesmeyi öğrendin. Ne Uruk ne de saf İnsan olduğun için kabul görmek için iki kat acımasız olmak zorundaydın." />
+    <string id="taom_cc_taom_education_isengard_5_text" text="Saruman'ın gözleri için Rohan ovalarını keşfetti." />
+    <string id="taom_cc_taom_education_isengard_5_desc" text="Isengard için keşifçi olarak Wold'u ve Miğfer Derinliği'ne giden yolları taradın, açık arazide hızlı ve görünmeden seyahat etmeyi öğrendin. Araziyi okumak ve Rohirrim devriyelerinden kaçınmak içgüdülerini keskin bir şekilde biledi." />
+    <string id="taom_cc_taom_education_isengard_6_text" text="Isengard'ın gölgeleri arasında bilgi taşıdı." />
+    <string id="taom_cc_taom_education_isengard_6_desc" text="Saruman'ın casus ağlarının gri dünyasında ulak ve muhbir olarak kullanılacak kadar hızlı parmaklı ve zekiliydin. Bir sırrın ne kadar değerli olduğunu ve onu saklamanın ne kadar acıya mal olduğunu öğrendin." />
+    <string id="taom_cc_taom_education_gundabad_1_text" text="Gundabad Dağı'nın savaş salonlarında eğitim gördü." />
+    <string id="taom_cc_taom_education_gundabad_1_desc" text="Dağ kalesinin meşaleli eğitim salonlarında savaşa atıldın, kuzey Ork klanlarının geleneğinde sert biniciliği ve ağır silahları kullanmayı öğrendin. İtibar, büyüklerinin önünde arenada kendini kanıtlayabilenlere geliyordu." />
+    <string id="taom_cc_taom_education_gundabad_2_text" text="Gundabad'ın silah ustalarında çıraklık yaptı." />
+    <string id="taom_cc_taom_education_gundabad_2_desc" text="Dağın gürültülü demirci salonlarında kaba ama etkili silahlar dövmeyi öğrendin, onları erzak ve iyiliklerle değiş tokuş etmeyi öğrendin. İş çirkindi ama beceriler gerçekti ve demirhaneden hem demiri hem de ticareti bilerek ayrıldın." />
+    <string id="taom_cc_taom_education_gundabad_3_text" text="Dağın altındaki madenlerde kazdı." />
+    <string id="taom_cc_taom_education_gundabad_3_desc" text="Gundabad'ın ışıksız galerilerinde kazma salladın, dağın yapısını ve kuyu desteklerinin mühendisliğini öğrendin. Tüneller senin evinindi ve onlarda gözlerin kapalıyken gezinebiliyordun, ki genellikle böyle yapmak zorundaydın." />
+    <string id="taom_cc_taom_education_gundabad_4_text" text="Gri Dağlar geçitlerinde savaştı." />
+    <string id="taom_cc_taom_education_gundabad_4_desc" text="Gri Dağlar'a saldıran akın çeteleriyle koştun, kuzey klanlarının acımasız vur-kaç tarzında balta ve mızrakla savaşmayı öğrendin. Her seferinde daha sert ve hayatta kalacağından biraz daha emin döndün." />
+    <string id="taom_cc_taom_education_gundabad_5_text" text="Gundabad çevresindeki vahşi topraklarda dolaştı." />
+    <string id="taom_cc_taom_education_gundabad_5_desc" text="Dağ kalesini çevreleyen kayalık vahşi doğada devriye gezdirdin, izinsiz girenlerin izini sürdün ve düşman hareketlerinin işaretlerini okudun. Soğuk kuzey vahşi doğası sana herhangi bir hedefi aşan bir sabır ve okçu durgunluğu kazandırdı." />
+    <string id="taom_cc_taom_education_gundabad_6_text" text="Dağ geçitlerinde tek başına hayatta kaldı." />
+    <string id="taom_cc_taom_education_gundabad_6_desc" text="Kovularak ya da bir borçtan kaçarak, dağın çevresindeki tehlikeli geçitlerde kendi başının çaresine baktın, hırsızlık ve hızlı düşünmeyle hayatta kaldın. Bu deneyim sana sadakat konusunda hiçbir yanılsama bırakmadı ve beladan kurtulmak için keskin bir yetenek kazandırdı." />
+    <string id="taom_cc_taom_education_dolguldur_1_text" text="Dol Guldur'un gölge avlularında talim yaptı." />
+    <string id="taom_cc_taom_education_dolguldur_1_desc" text="Ölüçağıran'ın kalesinin ışıksız avlularında eğitim gördün, başlıklı gözetmenlerinin gözü altında büyük kılıç ve teberlereyle savaşmayı öğrendin. Mekanın üzerine çöken gölge kemiklerine işledi ve şiddet içgüdülerini keskinleştirdi." />
+    <string id="taom_cc_taom_education_dolguldur_2_text" text="Karanlık atölyelerde gölge-çelik dövdü." />
+    <string id="taom_cc_taom_education_dolguldur_2_desc" text="Dol Guldur'un kara-demir demirhanelerinde çalıştın, daha zayıf bir genci kıracak koşullarda silah şekillendirmeyi öğrendin. Malzemeler karanlıktı ve yöntemler daha da karanlıktı, ve sahip olduğunu az kişinin kabul edeceği bilgilerle ayrıldın." />
+    <string id="taom_cc_taom_education_dolguldur_3_text" text="Kalenin mağaralarında taş taşıdı." />
+    <string id="taom_cc_taom_education_dolguldur_3_desc" text="Dol Guldur'un yeraltı kazılarında çalıştın, bozulmuş tepenin altındaki kalıcı karanlıkta bloklar sürükleyerek ve tünelleri destekleyerek. İş acımasızdı ve dayanıklılık herhangi bir rahatlama satın alan tek para birimiydi." />
+    <string id="taom_cc_taom_education_dolguldur_4_text" text="Büyülü Orman'ın gölge devriyelerinde savaştı." />
+    <string id="taom_cc_taom_education_dolguldur_4_desc" text="Dol Guldur'un bozulmasını güney Mirkwood'a iten karanlık devriyelerle koştun, direnişi balta ve mızrakla yere sererek. Her çıkış seni bozuk ormanın derinliklerine götürdü ve eski benliğinden daha azını arkada bıraktı." />
+    <string id="taom_cc_taom_education_dolguldur_5_text" text="Karanlık ormanın kenarlarında avlandı." />
+    <string id="taom_cc_taom_education_dolguldur_5_desc" text="Güney Mirkwood'un bozuk çalılıklarında iz sürdün, kaleye fazla yaklaşan her yaratığı öldürerek ve her yolu büken bir ormanda ses çıkarmadan hareket etmeyi öğrenerek. Gözlerin güneş ışığı olmayan bir dünyaya adapte oldu." />
+    <string id="taom_cc_taom_education_dolguldur_6_text" text="Ölüçağıran'ın casusu olarak gölgelerde hareket etti." />
+    <string id="taom_cc_taom_education_dolguldur_6_desc" text="Ölüçağıran'ın ağında ulak ve ajan olarak kullanıldın, karanlık ormanda mesaj taşıyarak ve yüzlerini asla göstermeyen temaslara ulaştırarak. Gölgelerin senin zırhın ve sessizliğin en iyi silahın olduğunu öğrendin." />
+    <string id="taom_cc_taom_education_umbar_1_text" text="Kara gemiler üzerinde denizciliği ve kılıç kullanmayı öğrendi." />
+    <string id="taom_cc_taom_education_umbar_1_desc" text="Küçük yaşta denize açıldın, yelken kullanmayı ve Korsan geleneğinin pala ve biniş baltasıyla savaşmayı öğrendin. Savaş gemisinin güvertesi senin eğitim alanın ve Anduin Deltası senin sınav yerindi." />
+    <string id="taom_cc_taom_education_umbar_2_text" text="Limanın rıhtımlarında ve sayım evlerinde koşturdu." />
+    <string id="taom_cc_taom_education_umbar_2_desc" text="Umbar'ın hareketli tersanelerinde hızlı dilli ve hızlı parmaklı büyüdün, alıcıları etkilemeyi, şişirilmiş faturaları tespit etmeyi ve malları garip sorular sormadan gümrükten geçirmeyi öğrendin. Liman hem ticaret hem de aldatmada bir okuldu." />
+    <string id="taom_cc_taom_education_umbar_3_text" text="Umbar'ın tersanelerinde çalıştı." />
+    <string id="taom_cc_taom_education_umbar_3_desc" text="Umbar'ın büyük gemi hangarlarında kereste şekillendirmeyi ve tahta kalafatlamayı öğrendin, savaşı deniz aşırı taşıyan gemilerin mühendisliğini inceleyerek. Gemi inşa etmediğin zamanlarda nasıl kırılabileceklerini düşünüyordun." />
+    <string id="taom_cc_taom_education_umbar_4_text" text="Korsanlarla birlikte Gondor'un kıyı köylerini bastı." />
+    <string id="taom_cc_taom_education_umbar_4_desc" text="Gondor kıyılarına ilk baskınlarını neredeyse bir genç olarak yaptın, kılıç ve fırlatma bıçağıyla bir baskın grubunun ön saflarında savaştın. Baskınlar acımasız ve hızlıydı ve sana şiddetin tam olarak neye değdiğini öğrettiler." />
+    <string id="taom_cc_taom_education_umbar_5_text" text="Korsan yollarında karga yuvasından yön buldu." />
+    <string id="taom_cc_taom_education_umbar_5_desc" text="Gözcü ve keşif gemicisi olarak hizmet ettin, denizi okumayı ve Belfalas Körfezi'nin tehlikeli sularında rota çizmeyi öğrendin. Direk başından ne gördüğün, bir baskının başarılı olup felakete dönüşeceğini belirliyordu." />
+    <string id="taom_cc_taom_education_umbar_6_text" text="Umbar'ın arka sokaklarında kaçak mal taşıdı." />
+    <string id="taom_cc_taom_education_umbar_6_desc" text="Liman şehrinin gölge ekonomisinde koştun, beyan edilemeyecek mallar ve yazıya dökülemeyen mesajlar taşıdın. İş sırlar ve küçük paralarla ödendi ve Umbar'daki her satıcıyı, rüşveti ve kaçış deliğini öğrendin." />
+    <string id="taom_cc_taom_education_empire_1_text" text="Klan reisinin genç savaşçılarıyla eğitim gördü." />
+    <string id="taom_cc_taom_education_empire_1_desc" text="Tepe kalesinin çamurlu antrenman alanlarında kabile reisinin oğullarıyla talim yaptın, sert sürmek ve kaba Dunlending tarzında iki elli kılıç sallamak öğrendin. Her çürük bir dersti ve her ders at-lordlarına karşı eski kini taşıyordu." />
+    <string id="taom_cc_taom_education_empire_2_text" text="Tepe kabileleri ile ova pazarları arasında ticaret yaptı." />
+    <string id="taom_cc_taom_education_empire_2_desc" text="Tepe yerleşimleri ile nehir pazarları arasında mal ve haber taşıdın, sert pazarlık yapmayı ve güvenmediğin alıcılara gülümsemeyi öğrendin. Dunland ile daha geniş dünya arasındaki yollar zorlu ve çekicilik çoğu zaman bir kılıçtan daha ucuzdu." />
+    <string id="taom_cc_taom_education_empire_3_text" text="Dunland tepelerinde koyun güttü ve mızrak biledi." />
+    <string id="taom_cc_taom_education_empire_3_desc" text="Gençliğini Dunland'ın rüzgarla süpürülmüş yamaçlarında sürülere bakarak geçirdin ve çağrı geldiğinde eline bir mızrak tutuşturuldu ve levantta itildin. Tepeler seni sertleştirdi ve levant seni tehlikeli yaptı." />
+    <string id="taom_cc_taom_education_empire_4_text" text="Demirhanede ve ahşap oymacılık tezgahında çalıştı." />
+    <string id="taom_cc_taom_education_empire_4_desc" text="Dunlending yerleşimlerinin pratik zanaatlarında metal ve ahşap şekillendirmeyi öğrendin, klanlar için alet, silah ve donanım yaptın. İş sana becerikli eller ve eşyaların nasıl bir araya getirildiğini ve nasıl sökülüp parçalanabileceğini görebilecek bir göz verdi." />
+    <string id="taom_cc_taom_education_empire_5_text" text="Dunland ormanlarında avlandı ve besin topladı." />
+    <string id="taom_cc_taom_education_empire_5_desc" text="Genç bir avcı olarak Sisli Dağlar sınırındaki ormanlık sırtları öğrendin, geyik izleyip çoğu çocuk제대로 tutamadan yayı aldın. Orman sırlarını sakladı ve sen onların çoğunu öğrendin." />
+    <string id="taom_cc_taom_education_empire_6_text" text="Bir dışlanmış olarak klanlar arasında sürüklendi." />
+    <string id="taom_cc_taom_education_empire_6_desc" text="Kovuldun ya da kaçtın, oluşum yıllarını Dunlending toplumunun kenarlarında geçirerek, eşit ölçüde iş ve sorun toplayarak. İyi hedeflenmiş bir atış ya da inandırıcı bir yalanın, hiçbir klan rozetinin açamayacağı kapıları açabileceğini öğrendin." />
+    <string id="taom_cc_taom_education_vlandia_1_text" text="Mareşalin hanedanında eğitimle ata bindi." />
+    <string id="taom_cc_taom_education_vlandia_1_desc" text="Gençliğini Riddermark mareşallerinden birine hizmet ederek atlı savaş sanatını öğrenerek geçirdin, Rohan'ın geniş otlaklarında mızrak ve kılıçla talim yaptın. Riddermark'ta binicilik öğretilmezdi — nefes alınırdı." />
+    <string id="taom_cc_taom_education_vlandia_2_text" text="Riddermark pazarlarında mal ticareti yaptı." />
+    <string id="taom_cc_taom_education_vlandia_2_desc" text="Edoras'ın kaleleri ile Rohan'ın küçük kasabaları arasında mal ve fiyat taşıdın, insanları okumayı ve günün ışığı solmadan önce anlaşmayı kapatmayı öğrendin. Ovalar uzun ve boştu ve pazar tezgahlarındaki sohbet dünyayı döndürüyordu." />
+    <string id="taom_cc_taom_education_vlandia_3_text" text="Westfold'da at yetiştirdi ve levantta durdu." />
+    <string id="taom_cc_taom_education_vlandia_3_desc" text="Westfold'daki ailenin meralarında çalıştın, yürümeyi öğrenmeden önce neredeyse atları idare etmeyi öğrendin ve mızrak için yeterince uzun olur olmaz levanta alındın. Batı Rohan'ın dalgalı ovaları senin okulundu." />
+    <string id="taom_cc_taom_education_vlandia_4_text" text="Aldburg'un demircilerine çırak oldu." />
+    <string id="taom_cc_taom_education_vlandia_4_desc" text="Aldburg'un demirhanelerinde Rohan'ın parlak çeliğini şekillendirmeyi öğrendin, Rohirrim için kılıç ve donanım yaptın. Her gece kolların ağrıyarak ve hiçbir savaş alanının azaltamayacağı bir zanaat gururu ile eve gittin." />
+    <string id="taom_cc_taom_education_vlandia_5_text" text="Eastfold'da avlandı ve ufku izledi." />
+    <string id="taom_cc_taom_education_vlandia_5_desc" text="Yayınla Eastfold boyunca geniş bir alanda dolaştın, av hayvanı avladın ve Ork hareketi belirtileri için doğu ufkunu keskin bir gözle izledin. Geniş ovalar sana uzağı görmeyi ve sessizce hareket etmeyi öğretti ve her iki beceri de sana iyi hizmet etti." />
+    <string id="taom_cc_taom_education_vlandia_6_text" text="Sabit bir bağlılık olmadan Wold'da sürüklendi." />
+    <string id="taom_cc_taom_education_vlandia_6_desc" text="Kendine ait bir klan ya da kale olmadan Wold'un vahşi otlaklarında gezindin, ovaların sunduklarıyla ve ara sıra başkalarının yeterince iyi gizlemediği şeylerle hayatta kalmayı öğrendin. Kurnazlık, şans olmadığında seni besledi." />
+    <string id="taom_cc_taom_education_sturgia_1_text" text="Kral Brand'ın krali salonunda eğitim gördü." />
+    <string id="taom_cc_taom_education_sturgia_1_desc" text="Dale'in savaş sanatlarında eğitim gördün, Brand'ın hanedan muhafızlarının talimatı altında ata binmeyi ve ağır silahları kullanmayı öğrendin. Yeniden inşa edilen şehir müreffeh ve gururluydu ve askerlerinin onun itibarına uyması bekleniyordu." />
+    <string id="taom_cc_taom_education_sturgia_2_text" text="Dale'in ticaret evlerinde katiplik yaptı." />
+    <string id="taom_cc_taom_education_sturgia_2_desc" text="Dale'in tüccar salonlarında hesap tutmayı ve alıcıları büyülemeyi öğrendin, burada Doğu ve Güney'den gelen mallar Erebor ve Kuzey'den gelen mallarla buluşuyordu. Şehrin ünlü ticareti onu zenginliği anlamak isteyen herkes için ideal bir sınıf yaptı." />
+    <string id="taom_cc_taom_education_sturgia_3_text" text="Uzun Göl'de balık tuttu ve çevredeki tarlalarda çalıştı." />
+    <string id="taom_cc_taom_education_sturgia_3_desc" text="Uzun Göl'de ağ çekerek ve Esgaroth çevresindeki tarım arazilerini sürerek büyüdün, göl yaşamının gerektirdiği dayanıklılığı inşa ettin. Milis çağrıldığında mızrağını diğer özgür adamlarla birlikte aldın ve evini güvende tutmak için yürüdün." />
+    <string id="taom_cc_taom_education_sturgia_4_text" text="Dale'in atölyelerinde zanaat öğrendi." />
+    <string id="taom_cc_taom_education_sturgia_4_desc" text="Metal işçiliği ve tüccarların uzağa güneye taşıdığı ince eşyalarla ünlü Dale'in atölyelerinde çıraklık yaptın. Bir zanaatkarın elleri ve bir zanaatkarın gururu seninki oldu, onları koruyacak kadar keskin bir kılıçla birlikte." />
+    <string id="taom_cc_taom_education_sturgia_5_text" text="Mirkwood sınırlarında ve orman yollarında avlandı." />
+    <string id="taom_cc_taom_education_sturgia_5_desc" text="Uzun Göl'ün güneyindeki karanlık orman kenarında dolaştın, av izlemeyi ve daha kötü şeylerin dikkatini çekmemeyi öğrendin. Yayın en güvenilir arkadaşındı ve orman yolları bilgin seni birden fazla kez hayatta tuttu." />
+    <string id="taom_cc_taom_education_sturgia_6_text" text="Göl-kasabası rıhtımlarının kenarlarında geçinip gitti." />
+    <string id="taom_cc_taom_education_sturgia_6_desc" text="Esgaroth'un rıhtım işçileri ve küçük hırsızları arasında büyüdün, dürüst kazançları dürüst olmayan kazançlarla desteklemeyi ve nöbet gelmeden kaybolmayı öğrendin. Göl kasabasının hareketli rıhtımları, dünyanın gerçekte nasıl işlediğine dair mükemmel bir eğitimdi." />
+    <string id="taom_cc_taom_education_aserai_1_text" text="Kara Yılan'ın savaş ordusuyla birlikte sürdün." />
+    <string id="taom_cc_taom_education_aserai_1_desc" text="Kara Yılan'ın hane halkının sancak savaşçıları arasında eğitim gördün, güneyin sıcak güneşi altında at sırtında savaşmayı ve ağır kılıcı kullanmayı öğrendin. Her talim, kuzeyin vaadi ve Harad savaşçılarını orada bekleyen şanla sona erdi." />
+    <string id="taom_cc_taom_education_aserai_2_text" text="Harad'ın çöl mızrakçılarıyla talim yaptın." />
+    <string id="taom_cc_taom_education_aserai_2_desc" text="Güneyin cezalandırıcı sıcağında eğitim gördün, Haradrim piyadelerinin acımasız tarzıyla balta ve mızrakla düzen tutmayı öğrendin. Güneş altında dayanıklılık, diğer tüm niteliklerden daha değerliydi." />
+    <string id="taom_cc_taom_education_aserai_3_text" text="Güneyin çöl yollarında ticaret malları taşıdın." />
+    <string id="taom_cc_taom_education_aserai_3_desc" text="Harad'ın kızgın kervan yollarında seyahat ettin, çöl pazar kasabalarında egzotik mallar takas ederek ve Güneş Topraklarını defalarca geçmiş katı tüccarlardan ikna sanatını öğrendin. Yol sana herhangi bir salona göre daha fazlasını öğretti." />
+    <string id="taom_cc_taom_education_aserai_4_text" text="Harad'ın kalbindeki vaha tarlalarında çalıştın." />
+    <string id="taom_cc_taom_education_aserai_4_desc" text="Çöl vahalarının çevresindeki sulanan tarlalarda çalıştın, kurak topraktan büyüme elde etmeyi ve acımasız bir güneş altında çiftlik işinin fiziksel taleplerini karşılamayı öğrendin. Savaş çağrısı geldiğinde zayıf, güçlü ve hazırdın." />
+    <string id="taom_cc_taom_education_aserai_5_text" text="Göçebe kabilelerle birlikte Güneş Toprakları boyunca sürdün." />
+    <string id="taom_cc_taom_education_aserai_5_desc" text="Gezgin kabilelerle seyahat ettin, yıldızlara bakarak yön bulmayı ve çölün ince işaretlerini okumayı öğrendin. Yayın en güvenilir aletin oldu ve uçsuz bucaksız Güneş Toprakları, bir hedefi görmeden çok önce gözetlemeyi öğretti." />
+    <string id="taom_cc_taom_education_aserai_6_text" text="Vahalar ötesindeki kum akıncısı çeteleriyle koştun." />
+    <string id="taom_cc_taom_education_aserai_6_desc" text="Derin çölde kervanları avlayan akıncı çetelerine katıldın, kumlarda hızla hareket etmeyi ve kervan muhafızları düzen kurmaya vakit bulamadan at sırtından mızrak fırlatmayı öğrendin. Çöl haydutlarının hayatı acımasız ama öğreticiydi." />
+    <string id="taom_cc_taom_education_battania_1_text" text="Dunedain ile birlikte kuzey vahşi topraklarında dolaştın." />
+    <string id="taom_cc_taom_education_battania_1_desc" text="Daha gençken Kuzey Korucuları tarafından eğitime alındın, Eriador'un vahşi topraklarında sessizce hareket etmeyi ve yıkık Arnor boyunca düşmanları takip etmeyi öğrendin. Korucular az istedi ve her şeyi talep etti, sen de bunu vermeyi öğrendin." />
+    <string id="taom_cc_taom_education_battania_2_text" text="Bir Korucu şifacısının yanında şifa ve bitki bilgisi öğrendin." />
+    <string id="taom_cc_taom_education_battania_2_desc" text="Kuzeyde Westernesse bilgisini canlı tutan Dunedain şifacılarından birine çırak verdin, bitkileri tanımayı ve vahşi toprakların sunduğu kaynaklarla yaraları tedavi etmeyi öğrendin. Bilgelik ve pratik bilgi eşit derecede saygı görüyordu." />
+    <string id="taom_cc_taom_education_battania_3_text" text="Korucu devriyelerinde Ork ve kurda karşı savaştın." />
+    <string id="taom_cc_taom_education_battania_3_desc" text="Dunedain ile birlikte Arnor kalıntıları boyunca devriyeler koştun, kuzey sınırlarını test eden Ork savaş çetelerine karşı kılıç ve mızrakla savaşmayı öğrendin. Korucuların kalesi yoktu, sadece tetikte oluşları vardı ve sen de bunun bedelini öğrendin." />
+    <string id="taom_cc_taom_education_battania_4_text" text="Bir Korucu yerleşiminde demirhanede çalıştın." />
+    <string id="taom_cc_taom_education_battania_4_desc" text="Dunedainlerin kış geçirdiği küçük gizli yerleşimlerde kılıç yaptın ve teçhizat onardın, tasarrufla üretim yapmayı öğrendin — malzemeler kıttı ve her parça dayanıklı olacak şekilde yapılmalıydı. Bir zanaatkarın hassasiyetini ve bir savaşçının silahın ne yapması gerektiğine dair içgüdüsünü geliştirdin." />
+    <string id="taom_cc_taom_education_battania_5_text" text="Eriador'un vahşi topraklarında av ve düşmanları takip ettin." />
+    <string id="taom_cc_taom_education_battania_5_desc" text="Eriador'un eski ormanlarında ve bozkırlarında insanların ve hayvanların bıraktığı geçiş izlerini okumayı öğrendin, sofra için av ve yerleşimlerin güvenliği için Ork gözcülerini avladın. Yay senin ilk dilin, vahşi doğa ikinci eviniydi." />
+    <string id="taom_cc_taom_education_battania_6_text" text="Köyler arasında adsız bir gezgin olarak dolaştın." />
+    <string id="taom_cc_taom_education_battania_6_desc" text="Kuzey yollarında zekanla yaşadın, küçük işler karşılığında yemek ve barınak elde ettin ve ara sıra sunulmayanı aldın. Dunedain aynı yerleşimlerden geçiyordu ama kimseyle konuşmuyordu, bu da sana görünmezliğin kendi türünde bir güç olduğunu öğretti." />
+    <string id="taom_cc_taom_education_khuzait_1_text" text="Doğulu savaş süvarilerine katılıp talim yaptın." />
+    <string id="taom_cc_taom_education_khuzait_1_desc" text="Rhun'un bir savaş süvarisi olarak eğitim gördün, babaları kırmızı şafak sancağı altında Gondor'a karşı sürmüş yaşlılardan geniş bozkır geleneğinde atlı dövüş öğrendin. Büyük doğu ovaları senin çalışma alanın ve at senin en güvenilir silahındı." />
+    <string id="taom_cc_taom_education_khuzait_2_text" text="Doğu'nun ticaret yollarında takas yaptın." />
+    <string id="taom_cc_taom_education_khuzait_2_desc" text="Rhun Denizi ile batı toprakları arasındaki ticaret yollarında seyahat ettin, birçok halkın tüccarlarıyla iş yapmayı ve anlaşmazlıklarda çıkış yolunu bularak yolunu açmayı öğrendin. Doğu yolları tehlikeliydi ve dilin herhangi bir kılıçtan daha keskin olmalıydı." />
+    <string id="taom_cc_taom_education_khuzait_3_text" text="Doğu bozkırları boyunca göçebe klanlarla birlikte hareket ettin." />
+    <string id="taom_cc_taom_education_khuzait_3_desc" text="Bozkır klanlarının mevsimsel göçlerini takip ettin, kamp kurmayı ve her havada yaya ve ata binmiş olarak büyük mesafeleri kat etmeyi öğrendin. Göçebe yaşam sert bir dayanıklılık ve mızrakla kolay bir ilişki inşa etti." />
+    <string id="taom_cc_taom_education_khuzait_4_text" text="Rhun Denizi yakınındaki vadi çiftliklerinde çalıştın." />
+    <string id="taom_cc_taom_education_khuzait_4_desc" text="İç denizin etrafındaki verimli vadilerde çiftçilik yaptın, alet yapmayı ve Doğulu tarzında sınırlı malzemelerden en iyi şekilde yararlanmayı öğrendin. Kılıçla eğitim geldiğinde çiftliğin sana verdiği metodik disiplinle ona yöneldin." />
+    <string id="taom_cc_taom_education_khuzait_5_text" text="Klan yaşlılarıyla ruh bilgisi ve şifa öğrendin." />
+    <string id="taom_cc_taom_education_khuzait_5_desc" text="Doğulu klanların şamanları ve şifacılarıyla oturdun, göçebe halkı açık ovalarda hayatta tutan ritüel bilgiyi ve pratik tıbbı öğrendin. Sözler ve anlayış, herhangi bir silahtan çok önce senin aletlerindi." />
+    <string id="taom_cc_taom_education_khuzait_6_text" text="Doğu savaş ordusunun çok ilerisinde keşif yaptın." />
+    <string id="taom_cc_taom_education_khuzait_6_desc" text="Doğulu süvari kolları için ileri keşif olarak sürdün, ana gücün günler ötesinde dolaşıp bulduklarını rapor ettin. İş, görünmez kalmayı, at sırtından isabetli atış yapmayı ve ne zaman savaşmak yerine kaçacağını değerlendirmeyi gerektirdi." />
+    <string id="taom_cc_taom_adulthood_gondor_1_text" text="Osgiliath savunmasında kendini gösterdin." />
+    <string id="taom_cc_taom_adulthood_gondor_1_desc" text="Mordor nehir boyunca sıkı bastırdığında, geri çekilme emri verilene kadar köprünün kendi bölümünü tuttun. Yüzbaşı adını Kâhya'nın haberci'sine övgüyle bildirdi ve bölüğündeki adamlar o gün ne yaptığını hatırladı." />
+    <string id="taom_cc_taom_adulthood_gondor_2_text" text="Minas Tirith için hayati bir tahıl tedarik anlaşması müzakere ettiniz." />
+    <string id="taom_cc_taom_adulthood_gondor_2_desc" text="Kuraklık dış çiftlikleri tehdit ettiğinde, şehrin ambarlarını zorlu bir kış boyunca dolu tutmak için Pelargir'den gelen tüccar evleriyle şartları ayarladınız. Kâhya'nın odabaşısı gelecekteki hizmetler için adınızı not etti." />
+    <string id="taom_cc_taom_adulthood_gondor_3_text" text="Ork baskınları tehdidi altında Pelennor hasadını organize ettiniz." />
+    <string id="taom_cc_taom_adulthood_gondor_3_desc" text="Ephel Duath'tan baskın grupları çıktığında, hasat yapanları korumak için yerel kuvvetleri koordine ettiniz ve mevsim bitmeden mahsulü topladınız. Köy başkanları hâlâ birinin gerçekten bunu başardığı yıldan bahsediyor." />
+    <string id="taom_cc_taom_adulthood_gondor_4_text" text="Bir Kule Muhafızı yüzbaşısına sunulan bir kılıç dövdünüz." />
+    <string id="taom_cc_taom_adulthood_gondor_4_desc" text="Yüzbaşı işinizi duymuştu ve terfi töreninde kullanmak için bir kılıç sipariş etti. Toplanan muhafızların önünde kılıcı çektiğinde ve gerçek bir ses çıkardığında, zanaatın demircilik mahallesindeki her ağrılı sabahın karşılığını verdiğini anladınız." />
+    <string id="taom_cc_taom_adulthood_gondor_5_text" text="İthilien'de bir Korucu birliğine Ork kuşatmasından kılavuzluk ettiniz." />
+    <string id="taom_cc_taom_adulthood_gondor_5_desc" text="Devriye Anduin'in doğusunda kuşatıldığında, hiçbir Ork gözcüsünün haritalamadığı bir patikadan onları yönlendirdiniz ve tek bir adam kaybetmediniz. İçeri girdiğinizde Faramir'in teğmeni kolunuzu sıktı ve daha fazla söze gerek olmadığını belirtti." />
+    <string id="taom_cc_taom_adulthood_gondor_6_text" text="Aşağı şehirden faaliyet gösteren bir kaçakçılık çetesini ortaya çıkardınız." />
+    <string id="taom_cc_taom_adulthood_gondor_6_desc" text="Aylarca kaçak mal, kimsenin nasıl olduğunu bilmeden Osgiliath kalıntılarından Minas Tirith'e taşınıyordu. Rotaları haritaladınız, elebaşını belirlediniz ve tüm operasyonu şehir muhafızlarına teslim ettiniz. Ödül, ilk gerçek kılıcınızı almaya yetti." />
+    <string id="taom_cc_taom_adulthood_mordor_1_text" text="Kara Çukurlar sınavından sağ çıktınız ve Göz'ün lejyonuna seçildiniz." />
+    <string id="taom_cc_taom_adulthood_mordor_1_desc" text="Çukurlara giren az kişi layık görüldü. Sadece hayatta kalmadınız — gözetmenler işi bitirmiş saymadan önce arka arkaya üç rakibi yendiniz. Kalabalık dağılmadan önce lejyon damgası kolunuza basıldı." />
+    <string id="taom_cc_taom_adulthood_mordor_2_text" text="Kaybedilen bir tedarik yolunu Kara Diyar'ın en kârlı yoluna dönüştürdünüz." />
+    <string id="taom_cc_taom_adulthood_mordor_2_desc" text="Önceki kurye, aylarca kötü rotalama ve daha kötü anlaşmalarla tedarik konvoylarını kanatıyordu. Ölü ağırlığı kestiniz, geçiş anlaşmalarını yeniden müzakere ettiniz ve bir mevsim içinde verimi ikiye katladınız. Gözetmenler sizi daha iyi bir payla ve daha kötü bir vicdanla ödüllendirdi." />
+    <string id="taom_cc_taom_adulthood_mordor_3_text" text="Bir demirci kulesinin inşaatını planlanan tarihten önce tamamladınız." />
+    <string id="taom_cc_taom_adulthood_mordor_3_desc" text="Gözetmen, Kara Lord'un denetiminden önce demirci kulesinin hazır olmaması durumunda ceza vaat etmişti. İş ekiplerini herkesin mümkün olduğunu düşündüğünden daha sert yönlendirdiniz ve kule iki gün önceden tamamlanmış olarak ayakta duruyordu. Gözetmen övgüyü aldı; siz hayatta kalmayı aldınız." />
+    <string id="taom_cc_taom_adulthood_mordor_4_text" text="Günün çıktısını kaybetmeden bir işçi isyanını bastırdınız." />
+    <string id="taom_cc_taom_adulthood_mordor_4_desc" text="Bitkin işçiler aletlerini bırakıp hareket etmeyi reddettiklerinde, tek başınıza devreye girdiniz, üç kışkırtıcıyı belirlediniz ve gözetmenler gecikmeyi fark etmeden durumu hallettiniz. Ekip işe geri döndü. Kışkırtıcılar başka sorun çıkarmadı." />
+    <string id="taom_cc_taom_adulthood_mordor_5_text" text="Üç devriyenin bulamadığı bir firarinin izini sürdünüz ve öldürdünüz." />
+    <string id="taom_cc_taom_adulthood_mordor_5_desc" text="Firari iki gözetmeni öldürmüş ve Gorgoroth'un ıssız topraklarında kaybolmuştu. Yalnız gittiniz, kül düzlüklerinde dört gün boyunca izi takip ettiniz ve bulduğunuzun kanıtıyla geri döndünüz. Kimse ayrıntı sormadı." />
+    <string id="taom_cc_taom_adulthood_mordor_6_text" text="Yozlaşmış bir kapı bekçisini ifşa ettiniz ve görevini devraldınız." />
+    <string id="taom_cc_taom_adulthood_mordor_6_desc" text="Morannon'daki kapı bekçisi geçen her gruptan vergi alıyor ve gelirin yarısını cebe indiriyordu. Planı belgeledıniz, tam doğru anda amirine sundunuz ve görevin el değiştirmesini izlediniz. Sizinkine el değiştirdiğinden emin oldunuz." />
+    <string id="taom_cc_taom_adulthood_erebor_1_text" text="Yalnız başınıza eteklerde bir Ork baskın grubunu püskürttünüz." />
+    <string id="taom_cc_taom_adulthood_erebor_1_desc" text="Dış devriyeden dönerken, nöbeti atlamış bir Ork çetesiyle karşılaştınız. Yardım almaya zaman yoktu. Alarm kapıya ulaşana kadar dar geçidi baltanızla tuttunuz. Üç Ork oraya ulaşamadı." />
+    <string id="taom_cc_taom_adulthood_erebor_2_text" text="Dale ile bir neslin en iyi ticaret anlaşmasını yaptınız." />
+    <string id="taom_cc_taom_adulthood_erebor_2_desc" text="Erebor'un demir ihracatı şartları Dağ'ın geri alınmasından bu yana yeniden müzakere edilmemişti. Dengesizliği belirlediniz, gerçekleri bir araya getirdiniz ve davayı Kral Dain'in kâhyasına o kadar açık bir şekilde sundunuz ki anlaşma bir ay içinde revize edildi." />
+    <string id="taom_cc_taom_adulthood_erebor_3_text" text="Kayıp bir galeriyi keşfettiniz ve yeni bir mithril damarı açtınız." />
+    <string id="taom_cc_taom_adulthood_erebor_3_desc" text="Eski haritalar bir çöküş gösteriyordu, ama derin taştaki su sesini takip ettiniz ve galeriyi molozun arkasında sağlam buldunuz. İçindeki mithril damarı mütevazıydı, ama onu haritalayan mühendisler adınızı araştırma kaydına ekledi." />
+    <string id="taom_cc_taom_adulthood_erebor_4_text" text="Dağ Altı Savaşı'nda kalkan duvarını tuttunuz." />
+    <string id="taom_cc_taom_adulthood_erebor_4_desc" text="Ork ordusu alt kapılara bastırdığında, diğerleri büküldüğü sırada kalkan duvarının bölümünüzü sabitlediniz ve karşı saldırıya oluşması için zaman kazandırdınız. Dain'in yüzbaşısı adınızı savaş kaydına not etti ki bu bir Cücenin şiire en yakın olduğu şeydir." />
+    <string id="taom_cc_taom_adulthood_erebor_5_text" text="Yıllarca süren tutarsızlıktan sonra hazine hesaplarını dengeledıniz." />
+    <string id="taom_cc_taom_adulthood_erebor_5_desc" text="Defterler geri alınmadan bu yana uyumsuzdu ve kimsenin açıklayamadığı kayıplar vardı. Üç ay boyunca kayıtları çapraz referansladınız ve hatayı belirlediniz — yirmi yıllık kayıtlarda birleşen basit bir dönüştürme hatası. Kralın haznedarı elinizi sıktı." />
+    <string id="taom_cc_taom_adulthood_erebor_6_text" text="Bir Ork baskın çetesinin izini inine kadar sürdünüz ve muhafızlar için işaretlediniz." />
+    <string id="taom_cc_taom_adulthood_erebor_6_desc" text="Çete aynı yönden üç kez saldırmış ve kimse takip edemeden sıvışmıştı. Yalnız başınıza çamlara gittiniz, kampı buldunuz, sayılarını saydınız, yaklaşımı çizdiniz ve raporu garnizonun üzerine hareket etmesi için zamanında geri getirdiniz." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_text" text="Yaralı bir haberciye İmladris'e geri dönmesi için yalnız başınıza yardım etmeye çıktınız." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_desc" text="Haberci Geçit'in doğusunda pusuya düşmüş ve yardımsız binemiyordu. Onu buldunuz, hâlâ yolu arayan Ork kaçaklarını püskürttünüz ve içeri getirdiniz. Elrond mesaja dönmeden önce sizinle kısaca konuştu." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_text" text="Elrond'un bilgin ustalarının korumayı seçtiği bir zanaat eseri tamamladınız." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_desc" text="Eser — parçalı kaynaklardan yeniden oluşturulmuş Eriador'un antik yol ağının detaylı kabartma haritası — kütüphanenin arşivlerine kopyalanacak kadar doğru kabul edildi. Üç bilgin usta iki vadi hakkında anlaşmazlığa düştü; her ikisi hakkında da haklıydınız." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_text" text="Hasat kaybetmeden bir hastalık mevsimi boyunca vadinin teraslarına baktınız." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_desc" text="Fungal bir hastalık üst bahçelere yayıldı ve alt terasları tehdit etti. Etkilenen ağaçları erken belirlediniz, Elflerin aşırı bulduğu bir karantina uyguladınız ve hastalığın yayılmasını engellediniz. O yılki hasat daha küçüktü ama tamdı." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_text" text="Geçit'i tehdit etmeden önce Imladris'i bir Troll kampından haberdar ettiniz." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_desc" text="Üç Taş Troll, Geçit'e daha önce hiç olmadığı kadar yakın bir yerde Trol Geçitleri'ne yerleşmişti. Kamplarını tespit ettiniz, konumunu haritalaştırdınız, menzillerini tahmin ettiniz ve hareket etmeden önce muhafızlara rapor sundunuz. Geri kalanıyla muhafızlar ilgilendi." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_text" text="Elrond'un şifacılarının ümidini kestiği bir yolcunun hayatını kurtardınız." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_desc" text="Yolcu Morgul zehirli bir yara almıştı ve kıdemli şifacılar çoktan özürlerini hazırlıyordu. Kütüphanenin eski metinlerinde zehrin davranışı hakkında farklı bir açıklama okumuştunuz. Okuduklarınızı uyguladınız ve yolcu iyileşti." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_text" text="Bir Korucu kampından çalınan bir belgeyi görünmeden geri aldınız." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_desc" text="Elrond'un evinden özel bir mektup, bir misafirin çantasına işaret eden koşullarda kaybolmuştu. Kimse kayıp olduğunu fark etmeden geri aldınız, karıştırılanları yerine koydunuz ve mektubu hiçbir şey konuşulmadan iade ettiniz." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_text" text="Güney yollarını terörize eden bir örümcek-kraliçesini yakaladınız." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_desc" text="Yaratık üç keşif grubunu geri püskürtmüş ve iki kişiyi öldürmüştü. Ağ düzenlerini inceleydiniz, döndüğü demir ağacı tespit ettiniz ve şafakta beslenirken uzun bir Elf kılıcıyla onu yakaladınız. Thranduil'in kaptanları ganimetin yolun girişine astılar." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_text" text="Yıllarca kapalı kalan Orman Yolu ticaret rotasını yeniden açtınız." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_desc" text="Yol, örümcek ve Ork tacizi nedeniyle iki mevsim boyunca fiilen kapalıydı. Kalan en güvenli koridorları haritalaştırdınız, Thranduil'in kaptanıyla muhafız düzenlemeleri müzakere ettiniz ve ilk tüccar kervanını başarıyla yönlendirdiniz. Ticaret bir ay içinde yeniden başladı." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_text" text="Bozulmuş bir açıklığı temizlediniz ve tekrar sağlıklı hale getirdiniz." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_desc" text="Dol Guldur'dan gelen karanlık, krallığın kenarına yakın bir açıklığa sızmış, toprağı karartmış ve orada büyüyenleri öldürmüştü. İki mevsim boyunca lekeyi çıkarmak ve yeniden dikmek için çalıştınız ve fidanlar tuttu. Thranduil'in ormancıları bunu görmek için geldiler." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_text" text="Elf Kralı'nın şampiyonunun taşımayı seçtiği bir yay yaptınız." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_desc" text="Şampiyon, doğu geçitlerinin savunmasında önceki yayını kırmıştı ve sezonun turnuvasından önce bir yenisine ihtiyacı vardı. Üç gün dinlenmeden sırık üzerinde çalıştınız. Şampiyon ilk defa çektiğinde bir kez başını salladı ve konuşmadan yürüyüp gitti. Bu yeterliydi." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_text" text="Güney ormanındaki ağ-tünel ağını haritalaştırdınız." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_desc" text="Kimse örümceklerin yeraltı geçitlerinin kapsamını içlerinde yakalanmadan haritalaştıramamıştı. Küçük gitiniz, dikkatle hareket ettiniz ve Elf Kralı'nın izcilikçilerinin o zamandan beri kullandığı bir haritayla çıktınız. Tam olarak nasıl çıktığınızı anlatmayı reddettiniz." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_text" text="Bir örümcek ağ yuvasından üç Elf esiri tek başınıza kurtardınız." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_desc" text="İzciler, devriyenin gitmeyeceği bozulmuş güney ormanının derinliklerinde yakalanmıştı. Gece yalnız gittiniz, onları kestiniz ve üç örümcek korumalı yoldan geçirerek dışarı çıkardınız. İkisi yolu nasıl bildiğinizi sordu. Onlara içgüdü olduğunu söylediniz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_text" text="Partneriniz hastalandığında Dimrill Vadisi'nde tek başınıza nöbet tuttunuz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_desc" text="Görev noktası her iki yaklaşımı da kapsıyordu ve boş bırakılamazdı. Soğuk bir gece ve yarım gün vardiya boyunca tam nöbeti kendiniz dinlenmeden tuttunuz, yardım vardiyasının tam olarak tanımladığınız gibi bulduğu üç olayı rapor ettiniz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_text" text="Orman Hanımefendisi'nin hediye olarak sunduğu törensel bir pelerin dokudunuz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_desc" text="Galadriel'in ziyaret eden bir beye diplomatik bir hediye için layık bir pelerine ihtiyacı vardı. Size görevlendirme, malzemeler ve bir hafta verildi. Caras Galadhon'dan çıkan pelerin, üç Elf dokuyucusunun kimin yaptığını sormasına neden oldu. Galadriel gülümsedi ve söylemedi." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_text" text="Bir sınır ihlali sırasında gece bir flet'ten üç Ork'u vurdunuz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_desc" text="Ork izcileri dış işaretleri geçmiş ve ormanın kalbine doğru ilerliyordu. Onları altmış yarda karanlıktan ayırdınız — üç atış, üç düşüş, alarm verilmedi. Devriye sabah onları buldu ve okların hangi yönden geldiğini anlayamadı." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_text" text="Bir Nazgul'un yaklaşımını ormanın sınırlarına ulaşmadan tespit ettiniz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_desc" text="Doğal olmayan soğuk ve kuşların hareketsizliği ilk işaretlerdi. Başka kimse fark etmeden hissettiğinizi Galadhrim komutasına bildirdiniz. Hanımefendi'nin gücü sınırları güçlendirmek için hareket etti. Sonrasında Celeborn içgüdülerinizin alışılmadık derecede keskin olduğunu söyledi." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_text" text="Diğerlerinin kapanmayacağını söylediği ağır bir Ork yarasını iyileştirdiniz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_desc" text="Yara, iyileşmenin pek mümkün olmadığı konusunda hemfikir olan iki şifacı tarafından tedavi edilmişti. Daha eski bir metinden ath'elas'ın farklı bir hazırlanışını tanıdınız ve onların itirazlarına rağmen uyguladınız. Elf iyileşti. İki şifacı daha sonra size hazırlık hakkında sorular sordu." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_text" text="Dol Guldur'un dış karakollarından süzüldünüz ve bir esir sayımıyla döndünüz." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_desc" text="Galadhrim'in herhangi bir eylem planlanmadan önce güney kalesinde kaç kişinin garnizon kurduğunu bilmesi gerekiyordu. Gidip bakmak için gönüllü oldunuz. Altı gün kayıptınız. Geri getirdiğiniz şey Galadriel'e kararını vermesi için gereken bilgiyi verdi." />
+    <string id="taom_cc_taom_adulthood_isengard_1_text" text="Miğfer Dibi'nde saldırı kolunu yönettiniz ve dış duvarı deldiniz." />
+    <string id="taom_cc_taom_adulthood_isengard_1_desc" text="Saruman'ın planı şafaktan önce bir gedik açılmasını gerektiriyordu. Kolonunuz kapıya ilk ulaştı ve patlayıcı ateş yükünü dibine siz yerleştirdiniz. Patlama gökyüzünü aydınlattı. Saldırı izledi. Dip'in içinde ne olduğu sizin meseleniz." />
+    <string id="taom_cc_taom_adulthood_isengard_2_text" text="Isengard'ın silah üretimini ikiye katlayan yeni bir alaşım süreci tasarladınız." />
+    <string id="taom_cc_taom_adulthood_isengard_2_desc" text="Mevcut süreç çeliğin üçte birini su verme sırasındaki kırılgan hatalar yüzünden israf ediyordu. Sıcaklığı sorun olarak belirlediniz, bir düzeltme önermek, Saruman'ın denetçisinin şüpheciliğine karşı test ettiniz ve tek bir vardiyada kanıtladınız. Üretim bir ay içinde ikiye katlandı." />
+    <string id="taom_cc_taom_adulthood_isengard_3_text" text="Isengard'ın yeni doğu menfez sistemini Saruman'ın son tarihinden önce tamamladınız." />
+    <string id="taom_cc_taom_adulthood_isengard_3_desc" text="Menfez, çukur zeminlerini sel sezonu boyunca kuru tutmak için gerekliydi. Saruman otuz gün vermişti. İşçi çetelerini yeniden organize ettiniz, yönlendirmeyi basitleştirdiniz ve yirmi ikide bitirdiniz. Saruman çalışmayı yorum yapmadan inceledi, bu kabul edilebilir olduğu anlamına geliyordu." />
+    <string id="taom_cc_taom_adulthood_isengard_4_text" text="Ham acemi bir bölüğü disiplinli bir piyade birliğine dönüştürdünüz." />
+    <string id="taom_cc_taom_adulthood_isengard_4_desc" text="Acemiler Isengard'ın gördüğü en kötü taslaktı — yetersiz beslenmiş, disiplinsiz ve kendi değersizliklerine ikna olmuş. Sizin talimatınız altında on iki hafta sonra Uruk-hai gözlemcilerinin yeterli dediği bir eğitim tatbikatında hattı tuttular. Onlardan gelen bu, yüksek övgüydü." />
+    <string id="taom_cc_taom_adulthood_isengard_5_text" text="Rohirrim devriye düzenlerini haritalaştırdınız ve Saruman'a stratejik bir avantaj sundunuz." />
+    <string id="taom_cc_taom_adulthood_isengard_5_desc" text="Üç ay boyunca Isen boyunca Rohirrim hareketlerini gözlemlediniz, kaydettiniz ve çapraz referans aldınız. Düzen haritasını Saruman'ın stratejistlerine sunduğunuzda, bütün doğu izcilik rotasyonunu onun temelinde yeniden düzenlediler. Saruman brifingte sizi isminizle andı." />
+    <string id="taom_cc_taom_adulthood_isengard_6_text" text="Bir Rohirrim casusunu Isengard için çalışan çifte ajan haline getirdin." />
+    <string id="taom_cc_taom_adulthood_isengard_6_desc" text="Casusu davranış tutarsızlığıyla tespit ettin, özel olarak yüzleştirdin ve ona kararı basit kılan bir seçenek sundun. Rohan'da herhangi birinin şüphelenmesinden önce iki sezon boyunca Edoras'a yanlış bilgiler besledi. Bu başarı için yazılı hiçbir şey almadın." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_text" text="Büyük Dağ Turnuvasını kazandın ve bir savaş başının hizmetkârı ilan edildin." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_desc" text="Turnuva ana salonda üç acımasız tur boyunca dövüşüldü. Kimsenin favorisi olmadan girdin ve savaş başının gümüş kol halkası ve daha iyi bir ranza ile çıktın. Diğer yarışmacılar sana kazandığın için daha önce hiçbir şey için gösterdiklerinden daha fazla saygı gösterdi." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_text" text="Güneyli bir Ork klanıyla kârlı bir silah ticareti kurdun." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_desc" text="Güneyli klanın demiri vardı ama demircisi yoktu. Gundabad'ın demircileri vardı ama yiyecek ve kürke ihtiyacı vardı. İlk takası sen ayarladın, şartları belirledin ve anlaşmanın alışkanlık haline gelmesi için her iki tarafı birbirlerini öldürmekten alıkoydun. Savaş başı sana yüzde verdi." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_text" text="Kısmi bir çökmeden sonra alt maden galerilerini sağlamlaştırdın." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_desc" text="Çökme alt galeride sekiz Ork'u tuzağa düşürmüştü. Gerilim şemasını değerlendirdin, güçlendirme çalışmasını yönettirdin ve ekibi ardından gelecek ve onları öldürecek olan ikincil çökmeden önce güvenliğe kavuşturdun. Savaş başının mühendisi planları sende kalması için sana verdi." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_text" text="Gri Dağlar'daki Cüce karakolunu kıran baskına önderlik ettin." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_desc" text="Cüceler Gundabad'ın kış baskınları için kullandığı bir geçidi tahkim etmiş, erişimi kesmişler ve dağa tam bir sezonluk yağmaya mal olmuşlardı. Saldırıyı planladın, öncü birliğe önderlik ettin ve karakolun kapısını tek bir hamleyle kırdın. Geçit yeniden açıldı. Cüceler geri gelmediler." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_text" text="Bir Cüce keşif müfrezesini dört gün takip ettin ve haritalarını geri getirdin." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_desc" text="Cüceler Gri Dağlar'da bir şeyin haritasını çıkarıyorlardı ve Gundabad'ın bunun ne olduğunu bilmesi gerekiyordu. Onları yüksek geçitlerden görülmeden takip ettin, kamp kurana kadar bekledin, haritaları aldın ve alarm çalmadan önce kaleye geri döndün." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_text" text="Rakip bir savaş liderini hırsızlıkla suçlayıp tuzağa düşürdün ve onun pozisyonunu aldın." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_desc" text="Rakip, rüşvetler ve daha iyi bağlantılar sayesinde iki yıldır senin ilerlemeni engelliyordu. Neye değer verdiğini belirledin, doğru nesnelerin yanlış zamanda yanlış yerde olmasını ayarladın ve doğru anda keşfi yaptın. Ayın bitmesinden önce onun pozisyonunu ele geçirdin." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_text" text="Mirkwood'un kuzey savunmasını ilk kez delen devriyeye komuta ettin." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_desc" text="Elf sınır muhafızları yaklaşımı iki sezon boyunca tutmuştu. Rotasyonlarındaki boşluğu belirledin, geçişini dakika dakika zamanladın ve devriyeni tek bir kayıp vermeden ileri ve geri getirdin. Gölge ustaları raporunu not etti ve sana kalıcı bir komuta verdi." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_text" text="Sauron'un kalite denetimini geçen gölge-çelik silahlar dövdün." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_desc" text="Ölümçağıran'ın denetçileri kalenin demircilerinden gelen önceki iki partiyi reddetmişti. Eritme sürecini yeniden çalıştın, sulamada hiçbir taviz kabul etmedin ve denetçinin sessizce inceledikten sonra onaylı olarak işaretlediği bir parti teslim ettin. Bu üç yıldır ilk böyle onaylamaydı." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_text" text="Kalenin en alt zindan katının genişletilmesini tamamladın." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_desc" text="İş, sızan yeraltı suyu ve başarısız destekler nedeniyle bir sezon durmuştu. Drenajı yeniden tasarladın, tehlikeye giren keresteleri değiştirdin ve katı revize edilmiş programa göre tamamladın. Ölümçağıran'ın denetçileri aynı hafta mahkûmları taşıdı." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_text" text="Elf dış gözetimini deldin ve sorgu için bir esir aldın." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_desc" text="Elf muhafızından alınan istihbarat, Thranduil'in doğu sınır devriyesinin tam rotasyonunu açıklıyordu. Bu, Dol Guldur'un bir yıldır aldığı en kullanışlı stratejik bilgiydi. Esiri nasıl çıkardığını kimse sormadı. Sen de açıklamadın." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_text" text="Güney Mirkwood'daki Elf devriye rotalarının altı ay boyunca haritasını çıkardın." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_desc" text="Tek başına ve birden fazla sezon boyunca çalışarak, Thranduil'in güney sınır düzenlemelerinin tam bir resmini oluşturdun. Ortaya çıkan harita, Dol Guldur'un planlayıcılarına daha önce hiç sahip olmadıkları bir şey verdi: kesinlik. Ölümçağıran'ın ajanları bunu iki yıl kullandı." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_text" text="Elf Kralı'nın sarayına tüccar olarak sızdın ve duyduklarını rapor ettin." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_desc" text="Thranduil'in salonlarında sahte bir kimlik altında geçirilen üç ay, Dol Guldur'un hiçbir ajanının kulak misafiri olmadığı konuşmalara erişim sağladı. Gölge ustalarının bir sonraki sezonun stratejisini şekillendirmek için kullandığı isimler, planlar ve ilişkilerle geri döndün. Elfler hakkındaki deneyimi beklenmedik şekilde öğretici buldun." />
+    <string id="taom_cc_taom_adulthood_umbar_1_text" text="On yılın en hızlı Anduin baskınına kaptanlık ettin." />
+    <string id="taom_cc_taom_adulthood_umbar_1_desc" text="Gemين Gondor nehir zincirini geçti, Pelargir'daki ikmal deposuna saldırdı ve garnizonun işaret ateşleri sönmeden denize geri döndü. Korsanlar filosu kaptanları geldiğinde senin adına kadeh kaldırdılar, bu onların bildikleri tek tören türüydü." />
+    <string id="taom_cc_taom_adulthood_umbar_2_text" text="Körfez üzerinden liman gelirini iki katına çıkaran yeni bir ticaret yolu kurdun." />
+    <string id="taom_cc_taom_adulthood_umbar_2_desc" text="Mevcut rotalar tüccarların alternatifler aramasına neden olacak şekilde vergilendirilmişti. Körfez adaları arasından az kullanılan bir geçit belirledin, ücretleri ayarladın ve bir sezon içinde üç yeni tüccar evini limana getirdin. Liman müdürleri rahatsız oldu ama zenginleştiler." />
+    <string id="taom_cc_taom_adulthood_umbar_3_text" text="Umbar'ın filo bakım darboğazını çözen yeni kuru havuzu tasarladın." />
+    <string id="taom_cc_taom_adulthood_umbar_3_desc" text="Eski kuru havuz bir seferde yalnızca bir gövde alabiliyordu ve filo birikiyordu. Yeniden tasarımın iki gemi üzerinde eşzamanlı çalışmaya izin verdi. Gemi ustaları ilk eşzamanlı tamamlama programın önünde gelene kadar şüpheciydiler. Ondan sonra şüpheci değillerdi." />
+    <string id="taom_cc_taom_adulthood_umbar_4_text" text="Belfalas açıklarında Gondor savaş gemisini alan baskın müfrezesine önderlik ettin." />
+    <string id="taom_cc_taom_adulthood_umbar_4_desc" text="Savaş gemisi senin geminin iki katı büyüklüğündeydi ve mürettebatı seninkinden daha kalabalıktı. Siste yaklaştın, bordadan ilk atlayan sen oldun, dümeni aldın ve mürettebatı ne olduğunu tam anlamadan silahsız bıraktın. Gemi iki gün içinde Umbar limanındaydı." />
+    <string id="taom_cc_taom_adulthood_umbar_5_text" text="Filonuz içine yelken açmadan önce bir Gondor deniz tuzağını fark ettin." />
+    <string id="taom_cc_taom_adulthood_umbar_5_desc" text="İkmal filosu üç saat dışarıdayken kıyı kuşlarının belirli bir burun etrafında nasıl davrandığını fark ettin. Duraklamayı çağırdın, küçük bir tekneyle ileriye gittın ve arkasındaki sakin suda bekleyen bir Gondor filosu buldun. Filo geri döndü. Amiral sana bir sonraki komutayı verdi." />
+    <string id="taom_cc_taom_adulthood_umbar_6_text" text="Umbar'ın alt limanında iki yıl boyunca en başarılı karaborsayı işlettin." />
+    <string id="taom_cc_taom_adulthood_umbar_6_desc" text="Operasyon, resmi olarak var olmayan kanallardan beyan edilemeyen malları, hiç sayılmayan madeni paralarla ödeme yapan alıcılara taşıdı. Hiçbir bekçi kaptanının dava açamayacağı kadar temiz yönettın. Kapattığında, bunu tercih ettiğin için yaptın." />
+    <string id="taom_cc_taom_adulthood_empire_1_text" text="Bir Rohirrim cezalandırma seferine karşı kavga eden üç klanı birleştirdin." />
+    <string id="taom_cc_taom_adulthood_empire_1_desc" text="Üç şef bir nesil boyunca konuşmamıştı ve Rohirrim bölünmelerine güveniyordu. Bir hafta kamplar arasında at sürdün, doğru şeyleri doğru insanlara doğru sırayla söyledin ve seferin varış gününde, üç klan sırtta birlikte durdu. Rohirrim geri döndü." />
+    <string id="taom_cc_taom_adulthood_empire_2_text" text="Isengard ile klanını kış boyunca doyuran bir ticaret ilişkisi kurdun." />
+    <string id="taom_cc_taom_adulthood_empire_2_desc" text="Hasat başarısız olmuş ve kış stokları azalmıştı. Tek başına Isengard'a gittin, doğru adamla konuştun ve klanın yıllardır üzerinde oturduğu demir cevheri karşılığında tahıl ile geri döndün. Klan reisi hayrete düştü; klan yemek yedi." />
+    <string id="taom_cc_taom_adulthood_empire_3_text" text="Bir Rohirrim sığır baskınını püskürttün ve çalınan sürüyü geri aldın." />
+    <string id="taom_cc_taom_adulthood_empire_3_desc" text="Atlılar kimse alarm vermeden önce klanın damızlık hayvanlarını almıştı. Altı adam topladın, grubu gece boyunca takip ettin, onları Isen geçidinde yakaladın ve sabah olmadan önce sığırları geri getirdin. Klan reisi adını kale taşına ekledi." />
+    <string id="taom_cc_taom_adulthood_empire_4_text" text="Rohirrim tarafından yakılan klan salonunun yerini alan yeni salonu inşa ettin." />
+    <string id="taom_cc_taom_adulthood_empire_4_desc" text="Eski salon, atlılar meşaleyi ona değdirmeden önce üç nesil boyunca ayakta kalmıştı. Yenisini sen tasarladın, kereste kesimini organize ettin ve inşaatı bizzat sen yönetttin. Şimdi ayakta duran salon yanandan daha güçlü ve daha büyük. Mesele buydu zaten." />
+    <string id="taom_cc_taom_adulthood_empire_5_text" text="Bir Dunlending savaş grubunu Fangorn'un kenarından tek bir adam kaybetmeden geçirdin." />
+    <string id="taom_cc_taom_adulthood_empire_5_desc" text="Savaş grubu, Rohirrim devriyelerinin görebileceği açık araziden geçmeden güney yaklaşımlarına ulaşmalıydı. Tek yol Fangorn sınırı boyunca uzanıyordu. Onları iki gecede geçirdin, grubu sessiz tuttun ve Entleri rahatsız etmedin. Her iki grup da güvenle vardı, ki bu garanti değildi." />
+    <string id="taom_cc_taom_adulthood_empire_6_text" text="Edoras'taki bir bağlantı aracılığıyla Rohirrim askeri planlarını elde ettin." />
+    <string id="taom_cc_taom_adulthood_empire_6_desc" text="Bağlantı, Mark'a sadakatten çok paraya ihtiyacı olan hoşnutsuz bir ahır görevlisiydi. İlişkiyi dikkatle geliştirdin ve klan reisinin mütevazı bulduğu bir meblağ karşılığında iki sezonluk devriye programı aldın. Klan takip eden yıl boyunca sorunsuz akınlar düzenledi." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_text" text="Isen Geçitlerinde hücuma katıldın ve safı tuttun." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_desc" text="Saruman'ın güçleri Isen'i geçerken, Rohirrim hattı merkezde büküldü. Sen geçidi, geri çekilmenin bozguna değil de çekilişe dönüşmesi için yeterince uzun süre tutanlar arasındaydın. Mareşal savaş raporunda senden bahsetti." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_text" text="Edoras'ın beş yıldır gördüğü en iyi at panayırı fiyatlarını müzakere ettin." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_desc" text="Güneyden gelen alıcılar her zaman yaptıkları gibi fiyatı kendilerinin belirleyeceğini düşünerek gelmişlerdi. Panayırdan önce Rohirrim satıcılarını örgütledin, bir taban fiyat kararlaştırdın ve onu korudun. Alıcılar atların değerini ödedi. Satıcılar bunu kimin mümkün kıldığını hatırladı." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_text" text="İlkbaharda Westfold'a düzenlenen bir Dunlending baskınını bozguna uğrattın." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_desc" text="Akıncılar, çiftliklerin savunmasız olduğu hasat dönemine denk getirmişlerdi saldırıyı. Sen olasılığı önceden tahmin etmiş, yerel ahalileri önceden örgütlemiş ve onları vadi girişinde karşılamıştın. Akın tek bir çiftliğe ulaşmadan mızrak hattında kırıldı." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_text" text="Mark Kralı'nın kişisel muhafızları için seçtiği bir kılıç dövdün." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_desc" text="Sipariş ahırlardan geldi - at üzerinde taşınırken gariplik yaratmayacak bir kılıç talebi. Sorunu inceleyip dengeyi ayarladın ve sonucu sundun. Theoden'ın kaptanı avluda test etti ve aynı öğleden sonra kralın cephaneliğine göndertti." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_text" text="Helm Derin'in yaklaşım yollarını haritalayan Isengard keşif birliklerini takip ettin." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_desc" text="Dikkatli gözlemin işaretlerini fark ettin - dik durur hale getirilmiş kırık otlar, yeniden yerleştirilmiş taşlar - ve birisinin haftalardır Derin'e giden yolları incelediğini anladın. Rotaları boyunca geri takip ettin, kampı tespit ettin ve garnizon kaptanına bildirdin. Helm Derin'i buna göre hazırlandı." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_text" text="Edoras içinde faaliyet gösteren bir Dunlending casusunu ifşa ettin." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_desc" text="Casus iki yıldır şehirdeydi ve klanlara Rohirrim garnizon güçleri hakkında bilgi aktarıyordu. Sadece birkaç kişiye detayların anlatıldığı baskınlarda ters giden olaylardaki kalıbı fark ettin. Üç konuşma sonra ismi ve aktarım yöntemini elde ettin." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_text" text="Dale Savaşı'nda Kral Brand'in yanında durdun." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_desc" text="Doğulu güçler kuzeyden aşağı inip şehir sokaklarına bastığında, Brand savunmayı yönetirken merkez meydanı tutan muhafızlar arasındaydın. Takviye doğu kapısından gelene kadar kralın yanında ayakta kalan son kişi sendin." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_text" text="Dale ile Doğulu sınır yerleşimleri arasında ilk kalıcı ticaret evini açtın." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_desc" text="Sınır gerginmişti ve kimse ilk olmak istemiyordu. Sen gittin, temas kurdun, ilk değiş tokuşu yaptın ve ikincisini yapabilecek kadar hayatta kaldın. Bir yıl içinde iki tüccar daha izledi. Kurduğun ticaret evi geri kalanına model oldu." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_text" text="Doğulu savaşında hasar gören Uzungöl balık setlerini yeniden inşa ettin." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_desc" text="Setler baskınlarda tahrip edilmiş ve göl avı normal veriminin bir kısmına düşmüştü. Yeniden inşayı organize ettin, eski tasarımın başını ağrıtan yapısal sorunu çözdün ve yeni setleri bir ay içinde üretime geçirdin. Balıkçılar setlerden birini senin adınla andı." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_text" text="Dale zanaat loncasının salonunda sergilediği bir dizi eser ürettin." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_desc" text="Lonca yılda bölge genelindeki zanaatkarlardan on iki eser sergiliyordu. Üç eser sundin - bir bıçak, bir kilit mekanizması ve dekoratif bir aksesuar - ve üçü de kabul edildi. Lonca ustası sana aynı yıl tek bir zanaatkarın üç eser yerleştirmesinin ilk defa olduğunu söyledi." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_text" text="Gölgenin genişlemesi sırasında mültecileri Mirkwood'un güney kenarından çıkardın." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_desc" text="Dol Guldur'un bozulması güney ormana sızdığında ve yerleşimcileri dışarı sürdüğünde, onları ormanın kenarı boyunca kuzeye götürmek için gönüllü oldun. Rota açık değildi ve takip iki kez geldi. Başladığın kırk üç kişinin tamamı Esgaroth'a vardı." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_text" text="Yozlaşmış bir liman görevlisinden çalınan kargoyu geri aldın ve hesaplarını sakladın." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_desc" text="Görevli üç yıldır kargoyu başka yöne çeviriyordu ve herkes bunu biliyordu, ama kimsenin belgeleri yoktu. Sen belgeleri elde ettin, kargoyu tüccarlar adına geri aldın ve hesapları alıcıların listesiyle birlikte kasaba konseyine sundun. Görevli Dale'i sessizce terk etti." />
+    <string id="taom_cc_taom_adulthood_aserai_1_text" text="Kara Yılan'ın kuzeye yürüyüşünün öncüsünde sen bindin." />
+    <string id="taom_cc_taom_adulthood_aserai_1_desc" text="Harad ordusu Gondor'a doğru ilerledi ve sen yolu açan çatışmalarda savaşarak savaş kolunun önünde bindin. Büyük savaş geldiğinde, her şey bittiğinde - hayatta kalıp ona anlatabilenler için - Kara Yılan'ın adını bildiği kişiler arasındaydın." />
+    <string id="taom_cc_taom_adulthood_aserai_2_text" text="Bir Mumak kervanını düşman çöl içinden güvenle geçirdin." />
+    <string id="taom_cc_taom_adulthood_aserai_2_desc" text="Kervan haraç taşıyordu ve rakip kabileler tarafından iki kez saldırıya uğradı. Her iki seferde de cephede savaştın ve kolonun düzenini korudun. Mumak geldi, haraç teslim edildi ve tüccarlar ücretini tartışmadan ödedi, ki bu verdikleri en güçlü övgüydü." />
+    <string id="taom_cc_taom_adulthood_aserai_3_text" text="Kavgalı iki çöl kabilesi arasında barış müzakere ettin." />
+    <string id="taom_cc_taom_adulthood_aserai_3_desc" text="Kan davası üç yıldır sürüyordu ve her iki kabileye de ikisinin de kabul edeceğinden fazlaya mal oluyordu. Toplantıda konuşmak için izin istedin, rakamları duygusallık katmadan ortaya koydun ve hiçbir tarafın sevmediği ama her ikisinin de kabul edebileceği şartlar önerdin. Kabul ettiler." />
+    <string id="taom_cc_taom_adulthood_aserai_4_text" text="Vaha sulama ağını genişlettiniz ve verimini iki katına çıkardınız." />
+    <string id="taom_cc_taom_adulthood_aserai_4_desc" text="Mevcut kanallar bir kuşaktır genişletilmemişti. Araziyi inceleyip yeni bir kol önerdiniz, işgücünü organize ettiniz ve bahar sellerinden önce inşaatı tamamladınız. Vaha bir önceki yıla kıyasla iki kat fazla ürün verdi. Diğer üç yerleşim nasıl yapıldığını öğrenmek için ulaklar gönderdi." />
+    <string id="taom_cc_taom_adulthood_aserai_5_text" text="Derin çöle tek başınıza gittiniz ve eski metinlerde bahsedilen kayıp bir vaha buldunuz." />
+    <string id="taom_cc_taom_adulthood_aserai_5_desc" text="Vaha efsane olarak kabul ediliyordu. Eski kayıtları okudunuz, coğrafi ipuçlarını belirlediniz ve on günlük suyla derin çöle gittiniz. Dokuzuncu gün varayı buldunuz. Dönüş beklenenden uzun sürdü ancak işaretlediğiniz güzergah kervanları mevsim içinde oraya ulaştırdı." />
+    <string id="taom_cc_taom_adulthood_aserai_6_text" text="Rakip kabilenin hazine kervanını soydunuz ve kendinizinkine dağıttınız." />
+    <string id="taom_cc_taom_adulthood_aserai_6_desc" text="Rakip kabile, ticaret rotalarınıza dayattığı elverişsiz geçiş ücretleri anlaşmaları sayesinde yıllarca refah içinde yaşamıştı. Bir mevsim boyunca kervan programlarını inceleyip derin çölde doğru anı seçtiniz ve alınanı geri aldınız. Kabileniz bunu adalet olarak gördü; rakip kabile başka bir şey olarak adlandırdı." />
+    <string id="taom_cc_taom_adulthood_battania_1_text" text="Kuzey Tepeleri yerleşimlerini avlayan bir Ork savaş çetesini izleyip yok ettiniz." />
+    <string id="taom_cc_taom_adulthood_battania_1_desc" text="Savaş çetesi Korucular onları yakalamadan dört yerleşime saldırmıştı. Deseni okudunuz, bir sonraki hedeflerini tahmin ettiniz ve kovalamak yerine önlerini kesmek için harekete geçtiniz. Yanınızdaki Koruculardan üçü, haklı çıkacağınızı beklemediklerini sonradan söyledi. Haklı çıktınız." />
+    <string id="taom_cc_taom_adulthood_battania_2_text" text="Yaralı bir ekibi Sisli Dağlar kışında hayatta tuttunuz." />
+    <string id="taom_cc_taom_adulthood_battania_2_desc" text="Korucu devriyesi yardımdan üç gün uzaktayken bir kaya düşmesi iki üyeyi sakat bırakmıştı. En kötü yaraları sardınız, dağın sunduklarından barınak inşa ettiniz ve kurtarma ekibi sizi bulana kadar ekibi on bir gün boyunca hayatta tuttunuz. Herkes eve döndü." />
+    <string id="taom_cc_taom_adulthood_battania_3_text" text="Bölüğe geri çekilmek için zaman kazandırmak üzere bir dağ geçidini tek başınıza Ork devriyelere karşı tuttunuz." />
+    <string id="taom_cc_taom_adulthood_battania_3_desc" text="Geçit bir kişinin tutabileceği kadar dardı ve birinin kalması gerekiyordu. Gönüllü oldunuz, Orkları yeterince tutup sonra anlaştığınız şekilde geri çekildiniz. Bölük kurtuldu. Siz de kurtuldunuz, ancak nasıl olduğunu tartışmamayı tercih ettiniz." />
+    <string id="taom_cc_taom_adulthood_battania_4_text" text="Kurtarılmış Dunedain malzemelerinden yeniden her yeni şeyden daha dayanıklı teçhizat dövdünüz." />
+    <string id="taom_cc_taom_adulthood_battania_4_desc" text="Yerleşimin tedarik hattı kesilmişti ve aletler bozuluyordu. Neyin kurtarılabileceğini değerlendirip kırık parçalardan en iyi malzemeyi geri dönüştürdünüz ve çalışır teçhizat haline getirip yeniden dövdünüz. Hat yeniden açıldığında üç Korucu yeni tedarik yerine sizin işinizi istedi." />
+    <string id="taom_cc_taom_adulthood_battania_5_text" text="Hava Tepeleri'ni bir yıldır basan gizli Ork kampını buldunuz." />
+    <string id="taom_cc_taom_adulthood_battania_5_desc" text="Yedi devriye aramış ve hiçbir şey bulamamıştı. Farklı bir yaklaşım benimseyip Orkları değil onlardan kaçınan şeyleri takip ettiniz, kuş çağrılarındaki sessizliği ve kurt izlerindeki boşlukları okudunuz. Kamp yoklukların birleştiği yerdeydi. Korucular temizledi." />
+    <string id="taom_cc_taom_adulthood_battania_6_text" text="Shire'dan iki kez geçtiniz ve hiçbir Hobbit orada olduğunuzu bilmedi." />
+    <string id="taom_cc_taom_adulthood_battania_6_desc" text="Dunedain Shire'ı sınırlarının ötesinden izliyordu ama bazen bilgi daha yakın gözlem gerektiriyordu. İçeri girip üç gün çiftlik arazisinde dolaştınız, gerekeni topladınız ve tek bir bahçe kapısını bile rahatsız etmeden ayrıldınız. Hobbitler asla bilmedi. Mesele de buydu zaten." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_text" text="Gondor piyade karesini kıran yan kanat hücumunu yönettiniz." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_desc" text="Gondor karesi üç doğrudan saldırıya dayanmıştı ve savaş lordu geri çekilmeyi düşünüyordu. Kalkan dönüş zamanlamalarını belirleyip yan kanat süvarisini talep ettiniz ve tam doğru anda hücumu yaptınız. Kare kırıldı. Savaş kazanıldı." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_text" text="Batılı tüccarlarla kabilelere çelik aletlere erişim sağlayan ticaret açtınız." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_desc" text="Kabileler her zaman doğuya ticaret yapmıştı ama en iyi çelik batıdan geliyordu. İlk teması kurdunuz, Rhûn Denizi'ne yolculuk yapmaya istekli bir tüccar buldunuz ve her iki taraf için de değmesini sağlayan şartları müzakere ettiniz. Geri gelen aletler üç kışlık çalışmayı dönüştürdü." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_text" text="Kabile göçünü yeni otlak arazilerine sürüyü kaybetmeden yönettiniz." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_desc" text="Eski araziler otlatılıp tüketilmişti ve yaşlı konseyi nereye gidileceği konusunda bölünmüştü. Bir güzergah önerip sayılar ve emsallerle savundunuz ve göçü kendiniz yönettiniz. Üç yüz hayvan ve seksen iki kişi yeni arazilere sağ salim ulaştı." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_text" text="Batı tarım yöntemlerini vadi yerleşimine uyarlayıp verimini üç katına çıkardınız." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_desc" text="Vadi yerleşimi bir kuşaktır eski yöntemlerle geçimlik tarım yapıyordu. Ticaret rotalarında daha iyi yaklaşımlar görmüştünüz ve bunları dikkatle, ürün ürün, yıl yıl uyguladınız. Üçüncü mevsime gelindiğinde yerleşim ilk kez kimsenin hatırlayabildiğinden beri fazlalık üretiyordu." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_text" text="Ölmekte olan bir kabile reisini kabile yaşlılarından aldığınız bilgiyle geri döndürdünüz." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="Zehir hızlı etkiliyor ve şaman yapılacak bir şey olmadığını söylüyordu. Farklı bir öğretiyi hatırladınız — bu tür yaralara karşı işleyen soğuk bozkır bitkilerinden bir karışım. Hazırlayıp uyguladınız ve gece boyunca oturarak beklediniz. Reis iyileşti. Size konseyinde bir yer verdi." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Cair Andros'taki Gondor kalesini keşfedip zayıf noktalarını haritaladınız." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="Savaş lordu kalenin atlanıp atlanamayacağını ya da düşürülmesi gerekip gerekmediğini bilmeye ihtiyaç duyuyordu. Tek başınıza ileri gittiniz, nehrin doğu kıyısından dört gün gözlemleme yaptınız ve garnizon gücü, tedarik programı ve en iyi şansı veren yaklaşımın detaylı değerlendirmesiyle döndünüz. Savaş lordu bunu bir seferde aldığı en yararlı rapor olarak nitelendirdi." />
+  </strings>
+</base>

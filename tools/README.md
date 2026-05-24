@@ -71,10 +71,45 @@ All Python scripts support `--dry-run` (preview) and `--apply` (write). Run from
 
 ---
 
+## Localization Pipeline
+
+| Script | Purpose | Output |
+|--------|---------|--------|
+| `generate_translation_template.py` | Generate English templates for a target language across the 6 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
+| `translate_with_claude.py` | AI first-draft translation via Claude API (Sonnet 4.5). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. | All 26 language XMLs for `<LANG>` |
+
+**Configuration:**
+- Overrides (hand-curated canonical translations, e.g. Tolkien proper nouns): `tools/translation_overrides/<lang>.json` — git-tracked, edit freely
+- Cache (machine-written API results): `tools/translation_cache/<lang>.json` — git-tracked, persists across runs so re-runs are free
+
+**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~8,600 strings).
+
+**Usage:**
+```bash
+# Preview what would be translated and rough cost:
+python tools/translate_with_claude.py --lang RU --dry-run
+
+# Pilot a small batch first:
+python tools/translate_with_claude.py --lang RU --module TAOM --max-entries 50 --apply
+
+# Full run for a language (all 26 files):
+python tools/translate_with_claude.py --lang RU --apply
+
+# Translate just one module:
+python tools/translate_with_claude.py --lang RU --module Armory --apply
+```
+
+Quality enforcement: the script validates that every `{VARIABLE}`, `{?GENDER}{?}{\?}` placeholder/conditional present in the English source is preserved verbatim in the translation. Failed entries (mismatch detected) keep the English text — never get poisoned with broken markup.
+
+See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow.
+
+---
+
 ## Common Dependencies
 
 **Python:** `xml.etree.ElementTree`, `argparse`, `re`, `csv`
 **Image processing (faction map only):** `Pillow`, `numpy`
+**AI translation (translate_with_claude.py only):** `anthropic` SDK
 
 **Hardcoded paths** (update if your environment differs):
 - TAOM repo: `c:\Users\mikew\source\repos\TAOM\`

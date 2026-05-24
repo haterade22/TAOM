@@ -1,12 +1,2060 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="繁體中文" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_career_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Traditional Chinese" />
+  </tags>
+  <strings>
+    <string id="taom_career_ranger_of_ithilien" text="伊西力安遊俠" />
+    <string id="taom_career_ranger_of_ithilien_desc" text="在伊西力安陰影中出擊的精銳斥候,以致命的精準伏擊剛鐸的敵人。" />
+    <string id="taom_career_captain_of_osgiliath" text="奧斯吉力亞斯隊長" />
+    <string id="taom_career_captain_of_osgiliath_desc" text="身經百戰的步兵軍官,指揮剛鐸在奧斯吉力亞斯廢墟的前線防禦,在殘酷的城市戰中從混亂中鍛造秩序。隊長在他人會崩潰之處守住陣線,以純粹的意志力凝聚士兵。" />
+    <string id="taom_career_knight_of_belfalas" text="貝爾法拉斯騎士" />
+    <string id="taom_career_knight_of_belfalas_desc" text="沿海封地貝爾法拉斯的重裝勇士,其雷鳴般的衝鋒粉碎了無數敵軍陣型。貝爾法拉斯騎士結合了剛鐸的紀律與多爾安羅斯驕傲的騎兵傳統,成為堅不可摧的鋼鐵之牆。" />
+    <string id="taom_career_black_uruk_captain" text="黑色強獸人隊長" />
+    <string id="taom_career_black_uruk_captain_desc" text="魔多的鐵肌勇士,率領黑色強獸人戰幫衝入突破口,承受足以擊倒弱者的懲罰,並以純粹的野蠻統治力扭轉戰局。" />
+    <string id="taom_career_mulkerhili_cultist" text="穆爾克希利教徒" />
+    <string id="taom_career_mulkerhili_cultist_desc" text="至尊魔戒低語承諾的狂熱信徒,引導索倫之聲的恐怖粉碎敵人的決心,將詛咒箭術與令人發狂的存在融合,侵蝕戰鬥意志。" />
+    <string id="taom_career_snaga_rider" text="斯那加騎兵" />
+    <string id="taom_career_snaga_rider_desc" text="一名精瘦的斯那加騎兵襲擊者,以令人不安的寂靜潛入敵後,突襲補給隊和孤立單位,然後消失於魔多的煙霧之中。" />
+    <string id="taom_career_olog_hai_warchief" text="歐羅格-海戰酋" />
+    <string id="taom_career_olog_hai_warchief_desc" text="一名高聳的歐羅格-海戰巨魔,如活體攻城錘般涉入最激烈的戰鬥,承受巨大的傷害並以毀滅性的高舉猛擊將敵人砸入地面。" />
+    <string id="taom_career_marksman_of_aldburg" text="奧德堡神射手" />
+    <string id="taom_career_marksman_of_aldburg_desc" text="奧德堡守軍的重型弓箭手,精通以致命精準度射出輕巧高速箭矢的技藝,能在遠距離穿透盔甲,令敵人無處可藏。" />
+    <string id="taom_career_eotheod_windrider" text="伊歐西歐德風騎士" />
+    <string id="taom_career_eotheod_windrider_desc" text="古老伊歐西歐德馬術大師的後裔,騎乘時帶著世代傳奇的雷鳴之聲,以呼應伊歐年輕王的戰吼鼓舞盟友,在無法阻擋的重騎兵鐵蹄下驅散敵軍。" />
+    <string id="taom_career_watchman_of_stangard" text="斯坦加德守望者" />
+    <string id="taom_career_watchman_of_stangard_desc" text="斯坦加德歷經風霜的河流守衛,乘平底船和徒步巡邏安都因河渡口,以耐力、當地知識和水手般對爭議地帶的頑強掌控守衛洛汗的東翼。" />
+    <string id="taom_career_avanc_luth_raider" text="阿凡克-盧斯襲擊者" />
+    <string id="taom_career_avanc_luth_raider_desc" text="阿凡克-盧斯部族塗滿血彩的游擊兵,以魯莽的侵略性衝入近戰,以純粹野蠻的力量取代精準的技巧,透過無情的持續壓力壓倒對手。" />
+    <string id="taom_career_wolfskin_hunter" text="狼皮獵人" />
+    <string id="taom_career_wolfskin_hunter_desc" text="耐心的追蹤者,身披狼皮如幽靈般穿梭於迷霧山脈山麓,從隱蔽處標記獵物,然後射出受害者永遠聽不到的精準箭矢。" />
+    <string id="taom_career_clanguard_rider" text="氏族衛隊騎兵" />
+    <string id="taom_career_clanguard_rider_desc" text="快速突襲的氏族騎兵,以迅速的打了就跑攻擊騷擾敵軍側翼,利用優越的速度和群體協調瓦解陣形,讓氏族步兵得以接近並殲滅敵人。" />
+    <string id="taom_career_blademaster_of_ren" text="雷恩劍術大師" />
+    <string id="taom_career_blademaster_of_ren_desc" text="來自雷恩武士宮廷的精準決鬥者,以精確致命的劍術擊殺敵人。" />
+    <string id="taom_career_steppe_bowmaster" text="草原弓術大師" />
+    <string id="taom_career_steppe_bowmaster_desc" text="坎德平原的機動弓箭手,以無情的齊射騷擾敵軍陣線,從不停留足夠長的時間被捕獲。" />
+    <string id="taom_career_chariot_warlord" text="戰車軍閥" />
+    <string id="taom_career_chariot_warlord_desc" text="坎德的鐮刀戰車指揮官,其殘酷的衝擊衝鋒粉碎陣形,將倖存者驅散至四方。" />
+    <string id="taom_career_tribesman_of_jelut" text="傑盧特部落民" />
+    <string id="taom_career_tribesman_of_jelut_desc" text="傑盧特沙漠部落的戰士,其消耗戰術以無情的壓力和毒刃磨損敵人。" />
+    <string id="taom_career_pezarsani_javelineer" text="佩扎桑標槍兵" />
+    <string id="taom_career_pezarsani_javelineer_desc" text="佩扎桑的快速移動游擊兵,以標槍雨掩護騎兵,然後撤退至報復射程之外。" />
+    <string id="taom_career_mahud_beast_rider" text="瑪胡德巨獸騎士" />
+    <string id="taom_career_mahud_beast_rider_desc" text="遙遠哈拉德的可怕騎士,驅使巨獸衝向敵軍,以衝擊和原始恐懼打破陣線。" />
+    <string id="taom_career_far_harad_halftroll" text="遠哈拉德半巨魔" />
+    <string id="taom_career_far_harad_halftroll_desc" text="來自最深處遠哈拉德叢林的半巨魔狂戰士,承受足以殺死較弱戰士的懲罰,並以邪惡的殘暴進行報復。" />
+    <string id="taom_career_codyan_legionaire" text="寇迪安軍團兵" />
+    <string id="taom_career_codyan_legionaire_desc" text="寇迪亞陣形中紀律嚴明的盾牆士兵,擅長防禦性凝聚,在陣線堅守時承受懲罰。" />
+    <string id="taom_career_lokhas_drus_marksman" text="洛卡斯·德魯斯神射手" />
+    <string id="taom_career_lokhas_drus_marksman_desc" text="洛卡斯·德魯斯軍團的破甲專家,訓練在遠距離以箭矢穿透最厚重的板甲。" />
+    <string id="taom_career_balchoth_kan" text="巴爾寇斯可汗" />
+    <string id="taom_career_balchoth_kan_desc" text="巴爾寇斯的重騎兵指揮官,率領無法阻擋的騎兵衝鋒,無論勝算如何都保持鋼鐵般的士氣。" />
+    <string id="taom_career_dale_guardsman" text="河谷城衛兵" />
+    <string id="taom_career_dale_guardsman_desc" text="重建的河谷城的堅定守護者,以盾牌和長矛守住城門抵禦所有來犯者。" />
+    <string id="taom_career_dale_marksman" text="河谷城神射手" />
+    <string id="taom_career_dale_marksman_desc" text="河谷城的傳奇弓箭手,其祖先曾射殺史矛革,延續著百發百中的傳統。" />
+    <string id="taom_career_dale_outrider" text="河谷鎮外圍騎兵" />
+    <string id="taom_career_dale_outrider_desc" text="北方貿易道路上的騎馬巡邏隊,保護河谷鎮與孤山之間的商隊安全。" />
+    <string id="taom_career_ironguard" text="鐵衛" />
+    <string id="taom_career_ironguard_desc" text="身披秘銀鍛造板甲的矮人精銳戰士,守衛埃瑞博深處,對抗半獸人與惡龍。" />
+    <string id="taom_career_crossbow_master" text="弩弓大師" />
+    <string id="taom_career_crossbow_master_desc" text="矮人工程師戰士,揮舞著威力驚人的精工弩弓,每支弩箭都經過精密打造。" />
+    <string id="taom_career_ram_rider" text="公羊騎士" />
+    <string id="taom_career_ram_rider_desc" text="騎乘巨型戰羊的矮人騎兵戰士,在馬匹無法通行的狹窄山路中衝鋒陷陣。" />
+    <string id="taom_career_blade_dancer" text="刃舞者" />
+    <string id="taom_career_blade_dancer_desc" text="優雅的精靈戰士,如流水般穿梭戰場,揮舞第一紀元鍛造的古老刀劍出擊。" />
+    <string id="taom_career_elven_archer" text="精靈弓箭手" />
+    <string id="taom_career_elven_archer_desc" text="伊姆拉崔斯無與倫比的神射手,箭矢在數世紀的練習指引下飛越遙遠距離,百發百中。" />
+    <string id="taom_career_rivendell_knight" text="瑞文戴爾騎士" />
+    <string id="taom_career_rivendell_knight_desc" text="愛隆德家族的騎乘戰士,騎著迅捷的精靈駿馬奔赴戰場,是對抗黑暗的希望之光。" />
+    <string id="taom_career_warden" text="羅瑞安守衛" />
+    <string id="taom_career_warden_desc" text="金色森林的無聲守護者,以古老的決心守衛羅斯洛立安的邊境,無預警地發動襲擊。" />
+    <string id="taom_career_galadhrim_archer" text="加拉赫林弓箭手" />
+    <string id="taom_career_galadhrim_archer_desc" text="羅斯洛立安的精銳弓手,從馬隆樹冠上射出銀箭如雨,每一箭都受凱蘭崔爾之光指引。" />
+    <string id="taom_career_sentinel" text="金色森林哨兵" />
+    <string id="taom_career_sentinel_desc" text="巡邏羅瑞安邊境的騎乘守衛,在金色樹冠下迅捷而無聲地馳騁。" />
+    <string id="taom_career_shadow_walker" text="影行者" />
+    <string id="taom_career_shadow_walker_desc" text="在幽暗密林的黑暗小徑上無影無蹤移動的森林精靈,悄無聲息地消滅蜘蛛與半獸人。" />
+    <string id="taom_career_silvan_archer" text="西爾凡弓箭手" />
+    <string id="taom_career_silvan_archer_desc" text="森林王國的銳眼獵手,從樹梢以致命精準度發動攻擊。" />
+    <string id="taom_career_elk_rider" text="麋鹿騎士" />
+    <string id="taom_career_elk_rider_desc" text="瑟蘭督伊護衛隊的騎乘戰士,騎著巨大的森林麋鹿衝入戰場,踏破灌木叢與敵人。" />
+    <string id="taom_career_uruk_berserker" text="強獸人狂戰士" />
+    <string id="taom_career_uruk_berserker_desc" text="狂熱的強獸人,全力衝鋒陷陣,傷口反而激發出無法阻擋的怒火,越戰越強。" />
+    <string id="taom_career_uruk_crossbow" text="強獸人弩手" />
+    <string id="taom_career_uruk_crossbow_desc" text="訓練有素的強獸人射手,使用薩魯曼的鐵製弩弓,從歐散克的鍛爐發射毀滅性齊射。" />
+    <string id="taom_career_warg_scout" text="座狼斥候" />
+    <string id="taom_career_warg_scout_desc" text="騎乘迅捷座狼的狡猾強獸人騎士,在艾辛格大軍前方偵察,追捕逃亡的獵物。" />
+    <string id="taom_career_cave_troll_master" text="洞穴巨魔馭者" />
+    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning." />
+    <string id="taom_career_goblin_sniper" text="哥布林狙擊手" />
+    <string id="taom_career_goblin_sniper_desc" text="潛伏在山間峭壁的惡毒哥布林射手,用毒鏢和粗製弓箭狙殺目標。" />
+    <string id="taom_career_warg_pack_leader" text="座狼群首領" />
+    <string id="taom_career_warg_pack_leader_desc" text="令人畏懼的半獸人頭狼,騎乘狼群中最大的座狼,率領野蠻狩獵隊穿越迷霧山脈。" />
+    <string id="taom_career_shadow_warrior" text="暗影戰士" />
+    <string id="taom_career_shadow_warrior_desc" text="多爾哥多的黑暗勇士,受死靈法師巫術賦予力量,吸取所有對手的生命。" />
+    <string id="taom_career_necromancer_acolyte" text="死靈術士學徒" />
+    <string id="taom_career_necromancer_acolyte_desc" text="一位邪惡的術士,操控黑暗能量遠距離削弱敵人,在戰場上播撒恐懼與腐朽。" />
+    <string id="taom_career_fell_rider" text="魔影騎士" />
+    <string id="taom_career_fell_rider_desc" text="影子軍團中令人畏懼的騎士,每次衝鋒都散播恐懼,其坐騎籠罩於黑暗迷霧之中。" />
+    <string id="taom_career_corsair_boarder" text="海盜登船兵" />
+    <string id="taom_career_corsair_boarder_desc" text="揮舞彎刀的海上掠奪者,以無情的兇猛衝上敵艦甲板,奪取海盜們所渴望的一切。" />
+    <string id="taom_career_corsair_crossbow" text="海盜弩手" />
+    <string id="taom_career_corsair_crossbow_desc" text="海盜艦隊的神射手,從索具上以致命的精準射殺舵手和軍官。" />
+    <string id="taom_career_corsair_captain" text="海盜船長" />
+    <string id="taom_career_corsair_captain_desc" text="經驗豐富的艦隊指揮官,在船首領導部下,以掠奪與榮耀的承諾激勵船員征戰公海。" />
+    <string id="taom_ability_ranger_of_ithilien" text="伏擊" />
+    <string id="taom_ability_ranger_of_ithilien_tt" text="發動致命伏擊,在短時間內提升你的遠程傷害、拉弓速度和移動速度。" />
+    <string id="taom_ability_captain_of_osgiliath" text="堅守陣線" />
+    <string id="taom_ability_captain_of_osgiliath_tt" text="以鐵一般的紀律振奮你的士兵,在短時間內為所有附近盟友提升20點近戰傷害。" />
+    <string id="taom_ability_knight_of_belfalas" text="踐踏突擊" />
+    <string id="taom_ability_knight_of_belfalas_tt" text="以不可阻擋的騎兵衝鋒雷霆向前,在短時間內提升你的坐騎速度、衝鋒傷害和近戰傷害。" />
+    <string id="taom_ability_black_uruk_captain" text="血之狂怒" />
+    <string id="taom_ability_black_uruk_captain_tt" text="進入血腥狂怒狀態,大幅提升傷害抗性和近戰力量,同時激勵黑色強獸人部隊。" />
+    <string id="taom_ability_mulkerhili_cultist" text="至尊之聲" />
+    <string id="taom_ability_mulkerhili_cultist_tt" text="在戰場上傳導至尊魔戒低語的恐懼,削弱敵人士氣並強化你的詛咒之箭。" />
+    <string id="taom_ability_snaga_rider" text="鬼鬼祟祟" />
+    <string id="taom_ability_snaga_rider_tt" text="在敵方陣型的陰影中穿梭,以增強的騎乘傷害打擊側翼,然後悄無聲息地溜走。" />
+    <string id="taom_ability_olog_hai_warchief" text="戰鎚猛擊" />
+    <string id="taom_ability_olog_hai_warchief_tt" text="以巨大的力量揮下戰鎚重擊,震撼大地並大幅提升你的傷害減免和部隊抗性。" />
+    <string id="taom_ability_marksman_of_aldburg" text="輕羽之箭" />
+    <string id="taom_ability_marksman_of_aldburg_tt" text="搭上一組迅捷的輕羽箭矢,在短時間內提升你的遠程傷害、拉弓速度和移動速度。" />
+    <string id="taom_ability_eotheod_windrider" text="伊歐之吼" />
+    <string id="taom_ability_eotheod_windrider_tt" text="發出年輕的伊歐的古老戰吼,在短時間內提升你的坐騎速度、衝鋒傷害和近戰傷害。" />
+    <string id="taom_ability_watchman_of_stangard" text="堅定不移" />
+    <string id="taom_ability_watchman_of_stangard_tt" text="以鋼鐵般的決心固守陣地,在短時間內為所有附近盟友提升20點近戰傷害。" />
+    <string id="taom_ability_avanc_luth_raider" text="野蠻突襲" />
+    <string id="taom_ability_avanc_luth_raider_tt" text="以嚎叫的戰吼投身戰鬥,大幅提升近戰傷害和移動速度,但犧牲穩健的防禦。" />
+    <string id="taom_ability_wolfskin_hunter" text="標記獵物" />
+    <string id="taom_ability_wolfskin_hunter_tt" text="透過迷霧標記目標,提升對其的遠程傷害,並賦予你的隊伍增強的追蹤感知。" />
+    <string id="taom_ability_clanguard_rider" text="戰群衝鋒" />
+    <string id="taom_ability_clanguard_rider_tt" text="率領你的戰群進行協調的快速衝鋒,提升騎乘傷害和隊伍移動速度,同時騷擾敵方側翼。" />
+    <string id="taom_ability_blademaster_of_ren" text="雙刃連擊" />
+    <string id="taom_ability_blademaster_of_ren_tt" text="施展精準的雙刃連擊,大幅提升揮砍速度和護甲穿透。" />
+    <string id="taom_ability_steppe_bowmaster" text="箭雨風暴" />
+    <string id="taom_ability_steppe_bowmaster_tt" text="在高速撤退時持續射出箭雨風暴,以齊射覆蓋廣闊區域。" />
+    <string id="taom_ability_chariot_warlord" text="鐮刀衝鋒" />
+    <string id="taom_ability_chariot_warlord_tt" text="駕駛裝有鐮刀的戰車衝破敵軍陣線,在廣闊的弧形範圍內造成大量範圍衝鋒傷害。" />
+    <string id="taom_ability_tribesman_of_jelut" text="淬毒刀刃" />
+    <string id="taom_ability_tribesman_of_jelut_tt" text="在你的武器上塗抹沙漠毒素,增加近戰傷害並施加削弱性的持續傷害效果。" />
+    <string id="taom_ability_pezarsani_javelineer" text="烈日齊射" />
+    <string id="taom_ability_pezarsani_javelineer_tt" text="釋放熾熱的標槍彈幕,提升遠程傷害與掩護機動速度。" />
+    <string id="taom_ability_mahud_beast_rider" text="姆馬基爾的迴響" />
+    <string id="taom_ability_mahud_beast_rider_tt" text="引導對姆馬基爾的古老恐懼,提升巨獸衝鋒傷害並在敵軍陣營中散播恐懼。" />
+    <string id="taom_ability_far_harad_halftroll" text="邪惡殘暴" />
+    <string id="taom_ability_far_harad_halftroll_tt" text="進入野蠻殘暴狀態,大幅提升生命值和抗性,同時恐嚇附近敵人。" />
+    <string id="taom_ability_codyan_legionaire" text="盾牆" />
+    <string id="taom_ability_codyan_legionaire_tt" text="以陣型鎖盾,在短時間內為所有附近盟友提升20點近戰傷害。" />
+    <string id="taom_ability_lokhas_drus_marksman" text="穿透齊射" />
+    <string id="taom_ability_lokhas_drus_marksman_tt" text="射出特製硬化箭矢,在短時間內提升你的遠程傷害、拉弓速度和移動速度。" />
+    <string id="taom_ability_balchoth_kan" text="不屈不撓" />
+    <string id="taom_ability_balchoth_kan_tt" text="祈求巴爾霍斯的鐵血紀律,在短時間內提升你的坐騎速度、衝鋒傷害和近戰傷害。" />
+    <string id="taom_ability_dale_guardsman" text="守門" />
+    <string id="taom_ability_dale_guardsman_tt" text="穩固腳步守住大門,在靜止時大幅提升生命值和抗性。" />
+    <string id="taom_ability_dale_marksman" text="黑箭" />
+    <string id="taom_ability_dale_marksman_tt" text="承襲弓手巴德的傳奇,大幅提升你下一次射擊的傷害和穿透力。" />
+    <string id="taom_ability_dale_outrider" text="商道疾馳" />
+    <string id="taom_ability_dale_outrider_tt" text="在熟悉的道路上策馬狂奔,獲得速度爆發和騎戰技巧提升。" />
+    <string id="taom_ability_ironguard" text="秘銀堡壘" />
+    <string id="taom_ability_ironguard_tt" text="祈求矮人工藝的力量,在短時間內為所有附近盟友提升20點近戰傷害。" />
+    <string id="taom_ability_crossbow_master" text="精準彈幕" />
+    <string id="taom_ability_crossbow_master_tt" text="裝填大師級弩箭,在短時間內提升你的遠程傷害、填裝速度和移動速度。" />
+    <string id="taom_ability_ram_rider" text="山地衝鋒" />
+    <string id="taom_ability_ram_rider_tt" text="驅策戰羊向前衝鋒,在短時間內提升你的坐騎速度、衝鋒傷害和近戰傷害。" />
+    <string id="taom_ability_blade_dancer" text="星光交織" />
+    <string id="taom_ability_blade_dancer_tt" text="進入優雅的戰鬥冥想,閃避攻擊的同時以精靈般的精準打擊敵人。" />
+    <string id="taom_ability_elven_archer" text="精靈之眼" />
+    <string id="taom_ability_elven_archer_tt" text="集中古老精靈的感知力,在極遠距離實現百發百中。" />
+    <string id="taom_ability_rivendell_knight" text="最後同盟" />
+    <string id="taom_ability_rivendell_knight_tt" text="以最後同盟的英勇策馬而行,提升騎乘傷害並激勵所有附近盟友。" />
+    <string id="taom_ability_warden" text="寧若戴爾的祝福" />
+    <string id="taom_ability_warden_tt" text="祈求寧若戴爾之水的力量,在短時間內治療傷口並提升抗性。" />
+    <string id="taom_ability_galadhrim_archer" text="銀雨" />
+    <string id="taom_ability_galadhrim_archer_tt" text="以驚人的速度射出一輪銀尖箭雨,撕裂敵軍陣營。" />
+    <string id="taom_ability_sentinel" text="伊拉諾的迅捷" />
+    <string id="taom_ability_sentinel_tt" text="引導金色森林的優雅,以超自然的速度和精準向前衝刺。" />
+    <string id="taom_ability_shadow_walker" text="森林斗篷" />
+    <string id="taom_ability_shadow_walker_tt" text="融入森林陰影之中,在短時間內為所有附近盟友提升20點近戰傷害。" />
+    <string id="taom_ability_silvan_archer" text="林冠打擊" />
+    <string id="taom_ability_silvan_archer_tt" text="從高處有利位置射擊,在短時間內提升你的遠程傷害、拉弓速度和移動速度。" />
+    <string id="taom_ability_elk_rider" text="鹿角衝撞" />
+    <string id="taom_ability_elk_rider_tt" text="放低巨大的鹿角發起衝鋒,在短時間內提升你的坐騎速度、衝鋒傷害和近戰傷害。" />
+    <string id="taom_ability_uruk_berserker" text="血之狂怒" />
+    <string id="taom_ability_uruk_berserker_tt" text="進入狂暴狀態,大幅提升傷害和生命值,同時無視痛苦。" />
+    <string id="taom_ability_uruk_crossbow" text="鐵雨" />
+    <string id="taom_ability_uruk_crossbow_tt" text="射出一陣歐散克鍛造的弩箭,具有毀滅性的穿透力和射速。" />
+    <string id="taom_ability_warg_scout" text="狼群嚎叫" />
+    <string id="taom_ability_warg_scout_tt" text="發出恐怖的嚎叫,提升你的速度並使附近敵人陷入恐懼。" />
+    <string id="taom_ability_cave_troll_master" text="食人妖狂亂" />
+    <string id="taom_ability_cave_troll_master_tt" text="鞭策你的食人妖進入狂亂狀態,大幅提升生命值和部隊傷害。" />
+    <string id="taom_ability_goblin_sniper" text="毒鏢" />
+    <string id="taom_ability_goblin_sniper_tt" text="在箭矢上塗抹洞穴真菌毒素,造成持續傷害並減緩目標速度。" />
+    <string id="taom_ability_warg_pack_leader" text="首領嚎叫" />
+    <string id="taom_ability_warg_pack_leader_tt" text="以雷鳴般的嚎叫展現統治地位,提升狼群速度和兇猛度。" />
+    <string id="taom_ability_shadow_warrior" text="靈魂汲取" />
+    <string id="taom_ability_shadow_warrior_tt" text="汲取附近敵人的生命力,治療自己並削弱他們的攻擊。" />
+    <string id="taom_ability_necromancer_acolyte" text="黑暗箭" />
+    <string id="taom_ability_necromancer_acolyte_tt" text="將死靈能量灌注於攻擊之中,大幅提升遠程傷害和護甲穿透。" />
+    <string id="taom_ability_fell_rider" text="恐懼衝鋒" />
+    <string id="taom_ability_fell_rider_tt" text="在陰影籠罩下發起衝鋒,使敵人驚恐逃散並造成毀滅性傷害。" />
+    <string id="taom_ability_corsair_boarder" text="登船作戰" />
+    <string id="taom_ability_corsair_boarder_tt" text="發動殘酷的登船突襲,在近距離戰鬥中提升近戰傷害和抗性。" />
+    <string id="taom_ability_corsair_crossbow" text="索具射擊" />
+    <string id="taom_ability_corsair_crossbow_tt" text="從穩定位置以致命精度射擊,大幅提升遠程傷害和準確度。" />
+    <string id="taom_ability_corsair_captain" text="掠奪" />
+    <string id="taom_ability_corsair_captain_tt" text="以掠奪的承諾激勵你的船員,提升速度、傷害和部隊士氣。" />
+    <string id="taom_ranger_of_ithilien_root_desc" text="Ambush grants +5% ranged damage and scales duration with Bow skill." />
+    <string id="taom_roi_t1a_key" text="伏擊範圍增加,從隱蔽處射出的箭矢造成額外傷害。" />
+    <string id="taom_roi_t1a_p1" text="+8%遠程傷害。" />
+    <string id="taom_roi_t1a_p2" text="+5%護甲穿透。" />
+    <string id="taom_roi_t1a_p3" text="+7%移動速度。" />
+    <string id="taom_roi_t1a_p4" text="+5%戰鬥聲望獲取。" />
+    <string id="taom_roi_t1b_key" text="伏擊持續時間延長,賦予額外閃避。" />
+    <string id="taom_roi_t1b_p1" text="+5%抗性。" />
+    <string id="taom_roi_t1b_p2" text="+25最大生命值。" />
+    <string id="taom_roi_t1b_p3" text="+5%隊伍偵察範圍。" />
+    <string id="taom_roi_t1b_p4" text="+5% 隱匿加成。" />
+    <string id="taom_roi_t2a_key" text="伏擊充能需求降低,觸發更加頻繁。" />
+    <string id="taom_roi_t2a_p1" text="+10% 隊伍偵查範圍。" />
+    <string id="taom_roi_t2a_p2" text="+10% 移動速度。" />
+    <string id="taom_roi_t2a_p3" text="+10% 隱匿加成。" />
+    <string id="taom_roi_t2a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_roi_t2b_key" text="伏擊啟動時同時增加部隊遠程傷害。" />
+    <string id="taom_roi_t2b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_roi_t2b_p2" text="+10% 破甲。" />
+    <string id="taom_roi_t2b_p3" text="+50 最大生命值。" />
+    <string id="taom_roi_t2b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_roi_t3a_key" text="伏擊範圍大幅增加,釋放毀滅性箭雨。" />
+    <string id="taom_roi_t3a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_roi_t3a_p2" text="+15% 破甲。" />
+    <string id="taom_roi_t3a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_roi_t3a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_roi_t3b_key" text="伏擊充能大幅降低,幾乎可以隨時使用。" />
+    <string id="taom_roi_t3b_p1" text="+15% 隱匿加成。" />
+    <string id="taom_roi_t3b_p2" text="+15% 移動速度。" />
+    <string id="taom_roi_t3b_p3" text="+75 最大生命值。" />
+    <string id="taom_roi_t3b_p4" text="+15% 隊伍偵查範圍。" />
+    <string id="taom_cop_root_desc" text="職業能力賦予 +5% 近戰傷害,並在河流與海岸附近提升部隊士氣。" />
+    <string id="taom_cop_t1a_key" text="職業能力範圍增加,指揮更廣闊的河流通道。" />
+    <string id="taom_cop_t1a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_cop_t1a_p2" text="+10% 揮擊速度。" />
+    <string id="taom_cop_t1a_p3" text="+5% 部隊傷害。" />
+    <string id="taom_cop_t1a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_cop_t1b_key" text="職業能力持續時間延長,更久地守住港口防線。" />
+    <string id="taom_cop_t1b_p1" text="+5% 抗性。" />
+    <string id="taom_cop_t1b_p2" text="+30 最大生命值。" />
+    <string id="taom_cop_t1b_p3" text="+5% 部隊士氣。" />
+    <string id="taom_cop_t1b_p4" text="-5% 部隊薪餉。" />
+    <string id="taom_cop_t2a_key" text="職業能力充能需求降低,允許更頻繁地啟動。" />
+    <string id="taom_cop_t2a_p1" text="+8% 隊伍移動速度。" />
+    <string id="taom_cop_t2a_p2" text="+10% 部隊士氣。" />
+    <string id="taom_cop_t2a_p3" text="+2 隊伍規模。" />
+    <string id="taom_cop_t2a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_cop_t2b_key" text="職業能力啟動時同時提升部隊近戰傷害。" />
+    <string id="taom_cop_t2b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_cop_t2b_p2" text="+8% 破甲。" />
+    <string id="taom_cop_t2b_p3" text="+15% 揮砍速度。" />
+    <string id="taom_cop_t2b_p4" text="+35 最大生命值。" />
+    <string id="taom_cop_t3a_key" text="職業能力激活時賦予部隊抗性,強化艦隊。" />
+    <string id="taom_cop_t3a_p1" text="+15% 部隊士氣。" />
+    <string id="taom_cop_t3a_p2" text="+4 隊伍規模。" />
+    <string id="taom_cop_t3a_p3" text="-10% 部隊薪餉。" />
+    <string id="taom_cop_t3a_p4" text="+10% 自訂資源獲取。" />
+    <string id="taom_cop_t3b_key" text="職業能力範圍和持續時間最大化,主宰每一條水路。" />
+    <string id="taom_cop_t3b_p1" text="+15% 近戰傷害。" />
+    <string id="taom_cop_t3b_p2" text="+10% 抗性。" />
+    <string id="taom_cop_t3b_p3" text="+15% 護甲穿透。" />
+    <string id="taom_cop_t3b_p4" text="+50 最大生命值。" />
+    <string id="taom_knight_of_belfalas_root_desc" text="踐踏賦予 +5% 近戰傷害,並隨騎兵衝鋒的力量而提升。" />
+    <string id="taom_kob_t1a_key" text="踐踏能力範圍增加,橫掃更廣的敵方陣型。" />
+    <string id="taom_kob_t1a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_kob_t1a_p2" text="+10% 馬匹衝鋒傷害。" />
+    <string id="taom_kob_t1a_p3" text="+5% 部隊傷害。" />
+    <string id="taom_kob_t1a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_kob_t1b_key" text="踐踏持續時間延長,維持衝鋒更久。" />
+    <string id="taom_kob_t1b_p1" text="+8% 抗性。" />
+    <string id="taom_kob_t1b_p2" text="+40 最大生命值。" />
+    <string id="taom_kob_t1b_p3" text="+10% 馬匹生命值。" />
+    <string id="taom_kob_t1b_p4" text="+5% 部隊抗性。" />
+    <string id="taom_kob_t2a_key" text="踐踏衝鋒需求降低,可更頻繁地發動如雷衝鋒。" />
+    <string id="taom_kob_t2a_p1" text="+15% 馬匹衝鋒傷害。" />
+    <string id="taom_kob_t2a_p2" text="+12% 近戰傷害。" />
+    <string id="taom_kob_t2a_p3" text="+8% 移動速度。" />
+    <string id="taom_kob_t2a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_kob_t2b_key" text="踐踏在激活時也提升部隊抗性。" />
+    <string id="taom_kob_t2b_p1" text="+10% 抗性。" />
+    <string id="taom_kob_t2b_p2" text="+50 最大生命值。" />
+    <string id="taom_kob_t2b_p3" text="+15% 馬匹生命值。" />
+    <string id="taom_kob_t2b_p4" text="+8% 部隊抗性。" />
+    <string id="taom_kob_t3a_key" text="踐踏激活時賦予部隊士氣,鼓舞貝爾法拉斯的軍隊。" />
+    <string id="taom_kob_t3a_p1" text="+15% 部隊士氣。" />
+    <string id="taom_kob_t3a_p2" text="+4 隊伍規模。" />
+    <string id="taom_kob_t3a_p3" text="-10% 部隊升級費用。" />
+    <string id="taom_kob_t3a_p4" text="-10% 自訂資源升級費用。" />
+    <string id="taom_kob_t3b_key" text="踐踏範圍和持續時間最大化——朵爾安羅斯的衝鋒勢不可擋。" />
+    <string id="taom_kob_t3b_p1" text="+15% 抗性。" />
+    <string id="taom_kob_t3b_p2" text="+75 最大生命值。" />
+    <string id="taom_kob_t3b_p3" text="+20% 戰馬衝鋒傷害。" />
+    <string id="taom_kob_t3b_p4" text="+12% 部隊抗性。" />
+    <string id="taom_buc_root_desc" text="黑暗剛毅賦予 +6% 生命值並激發黑色烏魯克的戰鬥狂怒。" />
+    <string id="taom_buc_t1_a_key" text="鐵皮" />
+    <string id="taom_buc_t1_a_key_desc" text="經鍛爐與戰爭錘鍊,你的皮膚能擋下刀刃。血怒範圍 +3。" />
+    <string id="taom_buc_t1_a_p1" text="殘暴衝鋒" />
+    <string id="taom_buc_t1_a_p1_desc" text="你以毀滅性的力量衝入敵陣。+5% 近戰傷害。" />
+    <string id="taom_buc_t1_a_p2" text="厚顱骨" />
+    <string id="taom_buc_t1_a_p2_desc" text="能擊倒弱小半獸人的攻擊只會激怒你。+5% 鈍擊抗性。" />
+    <string id="taom_buc_t1_a_p3" text="戰吼" />
+    <string id="taom_buc_t1_a_p3_desc" text="你喉嚨深處的咆哮穩定魔多部隊。+3% 部隊士氣。" />
+    <string id="taom_buc_t1_a_p4" text="傷痕老兵" />
+    <string id="taom_buc_t1_a_p4_desc" text="舊傷教會了你慘痛的教訓。+25 生命值。" />
+    <string id="taom_buc_t1_b_key" text="血之狂暴" />
+    <string id="taom_buc_t1_b_key_desc" text="痛苦只會加深你的渴望。血怒持續時間 +4秒。" />
+    <string id="taom_buc_t1_b_p1" text="破甲者" />
+    <string id="taom_buc_t1_b_p1_desc" text="你以純粹的暴力擊穿板甲。+5% 護甲穿透。" />
+    <string id="taom_buc_t1_b_p2" text="不可擊破" />
+    <string id="taom_buc_t1_b_p2_desc" text="即使寡不敵眾,你也不會輕易倒下。+30 生命值。" />
+    <string id="taom_buc_t1_b_p3" text="鐵律" />
+    <string id="taom_buc_t1_b_p3_desc" text="你的存在減少逃兵。-4% 部隊薪資。" />
+    <string id="taom_buc_t1_b_p4" text="碎盾者" />
+    <string id="taom_buc_t1_b_p4_desc" text="你的攻擊粉碎守衛陣型。+5% 揮擊速度。" />
+    <string id="taom_buc_t2_a_key" text="狂戰士之約" />
+    <string id="taom_buc_t2_a_key_desc" text="你只需更少的蓄力就能釋放毀滅。血怒蓄力消耗 -20。" />
+    <string id="taom_buc_t2_a_p1" text="野蠻動能" />
+    <string id="taom_buc_t2_a_p1_desc" text="殺戮推動你前進。+8% 近戰傷害。" />
+    <string id="taom_buc_t2_a_p2" text="戰頭領威嚴" />
+    <string id="taom_buc_t2_a_p2_desc" text="魔多部隊在你的指揮下戰鬥更加賣力。+6% 部隊傷害。" />
+    <string id="taom_buc_t2_a_p3" text="浴血鎧甲" />
+    <string id="taom_buc_t2_a_p3_desc" text="敵人的鮮血抵擋進一步的傷害。+8% 斬擊抗性。" />
+    <string id="taom_buc_t2_a_p4" text="攻城破壞者" />
+    <string id="taom_buc_t2_a_p4_desc" text="你粉碎堅固的防線。+35 生命值。" />
+    <string id="taom_buc_t2_b_key" text="延長狂怒" />
+    <string id="taom_buc_t2_b_key_desc" text="血之狂暴維持更久。血怒持續時間 +2秒。" />
+    <string id="taom_buc_t2_b_p1" text="暴走恐怖" />
+    <string id="taom_buc_t2_b_p1_desc" text="你的存在挫敗敵人士氣並鼓舞己方。+6% 部隊士氣。" />
+    <string id="taom_buc_t2_b_p2" text="半獸人耐力" />
+    <string id="taom_buc_t2_b_p2_desc" text="你的身體能承受會殺死弱小種族的傷口。+10% 遠程抗性。" />
+    <string id="taom_buc_t2_b_p3" text="監工之鞭" />
+    <string id="taom_buc_t2_b_p3_desc" text="對你憤怒的恐懼驅使軍隊前進。部隊薪餉 -5%。" />
+    <string id="taom_buc_t2_b_p4" text="板甲與鎖甲" />
+    <string id="taom_buc_t2_b_p4_desc" text="層層盔甲擋開最銳利的打擊。生命值 +40。" />
+    <string id="taom_buc_t3_a_key" text="索倫之眼" />
+    <string id="taom_buc_t3_a_key_desc" text="索倫的黑暗意志使狂怒席捲附近所有敵人。血怒半徑 +5。" />
+    <string id="taom_buc_t3_a_p1" text="黑暗隊長之怒" />
+    <string id="taom_buc_t3_a_p1_desc" text="你的攻擊帶著黑暗魔君的怒火。近戰傷害 +12%。" />
+    <string id="taom_buc_t3_a_p2" text="不死狂怒" />
+    <string id="taom_buc_t3_a_p2_desc" text="即使身受重傷你仍繼續戰鬥。生命值 +75。" />
+    <string id="taom_buc_t3_a_p3" text="戰爭軍團指揮官" />
+    <string id="taom_buc_t3_a_p3_desc" text="隨著你的傳奇散播,你的戰爭軍團不斷擴大。隊伍規模 +4。" />
+    <string id="taom_buc_t3_a_p4" text="碾壓進軍" />
+    <string id="taom_buc_t3_a_p4_desc" text="你的部隊以殘酷的效率粉碎敵軍防線。部隊傷害 +10%。" />
+    <string id="taom_buc_t3_b_key" text="不可征服" />
+    <string id="taom_buc_t3_b_key_desc" text="你幾乎不需釋放狂怒——它永遠存在。血怒消耗 -30。" />
+    <string id="taom_buc_t3_b_p1" text="黑暗浪潮" />
+    <string id="taom_buc_t3_b_p1_desc" text="你的戰爭軍團毫不留情地淹沒敵人。部隊傷害 +12%。" />
+    <string id="taom_buc_t3_b_p2" text="無情進軍" />
+    <string id="taom_buc_t3_b_p2_desc" text="你的戰爭軍團不眠不休地行軍。隊伍移動速度 +5%。" />
+    <string id="taom_buc_t3_b_p3" text="黑暗聲望" />
+    <string id="taom_buc_t3_b_p3_desc" text="勝利帶來令人畏懼的名聲。戰鬥聲望獲得 +12%。" />
+    <string id="taom_buc_t3_b_p4" text="攻城領主" />
+    <string id="taom_buc_t3_b_p4_desc" text="你的戰爭軍團龐大而可怕。隊伍規模 +12%。" />
+    <string id="taom_mc_root_desc" text="至尊之聲賦予 +5% 遠程傷害並傳遞索倫的黑暗低語。" />
+    <string id="taom_mc_t1_a_key" text="毒刺箭矢" />
+    <string id="taom_mc_t1_a_key_desc" text="你的箭矢攜帶邪惡毒素。至尊之聲半徑 +3。" />
+    <string id="taom_mc_t1_a_p1" text="黑暗低語" />
+    <string id="taom_mc_t1_a_p1_desc" text="你的吟誦動搖敵人。部隊抗性 +5%。" />
+    <string id="taom_mc_t1_a_p2" text="穩固瞄準" />
+    <string id="taom_mc_t1_a_p2_desc" text="耐心而精準。遠程傷害 +6%。" />
+    <string id="taom_mc_t1_a_p3" text="邪教狂熱" />
+    <string id="taom_mc_t1_a_p3_desc" text="至尊的祝福護佑信徒。生命值 +25。" />
+    <string id="taom_mc_t1_a_p4" text="暗影步伐" />
+    <string id="taom_mc_t1_a_p4_desc" text="你在齊射之間隱身移動。潛行加成 +5%。" />
+    <string id="taom_mc_t1_b_key" text="索倫的低語" />
+    <string id="taom_mc_t1_b_key_desc" text="聲音傳播得更遠。至尊之聲持續時間 +4秒。" />
+    <string id="taom_mc_t1_b_p1" text="黑暗箭袋" />
+    <string id="taom_mc_t1_b_p1_desc" text="你攜帶更多黑羽箭矢。彈藥 +3。" />
+    <string id="taom_mc_t1_b_p2" text="儀式傷疤" />
+    <string id="taom_mc_t1_b_p2_desc" text="來自穆爾克希利儀式的痛苦守護。+30 生命值。" />
+    <string id="taom_mc_t1_b_p3" text="先知之步" />
+    <string id="taom_mc_t1_b_p3_desc" text="索倫的恩典使你迅捷而隱蔽。+4% 隱匿加成。" />
+    <string id="taom_mc_t1_b_p4" text="黑暗祝福" />
+    <string id="taom_mc_t1_b_p4_desc" text="至尊魔戒之主的目光注視著你。+8% 遠程抗性。" />
+    <string id="taom_mc_t2_a_key" text="恐懼集會" />
+    <string id="taom_mc_t2_a_key_desc" text="更多信徒回應你的召喚。至尊之音充能消耗 -20。" />
+    <string id="taom_mc_t2_a_p1" text="信徒齊射" />
+    <string id="taom_mc_t2_a_p1_desc" text="你的教派戰士釋放毀滅性的齊射。+8% 部隊傷害。" />
+    <string id="taom_mc_t2_a_p2" text="黑貂之箭" />
+    <string id="taom_mc_t2_a_p2_desc" text="黑鍛箭頭穿透更深。+8% 護甲穿透。" />
+    <string id="taom_mc_t2_a_p3" text="狂信者決心" />
+    <string id="taom_mc_t2_a_p3_desc" text="死亡對真正的信徒毫無意義。+35 生命值。" />
+    <string id="taom_mc_t2_a_p4" text="教派後勤" />
+    <string id="taom_mc_t2_a_p4_desc" text="教派的網絡使軍隊得到補給。+5 彈藥。" />
+    <string id="taom_mc_t2_b_key" text="黑暗佈道" />
+    <string id="taom_mc_t2_b_key_desc" text="你的祈禱延伸至整個戰場。至尊之音持續時間 +2秒。" />
+    <string id="taom_mc_t2_b_p1" text="恐懼真言" />
+    <string id="taom_mc_t2_b_p1_desc" text="吟唱削弱敵人意志。+8% 部隊士氣。" />
+    <string id="taom_mc_t2_b_p2" text="至尊魔戒之影" />
+    <string id="taom_mc_t2_b_p2_desc" text="無形之手保護著你。+10% 近戰抗性。" />
+    <string id="taom_mc_t2_b_p3" text="暗影網絡" />
+    <string id="taom_mc_t2_b_p3_desc" text="教徒在黑暗中暢通無阻地潛行。+6% 隊伍偵察範圍。" />
+    <string id="taom_mc_t2_b_p4" text="狂熱信仰" />
+    <string id="taom_mc_t2_b_p4_desc" text="真正的信徒奉獻一切。+40 生命值。" />
+    <string id="taom_mc_t3_a_key" text="索倫凝視" />
+    <string id="taom_mc_t3_a_key_desc" text="黑暗魔君的目光掃視戰場。至尊之音範圍 +5。" />
+    <string id="taom_mc_t3_a_p1" text="末日彈幕" />
+    <string id="taom_mc_t3_a_p1_desc" text="你的齊射遮天蔽日。+12% 遠程傷害。" />
+    <string id="taom_mc_t3_a_p2" text="終極啟示" />
+    <string id="taom_mc_t3_a_p2_desc" text="即使死亡也無法阻止信徒。+75 生命值。" />
+    <string id="taom_mc_t3_a_p3" text="集會之軍" />
+    <string id="taom_mc_t3_a_p3_desc" text="信徒群聚於你的旗幟下。+4 隊伍規模。" />
+    <string id="taom_mc_t3_a_p4" text="祝福箭囊" />
+    <string id="taom_mc_t3_a_p4_desc" text="索倫的祝福倍增你的箭矢。+8 彈藥。" />
+    <string id="taom_mc_t3_b_key" text="黑暗契約" />
+    <string id="taom_mc_t3_b_key_desc" text="召喚至尊之音需要的犧牲更少。至尊之音充能消耗 -30。" />
+    <string id="taom_mc_t3_b_p1" text="魔眼教派" />
+    <string id="taom_mc_t3_b_p1_desc" text="魔多軍隊以索倫之名戰鬥。+12% 部隊傷害。" />
+    <string id="taom_mc_t3_b_p2" text="不倦聖戰" />
+    <string id="taom_mc_t3_b_p2_desc" text="忠誠者行軍無倦。隊伍移動速度+5%。" />
+    <string id="taom_mc_t3_b_p3" text="殉道者的獎賞" />
+    <string id="taom_mc_t3_b_p3_desc" text="以索倫之名而死將帶來巨大聲望。戰鬥聲望獲得+12%。" />
+    <string id="taom_mc_t3_b_p4" text="先知的大軍" />
+    <string id="taom_mc_t3_b_p4_desc" text="成千上萬的人響應先知的號召。隊伍規模+12%。" />
+    <string id="taom_sr_root_desc" text="潛行爬行賦予+5%移動速度,並讓騎手消失於魔多的陰影之中。" />
+    <string id="taom_sr_t1_a_key" text="暗影疾馳" />
+    <string id="taom_sr_t1_a_key_desc" text="你消失於魔多的黑暗之中。潛行爬行範圍+3。" />
+    <string id="taom_sr_t1_a_p1" text="座狼本能" />
+    <string id="taom_sr_t1_a_p1_desc" text="你的坐騎和你一樣兇猛。馬匹衝鋒傷害+6%。" />
+    <string id="taom_sr_t1_a_p2" text="潛行側翼手" />
+    <string id="taom_sr_t1_a_p2_desc" text="你出現在最意想不到的地方。潛行加成+5%。" />
+    <string id="taom_sr_t1_a_p3" text="強行騎乘" />
+    <string id="taom_sr_t1_a_p3_desc" text="你的身體能承受最嚴酷的騎行。生命值+25。" />
+    <string id="taom_sr_t1_a_p4" text="襲擊與消逝" />
+    <string id="taom_sr_t1_a_p4_desc" text="快速打擊後消失。騎馬近戰傷害+5%。" />
+    <string id="taom_sr_t1_b_key" text="夜行騎士" />
+    <string id="taom_sr_t1_b_key_desc" text="黑暗保護你更久。潛行爬行持續時間+4秒。" />
+    <string id="taom_sr_t1_b_p1" text="精瘦坐騎" />
+    <string id="taom_sr_t1_b_p1_desc" text="你的野獸在最激烈的戰鬥中仍能站穩腳步。馬匹生命值+5%。" />
+    <string id="taom_sr_t1_b_p2" text="劫掠者速度" />
+    <string id="taom_sr_t1_b_p2_desc" text="你能超越任何追擊。移動速度+5%。" />
+    <string id="taom_sr_t1_b_p3" text="群體戰術" />
+    <string id="taom_sr_t1_b_p3_desc" text="斯那加騎兵成群攻擊。部隊傷害+3%。" />
+    <string id="taom_sr_t1_b_p4" text="馬鞍堅韌" />
+    <string id="taom_sr_t1_b_p4_desc" text="在魔多騎行使身體更加強壯。生命值+30。" />
+    <string id="taom_sr_t2_a_key" text="伏擊突襲" />
+    <string id="taom_sr_t2_a_key_desc" text="你在敵人發覺之前就發動攻擊。潛行爬行衝鋒消耗-20。" />
+    <string id="taom_sr_t2_a_p1" text="動能殺手" />
+    <string id="taom_sr_t2_a_p1_desc" text="你的衝鋒打破敵人陣型。馬匹衝鋒傷害+8%。" />
+    <string id="taom_sr_t2_a_p2" text="無情追擊" />
+    <string id="taom_sr_t2_a_p2_desc" text="沒有人能逃脫斯那加騎兵的追捕。隊伍移動速度+8%。" />
+    <string id="taom_sr_t2_a_p3" text="劫掠者的收穫" />
+    <string id="taom_sr_t2_a_p3_desc" text="成功的劫掠帶來巨大聲望。戰鬥聲望獲得+8%。" />
+    <string id="taom_sr_t2_a_p4" text="座狼血統的耐力" />
+    <string id="taom_sr_t2_a_p4_desc" text="你的坐騎超越普通野獸的耐力。生命值+35。" />
+    <string id="taom_sr_t2_b_key" text="幽靈騎士" />
+    <string id="taom_sr_t2_b_key_desc" text="陰影更長久地依附於你。潛行爬行持續時間+2秒。" />
+    <string id="taom_sr_t2_b_p1" text="尖嘯降臨" />
+    <string id="taom_sr_t2_b_p1_desc" text="你的戰吼能挫敗除了最勇敢者外的所有人。部隊士氣+6%。" />
+    <string id="taom_sr_t2_b_p2" text="側翼專家" />
+    <string id="taom_sr_t2_b_p2_desc" text="你精準地指揮側翼突襲。+10% 潛行加成。" />
+    <string id="taom_sr_t2_b_p3" text="掠奪者的份額" />
+    <string id="taom_sr_t2_b_p3_desc" text="分享戰利品能讓狼群保持忠誠。-5% 部隊薪餉。" />
+    <string id="taom_sr_t2_b_p4" text="鐵製馬鞍" />
+    <string id="taom_sr_t2_b_p4_desc" text="魔多皮革與鐵環保護騎士與坐騎。+40 生命值。" />
+    <string id="taom_sr_t3_a_key" text="暗影踐踏" />
+    <string id="taom_sr_t3_a_key_desc" text="一支騎兵大軍從黑暗中現身。潛行突襲半徑 +5。" />
+    <string id="taom_sr_t3_a_p1" text="死亡衝鋒" />
+    <string id="taom_sr_t3_a_p1_desc" text="你的衝鋒摧毀途經的一切。+12% 馬匹衝鋒傷害。" />
+    <string id="taom_sr_t3_a_p2" text="座狼領主的號令" />
+    <string id="taom_sr_t3_a_p2_desc" text="龐大的狼群在你的旗幟下奔馳。+4 隊伍規模。" />
+    <string id="taom_sr_t3_a_p3" text="不朽之影" />
+    <string id="taom_sr_t3_a_p3_desc" text="即使致命的傷口也無法減慢你的速度。+75 生命值。" />
+    <string id="taom_sr_t3_a_p4" text="魔多之恐懼" />
+    <string id="taom_sr_t3_a_p4_desc" text="你的突襲帶來巨大的恐懼與聲望。+12% 戰鬥聲望獲取。" />
+    <string id="taom_sr_t3_b_key" text="魔多先鋒" />
+    <string id="taom_sr_t3_b_key_desc" text="你總是率先出擊。潛行突襲消耗 -30。" />
+    <string id="taom_sr_t3_b_p1" text="座狼狂潮" />
+    <string id="taom_sr_t3_b_p1_desc" text="數百名騎士衝擊敵軍。+12% 部隊傷害。" />
+    <string id="taom_sr_t3_b_p2" text="無盡黑暗行軍" />
+    <string id="taom_sr_t3_b_p2_desc" text="魔多的大軍不眠不休地行進。+8% 隊伍移動速度。" />
+    <string id="taom_sr_t3_b_p3" text="暗影軍團" />
+    <string id="taom_sr_t3_b_p3_desc" text="你的部落龐大到難以計數。+12% 隊伍規模。" />
+    <string id="taom_sr_t3_b_p4" text="騎士的威名" />
+    <string id="taom_sr_t3_b_p4_desc" text="暗影騎兵的事蹟已成傳奇。+14% 戰鬥聲望獲取。" />
+    <string id="taom_ohw_root_desc" text="重錘砸擊賦予 +8% 生命值。歐祿巨大的體型能擊潰步兵。" />
+    <string id="taom_ohw_t1_a_key" text="震地者" />
+    <string id="taom_ohw_t1_a_key_desc" text="你的踐踏震動大地。重錘砸擊半徑 +3。" />
+    <string id="taom_ohw_t1_a_p1" text="碎骨者" />
+    <string id="taom_ohw_t1_a_p1_desc" text="你的打擊粉碎盾牌與敵人。+6% 近戰傷害。" />
+    <string id="taom_ohw_t1_a_p2" text="石膚" />
+    <string id="taom_ohw_t1_a_p2_desc" text="巨魔的皮膚能擋下大部分刀劍。+6% 鈍器抗性。" />
+    <string id="taom_ohw_t1_a_p3" text="雷鳴之威" />
+    <string id="taom_ohw_t1_a_p3_desc" text="你的到來穩定了戰軍。+3% 部隊士氣。" />
+    <string id="taom_ohw_t1_a_p4" text="巨魔體質" />
+    <string id="taom_ohw_t1_a_p4_desc" text="你輕易承受能擊倒較弱生物的傷害。+30 生命值。" />
+    <string id="taom_ohw_t1_b_key" text="持續猛擊" />
+    <string id="taom_ohw_t1_b_key_desc" text="重擊持續不斷。重錘砸擊持續時間 +4秒。" />
+    <string id="taom_ohw_t1_b_p1" text="戰鼓獸皮" />
+    <string id="taom_ohw_t1_b_p1_desc" text="你的厚皮甚至能吸收攻城弩箭。遠程抗性+6%。" />
+    <string id="taom_ohw_t1_b_p2" text="石板巨拳" />
+    <string id="taom_ohw_t1_b_p2_desc" text="你的巨拳能擊穿鎧甲。護甲穿透+5%。" />
+    <string id="taom_ohw_t1_b_p3" text="鋼鐵意志" />
+    <string id="taom_ohw_t1_b_p3_desc" text="索倫的命令激發你的意志。部隊薪餉-4%。" />
+    <string id="taom_ohw_t1_b_p4" text="山岳之軀" />
+    <string id="taom_ohw_t1_b_p4_desc" text="你是行走的山岳。生命值+35。" />
+    <string id="taom_ohw_t2_a_key" text="暴走巨獸" />
+    <string id="taom_ohw_t2_a_key_desc" text="你無需理由便可暴走。錘擊衝鋒消耗-20。" />
+    <string id="taom_ohw_t2_a_p1" text="泰坦打擊" />
+    <string id="taom_ohw_t2_a_p1_desc" text="你的重擊擁有攻城槌般的力量。近戰傷害+10%。" />
+    <string id="taom_ohw_t2_a_p2" text="恐懼化身" />
+    <string id="taom_ohw_t2_a_p2_desc" text="你的存在本身就能瓦解敵人士氣。部隊士氣+8%。" />
+    <string id="taom_ohw_t2_a_p3" text="破城槌" />
+    <string id="taom_ohw_t2_a_p3_desc" text="你能同時粉碎城門與人群。護甲穿透+10%。" />
+    <string id="taom_ohw_t2_a_p4" text="食人妖耐力" />
+    <string id="taom_ohw_t2_a_p4_desc" text="你能再生足以致殘凡人的傷勢。生命值+50。" />
+    <string id="taom_ohw_t2_b_key" text="延長暴走" />
+    <string id="taom_ohw_t2_b_key_desc" text="粉碎持續不斷。錘擊持續時間+2秒。" />
+    <string id="taom_ohw_t2_b_p1" text="軍團恐怖" />
+    <string id="taom_ohw_t2_b_p1_desc" text="敵人在你的大軍面前逃竄。部隊傷害+10%。" />
+    <string id="taom_ohw_t2_b_p2" text="攻城器械厚皮" />
+    <string id="taom_ohw_t2_b_p2_desc" text="即使攻城弩箭也會從你的厚皮上彈開。遠程抗性+10%。" />
+    <string id="taom_ohw_t2_b_p3" text="黑暗滋養" />
+    <string id="taom_ohw_t2_b_p3_desc" text="索倫的力量維持著大軍。部隊薪餉-5%。" />
+    <string id="taom_ohw_t2_b_p4" text="遠古岩石" />
+    <string id="taom_ohw_t2_b_p4_desc" text="你的厚皮比人類紀元更古老。生命值+50。" />
+    <string id="taom_ohw_t3_a_key" text="震世者" />
+    <string id="taom_ohw_t3_a_key_desc" text="你的錘擊震撼整個戰場。錘擊範圍+5。" />
+    <string id="taom_ohw_t3_a_p1" text="災變之擊" />
+    <string id="taom_ohw_t3_a_p1_desc" text="你的打擊重塑戰場。近戰傷害+14%。" />
+    <string id="taom_ohw_t3_a_p2" text="死亡無法阻擋" />
+    <string id="taom_ohw_t3_a_p2_desc" text="即使重傷也無法阻止歐魯克海。生命值+75。" />
+    <string id="taom_ohw_t3_a_p3" text="戰酋部落" />
+    <string id="taom_ohw_t3_a_p3_desc" text="數萬大軍在你的旗幟下行軍。隊伍規模+12%。" />
+    <string id="taom_ohw_t3_a_p4" text="魔多之錘" />
+    <string id="taom_ohw_t3_a_p4_desc" text="你的大軍粉碎一切擋路者。部隊傷害+12%。" />
+    <string id="taom_ohw_t3_b_key" text="永恆狂怒" />
+    <string id="taom_ohw_t3_b_key_desc" text="你幾乎不需要理由就能粉碎一切。錘擊消耗-30。" />
+    <string id="taom_ohw_t3_b_p1" text="黑暗時代恐懼" />
+    <string id="taom_ohw_t3_b_p1_desc" text="光是看到你就能瓦解敵軍士氣。部隊士氣+12%。" />
+    <string id="taom_ohw_t3_b_p2" text="無可阻擋之力" />
+    <string id="taom_ohw_t3_b_p2_desc" text="你的戰爭大軍永不停歇地前進。隊伍移動速度+8%。" />
+    <string id="taom_ohw_t3_b_p3" text="食人妖傳說" />
+    <string id="taom_ohw_t3_b_p3_desc" text="你的事蹟在魔多的黑暗大廳中被傳唱。戰鬥聲望獲取+14%。" />
+    <string id="taom_ohw_t3_b_p4" text="黑暗軍團" />
+    <string id="taom_ohw_t3_b_p4_desc" text="黑暗大軍膨脹至難以計數。隊伍規模+14%。" />
+    <string id="taom_moa_root_desc" text="輕羽箭給予+5%遠程傷害,讓每一支箭都更加致命。" />
+    <string id="taom_moa_t1_a_key" text="鷹眼" />
+    <string id="taom_moa_t1_a_key_desc" text="你的視力比任何鷹隼都要敏銳。輕羽箭範圍+3。" />
+    <string id="taom_moa_t1_a_p1" text="真實飛行" />
+    <string id="taom_moa_t1_a_p1_desc" text="你的箭矢飛行絲毫不偏。遠程傷害+6%。" />
+    <string id="taom_moa_t1_a_p2" text="縫隙尋者" />
+    <string id="taom_moa_t1_a_p2_desc" text="你能找到每套盔甲的接合處。護甲穿透+5%。" />
+    <string id="taom_moa_t1_a_p3" text="奧德堡訓練" />
+    <string id="taom_moa_t1_a_p3_desc" text="奧德堡弓手是洛汗國中最優秀的。生命值+25。" />
+    <string id="taom_moa_t1_a_p4" text="滿箭袋" />
+    <string id="taom_moa_t1_a_p4_desc" text="你攜帶的白羽箭矢比任何人都多。彈藥+3。" />
+    <string id="taom_moa_t1_b_key" text="堅定拉弦" />
+    <string id="taom_moa_t1_b_key_desc" text="你能更長時間維持拉弦以尋求完美一擊。輕羽箭持續時間+4秒。" />
+    <string id="taom_moa_t1_b_p1" text="迅速搭箭" />
+    <string id="taom_moa_t1_b_p1_desc" text="你的雙手動作快如閃電。遠程傷害+5%。" />
+    <string id="taom_moa_t1_b_p2" text="弓手耐力" />
+    <string id="taom_moa_t1_b_p2_desc" text="你可以連續數小時拉弓射箭而不疲憊。生命值+30。" />
+    <string id="taom_moa_t1_b_p3" text="原野斥候" />
+    <string id="taom_moa_t1_b_p3_desc" text="你能如讀書般熟知洛汗平原。隊伍偵測範圍+5%。" />
+    <string id="taom_moa_t1_b_p4" text="洛汗騎士紀律" />
+    <string id="taom_moa_t1_b_p4_desc" text="你訓練弓手堅守陣線。部隊抗性+3%。" />
+    <string id="taom_moa_t2_a_key" text="齊射指揮官" />
+    <string id="taom_moa_t2_a_key_desc" text="你協調毀滅性的集體射擊。輕羽箭充能消耗-20。" />
+    <string id="taom_moa_t2_a_p1" text="釘住陣線" />
+    <string id="taom_moa_t2_a_p1_desc" text="你的齊射壓制敵軍推進。部隊抗性+8%。" />
+    <string id="taom_moa_t2_a_p2" text="尖錐箭頭" />
+    <string id="taom_moa_t2_a_p2_desc" text="硬化的箭頭能穿透鎖甲和板甲。護甲穿透+10%。" />
+    <string id="taom_moa_t2_a_p3" text="野外技巧" />
+    <string id="taom_moa_t2_a_p3_desc" text="你利用每一處地形優勢。隱蔽加成+8%。" />
+    <string id="taom_moa_t2_a_p4" text="戰箭儲備" />
+    <string id="taom_moa_t2_a_p4_desc" text="預先配置的儲備讓你的箭袋保持充足。彈藥+5。" />
+    <string id="taom_moa_t2_b_key" text="持續彈幕" />
+    <string id="taom_moa_t2_b_key_desc" text="箭雨永不停歇。輕羽箭持續時間+2秒。" />
+    <string id="taom_moa_t2_b_p1" text="掩護射擊" />
+    <string id="taom_moa_t2_b_p1_desc" text="你的弓箭手掩護每一次推進。部隊傷害 +8%。" />
+    <string id="taom_moa_t2_b_p2" text="法貢森林陰影下的淬煉" />
+    <string id="taom_moa_t2_b_p2_desc" text="奧德堡的戰士因鄰近法貢森林而得到磨練。生命值 +35。" />
+    <string id="taom_moa_t2_b_p3" text="伊歐之眼" />
+    <string id="taom_moa_t2_b_p3_desc" text="平原對你毫無秘密可言。隊伍偵察範圍 +8%。" />
+    <string id="taom_moa_t2_b_p4" text="精準訓練" />
+    <string id="taom_moa_t2_b_p4_desc" text="你的弓箭手以機械般的完美度射擊。部隊傷害 +8%。" />
+    <string id="taom_moa_t3_a_key" text="傳奇射技" />
+    <string id="taom_moa_t3_a_key_desc" text="你的技藝將被傳頌於歌謠之中。輕羽箭術範圍 +5。" />
+    <string id="taom_moa_t3_a_p1" text="標記之箭" />
+    <string id="taom_moa_t3_a_p1_desc" text="一箭一殺——每次皆然。遠程傷害 +12%。" />
+    <string id="taom_moa_t3_a_p2" text="奧德堡的勇士" />
+    <string id="taom_moa_t3_a_p2_desc" text="你是全洛汗最優秀的射手。生命值 +75。" />
+    <string id="taom_moa_t3_a_p3" text="戰爭軍團弓手" />
+    <string id="taom_moa_t3_a_p3_desc" text="你的傳奇吸引了最優秀的弓箭手。隊伍規模 +4。" />
+    <string id="taom_moa_t3_a_p4" text="無盡箭矢" />
+    <string id="taom_moa_t3_a_p4_desc" text="你的補給線讓箭矢源源不絕。彈藥 +8。" />
+    <string id="taom_moa_t3_b_key" text="反射性射擊" />
+    <string id="taom_moa_t3_b_key_desc" text="搭箭與放箭已是純粹的肌肉記憶。輕羽箭術消耗 -30。" />
+    <string id="taom_moa_t3_b_p1" text="箭雨" />
+    <string id="taom_moa_t3_b_p1_desc" text="你的弓箭手讓天空為之黯淡。部隊傷害 +12%。" />
+    <string id="taom_moa_t3_b_p2" text="快速行軍" />
+    <string id="taom_moa_t3_b_p2_desc" text="輕步兵在洛汗國境內快速移動。隊伍移動速度 +5%。" />
+    <string id="taom_moa_t3_b_p3" text="洛汗聲望" />
+    <string id="taom_moa_t3_b_p3_desc" text="你的事蹟為奧德堡帶來榮耀。戰鬥聲望獲得 +12%。" />
+    <string id="taom_moa_t3_b_p4" text="洛汗大軍" />
+    <string id="taom_moa_t3_b_p4_desc" text="洛汗最優秀的弓手聚集在你的旗幟之下。隊伍規模 +12%。" />
+    <string id="taom_ew_root_desc" text="伊歐的戰吼賦予 +5% 騎兵衝鋒傷害,召喚先祖的雷鳴。" />
+    <string id="taom_ew_t1_a_key" text="先祖之雷" />
+    <string id="taom_ew_t1_a_key_desc" text="戰吼回盪於平原之上。伊歐的戰吼範圍 +3。" />
+    <string id="taom_ew_t1_a_p1" text="首次衝鋒" />
+    <string id="taom_ew_t1_a_p1_desc" text="你領導衝鋒,無人能及你的速度。騎兵衝鋒傷害 +6%。" />
+    <string id="taom_ew_t1_a_p2" text="天生騎士" />
+    <string id="taom_ew_t1_a_p2_desc" text="馬與騎士合而為一。馬匹生命值 +5%。" />
+    <string id="taom_ew_t1_a_p3" text="草原耐力" />
+    <string id="taom_ew_t1_a_p3_desc" text="在洛汗平原上的奔馳使你更加堅韌。生命值 +25。" />
+    <string id="taom_ew_t1_a_p4" text="集結呼喊" />
+    <string id="taom_ew_t1_a_p4_desc" text="你的呼喊振奮軍心。部隊士氣 +3%。" />
+    <string id="taom_ew_t1_b_key" text="持續戰吼" />
+    <string id="taom_ew_t1_b_key_desc" text="雷聲滾滾不息。伊歐的戰吼持續時間+4秒。" />
+    <string id="taom_ew_t1_b_p1" text="迅捷平原" />
+    <string id="taom_ew_t1_b_p1_desc" text="伊歐西歐德馳騁如風。+5%移動速度。" />
+    <string id="taom_ew_t1_b_p2" text="洛汗戰團" />
+    <string id="taom_ew_t1_b_p2_desc" text="伊歐西歐德緊密編隊騎行。+3%部隊傷害。" />
+    <string id="taom_ew_t1_b_p3" text="騎士的決心" />
+    <string id="taom_ew_t1_b_p3_desc" text="無論勝算如何,你絕不退縮。+30生命值。" />
+    <string id="taom_ew_t1_b_p4" text="堅毅坐騎" />
+    <string id="taom_ew_t1_b_p4_desc" text="你的戰馬久經沙場。+6%馬匹生命值。" />
+    <string id="taom_ew_t2_a_key" text="伊歐的傳承" />
+    <string id="taom_ew_t2_a_key_desc" text="先祖永遠與你同在。戰吼消耗-20。" />
+    <string id="taom_ew_t2_a_p1" text="銳不可當的衝鋒" />
+    <string id="taom_ew_t2_a_p1_desc" text="沒有什麼能擋住洛汗騎士。+10%馬匹衝鋒傷害。" />
+    <string id="taom_ew_t2_a_p2" text="盾牆破壞者" />
+    <string id="taom_ew_t2_a_p2_desc" text="你的衝鋒粉碎盾牆。+8%近戰傷害。" />
+    <string id="taom_ew_t2_a_p3" text="洛汗騎士士氣" />
+    <string id="taom_ew_t2_a_p3_desc" text="洛汗的吶喊鼓舞所有聽到的人。+8%部隊士氣。" />
+    <string id="taom_ew_t2_a_p4" text="長途騎士" />
+    <string id="taom_ew_t2_a_p4_desc" text="你能長途跋涉而不知疲倦。+35生命值。" />
+    <string id="taom_ew_t2_b_key" text="騎行之歌" />
+    <string id="taom_ew_t2_b_key_desc" text="伊歐西歐德的歌聲引領騎士前行。戰吼持續時間+2秒。" />
+    <string id="taom_ew_t2_b_p1" text="米亞拉斯血統" />
+    <string id="taom_ew_t2_b_p1_desc" text="你的戰馬擁有米亞拉斯的血統。+10%馬匹生命值。" />
+    <string id="taom_ew_t2_b_p2" text="平原大師" />
+    <string id="taom_ew_t2_b_p2_desc" text="你熟知驃騎國的每個山谷和山脊。+8%隊伍偵查範圍。" />
+    <string id="taom_ew_t2_b_p3" text="榮譽束縛" />
+    <string id="taom_ew_t2_b_p3_desc" text="洛汗騎士無需金錢來維持忠誠。-5%部隊薪資。" />
+    <string id="taom_ew_t2_b_p4" text="鐵製馬鐙" />
+    <string id="taom_ew_t2_b_p4_desc" text="即使在最激烈的混戰中,你的騎術依然穩健。+40生命值。" />
+    <string id="taom_ew_t3_a_key" text="洛汗騎士的衝鋒" />
+    <string id="taom_ew_t3_a_key_desc" text="人類紀元最偉大的衝鋒。戰吼範圍+5。" />
+    <string id="taom_ew_t3_a_p1" text="帕蘭諾平原的雷鳴" />
+    <string id="taom_ew_t3_a_p1_desc" text="如同在帕蘭諾平原之戰,你的衝鋒銳不可當。+14%馬匹衝鋒傷害。" />
+    <string id="taom_ew_t3_a_p2" text="驃騎國之主" />
+    <string id="taom_ew_t3_a_p2_desc" text="最偉大的騎士追隨你。+75生命值。" />
+    <string id="taom_ew_t3_a_p3" text="伊歐瑞德指揮官" />
+    <string id="taom_ew_t3_a_p3_desc" text="一支強大的伊歐瑞德追隨在你身後。+12%隊伍規模。" />
+    <string id="taom_ew_t3_a_p4" text="洛汗的榮耀" />
+    <string id="taom_ew_t3_a_p4_desc" text="你的功績為驃騎國帶來榮耀。+12%戰鬥聲望獲得。" />
+    <string id="taom_ew_t3_b_key" text="時刻備戰" />
+    <string id="taom_ew_t3_b_key_desc" text="戰吼永遠掛在你的嘴邊。戰吼充能消耗 -30。" />
+    <string id="taom_ew_t3_b_p1" text="騎兵浪潮" />
+    <string id="taom_ew_t3_b_p1_desc" text="洛汗騎士如浪潮般衝擊敵軍。+12% 部隊傷害。" />
+    <string id="taom_ew_t3_b_p2" text="疾如狂風" />
+    <string id="taom_ew_t3_b_p2_desc" text="伊歐西歐德人比傳說更快。+8% 隊伍移動速度。" />
+    <string id="taom_ew_t3_b_p3" text="驃騎國之歌" />
+    <string id="taom_ew_t3_b_p3_desc" text="伊歐西歐德人的事蹟將被傳唱千古。+14% 戰鬥聲望獲得。" />
+    <string id="taom_ew_t3_b_p4" text="偉大軍團" />
+    <string id="taom_ew_t3_b_p4_desc" text="伊歐西歐德人的全軍出征。+14% 隊伍規模。" />
+    <string id="taom_ws_root_desc" text="河流領航者賦予 +5% 抗性,並引導斯坦加德邊境守望者的警覺。" />
+    <string id="taom_ws_t1_a_key" text="河渡精通" />
+    <string id="taom_ws_t1_a_key_desc" text="你熟知每一個渡口。河流領航者範圍 +3。" />
+    <string id="taom_ws_t1_a_p1" text="盾與槍" />
+    <string id="taom_ws_t1_a_p1_desc" text="經典的洛汗步兵紀律。+5% 近戰傷害。" />
+    <string id="taom_ws_t1_a_p2" text="哨站錘煉" />
+    <string id="taom_ws_t1_a_p2_desc" text="在孤立哨站多年的歷練將你鍛造如鐵。+25 生命值。" />
+    <string id="taom_ws_t1_a_p3" text="邊境之眼" />
+    <string id="taom_ws_t1_a_p3_desc" text="沒有什麼能在你的視線下渡過恩特河。+5% 隊伍偵測範圍。" />
+    <string id="taom_ws_t1_a_p4" text="濕地耐力" />
+    <string id="taom_ws_t1_a_p4_desc" text="河流地區的潮濕使你更加堅韌。+5% 鈍器抗性。" />
+    <string id="taom_ws_t1_b_key" text="持續守望" />
+    <string id="taom_ws_t1_b_key_desc" text="守望在所有考驗中都得以維持。河流領航者持續時間 +4秒。" />
+    <string id="taom_ws_t1_b_p1" text="恩特河泳者" />
+    <string id="taom_ws_t1_b_p1_desc" text="河流對你毫無威脅。+5% 移動速度。" />
+    <string id="taom_ws_t1_b_p2" text="守衛體格" />
+    <string id="taom_ws_t1_b_p2_desc" text="多年孤獨的守望使你堅韌如老木。+30 生命值。" />
+    <string id="taom_ws_t1_b_p3" text="忠誠衛士" />
+    <string id="taom_ws_t1_b_p3_desc" text="你的士兵不需太多薪餉——職責已足夠。-4% 部隊薪資。" />
+    <string id="taom_ws_t1_b_p4" text="河流領主的紀律" />
+    <string id="taom_ws_t1_b_p4_desc" text="你的步兵在他人崩潰時仍堅守陣線。+3% 部隊抗性。" />
+    <string id="taom_ws_t2_a_key" text="預備渡口" />
+    <string id="taom_ws_t2_a_key_desc" text="你已偵察此地多年。河流領航者充能消耗 -20。" />
+    <string id="taom_ws_t2_a_p1" text="盾牆" />
+    <string id="taom_ws_t2_a_p1_desc" text="你的士兵組成堅不可摧的壁壘。+8% 部隊抗性。" />
+    <string id="taom_ws_t2_a_p2" text="久經考驗之鋼" />
+    <string id="taom_ws_t2_a_p2_desc" text="每件武器都由斯坦加德鐵匠打磨。+8% 近戰傷害。" />
+    <string id="taom_ws_t2_a_p3" text="法貢森林的警告" />
+    <string id="taom_ws_t2_a_p3_desc" text="森林教會你提早察覺危險。+10% 隊伍偵測範圍。" />
+    <string id="taom_ws_t2_a_p4" text="堅定意志" />
+    <string id="taom_ws_t2_a_p4_desc" text="斯坦加德的孤立培育出鋼鐵般的決心。+35 生命值。" />
+    <string id="taom_ws_t2_b_key" text="不倦巡邏" />
+    <string id="taom_ws_t2_b_key_desc" text="你不停歇地巡邏。河流導航者持續時間+2秒。" />
+    <string id="taom_ws_t2_b_p1" text="恩特河防線" />
+    <string id="taom_ws_t2_b_p1_desc" text="在你守衛之時,無敵可越恩特河。部隊士氣+8%。" />
+    <string id="taom_ws_t2_b_p2" text="河流鎧甲" />
+    <string id="taom_ws_t2_b_p2_desc" text="你的鎧甲如河流般不可阻擋。遠程抗性+10%。" />
+    <string id="taom_ws_t2_b_p3" text="渡口專家" />
+    <string id="taom_ws_t2_b_p3_desc" text="你能在困住他人的地形中迅速移動。隊伍移動速度+6%。" />
+    <string id="taom_ws_t2_b_p4" text="邊境鋼鐵" />
+    <string id="taom_ws_t2_b_p4_desc" text="在邊境的艱苦服役使你堅不可摧。生命值+45。" />
+    <string id="taom_ws_t3_a_key" text="斯坦加德堡壘" />
+    <string id="taom_ws_t3_a_key_desc" text="你是文明與黑暗之間的最後防線。河流導航者半徑+5。" />
+    <string id="taom_ws_t3_a_p1" text="不破防線" />
+    <string id="taom_ws_t3_a_p1_desc" text="你的盾牆從未被攻破。部隊抗性+12%。" />
+    <string id="taom_ws_t3_a_p2" text="不朽守衛" />
+    <string id="taom_ws_t3_a_p2_desc" text="守望永不終結。生命值+75。" />
+    <string id="taom_ws_t3_a_p3" text="駐軍指揮官" />
+    <string id="taom_ws_t3_a_p3_desc" text="你的駐軍因志願者而壯大。隊伍規模+4。" />
+    <string id="taom_ws_t3_a_p4" text="守護者榮耀" />
+    <string id="taom_ws_t3_a_p4_desc" text="防禦勝利帶來巨大榮譽。戰鬥聲望獲得+12%。" />
+    <string id="taom_ws_t3_b_key" text="永遠警戒" />
+    <string id="taom_ws_t3_b_key_desc" text="守望始終維持。河流導航者充能消耗-30。" />
+    <string id="taom_ws_t3_b_p1" text="洛汗騎士之牆" />
+    <string id="taom_ws_t3_b_p1_desc" text="你的步兵如同一體作戰。部隊傷害+12%。" />
+    <string id="taom_ws_t3_b_p2" text="迅速應召" />
+    <string id="taom_ws_t3_b_p2_desc" text="你的部下瞬間回應任何威脅。隊伍移動速度+6%。" />
+    <string id="taom_ws_t3_b_p3" text="國境守護者" />
+    <string id="taom_ws_t3_b_p3_desc" text="國境最優秀的守衛者。戰鬥聲望獲得+12%。" />
+    <string id="taom_ws_t3_b_p4" text="斯坦加德大軍" />
+    <string id="taom_ws_t3_b_p4_desc" text="斯坦加德的全部力量隨你而行。隊伍規模+12%。" />
+    <string id="taom_alr_root_desc" text="野蠻衝鋒賦予+5%近戰傷害並引導登蘭德氏族的狂怒。" />
+    <string id="taom_alr_t1_a_key" text="氏族戰怒" />
+    <string id="taom_alr_t1_a_key_desc" text="你祖先的怒火在你體內奔流。野蠻衝鋒半徑+3。" />
+    <string id="taom_alr_t1_a_p1" text="野人之怒" />
+    <string id="taom_alr_t1_a_p1_desc" text="你以狂野的兇猛作戰。近戰傷害+6%。" />
+    <string id="taom_alr_t1_a_p2" text="山地淬煉" />
+    <string id="taom_alr_t1_a_p2_desc" text="登蘭德的嚴酷山地使你堅韌。近戰抗性+5%。" />
+    <string id="taom_alr_t1_a_p3" text="氏族驕傲" />
+    <string id="taom_alr_t1_a_p3_desc" text="你為證明氏族的價值而戰。部隊士氣+3%。" />
+    <string id="taom_alr_t1_a_p4" text="掠奪者活力" />
+    <string id="taom_alr_t1_a_p4_desc" text="你從黃昏突襲至黎明而不知疲憊。+25 生命值。" />
+    <string id="taom_alr_t1_b_key" text="持久狂怒" />
+    <string id="taom_alr_t1_b_key_desc" text="怒火在你胸中燃燒得更久。野蠻衝鋒持續時間 +4秒。" />
+    <string id="taom_alr_t1_b_p1" text="投斧手" />
+    <string id="taom_alr_t1_b_p1_desc" text="你以致命的精準投擲戰斧。+5% 遠程傷害。" />
+    <string id="taom_alr_t1_b_p2" text="登蘭德人體質" />
+    <string id="taom_alr_t1_b_p2_desc" text="丘陵子民比外表看起來更加堅韌。+30 生命值。" />
+    <string id="taom_alr_t1_b_p3" text="迅捷劫掠者" />
+    <string id="taom_alr_t1_b_p3_desc" text="你總是最先出擊也最先消失。+5% 移動速度。" />
+    <string id="taom_alr_t1_b_p4" text="氏族忠誠" />
+    <string id="taom_alr_t1_b_p4_desc" text="你的氏族為血仇而戰,而非金錢。-4% 部隊薪資。" />
+    <string id="taom_alr_t2_a_key" text="血債" />
+    <string id="taom_alr_t2_a_key_desc" text="氏族有舊帳要清算。野蠻衝鋒消耗 -20。" />
+    <string id="taom_alr_t2_a_p1" text="吼叫衝鋒" />
+    <string id="taom_alr_t2_a_p1_desc" text="你的戰吼令步兵膽寒。+8% 近戰傷害。" />
+    <string id="taom_alr_t2_a_p2" text="氏族盟誓" />
+    <string id="taom_alr_t2_a_p2_desc" text="你的盟誓氏族兄弟以最高強度作戰。+8% 部隊傷害。" />
+    <string id="taom_alr_t2_a_p3" text="登蘭德硬皮" />
+    <string id="taom_alr_t2_a_p3_desc" text="多年野外生活使你的皮膚如皮革般堅韌。+8% 遠程抗性。" />
+    <string id="taom_alr_t2_a_p4" text="身經百戰" />
+    <string id="taom_alr_t2_a_p4_desc" text="你已從百次突襲中倖存。+40 生命值。" />
+    <string id="taom_alr_t2_b_key" text="延長狂暴" />
+    <string id="taom_alr_t2_b_key_desc" text="狂怒不會消退。野蠻衝鋒持續時間 +2秒。" />
+    <string id="taom_alr_t2_b_p1" text="丘陵戰歌" />
+    <string id="taom_alr_t2_b_p1_desc" text="丘陵之歌振奮你的戰士精神。+8% 部隊士氣。" />
+    <string id="taom_alr_t2_b_p2" text="硬頭骨" />
+    <string id="taom_alr_t2_b_p2_desc" text="丘陵造就厚實的頭骨與不屈的意志。+10% 鈍擊抗性。" />
+    <string id="taom_alr_t2_b_p3" text="掠奪分配" />
+    <string id="taom_alr_t2_b_p3_desc" text="公平分配戰利品使氏族保持忠誠。-5% 部隊薪資。" />
+    <string id="taom_alr_t2_b_p4" text="傷痕與榮耀" />
+    <string id="taom_alr_t2_b_p4_desc" text="每道傷疤都訴說著倖存的勝利。+45 生命值。" />
+    <string id="taom_alr_t3_a_key" text="阿凡克魯斯之血" />
+    <string id="taom_alr_t3_a_key_desc" text="古老氏族的狂怒籠罩整個戰場。野蠻衝鋒範圍 +5。" />
+    <string id="taom_alr_t3_a_p1" text="氏族戰怒" />
+    <string id="taom_alr_t3_a_p1_desc" text="每個登蘭德人都以你的名義如狂戰士般作戰。+12% 近戰傷害。" />
+    <string id="taom_alr_t3_a_p2" text="不屈野人" />
+    <string id="taom_alr_t3_a_p2_desc" text="沒有傷口能長久阻止你。+75 生命值。" />
+    <string id="taom_alr_t3_a_p3" text="氏族集結" />
+    <string id="taom_alr_t3_a_p3_desc" text="所有丘陵氏族響應你的戰爭號召。+4 隊伍規模。" />
+    <string id="taom_alr_t3_a_p4" text="劫掠者聲望" />
+    <string id="taom_alr_t3_a_p4_desc" text="你的名字令從艾辛河到迷霧山脈的敵人聞風喪膽。+12% 戰鬥名望獲得。" />
+    <string id="taom_alr_t3_b_key" text="永恆之怒" />
+    <string id="taom_alr_t3_b_key_desc" text="怒火無需多少挑釁即可點燃。野蠻衝鋒消耗 -30。" />
+    <string id="taom_alr_t3_b_p1" text="登蘭德戰爭軍團" />
+    <string id="taom_alr_t3_b_p1_desc" text="團結的部族勢不可擋。+12% 部隊傷害。" />
+    <string id="taom_alr_t3_b_p2" text="迅捷部族" />
+    <string id="taom_alr_t3_b_p2_desc" text="登蘭德人如山羊般敏捷移動。+8% 隊伍移動速度。" />
+    <string id="taom_alr_t3_b_p3" text="群山傳奇" />
+    <string id="taom_alr_t3_b_p3_desc" text="你的名字在每個登蘭德大廳中迴響。+14% 戰鬥名望獲得。" />
+    <string id="taom_alr_t3_b_p4" text="聯合部族" />
+    <string id="taom_alr_t3_b_p4_desc" text="登蘭德的每個部族都派遣戰士加入你的旗幟。+14% 隊伍規模。" />
+    <string id="taom_wh_root_desc" text="標記獵物給予 +5% 遠程傷害並標記目標以進行無情追擊。" />
+    <string id="taom_wh_t1_a_key" text="群狼首領的標記" />
+    <string id="taom_wh_t1_a_key_desc" text="你的標記將整個狼群吸引至獵物。標記獵物範圍 +3。" />
+    <string id="taom_wh_t1_a_p1" text="野狼的耐心" />
+    <string id="taom_wh_t1_a_p1_desc" text="你等待完美的時機出擊。+6% 遠程傷害。" />
+    <string id="taom_wh_t1_a_p2" text="丘陵潛行者" />
+    <string id="taom_wh_t1_a_p2_desc" text="你在登蘭德丘陵中無聲移動。+5% 隱蔽加成。" />
+    <string id="taom_wh_t1_a_p3" text="獵人的耐力" />
+    <string id="taom_wh_t1_a_p3_desc" text="你追蹤獵物數日而不休息。+25 生命值。" />
+    <string id="taom_wh_t1_a_p4" text="骨製箭袋" />
+    <string id="taom_wh_t1_a_p4_desc" text="登蘭德的箭羽製作傳統填滿你的箭袋。+3 彈藥。" />
+    <string id="taom_wh_t1_b_key" text="延長狩獵" />
+    <string id="taom_wh_t1_b_key_desc" text="標記在混亂的戰鬥中持續存在。標記獵物持續時間 +4秒。" />
+    <string id="taom_wh_t1_b_p1" text="快速搭箭" />
+    <string id="taom_wh_t1_b_p1_desc" text="你以流暢的動作搭箭拉弓。+5% 遠程傷害。" />
+    <string id="taom_wh_t1_b_p2" text="狼皮斗篷" />
+    <string id="taom_wh_t1_b_p2_desc" text="狼皮讓你保持溫暖且不被察覺。+30 生命值。" />
+    <string id="taom_wh_t1_b_p3" text="痕跡識讀者" />
+    <string id="taom_wh_t1_b_p3_desc" text="你如同讀書般解讀大地。+5% 隊伍偵察範圍。" />
+    <string id="taom_wh_t1_b_p4" text="狼群忠誠" />
+    <string id="taom_wh_t1_b_p4_desc" text="你的獵人毫不質疑地追隨群狼首領。-4% 部隊工資。" />
+    <string id="taom_wh_t2_a_key" text="群體狩獵" />
+    <string id="taom_wh_t2_a_key_desc" text="整個狼群毫無預警地降臨。標記獵物消耗 -20。" />
+    <string id="taom_wh_t2_a_p1" text="喉嚨射擊" />
+    <string id="taom_wh_t2_a_p1_desc" text="你瞄準每個敵人盔甲的縫隙。+10% 破甲。" />
+    <string id="taom_wh_t2_a_p2" text="狼群包圍" />
+    <string id="taom_wh_t2_a_p2_desc" text="你的獵人包圍並騷擾敵人。+8% 部隊傷害。" />
+    <string id="taom_wh_t2_a_p3" text="荒野生存者" />
+    <string id="taom_wh_t2_a_p3_desc" text="荒野教會你在任何情況下生存。+35 生命值。" />
+    <string id="taom_wh_t2_a_p4" text="深邃箭袋" />
+    <string id="taom_wh_t2_a_p4_desc" text="你的氏族提供足夠圍城所需的箭矢。+5彈藥。" />
+    <string id="taom_wh_t2_b_key" text="持久印記" />
+    <string id="taom_wh_t2_b_key_desc" text="印記深刻且不會消退。標記獵物持續時間+2秒。" />
+    <string id="taom_wh_t2_b_p1" text="伏擊掠食者" />
+    <string id="taom_wh_t2_b_p1_desc" text="你從隱蔽處發動攻擊以達到最大效果。+10%潛行加成。" />
+    <string id="taom_wh_t2_b_p2" text="登蘭德人的韌性" />
+    <string id="taom_wh_t2_b_p2_desc" text="山丘中的艱苦生活使你幾乎殺不死。+10%近戰抗性。" />
+    <string id="taom_wh_t2_b_p3" text="無形之徑" />
+    <string id="taom_wh_t2_b_p3_desc" text="你的斥候行動不留痕跡。+8%隊伍偵察範圍。" />
+    <string id="taom_wh_t2_b_p4" text="狩獵的鋼鐵意志" />
+    <string id="taom_wh_t2_b_p4_desc" text="沒有傷口能阻止獵人。+40生命值。" />
+    <string id="taom_wh_t3_a_key" text="頂級掠食者" />
+    <string id="taom_wh_t3_a_key_desc" text="狼皮者的印記不留活口。標記獵物範圍+5。" />
+    <string id="taom_wh_t3_a_p1" text="致命箭袋" />
+    <string id="taom_wh_t3_a_p1_desc" text="每支箭都是致命的。+14%遠程傷害。" />
+    <string id="taom_wh_t3_a_p2" text="獵人之魂" />
+    <string id="taom_wh_t3_a_p2_desc" text="對你而言,狩獵永不停歇。+75生命值。" />
+    <string id="taom_wh_t3_a_p3" text="狼皮軍團" />
+    <string id="taom_wh_t3_a_p3_desc" text="登蘭德的每位獵人都響應你的召喚。+4隊伍規模。" />
+    <string id="taom_wh_t3_a_p4" text="聞名於渡口" />
+    <string id="taom_wh_t3_a_p4_desc" text="你的名字在敵營中被低聲傳誦。+12%戰鬥聲望獲取。" />
+    <string id="taom_wh_t3_b_key" text="無盡追獵" />
+    <string id="taom_wh_t3_b_key_desc" text="獵物永遠無法逃脫你的印記。標記獵物充能消耗-30。" />
+    <string id="taom_wh_t3_b_p1" text="狼群降臨" />
+    <string id="taom_wh_t3_b_p1_desc" text="你的獵人們無情且配合默契。+12%部隊傷害。" />
+    <string id="taom_wh_t3_b_p2" text="幽靈足跡" />
+    <string id="taom_wh_t3_b_p2_desc" text="你的獵人們不留痕跡,不知不覺便已抵達。+8%隊伍移動速度。" />
+    <string id="taom_wh_t3_b_p3" text="戰利品收集者" />
+    <string id="taom_wh_t3_b_p3_desc" text="每件戰利品都為你的可怕傳說增色。+14%戰鬥聲望獲取。" />
+    <string id="taom_wh_t3_b_p4" text="偉大狼群" />
+    <string id="taom_wh_t3_b_p4_desc" text="登蘭德的每位狼皮獵人都與你並肩作戰。+14%隊伍規模。" />
+    <string id="taom_cr_root_desc" text="戰群衝鋒賦予+5%馬匹衝鋒傷害,並使敵方陣線陷入混亂。" />
+    <string id="taom_cr_t1_a_key" text="氏族雷鳴" />
+    <string id="taom_cr_t1_a_key_desc" text="騎兵降臨時大地震動。戰群衝鋒範圍+3。" />
+    <string id="taom_cr_t1_a_p1" text="登蘭德騎士" />
+    <string id="taom_cr_t1_a_p1_desc" text="你與坐騎合而為一。+6%馬匹衝鋒傷害。" />
+    <string id="taom_cr_t1_a_p2" text="強健坐騎" />
+    <string id="taom_cr_t1_a_p2_desc" text="登蘭德山地矮種馬堅韌如鐵。+5%馬匹生命值。" />
+    <string id="taom_cr_t1_a_p3" text="氏族護衛" />
+    <string id="taom_cr_t1_a_p3_desc" text="你的騎士守護氏族免受傷害。+3% 部隊抗性。" />
+    <string id="taom_cr_t1_a_p4" text="鞍上耐力" />
+    <string id="taom_cr_t1_a_p4_desc" text="你能連續數日騎行而不下馬。+25 生命值。" />
+    <string id="taom_cr_t1_b_key" text="持續衝鋒" />
+    <string id="taom_cr_t1_b_key_desc" text="戰群永不疲憊。戰群衝鋒持續時間 +4秒。" />
+    <string id="taom_cr_t1_b_p1" text="丘陵矮馬速度" />
+    <string id="taom_cr_t1_b_p1_desc" text="登蘭德坐騎在崎嶇地形上更為迅速。+5% 移動速度。" />
+    <string id="taom_cr_t1_b_p2" text="氏族戰團" />
+    <string id="taom_cr_t1_b_p2_desc" text="你的戰團如兄弟般並肩作戰。+3% 部隊傷害。" />
+    <string id="taom_cr_t1_b_p3" text="騎士堅韌" />
+    <string id="taom_cr_t1_b_p3_desc" text="山丘如鐵般鍛造著你。+30 生命值。" />
+    <string id="taom_cr_t1_b_p4" text="血脈紐帶" />
+    <string id="taom_cr_t1_b_p4_desc" text="你的氏族為榮譽而戰,而非為金錢。-4% 部隊薪餉。" />
+    <string id="taom_cr_t2_a_key" text="戰群釋放" />
+    <string id="taom_cr_t2_a_key_desc" text="戰群隨時準備衝鋒。戰群衝鋒消耗 -20。" />
+    <string id="taom_cr_t2_a_p1" text="粉碎衝擊" />
+    <string id="taom_cr_t2_a_p1_desc" text="你的衝鋒能擊潰敵軍陣型。+10% 馬匹衝鋒傷害。" />
+    <string id="taom_cr_t2_a_p2" text="迅捷追擊" />
+    <string id="taom_cr_t2_a_p2_desc" text="無人能逃脫氏族衛隊的追擊。+8% 隊伍移動速度。" />
+    <string id="taom_cr_t2_a_p3" text="掠奪聲望" />
+    <string id="taom_cr_t2_a_p3_desc" text="成功的劫掠建立起令人生畏的聲譽。+8% 戰鬥聲望獲取。" />
+    <string id="taom_cr_t2_a_p4" text="鐵驪" />
+    <string id="taom_cr_t2_a_p4_desc" text="你的坐騎比普通牲畜更為持久。+40 生命值。" />
+    <string id="taom_cr_t2_b_key" text="無盡戰群" />
+    <string id="taom_cr_t2_b_key_desc" text="每次衝鋒都有更多騎士加入。戰群衝鋒持續時間 +2秒。" />
+    <string id="taom_cr_t2_b_p1" text="群隊士氣" />
+    <string id="taom_cr_t2_b_p1_desc" text="並肩騎行提升每位戰士的精神。+8% 部隊士氣。" />
+    <string id="taom_cr_t2_b_p2" text="登蘭德老兵" />
+    <string id="taom_cr_t2_b_p2_desc" text="數十年的騎術使你幾乎不可能被擊落馬下。+10% 遠程抗性。" />
+    <string id="taom_cr_t2_b_p3" text="氏族什一稅" />
+    <string id="taom_cr_t2_b_p3_desc" text="氏族自給自足。-5% 部隊薪餉。" />
+    <string id="taom_cr_t2_b_p4" text="丘陵騎士體魄" />
+    <string id="taom_cr_t2_b_p4_desc" text="矮馬的力量成為你自己的力量。+45 生命值。" />
+    <string id="taom_cr_t3_a_key" text="騎士氏族" />
+    <string id="taom_cr_t3_a_key_desc" text="登蘭德的每位騎士都在你的旗幟下騎行。戰群衝鋒範圍 +5。" />
+    <string id="taom_cr_t3_a_p1" text="雪崩衝鋒" />
+    <string id="taom_cr_t3_a_p1_desc" text="你的衝鋒無可阻擋。+14% 馬匹衝鋒傷害。" />
+    <string id="taom_cr_t3_a_p2" text="山脈之子" />
+    <string id="taom_cr_t3_a_p2_desc" text="你為馬鞍而生。+75 生命值。" />
+    <string id="taom_cr_t3_a_p3" text="偉大戰群" />
+    <string id="taom_cr_t3_a_p3_desc" text="數百名騎士聽從你的號令。隊伍規模 +12%。" />
+    <string id="taom_cr_t3_a_p4" text="登蘭德傳奇" />
+    <string id="taom_cr_t3_a_p4_desc" text="你衝鋒的歌謠在迷霧山脈迴盪。戰鬥聲望獲取 +12%。" />
+    <string id="taom_cr_t3_b_key" text="永恆衝鋒" />
+    <string id="taom_cr_t3_b_key_desc" text="戰群始終保持完全狂怒。戰群衝鋒消耗 -30。" />
+    <string id="taom_cr_t3_b_p1" text="氏族之怒" />
+    <string id="taom_cr_t3_b_p1_desc" text="氏族如同不可阻擋的力量一同騎行。部隊傷害 +12%。" />
+    <string id="taom_cr_t3_b_p2" text="無盡騎士" />
+    <string id="taom_cr_t3_b_p2_desc" text="戰群從地平線的一端覆蓋到另一端。隊伍規模 +14%。" />
+    <string id="taom_cr_t3_b_p3" text="掠奪者聲望" />
+    <string id="taom_cr_t3_b_p3_desc" text="從伊多拉斯到歐散克都畏懼你的掠奪。戰鬥聲望獲取 +14%。" />
+    <string id="taom_cr_t3_b_p4" text="不朽戰群" />
+    <string id="taom_cr_t3_b_p4_desc" text="世上沒有力量能擊潰登蘭德戰群。隊伍移動速度 +8%。" />
+    <string id="taom_blademaster_of_ren_root_desc" text="雙重打擊賦予 +5% 近戰傷害並提升決鬥精準度。" />
+    <string id="taom_bor_t1a_key" text="雙重打擊範圍增加,刀鋒觸及更遠。" />
+    <string id="taom_bor_t1a_p1" text="揮擊速度 +8%。" />
+    <string id="taom_bor_t1a_p2" text="近戰傷害 +7%。" />
+    <string id="taom_bor_t1a_p3" text="穿甲 +5%。" />
+    <string id="taom_bor_t1a_p4" text="戰鬥聲望獲取 +5%。" />
+    <string id="taom_bor_t1b_key" text="雙重打擊持續時間延長,持續決鬥連擊。" />
+    <string id="taom_bor_t1b_p1" text="抗性 +6%。" />
+    <string id="taom_bor_t1b_p2" text="穿甲 +5%。" />
+    <string id="taom_bor_t1b_p3" text="最大生命值 +30。" />
+    <string id="taom_bor_t1b_p4" text="移動速度 +5%。" />
+    <string id="taom_bor_t2a_key" text="雙重打擊充能降低,無情精準打擊。" />
+    <string id="taom_bor_t2a_p1" text="揮擊速度 +12%。" />
+    <string id="taom_bor_t2a_p2" text="穿甲 +10%。" />
+    <string id="taom_bor_t2a_p3" text="戰鬥聲望獲取 +10%。" />
+    <string id="taom_bor_t2a_p4" text="隊伍規模 +3。" />
+    <string id="taom_bor_t2b_key" text="雙重打擊提升精準時機,首次打擊造成最大傷害。" />
+    <string id="taom_bor_t2b_p1" text="近戰傷害 +10%。" />
+    <string id="taom_bor_t2b_p2" text="最大生命值 +50。" />
+    <string id="taom_bor_t2b_p3" text="抗性 +10%。" />
+    <string id="taom_bor_t2b_p4" text="部隊傷害 +10%。" />
+    <string id="taom_bor_t3a_key" text="雙重打擊範圍大幅擴展,四面皆死。" />
+    <string id="taom_bor_t3a_p1" text="近戰傷害 +15%。" />
+    <string id="taom_bor_t3a_p2" text="揮擊速度 +15%。" />
+    <string id="taom_bor_t3a_p3" text="穿甲 +15%。" />
+    <string id="taom_bor_t3a_p4" text="戰鬥聲望獲取 +15%。" />
+    <string id="taom_bor_t3b_key" text="雙重打擊充能大幅降低,刀鋒永遠準備就緒。" />
+    <string id="taom_bor_t3b_p1" text="+15% 抗性。" />
+    <string id="taom_bor_t3b_p2" text="+75 最大生命值。" />
+    <string id="taom_bor_t3b_p3" text="+15% 部隊傷害。" />
+    <string id="taom_bor_t3b_p4" text="+5 隊伍規模。" />
+    <string id="taom_steppe_bowmaster_root_desc" text="箭雨風暴賦予 +5% 遠程傷害並提升持續射擊能力。" />
+    <string id="taom_sb_t1a_key" text="箭雨風暴範圍擴大,齊射覆蓋更多地面。" />
+    <string id="taom_sb_t1a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_sb_t1a_p2" text="+2 彈藥。" />
+    <string id="taom_sb_t1a_p3" text="+7% 移動速度。" />
+    <string id="taom_sb_t1a_p4" text="+5% 隊伍偵察範圍。" />
+    <string id="taom_sb_t1b_key" text="箭雨風暴持續時間延長,無情的冰雹。" />
+    <string id="taom_sb_t1b_p1" text="+5% 抗性。" />
+    <string id="taom_sb_t1b_p2" text="+25 最大生命值。" />
+    <string id="taom_sb_t1b_p3" text="+5% 部隊傷害。" />
+    <string id="taom_sb_t1b_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_sb_t2a_key" text="箭雨風暴充能減少,無盡的箭袋。" />
+    <string id="taom_sb_t2a_p1" text="+4 彈藥。" />
+    <string id="taom_sb_t2a_p2" text="+10% 遠程傷害。" />
+    <string id="taom_sb_t2a_p3" text="+10% 移動速度。" />
+    <string id="taom_sb_t2a_p4" text="+10% 隊伍偵察範圍。" />
+    <string id="taom_sb_t2b_key" text="箭雨風暴在啟動時提升部隊火力支援。" />
+    <string id="taom_sb_t2b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_sb_t2b_p2" text="+50 最大生命值。" />
+    <string id="taom_sb_t2b_p3" text="+10% 部隊傷害。" />
+    <string id="taom_sb_t2b_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_sb_t3a_key" text="箭雨風暴範圍大幅擴展,無可逃避的雨幕。" />
+    <string id="taom_sb_t3a_p1" text="+15% 遠程傷害。" />
+    <string id="taom_sb_t3a_p2" text="+6 彈藥。" />
+    <string id="taom_sb_t3a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_sb_t3a_p4" text="+15% 隊伍偵察範圍。" />
+    <string id="taom_sb_t3b_key" text="箭雨風暴充能大幅減少,不斷的齊射。" />
+    <string id="taom_sb_t3b_p1" text="+15% 移動速度。" />
+    <string id="taom_sb_t3b_p2" text="+75 最大生命值。" />
+    <string id="taom_sb_t3b_p3" text="+15% 部隊傷害。" />
+    <string id="taom_sb_t3b_p4" text="+5 隊伍規模。" />
+    <string id="taom_chariot_warlord_root_desc" text="鐮刀衝鋒賦予 +5% 戰馬衝鋒傷害並激勵騎兵戰士。" />
+    <string id="taom_cw_t1a_key" text="鐮刀衝鋒範圍擴大,刀刃劈開更寬的路徑。" />
+    <string id="taom_cw_t1a_p1" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_cw_t1a_p2" text="+8% 近戰傷害。" />
+    <string id="taom_cw_t1a_p3" text="+5% 部隊傷害。" />
+    <string id="taom_cw_t1a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_cw_t1b_key" text="鐮刃衝鋒持續時間延長,勢頭持續維持。" />
+    <string id="taom_cw_t1b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_cw_t1b_p2" text="+25 最大生命值。" />
+    <string id="taom_cw_t1b_p3" text="+5% 部隊士氣。" />
+    <string id="taom_cw_t1b_p4" text="+5% 戰鬥聲望獲得。" />
+    <string id="taom_cw_t2a_key" text="鐮刃衝鋒冷卻時間縮短,車輪永不停歇。" />
+    <string id="taom_cw_t2a_p1" text="+12% 戰馬衝鋒傷害。" />
+    <string id="taom_cw_t2a_p2" text="+10% 隊伍移動速度。" />
+    <string id="taom_cw_t2a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_cw_t2a_p4" text="+3 隊伍規模。" />
+    <string id="taom_cw_t2b_key" text="鐮刃衝鋒在衝鋒期間提升坐騎韌性。" />
+    <string id="taom_cw_t2b_p1" text="+10% 近戰傷害。" />
+    <string id="taom_cw_t2b_p2" text="+60 戰馬生命值。" />
+    <string id="taom_cw_t2b_p3" text="+12% 部隊傷害。" />
+    <string id="taom_cw_t2b_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_cw_t3a_key" text="鐮刃衝鋒範圍大幅擴大,勢不可擋的範圍橫掃。" />
+    <string id="taom_cw_t3a_p1" text="+18% 戰馬衝鋒傷害。" />
+    <string id="taom_cw_t3a_p2" text="+15% 近戰傷害。" />
+    <string id="taom_cw_t3a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_cw_t3a_p4" text="+15% 戰鬥聲望獲得。" />
+    <string id="taom_cw_t3b_key" text="鐮刃衝鋒冷卻時間大幅縮短,車輪無休止地碾壓。" />
+    <string id="taom_cw_t3b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_cw_t3b_p2" text="+15% 隊伍移動速度。" />
+    <string id="taom_cw_t3b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_cw_t3b_p4" text="+5 隊伍規模。" />
+    <string id="taom_tribesman_of_jelut_root_desc" text="毒刃賦予 +5% 近戰傷害並施加消耗效果。" />
+    <string id="taom_toj_t1a_key" text="毒刃範圍增加,毒素擴散更廣。" />
+    <string id="taom_toj_t1a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_toj_t1a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_toj_t1a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_toj_t1a_p4" text="+5% 戰鬥聲望獲得。" />
+    <string id="taom_toj_t1b_key" text="毒刃持續時間延長,毒素揮之不去。" />
+    <string id="taom_toj_t1b_p1" text="+6% 抗性。" />
+    <string id="taom_toj_t1b_p2" text="+30 最大生命值。" />
+    <string id="taom_toj_t1b_p3" text="+5% 移動速度。" />
+    <string id="taom_toj_t1b_p4" text="+5% 部隊士氣。" />
+    <string id="taom_toj_t2a_key" text="毒刃冷卻時間縮短,更頻繁地施展攻擊。" />
+    <string id="taom_toj_t2a_p1" text="+10% 部隊傷害。" />
+    <string id="taom_toj_t2a_p2" text="+10% 近戰傷害。" />
+    <string id="taom_toj_t2a_p3" text="+10%戰鬥聲望獲得。" />
+    <string id="taom_toj_t2a_p4" text="+3隊伍規模。" />
+    <string id="taom_toj_t2b_key" text="毒刃增強消耗,削弱敵人戰意。" />
+    <string id="taom_toj_t2b_p1" text="+10%揮砍速度。" />
+    <string id="taom_toj_t2b_p2" text="+50最大生命值。" />
+    <string id="taom_toj_t2b_p3" text="+10%抗性。" />
+    <string id="taom_toj_t2b_p4" text="+10%部隊士氣。" />
+    <string id="taom_toj_t3a_key" text="毒刃範圍大幅擴大,形成毒雲。" />
+    <string id="taom_toj_t3a_p1" text="+15%近戰傷害。" />
+    <string id="taom_toj_t3a_p2" text="+75最大生命值。" />
+    <string id="taom_toj_t3a_p3" text="+15%部隊傷害。" />
+    <string id="taom_toj_t3a_p4" text="+15%戰鬥聲望獲得。" />
+    <string id="taom_toj_t3b_key" text="毒刃充能大幅減少,持續消耗。" />
+    <string id="taom_toj_t3b_p1" text="+15%抗性。" />
+    <string id="taom_toj_t3b_p2" text="+20%部隊士氣。" />
+    <string id="taom_toj_t3b_p3" text="+20%部隊傷害。" />
+    <string id="taom_toj_t3b_p4" text="+5隊伍規模。" />
+    <string id="taom_pezarsani_javelineer_root_desc" text="烈日齊射賦予+5%遠程傷害並加快標槍投擲速度。" />
+    <string id="taom_pj_t1a_key" text="烈日齊射範圍增加,標槍覆蓋更廣區域。" />
+    <string id="taom_pj_t1a_p1" text="+8%遠程傷害。" />
+    <string id="taom_pj_t1a_p2" text="+2彈藥。" />
+    <string id="taom_pj_t1a_p3" text="+7%移動速度。" />
+    <string id="taom_pj_t1a_p4" text="+5%戰鬥聲望獲得。" />
+    <string id="taom_pj_t1b_key" text="烈日齊射持續時間延長,持續騷擾火力。" />
+    <string id="taom_pj_t1b_p1" text="+5%抗性。" />
+    <string id="taom_pj_t1b_p2" text="+25最大生命值。" />
+    <string id="taom_pj_t1b_p3" text="+5%部隊傷害。" />
+    <string id="taom_pj_t1b_p4" text="+5%隊伍偵察範圍。" />
+    <string id="taom_pj_t2a_key" text="烈日齊射充能減少,永不缺乏標槍。" />
+    <string id="taom_pj_t2a_p1" text="+4彈藥。" />
+    <string id="taom_pj_t2a_p2" text="+10%遠程傷害。" />
+    <string id="taom_pj_t2a_p3" text="+10%移動速度。" />
+    <string id="taom_pj_t2a_p4" text="+10%戰鬥聲望獲得。" />
+    <string id="taom_pj_t2b_key" text="烈日齊射在啟動時增強掩護效果。" />
+    <string id="taom_pj_t2b_p1" text="+12%遠程傷害。" />
+    <string id="taom_pj_t2b_p2" text="+50最大生命值。" />
+    <string id="taom_pj_t2b_p3" text="+10%部隊傷害。" />
+    <string id="taom_pj_t2b_p4" text="+10%隊伍偵察範圍。" />
+    <string id="taom_pj_t3a_key" text="烈日齊射範圍大幅擴大,無處可逃的彈幕。" />
+    <string id="taom_pj_t3a_p1" text="+15%遠程傷害。" />
+    <string id="taom_pj_t3a_p2" text="+6 彈藥。" />
+    <string id="taom_pj_t3a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_pj_t3a_p4" text="+15% 移動速度。" />
+    <string id="taom_pj_t3b_key" text="烈日齊射充能大幅減少,無休止的騷擾。" />
+    <string id="taom_pj_t3b_p1" text="+15% 遠程傷害。" />
+    <string id="taom_pj_t3b_p2" text="+75 最大生命值。" />
+    <string id="taom_pj_t3b_p3" text="+15% 部隊傷害。" />
+    <string id="taom_pj_t3b_p4" text="+15% 隊伍偵查範圍。" />
+    <string id="taom_mahud_beast_rider_root_desc" text="莫馬基之迴響賦予 +5% 戰馬衝鋒傷害並散播恐懼。" />
+    <string id="taom_mbr_t1a_key" text="莫馬基之迴響範圍擴大,恐懼傳播更遠。" />
+    <string id="taom_mbr_t1a_p1" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_mbr_t1a_p2" text="+8% 近戰傷害。" />
+    <string id="taom_mbr_t1a_p3" text="+5% 部隊士氣。" />
+    <string id="taom_mbr_t1a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_mbr_t1b_key" text="莫馬基之迴響持續時間延長,恐懼揮之不去。" />
+    <string id="taom_mbr_t1b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_mbr_t1b_p2" text="+5% 部隊傷害。" />
+    <string id="taom_mbr_t1b_p3" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_mbr_t1b_p4" text="+5% 抗性。" />
+    <string id="taom_mbr_t2a_key" text="莫馬基之迴響充能減少,恐怖始終逼近。" />
+    <string id="taom_mbr_t2a_p1" text="+12% 戰馬衝鋒傷害。" />
+    <string id="taom_mbr_t2a_p2" text="+10% 部隊士氣。" />
+    <string id="taom_mbr_t2a_p3" text="+10% 部隊傷害。" />
+    <string id="taom_mbr_t2a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_mbr_t2b_key" text="莫馬基之迴響在衝鋒期間提升巨獸韌性。" />
+    <string id="taom_mbr_t2b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_mbr_t2b_p2" text="+60 戰馬生命值。" />
+    <string id="taom_mbr_t2b_p3" text="+10% 隊伍移動速度。" />
+    <string id="taom_mbr_t2b_p4" text="+3 隊伍規模。" />
+    <string id="taom_mbr_t3a_key" text="莫馬基之迴響範圍大幅擴大,大地為之震顫。" />
+    <string id="taom_mbr_t3a_p1" text="+18% 戰馬衝鋒傷害。" />
+    <string id="taom_mbr_t3a_p2" text="+15% 近戰傷害。" />
+    <string id="taom_mbr_t3a_p3" text="+20% 部隊士氣。" />
+    <string id="taom_mbr_t3a_p4" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_mbr_t3b_key" text="莫馬基之迴響充能大幅減少,無盡恐懼。" />
+    <string id="taom_mbr_t3b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_mbr_t3b_p2" text="+15% 隊伍移動速度。" />
+    <string id="taom_mbr_t3b_p3" text="+15% 部隊傷害。" />
+    <string id="taom_mbr_t3b_p4" text="+75 最大生命值。" />
+    <string id="taom_far_harad_halftroll_root_desc" text="邪惡殘暴賦予巨大生命值加成並灌注恐懼。" />
+    <string id="taom_fhh_t1a_key" text="邪惡殘暴範圍增加,恐懼蔓延更廣。" />
+    <string id="taom_fhh_t1a_p1" text="+35 最大生命值。" />
+    <string id="taom_fhh_t1a_p2" text="+8% 抗性。" />
+    <string id="taom_fhh_t1a_p3" text="+8% 近戰傷害。" />
+    <string id="taom_fhh_t1a_p4" text="+5% 部隊士氣。" />
+    <string id="taom_fhh_t1b_key" text="邪惡殘暴持續時間延長,食人妖的狂怒持續更久。" />
+    <string id="taom_fhh_t1b_p1" text="+8% 部隊抗性。" />
+    <string id="taom_fhh_t1b_p2" text="+5% 部隊傷害。" />
+    <string id="taom_fhh_t1b_p3" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_fhh_t1b_p4" text="+25 最大生命值。" />
+    <string id="taom_fhh_t2a_key" text="邪惡殘暴充能減少,狂怒點燃更快。" />
+    <string id="taom_fhh_t2a_p1" text="+12% 抗性。" />
+    <string id="taom_fhh_t2a_p2" text="+50 最大生命值。" />
+    <string id="taom_fhh_t2a_p3" text="+12% 部隊抗性。" />
+    <string id="taom_fhh_t2a_p4" text="+10% 部隊士氣。" />
+    <string id="taom_fhh_t2b_key" text="邪惡殘暴使半食人妖更加恐怖。" />
+    <string id="taom_fhh_t2b_p1" text="+60 最大生命值。" />
+    <string id="taom_fhh_t2b_p2" text="+10% 近戰傷害。" />
+    <string id="taom_fhh_t2b_p3" text="+10% 部隊傷害。" />
+    <string id="taom_fhh_t2b_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_fhh_t3a_key" text="邪惡殘暴範圍大幅擴張,萬物皆顫慄。" />
+    <string id="taom_fhh_t3a_p1" text="+75 最大生命值。" />
+    <string id="taom_fhh_t3a_p2" text="+15% 抗性。" />
+    <string id="taom_fhh_t3a_p3" text="+15% 部隊抗性。" />
+    <string id="taom_fhh_t3a_p4" text="+20% 部隊士氣。" />
+    <string id="taom_fhh_t3b_key" text="邪惡殘暴充能大幅減少,狂怒永不消退。" />
+    <string id="taom_fhh_t3b_p1" text="+15% 近戰傷害。" />
+    <string id="taom_fhh_t3b_p2" text="+15% 部隊傷害。" />
+    <string id="taom_fhh_t3b_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_fhh_t3b_p4" text="+5 隊伍規模。" />
+    <string id="taom_cl_root_desc" text="盾牆賦予 +5% 抗性,你的陣型堅如磐石,抵禦一切困境。" />
+    <string id="taom_cl_t1_a_key" text="盾牆範圍擴大,保護更廣闊的陣型。" />
+    <string id="taom_cl_t1_a_p1" text="+8% 抗性。" />
+    <string id="taom_cl_t1_a_p2" text="+5% 部隊抗性。" />
+    <string id="taom_cl_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_cl_t1_a_p4" text="+5% 部隊士氣。" />
+    <string id="taom_cl_t1_b_key" text="盾牆持續時間延長,承受最長久的攻擊。" />
+    <string id="taom_cl_t1_b_p1" text="+8% 近戰傷害。" />
+    <string id="taom_cl_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_cl_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_cl_t1_b_p4" text="+7% 揮砍速度。" />
+    <string id="taom_cl_t2_a_key" text="盾牆充能減少,更頻繁地重整盾牆。" />
+    <string id="taom_cl_t2_a_p1" text="+10% 部隊抗性。" />
+    <string id="taom_cl_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_cl_t2_a_p3" text="+10% 抗性。" />
+    <string id="taom_cl_t2_a_p4" text="-10% 部隊薪餉。" />
+    <string id="taom_cl_t2_b_key" text="盾牆在維持時強化部隊護甲。" />
+    <string id="taom_cl_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_cl_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_cl_t2_b_p3" text="+10% 部隊傷害。" />
+    <string id="taom_cl_t2_b_p4" text="+10% 部隊士氣。" />
+    <string id="taom_cl_t3_a_key" text="盾牆範圍大幅擴大,形成堅不可摧的防線。" />
+    <string id="taom_cl_t3_a_p1" text="+15% 抗性。" />
+    <string id="taom_cl_t3_a_p2" text="+75 最大生命值。" />
+    <string id="taom_cl_t3_a_p3" text="+15% 部隊抗性。" />
+    <string id="taom_cl_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_cl_t3_b_key" text="盾牆充能大幅減少,軍團永不屈服。" />
+    <string id="taom_cl_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_cl_t3_b_p2" text="+15% 部隊抗性。" />
+    <string id="taom_cl_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_cl_t3_b_p4" text="+15% 戰鬥聲望獲得。" />
+    <string id="taom_ldm_root_desc" text="穿透齊射賦予+5% 遠程傷害,你的弩箭穿透更深。" />
+    <string id="taom_ldm_t1_a_key" text="穿透齊射範圍擴大,覆蓋更廣的目標。" />
+    <string id="taom_ldm_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_ldm_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_ldm_t1_a_p3" text="+5% 部隊傷害。" />
+    <string id="taom_ldm_t1_a_p4" text="+5% 戰鬥聲望獲得。" />
+    <string id="taom_ldm_t1_b_key" text="穿透齊射持續時間延長,無情的連射。" />
+    <string id="taom_ldm_t1_b_p1" text="+5% 護甲穿透。" />
+    <string id="taom_ldm_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_ldm_t1_b_p3" text="+5% 隊伍偵察範圍。" />
+    <string id="taom_ldm_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_ldm_t2_a_key" text="穿透齊射充能減少,不絕的弩箭彈雨。" />
+    <string id="taom_ldm_t2_a_p1" text="+10% 護甲穿透。" />
+    <string id="taom_ldm_t2_a_p2" text="+10% 部隊傷害。" />
+    <string id="taom_ldm_t2_a_p3" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_ldm_t2_a_p4" text="+2 隊伍規模。" />
+    <string id="taom_ldm_t2_b_key" text="穿透齊射以貫穿之力撕裂護甲。" />
+    <string id="taom_ldm_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_ldm_t2_b_p2" text="+12% 護甲穿透。" />
+    <string id="taom_ldm_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_ldm_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_ldm_t3_a_key" text="穿刺齊射範圍大幅擴大,無人能逃離此風暴。" />
+    <string id="taom_ldm_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_ldm_t3_a_p2" text="+18% 破甲穿透。" />
+    <string id="taom_ldm_t3_a_p3" text="+15% 戰鬥聲望獲得。" />
+    <string id="taom_ldm_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_ldm_t3_b_key" text="穿刺齊射充能大幅減少,齊射永不停歇。" />
+    <string id="taom_ldm_t3_b_p1" text="+20% 破甲穿透。" />
+    <string id="taom_ldm_t3_b_p2" text="+15% 遠程傷害。" />
+    <string id="taom_ldm_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_ldm_t3_b_p4" text="+10% 隊伍偵查範圍。" />
+    <string id="taom_bk_root_desc" text="不屈賦予 +5% 馬匹衝鋒傷害,你的戰團無情奔馳。" />
+    <string id="taom_bk_t1_a_key" text="不屈範圍擴大,凝聚更廣大的騎兵浪潮。" />
+    <string id="taom_bk_t1_a_p1" text="+8% 馬匹衝鋒傷害。" />
+    <string id="taom_bk_t1_a_p2" text="+5% 部隊士氣。" />
+    <string id="taom_bk_t1_a_p3" text="+30 馬匹生命值。" />
+    <string id="taom_bk_t1_a_p4" text="+5% 近戰傷害。" />
+    <string id="taom_bk_t1_b_key" text="不屈持續時間延長,維持無畏衝鋒。" />
+    <string id="taom_bk_t1_b_p1" text="+7% 抗性。" />
+    <string id="taom_bk_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_bk_t1_b_p3" text="+5% 隊伍移動速度。" />
+    <string id="taom_bk_t1_b_p4" text="+5% 部隊士氣。" />
+    <string id="taom_bk_t2_a_key" text="不屈充能減少,戰團永不減速。" />
+    <string id="taom_bk_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_bk_t2_a_p2" text="+10% 隊伍移動速度。" />
+    <string id="taom_bk_t2_a_p3" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_bk_t2_a_p4" text="-10% 部隊薪資。" />
+    <string id="taom_bk_t2_b_key" text="不屈在衝鋒期間強化坐騎。" />
+    <string id="taom_bk_t2_b_p1" text="+12% 馬匹衝鋒傷害。" />
+    <string id="taom_bk_t2_b_p2" text="+60 馬匹生命值。" />
+    <string id="taom_bk_t2_b_p3" text="+10% 抗性。" />
+    <string id="taom_bk_t2_b_p4" text="+10% 部隊士氣。" />
+    <string id="taom_bk_t3_a_key" text="不屈範圍大幅擴大,踐踏勢不可擋。" />
+    <string id="taom_bk_t3_a_p1" text="+18% 馬匹衝鋒傷害。" />
+    <string id="taom_bk_t3_a_p2" text="+100 馬匹生命值。" />
+    <string id="taom_bk_t3_a_p3" text="+15% 部隊士氣。" />
+    <string id="taom_bk_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_bk_t3_b_key" text="不屈充能大幅減少,永存且無情。" />
+    <string id="taom_bk_t3_b_p1" text="+15% 馬匹衝鋒傷害。" />
+    <string id="taom_bk_t3_b_p2" text="+20% 部隊士氣。" />
+    <string id="taom_bk_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_bk_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_dale_guardsman_root_desc" text="守門堅守賦予 +5% 抗性並穩定防守者。" />
+    <string id="taom_dg2_t1_a_key" text="守門堅守範圍增加,強化更多戰士。" />
+    <string id="taom_dg2_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_dg2_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_dg2_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_dg2_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_dg2_t1_b_key" text="守門堅守持續時間延長,鞏固防禦。" />
+    <string id="taom_dg2_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_dg2_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_dg2_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_dg2_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_dg2_t2_a_key" text="守門堅守充能減少,更頻繁啟動。" />
+    <string id="taom_dg2_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_dg2_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_dg2_t2_a_p3" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_dg2_t2_a_p4" text="-10% 部隊薪資。" />
+    <string id="taom_dg2_t2_b_key" text="守門堅守在啟動時賦予額外的防禦增益。" />
+    <string id="taom_dg2_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_dg2_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_dg2_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_dg2_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_dg2_t3_a_key" text="守門堅守範圍大幅擴展,毀滅性力量。" />
+    <string id="taom_dg2_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_dg2_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_dg2_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_dg2_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_dg2_t3_b_key" text="守門堅守充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_dg2_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_dg2_t3_b_p2" text="+15% 生命再生。" />
+    <string id="taom_dg2_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_dg2_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_dale_marksman_root_desc" text="黑箭賦予 +5% 遠程傷害以紀念弓箭手巴德。" />
+    <string id="taom_dm_t1_a_key" text="黑箭範圍增加,覆蓋更廣的殺戮區域。" />
+    <string id="taom_dm_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_dm_t1_a_p2" text="+5% 穿甲。" />
+    <string id="taom_dm_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_dm_t1_a_p4" text="+5% 戰鬥聲望獲得。" />
+    <string id="taom_dm_t1_b_key" text="黑箭持續時間延長,持續彈幕射擊。" />
+    <string id="taom_dm_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_dm_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_dm_t1_b_p3" text="+5% 隊伍偵察範圍。" />
+    <string id="taom_dm_t1_b_p4" text="+5% 隱匿加成。" />
+    <string id="taom_dm_t2_a_key" text="黑箭充能減少,保持持續壓制。" />
+    <string id="taom_dm_t2_a_p1" text="+10% 隊伍偵察範圍。" />
+    <string id="taom_dm_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_dm_t2_a_p3" text="+10% 隱匿加成。" />
+    <string id="taom_dm_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_dm_t2_b_key" text="黑箭在啟動時獲得額外穿透力。" />
+    <string id="taom_dm_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_dm_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_dm_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_dm_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_dm_t3_a_key" text="黑箭範圍大幅擴大,無法逃脫的齊射。" />
+    <string id="taom_dm_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_dm_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_dm_t3_a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_dm_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_dm_t3_b_key" text="黑箭充能大幅減少,無情射擊。" />
+    <string id="taom_dm_t3_b_p1" text="+15% 隱匿加成。" />
+    <string id="taom_dm_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_dm_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_dm_t3_b_p4" text="+15% 隊伍偵察範圍。" />
+    <string id="taom_dale_outrider_root_desc" text="商道衝刺賦予 +5% 近戰傷害,並使你的坐騎加速。" />
+    <string id="taom_dor_t1_a_key" text="商道衝刺範圍擴大,橫掃更廣陣型。" />
+    <string id="taom_dor_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_dor_t1_a_p2" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_dor_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_dor_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_dor_t1_b_key" text="商道衝刺持續時間延長,保持衝勢。" />
+    <string id="taom_dor_t1_b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_dor_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_dor_t1_b_p3" text="-5% 部隊薪餉。" />
+    <string id="taom_dor_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_dor_t2_a_key" text="商道衝刺充能減少,更快啟動。" />
+    <string id="taom_dor_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_dor_t2_a_p2" text="-10% 部隊薪餉。" />
+    <string id="taom_dor_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_dor_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_dor_t2_b_key" text="貿易路衝刺啟動時提升坐騎韌性。" />
+    <string id="taom_dor_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_dor_t2_b_p2" text="+12% 騎兵衝鋒傷害。" />
+    <string id="taom_dor_t2_b_p3" text="+60 坐騎生命值。" />
+    <string id="taom_dor_t2_b_p4" text="+10% 揮砍速度。" />
+    <string id="taom_dor_t3_a_key" text="貿易路衝刺範圍大幅擴展,勢不可擋的衝擊。" />
+    <string id="taom_dor_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_dor_t3_a_p2" text="+18% 騎兵衝鋒傷害。" />
+    <string id="taom_dor_t3_a_p3" text="+15% 揮砍速度。" />
+    <string id="taom_dor_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_dor_t3_b_key" text="貿易路衝刺充能大幅減少,日夜兼程不停歇。" />
+    <string id="taom_dor_t3_b_p1" text="+100 坐騎生命值。" />
+    <string id="taom_dor_t3_b_p2" text="-15% 部隊薪餉。" />
+    <string id="taom_dor_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_dor_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_ironguard_root_desc" text="秘銀堡壘給予+25生命值,矮人工藝守護著你。" />
+    <string id="taom_ig_t1_a_key" text="秘銀堡壘範圍增加,賦予更多戰士力量。" />
+    <string id="taom_ig_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_ig_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_ig_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_ig_t1_a_p4" text="+7% 揮砍速度。" />
+    <string id="taom_ig_t1_b_key" text="秘銀堡壘持續時間延長,強化防禦。" />
+    <string id="taom_ig_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_ig_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_ig_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_ig_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_ig_t2_a_key" text="秘銀堡壘充能減少,更頻繁地啟動。" />
+    <string id="taom_ig_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_ig_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_ig_t2_a_p3" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_ig_t2_a_p4" text="-10% 部隊薪餉。" />
+    <string id="taom_ig_t2_b_key" text="秘銀堡壘啟動時給予額外防禦增益。" />
+    <string id="taom_ig_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_ig_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_ig_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_ig_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_ig_t3_a_key" text="秘銀堡壘範圍大幅擴展,毀滅性力量。" />
+    <string id="taom_ig_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_ig_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_ig_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_ig_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_ig_t3_b_key" text="秘銀堡壘充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_ig_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_ig_t3_b_p2" text="+15% 生命恢復。" />
+    <string id="taom_ig_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_ig_t3_b_p4" text="+15% 部隊恢復。" />
+    <string id="taom_crossbow_master_root_desc" text="精準彈幕使用精工弩矢時賦予 +5% 遠程傷害。" />
+    <string id="taom_cbm_t1_a_key" text="精準彈幕半徑增加,覆蓋更廣闊的殺戮區域。" />
+    <string id="taom_cbm_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_cbm_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_cbm_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_cbm_t1_a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_cbm_t1_b_key" text="精準彈幕持續時間延長,維持持續彈幕。" />
+    <string id="taom_cbm_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_cbm_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_cbm_t1_b_p3" text="+5% 隊伍偵察範圍。" />
+    <string id="taom_cbm_t1_b_p4" text="+5% 潛行加成。" />
+    <string id="taom_cbm_t2_a_key" text="精準彈幕充能減少,保持持續壓制。" />
+    <string id="taom_cbm_t2_a_p1" text="+10% 隊伍偵察範圍。" />
+    <string id="taom_cbm_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_cbm_t2_a_p3" text="+10% 潛行加成。" />
+    <string id="taom_cbm_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_cbm_t2_b_key" text="精準彈幕啟動時獲得額外穿透力。" />
+    <string id="taom_cbm_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_cbm_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_cbm_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_cbm_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_cbm_t3_a_key" text="精準彈幕半徑大幅擴張,無法逃脫的齊射。" />
+    <string id="taom_cbm_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_cbm_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_cbm_t3_a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_cbm_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_cbm_t3_b_key" text="精準彈幕充能大幅減少,無情火力。" />
+    <string id="taom_cbm_t3_b_p1" text="+15% 潛行加成。" />
+    <string id="taom_cbm_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_cbm_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_cbm_t3_b_p4" text="+15% 隊伍偵察範圍。" />
+    <string id="taom_ram_rider_root_desc" text="山地衝鋒賦予 +5% 近戰傷害,公羊低下牠的角。" />
+    <string id="taom_rr_t1_a_key" text="山地衝鋒半徑擴大,橫掃更廣的陣型。" />
+    <string id="taom_rr_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_rr_t1_a_p2" text="+7% 坐騎衝鋒傷害。" />
+    <string id="taom_rr_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_rr_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_rr_t1_b_key" text="山嶽衝鋒持續時間延長,保持衝勢。" />
+    <string id="taom_rr_t1_b_p1" text="+30 坐騎生命值。" />
+    <string id="taom_rr_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_rr_t1_b_p3" text="-5% 部隊薪餉。" />
+    <string id="taom_rr_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_rr_t2_a_key" text="山嶽衝鋒蓄力時間縮短,更快啟動。" />
+    <string id="taom_rr_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_rr_t2_a_p2" text="-10% 部隊薪餉。" />
+    <string id="taom_rr_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_rr_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_rr_t2_b_key" text="山嶽衝鋒在啟動時提升坐騎韌性。" />
+    <string id="taom_rr_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_rr_t2_b_p2" text="+12% 坐騎衝鋒傷害。" />
+    <string id="taom_rr_t2_b_p3" text="+60 坐騎生命值。" />
+    <string id="taom_rr_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_rr_t3_a_key" text="山嶽衝鋒範圍大幅擴張,勢不可擋。" />
+    <string id="taom_rr_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_rr_t3_a_p2" text="+18% 坐騎衝鋒傷害。" />
+    <string id="taom_rr_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_rr_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_rr_t3_b_key" text="山嶽衝鋒蓄力時間大幅縮短,疾馳不息。" />
+    <string id="taom_rr_t3_b_p1" text="+100 坐騎生命值。" />
+    <string id="taom_rr_t3_b_p2" text="-15% 部隊薪餉。" />
+    <string id="taom_rr_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_rr_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_blade_dancer_root_desc" text="星光編織賦予 +5% 抗性與精靈般的敏捷。" />
+    <string id="taom_bd_t1_a_key" text="星光編織範圍擴大,賦能更多戰士。" />
+    <string id="taom_bd_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_bd_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_bd_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_bd_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_bd_t1_b_key" text="星光編織持續時間延長,強化防禦。" />
+    <string id="taom_bd_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_bd_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_bd_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_bd_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_bd_t2_a_key" text="Starlight Weave charge reduced, activating more frequently." />
+    <string id="taom_bd_t2_a_p1" text="+10% troop morale." />
+    <string id="taom_bd_t2_a_p2" text="+2 party size." />
+    <string id="taom_bd_t2_a_p3" text="+10% battle renown gain." />
+    <string id="taom_bd_t2_a_p4" text="-10% troop wages." />
+    <string id="taom_bd_t2_b_key" text="Starlight Weave grants additional defensive buffs while active." />
+    <string id="taom_bd_t2_b_p1" text="+12% resistance." />
+    <string id="taom_bd_t2_b_p2" text="+60 max health." />
+    <string id="taom_bd_t2_b_p3" text="+10% troop resistance." />
+    <string id="taom_bd_t2_b_p4" text="+10% troop damage." />
+    <string id="taom_bd_t3_a_key" text="Starlight Weave radius greatly expanded, devastating power." />
+    <string id="taom_bd_t3_a_p1" text="+15% melee damage." />
+    <string id="taom_bd_t3_a_p2" text="+100 max health." />
+    <string id="taom_bd_t3_a_p3" text="+15% troop damage." />
+    <string id="taom_bd_t3_a_p4" text="+4 party size." />
+    <string id="taom_bd_t3_b_key" text="Starlight Weave charge greatly reduced, nearly always available." />
+    <string id="taom_bd_t3_b_p1" text="+18% resistance." />
+    <string id="taom_bd_t3_b_p2" text="+15% health regeneration." />
+    <string id="taom_bd_t3_b_p3" text="+20% troop morale." />
+    <string id="taom_bd_t3_b_p4" text="+15% troop regeneration." />
+    <string id="taom_elven_archer_root_desc" text="Elven Sight grants +5% ranged damage with centuries of practice." />
+    <string id="taom_elar_t1_a_key" text="Elven Sight radius increased, covering wider kill zones." />
+    <string id="taom_elar_t1_a_p1" text="+8% ranged damage." />
+    <string id="taom_elar_t1_a_p2" text="+5% armor penetration." />
+    <string id="taom_elar_t1_a_p3" text="+7% movement speed." />
+    <string id="taom_elar_t1_a_p4" text="+5% battle renown gain." />
+    <string id="taom_elar_t1_b_key" text="Elven Sight duration extended, sustained barrage." />
+    <string id="taom_elar_t1_b_p1" text="+5% resistance." />
+    <string id="taom_elar_t1_b_p2" text="+25 max health." />
+    <string id="taom_elar_t1_b_p3" text="+5% party spotting range." />
+    <string id="taom_elar_t1_b_p4" text="+5% stealth bonus." />
+    <string id="taom_elar_t2_a_key" text="Elven Sight charge reduced, maintaining constant pressure." />
+    <string id="taom_elar_t2_a_p1" text="+10% party spotting range." />
+    <string id="taom_elar_t2_a_p2" text="+10% movement speed." />
+    <string id="taom_elar_t2_a_p3" text="+10% stealth bonus." />
+    <string id="taom_elar_t2_a_p4" text="+10% battle renown gain." />
+    <string id="taom_elar_t2_b_key" text="Elven Sight gains additional penetration while active." />
+    <string id="taom_elar_t2_b_p1" text="+12% ranged damage." />
+    <string id="taom_elar_t2_b_p2" text="+10% armor penetration." />
+    <string id="taom_elar_t2_b_p3" text="+50 max health." />
+    <string id="taom_elar_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_elar_t3_a_key" text="精靈視野大幅擴展,齊射無可避免。" />
+    <string id="taom_elar_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_elar_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_elar_t3_a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_elar_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_elar_t3_b_key" text="精靈視野充能大幅減少,射擊不停歇。" />
+    <string id="taom_elar_t3_b_p1" text="+15% 隱蔽加成。" />
+    <string id="taom_elar_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_elar_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_elar_t3_b_p4" text="+15% 隊伍偵查範圍。" />
+    <string id="taom_rivendell_knight_root_desc" text="終極同盟提供 +5% 近戰傷害並鼓舞你的盟友。" />
+    <string id="taom_rvk_t1_a_key" text="終極同盟範圍擴展,橫掃更廣陣型。" />
+    <string id="taom_rvk_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_rvk_t1_a_p2" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_rvk_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_rvk_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_rvk_t1_b_key" text="終極同盟持續時間延長,維持攻勢。" />
+    <string id="taom_rvk_t1_b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_rvk_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_rvk_t1_b_p3" text="-5% 部隊薪資。" />
+    <string id="taom_rvk_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_rvk_t2_a_key" text="終極同盟充能減少,更快啟動。" />
+    <string id="taom_rvk_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_rvk_t2_a_p2" text="-10% 部隊薪資。" />
+    <string id="taom_rvk_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_rvk_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_rvk_t2_b_key" text="終極同盟啟動時提升坐騎韌性。" />
+    <string id="taom_rvk_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_rvk_t2_b_p2" text="+12% 戰馬衝鋒傷害。" />
+    <string id="taom_rvk_t2_b_p3" text="+60 戰馬生命值。" />
+    <string id="taom_rvk_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_rvk_t3_a_key" text="終極同盟範圍大幅擴展,勢不可擋的衝擊。" />
+    <string id="taom_rvk_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_rvk_t3_a_p2" text="+18% 戰馬衝鋒傷害。" />
+    <string id="taom_rvk_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_rvk_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_rvk_t3_b_key" text="終極同盟充能大幅減少,不停歇地奔馳。" />
+    <string id="taom_rvk_t3_b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_rvk_t3_b_p2" text="-15% 部隊薪資。" />
+    <string id="taom_rvk_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_rvk_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_warden_root_desc" text="寧若戴爾祝福賦予 +5% 抗性,聖水治癒你的傷痛。" />
+    <string id="taom_wdn_t1_a_key" text="寧若戴爾祝福範圍增加,賦予更多戰士力量。" />
+    <string id="taom_wdn_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_wdn_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_wdn_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_wdn_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_wdn_t1_b_key" text="寧若戴爾祝福持續時間延長,鞏固防禦。" />
+    <string id="taom_wdn_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_wdn_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_wdn_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_wdn_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_wdn_t2_a_key" text="寧若戴爾祝福充能減少,更頻繁地啟動。" />
+    <string id="taom_wdn_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_wdn_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_wdn_t2_a_p3" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_wdn_t2_a_p4" text="-10% 部隊薪餉。" />
+    <string id="taom_wdn_t2_b_key" text="寧若戴爾祝福在啟動時賦予額外防禦增益。" />
+    <string id="taom_wdn_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_wdn_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_wdn_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_wdn_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_wdn_t3_a_key" text="寧若戴爾祝福範圍大幅擴展,毀滅性的力量。" />
+    <string id="taom_wdn_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_wdn_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_wdn_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_wdn_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_wdn_t3_b_key" text="寧若戴爾祝福充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_wdn_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_wdn_t3_b_p2" text="+15% 生命再生。" />
+    <string id="taom_wdn_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_wdn_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_galadhrim_archer_root_desc" text="銀雨賦予 +5% 遠程傷害,箭矢浸染星光。" />
+    <string id="taom_gar_t1_a_key" text="銀雨範圍增加,覆蓋更廣的殺戮區域。" />
+    <string id="taom_gar_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_gar_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_gar_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_gar_t1_a_p4" text="+5% 戰鬥聲望獲得。" />
+    <string id="taom_gar_t1_b_key" text="銀雨持續時間延長,持續不斷的彈幕。" />
+    <string id="taom_gar_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_gar_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_gar_t1_b_p3" text="+5% 隊伍偵察範圍。" />
+    <string id="taom_gar_t1_b_p4" text="+5% 隱匿加成。" />
+    <string id="taom_gar_t2_a_key" text="銀雨充能時間減少,保持持續壓制。" />
+    <string id="taom_gar_t2_a_p1" text="+10% 隊伍偵察範圍。" />
+    <string id="taom_gar_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_gar_t2_a_p3" text="+10% 隱匿加成。" />
+    <string id="taom_gar_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_gar_t2_b_key" text="銀雨啟動時獲得額外穿透。" />
+    <string id="taom_gar_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_gar_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_gar_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_gar_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_gar_t3_a_key" text="銀雨範圍大幅擴張,無可逃避的齊射。" />
+    <string id="taom_gar_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_gar_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_gar_t3_a_p3" text="+15% 戰鬥聲望獲得。" />
+    <string id="taom_gar_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_gar_t3_b_key" text="銀雨充能時間大幅減少,無情射擊。" />
+    <string id="taom_gar_t3_b_p1" text="+15% 隱匿加成。" />
+    <string id="taom_gar_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_gar_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_gar_t3_b_p4" text="+15% 隊伍偵察範圍。" />
+    <string id="taom_sentinel_root_desc" text="伊拉諾迅捷賦予 +5% 近戰傷害與精靈優雅。" />
+    <string id="taom_snt_t1_a_key" text="伊拉諾迅捷範圍擴張,橫掃更廣陣型。" />
+    <string id="taom_snt_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_snt_t1_a_p2" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_snt_t1_a_p3" text="+7% 揮舞速度。" />
+    <string id="taom_snt_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_snt_t1_b_key" text="伊拉諾迅捷持續時間延長,保持氣勢。" />
+    <string id="taom_snt_t1_b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_snt_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_snt_t1_b_p3" text="-5% 部隊薪餉。" />
+    <string id="taom_snt_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_snt_t2_a_key" text="伊拉諾迅捷充能時間減少,更快啟動。" />
+    <string id="taom_snt_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_snt_t2_a_p2" text="-10% 部隊薪餉。" />
+    <string id="taom_snt_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_snt_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_snt_t2_b_key" text="伊拉諾迅捷在啟動時提升坐騎韌性。" />
+    <string id="taom_snt_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_snt_t2_b_p2" text="+12% 戰馬衝鋒傷害。" />
+    <string id="taom_snt_t2_b_p3" text="+60 戰馬生命值。" />
+    <string id="taom_snt_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_snt_t3_a_key" text="伊拉諾迅捷範圍大幅擴展,勢不可擋的衝擊。" />
+    <string id="taom_snt_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_snt_t3_a_p2" text="+18% 戰馬衝鋒傷害。" />
+    <string id="taom_snt_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_snt_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_snt_t3_b_key" text="伊拉諾迅捷充能大幅減少,不停歇地騎行。" />
+    <string id="taom_snt_t3_b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_snt_t3_b_p2" text="-15% 部隊薪資。" />
+    <string id="taom_snt_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_snt_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_shadow_walker_root_desc" text="森林斗篷給予 +5% 抗性,陰影將你隱藏。" />
+    <string id="taom_shw_t1_a_key" text="森林斗篷範圍增加,賦予更多戰士力量。" />
+    <string id="taom_shw_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_shw_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_shw_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_shw_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_shw_t1_b_key" text="森林斗篷持續時間延長,強化防禦。" />
+    <string id="taom_shw_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_shw_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_shw_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_shw_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_shw_t2_a_key" text="森林斗篷充能減少,更頻繁地啟動。" />
+    <string id="taom_shw_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_shw_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_shw_t2_a_p3" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_shw_t2_a_p4" text="-10% 部隊薪資。" />
+    <string id="taom_shw_t2_b_key" text="森林斗篷在啟動時給予額外防禦增益。" />
+    <string id="taom_shw_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_shw_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_shw_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_shw_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_shw_t3_a_key" text="森林斗篷範圍大幅擴展,毀滅性力量。" />
+    <string id="taom_shw_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_shw_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_shw_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_shw_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_shw_t3_b_key" text="森林斗篷充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_shw_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_shw_t3_b_p2" text="+15% 生命恢復。" />
+    <string id="taom_shw_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_shw_t3_b_p4" text="+15% 部隊恢復。" />
+    <string id="taom_silvan_archer_root_desc" text="Canopy Strike grants +5% ranged damage from the treetops." />
+    <string id="taom_sva_t1_a_key" text="樹冠打擊範圍增加,覆蓋更廣闊的殺戮區域。" />
+    <string id="taom_sva_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_sva_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_sva_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_sva_t1_a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_sva_t1_b_key" text="樹冠打擊持續時間延長,持續彈幕攻擊。" />
+    <string id="taom_sva_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_sva_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_sva_t1_b_p3" text="+5% 隊伍偵查範圍。" />
+    <string id="taom_sva_t1_b_p4" text="+5% 潛行加成。" />
+    <string id="taom_sva_t2_a_key" text="樹冠打擊充能減少,保持持續壓制。" />
+    <string id="taom_sva_t2_a_p1" text="+10% 隊伍偵查範圍。" />
+    <string id="taom_sva_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_sva_t2_a_p3" text="+10% 潛行加成。" />
+    <string id="taom_sva_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_sva_t2_b_key" text="樹冠打擊激活時獲得額外穿透。" />
+    <string id="taom_sva_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_sva_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_sva_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_sva_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_sva_t3_a_key" text="樹冠打擊範圍大幅擴展,無可躲避的箭雨。" />
+    <string id="taom_sva_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_sva_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_sva_t3_a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_sva_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_sva_t3_b_key" text="樹冠打擊充能大幅減少,無情射擊。" />
+    <string id="taom_sva_t3_b_p1" text="+15% 潛行加成。" />
+    <string id="taom_sva_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_sva_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_sva_t3_b_p4" text="+15% 隊伍偵查範圍。" />
+    <string id="taom_elk_rider_root_desc" text="鹿角衝撞賦予 +5% 近戰傷害,巨鹿衝鋒。" />
+    <string id="taom_elk_t1_a_key" text="鹿角衝撞範圍擴大,橫掃更寬廣的陣型。" />
+    <string id="taom_elk_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_elk_t1_a_p2" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_elk_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_elk_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_elk_t1_b_key" text="鹿角衝撞持續時間延長,保持衝勢。" />
+    <string id="taom_elk_t1_b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_elk_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_elk_t1_b_p3" text="-5% 部隊薪餉。" />
+    <string id="taom_elk_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_elk_t2_a_key" text="鹿角衝撞充能降低,更快啟動。" />
+    <string id="taom_elk_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_elk_t2_a_p2" text="-10% 部隊薪餉。" />
+    <string id="taom_elk_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_elk_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_elk_t2_b_key" text="鹿角衝撞在啟動時提升坐騎韌性。" />
+    <string id="taom_elk_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_elk_t2_b_p2" text="+12% 戰馬衝鋒傷害。" />
+    <string id="taom_elk_t2_b_p3" text="+60 戰馬生命值。" />
+    <string id="taom_elk_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_elk_t3_a_key" text="鹿角衝撞範圍大幅擴大,勢不可擋的衝擊。" />
+    <string id="taom_elk_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_elk_t3_a_p2" text="+18% 戰馬衝鋒傷害。" />
+    <string id="taom_elk_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_elk_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_elk_t3_b_key" text="鹿角衝撞充能大幅降低,馳騁不息。" />
+    <string id="taom_elk_t3_b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_elk_t3_b_p2" text="-15% 部隊薪餉。" />
+    <string id="taom_elk_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_elk_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_uruk_berserker_root_desc" text="血之狂怒賦予 +25 生命值,痛苦激發你的怒火。" />
+    <string id="taom_ub_t1_a_key" text="血之狂怒範圍增加,賦予更多戰士力量。" />
+    <string id="taom_ub_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_ub_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_ub_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_ub_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_ub_t1_b_key" text="血之狂怒持續時間延長,強化防禦。" />
+    <string id="taom_ub_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_ub_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_ub_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_ub_t1_b_p4" text="+5% 部隊生命回復。" />
+    <string id="taom_ub_t2_a_key" text="血之狂怒充能降低,更頻繁地啟動。" />
+    <string id="taom_ub_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_ub_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_ub_t2_a_p3" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_ub_t2_a_p4" text="-10% 部隊薪資。" />
+    <string id="taom_ub_t2_b_key" text="血之狂怒啟動時賦予額外防禦增益。" />
+    <string id="taom_ub_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_ub_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_ub_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_ub_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_ub_t3_a_key" text="血之狂怒範圍大幅擴展,毀滅性威力。" />
+    <string id="taom_ub_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_ub_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_ub_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_ub_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_ub_t3_b_key" text="血之狂怒充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_ub_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_ub_t3_b_p2" text="+15% 生命回復。" />
+    <string id="taom_ub_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_ub_t3_b_p4" text="+15% 部隊回復。" />
+    <string id="taom_uruk_crossbow_root_desc" text="鐵雨賦予使用歐散克鍛造弩箭時 +5% 遠程傷害。" />
+    <string id="taom_ucb_t1_a_key" text="鐵雨範圍增加,覆蓋更廣闊的殺戮區域。" />
+    <string id="taom_ucb_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_ucb_t1_a_p2" text="+5% 破甲能力。" />
+    <string id="taom_ucb_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_ucb_t1_a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_ucb_t1_b_key" text="鐵雨持續時間延長,持續彈幕轟炸。" />
+    <string id="taom_ucb_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_ucb_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_ucb_t1_b_p3" text="+5% 隊伍偵查範圍。" />
+    <string id="taom_ucb_t1_b_p4" text="+5% 隱匿加成。" />
+    <string id="taom_ucb_t2_a_key" text="鐵雨充能減少,維持持續壓力。" />
+    <string id="taom_ucb_t2_a_p1" text="+10% 隊伍偵查範圍。" />
+    <string id="taom_ucb_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_ucb_t2_a_p3" text="+10% 隱匿加成。" />
+    <string id="taom_ucb_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_ucb_t2_b_key" text="鐵雨啟動時獲得額外穿透力。" />
+    <string id="taom_ucb_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_ucb_t2_b_p2" text="+10% 破甲能力。" />
+    <string id="taom_ucb_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_ucb_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_ucb_t3_a_key" text="Iron Rain radius greatly expanded, inescapable volleys." />
+    <string id="taom_ucb_t3_a_p1" text="+18% ranged damage." />
+    <string id="taom_ucb_t3_a_p2" text="+15% armor penetration." />
+    <string id="taom_ucb_t3_a_p3" text="+15% battle renown gain." />
+    <string id="taom_ucb_t3_a_p4" text="+10% troop damage." />
+    <string id="taom_ucb_t3_b_key" text="Iron Rain charge greatly reduced, relentless fire." />
+    <string id="taom_ucb_t3_b_p1" text="+15% stealth bonus." />
+    <string id="taom_ucb_t3_b_p2" text="+15% movement speed." />
+    <string id="taom_ucb_t3_b_p3" text="+75 max health." />
+    <string id="taom_ucb_t3_b_p4" text="+15% party spotting range." />
+    <string id="taom_warg_scout_root_desc" text="Pack Howl grants +5% melee damage and terrifies nearby foes." />
+    <string id="taom_wsc_t1_a_key" text="Pack Howl radius expanded, sweeping wider formations." />
+    <string id="taom_wsc_t1_a_p1" text="+8% melee damage." />
+    <string id="taom_wsc_t1_a_p2" text="+7% horse charge damage." />
+    <string id="taom_wsc_t1_a_p3" text="+7% swing speed." />
+    <string id="taom_wsc_t1_a_p4" text="+5% party movement speed." />
+    <string id="taom_wsc_t1_b_key" text="Pack Howl duration extended, maintaining momentum." />
+    <string id="taom_wsc_t1_b_p1" text="+30 horse health." />
+    <string id="taom_wsc_t1_b_p2" text="+25 max health." />
+    <string id="taom_wsc_t1_b_p3" text="-5% troop wages." />
+    <string id="taom_wsc_t1_b_p4" text="+5% resistance." />
+    <string id="taom_wsc_t2_a_key" text="Pack Howl charge reduced, swifter activation." />
+    <string id="taom_wsc_t2_a_p1" text="+10% party movement speed." />
+    <string id="taom_wsc_t2_a_p2" text="-10% troop wages." />
+    <string id="taom_wsc_t2_a_p3" text="+10% troop morale." />
+    <string id="taom_wsc_t2_a_p4" text="+10% battle renown gain." />
+    <string id="taom_wsc_t2_b_key" text="Pack Howl boosts mount resilience while active." />
+    <string id="taom_wsc_t2_b_p1" text="+12% melee damage." />
+    <string id="taom_wsc_t2_b_p2" text="+12% horse charge damage." />
+    <string id="taom_wsc_t2_b_p3" text="+60 horse health." />
+    <string id="taom_wsc_t2_b_p4" text="+10% swing speed." />
+    <string id="taom_wsc_t3_a_key" text="Pack Howl radius greatly expanded, unstoppable impact." />
+    <string id="taom_wsc_t3_a_p1" text="+18% melee damage." />
+    <string id="taom_wsc_t3_a_p2" text="+18% horse charge damage." />
+    <string id="taom_wsc_t3_a_p3" text="+15% swing speed." />
+    <string id="taom_wsc_t3_a_p4" text="+15% troop damage." />
+    <string id="taom_wsc_t3_b_key" text="Pack Howl charge greatly reduced, ride without ceasing." />
+    <string id="taom_wsc_t3_b_p1" text="+100 horse health." />
+    <string id="taom_wsc_t3_b_p2" text="-15% troop wages." />
+    <string id="taom_wsc_t3_b_p3" text="+15% party movement speed." />
+    <string id="taom_wsc_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_cave_troll_master_root_desc" text="巨魔狂暴賦予+25生命值,並驅使你的巨魔陷入狂暴。" />
+    <string id="taom_ctm_t1_a_key" text="巨魔狂暴範圍增加,強化更多戰士。" />
+    <string id="taom_ctm_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_ctm_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_ctm_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_ctm_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_ctm_t1_b_key" text="巨魔狂暴持續時間延長,強化防禦。" />
+    <string id="taom_ctm_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_ctm_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_ctm_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_ctm_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_ctm_t2_a_key" text="巨魔狂暴充能減少,更頻繁觸發。" />
+    <string id="taom_ctm_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_ctm_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_ctm_t2_a_p3" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_ctm_t2_a_p4" text="-10% 部隊薪資。" />
+    <string id="taom_ctm_t2_b_key" text="巨魔狂暴在啟動時賦予額外防禦增益。" />
+    <string id="taom_ctm_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_ctm_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_ctm_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_ctm_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_ctm_t3_a_key" text="巨魔狂暴範圍大幅擴張,毀滅性力量。" />
+    <string id="taom_ctm_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_ctm_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_ctm_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_ctm_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_ctm_t3_b_key" text="巨魔狂暴充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_ctm_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_ctm_t3_b_p2" text="+15% 生命再生。" />
+    <string id="taom_ctm_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_ctm_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_goblin_sniper_root_desc" text="毒鏢賦予+5%遠程傷害,附帶洞穴真菌毒素。" />
+    <string id="taom_gbs_t1_a_key" text="毒鏢範圍增加,覆蓋更廣的殺戮區域。" />
+    <string id="taom_gbs_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_gbs_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_gbs_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_gbs_t1_a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_gbs_t1_b_key" text="毒鏢持續時間延長,持續彈幕攻擊。" />
+    <string id="taom_gbs_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_gbs_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_gbs_t1_b_p3" text="+5% 隊伍偵查範圍。" />
+    <string id="taom_gbs_t1_b_p4" text="+5% 隱匿加成。" />
+    <string id="taom_gbs_t2_a_key" text="毒鏢充能時間縮短,保持持續壓制。" />
+    <string id="taom_gbs_t2_a_p1" text="+10% 隊伍偵查範圍。" />
+    <string id="taom_gbs_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_gbs_t2_a_p3" text="+10% 隱匿加成。" />
+    <string id="taom_gbs_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_gbs_t2_b_key" text="毒鏢在啟動時獲得額外穿透力。" />
+    <string id="taom_gbs_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_gbs_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_gbs_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_gbs_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_gbs_t3_a_key" text="毒鏢範圍大幅擴大,無可逃避的齊射。" />
+    <string id="taom_gbs_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_gbs_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_gbs_t3_a_p3" text="+15% 戰鬥聲望獲得。" />
+    <string id="taom_gbs_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_gbs_t3_b_key" text="毒鏢充能時間大幅縮短,無情射擊。" />
+    <string id="taom_gbs_t3_b_p1" text="+15% 隱匿加成。" />
+    <string id="taom_gbs_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_gbs_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_gbs_t3_b_p4" text="+15% 隊伍偵查範圍。" />
+    <string id="taom_warg_pack_leader_root_desc" text="頭狼咆哮賦予 +5% 近戰傷害,狼群展開狩獵。" />
+    <string id="taom_wpl_t1_a_key" text="頭狼咆哮範圍擴大,橫掃更寬廣的陣型。" />
+    <string id="taom_wpl_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_wpl_t1_a_p2" text="+7% 坐騎衝鋒傷害。" />
+    <string id="taom_wpl_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_wpl_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_wpl_t1_b_key" text="頭狼咆哮持續時間延長,保持衝勢。" />
+    <string id="taom_wpl_t1_b_p1" text="+30 坐騎生命值。" />
+    <string id="taom_wpl_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_wpl_t1_b_p3" text="-5% 部隊薪餉。" />
+    <string id="taom_wpl_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_wpl_t2_a_key" text="頭狼咆哮充能時間縮短,更快啟動。" />
+    <string id="taom_wpl_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_wpl_t2_a_p2" text="-10% 部隊薪餉。" />
+    <string id="taom_wpl_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_wpl_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_wpl_t2_b_key" text="頭狼咆哮在啟動時增強坐騎韌性。" />
+    <string id="taom_wpl_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_wpl_t2_b_p2" text="+12% 馬匹衝鋒傷害。" />
+    <string id="taom_wpl_t2_b_p3" text="+60 馬匹生命值。" />
+    <string id="taom_wpl_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_wpl_t3_a_key" text="頭狼咆哮範圍大幅擴展,勢不可擋的衝擊。" />
+    <string id="taom_wpl_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_wpl_t3_a_p2" text="+18% 馬匹衝鋒傷害。" />
+    <string id="taom_wpl_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_wpl_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_wpl_t3_b_key" text="頭狼咆哮充能大幅縮短,晝夜馳騁不息。" />
+    <string id="taom_wpl_t3_b_p1" text="+100 馬匹生命值。" />
+    <string id="taom_wpl_t3_b_p2" text="-15% 部隊薪餉。" />
+    <string id="taom_wpl_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_wpl_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_shadow_warrior_root_desc" text="靈魂汲取賦予+25生命值並吸取敵人生命力。" />
+    <string id="taom_swr_t1_a_key" text="靈魂汲取範圍增加,強化更多戰士。" />
+    <string id="taom_swr_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_swr_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_swr_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_swr_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_swr_t1_b_key" text="靈魂汲取持續時間延長,強化防禦。" />
+    <string id="taom_swr_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_swr_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_swr_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_swr_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_swr_t2_a_key" text="靈魂汲取充能縮短,更頻繁地啟動。" />
+    <string id="taom_swr_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_swr_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_swr_t2_a_p3" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_swr_t2_a_p4" text="-10% 部隊薪餉。" />
+    <string id="taom_swr_t2_b_key" text="靈魂汲取在啟動時賦予額外防禦增益。" />
+    <string id="taom_swr_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_swr_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_swr_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_swr_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_swr_t3_a_key" text="靈魂汲取範圍大幅擴展,毀滅性力量。" />
+    <string id="taom_swr_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_swr_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_swr_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_swr_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_swr_t3_b_key" text="靈魂汲取充能大幅減少,幾乎隨時可用。" />
+    <string id="taom_swr_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_swr_t3_b_p2" text="+15% 生命恢復速度。" />
+    <string id="taom_swr_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_swr_t3_b_p4" text="+15% 部隊恢復速度。" />
+    <string id="taom_necromancer_acolyte_root_desc" text="黑暗箭矢賦予 +5% 遠程傷害,蘊含死靈能量。" />
+    <string id="taom_nca_t1_a_key" text="黑暗箭矢範圍增加,覆蓋更廣的殺戮區域。" />
+    <string id="taom_nca_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_nca_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_nca_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_nca_t1_a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_nca_t1_b_key" text="黑暗箭矢持續時間延長,持續轟擊。" />
+    <string id="taom_nca_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_nca_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_nca_t1_b_p3" text="+5% 隊伍偵查範圍。" />
+    <string id="taom_nca_t1_b_p4" text="+5% 隱匿加成。" />
+    <string id="taom_nca_t2_a_key" text="黑暗箭矢充能減少,保持持續壓制。" />
+    <string id="taom_nca_t2_a_p1" text="+10% 隊伍偵查範圍。" />
+    <string id="taom_nca_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_nca_t2_a_p3" text="+10% 隱匿加成。" />
+    <string id="taom_nca_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_nca_t2_b_key" text="黑暗箭矢在啟動時獲得額外穿透力。" />
+    <string id="taom_nca_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_nca_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_nca_t2_b_p3" text="+50 最大生命值。" />
+    <string id="taom_nca_t2_b_p4" text="+5% 部隊傷害。" />
+    <string id="taom_nca_t3_a_key" text="黑暗箭矢範圍大幅擴張,無法逃脫的齊射。" />
+    <string id="taom_nca_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_nca_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_nca_t3_a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_nca_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_nca_t3_b_key" text="黑暗箭矢充能大幅減少,無情射擊。" />
+    <string id="taom_nca_t3_b_p1" text="+15% 隱匿加成。" />
+    <string id="taom_nca_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_nca_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_nca_t3_b_p4" text="+15% 隊伍偵查範圍。" />
+    <string id="taom_fell_rider_root_desc" text="恐懼衝鋒賦予 +5% 近戰傷害,陰影纏繞你的坐騎。" />
+    <string id="taom_flr_t1_a_key" text="恐懼衝鋒範圍擴大,橫掃更廣陣型。" />
+    <string id="taom_flr_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_flr_t1_a_p2" text="+7% 騎兵衝鋒傷害。" />
+    <string id="taom_flr_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_flr_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_flr_t1_b_key" text="恐懼衝鋒持續時間延長,保持衝勢。" />
+    <string id="taom_flr_t1_b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_flr_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_flr_t1_b_p3" text="-5% 部隊薪餉。" />
+    <string id="taom_flr_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_flr_t2_a_key" text="恐懼衝鋒充能減少,更快啟動。" />
+    <string id="taom_flr_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_flr_t2_a_p2" text="-10% 部隊薪餉。" />
+    <string id="taom_flr_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_flr_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_flr_t2_b_key" text="恐懼衝鋒啟動時提升坐騎韌性。" />
+    <string id="taom_flr_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_flr_t2_b_p2" text="+12% 戰馬衝撞傷害。" />
+    <string id="taom_flr_t2_b_p3" text="+60 戰馬生命值。" />
+    <string id="taom_flr_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_flr_t3_a_key" text="恐懼衝鋒範圍大幅擴大,勢不可擋的衝擊。" />
+    <string id="taom_flr_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_flr_t3_a_p2" text="+18% 戰馬衝撞傷害。" />
+    <string id="taom_flr_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_flr_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_flr_t3_b_key" text="恐懼衝鋒充能大幅減少,不停歇地奔馳。" />
+    <string id="taom_flr_t3_b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_flr_t3_b_p2" text="-15% 部隊薪餉。" />
+    <string id="taom_flr_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_flr_t3_b_p4" text="+75 最大生命值。" />
+    <string id="taom_corsair_boarder_root_desc" text="登船作戰在近身混戰中給予 +5% 抗性。" />
+    <string id="taom_crb_t1_a_key" text="登船作戰範圍增加,增強更多戰士。" />
+    <string id="taom_crb_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_crb_t1_a_p2" text="+5% 部隊傷害。" />
+    <string id="taom_crb_t1_a_p3" text="+30 最大生命值。" />
+    <string id="taom_crb_t1_a_p4" text="+7% 揮擊速度。" />
+    <string id="taom_crb_t1_b_key" text="登船作戰持續時間延長,強化防禦。" />
+    <string id="taom_crb_t1_b_p1" text="+8% 抗性。" />
+    <string id="taom_crb_t1_b_p2" text="+5% 部隊士氣。" />
+    <string id="taom_crb_t1_b_p3" text="+5% 部隊抗性。" />
+    <string id="taom_crb_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_crb_t2_a_key" text="登船作戰充能減少,更頻繁啟動。" />
+    <string id="taom_crb_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_crb_t2_a_p2" text="隊伍規模+2。" />
+    <string id="taom_crb_t2_a_p3" text="戰鬥聲望獲取+10%。" />
+    <string id="taom_crb_t2_a_p4" text="部隊薪餉-10%。" />
+    <string id="taom_crb_t2_b_key" text="「登船行動」啟動時提供額外的防禦增益。" />
+    <string id="taom_crb_t2_b_p1" text="抗性+12%。" />
+    <string id="taom_crb_t2_b_p2" text="最大生命值+60。" />
+    <string id="taom_crb_t2_b_p3" text="部隊抗性+10%。" />
+    <string id="taom_crb_t2_b_p4" text="部隊傷害+10%。" />
+    <string id="taom_crb_t3_a_key" text="「登船行動」範圍大幅擴展,威力驚人。" />
+    <string id="taom_crb_t3_a_p1" text="近戰傷害+15%。" />
+    <string id="taom_crb_t3_a_p2" text="最大生命值+100。" />
+    <string id="taom_crb_t3_a_p3" text="部隊傷害+15%。" />
+    <string id="taom_crb_t3_a_p4" text="隊伍規模+4。" />
+    <string id="taom_crb_t3_b_key" text="「登船行動」充能時間大幅縮短,幾乎隨時可用。" />
+    <string id="taom_crb_t3_b_p1" text="抗性+18%。" />
+    <string id="taom_crb_t3_b_p2" text="生命恢復+15%。" />
+    <string id="taom_crb_t3_b_p3" text="部隊士氣+20%。" />
+    <string id="taom_crb_t3_b_p4" text="部隊恢復+15%。" />
+    <string id="taom_corsair_crossbow_root_desc" text="「索具射擊」提供+5%遠程傷害,穩定瞄準。" />
+    <string id="taom_crc_t1_a_key" text="「索具射擊」範圍增加,覆蓋更廣的殺戮區域。" />
+    <string id="taom_crc_t1_a_p1" text="遠程傷害+8%。" />
+    <string id="taom_crc_t1_a_p2" text="護甲穿透+5%。" />
+    <string id="taom_crc_t1_a_p3" text="移動速度+7%。" />
+    <string id="taom_crc_t1_a_p4" text="戰鬥聲望獲取+5%。" />
+    <string id="taom_crc_t1_b_key" text="「索具射擊」持續時間延長,持續彈幕。" />
+    <string id="taom_crc_t1_b_p1" text="抗性+5%。" />
+    <string id="taom_crc_t1_b_p2" text="最大生命值+25。" />
+    <string id="taom_crc_t1_b_p3" text="隊伍偵查範圍+5%。" />
+    <string id="taom_crc_t1_b_p4" text="隱蔽加成+5%。" />
+    <string id="taom_crc_t2_a_key" text="「索具射擊」充能時間縮短,維持持續壓力。" />
+    <string id="taom_crc_t2_a_p1" text="隊伍偵查範圍+10%。" />
+    <string id="taom_crc_t2_a_p2" text="移動速度+10%。" />
+    <string id="taom_crc_t2_a_p3" text="隱蔽加成+10%。" />
+    <string id="taom_crc_t2_a_p4" text="戰鬥聲望獲取+10%。" />
+    <string id="taom_crc_t2_b_key" text="「索具射擊」啟動時獲得額外穿透。" />
+    <string id="taom_crc_t2_b_p1" text="遠程傷害+12%。" />
+    <string id="taom_crc_t2_b_p2" text="護甲穿透+10%。" />
+    <string id="taom_crc_t2_b_p3" text="最大生命值+50。" />
+    <string id="taom_crc_t2_b_p4" text="部隊傷害+5%。" />
+    <string id="taom_crc_t3_a_key" text="「索具射擊」範圍大幅擴展,無法逃脫的齊射。" />
+    <string id="taom_crc_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_crc_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_crc_t3_a_p3" text="+15% 戰鬥聲望獲得。" />
+    <string id="taom_crc_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_crc_t3_b_key" text="索具射擊充能大幅減少,無情火力。" />
+    <string id="taom_crc_t3_b_p1" text="+15% 隱匿加成。" />
+    <string id="taom_crc_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_crc_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_crc_t3_b_p4" text="+15% 隊伍偵察範圍。" />
+    <string id="taom_corsair_captain_root_desc" text="掠奪獲得 +5% 近戰傷害並激勵你的船員。" />
+    <string id="taom_crca_t1_a_key" text="掠奪範圍擴大,橫掃更寬的陣型。" />
+    <string id="taom_crca_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_crca_t1_a_p2" text="+7% 戰馬衝鋒傷害。" />
+    <string id="taom_crca_t1_a_p3" text="+7% 揮砍速度。" />
+    <string id="taom_crca_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_crca_t1_b_key" text="掠奪持續時間延長,保持勢頭。" />
+    <string id="taom_crca_t1_b_p1" text="+30 戰馬生命值。" />
+    <string id="taom_crca_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_crca_t1_b_p3" text="-5% 部隊薪資。" />
+    <string id="taom_crca_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_crca_t2_a_key" text="掠奪充能減少,更快啟動。" />
+    <string id="taom_crca_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_crca_t2_a_p2" text="-10% 部隊薪資。" />
+    <string id="taom_crca_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_crca_t2_a_p4" text="+10% 戰鬥聲望獲得。" />
+    <string id="taom_crca_t2_b_key" text="掠奪在啟動時提升坐騎韌性。" />
+    <string id="taom_crca_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_crca_t2_b_p2" text="+12% 戰馬衝鋒傷害。" />
+    <string id="taom_crca_t2_b_p3" text="+60 戰馬生命值。" />
+    <string id="taom_crca_t2_b_p4" text="+10% 揮砍速度。" />
+    <string id="taom_crca_t3_a_key" text="掠奪範圍大幅擴大,勢不可擋的衝擊。" />
+    <string id="taom_crca_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_crca_t3_a_p2" text="+18% 戰馬衝鋒傷害。" />
+    <string id="taom_crca_t3_a_p3" text="+15% 揮砍速度。" />
+    <string id="taom_crca_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_crca_t3_b_key" text="掠奪充能大幅減少,馳騁不息。" />
+    <string id="taom_crca_t3_b_p1" text="+100 戰馬生命值。" />
+    <string id="taom_crca_t3_b_p2" text="-15% 部隊薪資。" />
+    <string id="taom_crca_t3_b_p3" text="+15% 隊伍移動速度。" />
+    <string id="taom_crca_t3_b_p4" text="+75 最大生命值。" />
+  </strings>
+</base>

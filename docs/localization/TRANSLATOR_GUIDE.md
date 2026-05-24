@@ -99,13 +99,27 @@ Each module has its own `language_data.xml` that lists the translation files for
 
 ### 1. Get the Template Files
 
-Template files with English text are pre-generated in your language folder. If they're empty or you need to regenerate them:
+You have two options for getting started:
+
+**A. AI first-draft (Recommended)** — Claude API generates a high-quality first-draft translation across all files. You then review and refine. Requires `ANTHROPIC_API_KEY` env var. Typical cost: $3-10 per language for a full pass.
+
+```bash
+# Preview cost and counts (no API calls):
+python tools/translate_with_claude.py --lang PL --dry-run
+
+# Run full translation (writes to all language files):
+python tools/translate_with_claude.py --lang PL --apply
+```
+
+Results are cached at `tools/translation_cache/<lang>.json` so re-runs are free. Canonical translations (Tolkien proper nouns) go in `tools/translation_overrides/<lang>.json` to ensure consistency.
+
+**B. English templates (Manual translation from scratch)** — Populate target language files with English placeholders, then translate by hand:
 
 ```bash
 python tools/generate_translation_template.py --apply PL
 ```
 
-This populates all three TAOM files with English text as placeholder content.
+This populates the TAOM-module files with English text. For TAOM_Map and LOTRLOME_Armory, English templates are already populated in their per-language directories.
 
 ### 2. Translate
 

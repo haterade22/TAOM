@@ -1,12 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Türkçe" />
-  </tags>
-  <strings>
-    <!-- Translate entries from named_companions/named_companion_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="nc_backstory_a.named_companion_aragorn_text" text="Ben Kuzey'in bir Korucu'suyum. Bazıları bana Çoban der, gerçi bu adım değil." />
+    <string id="nc_prebackstory.named_companion_aragorn_text" text="Bir korucu mu? Sıradan bir ormancıdan fazlası gibi görünüyorsun." />
+    <string id="nc_backstory_b.named_companion_aragorn_text" text="Birçok yolda yürüdüm ve bu toprakları çoğu insanın asla görmediği gölgelerden korudum." />
+    <string id="nc_backstory_c.named_companion_aragorn_text" text="Mirasım hem bir yük hem de bir görev. Uzun süredir boş duran bir tahtın varisi olmama rağmen, en azından şimdilik, taç yerine vahşi doğayı seçtim." />
+    <string id="nc_response_1.named_companion_aragorn_text" text="Asil bir amaç. Diyarın gölgelerde koruyuculara ihtiyacı var." />
+    <string id="nc_response_2.named_companion_aragorn_text" text="Kaderinden mi kaçıyorsun? Yoksa ona mı hazırlanıyorsun?" />
+    <string id="nc_backstory_d.named_companion_aragorn_text" text="Belki de her ikisi. Şimdilik, kılıcım kendilerini savunamayanlara hizmet ediyor. Bir korucu'nun yeteneklerine ihtiyacınız varsa, grubunuza katılırım." />
+    <string id="nc_backstory_a.named_companion_legolas_text" text="Ben orman diyarının bir elfi'yim, yay ve kılıçta ustayım. Halkım bana Legolas der." />
+    <string id="nc_prebackstory.named_companion_legolas_text" text="Yalnız seyahat eden bir elf mi? Bu topraklarda alışılmadık bir durum." />
+    <string id="nc_backstory_b.named_companion_legolas_text" text="Babamın salonları çok sınırlayıcı hale geldi. Sınırlarımızın ötesindeki daha geniş dünyayı anlamaya çalışıyorum." />
+    <string id="nc_backstory_c.named_companion_legolas_text" text="Yüzyıllardır halkım ormanlarımızda kaldı, ama şimdi birçok yerde karanlık kıpırdanıyor. Büyüyen gölgelere karşı diğerleriyle birlikte durmalıyız diye inanıyorum." />
+    <string id="nc_response_1.named_companion_legolas_text" text="Yeteneklerin hoş karşılanır. Diyarın birliğe ihtiyacı var." />
+    <string id="nc_response_2.named_companion_legolas_text" text="Sıradan bir okçu gibi dolaşan bir prens mi? Ne kadar alçakgönüllü." />
+    <string id="nc_backstory_d.named_companion_legolas_text" text="Unvanlar gerçek kötülüğe karşı pek bir şey ifade etmez. Yayım taçlar için değil, adalet için şarkı söyler. İyilik için savaşıyorsan, yanında dururum." />
+    <string id="nc_backstory_a.named_companion_gimli_text" text="Ben Gimli, Glóin oğlu, dağ salonlarından bir cüceyim. Baltam layık savaşlar arıyor." />
+    <string id="nc_prebackstory.named_companion_gimli_text" text="Dağlardan uzakta bir cüce savaşçı mı? Seni buraya ne getiriyor?" />
+    <string id="nc_backstory_b.named_companion_gimli_text" text="Şarkılara ilham verecek işler olmadığında ocak soğur. Her düzgün cücenin yapması gerektiği gibi, zafer ve altın arıyorum!" />
+    <string id="nc_backstory_c.named_companion_gimli_text" text="Babam gençliğinde büyük maceralardan bahsederdi. Şimdi cüce çeliğinin ve cüce cesaretinin tüm diyarda eşsiz kaldığını kanıtlama sırası bende." />
+    <string id="nc_response_1.named_companion_gimli_text" text="Bir savaşçı ruhu! Böyle bir güce ihtiyacımız olabilir." />
+    <string id="nc_response_2.named_companion_gimli_text" text="Başka bir şöhret avcısı mı? Umarım bu övünmeyi destekleyebilirsin." />
+    <string id="nc_backstory_d.named_companion_gimli_text" text="Övünme mi? Ha! Baltam senin yediğin sıcak yemeklerden daha fazla düşman devirdi! Ama bir cücenin sadakatine layık yoldaşlar arıyorum. Belki sen uygun düşersin." />
+    <string id="nc_backstory_a.named_companion_swan_text" text="Ben Swan, Gümüş Kuğu Şövalyesi. Diyara hem kılıç hem de haritacılıkla hizmet ediyorum." />
+    <string id="nc_prebackstory.named_companion_swan_text" text="Harita yapan bir şövalye mi? Bu alışılmadık bir kombinasyon." />
+    <string id="nc_backstory_b.named_companion_swan_text" text="Toprağı bilmek herhangi bir kılıç kadar hayatidir. Başkalarının geçmeye korktuğu yolları haritaya dökerim, güçlerimizin asla kör bir şekilde yürümemesini sağlarım." />
+    <string id="nc_backstory_c.named_companion_swan_text" text="Gümüş Kuğu Tarikatı bana bilgelik ve savaşın el ele gittiğini öğretti. İşaretlenen her dağ geçidi, not edilen her nehir geçişi - bunlar herhangi bir tek kılıç darbesi kadar fazla hayat kurtarır." />
+    <string id="nc_response_1.named_companion_swan_text" text="Stratejik bir zihin ve bir savaşçının kalbi. Etkileyici." />
+    <string id="nc_response_2.named_companion_swan_text" text="Haritalar ve kılıçlar mı? Her işten anlar ama hiçbirinin ustası değil mi?" />
+    <string id="nc_backstory_d.named_companion_swan_text" text="Aslında her ikisinin de ustasıyım. Haritalarım orduları zafere yönlendirdi ve kılıcım gerektiğinde onları savundu. Hazırlığa beceri kadar değer veriyorsan, hizmetlerimi sunuyorum." />
+    <string id="nc_backstory_a.named_companion_rcmcplayz_text" text="Ben Rukumazig-khamîz, Demirci olarak biliniyorum. Sadece metal değil, zanaatımla tüm dünyaları dövüyorum." />
+    <string id="nc_prebackstory.named_companion_rcmcplayz_text" text="Demirhanesinden uzakta dolaşan bir demirci mi? Seni buraya getiren nedir?" />
+    <string id="nc_backstory_b.named_companion_rcmcplayz_text" text="İşim örs ve çekicin ötesine geçer. Sahneleri ve mekanları şekillendiririm, anıların manzaralarını üç boyutta işlerim." />
+    <string id="nc_backstory_c.named_companion_rcmcplayz_text" text="Her kale duvarı, her köy meydanı, her dağ geçidi - özlerini yakalayıp mükemmel ayrıntılarla yeniden inşa ediyorum. Bazıları buna sanat der, ben koruma derim." />
+    <string id="nc_response_1.named_companion_rcmcplayz_text" text="Dünyalar döven bir demirci mi? Bu nadir bir yetenek." />
+    <string id="nc_response_2.named_companion_rcmcplayz_text" text="Süslü demircilik savaşta işe yaramaz, sanatkâr." />
+    <string id="nc_backstory_d.named_companion_rcmcplayz_text" text="Şaşırırsın. Yapı gözüm herhangi bir duvardaki zayıf noktaları ortaya çıkarır ve mekan bilgim taktik avantaj sağlar. Üstelik bu çekiç hem yaratmada hem de savaşta işe yarar. Beni kabul edecek misin?" />
+    <string id="nc_backstory_a.named_companion_leovsilva_text" text="Ben Silvan'lı Leovlas, biçim ve ışığın usta zanaatkârıyım. Sanatım dijital aleme hayat üfler." />
+    <string id="nc_prebackstory.named_companion_leovsilva_text" text="Silvan'lı bir zanaatkâr mı? Halkın sanatkârlığıyla ünlüdür." />
+    <string id="nc_backstory_b.named_companion_leovsilva_text" text="Soydaşlarım arasında gerçek zanaatkârlığın fiziksel olanı aştığını öğrendim. Yoktan dünyalar şekillendiririm, doğanın kendisine rakip güzellikler yontarım." />
+    <string id="nc_backstory_c.named_companion_leovsilva_text" text="Bu zanaatta diyardaki en iyilerden biri olduğum söylenir. Her doku, her gölge, her ayrıntı mükemmel olmalı - bu Silvan yoludur. Eserlerim özverililiğin başarabileceğinin anıtları olarak duruyor." />
+    <string id="nc_response_1.named_companion_leovsilva_text" text="Ününüz önünüzden geliyor. Böyle bir yetenek her türlüye şeref verir." />
+    <string id="nc_response_2.named_companion_leovsilva_text" text="Güzel zanaatlar hoş ama savaşabilir misin?" />
+    <string id="nc_backstory_d.named_companion_leovsilva_text" text="Sanatımı yönlendiren hassasiyet kılıcımı da yönlendirir. Bir usta zanaatkâr eserlerini savunmalıdır. Üstelik bu kadar güzellik yaratabilen biri, düşmanlarının nasıl yok edileceğini de tam olarak bilir. Size katılayım mı?" />
+    <string id="nc_backstory_a.named_companion_yotthani_text" text="Ben Thanor, kodların dokuyucusu ve sistemlerin mimarıyım. Programlamanın kadim sanatıyla fikirlere hayat veriyorum." />
+    <string id="nc_prebackstory.named_companion_yotthani_text" text="Bir kodlayıcı mı? Bu topraklarda güçlü bir büyü." />
+    <string id="nc_backstory_b.named_companion_yotthani_text" text="Başkalarının hayal ettiğini ben gerçek yaparım. Yaratılışın dokusunun derinliklerine dalıyor, saf mantık ve kararlılıktan özellikler dokuyorum." />
+    <string id="nc_backstory_c.named_companion_yotthani_text" text="Bana bir konsept verin, ne kadar karmaşık olursa olsun, ona hayat üflerim. Her sistem, her mekanik, her özellik - onları boşluktan yaratıyorum, satır satır, yaşayıp nefes alana kadar." />
+    <string id="nc_response_1.named_companion_yotthani_text" text="Yoktan yaratma gücü mü? Gerçekten etkileyici." />
+    <string id="nc_response_2.named_companion_yotthani_text" text="Kodlar ve sistemler mi? Gerçek bir silah kullanabiliyor musun?" />
+    <string id="nc_backstory_d.named_companion_yotthani_text" text="Zihin en keskin silahtır. Başkalarının göremediği sorunları düzeltirim ve çözümlerim zarif ve ölümcüldür. Savaşta ya da kodda hassasiyet her şeydir. Davanıza katılarak bunu gösterme izni verin." />
+    <string id="nc_backstory_a.named_companion_whitegoat_text" text="Ben Whitegoat, Yol Gösterici. Gezginlere en karmaşık yolculuklarda rehberlik ediyorum - zihin ve makine arasındaki arayüzde." />
+    <string id="nc_prebackstory.named_companion_whitegoat_text" text="Yol Gösterici mi? İlgi çekici bir unvan." />
+    <string id="nc_backstory_b.named_companion_whitegoat_text" text="Herkesin dünyamızla etkileşime girdiği pencereleri yaratıyorum. Her düğme, her menü, her gösterge - kullanıcıları hedeflerine götüren yolları tasarlıyorum." />
+    <string id="nc_backstory_c.named_companion_whitegoat_text" text="Güzel bir manzara, içinde gezinemeğiniz takdirde hiçbir anlam ifade etmez. Veterandan yeni gelene her ruhun zarafet ve kolaylıkla yolunu bulabilmesini sağlıyorum. Bu benim sanatım - karmaşığı basit göstermek." />
+    <string id="nc_response_1.named_companion_whitegoat_text" text="Dijital diyar için bir rehber. Bu gerçekten değerli." />
+    <string id="nc_response_2.named_companion_whitegoat_text" text="Menüler ve düğmeler mi? Bu savaşta nasıl yardımcı olur?" />
+    <string id="nc_backstory_d.named_companion_whitegoat_text" text="Strateji bilgiyle başlar ve bilgi netlik gerektirir. Başkalarının kaçırdığı kalıpları görür, kaosu düzene sokarım. Yeteneklerim taktik ve lojistiğe iyi uyum sağlar. Sizinle zafere giden yolu bulmama izin verin." />
+    <string id="nc_backstory_a.named_companion_igor_text" text="Ben Igor Fahlun, Kayıp olarak anılırım. Çöl kumlarından uzak bir Haradrim, yeni dünyalar yaratmakta amaç bulan." />
+    <string id="nc_prebackstory.named_companion_igor_text" text="Kayıp mı? Bir Haradrim için uğursuz bir unvan." />
+    <string id="nc_backstory_b.named_companion_igor_text" text="Adını koyamadığım bir şey arayarak anavatan­mdan ayrıldım. Üç boyutlu vizyonları şekillendirme sanatında, hiç aradığımı bilmediğim şeyi buldum." />
+    <string id="nc_backstory_c.named_companion_igor_text" text="Çöl bana boşlukta güzellik görmeyi, yoktan bir şey inşa etmeyi öğretti. Şimdi boşluktan tüm diyarlar yontuyorum, her yaratım arkamda değil içimde taşıdığım yurdun bir parçası." />
+    <string id="nc_response_1.named_companion_igor_text" text="Bazen gerçek yolumuzu bulmak için kendimizi kaybetmeliyiz." />
+    <string id="nc_response_2.named_companion_igor_text" text="Haradrimli bir sanatçı mı? Bu beklenmedik." />
+    <string id="nc_backstory_d.named_companion_igor_text" text="Beklenmedik genellikle en değerli olandır. Güneyli gözlerim başkalarının kaçırdığı açıları görür, çöl mirasım kuzey topraklarına farklı bakış açıları getirir. Belki kaybolmak sadece bulunmanın başlangıcıydı. Sizinle yolculuk edebilir miyim?" />
+    <string id="nc_backstory_a.named_companion_thyrell_text" text="Ben Altın Thyrell, Altın Çiçek Şövalyesiyim, Rivendell'in kadim salonlarının yeminli koruyucusu." />
+    <string id="nc_prebackstory.named_companion_thyrell_text" text="Altın Çiçek Şövalyesi mi? O tarikatın efsanevi bir geçmişi var." />
+    <string id="nc_backstory_b.named_companion_thyrell_text" text="Geçmiş çağların ışığını bu kararan zamanlara taşıyoruz. Rivendell'in kütüphanelerinden talim alanlarına, hem ilmi hem de kılıcı ustalaştırdım." />
+    <string id="nc_backstory_c.named_companion_thyrell_text" text="Altın Çiçek bir zamanlar en büyük karanlığa karşı durdu ve onurla düştü. Şimdi onların adını taşıyan bizler fedakârlıklarının boşa gitmediğinden emin olmalıyız. Güzellik, bilgelik ve kahramanlık - bunlar bizim şiarlarımızdır." />
+    <string id="nc_response_1.named_companion_thyrell_text" text="Böylesine asil soydan biriyle tanışmak bir onur." />
+    <string id="nc_response_2.named_companion_thyrell_text" text="Süslü unvanlar ve altın çiçekler - gerçekten dövüşebiliyor musun?" />
+    <string id="nc_backstory_d.named_companion_thyrell_text" text="Altın Çiçek şanını kelimelerle değil, eylemlerle kazandı. Kılıcım yüzyıllarca süren elf tekniğiyle şarkı söyler ve yeminim beni tüm özgür halkları korumaya bağlar. Aynı adanmışlığı senin takımına da getiririm." />
+    <string id="nc_backstory_a.named_companion_haterade_text" text="Ben Hatérade, bu üzerinde yürüdüğün diyarın usta zanaatkarı ve mimarıyım. Bazıları bana Yaratıcı der, ama ben sadece bir vizyona sahip bir cüceyim." />
+    <string id="nc_prebackstory.named_companion_haterade_text" text="Yaratıcı mı? Yani tüm bunları sen mi şekillendirdin?" />
+    <string id="nc_backstory_b.named_companion_haterade_text" text="Evet, her sistem, her özellik, bu dünyadaki her nefes hayal gücümün demirhanesinden akar. En iyi zanaatkarları bir araya getirdim ve onlara bir amaç verdim." />
+    <string id="nc_backstory_c.named_companion_haterade_text" text="Derinlere inen ve büyük salonlar inşa eden atalarım gibi, ben de daha büyük bir şey inşa ettim - efsanelerin yeniden yürüdüğü tüm bir dünya. Her ayrıntı benim izimi taşır, ama artık elimden bağımsız yaşıyor." />
+    <string id="nc_response_1.named_companion_haterade_text" text="Tüm bunları mümkün kılan kişiyle tanışmak bir onur." />
+    <string id="nc_response_2.named_companion_haterade_text" text="Bir cüce için tanrı kompleksi mi? Bu yeni bir şey." />
+    <string id="nc_backstory_d.named_companion_haterade_text" text="Ha! Tanrı değilim, sadece bir hayalin ölmesine izin vermeyen inatçı bir cüceyim. Bu diyarın her yolunda onun yaratıcısı olarak yürüdüm, şimdi onlarda bir savaşçı olarak yürüyorum. Sana dünyayı yaratıcısının gözünden göstereyim." />
+    <string id="nc_backstory_a.named_companion_hart_text" text="Ben Wold'lu Éohart, manzara ustası ve ufuk şekillendireni. Tüm diyardaki en iyi sahne zanaatkarlarından biri olduğumu söylerler." />
+    <string id="nc_prebackstory.named_companion_hart_text" text="Wold'lu mu? At lordlarının otlaklarından mı?" />
+    <string id="nc_backstory_b.named_companion_hart_text" text="Evet, sonsuz ovalar ve dalgalı tepeler arasında doğdum. O enginlik bana dünyayı olduğu gibi değil, olabileceği gibi görmeyi öğretti. Şimdi o görkemi gittiğim her yerde yeniden yaratıyorum." />
+    <string id="nc_backstory_c.named_companion_hart_text" text="Her vadi, her dağ zirvesi, her orman açıklığı - onları manzaraların içinde anlatılan hikayeleri şekillendirdiğini bilen birinin özenıyle işlerim. Sahnelerim sadece var olmaz, hayat ve amaçla nefes alırlar." />
+    <string id="nc_response_1.named_companion_hart_text" text="Usta bir zanaatkar olarak şöhretin hak edilmiş." />
+    <string id="nc_response_2.named_companion_hart_text" text="Güzel manzaralar savaşları kazandırmaz, atlı." />
+    <string id="nc_backstory_d.named_companion_hart_text" text="Savaşların araziyi bilmeye bağlı olarak nasıl döndüğünü görseydin şaşırırdın. İşlediğim her sahne bana arazi, görüş çizgileri ve stratejik avantaj öğretir. Wold, toprağın kendisini okuyan savaşçılar yetiştirdi. Seninle bineceğim mi?" />
+    <string id="nc_backstory_a.named_companion_blackrose_text" text="Ben BlackRose, Unutulmuş Diyarlar'ın demirhanesi ustasıyım. Dünyaları yok etmek yerine inşa eden bir Uruk-Hai." />
+    <string id="nc_prebackstory.named_companion_blackrose_text" text="Yaratan bir Uruk-Hai mi? Bu senin türün hakkında bildiğim her şeye aykırı." />
+    <string id="nc_backstory_b.named_companion_blackrose_text" text="Saruman bizi yok etmek için yarattı, evet, ama ben farklı bir güç keşfettim - yaratma. Kod ve zanaat aracılığıyla Unutulmuş Diyarlar'ı dövdüm, ölü piksellere hayat üfledim. Bir zamanlar kılıç tutan pençelerim artık tüm uygarlıkları şekillendiriyor." />
+    <string id="nc_backstory_c.named_companion_blackrose_text" text="Ganimetlerini biriktiren soydaşlarımın aksine, ben özgürce paylaşıyorum. Her varlık, her kod satırı, kazanılan her altın - benimle birlikte inşa edecek olanlara verdim. Topluluk gelişiyor çünkü birbirimizi yıkmıyoruz, yükseliyoruz. Bu benim doğama karşı isyanım." />
+    <string id="nc_response_1.named_companion_blackrose_text" text="Cömertliğin sayısız yaratıcıya yardım etti. İşte bu gerçek güç." />
+    <string id="nc_response_2.named_companion_blackrose_text" text="Almak yerine öğreten bir Uruk mu? Saruman dehşete düşerdi." />
+    <string id="nc_backstory_d.named_companion_blackrose_text" text="Bırak düşsün. Başkalarını yüceltmekte hiçbir fethin sağlayamayacağı bir güç buldum. Şimdi bu topraklarda hem yaratıcı hem savaşçı olarak yürüyorum. İnşa ettiği kadar azimle dövüşen birini kabul eder misin?" />
+    <string id="nc_backstory_a.named_companion_spartan_text" text="Ben Belecthar, Spartalı. Başkaları mızrak kullanırken, ben dünyaları kod ve yapı ile dövüyorum." />
+    <string id="nc_prebackstory.named_companion_spartan_text" text="XML ile dövüşen bir Spartalı mı? Bu alışılmadık bir savaş alanı." />
+    <string id="nc_backstory_b.named_companion_spartan_text" text="Sparta disiplini birçok amaca hizmet eder. Kardeşlerim falanks formasyonları için eğitilirken, ben kodda herhangi bir kalkan duvarından daha zarif örüntüler buldum. Her XML düğümü tam olarak yerleştirilmiş, her fonksiyon hesaplanmış bir darbe." />
+    <string id="nc_backstory_c.named_companion_spartan_text" text="Spartalıların asla geri çekilmediğini söylerler - ben hiçbir zaman kodu yarım bırakmam. Başkaları sonsuz metin gördüğü yerde, ben gerçekliğin mimarisini görürüm. Sistematik organizasyon ve amansız optimizasyon yoluyla, başkalarının üzerinde durabileceği temeller inşa ediyorum." />
+    <string id="nc_response_1.named_companion_spartan_text" text="Teknik hassasiyet kendi savaş biçimidir." />
+    <string id="nc_response_2.named_companion_spartan_text" text="Görünüşe göre kalkanını klavyeyle değiştirmişsin." />
+    <string id="nc_backstory_d.named_companion_spartan_text" text="İkisi de disiplin gerektirir, dostum. Kodum her tunç mızrak kadar savaşta test edilir. Sistematik çözümler ve savaşçı kararlılığı sunuyorum. Beni takımına alır mısın?" />
+    <string id="nc_backstory_a.named_companion_solus_text" text="Ben Solus, Höyük, Altın Çiçek Şövalyesi. Ellerim bu diyarı silahlandıran tam silahları şekillendirdi." />
+    <string id="nc_prebackstory.named_companion_solus_text" text="Altın Çiçek mi? O tarikat Gondolin'de uzun zaman önce düştü..." />
+    <string id="nc_backstory_b.named_companion_solus_text" text="Yine de ruhu hatırlayanlar aracılığıyla yaşıyor. Rivendell'in demirhanelerinde eski teknikleri yeni amaçla harmanlayı öğrendim. Dövdüğüm her kılıç Gondolin'in mirasını taşır - Glorfindel'in bir zamanlar öğrettiği gibi güzellik ve işlev birleşmiş." />
+    <string id="nc_backstory_c.named_companion_solus_text" text="Bana Höyük derler çünkü eski zanaatın yeniyle buluştuğu yeri işaretlerim. Bu diyar için dövdüğüm her silah bir anıt taşıdır, olanı onurlandırırken olana hizmet eder. Yayım, keskinleştirdiğim her ağızdan talep ettiğim hassasiyetle şarkı söyler." />
+    <string id="nc_response_1.named_companion_solus_text" text="Böyle ellerin dövdüğü silahları kullanmak bir onurdur." />
+    <string id="nc_response_2.named_companion_solus_text" text="Dövüşen bir silah ustası mı? Alışılmadık bir kombinasyon." />
+    <string id="nc_backstory_d.named_companion_solus_text" text="Kişi yarattığını test etmelidir. Oklarım gerçek uçar çünkü yayın ruhunu anlıyorum - ona ben biçim verdim. Kahramanları silahlandıran ve aralarında duran birini arıyorsan, hazırım." />
+    <string id="nc_backstory_a.named_companion_maztog_text" text="Ben Maztog, Ahırcının Dehşeti - ancak çoğu beni sadece MOD olarak tanır. Kayıp ruhları yaratımın labirentinde yönlendiririm." />
+    <string id="nc_prebackstory.named_companion_maztog_text" text="Zarar vermek yerine yardım eden bir Uruk-hai mi? Bu benzersiz." />
+    <string id="nc_backstory_b.named_companion_maztog_text" text="Discord salonlarında gerçek çağrımı buldum. Kardeşlerim çelikle savaş yürütürken, ben bilgiyle barış yürütüyorum. Cevaplanan her soru, çözülen her sorun, hoş karşılanan her yeni gelen - bu benim savaş alanım ve asla yorulmuyorum." />
+    <string id="nc_backstory_c.named_companion_maztog_text" text="Bana Ahırbaşının Dehşeti diyorlar çünkü topluluğa bir ahır ustasının atlara davrandığı gibi davranıyorum - sabırla, sertlikle ve özenle. Gece gündüz hazır beklerim. Hiçbir soru çok küçük, hiçbir kriz çok büyük değil. Saruman beni hizmet etmek için yarattı ve hizmet ediyorum - sadece onun istediği gibi değil." />
+    <string id="nc_response_1.named_companion_maztog_text" text="Topluluğa olan bağlılığın efsanevi." />
+    <string id="nc_response_2.named_companion_maztog_text" text="Bir Uruk moderatör mü? Dünya gerçekten değişti." />
+    <string id="nc_backstory_d.named_companion_maztog_text" text="Değişim seçimle başlar. Ben köprüler yakmak yerine kurmayı seçtim. Hem çatışma çözümünü hem de gerçek çatışmayı bilen birine ihtiyacın varsa, hizmet etmeye hazırım." />
+    <string id="nc_backstory_a.named_companion_balakhor_text" text="Ben Balakhôr, Bilgi-Büyükustası. Bu diyarın her hikayesi, her savaşı, her kahramanı - hepsini kaydettim." />
+    <string id="nc_prebackstory.named_companion_balakhor_text" text="Bir Bilgi-Büyükustası mı? Zamanın kendisinde kaybolmuş sırları biliyor olmalısın." />
+    <string id="nc_backstory_b.named_companion_balakhor_text" text="Üç çağ boyunca bilgi topladım, ama en büyük bilgeliğim silah kardeşim Thyrell ile birlikte savaşarak geldi. Sayısız çarpışmada birlikte durduk - o altın kılıcıyla, ben kadim sözlerle. Kan kardeş yapar, ama ortak amaç onları sonsuz kılar." />
+    <string id="nc_backstory_c.named_companion_balakhor_text" text="Rivendell'in salonlarında, sadece tarihi değil anlamını da koruyorum. Her mod özelliği, her halkın yükselişi, her kahramanın yolculuğu - onları büyük goblenin içine örüyorum. Yaratıcılar yollarından şüphe duyduğunda, onlara daha büyük düzenin neresinde olduklarını gösteririm. Bu diyarın bilgisi, hayatımın çalışması." />
+    <string id="nc_response_1.named_companion_balakhor_text" text="Bilgi-Büyükustası'nın kendisinden öğrenmek bir onur olurdu." />
+    <string id="nc_response_2.named_companion_balakhor_text" text="Bütün bu bilgi - ağır gelmiyor mu?" />
+    <string id="nc_backstory_d.named_companion_balakhor_text" text="Bilgi ancak saklandığında ağırdır. Özgürce paylaşıldığında, onu alan herkesi yüceltir. Kardeşim Thyrell gibi, bu diyarın şanına hizmet ediyorum. Sen de sonsuz hikayemize kendi bölümünü ekleyecek misin?" />
+    <string id="nc_backstory_a.named_companion_noxix_text" text="Ben Noxix Ilúvatar, Doğu'nun Alevi. Orta Dünya'da yürümeden önce, ustalığımla Westeros'a ateş ve kan getirdim." />
+    <string id="nc_prebackstory.named_companion_noxix_text" text="A Dance of Dragons'ın yaratıcısı mı? Eserin diyarlar arasında efsanevi!" />
+    <string id="nc_backstory_b.named_companion_noxix_text" text="Mirkwood'un gölgeli patikalarında, yaratımın hem ışığa hem karanlığa ihtiyaç duyduğunu öğrendim. Dance of Dragons'ı yarattığımda, buz ve ateşi, onuru ve ihaneti bir araya ördüm. Aynı vizyonu buraya getirdim, bu Orta Dünya'nın ilk kod satırlarından doğmasına yardım ettim." />
+    <string id="nc_backstory_c.named_companion_noxix_text" text="Bana Doğu'nun Alevi diyorlar çünkü başkalarında ilhamı tutuşturuyorum. Westeros'tan Orta Dünya'ya, başlangıçlarında yaratıcılarla birlikte durdum, öğrendiklerimi paylaştım. Bu diyar var çünkü daha önce dünyalar inşa edenler bilir - en büyük yaratımlar yalnızlıktan değil, işbirliğinden gelir." />
+    <string id="nc_response_1.named_companion_noxix_text" text="Uzmanlığın birden fazla dünyaya yayılıyor - inanılmaz." />
+    <string id="nc_response_2.named_companion_noxix_text" text="Ejderhalardan Orta Dünya'ya - epey bir yolculuk." />
+    <string id="nc_backstory_d.named_companion_noxix_text" text="Her diyar yeni dersler öğretir. Westeros bana siyasi karmaşıklığı öğretti, Orta Dünya efsanevi derinliği öğretiyor. Her iki dünyanın bilgeliğini ve asla ıskalamayan bir yayı sunuyorum. Birlikte yeni efsaneler yazacak mıyız?" />
+  </strings>
+</base>

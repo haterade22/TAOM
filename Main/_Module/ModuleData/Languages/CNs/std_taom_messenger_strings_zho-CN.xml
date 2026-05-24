@@ -1,39 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="简体中文" />
-  </tags>
-  <strings>
-    <string id="taom_send_messenger" text="Send Messenger" />
-    <string id="taom_messenger_target_unavailable" text="This person cannot be reached by messenger at this time." />
-    <string id="taom_messenger_disabled" text="The messenger system is disabled in settings." />
-    <string id="taom_messenger_not_available" text="Messenger system not available." />
-    <string id="taom_messenger_invalid_target" text="Invalid target." />
-    <string id="taom_messenger_cannot_send" text="Cannot Send Messenger" />
-    <string id="taom_messenger_no_gold" text="Not enough gold! You need {COST} denars." />
-    <string id="taom_messenger_already_sent" text="A messenger has already been dispatched to this person." />
-    <string id="taom_messenger_hero_dead" text="{HERO_NAME} is dead." />
-    <string id="taom_messenger_hero_prisoner" text="{HERO_NAME} is imprisoned and cannot receive messengers." />
-    <string id="taom_messenger_hero_fugitive" text="{HERO_NAME} is a fugitive and cannot be found." />
-    <string id="taom_messenger_hero_child" text="{HERO_NAME} is too young to receive messengers." />
-    <string id="taom_messenger_confused" text="The messenger seems confused — they were trying to reach someone in your own party!" />
-    <string id="taom_messenger_sent" text="A messenger has been dispatched to {HERO_NAME} and will arrive within {DAYS} days." />
-    <string id="taom_messenger_sent_title" text="Messenger Sent" />
-    <string id="taom_messenger_arrived" text="A messenger from {HERO_NAME} has arrived. Do you wish to speak with them?" />
-    <string id="taom_messenger_arrived_title" text="Messenger Arrived" />
-    <string id="taom_messenger_speak" text="Speak" />
-    <string id="taom_messenger_dismiss" text="Dismiss" />
-    <string id="taom_messenger_lost" text="Your messenger to {HERO_NAME} was ambushed by bandits and never arrived." />
-    <string id="taom_messenger_recipient_gone" text="Your messenger to {HERO_NAME} returned without delivering — the recipient is no longer reachable." />
-    <string id="taom_messenger_lost_title" text="Messenger Lost" />
-    <string id="taom_messenger_error" text="Messenger Error" />
-    <string id="taom_messenger_dialog_init" text="I may need to send you a message later. Can I dispatch a messenger to you?" />
-    <string id="taom_messenger_dialog_npc_accept" text="Of course. I'll make sure to receive your messenger when they arrive." />
-    <string id="taom_messenger_dialog_send" text="Send the messenger ({COST} denars)" />
-    <string id="taom_messenger_dialog_decline" text="On second thought, never mind." />
-    <string id="taom_messenger_dialog_decline_ack" text="As you wish." />
-    <string id="taom_messenger_dialog_sent" text="I'll be expecting your messenger then." />
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Simplified Chinese" />
+  </tags>
+  <strings>
+    <string id="taom_send_messenger" text="派遣信使" />
+    <string id="taom_messenger_target_unavailable" text="此人目前无法通过信使联系。" />
+    <string id="taom_messenger_disabled" text="信使系统已在设置中禁用。" />
+    <string id="taom_messenger_not_available" text="信使系统不可用。" />
+    <string id="taom_messenger_invalid_target" text="无效目标。" />
+    <string id="taom_messenger_cannot_send" text="无法派遣信使" />
+    <string id="taom_messenger_no_gold" text="金币不足!你需要{COST}第纳尔。" />
+    <string id="taom_messenger_already_sent" text="已向此人派遣过信使。" />
+    <string id="taom_messenger_hero_dead" text="{HERO_NAME}已死亡。" />
+    <string id="taom_messenger_hero_prisoner" text="{HERO_NAME}被囚禁,无法接收信使。" />
+    <string id="taom_messenger_hero_fugitive" text="{HERO_NAME}正在逃亡,无法找到。" />
+    <string id="taom_messenger_hero_child" text="{HERO_NAME}太年幼,无法接收信使。" />
+    <string id="taom_messenger_confused" text="信使似乎很困惑——他们试图联系的是你自己队伍中的人!" />
+    <string id="taom_messenger_sent" text="已向{HERO_NAME}派遣信使,将在{DAYS}天内抵达。" />
+    <string id="taom_messenger_sent_title" text="信使已派遣" />
+    <string id="taom_messenger_arrived" text="来自{HERO_NAME}的信使已抵达。你想与他们交谈吗?" />
+    <string id="taom_messenger_arrived_title" text="信使抵达" />
+    <string id="taom_messenger_speak" text="交谈" />
+    <string id="taom_messenger_dismiss" text="打发走" />
+    <string id="taom_messenger_lost" text="你派往{HERO_NAME}的信使遭到强盗伏击,未能抵达。" />
+    <string id="taom_messenger_recipient_gone" text="你派往{HERO_NAME}的信使未能送达消息便返回了——收信人已无法联系。" />
+    <string id="taom_messenger_lost_title" text="信使失踪" />
+    <string id="taom_messenger_error" text="信使错误" />
+    <string id="taom_messenger_dialog_init" text="我之后可能需要给你传个信。我能派信使去找你吗?" />
+    <string id="taom_messenger_dialog_npc_accept" text="当然可以。我会确保在你的信使抵达时接见他。" />
+    <string id="taom_messenger_dialog_send" text="派遣信使({COST}第纳尔)" />
+    <string id="taom_messenger_dialog_decline" text="再想想,算了。" />
+    <string id="taom_messenger_dialog_decline_ack" text="如你所愿。" />
+    <string id="taom_messenger_dialog_sent" text="那我就等你的信使了。" />
+  </strings>
+</base>

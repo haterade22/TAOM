@@ -1,12 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="한국어" />
-  </tags>
-  <strings>
-    <!-- Translate entries from named_companions/named_companion_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="nc_backstory_a.named_companion_aragorn_text" text="나는 북부의 순찰자다. 어떤 이들은 나를 스트라이더라 부르지만, 그것이 내 진짜 이름은 아니다." />
+    <string id="nc_prebackstory.named_companion_aragorn_text" text="순찰자라고? 단순한 숲지기 이상으로 보이는데." />
+    <string id="nc_backstory_b.named_companion_aragorn_text" text="나는 많은 길을 걸어왔고, 대부분의 사람들이 결코 보지 못하는 어둠으로부터 이 땅을 지켜왔다." />
+    <string id="nc_backstory_c.named_companion_aragorn_text" text="내 혈통은 짐이자 의무다. 나는 오랫동안 비어있던 왕좌의 후계자이지만, 적어도 지금은 왕관보다 야생을 택했다." />
+    <string id="nc_response_1.named_companion_aragorn_text" text="고귀한 대의로군. 왕국은 어둠 속의 수호자들이 필요하다." />
+    <string id="nc_response_2.named_companion_aragorn_text" text="운명으로부터 도망치는 건가? 아니면 준비하는 건가?" />
+    <string id="nc_backstory_d.named_companion_aragorn_text" text="아마 둘 다일 것이다. 지금은 내 검이 스스로를 방어할 수 없는 자들을 섬긴다. 순찰자의 기술이 필요하다면, 당신 일행에 합류하겠다." />
+    <string id="nc_backstory_a.named_companion_legolas_text" text="나는 숲속 왕국의 엘프, 활과 검에 능하다. 내 동족들은 나를 레골라스라 부른다." />
+    <string id="nc_prebackstory.named_companion_legolas_text" text="홀로 여행하는 엘프라니? 이 땅에서는 드문 일인데." />
+    <string id="nc_backstory_b.named_companion_legolas_text" text="아버지의 전당이 너무 답답해졌다. 우리 경계 너머의 더 넓은 세상을 이해하고자 한다." />
+    <string id="nc_backstory_c.named_companion_legolas_text" text="수 세기 동안 내 동족은 우리 숲에 머물렀지만, 이제 많은 곳에서 어둠이 꿈틀거린다. 우리는 커져가는 그림자에 맞서 다른 이들과 함께 서야 한다고 믿는다." />
+    <string id="nc_response_1.named_companion_legolas_text" text="당신의 기술은 환영받을 것이다. 왕국은 단결이 필요하다." />
+    <string id="nc_response_2.named_companion_legolas_text" text="왕자가 평범한 궁수로 떠돌다니? 참으로 겸손하군." />
+    <string id="nc_backstory_d.named_companion_legolas_text" text="진정한 악 앞에서 칭호는 무의미하다. 내 활은 왕관이 아니라 정의를 위해 노래한다. 선을 위해 싸운다면, 당신 곁에 서겠다." />
+    <string id="nc_backstory_a.named_companion_gimli_text" text="나는 글로인의 아들 김리, 산의 전당에 사는 드워프다. 내 도끼는 가치 있는 전투를 찾는다." />
+    <string id="nc_prebackstory.named_companion_gimli_text" text="산에서 멀리 떨어진 드워프 전사라니? 무슨 일로 여기에?" />
+    <string id="nc_backstory_b.named_companion_gimli_text" text="노래를 영감할 업적이 없으면 대장간도 차갑게 식는다. 영광과 황금을 찾는다, 제대로 된 드워프라면 당연하지!" />
+    <string id="nc_backstory_c.named_companion_gimli_text" text="아버지는 젊은 시절의 위대한 모험담을 들려주셨다. 이제 내 차례다. 드워프의 강철과 드워프의 용기가 온 왕국에서 여전히 무적임을 증명할 때가." />
+    <string id="nc_response_1.named_companion_gimli_text" text="전사의 혼이로군! 그런 힘이 필요하다." />
+    <string id="nc_response_2.named_companion_gimli_text" text="Another glory-seeker? Hope you can back up that boasting." />
+    <string id="nc_backstory_d.named_companion_gimli_text" text="허풍? 하! 내 도끼가 쓰러뜨린 적이 당신이 먹은 따뜻한 식사보다 많다! 하지만 난 드워프의 충성심에 걸맞은 동료를 찾는다. 아마 당신이 그럴지도 모르지." />
+    <string id="nc_backstory_a.named_companion_swan_text" text="나는 은빛 백조 기사단의 스완이다. 검과 지도 제작 모두를 통해 왕국을 섬긴다." />
+    <string id="nc_prebackstory.named_companion_swan_text" text="지도를 만드는 기사라니? 흔치 않은 조합인걸." />
+    <string id="nc_backstory_b.named_companion_swan_text" text="땅에 대한 지식은 어떤 검만큼이나 중요하다. 나는 다른 이들이 두려워하는 길을 기록하여, 우리 군대가 결코 맹목적으로 행군하지 않도록 한다." />
+    <string id="nc_backstory_c.named_companion_swan_text" text="은빛 백조 기사단은 나에게 지혜와 전쟁이 함께 가야 함을 가르쳤다. 표시된 모든 산길, 기록된 모든 강 도하지점 - 이것들이 어떤 단일 검격보다 더 많은 생명을 구한다." />
+    <string id="nc_response_1.named_companion_swan_text" text="전략적 사고와 전사의 심장을. 인상적이군." />
+    <string id="nc_response_2.named_companion_swan_text" text="지도와 검이라? 여러 가지를 하지만 하나도 제대로 못하는 건 아닌가?" />
+    <string id="nc_backstory_d.named_companion_swan_text" text="사실 둘 다 완벽하다. 내 지도는 군대를 승리로 이끌었고, 내 검은 필요할 때 그들을 방어했다. 능력만큼이나 준비를 중시한다면, 내 봉사를 제안한다." />
+    <string id="nc_backstory_a.named_companion_rcmcplayz_text" text="나는 대장장이로 알려진 루쿠마지그-카미즈입니다. 나는 금속뿐만 아니라 내 기술로 세계 전체를 벼려냅니다." />
+    <string id="nc_prebackstory.named_companion_rcmcplayz_text" text="대장간에서 멀리 떠도는 대장장이라니? 무엇이 당신을 여기로 이끌었소?" />
+    <string id="nc_backstory_b.named_companion_rcmcplayz_text" text="내 작업은 모루와 망치를 넘어섭니다. 나는 장면과 공간을 빚어, 기억의 풍경 자체를 3차원으로 제작합니다." />
+    <string id="nc_backstory_c.named_companion_rcmcplayz_text" text="모든 요새의 벽, 모든 마을 광장, 모든 산길 - 나는 그들의 본질을 포착하여 완벽한 세부사항으로 재건합니다. 어떤 이들은 그것을 예술이라 부르지만, 나는 그것을 보존이라 부릅니다." />
+    <string id="nc_response_1.named_companion_rcmcplayz_text" text="세계를 벼려내는 대장장이라니? 그것은 드문 재능이오." />
+    <string id="nc_response_2.named_companion_rcmcplayz_text" text="화려한 대장일은 전투에서 도움이 안 될 거요, 장인." />
+    <string id="nc_backstory_d.named_companion_rcmcplayz_text" text="놀라실 겁니다. 구조물을 보는 내 눈은 어떤 벽의 약점도 드러내고, 공간에 대한 내 지식은 전술적 이점을 제공합니다. 게다가, 이 망치는 창조뿐만 아니라 전투에서도 유용합니다. 나를 받아들이시겠습니까?" />
+    <string id="nc_backstory_a.named_companion_leovsilva_text" text="나는 실반의 레오블라스, 형상과 빛의 대장인입니다. 내 예술은 디지털 영역에 생명을 불어넣습니다." />
+    <string id="nc_prebackstory.named_companion_leovsilva_text" text="실반 족의 장인이라니? 당신 민족은 그들의 예술성으로 전설적이오." />
+    <string id="nc_backstory_b.named_companion_leovsilva_text" text="내 동족 사이에서, 나는 진정한 장인정신이 물리적인 것을 초월한다는 것을 배웠습니다. 나는 무에서 세계를 만들어, 자연 그 자체에 필적하는 아름다움을 조각합니다." />
+    <string id="nc_backstory_c.named_companion_leovsilva_text" text="사람들은 내가 이 기술에서 이 영역 최고 중 하나라고 말합니다. 모든 질감, 모든 그림자, 모든 세부사항이 완벽해야 합니다 - 이것이 실반의 방식입니다. 내 작품들은 헌신이 이룰 수 있는 것의 기념비로 서 있습니다." />
+    <string id="nc_response_1.named_companion_leovsilva_text" text="당신의 명성이 당신보다 먼저 도착했소. 그런 기술은 어떤 동료에게도 영광이 될 것이오." />
+    <string id="nc_response_2.named_companion_leovsilva_text" text="아름다운 기술은 좋지만, 싸울 수는 있소?" />
+    <string id="nc_backstory_d.named_companion_leovsilva_text" text="내 예술을 인도하는 바로 그 정밀함이 내 검을 인도합니다. 대장인은 자신의 작품을 지켜야 합니다. 게다가, 그런 아름다움을 창조할 수 있는 자는 적을 무너뜨리는 방법도 정확히 압니다. 당신과 함께 가도 되겠습니까?" />
+    <string id="nc_backstory_a.named_companion_yotthani_text" text="나는 타노르, 코드의 짜는 이이자 시스템의 설계자입니다. 나는 프로그래밍이라는 고대 예술을 통해 아이디어에 생명을 불어넣습니다." />
+    <string id="nc_prebackstory.named_companion_yotthani_text" text="코딩 전문가라니? 이 땅에서는 강력한 마법이오." />
+    <string id="nc_backstory_b.named_companion_yotthani_text" text="다른 이들이 꿈꾸는 것을, 나는 현실로 만듭니다. 나는 창조의 구조 깊숙이 잠수하여, 순수한 논리와 결단력으로 기능들을 엮어냅니다." />
+    <string id="nc_backstory_c.named_companion_yotthani_text" text="아무리 복잡한 개념이든 내게 주시면, 나는 그것에 생명을 불어넣을 것입니다. 모든 시스템, 모든 메커니즘, 모든 기능 - 나는 그것들을 허공에서 제작하여, 한 줄 한 줄, 그것들이 살아 숨 쉴 때까지 만듭니다." />
+    <string id="nc_response_1.named_companion_yotthani_text" text="무에서 창조하는 힘이라니? 정말 인상적이오." />
+    <string id="nc_response_2.named_companion_yotthani_text" text="코드와 시스템이라고? 진짜 무기는 다룰 수 있소?" />
+    <string id="nc_backstory_d.named_companion_yotthani_text" text="정신이야말로 가장 날카로운 무기입니다. 나는 다른 이들이 볼 수조차 없는 문제를 해결하고, 내 해법은 우아하고 치명적입니다. 전투에서든 코드에서든, 정밀함이 전부입니다. 당신의 대의에 합류하여 증명해 보이겠습니다." />
+    <string id="nc_backstory_a.named_companion_whitegoat_text" text="나는 화이트고트, 길잡이입니다. 나는 여행자들을 가장 복잡한 여정 - 정신과 기계 사이의 인터페이스 - 을 통해 안내합니다." />
+    <string id="nc_prebackstory.named_companion_whitegoat_text" text="길잡이라니? 흥미로운 칭호로군." />
+    <string id="nc_backstory_b.named_companion_whitegoat_text" text="나는 모든 이가 우리 세계와 상호작용하는 창을 만듭니다. 모든 버튼, 모든 메뉴, 모든 표시 - 나는 사용자들을 목적지로 이끄는 길을 설계합니다." />
+    <string id="nc_backstory_c.named_companion_whitegoat_text" text="아름다운 풍경도 그것을 항해할 수 없다면 아무 의미가 없습니다. 나는 베테랑에서 신참까지 모든 영혼이 우아하고 쉽게 길을 찾을 수 있도록 보장합니다. 이것이 내 예술입니다 - 복잡한 것을 단순하게 느껴지게 만드는 것." />
+    <string id="nc_response_1.named_companion_whitegoat_text" text="디지털 영역의 안내자라니. 정말 가치 있는 일이오." />
+    <string id="nc_response_2.named_companion_whitegoat_text" text="메뉴와 버튼이라고? 그것이 전투에서 어떻게 도움이 되오?" />
+    <string id="nc_backstory_d.named_companion_whitegoat_text" text="전략은 정보에서 시작하고, 정보는 명확성을 요구합니다. 나는 다른 이들이 놓치는 패턴을 보고, 혼돈을 질서로 정리합니다. 내 기술은 전술과 병참술로도 잘 적용됩니다. 당신과 함께 승리로 가는 길을 찾게 해주십시오." />
+    <string id="nc_backstory_a.named_companion_igor_text" text="나는 방황자로 불리는 이고르 팔룬입니다. 사막 모래에서 멀리 떨어진 하라드림, 새로운 세계를 만드는 데서 목적을 찾습니다." />
+    <string id="nc_prebackstory.named_companion_igor_text" text="방황자라니? 하라드림에게는 불길한 칭호로군." />
+    <string id="nc_backstory_b.named_companion_igor_text" text="나는 이름 붙일 수 없는 무언가를 찾아 고향에서 떠돌았습니다. 3차원 비전을 빚는 예술에서, 나는 내가 찾고 있었는지도 몰랐던 것을 발견했습니다." />
+    <string id="nc_backstory_c.named_companion_igor_text" text="사막은 나에게 공허함 속에서 아름다움을 보고, 무에서 무언가를 건설하는 법을 가르쳤습니다. 이제 나는 허공에서 영역 전체를 조각하며, 각 창조물은 뒤가 아닌 내면에 담고 있는 고향의 한 조각입니다." />
+    <string id="nc_response_1.named_companion_igor_text" text="때로 우리는 진정한 길을 찾기 위해 자신을 잃어야 하는 법이오." />
+    <string id="nc_response_2.named_companion_igor_text" text="하라드림 예술가라니? 예상 밖이군." />
+    <string id="nc_backstory_d.named_companion_igor_text" text="예상 밖인 것이 종종 가장 가치 있는 것으로 증명됩니다. 내 남쪽의 눈은 다른 이들이 놓치는 각도를 보고, 내 사막 유산은 북쪽 땅에 다른 관점을 가져옵니다. 아마도 길을 잃은 것은 찾아지기 시작한 것일 뿐이었습니다. 당신과 함께 여행해도 되겠습니까?" />
+    <string id="nc_backstory_a.named_companion_thyrell_text" text="나는 황금의 티렐, 황금 꽃의 기사이자 리븐델의 고대 전당의 수호자입니다." />
+    <string id="nc_prebackstory.named_companion_thyrell_text" text="황금 꽃의 기사라니? 그 기사단은 전설적인 역사를 가지고 있소." />
+    <string id="nc_backstory_b.named_companion_thyrell_text" text="우리는 과거 시대의 빛을 이 어두워지는 시대로 가져옵니다. 리븐델의 도서관에서 훈련장까지, 나는 학문과 검술 모두를 익혔습니다." />
+    <string id="nc_backstory_c.named_companion_thyrell_text" text="황금 꽃은 한때 가장 큰 어둠에 맞서 싸우다 명예롭게 쓰러졌습니다. 이제 그들의 이름을 지닌 우리는 그들의 희생이 헛되지 않았음을 확실히 해야 합니다. 아름다움, 지혜, 용맹 - 이것들이 우리의 표어입니다." />
+    <string id="nc_response_1.named_companion_thyrell_text" text="그처럼 고귀한 혈통을 가진 분을 만나 영광이오." />
+    <string id="nc_response_2.named_companion_thyrell_text" text="화려한 칭호와 황금 꽃 - 실제로 싸울 수는 있소?" />
+    <string id="nc_backstory_d.named_companion_thyrell_text" text="황금 꽃은 말이 아닌 행동으로 영광을 얻었소. 내 검은 수 세기의 엘프 기술과 함께 노래하며, 내 맹세는 모든 자유로운 민족을 보호하는 것이오. 당신의 일행에도 같은 헌신을 바치겠소." />
+    <string id="nc_backstory_a.named_companion_haterade_text" text="나는 하테라데, 당신이 걷고 있는 이 영역의 대장장이이자 설계자요. 어떤 이들은 나를 창조자라 부르지만, 나는 그저 비전을 가진 드워프일 뿐이오." />
+    <string id="nc_prebackstory.named_companion_haterade_text" text="창조자? 이 모든 것을 당신이 만들었다는 말이오?" />
+    <string id="nc_backstory_b.named_companion_haterade_text" text="그렇소. 모든 시스템, 모든 특징, 이 세계의 모든 생명의 숨결이 내 상상력의 대장간에서 흘러나왔소. 나는 최고의 장인들을 모아 그들에게 목적을 부여했소." />
+    <string id="nc_backstory_c.named_companion_haterade_text" text="깊이 파고들어 위대한 전당을 세운 내 조상들처럼, 나는 더 웅장한 것을 건설했소 - 전설이 다시 걷는 완전한 세계를 말이오. 모든 세부 사항에 내 흔적이 있지만, 이제는 내 손을 넘어 살아 숨쉬고 있소." />
+    <string id="nc_response_1.named_companion_haterade_text" text="이 모든 것을 가능하게 한 분을 만나니 영광이오." />
+    <string id="nc_response_2.named_companion_haterade_text" text="드워프에게 신 콤플렉스라니? 새롭군." />
+    <string id="nc_backstory_d.named_companion_haterade_text" text="하! 신이 아니라, 꿈이 죽는 것을 거부한 완고한 드워프일 뿐이오. 창조자로서 이 영역의 모든 길을 걸었고, 이제는 전사로서 그 길을 걷소. 창조자의 눈으로 세상을 보여주겠소." />
+    <string id="nc_backstory_a.named_companion_hart_text" text="나는 황야의 에오하르트, 풍경의 대가이자 지평선의 조각가요. 사람들은 내가 이 영역 전체에서 가장 뛰어난 장면 제작자 중 하나라고 하오." />
+    <string id="nc_prebackstory.named_companion_hart_text" text="황야 출신? 기마 영주들의 초원 말이오?" />
+    <string id="nc_backstory_b.named_companion_hart_text" text="그렇소. 끝없는 평원과 구릉 지대에서 태어났소. 그 광활함은 세상을 있는 그대로가 아니라 될 수 있는 모습으로 보는 법을 가르쳐주었소. 이제 나는 가는 곳마다 그 장엄함을 재창조하오." />
+    <string id="nc_backstory_c.named_companion_hart_text" text="모든 계곡, 모든 산봉우리, 모든 숲의 공터 - 나는 풍경이 그 안에서 펼쳐지는 이야기를 형성한다는 것을 아는 자의 세심함으로 그것들을 만들어내오. 내 장면들은 단지 존재하는 것이 아니라, 생명과 목적으로 숨쉬오." />
+    <string id="nc_response_1.named_companion_hart_text" text="대장장이로서의 당신의 명성은 충분히 합당하오." />
+    <string id="nc_response_2.named_companion_hart_text" text="아름다운 경치로는 전쟁에서 이길 수 없소, 기병이여." />
+    <string id="nc_backstory_d.named_companion_hart_text" text="땅을 아는 것이 전투의 승패를 가른다는 것을 알면 놀랄 것이오. 내가 만드는 모든 장면은 지형, 시야, 전략적 이점을 가르쳐주오. 황야는 대지 자체를 읽는 전사들을 길렀소. 함께 가도 되겠소?" />
+    <string id="nc_backstory_a.named_companion_blackrose_text" text="나는 블랙로즈, 잊혀진 영역의 대장장이요. 파괴가 아닌 창조를 하는 우루크하이오." />
+    <string id="nc_prebackstory.named_companion_blackrose_text" text="창조하는 우루크하이? 당신 종족에 대해 알고 있는 모든 것과 모순되는군." />
+    <string id="nc_backstory_b.named_companion_blackrose_text" text="사루만은 우리를 파괴하도록 만들었소, 맞소. 하지만 나는 다른 힘을 발견했소 - 창조를 말이오. 코드와 기술을 통해 잊혀진 영역을 만들어, 죽은 픽셀에 생명을 불어넣었소. 한때 검을 쥐었던 내 발톱은 이제 문명 전체를 형성하오." />
+    <string id="nc_backstory_c.named_companion_blackrose_text" text="전리품을 움켜쥐는 내 동족들과 달리, 나는 자유롭게 나누오. 모든 자산, 모든 코드 줄, 벌어들인 모든 금화 - 나와 함께 건설할 이들에게 주었소. 공동체가 번영하는 것은 우리가 서로를 끌어내리는 것이 아니라 끌어올리기 때문이오. 이것이 내 본성에 대한 반역이오." />
+    <string id="nc_response_1.named_companion_blackrose_text" text="당신의 관대함은 수많은 창조자들을 도왔소. 그것이 진정한 힘이오." />
+    <string id="nc_response_2.named_companion_blackrose_text" text="빼앗지 않고 가르치는 우루크? 사루만이 경악할 일이군." />
+    <string id="nc_backstory_d.named_companion_blackrose_text" text="그가 그러도록 내버려두시오. 나는 어떤 정복으로도 얻을 수 없는 힘을 다른 이들을 끌어올리는 데서 찾았소. 이제 나는 창조자이자 전사로서 이 땅을 걷소. 싸우는 만큼 치열하게 건설하는 자를 받아들이겠소?" />
+    <string id="nc_backstory_a.named_companion_spartan_text" text="나는 벨렉타르, 스파르탄이오. 다른 이들이 창을 휘두를 때, 나는 코드와 구조로 세계를 만들어내오." />
+    <string id="nc_prebackstory.named_companion_spartan_text" text="XML로 싸우는 스파르탄? 특이한 전장이군." />
+    <string id="nc_backstory_b.named_companion_spartan_text" text="스파르타의 규율은 많은 목적에 쓰이오. 내 형제들이 밀집 대형 훈련을 할 때, 나는 어떤 방패벽보다도 우아한 코드의 패턴을 발견했소. 모든 XML 노드가 정확하게 배치되고, 모든 함수가 계산된 공격이오." />
+    <string id="nc_backstory_c.named_companion_spartan_text" text="스파르탄은 결코 후퇴하지 않는다고 하오 - 나는 코드를 완성하지 않고는 떠나지 않소. 다른 이들이 끝없는 텍스트를 볼 때, 나는 현실 자체의 구조를 보오. 체계적인 조직화와 끊임없는 최적화를 통해, 나는 다른 이들이 설 수 있는 기반을 건설하오." />
+    <string id="nc_response_1.named_companion_spartan_text" text="기술적 정밀함은 그 자체로 전쟁의 한 형태요." />
+    <string id="nc_response_2.named_companion_spartan_text" text="방패를 키보드로 바꾼 것 같군." />
+    <string id="nc_backstory_d.named_companion_spartan_text" text="둘 다 규율이 필요하오, 친구여. 내 코드는 청동 창만큼이나 확실하게 전투에서 시험받소. 나는 체계적인 해결책과 전사의 결의를 제공하오. 당신 일행에 받아주시겠소?" />
+    <string id="nc_backstory_a.named_companion_solus_text" text="나는 솔루스, 케언, 황금 꽃의 기사요. 내 손은 이 영역을 무장시키는 바로 그 무기들을 만들어냈소." />
+    <string id="nc_prebackstory.named_companion_solus_text" text="황금 꽃? 그 기사단은 곤돌린에서 오래 전에 몰락했는데..." />
+    <string id="nc_backstory_b.named_companion_solus_text" text="하지만 그 정신은 기억하는 이들을 통해 지속되오. 리븐델의 대장간에서, 나는 고대의 기술을 새로운 목적과 융합하는 법을 배웠소. 내가 만드는 모든 검은 곤돌린의 유산을 지니고 있소 - 글로르핀델이 한때 가르쳤던 것처럼, 아름다움과 기능이 하나 되었소." />
+    <string id="nc_backstory_c.named_companion_solus_text" text="사람들은 나를 케언이라 부르오. 왜냐하면 나는 옛 기술이 새것을 만나는 곳을 표시하기 때문이오. 내가 이 영역을 위해 만든 모든 무기는 기념비의 돌이오. 있었던 것을 기리면서 현재를 섬기오. 내 활은 내가 날카롭게 하는 모든 칼날에 요구하는 것과 같은 정밀함을 노래하오." />
+    <string id="nc_response_1.named_companion_solus_text" text="그런 손으로 만든 무기를 휘두르는 것은 영광이오." />
+    <string id="nc_response_2.named_companion_solus_text" text="싸우는 무기 제작자? 특이한 조합이군." />
+    <string id="nc_backstory_d.named_companion_solus_text" text="만드는 것을 시험해야 하오. 내 화살이 정확히 날아가는 것은 활의 영혼을 이해하기 때문이오 - 내가 그것에 형태를 부여했으니까. 영웅들을 무장시키고 그들 사이에 서는 자를 찾는다면, 나는 준비되어 있소." />
+    <string id="nc_backstory_a.named_companion_maztog_text" text="나는 마즈톡, 마구간지기의 공포 - 하지만 대부분은 그냥 MOD라고 부르오. 나는 창조의 미로를 통해 길 잃은 영혼들을 인도하오." />
+    <string id="nc_prebackstory.named_companion_maztog_text" text="해치지 않고 돕는 우루크하이? 전례가 없는 일이군." />
+    <string id="nc_backstory_b.named_companion_maztog_text" text="디스코드 홀에서, 나는 진정한 소명을 찾았소. 내 형제들이 강철로 전쟁을 벌이는 동안, 나는 지식으로 평화를 만들어내오. 모든 질문에 답하고, 모든 문제를 해결하고, 모든 신참을 환영하는 것 - 이것이 내 전장이며, 나는 결코 지치지 않소." />
+    <string id="nc_backstory_c.named_companion_maztog_text" text="사람들은 나를 마구간지기의 공포라 부르는데, 마구간 주인이 말을 돌보듯 나는 공동체를 돌보기 때문이오 - 인내심과 단호함, 그리고 보살핌으로 말이오. 밤낮으로 나는 준비되어 있소. 너무 작은 질문도, 너무 큰 위기도 없소. 사루만은 나를 섬기도록 만들었고, 나는 섬기고 있소 - 다만 그가 의도한 대로는 아니오." />
+    <string id="nc_response_1.named_companion_maztog_text" text="공동체에 대한 당신의 헌신은 전설적이오." />
+    <string id="nc_response_2.named_companion_maztog_text" text="우르크 중재자라니? 세상이 정말 변했군." />
+    <string id="nc_backstory_d.named_companion_maztog_text" text="변화는 선택에서 시작되오. 나는 다리를 불태우는 대신 놓는 것을 선택했소. 분쟁 해결과 실제 전투 모두를 아는 자가 필요하다면, 나는 섬길 준비가 되어 있소." />
+    <string id="nc_backstory_a.named_companion_balakhor_text" text="나는 발라코르, 지식의 대사장이오. 이 영역의 모든 이야기, 모든 전투, 모든 영웅 - 나는 그 모두를 기록했소." />
+    <string id="nc_prebackstory.named_companion_balakhor_text" text="지식의 대사장이라니? 시간 속에 잃어버린 비밀들을 알고 계시겠군요." />
+    <string id="nc_backstory_b.named_companion_balakhor_text" text="세 시대 동안 나는 지식을 모았지만, 나의 가장 큰 지혜는 내 전우 티렐과 함께 전투를 치르며 얻었소. 우리는 수많은 싸움에서 함께 섰소 - 그는 황금 검으로, 나는 고대의 말로. 피가 형제를 만들지만, 함께한 목적이 그들을 영원하게 만드오." />
+    <string id="nc_backstory_c.named_companion_balakhor_text" text="리븐델의 전당에서, 나는 역사뿐만 아니라 그 의미를 보존하오. 모든 모드 기능, 모든 세력의 부상, 모든 영웅의 여정 - 나는 그것들을 위대한 태피스트리로 엮소. 창조자들이 자신의 길을 의심할 때, 나는 그들에게 더 큰 패턴 속에서 그들이 어디에 속하는지 보여주오. 이 영역의 전승은 나의 평생의 작업이오." />
+    <string id="nc_response_1.named_companion_balakhor_text" text="지식의 대사장 그 자신에게서 배운다면 영광일 것이오." />
+    <string id="nc_response_2.named_companion_balakhor_text" text="그 모든 지식이 - 무겁지 않소?" />
+    <string id="nc_backstory_d.named_companion_balakhor_text" text="지식은 쌓아두기만 할 때만 무겁소. 자유롭게 나누면, 그것을 받는 모든 이를 고양시키오. 내 형제 티렐처럼, 나는 이 영역의 영광을 섬기오. 당신은 우리의 끝없는 이야기에 당신의 장을 더하겠소?" />
+    <string id="nc_backstory_a.named_companion_noxix_text" text="나는 녹식스 일루바타르, 동방의 불꽃이오. 가운데땅을 걷기 전에, 나는 내 기술을 통해 웨스테로스에 불과 피를 가져왔소." />
+    <string id="nc_prebackstory.named_companion_noxix_text" text="드래곤들의 춤의 창조자라니? 당신의 작업은 영역들을 넘어 전설적이오!" />
+    <string id="nc_backstory_b.named_companion_noxix_text" text="어둠숲의 그늘진 길에서, 나는 창조에는 빛과 어둠 모두가 필요하다는 것을 배웠소. 드래곤들의 춤을 만들 때, 나는 얼음과 불, 명예와 배신을 함께 엮었소. 바로 그 비전을 여기에 가져와, 이 가운데땅을 첫 코드 줄부터 탄생시키는 것을 도왔소." />
+    <string id="nc_backstory_c.named_companion_noxix_text" text="사람들이 나를 동방의 불꽃이라 부르는 것은 내가 다른 이들에게 영감을 불태우기 때문이오. 웨스테로스에서 가운데땅까지, 나는 창조자들의 시작에 함께 서서 내가 배운 것을 나누었소. 이 영역이 존재하는 것은 전에 세계를 건설했던 우리가 알기 때문이오 - 가장 위대한 창조는 고립이 아닌 협력에서 온다는 것을." />
+    <string id="nc_response_1.named_companion_noxix_text" text="당신의 전문성은 여러 세계에 걸쳐 있소 - 놀랍소." />
+    <string id="nc_response_2.named_companion_noxix_text" text="용들에서 가운데땅까지 - 대단한 여정이군." />
+    <string id="nc_backstory_d.named_companion_noxix_text" text="모든 영역은 새로운 교훈을 가르치오. 웨스테로스는 정치적 복잡성을 가르쳤고, 가운데땅은 신화적 깊이를 가르치오. 나는 두 세계의 지혜와 절대 빗나가지 않는 활을 제공하오. 함께 새로운 전설을 쓰겠소?" />
+  </strings>
+</base>

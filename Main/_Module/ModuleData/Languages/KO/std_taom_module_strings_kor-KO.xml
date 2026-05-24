@@ -1,14 +1,645 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="한국어" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_module_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" />
-         Variables like {RULER.NAME} and conditionals like {?RULER.GENDER}..{?}..{\?}
-         must be preserved verbatim. -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="taom_str_faction_official.empire" text="던랜드의 부족민" />
+    <string id="taom_str_faction_official.empire_f" text="던랜드의 부족민" />
+    <string id="taom_str_faction_ruler.empire" text="족장" />
+    <string id="taom_str_faction_ruler.empire_f" text="족장" />
+    <string id="taom_str_faction_ruler_term_in_speech.empire" text="족장 {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.empire" text="족장 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.empire" text="던랜드의" />
+    <string id="taom_str_short_term_for_faction.empire" text="던랜드" />
+    <string id="taom_str_faction_formal_name_for_culture.empire" text="던랜드 부족 연합" />
+    <string id="taom_str_faction_informal_name_for_culture.empire" text="던랜드" />
+    <string id="taom_str_neutral_term_for_culture.empire" text="던랜드인" />
+    <string id="taom_str_faction_official.vlandia" text="로한의 귀족" />
+    <string id="taom_str_faction_official.vlandia_f" text="로한의 귀부인" />
+    <string id="taom_str_faction_ruler.vlandia" text="왕" />
+    <string id="taom_str_faction_ruler.vlandia_f" text="여왕" />
+    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="왕 {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="왕 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.vlandia" text="로한의" />
+    <string id="taom_str_short_term_for_faction.vlandia" text="기수" />
+    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="기수왕국" />
+    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="로한" />
+    <string id="taom_str_neutral_term_for_culture.vlandia" text="로한 기병" />
+    <string id="taom_str_faction_official.battania" text="칸드의 귀족" />
+    <string id="taom_str_faction_official.battania_f" text="칸드의 귀부인" />
+    <string id="taom_str_faction_ruler.battania" text="칸드의 군주" />
+    <string id="taom_str_faction_ruler.battania_f" text="칸드의 여군주" />
+    <string id="taom_str_faction_ruler_term_in_speech.battania" text="군주 {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.battania" text="군주 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.battania" text="바리아그의" />
+    <string id="taom_str_short_term_for_faction.battania" text="바리아그" />
+    <string id="taom_str_faction_formal_name_for_culture.battania" text="칸드의 바리아그" />
+    <string id="taom_str_faction_informal_name_for_culture.battania" text="칸드" />
+    <string id="taom_str_neutral_term_for_culture.battania" text="바리아그인" />
+    <string id="taom_str_faction_official.khuzait" text="룬의 귀족" />
+    <string id="taom_str_faction_official.khuzait_f" text="룬의 귀부인" />
+    <string id="taom_str_faction_ruler.khuzait" text="대장군" />
+    <string id="taom_str_faction_ruler.khuzait_f" text="여대장군" />
+    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="전쟁군주, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="전쟁군주 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.khuzait" text="동방인" />
+    <string id="taom_str_short_term_for_faction.khuzait" text="룬" />
+    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="룬의 동방인" />
+    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="룬" />
+    <string id="taom_str_neutral_term_for_culture.khuzait" text="동방인" />
+    <string id="taom_str_faction_official.aserai" text="하라드의 귀족" />
+    <string id="taom_str_faction_official.aserai_f" text="하라드의 귀부인" />
+    <string id="taom_str_faction_ruler.aserai" text="족장" />
+    <string id="taom_str_faction_ruler.aserai_f" text="여족장" />
+    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="족장, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.aserai" text="족장 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.aserai" text="하라드림" />
+    <string id="taom_str_short_term_for_faction.aserai" text="하라드" />
+    <string id="taom_str_faction_formal_name_for_culture.aserai" text="하라드 왕국" />
+    <string id="taom_str_faction_informal_name_for_culture.aserai" text="하라드" />
+    <string id="taom_str_neutral_term_for_culture.aserai" text="하라드림" />
+    <string id="taom_str_faction_official.sturgia" text="골짜기 마을의 귀족" />
+    <string id="taom_str_faction_official.sturgia_f" text="골짜기 마을의 귀부인" />
+    <string id="taom_str_faction_ruler.sturgia" text="왕" />
+    <string id="taom_str_faction_ruler.sturgia_f" text="여왕" />
+    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="왕, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="왕 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.sturgia" text="바르드인" />
+    <string id="taom_str_short_term_for_faction.sturgia" text="골짜기 마을" />
+    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="골짜기 마을 왕국" />
+    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="골짜기 마을" />
+    <string id="taom_str_neutral_term_for_culture.sturgia" text="바르드인" />
+    <string id="taom_str_faction_official.dolguldur" text="돌 굴두르의 하인" />
+    <string id="taom_str_faction_official.dolguldur_f" text="돌 굴두르의 하인" />
+    <string id="taom_str_faction_ruler.dolguldur" text="감독관" />
+    <string id="taom_str_faction_ruler.dolguldur_f" text="감독관" />
+    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="감독관, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="감독관" />
+    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.dolguldur" text="굴두르" />
+    <string id="taom_str_short_term_for_faction.dolguldur" text="돌 굴두르" />
+    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="돌 굴두르 군대" />
+    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="돌 굴두르" />
+    <string id="taom_str_neutral_term_for_culture.dolguldur" text="돌 굴두르의 하인들" />
+    <string id="taom_str_faction_official.isengard" text="아이센가드의 대장" />
+    <string id="taom_str_faction_official.isengard_f" text="아이센가드의 여대장" />
+    <string id="taom_str_faction_ruler.isengard" text="흰 손" />
+    <string id="taom_str_faction_ruler.isengard_f" text="흰 손의 여군주" />
+    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="흰 손, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.isengard" text="흰 손 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.isengard" text="아이센가드" />
+    <string id="taom_str_short_term_for_faction.isengard" text="아이센가드" />
+    <string id="taom_str_faction_formal_name_for_culture.isengard" text="아이센가드 군대" />
+    <string id="taom_str_faction_informal_name_for_culture.isengard" text="아이센가드" />
+    <string id="taom_str_neutral_term_for_culture.isengard" text="아이센가드 세력" />
+    <string id="taom_str_faction_official.gundabad" text="군다바드의 족장" />
+    <string id="taom_str_faction_official.gundabad_f" text="군다바드의 여족장" />
+    <string id="taom_str_faction_ruler.gundabad" text="전쟁군주" />
+    <string id="taom_str_faction_ruler.gundabad_f" text="여전쟁군주" />
+    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="전쟁군주, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="전쟁군주 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.gundabad" text="군다바드" />
+    <string id="taom_str_short_term_for_faction.gundabad" text="군다바드" />
+    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="군다바드 오크" />
+    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="군다바드" />
+    <string id="taom_str_neutral_term_for_culture.gundabad" text="군다바드 오크들" />
+    <string id="taom_str_faction_official.umbar" text="움바르의 해적" />
+    <string id="taom_str_faction_official.umbar_f" text="움바르의 여해적" />
+    <string id="taom_str_faction_ruler.umbar" text="해적 선장" />
+    <string id="taom_str_faction_ruler.umbar_f" text="해적 여선장" />
+    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="선장, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.umbar" text="선장 {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.umbar" text="해적" />
+    <string id="taom_str_short_term_for_faction.umbar" text="움바르" />
+    <string id="taom_str_faction_formal_name_for_culture.umbar" text="움바르 해적단" />
+    <string id="taom_str_faction_informal_name_for_culture.umbar" text="움바르" />
+    <string id="taom_str_neutral_term_for_culture.umbar" text="해적들" />
+    <string id="taom_str_faction_official.gondor" text="고귀한 영주" />
+    <string id="taom_str_faction_official.gondor_f" text="고귀한 귀부인" />
+    <string id="taom_str_faction_ruler.gondor" text="집정관" />
+    <string id="taom_str_faction_ruler.gondor_f" text="여집정관" />
+    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}여집정관{?}집정관{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}여집정관{?}집정관{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.gondor" text="곤도르의" />
+    <string id="taom_str_short_term_for_faction.gondor" text="곤도르" />
+    <string id="taom_str_faction_formal_name_for_culture.gondor" text="곤도르" />
+    <string id="taom_str_faction_informal_name_for_culture.gondor" text="곤도르인들" />
+    <string id="taom_str_neutral_term_for_culture.gondor" text="곤도르인" />
+    <string id="taom_str_faction_official.mordor" text="사우론의 대장" />
+    <string id="taom_str_faction_official.mordor_f" text="암흑군주의 하인" />
+    <string id="taom_str_faction_ruler.mordor" text="암흑군주" />
+    <string id="taom_str_faction_ruler.mordor_f" text="암흑여군주" />
+    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}암흑여군주{?}암흑군주{\?}, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}암흑여군주{?}암흑군주{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}감시자{?}감독관{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.mordor" text="모르도르의" />
+    <string id="taom_str_short_term_for_faction.mordor" text="모르도르" />
+    <string id="taom_str_faction_formal_name_for_culture.mordor" text="모르도르" />
+    <string id="taom_str_faction_informal_name_for_culture.mordor" text="사우론의 하인들" />
+    <string id="taom_str_neutral_term_for_culture.mordor" text="모르도르" />
+    <string id="taom_str_faction_official.mirkwood" text="숲의 수호자" />
+    <string id="taom_str_faction_official.mirkwood_f" text="숲의 감시자" />
+    <string id="taom_str_faction_ruler.mirkwood" text="왕" />
+    <string id="taom_str_faction_ruler.mirkwood_f" text="여왕" />
+    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}여왕{?}왕{\?}, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}여왕{?}왕{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}감시자{?}수호자{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.mirkwood" text="숲요정의" />
+    <string id="taom_str_short_term_for_faction.mirkwood" text="숲요정" />
+    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="어둠숲 왕국" />
+    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="숲의 왕국" />
+    <string id="taom_str_neutral_term_for_culture.mirkwood" text="숲요정" />
+    <string id="taom_str_faction_official.lothlorien" text="로스로리엔의 수호자" />
+    <string id="taom_str_faction_official.lothlorien_f" text="로스로리엔의 감시자" />
+    <string id="taom_str_faction_ruler.lothlorien" text="영주" />
+    <string id="taom_str_faction_ruler.lothlorien_f" text="귀부인" />
+    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lothlorien" text="갈라드림" />
+    <string id="taom_str_short_term_for_faction.lothlorien" text="엘프" />
+    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="황금 숲" />
+    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="로스로리엔" />
+    <string id="taom_str_neutral_term_for_culture.lothlorien" text="황금 숲의 엘프들" />
+    <string id="taom_str_faction_official.rivendell" text="리븐델의 현자" />
+    <string id="taom_str_faction_official.rivendell_f" text="리븐델의 치유사" />
+    <string id="taom_str_faction_ruler.rivendell" text="군주" />
+    <string id="taom_str_faction_ruler.rivendell_f" text="여군주" />
+    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.rivendell" text="리븐델의" />
+    <string id="taom_str_short_term_for_faction.rivendell" text="엘프" />
+    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="마지막 아늑한 집" />
+    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="리븐델" />
+    <string id="taom_str_neutral_term_for_culture.rivendell" text="리븐델의 엘프들" />
+    <string id="taom_str_culture_description.empire" text="서부 고원의 사나운 산악민인 던랜딩들은 자부심 강하고 고대의 민족입니다. 로히림에게 원한을 품고 있으며, 게릴라 전술과 전투에서의 끈질김으로 알려져 있습니다. 강력한 지도자 아래 단결하여 그들의 생존과 정당하게 자신들의 것이라 믿는 땅을 되찾기 위해 싸웁니다." />
+    <string id="taom_str_culture_description.vlandia" text="말의 군주로 알려진 로히림은 넓은 평원과 구릉의 왕국 로한의 자랑스럽고 고귀한 민족입니다. 기병으로서의 기술과 비할 데 없는 기병대로 유명하며, 이는 그들의 군사력의 근간을 이룹니다. 긴밀한 봉건 사회에서 살아가는 로히림은 왕과 충성스러운 귀족들이 이끌며, 그들은 명예와 전통으로 땅과 백성을 지킬 의무를 집니다. 자유를 무엇보다 중시하는 독립적인 민족이며, 그들의 전사들은 강력한 말을 탄 채로 창, 검, 활로 싸우도록 훈련받습니다." />
+    <string id="taom_str_culture_description.battania" text="칸드의 바리아그들은 동부 초원의 무자비하고 호전적인 민족입니다. 말과 치명적인 전차를 다루는 능력으로 알려져 있으며, 독특하고 잔인한 전투 방식을 가져옵니다. 사우론과 동맹을 맺은 바리아그들은 권력과 약탈을 위해 싸우며, 가운데땅에 공포를 퍼뜨립니다." />
+    <string id="taom_str_culture_description.khuzait" text="동방인들은 모르도르 너머 광활한 동부 땅에서 온 자랑스럽고 규율 잡힌 민족입니다. 회복력과 전투 숙련도로 유명하며, 농부이자 전사로서 농경 전통과 격렬한 무예 문화를 결합합니다. 그들의 군대는 화려한 갑옷을 입고 치명적인 창과 활을 든 무시무시한 기병대로 알려져 있습니다. 풍부한 장인 정신과 동족에 대한 충성의 유산을 지닌 동방인들은 금색과 진홍색의 선명한 깃발 아래 전쟁에 나서며, 적들의 마음에 공포를 심어줍니다. 사우론에 대한 충성은 그들을 강력한 세력으로 만들었으며, 그의 그림자 아래 단결하여 가운데땅에 그들의 지배를 확장합니다." />
+    <string id="taom_str_culture_description.aserai" text="남부 사막의 전사인 하라드림은 사우론과 동맹을 맺은 사납고 회복력 강한 민족입니다. 이국적인 전쟁 야수와 숙련된 기병대로 알려져 있으며, 진홍색 깃발 아래 전쟁에 나섭니다. 자부심 강하고 전통에 깊이 뿌리내린 그들은 사막의 야만성을 가운데땅의 전장에 가져옵니다." />
+    <string id="taom_str_culture_description.sturgia" text="활잡이 바르드의 후손인 골짜기의 바르딩들은 에레보르의 그림자 속에 사는 자랑스럽고 근면한 민족입니다. 숙련된 궁수와 규율 잡힌 전사로 유명하며, 번영하는 도시와 북부의 무역로를 지킵니다. 강한 공동체 의식과 명예로 단결한 바르딩들은 그들의 땅을 위협하는 어둠에 맞서 굳건히 서 있습니다." />
+    <string id="taom_str_culture_description.erebor" text="고귀한 에레보르의 드워프들은 장인 정신, 회복력, 자부심으로 유명합니다. 외로운 산의 홀에서 그들은 강력한 무기와 비할 데 없는 아름다움의 보물을 단조합니다. 사슬 갑옷을 입고 도끼로 무장한 그들은 확고한 용기로 동족을 방어하며, 유산을 되찾고 그것을 위협하는 모든 이에 맞서 전통을 보존하려 합니다." />
+    <string id="taom_str_culture_description.rivendell" text="마지막 아늑한 집 리븐델은 엘론드 군주가 이끄는 지혜와 아름다움의 피난처입니다. 안개 산맥에 자리잡은 이곳의 주민들은 가운데땅의 고대 지식을 지키는 현자들이자 수호자들입니다. 리븐델의 엘프들은 어둠에 맞서는 이들에게 조언과 원조를 제공하며, 희망과 단결의 빛을 보존합니다." />
+    <string id="taom_str_culture_description.mirkwood" text="스란두일 왕이 이끄는 어둠숲의 숲 엘프들은 광활하고 신비로운 숲의 수호자들입니다. 민첩함과 활 숙련도로 알려져 있으며, 그림자 속으로 녹아들어 정확함과 우아함으로 타격을 가합니다. 그들의 영역은 아름다움과 위험의 땅이며, 전사들의 결의와 왕의 영원한 지혜로 보호받습니다. 극도로 독립적인 어둠숲의 엘프들은 점점 다가오는 어둠으로부터 숲을 지키기 위해 싸웁니다." />
+    <string id="taom_str_culture_description.lothlorien" text="황금 숲의 거주자인 로스로리엔의 갈라드림은 갈라드리엘 여군주와 켈레보른 군주가 이끄는 영묘하고 고귀한 민족입니다. 궁술과 숲 전투의 대가로서 그들은 비할 데 없는 기술로 마법에 걸린 영역을 지킵니다. 동족과 고향에 대한 그들의 충성은 흔들리지 않으며, 그들의 은밀한 마법은 로스로리엔을 점점 커지는 그림자 속에서 희망과 빛의 성소로 보존합니다." />
+    <string id="taom_str_culture_description.isengard" text="백색의 사루만이 이끄는 아이센가드의 군대는 우르크-하이와 용병들로 이루어진 강력한 세력입니다. 산업의 불길 속에서 단련된 그들의 무기와 갑옷은 파괴를 위해 제작되었습니다. 아이센가드의 군대는 정복과 지배를 향해 무자비한 효율성으로 전쟁에 나섭니다." />
+    <string id="taom_str_culture_description.gundabad" text="안개에 싸인 산에 거주하는 군다바드의 오크들은 잔인하고 야만적인 세력입니다. 전쟁군주들이 이끄는 그들은 인근 땅에 끝없는 약탈을 감행합니다. 증오와 잔혹함에 사로잡혀 그들은 북부를 지배하려는 집요한 추구를 멈추지 않습니다." />
+    <string id="taom_str_culture_description.umbar" text="해적이자 숙련된 항해사인 움바르의 해적들은 사우론과 동맹을 맺은 무자비하고 교활한 민족입니다. 빠른 배와 무자비한 해전으로 알려져 있으며, 가운데땅의 해안선에 공포를 심어줍니다. 해양 유산을 자랑스러워하는 그들은 어두운 동맹의 이름으로 약탈과 노략질을 하며 바다의 혼돈을 육지에 가져옵니다." />
+    <string id="taom_str_culture_description.dolguldur" text="강령술사의 지휘 아래 있는 돌 굴두르의 하수인들은 어둡고 사악한 세력입니다. 어둠숲의 타락한 숲 속에 숨어서 그들은 배신과 그림자를 이용해 적들을 약화시킵니다. 오크, 와르그, 그리고 다른 추악한 생물들이 가운데땅에 공포와 부패를 퍼뜨리기 위해 진군합니다." />
+    <string id="taom_str_culture_description.gondor" text="누메노르 망명자들의 후손인 곤도르인들은 가운데땅에서 가장 위대한 인간 왕국의 자랑스러운 집정관들입니다. 우뚝 솟은 석조 요새와 흔들리지 않는 용기로 알려진 곤도르는 모르도르의 다가오는 그림자에 맞서는 희망의 보루입니다. 용맹한 보병, 숙련된 궁수, 기마 기사들로 구성된 규율 잡힌 군대는 모든 자유 민족들의 방패로 서 있습니다. 고귀한 집정관들과 대장들의 인도를 받는 곤도르인들은 그들의 전통을 굳게 지키며, 왕국과 그 유산을 지키는 의무에 굴하지 않습니다." />
+    <string id="taom_str_culture_description.mordor" text="멸망의 산의 그림자 속에서 단련된 모르도르의 군대는 암흑군주 사우론이 지휘하는 무자비한 어둠의 세력입니다. 오크, 트롤, 사악한 인간들로 구성된 그들은 불타는 눈 아래 전쟁에 나서며 공포와 파괴를 뿌립니다. 이 군단들은 잔혹함과 복종에 사로잡혀 들쭉날쭉한 칼날과 조잡한 갑옷을 휘두릅니다. 사우론의 철의 의지에 묶인 모르도르의 군대는 가운데땅 전체를 그림자로 삼키려는 치명적인 물결입니다." />
+    <string id="taom_str_culture_rich_name.empire" text="던랜딩" />
+    <string id="taom_str_culture_rich_name.vlandia" text="로히림" />
+    <string id="taom_str_culture_rich_name.battania" text="바리아그" />
+    <string id="taom_str_culture_rich_name.khuzait" text="동방인" />
+    <string id="taom_str_culture_rich_name.aserai" text="하라드림" />
+    <string id="taom_str_culture_rich_name.sturgia" text="바르드 일족" />
+    <string id="taom_str_culture_rich_name.erebor" text="드워프" />
+    <string id="taom_str_culture_rich_name.rivendell" text="놀도르" />
+    <string id="taom_str_culture_rich_name.mirkwood" text="실반" />
+    <string id="taom_str_culture_rich_name.lothlorien" text="갈라드림" />
+    <string id="taom_str_culture_rich_name.isengard" text="우르크하이" />
+    <string id="taom_str_culture_rich_name.gundabad" text="군다바드 오크" />
+    <string id="taom_str_culture_rich_name.umbar" text="움바르" />
+    <string id="taom_str_culture_rich_name.dolguldur" text="돌 굴두르" />
+    <string id="taom_str_culture_rich_name.gondor" text="곤도르인" />
+    <string id="taom_str_culture_rich_name.mordor" text="모르도르" />
+    <string id="taom_str_adjective_for_culture.empire" text="던랜드" />
+    <string id="taom_str_adjective_for_culture.vlandia" text="로한" />
+    <string id="taom_str_adjective_for_culture.battania" text="바리아그" />
+    <string id="taom_str_adjective_for_culture.khuzait" text="동방인" />
+    <string id="taom_str_adjective_for_culture.aserai" text="하라드림" />
+    <string id="taom_str_adjective_for_culture.sturgia" text="바르드" />
+    <string id="taom_str_adjective_for_culture.erebor" text="드워프" />
+    <string id="taom_str_adjective_for_culture.rivendell" text="리븐델" />
+    <string id="taom_str_adjective_for_culture.mirkwood" text="미르크우드" />
+    <string id="taom_str_adjective_for_culture.lothlorien" text="로스로리엔" />
+    <string id="taom_str_adjective_for_culture.isengard" text="아이센가드" />
+    <string id="taom_str_adjective_for_culture.gundabad" text="군다바드" />
+    <string id="taom_str_adjective_for_culture.umbar" text="움바르" />
+    <string id="taom_str_adjective_for_culture.dolguldur" text="돌 굴두르" />
+    <string id="taom_str_adjective_for_culture.gondor" text="곤도르" />
+    <string id="taom_str_adjective_for_culture.mordor" text="모르도르" />
+    <string id="taom_str_player_father_name.empire" text="울프가르" />
+    <string id="taom_str_player_mother_name.empire" text="프레카" />
+    <string id="taom_str_player_father_name.vlandia" text="발드레드" />
+    <string id="taom_str_player_mother_name.vlandia" text="모르웬" />
+    <string id="taom_str_player_father_name.battania" text="바리아그" />
+    <string id="taom_str_player_mother_name.battania" text="카라" />
+    <string id="taom_str_player_father_name.khuzait" text="카물" />
+    <string id="taom_str_player_mother_name.khuzait" text="아두나펠" />
+    <string id="taom_str_player_father_name.aserai" text="술라단" />
+    <string id="taom_str_player_mother_name.aserai" text="할레스" />
+    <string id="taom_str_player_father_name.sturgia" text="바드" />
+    <string id="taom_str_player_mother_name.sturgia" text="시그리드" />
+    <string id="taom_str_player_father_name.erebor" text="드룰린" />
+    <string id="taom_str_player_mother_name.erebor" text="오리나" />
+    <string id="taom_str_player_father_name.rivendell" text="켈레포른" />
+    <string id="taom_str_player_mother_name.rivendell" text="길리엔" />
+    <string id="taom_str_player_father_name.mirkwood" text="갈리온" />
+    <string id="taom_str_player_mother_name.mirkwood" text="루시엔" />
+    <string id="taom_str_player_father_name.lothlorien" text="이로핀" />
+    <string id="taom_str_player_mother_name.lothlorien" text="오임로델" />
+    <string id="taom_str_player_father_name.isengard" text="그리마" />
+    <string id="taom_str_player_mother_name.isengard" text="루르카" />
+    <string id="taom_str_player_father_name.gundabad" text="나르주크" />
+    <string id="taom_str_player_mother_name.gundabad" text="보를리아" />
+    <string id="taom_str_player_father_name.umbar" text="카스타미르" />
+    <string id="taom_str_player_mother_name.umbar" text="베루시엘" />
+    <string id="taom_str_player_father_name.dolguldur" text="그리쉬마크" />
+    <string id="taom_str_player_mother_name.dolguldur" text="두르가쉬" />
+    <string id="taom_str_player_father_name.gondor" text="코로미르" />
+    <string id="taom_str_player_mother_name.gondor" text="핀두일라스" />
+    <string id="taom_str_player_father_name.mordor" text="고르바그" />
+    <string id="taom_str_player_mother_name.mordor" text="젤로브" />
+    <string id="taom_peace_news" text="{FACTION1}과(와) {FACTION2}이(가) 평화 조약을 맺었습니다." />
+    <string id="taom_war_news" text="{FACTION1_NAME}의 {RULER_NAME}이(가) {FACTION2_NAME}에 선전포고했습니다." />
+    <string id="taom_war_news_direct" text="{FACTION1_NAME}이(가) {FACTION2_NAME}에 선전포고했습니다." />
+    <string id="taom_siege_party_link" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에게 포위당했습니다!" />
+    <string id="taom_siege_party" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에게 포위당했습니다!" />
+    <string id="taom_siege_army_link" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 대군에게 포위당했습니다!" />
+    <string id="taom_siege_army" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 대군에게 포위당했습니다!" />
+    <string id="taom_raid_army" text="{SETTLEMENT}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 대군에게 약탈당하고 있습니다" />
+    <string id="taom_raid_party" text="{SETTLEMENT}이(가) {FACTION_NAME}의 {LORD.LINK}에게 약탈당하고 있습니다" />
+    <string id="taom_destroy_party" text="{VICTOR_FACTION}의 {VICTOR_PARTY}이(가) {DEFEATED_FACTION}의 {DEFEATED_PARTY}을(를) 격파했습니다." />
+    <string id="taom_secondary_peace" text="{FACTION1}과(와) {FACTION2}이(가) 평화 조약을 맺었습니다." />
+    <string id="taom_change_faction" text="{CLAN_NAME} 일족이 {FACTION}에 합류했습니다." />
+    <string id="taom_merc_contract" text="{CLAN}이(가) {KINGDOM}과(와) 함께 싸우기로 계약했습니다." />
+    <string id="taom_merc_end" text="{CLAN}이(가) 더 이상 {KINGDOM}을(를) 섬기지 않습니다." />
+    <string id="taom_minor_intro" text="나는 {FACTION}의 {CONVERSATION_CHARACTER.LINK}입니다." />
+    <string id="taom_alliance_desc" text="{FACTION}와(과) 동맹을 맺습니다" />
+    <string id="taom_vassal_rank" text="{FACTION_INFORMAL_NAME}의 가신" />
+    <string id="taom_ruler_rank" text="{FACTION_INFORMAL_NAME}의 통치자" />
+    <string id="taom_noble_rank" text="{FACTION_INFORMAL_NAME}의 귀족" />
+    <string id="taom_merc_rank" text="{FACTION_INFORMAL_NAME}을(를) 위해 싸우는 용병" />
+    <string id="taom_answer_call" text="{CALLING_KINGDOM}의 요청에 응답하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고" />
+    <string id="taom_propose_call" text="{CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고할 것을 요청" />
+    <string id="taom_raid_resist_peace" text="약탈을 위해 {SETTLEMENT}에 도착했습니다. 일부 주민들이 저항하기 위해 모였습니다. 이 마을을 약탈하면 {KINGDOM}와 전쟁이 발발합니다." />
+    <string id="taom_force_supply_peace" text="마을 주민들에게 물자를 강제로 징발하려 하자 일부 주민들이 저항하기 위해 모였습니다. 그들과 싸우면 {KINGDOM}와 전쟁이 발발합니다." />
+    <string id="taom_force_vol_peace" text="유력자들에게 병력을 강제로 징집하려 하자 일부 주민들이 저항하기 위해 모였습니다. 그들과 싸우면 {KINGDOM}와 전쟁이 발발합니다." />
+    <string id="taom_raid_noresist_peace" text="약탈을 위해 {SETTLEMENT}에 도착했습니다. 저항은 없습니다. 이 마을을 약탈하면 {KINGDOM}와 전쟁이 발발합니다." />
+    <string id="taom_encounter_peace" text="{PARTY}와 조우했습니다. 그들과 싸우면 {KINGDOM}와 전쟁이 발발합니다." />
+    <string id="0cdXddA9" text="{KINGDOM1_LINK}이(가) {KINGDOM2_LINK}와 동맹을 맺었습니다." />
+    <string id="1rbg3Hz2" text="{FACTION_1}와 {FACTION_2}는 더 이상 적이 아닙니다." />
+    <string id="2BVDp7Tg" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 중단합니다. {POLICY_SUPPORT}" />
+    <string id="Lbs2bNlg" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 시작합니다. {POLICY_SUPPORT}" />
+    <string id="jnYwiCAz" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 계속합니다. {POLICY_SUPPORT}" />
+    <string id="faUooB7V" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 시행하지 않습니다. {POLICY_SUPPORT}" />
+    <string id="TauRjAud" text="{FACTION}의 {NAME}" />
+    <string id="2mVZORaE" text="{FACTION_NAME}의 신하" />
+    <string id="6d4ZTvGv" text="{LORD.NAME}은(는) {FACTION_NAME}의 {TITLE}이자 왕국의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
+    <string id="o5AUljbW" text="{LORD.NAME}은(는) {FACTION_NAME}의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}은(는) {FACTION_NAME} 땅 출신의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}은(는) {FACTION_NAME} 땅 출신의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
+    <string id="0bPb5btR" text="{LORD.NAME}은(는) 내전에서 {RULER}을(를) 지지하는 {FACTION_NAME}의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
+    <string id="JuPUG5wX" text="{LORD.NAME}은(는) {FACTION_NAME}의 {TITLE}이자 내전에서 {RULER}을(를) 지지하는 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}의 성은 {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 소유하고 있습니다. {KEEP_INFO}" />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}은(는) {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 통치하고 있습니다. {KEEP_INFO}" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK} 주변의 땅은 대부분 {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 소유하고 있습니다. {PROSPERITY_INFO}" />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}은(는) {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 통치하고 있습니다. {PROSPERITY_INFO} {MORALE_INFO}" />
+    <string id="yAOQnMVw" text="너는 {FACTION} 소속이지? 그렇다면 너는 내 포로다." />
+    <string id="YT4OvaAG" text="좋습니다. 당신은 {FACTION_NAME}의 보호를 받는다고 생각하십시오. 내일 이 시간까지 여정을 완료하지 못하면 추가 지불을 요청할 수 있습니다." />
+    <string id="taom_str_faction_official.erebor" text="고귀한 드워프" />
+    <string id="taom_str_faction_official.erebor_f" text="고귀한 드워프 귀부인" />
+    <string id="taom_str_faction_ruler.erebor" text="산 아래 왕" />
+    <string id="taom_str_faction_ruler.erebor_f" text="산 아래 여왕" />
+    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}산 아래 여왕{?}산 아래 왕{\?}, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}산 아래 여왕{?}산 아래 왕{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.erebor" text="에레보르의" />
+    <string id="taom_str_short_term_for_faction.erebor" text="드워프" />
+    <string id="taom_str_faction_formal_name_for_culture.erebor" text="산 아래 왕국" />
+    <string id="taom_str_faction_informal_name_for_culture.erebor" text="에레보르" />
+    <string id="taom_str_neutral_term_for_culture.erebor" text="에레보르의 드워프들" />
+    <string id="0aXG8dvJ" text="{KINGDOM_NAME}와 평화를 맺습니다. 조공은 지불되지 않습니다." />
+    <string id="0CsbbwtN" text="{CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전 요청" />
+    <string id="0nhqJewP" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {SETTLEMENT}을(를) {LEADER.NAME}에게 하사하였습니다." />
+    <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}과(와) 평화 조약을 맺기로 결정하였습니다." />
+    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 강할지 모르나, 그들의 땅은 비옥하고 탈취하기에 무르익었습니다." />
+    <string id="1o8vgwTf" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {OTHER_KINGDOM}과(와) 무역 협정을 체결하기로 결정하였습니다." />
+    <string id="1V8f9vRM" text="{PROPOSER_KINGDOM}의 동맹 제안을 전하는 전령이 당신의 왕국 궁정에 도착하였습니다." />
+    <string id="21yUheIy" text="{KINGDOM_NAME}은(는) {CREATION_YEAR}년에 떠오르는 {CULTURE_ADJECTIVE} 군벌 {RULER.NAME}에 의해 세워졌습니다." />
+    <string id="22LCyCoA" text="귀하의 왕국이 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에게 선전포고를 한다면 {GOLD}{GOLD_ICON}을(를) 제공하겠습니다." />
+    <string id="2b1xZGaQ" text="{KINGDOM_NAME}과(와) 평화 조약을 맺습니다. 우리 왕국은 {TRIBUTE_DURATION}일 동안 매일 {TRIBUTE_AMOUNT}의 조공을 지불할 것입니다." />
+    <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}의 약탈로 인해 많은 농부들이 고향을 떠났습니다. 토지를 가진 자들은 대개 돌아가지만, 가난한 이들은 새로운 정착지를 찾고 있습니다. 당신은 마을 외곽에 야영하고 있는 몇몇과 대화를 나눕니다. 그들에게 줄 땅은 없습니다. 그들은 소작인으로 일하기를 열망하는 것 같지만, 기존 마을 가문들과의 갈등 가능성은 항상 존재합니다." />
+    <string id="4fXpOe4N" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 붙잡고 있으며 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 요구하고 있습니다." />
+    <string id="4GgfFDWG" text="{KINGDOM_NAME}과(와) 평화 조약 체결" />
+    <string id="4JSzHkpt" text="{?IS_FEMALE}여왕{?}왕{\?}으로서, {KINGDOM_NAME}에게 선전포고를 할지 결정해야 합니다" />
+    <string id="4z1t75be" text="{CLAN_NAME}의 {FIRSTNAME}" />
+    <string id="5bBAOHmC" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 반반으로 나뉜 가운데 {SETTLEMENT}을(를) {?RULER.GENDER}그녀의{?}그의{\?} 영지로 취하였습니다." />
+    <string id="5bza9sDs" text="유감입니다. {FACTION_NAME}보다 더 나은 고용주는 없을 것입니다. 확신하십시오." />
+    <string id="5DdbkWLu" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {OTHER_KINGDOM}과(와) 무역 협정을 체결하기로 결정하였습니다." />
+    <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회가 반반으로 나뉜 가운데 {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
+    <string id="5pOKmHsf" text="{RULER.NAME}이(가) {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청하기로 결정하였습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받았습니다." />
+    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 우리의 조상 대대로 내려온 땅을 점령하고 우리 동족을 억압하고 있습니다." />
+    <string id="7ouzFASf" text="전령이 도착하여 {OFFERED_KINGDOM_LEADER.NAME}의 전갈을 전합니다. {?OFFERED_KINGDOM_LEADER.GENDER}그녀는{?}그는{\?} 당신의 높아지는 명성에 대해 언급하며, {OFFERED_KINGDOM_NAME}의 봉신이 되는 것을 고려해보겠느냐고 묻습니다. 관심이 있다면 직접 만나 이야기해야 합니다." />
+    <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
+    <string id="940TwBPs" text="{RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CLAN} 일족을 {KINGDOM}에서 추방하지 않기로 결정하였습니다." />
+    <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
+    <string id="aE7OQDMS" text="{KINGDOM_NAME}과(와) 동맹 체결" />
+    <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 반반으로 나뉜 가운데 {KINGDOM}과(와) 평화 조약을 맺기로 결정하였습니다." />
+    <string id="AGdmoIUc" text="{RULER.NAME}이(가) {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청하기로 결정하였습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 조언에 반하는 것이었습니다." />
+    <string id="amdgO9Hr" text="저는 {CONVERSATION_HERO.FIRSTNAME}입니다. {DIVINITY}께서 이 시대에 그들의 메시지를 전하도록 선택하신 {FACTION_NAME}이라는 원정대의 겸손한 추종자입니다." />
+    <string id="aQAI99d4" text="{KINGDOM_NAME}에게 선전포고" />
+    <string id="AThZtg7U" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 반반으로 나뉜 가운데 {KINGDOM}과(와) 평화 조약을 맺지 않기로 결정하였습니다." />
+    <string id="AwCnrOan" text="{RULER_NAME_AND_TITLE}으로서, {CALL_TO_WAR_COST}{GOLD_ICON}을(를) 지불하고 {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청할지 결정해야 합니다." />
+    <string id="AWm7Kb9Y" text="{RULER.NAME}이(가) {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청하지 않기로 결정하였습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받았습니다." />
+    <string id="awoeb3br" text="{FACTION_LEADER}이(가) {KINGDOM_CONSIDERING_PEACE_NAME}이(가) {KINGDOM_NAME}과(와) 평화 조약을 맺을지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
+    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK}이(가) {ENEMYFACTION_INFORMALNAME}와(과) 평화 조약을 맺었습니다. {QUEST_GIVER.LINK}와(과)의 합의가 취소되었습니다." />
+    <string id="az3K3j4C" text="지금 우리는 {ENEMY_KINGDOM_INFORMAL_NAME}보다 강합니다. 가능할 때 공격해야 합니다." />
+    <string id="B818zx3W" text="당신의 일족은 {KINGDOM}이(가) 평화 관계를 유지하고 있는 세력들과 전쟁 중입니다." />
+    <string id="bjEN2OzZ" text="중립 마을에 대한 당신의 적대 행위로 인해 {KINGDOM}이(가) 당신에게 선전포고를 합니다." />
+    <string id="Bk3Wqy5j" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 참전 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁을 하지 않기로 결정하였습니다." />
+    <string id="BlVjIlZF" text="{FACTION_LEADER}이(가) {KINGDOM_CONSIDERING_PEACE_NAME}이(가) {TRIBUTE_DURATION}일 동안 {TRIBUTE_AMOUNT}의 조공을 지불하고 {KINGDOM_NAME}과(와) 평화 조약을 맺을지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
+    <string id="bMCZ5rWQ" text="{RULER.NAME}이(가) {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청하지 않기로 결정하였습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받았습니다." />
+    <string id="bR7MIkFi" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
+    <string id="bXN2fbcv" text="당신의 부하들은 {SETTLEMENT_NAME}의 주민들을 적이 아닌 {SETTLEMENT_CULTURE_NAME}의 길 잃은 신민으로 대하며, 그들을 비교적 잘 대우합니다." />
+    <string id="bYmc9fi3" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
+    <string id="Cf0amFBD" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 {CALLING_KINGDOM}의 전쟁 요청 수락 - {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
+    <string id="cRpsjvOM" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}은(는) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}에 선전포고했습니다." />
+    <string id="CrzFdo2H" text="그렇습니다. {ENEMYFACTION_INFORMALNAME}와(과)의 전쟁에 관한 일입니다. [ib:hip][if:convo_excited]우리는 그들의 병력 일부를 묶어둘 필요가 있습니다. 비교적 소규모 병력이 그들의 영토를 빠르게 이동하며 마을들을 성공적으로 약탈한다면 좋은 교란 작전이 될 것입니다. 그들의 영주들은 약탈자들을 쫓아야 하므로 다른 곳에서 우리를 위협할 수 없을 것입니다. 당신이 이 임무에 적합한 {?PLAYER.GENDER}전사{?}남자{\?}인 것 같습니다. 어떻습니까? 성공하신다면 저의 감사와 함께 후한 보상을 받게 될 것입니다." />
+    <string id="CswzBb02" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}은(는) {KINGDOM}와(과) 평화를 맺기로 결정했습니다." />
+    <string id="d6KbdIWg" text=" 중립 마을에 대한 당신의 적대적 의도로 인해, {MERCENARY_KINGDOM}은(는) 당신과의 계약을 종료하고, {KINGDOM}은(는) 당신에게 선전포고합니다." />
+    <string id="dCDBqYsh" text="{KINGDOM}의 {RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {OTHER_KINGDOM}와(과)의 무역 협정 체결을 거부했습니다." />
+    <string id="dDsJyerw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 {CALLED_KINGDOM}을(를) 소집합니다." />
+    <string id="dEsIQDo3" text="우리의 동맹 {CALLED_KINGDOM}을(를) 전쟁에 소집할 시간입니다!" />
+    <string id="dov3iRlt" text="{ENEMY_KINGDOM_INFORMAL_NAME}의 {ENEMY_RULER.NAME}은(는) 사악하고 위험합니다. 너무 늦기 전에 {?ENEMY_RULER.GENDER}그녀를{?}그를{\?} 처리해야 합니다." />
+    <string id="DphlPaF9" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}은(는) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}에 선전포고했습니다." />
+    <string id="dPOOmYGQ" text="{KINGDOM}의 영주들과 전사들이 그들의 백성이 납치당했는데 가만히 있을 것 같습니까? 어서 우리를 놓아주시오!" />
+    <string id="drZC1Frp" text="{KINGDOM_NAME}은(는) {CREATION_YEAR}년에 {CULTURE_ADJECTIVE} 반란군 집단의 지도자 {RULER.NAME}에 의해 건국되었습니다." />
+    <string id="eAhgrwkZ" text="{RULER_NAME_AND_TITLE}으로서, {KINGDOM_NAME}와(과)의 동맹 결성 여부를 결정해야 합니다." />
+    <string id="eEmFbQet" text="{RULER.NAME}은(는) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 {CALLED_KINGDOM}을(를) 소집하기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받았습니다." />
+    <string id="efTah9rk" text="저는 {ENEMY_INFORMAL_NAME}을(를) 대신하여 평화를 맺을 권한이 없습니다. 우리 평의회가 평화 제안 여부와 조건을 결정해야 합니다." />
+    <string id="eiGl6XBr" text="{CALL_TO_WAR_PAYMENT}{GOLD_ICON}을(를) 받고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 {CALLING_KINGDOM}의 전쟁 요청에 응할지 투표합니다." />
+    <string id="EqevKYZD" text="{RULER_NAME_AND_TITLE}으로서, {CALL_TO_WAR_COST}{GOLD_ICON}을(를) 지불하고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 {CALLED_KINGDOM}을(를) 소집할지 결정해야 합니다." />
+    <string id="eTylgLCc" text="{KINGDOM_NAME}에서 전령이 도착했습니다. 그들은 당신에게 동맹을 제안합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
+    <string id="eUWYqwE6" text="{CALLING_KINGDOM}은(는) 더 이상 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁 중이 아닙니다." />
+    <string id="F7CMsDyG" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
+    <string id="fcuUcjYV" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받았습니다." />
+    <string id="FNCq25P1" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
+    <string id="FuNbouTu" text="{KINGDOM_NAME}에서 전령이 도착했습니다. 그들은 당신의 왕국에 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁을 요청합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
+    <string id="G3qGLAeQ" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CLAN} 일족을 {KINGDOM}에서 추방했습니다." />
+    <string id="gf2Lje7o" text="{RULER.NAME}은(는) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 {CALLED_KINGDOM}을(를) 소집하지 않기로 결정했습니다." />
+    <string id="GiaTh92Q" text="{QUEST_GIVER_FACTION}의 군대를 지휘하는 {QUEST_GIVER.LINK}은(는) 다가올 군사 작전을 위한 식량 보급이 필요하다고 말했습니다. {?QUEST_GIVER.GENDER}그녀는{?}그는{\?} 당신이 곡물 {GRAIN_AMOUNT}자루를 배달하기를 원하며, 필수는 아니지만 가축 {LIVESTOCK_AMOUNT}마리와 포도주 {WINE_AMOUNT}통을 제공한다면 {?QUEST_GIVER.GENDER}그녀는{?}그는{\?} 감사하게 여길 것입니다." />
+    <string id="Gj5d9y2g" text="{KINGDOM}의 {RULER.NAME}은(는) {OTHER_KINGDOM}와(과)의 무역 협정 체결을 결정했습니다." />
+    <string id="gNf0ALKw" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신에게 무조건 평화를 제안합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
+    <string id="h5eTEYON" text="{RULER.NAME}은(는) {CLAN} 일족을 {KINGDOM}에서 추방했습니다." />
+    <string id="h9bWTLgK" text="우리의 동맹 {KINGDOM_NAME}의 전쟁에 합류할 시간입니다." />
+    <string id="IB1xsVEr" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신에게 무조건 평화를 제안합니다. 당신의 가신들은 결정을 당신에게 맡겼습니다." />
+    <string id="INfHUqxT" text="{RULER.NAME}은(는) {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
+    <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}은(는) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}와(과)의 평화를 거부했습니다." />
+    <string id="iOmgCFDI" text="{KINGDOM_NAME}와(과)의 동맹 결성에 투표합니다." />
+    <string id="ItueKmqd" text="당신의 일족은 이제 {QUEST_GIVER_SETTLEMENT_FACTION}와(과) 전쟁 중입니다. {QUEST_GIVER.LINK}와(과)의 계약은 취소되었습니다." />
+    <string id="izwKmH2I" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
+    <string id="jaioXYDc" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
+    <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}와(과) 평화를 맺기로 결정했습니다." />
+    <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. {MAP_FACTION_NAME}은(는) 우리 왕국들 간의 전쟁을 끝내기 위해 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불할 것입니다. 귀하의 가신들은 결정을 귀하에게 맡겼습니다." />
+    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 현재 우리보다 더 강력합니다. 우리는 힘을 키울 시간이 필요합니다." />
+    <string id="JQligd8z" text="{KINGDOM}의 평의회가 {KING.NAME}을(를) 새로운 통치자로 선출했습니다." />
+    <string id="JY717hPW" text="저는 {ENEMY_INFORMAL_NAME}을(를) 대신해 평화를 맺을 권한이 없습니다. {ENEMY_RULER.NAME}과(와) {?ENEMY_RULER.GENDER}그녀의{?}그의{\?} 평의회가 평화를 제안할지 여부와 조건을 결정해야 합니다." />
+    <string id="K5w135N9" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 조언에 반하는 것입니다." />
+    <string id="KFHj7ckm" text="통치자로서, 귀하는 {KINGDOM_NAME}와(과) 평화를 맺을지 결정해야 합니다" />
+    <string id="KlATZEbb" text="{KINGDOM_NAME}와(과) 동맹을 맺습니다." />
+    <string id="KSrNutEO" text="{FACTION_LEADER}이(가) {KINGDOM_NAME}에 전쟁을 선포할지 결정할 것입니다. 귀하는 이 결정에 대한 입장을 선택할 수 있습니다." />
+    <string id="Ktpia7Pa" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {SETTLEMENT}을(를) {LEADER.NAME}에게 하사했습니다." />
+    <string id="l5H9x7Lo" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 동등하게 나뉜 가운데 {SETTLEMENT}을(를) {LEADER.NAME}에게 하사했습니다." />
+    <string id="L802I9W2" text="그렇습니다, {FACTION_NAME}에 가입하겠습니다." />
+    <string id="L81DPSom" text="{RULER_NAME_AND_TITLE}(으)로서, 귀하는 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_COST}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정해야 합니다." />
+    <string id="Lalj0T1i" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CALLING_KINGDOM}의 요청에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포했습니다." />
+    <string id="lseJ70y0" text="귀하의 왕국은 {KINGDOM_NAME}와(과) 전쟁 중입니다." />
+    <string id="LVX2x6Jf" text="{SERVED_FACTION}와(과)의 계약을 끝내고 싶습니다." />
+    <string id="m69pvful" text="{KINGDOM_LEADER}이(가) 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_PAYMENT}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정할 것입니다. 귀하는 이 결정에 대한 입장을 선택할 수 있습니다." />
+    <string id="m6OVl6Dg" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 동등하게 나뉜 가운데 {KINGDOM}에서 {CLAN} 일족을 추방했습니다." />
+    <string id="mfYzCeGR" text="{CHARACTER.NAME}은(는) {CHARACTER_FACTION_SHORT}의 {TITLE}이었습니다. {FURTHER_DETAILS}." />
+    <string id="mRrYn2qm" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}은(는) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}와(과) 평화를 맺지 않기로 결정했습니다." />
+    <string id="MSr3HRa1" text="{CLAN}의 {?QUEST_GIVER.GENDER}여군주{?}군주{\?}인 {QUEST_GIVER.NAME}이(가) 일족의 젊은 구성원을 전쟁 기술로 훈련시키고자 합니다." />
+    <string id="mvkKP6OE" text="{RULER.NAME}은(는) {KINGDOM}에서 {CLAN} 일족을 추방하지 않기로 결정했습니다." />
+    <string id="MYIgSsfk" text="{RULER.NAME}은(는) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대해 {CALLED_KINGDOM}을(를) 전쟁에 부르지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 조언에 반하는 것입니다." />
+    <string id="n4I3pWOn" text="통치자로서, 귀하는 {TRIBUTE_DURATION}일 동안 {TRIBUTE_AMOUNT}을(를) 조공으로 지불하여 {KINGDOM_NAME}와(과) 평화를 맺을지 결정해야 합니다." />
+    <string id="Nd0Vhkxn" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 귀하가 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불하는 데 동의하면 평화를 제안합니다. 귀하의 가신들은 결정을 귀하에게 맡겼습니다." />
+    <string id="NFuezpbG" text="{CALLED_KINGDOM}은(는) 이미 {KINGDOM_NAME}와(과) 전쟁 중입니다." />
+    <string id="NjPMRWbW" text="{KINGDOM_NAME}와(과) 평화를 맺습니다. 우리 왕국은 {TRIBUTE_DURATION}일 동안 매일 {TRIBUTE_AMOUNT}의 조공을 받을 것입니다." />
+    <string id="nkvT88r2" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대해 {CALLED_KINGDOM}을(를) 전쟁에 부를 충분한 자금이 없습니다." />
+    <string id="NuYzgBZB" text="너무 지나칩니다. {KINGDOM}은(는) 자국의 카라반 파괴를 용납하지 않을 것입니다." />
+    <string id="o4IxXHnB" text="{RULER.NAME}은(는) {KINGDOM_NAME}와(과) 동맹을 맺지 않기로 결정했습니다." />
+    <string id="o69PZuce" text="{OLD_LEADER.LINK}은(는) 더 이상 {CLAN_NAME}의 수장이 아닙니다. {NEW_LEADER.LINK}이(가) 일족의 통치자로 취임했습니다." />
+    <string id="O9XpB5Ah" text="통치자로서, 귀하는 {KINGDOM}와(과) 무역 협정을 맺을지 결정해야 합니다" />
+    <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE}(으)로서, 귀하는 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_PAYMENT}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정해야 합니다." />
+    <string id="Oe1NdVLe" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 동등하게 나뉜 가운데 {KINGDOM}에서 {CLAN} 일족을 추방하지 않기로 결정했습니다." />
+    <string id="Oi20UrO2" text="{TARGET_SETTLEMENT_FACTION_INFORMAL_NAME}와(과)의 전쟁은 충분히 잘 진행되고 있습니다. 하지만 우리가 쏟은 피와 은화에 비해 보여줄 것이 충분하지 않다고 말하는 이들이 있습니다. 이 시점에서 명확한 승리는 많은 도움이 될 것입니다. 저는 {TARGET_SETTLEMENT}의 탑에서 우리의 깃발이 펄럭이는 것을 보고 싶습니다.[ib:normal2][if:convo_thinking]" />
+    <string id="OlIWwLbP" text="그렇습니다. {ENEMYFACTION_INFORMALNAME}와(과)의 전쟁에 관한 것입니다. [ib:closed][if:convo_pondering]우리는 그들의 군대 일부를 묶어둘 필요가 있으며, 가장 쉬운 방법은 그들의 마을을 약탈하는 것입니다. 잔인한 일이며 평민들에게 힘들 것이지만, 그들의 영주들은 약탈자들을 쫓아야 할 것이고 이는 그들이 우리에게 같은 짓을 하는 것을 막을 것입니다. 이 일을 맡는다면, 성공하면 보상하겠습니다." />
+    <string id="Ouj6eSWC" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받았습니다." />
+    <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 {KINGDOM_NAME}의 참전 요청을 담은 전령이 귀하 왕국의 궁정에 도착했습니다." />
+    <string id="PP7KD7OC" text="{KINGDOM}의 {RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 동등하게 나뉜 가운데 {OTHER_KINGDOM}와(과) 무역 협정을 체결하기로 결정했습니다." />
+    <string id="PutoRsWp" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 석방하면 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 제안합니다." />
+    <string id="q9DnHVcZ" text="{KINGDOM_NAME}의 전쟁에 참여하는 것은 우리의 이익에 부합하지 않습니다." />
+    <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
+    <string id="qgN9o2ip" text="우리의 동맹 {KINGDOM_NAME}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할 때입니다! 왕국은 그들에게 참전 요청 협정을 제안할지 투표할 것입니다." />
+    <string id="qN3x2usk" text="{CALL_TO_WAR_COST}{GOLD_ICON}를 지불하고 {CALLED_KINGDOM}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할지 투표하십시오." />
+    <string id="R0bJS0pn" text="{OTHER_FACTION}와(과) 평화 협정 체결" />
+    <string id="r0Kq0aeB" text="{FACTION_LEADER}이(가) {CALL_TO_WAR_COST}{GOLD_ICON}를 지불하고 {CALLED_KINGDOM}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
+    <string id="rd229FYG" text="{RULER.NAME} has expelled {CLAN} clan from {KINGDOM} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM}에 선전포고했습니다." />
+    <string id="rJIuQ0hc" text="{RULER.NAME} of {KINGDOM} has chosen not to sign a trade agreement with {OTHER_KINGDOM} over the objections of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="rtfoywJl" text="{KINGDOM_NAME}에 선전포고" />
+    <string id="sbFboHmV" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신이 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불하는 것에 동의한다면 평화를 제안합니다. 왕국은 이 제안을 수락할지 투표할 것입니다." />
+    <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {KINGDOM}에 선전포고했습니다." />
+    <string id="SR9FC5jH" text="{MAP_FACTION_NAME}에서 평화 제안을 가지고 전령이 도착했습니다. {MAP_FACTION_NAME}은(는) 왕국 간의 전쟁을 끝내기 위해 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불할 것입니다. 왕국은 이 제안을 수락할지 투표할 것입니다." />
+    <string id="syGyjjKE" text="{CALLING_KINGDOM}의 소집에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고하십시오." />
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} is offering you work as a mercenary, paying {GOLD_AMOUNT}{GOLD_ICON} per influence point that you would gain from fighting on their behalf. Do you accept?" />
+    <string id="uc4M4bhG" text="음, 내가 원하는 것이 있소. {TARGET_FACTION}의 한 {?TARGET_HERO.GENDER}귀부인{?}영주{\?}와 나는 아주 오랜, 오랜 관계가 있소. 그리고 우호적인 관계는 아니오. 지금 우리가 전쟁 중인 만큼, {?TARGET_HERO.GENDER}그녀가{?}그가{\?} 자유로운 한 내 목숨과 영지가 안전하지 않다는 것을 알고 있소. 말했듯이, 전혀 쉽지 않을 것이오. 하지만 그것을 해내는 자, {?TARGET_HERO.GENDER}그녀를{?}그를{\?} 살아서 내게 데려오는 자는, 내 감사는 차치하고라도, 정말로 매우 부유한 사람이 될 것이오.[if:convo_grave][ib:closed2]" />
+    <string id="uiY3ds0Z" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
+    <string id="UQq4ekeu" text="{KINGDOM}의 {RULER.NAME}이(가) {OTHER_KINGDOM}와(과)의 무역 협정 체결을 거부했습니다." />
+    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}이(가) {CALLED_KINGDOM_LINK}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}에 대한 선전포고를 요청했습니다." />
+    <string id="uWdj1X2c" text="{CHARACTER.NAME}은(는) {CHARACTER_FACTION_SHORT}의 일원이었습니다. {FURTHER_DETAILS}." />
+    <string id="V097rA1v" text="{LORD.FIRSTNAME}은(는) 떠오르는 새로운 일족인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} 아직 {?LORD.GENDER}그녀의{?}그의{\?} 명성을 쌓고 있는 중입니다." />
+    <string id="vf2pb7Ts" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
+    <string id="Vg5RmOqL" text="{FACTION_LEADER}이(가) {KINGDOM}이(가) {OTHER_KINGDOM}와(과) 무역 협정을 체결할지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
+    <string id="VWoHoUin" text="늑대가 양과 평화를 맺지 않는 것처럼, 우리와 {ENEMY_INFORMAL_NAME} 사이에는 평화가 있을 수 없소." />
+    <string id="wijL0mTy" text="{FACTION_LEADER}이(가) {KINGDOM_NAME}와(과) 동맹을 맺을지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
+    <string id="wsDNxArW" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {KINGDOM}와(과)의 평화 협정을 거부했습니다." />
+    <string id="xAuejv91" text="{KINGDOM}의 {RULER.NAME}이(가) {OTHER_KINGDOM}와(과)의 평화 협정을 거부했으며, {?RULER.GENDER}그녀의{?}그의{\?} 평의회는 이 문제에 대해 의견이 반반으로 나뉘었습니다." />
+    <string id="XaZyU3Cn" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회의 의사에도 불구하고 {KINGDOM}와(과)의 전쟁을 선택하지 않았습니다." />
+    <string id="XbYCVCbR" text="우리는 동맹 {CALLED_KINGDOM}을(를) 전쟁에 소집하는 것을 반대합니다." />
+    <string id="xhK4zMec" text="{RULER.NAME}이(가) {CALLED_KINGDOM}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집하기로 결정했습니다." />
+    <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}이(가) {CALLED_KINGDOM_LINK}에게 발령한 {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}에 대한 참전 소집이 종료되었습니다." />
+    <string id="xM97H0oR" text="{KINGDOM_NAME}에 대한 선전포고에 투표하십시오." />
+    <string id="yBL3TzXw" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {CLAN} 일족을 {KINGDOM}에서 추방하지 않기로 했습니다." />
+    <string id="yUYNlQhU" text="좋소, 내 부하들에게 간단한 계약서를 작성하도록 하겠소. {KINGDOM_FORMAL_NAME}을(를) 대표하여 환영하오. 우리의 적들에게 당신의 검을 잘 사용하시기를." />
+    <string id="Zckbdm4Z" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief with {?RULER.GENDER}her{?}his{\?} council's support." />
+    <string id="zd9sawl9" text="당신은 이미 {KINGDOM_NAME}와(과) 동맹 관계입니다." />
+    <string id="zXuo0Wbj" text="{KINGDOM}와(과) 무역 협정 체결" />
+    <string id="ZZ1oLfEq" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
+    <string id="taom_shaghana_name" text="샤가나" />
+    <string id="taom_shaghana_short_name" text="샤가나" />
+    <string id="taom_shaghana_title" text="샤가나의 타스크랄란" />
+    <string id="taom_shaghana_ruler_title" text="타스크랄" />
+    <string id="taom_shaghana_desc" text="샤가나는 하라드의 동부 지역으로, 태양에 그을린 초원과 고대 요새들의 땅이다. 아홉 부족 씨족은 맹세와 혈연으로 결속된 맹렬한 전사들로, 감히 그들에게 맞서는 자들에게 공포를 안긴다." />
+    <string id="aom_shaghana_name" text="샤가나" />
+    <string id="aom_shaghana_desc" text="샤가나는 동부 하라드 초원의 사나운 부족민으로, 끊임없는 약탈자이자 숙련된 기마병으로 명성이 높다. 맹세와 씨족으로 결속되어 그들의 타스크랄에게 복종하며, 태양에 그을린 요새에서 사우론의 어둠의 계획에 봉사한다." />
+    <string id="aom_lord_SH1_1_name" text="자르칸" />
+    <string id="aom_lord_SH2_1_name" text="라킴" />
+    <string id="aom_lord_SH3_1_name" text="타딘" />
+    <string id="aom_lord_SH4_1_name" text="나켈" />
+    <string id="aom_lord_SH5_1_name" text="야주르" />
+    <string id="aom_lord_SH6_1_name" text="카잔" />
+    <string id="aom_lord_SH7_1_name" text="할루즈" />
+    <string id="aom_lord_SH8_1_name" text="파룬" />
+    <string id="aom_lord_SH9_1_name" text="살루즈" />
+    <string id="aom_clan_shaghana_1_name" text="에자르키아" />
+    <string id="aom_clan_shaghana_2_name" text="쿠마라크니스" />
+    <string id="aom_clan_shaghana_3_name" text="타이마캬" />
+    <string id="aom_clan_shaghana_4_name" text="자야크누리" />
+    <string id="aom_clan_shaghana_5_name" text="셀라르케스" />
+    <string id="aom_clan_shaghana_6_name" text="우자레스" />
+    <string id="aom_clan_shaghana_7_name" text="알라라닌" />
+    <string id="aom_clan_shaghana_8_name" text="바누간드" />
+    <string id="aom_clan_shaghana_9_name" text="아캄메스" />
+    <string id="aom_sh_notable_0" text="빈틈없는 샤가나 상인" />
+    <string id="aom_sh_notable_0b" text="샤가나 향료 상인" />
+    <string id="aom_sh_notable_1" text="샤가나 대상 소유주" />
+    <string id="aom_sh_notable_1b" text="동부 초원 상인" />
+    <string id="aom_sh_notable_2" text="샤가나 비단 상인" />
+    <string id="aom_sh_notable_2b" text="하라드 초원 상인" />
+    <string id="aom_sh_notable_3" text="샤가나 환전상" />
+    <string id="aom_sh_notable_3b" text="동부 물품 중개인" />
+    <string id="aom_sh_notable_4" text="샤가나 시장 주인" />
+    <string id="aom_sh_notable_4b" text="교활한 샤가나 상인" />
+    <string id="aom_sh_notable_5" text="샤가나 태양 사제" />
+    <string id="aom_sh_notable_6" text="샤가나 부족 장로" />
+    <string id="aom_sh_notable_7" text="샤가나 전통 수호자" />
+    <string id="aom_sh_notable_8" text="샤가나 금속공" />
+    <string id="aom_sh_notable_9" text="샤가나 무기 제작자" />
+    <string id="aom_sh_notable_gl1" text="샤가나 집행자" />
+    <string id="aom_sh_notable_10" text="샤가나 범죄 두목" />
+    <string id="aom_sh_notable_11" text="샤가나 약탈자 두목" />
+    <string id="aom_sh_notable_gl4" text="샤가나 갱단 추장" />
+    <string id="aom_sh_notable_12" text="샤가나 거리 두목" />
+    <string id="aom_sh_notable_13" text="샤가나 암시장 중개인" />
+    <string id="aom_sh_notable_21" text="샤가나 지주" />
+    <string id="aom_sh_notable_22" text="샤가나 목축 대가" />
+    <string id="aom_sh_headman_1" text="샤가나 마을 촌장" />
+    <string id="aom_sh_headman_2" text="샤가나 원로 촌장" />
+    <string id="aom_sh_headman_3" text="샤가나 마을 원로" />
+    <string id="taom_abanissa_name" text="아바니사" />
+    <string id="taom_abanissa_short_name" text="아바니사" />
+    <string id="taom_abanissa_title" text="아바니사의 차자판" />
+    <string id="taom_abanissa_ruler_title" text="차자판" />
+    <string id="taom_abanissa_desc" text="아바니사는 하라드 깊은 남쪽에 위치한 곳으로, 습한 밀림과 고대 석조 왕조의 땅이다. 아바니사의 위대한 가문들은 무시무시한 전투 야수들과 훈련된 전사 군대를 지휘하며, 그들의 권력은 오직 사우론에게만 책임을 진다." />
+    <string id="aom_abanissa_name" text="아바니사" />
+    <string id="aom_abanissa_desc" text="아바니사의 위대한 가문들은 하라드 깊은 남쪽을 통치하며, 이곳은 습한 밀림과 고대 석조 궁전, 그리고 거대한 전투 야수들의 땅이다. 그들의 군대는 왕조의 깃발 아래 행군하며, 남방 땅 전역에서 존경과 공포를 불러일으킨다." />
+    <string id="aom_lord_AB1_1_name" text="팍사르" />
+    <string id="aom_lord_AB2_1_name" text="호셰드" />
+    <string id="aom_lord_AB3_1_name" text="바스나르" />
+    <string id="aom_lord_AB4_1_name" text="고라제" />
+    <string id="aom_lord_AB5_1_name" text="아자단" />
+    <string id="aom_lord_AB6_1_name" text="아르타시" />
+    <string id="aom_lord_AB7_1_name" text="아르다크" />
+    <string id="aom_lord_AB8_1_name" text="티르다" />
+    <string id="aom_clan_abanissa_1_name" text="팍샤란 가문" />
+    <string id="aom_clan_abanissa_2_name" text="호셰드하르마 가문" />
+    <string id="aom_clan_abanissa_3_name" text="바스나라드 가문" />
+    <string id="aom_clan_abanissa_4_name" text="고라제한 가문" />
+    <string id="aom_clan_abanissa_5_name" text="아자다프로잔 가문" />
+    <string id="aom_clan_abanissa_6_name" text="아르탁샤산 가문" />
+    <string id="aom_clan_abanissa_7_name" text="아르다체란 가문" />
+    <string id="aom_clan_abanissa_8_name" text="티르다하나 가문" />
+    <string id="aom_ab_notable_0" text="먼 하라드 왕조 중개인" />
+    <string id="aom_ab_notable_0b" text="아바니사 상아 상인" />
+    <string id="aom_ab_notable_1" text="아바니사 대상 대주" />
+    <string id="aom_ab_notable_1b" text="먼 하라드 향료 상인" />
+    <string id="aom_ab_notable_2" text="아바니사 금 상인" />
+    <string id="aom_ab_notable_2b" text="가문 집사 상인" />
+    <string id="aom_ab_notable_3" text="아바니사 보석 세공 중개인" />
+    <string id="aom_ab_notable_3b" text="먼 하라드 비단 상인" />
+    <string id="aom_ab_notable_4" text="아바니사 시장 감독관" />
+    <string id="aom_ab_notable_4b" text="교활한 아바니사 중개인" />
+    <string id="aom_ab_notable_5" text="아바니사 대사제" />
+    <string id="aom_ab_notable_6" text="아바니사 신전 관리인" />
+    <string id="aom_ab_notable_7" text="먼하라드 의식 집행자" />
+    <string id="aom_ab_notable_8" text="아바니사 장인 대가" />
+    <string id="aom_ab_notable_9" text="먼하라드 무구 제작자" />
+    <string id="aom_ab_notable_gl1" text="아바니사 가문 집행자" />
+    <string id="aom_ab_notable_10" text="아바니사 암흑의 군주" />
+    <string id="aom_ab_notable_11" text="먼하라드 전쟁단 지도자" />
+    <string id="aom_ab_notable_gl4" text="아바니사 조직 우두머리" />
+    <string id="aom_ab_notable_12" text="아바니사 구역 두목" />
+    <string id="aom_ab_notable_13" text="먼하라드 밀수왕" />
+    <string id="aom_ab_notable_21" text="아바니사 영지 영주" />
+    <string id="aom_ab_notable_22" text="아바니사 농장 주인" />
+    <string id="aom_ab_headman_1" text="아바니사 마을 촌장" />
+    <string id="aom_ab_headman_2" text="아바니사 원로 촌장" />
+    <string id="aom_ab_headman_3" text="아바니사 마을 원로" />
+    <string id="TAOM_ghilman_name" text="뱀 근위대" />
+    <string id="TAOM_ghilman_short" text="뱀 근위대" />
+    <string id="TAOM_ghilman_text" text="뱀 근위대는 근하라드의 뱀군주를 섬기는 기마병들이다. 에펠두아스 남쪽의 광활한 평원에서 말 위에서 자란 이들은 중간계 남부 전역에서 타의 추종을 불허하는 기마 궁수들이다. 하라드와 모르도르 사이에 평화가 지속되는 시기에 근위대는 그들의 용병술을 하라드림 영주들과 황금 대가를 지불할 여유가 있는 다른 세력들에게 제공한다." />
+    <string id="TAOM_legion_name" text="회색 중대" />
+    <string id="TAOM_legion_short" text="회색 중대" />
+    <string id="TAOM_legion_text" text="회색 중대는 오래 전에 왕국을 잃어버린 아르노르 왕들의 후손인 두네다인 야경대의 마지막 조직화된 형제단이다. 그들은 자신들의 이름을 잊어버린 땅에서 평화를 지키며 북부를 가로질러 집 없이 떠돈다. 그들의 첫 번째 충성심은 엘렌딜의 혈통에 있지만, 그들의 방랑이 문명화된 땅으로 이어질 때 중간계 전역의 영주들로부터 계약을 받기도 한다." />
+    <string id="TAOM_skolderbrotva_name" text="에레보르의 도끼병" />
+    <string id="TAOM_skolderbrotva_short" text="도끼병" />
+    <string id="TAOM_skolderbrotva_text" text="에레보르의 도끼병은 소린 왕의 전투를 겪은 참전용사들로, 평화시대가 그들의 기질에 맞지 않음을 깨달은 자들이다. 난쟁이 전당의 근접전투 - 방패벽, 단도끼, 곡괭이 - 에 훈련된 이들은 어떤 지형에서든 무시무시하지만 에레보르를 인간의 왕국들과 연결하는 산길에서 특히 뛰어나다. 그들은 대가를 지불할 수 있는 누구의 계약이든 받지만, 에레보르나 리븐델에 대항하여 도끼를 들지는 않는다." />
+    <string id="TAOM_company_name" text="해적단의 검" />
+    <string id="TAOM_company_short" text="해적단" />
+    <string id="TAOM_company_text" text="해적단의 검은 움바르 항구 출신의 베테랑 해상 전사들로, 육지에서 그들의 기술을 파는 일에 나섰다. 그들은 함선 전투의 선호 무기인 쇠뇌를 사용하며, 흔들리는 갑판 위에서만큼이나 공성전에서도 편안하다. 흉터투성이인 누메노르 망명자 선장은 그들의 명성이 가장 값진 화물임을 알고 철저한 규율로 계약을 지키게 한다." />
+    <string id="TAOM_beni_zilal_name" text="눈먼 눈" />
+    <string id="TAOM_beni_zilal_short" text="눈먼 눈" />
+    <string id="TAOM_beni_zilal_text" text="눈먼 눈은 하라드의 해안과 깊은 사막을 가로질러 활동하는 밀수꾼, 장물아비, 고용 살인자들의 형제단이다. 그들은 잊혀진 하라드림 왕을 섬겼던 암살자 집단의 후손이라고 전해지며, 그들의 방식 - 독, 그림자, 비밀의 활용 - 은 변하지 않았다. 조용히 경쟁자를 제거하고 싶거나 세관 검사 없이 화물을 옮겨야 하는 상인들은 금화 한 닢과 봉인된 편지를 어디에 남겨야 하는지 안다." />
+    <string id="TAOM_wolfskins_name" text="바리아그 약탈자" />
+    <string id="TAOM_wolfskins_short" text="약탈자" />
+    <string id="TAOM_wolfskins_text" text="바리아그 약탈자는 칸드의 초원 출신 젊은 바리아그 전사들의 전쟁단으로, 그들의 청년기를 의례적 전쟁 상태로 보낸다: 그들은 조리된 음식을 소유할 수 없고, 영구적인 지붕 아래 잠잘 수 없으며, 자비를 베풀 수 없다. 대부분은 결국 부족의 정착 생활로 돌아가지만, 일부는 결코 그렇게 하지 않으며, 이들이 약탈자를 형성한다 - 칸드의 길을 습격하고 하라드와 곤도르로 국경을 넘어 약탈하는 무법자들이다." />
+    <string id="TAOM_brotherhood_name" text="던랜드 약탈자" />
+    <string id="TAOM_brotherhood_short" text="약탈자" />
+    <string id="TAOM_brotherhood_text" text="던랜드 약탈자는 지금은 로히림이 다스리는 계곡에 살았던 산악 부족의 파괴된 잔재이다. 그들의 할아버지들은 비옥한 땅에서 바위투성이 고지로 쫓겨났고, 그들은 그 원한을 약탈자의 철학으로 키워왔다: 남부인이나 왕의 부하로부터 빼앗은 모든 것은 단지 빼앗긴 것의 복원일 뿐이다. 실제로 그들은 산적이지만, 언덕을 통과하는 모든 염소길을 아는 위험한 자들이다." />
+    <string id="TAOM_hidden_hand_name" text="입의 하인들" />
+    <string id="TAOM_hidden_hand_short" text="하인들" />
+    <string id="TAOM_hidden_hand_text" text="입의 하인들은 검은 문 너머에서 활동하는 바라드두르의 눈들이다 — 모르도르 국경 지역 민족들 사이에 잠입한 정보원, 집행자, 첩자들. 사우론의 군대가 아직 도달할 수 없는 곳에서, 이 요원들은 공물을 수거하고 반대 의견을 침묵시킨다. 그들은 뇌물, 협박, 은밀한 살인을 통해 일하며, 암흑군주에 대한 어떠한 음모도 뿌리내리기 전에 뿌리째 뽑아 분쇄한다." />
+    <string id="TAOM_lakepike_name" text="긴 호수의 난파업자들" />
+    <string id="TAOM_lakepike_short" text="난파업자" />
+    <string id="TAOM_lakepike_text" text="긴 호수의 난파업자들은 에스가로스의 위엄 있는 불빛에서 멀리 떨어진, 긴 호수의 그늘진 해안에 있는 갈대밭과 썩어가는 낡은 부두에서 산다. 그들은 거짓 등불로 바지선을 숨겨진 얕은 여울로 유인한 뒤 화물을 약탈하고 마을 내부의 장물아비를 통해 팔아 생계를 꾸린다. 호수마을 촌장과 데일 상인들의 노력에도 불구하고, 난파업자들은 부두가 선술집에 너무 많은 친구들을 두고 있어 쉽게 쫓아낼 수 없다." />
+    <string id="TAOM_embers_name" text="눈꺼풀 없는 눈의 숭배" />
+    <string id="TAOM_embers_short" text="눈 숭배" />
+    <string id="TAOM_embers_text" text="눈꺼풀 없는 눈의 숭배는 검은 누메노르 전통에 뿌리를 둔 비밀 결사로, 사우론이 다시 일어날 때 충실한 자들을 영광으로 회복시킬 신왕으로 숭배한다. 그들은 던랜드의 빈곤층과 왕국의 잊혀진 구석에서 신자를 모집하며, 신의 은총과 지상의 권력을 약속한다. 사실 그들의 지도자들은 바라드두르의 요원들에게 복종하며, 그들의 세포 기반 구조는 어떤 영주의 정의로도 근절하기가 거의 불가능하다." />
+    <string id="TAOM_jawwal_name" text="모래 기수들" />
+    <string id="TAOM_jawwal_short" text="모래 기수" />
+    <string id="TAOM_jawwal_text" text="모래 기수들은 에펠 두아스와 먼 남쪽 바다 사이의 물 없는 황무지의 지배자인, 깊은 하라드 내륙의 유목 사막 부족들이다. 그들은 자신들만이 아는 길을 따라 이동하며, 그들의 영토를 가로지르려는 대담한 대상에게 공물을 요구한다. 가까운 하라드의 정착 영주들은 그들을 골칫거리로 여기지만, 모래 기수들은 정착 영주들을 사막이 이미 자유롭게 준 것을 훔친 도둑으로 여긴다." />
+    <string id="TAOM_karakhuzaits_name" text="야생 동방인들" />
+    <string id="TAOM_karakhuzaits_short" text="야생인" />
+    <string id="TAOM_karakhuzaits_text" text="야생 동방인들은 룬 해의 정복되지 않은 초원 부족들로, 자신들을 통제하려 한 모든 영주의 권위를 저항해왔다 — 룬의 족장, 모르도르의 부관, 데일의 왕 모두를. 그들은 켈두인 동쪽의 초원을 가로질러 이동하며, 말을 모으고, 가축 떼를 약탈하며, 무장 호위 없이 그들의 초원을 가로지르려는 어리석은 대상에게 통행료를 징수한다." />
+    <string id="TAOM_forest_people_name" text="드루에다인" />
+    <string id="TAOM_forest_people_short" text="와세스" />
+    <string id="TAOM_forest_people_text" text="드루에다인은 인간들에게 와세스 또는 숲의 야생인으로 알려진 고대 민족으로, 드루아단의 깊은 숲과 하얀 산�맥의 숨겨진 계곡에 거주한다. 그들은 불로 땅을 개간하고, 재가 풍부한 토양에서 필요한 것을 재배하며, 땅이 소진되면 이동한다 — 가운데땅의 정착 민족들이 결코 이해하지 못했고 신경 쓰지도 않았던 삶의 방식이다. 드루에다인은 영주를 원하지 않고, 세금을 내지 않으며, 단지 숲의 고요 속에 남겨지기만을 바란다." />
+    <string id="TAOM_eleftheroi_name" text="베오르닝족" />
+    <string id="TAOM_eleftheroi_short" text="베오르닝" />
+    <string id="TAOM_eleftheroi_text" text="베오르닝족은 안개산맥과 어둠숲 사이의 안두인 계곡에 사는 위대한 숲 사람들로, 베오른 혈통의 피부 변환자들이 이끈다. 그들은 어떤 오크도 자신들의 영토를 가로지르게 허락하지 않으며, 경비 자금을 마련하기 위해 카록 여울에서 통행료를 징수하고, 가운데땅의 어떤 왕에게도 복종하지 않는다. 그들은 엘프와 드워프와 거래하고 대화하지만, 허가 없이 그들의 숲을 통과하는 군대는 베오르닝족이 매우 큰 이빨을 가지고 있음을 알게 될 것이다." />
+    <string id="taom_career" text="직업" />
+    <string id="taom_alliance_lore" text="설정 정렬" />
+    <string id="taom_alliance_blocked" text="이 왕국들은 결코 동맹을 맺을 수 없습니다." />
+    <string id="taom_war_blocked" text="이 왕국들은 깨질 수 없는 동맹으로 묶여 있습니다." />
+    <string id="taom_wotr_no_peace" text="반지 전쟁이 격렬하게 벌어지고 있습니다. 평화는 있을 수 없습니다." />
+    <string id="taom_precompile_shaders" text="셰이더 사전 컴파일" />
+    <string id="taom_precompile_hint" text="게임 내 끊김 현상을 제거하기 위해 셰이더를 사전 컴파일합니다. TAOM 설치 후 한 번 실행하세요." />
+    <string id="taom_main_menu_new_game" text="인간의 시대로" />
+    <string id="taom_career_screen_title" text="직업" />
+    <string id="taom_career_done" text="완료" />
+    <string id="taom_career_ability_label" text="직업 능력" />
+    <string id="taom_career_tier1" text="1단계" />
+    <string id="taom_career_tier2" text="2단계" />
+    <string id="taom_career_tier3" text="3단계" />
+    <string id="taom_career_free_points" text="사용 가능 포인트: {COUNT}" />
+  </strings>
+</base>

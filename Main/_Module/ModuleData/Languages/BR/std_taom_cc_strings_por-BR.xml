@@ -1,12 +1,782 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Português (BR)" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_cc_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Portuguese (Brazilian)" />
+  </tags>
+  <strings>
+    <string id="taom_cc_taom_parent_gondor_1_text" text="Casas Nobres de Gondor" />
+    <string id="taom_cc_taom_parent_gondor_1_desc" text="Sua família pertencia a uma das casas nobres de Gondor, jurada a defender a Árvore Branca. Seu pai era um cavaleiro que lutou bravamente a serviço do Regente, enquanto sua mãe administrava as terras e assuntos da família." />
+    <string id="taom_cc_taom_parent_gondor_2_text" text="Mercadores da Cidade Branca" />
+    <string id="taom_cc_taom_parent_gondor_2_desc" text="Sua família eram comerciantes prósperos dentro de Minas Tirith, negociando bens e mercadorias finas. Sua influência dentro das guildas mercantes da cidade trouxe riqueza e respeito ao seu lar." />
+    <string id="taom_cc_taom_parent_gondor_3_text" text="Fazendeiros do Pelennor" />
+    <string id="taom_cc_taom_parent_gondor_3_desc" text="Sua família cultivava o solo rico dos Campos do Pelennor, provendo sustento para Minas Tirith. Também serviam como soldados recrutas, defendendo a cidade em tempos de guerra." />
+    <string id="taom_cc_taom_parent_gondor_4_text" text="Artesãos de Minas Tirith" />
+    <string id="taom_cc_taom_parent_gondor_4_desc" text="Sua família eram artesãos habilidosos em Minas Tirith, criando armaduras finas, armas e tapeçarias que adornavam os salões da Cidade Branca. Sua arte era renomada por toda Gondor." />
+    <string id="taom_cc_taom_parent_gondor_5_text" text="Patrulheiros de Ithilien" />
+    <string id="taom_cc_taom_parent_gondor_5_desc" text="Sua família eram membros dos Patrulheiros de Ithilien, habilidosos nas artes do disfarce e do arco e flecha. Patrulhavam as terras selvagens, protegendo as fronteiras de Gondor das forças de Mordor." />
+    <string id="taom_cc_taom_parent_gondor_6_text" text="Pivetes das Ruas de Osgiliath" />
+    <string id="taom_cc_taom_parent_gondor_6_desc" text="Sua família vivia entre as ruínas de Osgiliath, sobrevivendo através da astúcia e engenhosidade. Reviravam o que podiam e ocasionalmente serviam sob os estandartes de Gondor como tropas irregulares." />
+    <string id="taom_cc_taom_parent_mordor_1_text" text="Servos da Torre Escura" />
+    <string id="taom_cc_taom_parent_mordor_1_desc" text="Sua família servia diretamente sob o comando da Torre Escura. Seu pai era um executor brutal, enquanto sua mãe trabalhava para incutir a vontade de Sauron entre o povo inferior." />
+    <string id="taom_cc_taom_parent_mordor_2_text" text="Mercadores da Estrada Negra" />
+    <string id="taom_cc_taom_parent_mordor_2_desc" text="Sua família administrava comércio e suprimentos dentro de Mordor, garantindo que os exércitos de Sauron estivessem equipados para a guerra. Seus negócios eram sombreados por intriga e violência." />
+    <string id="taom_cc_taom_parent_mordor_3_text" text="Escravos de Barad-dûr" />
+    <string id="taom_cc_taom_parent_mordor_3_desc" text="Sua família eram trabalhadores escravizados, labutando nas forjas e pedreiras de Mordor para alimentar a máquina de guerra do Senhor do Escuro. Sua resiliência tornou-se um testemunho de sua vontade de sobreviver." />
+    <string id="taom_cc_taom_parent_mordor_4_text" text="Feitores de Orcs" />
+    <string id="taom_cc_taom_parent_mordor_4_desc" text="Sua família era encarregada de supervisionar o trabalho de Orcs e Homens igualmente, garantindo que as ordens de Sauron fossem cumpridas com eficiência impiedosa." />
+    <string id="taom_cc_taom_parent_mordor_5_text" text="Caçadores de Gorgoroth" />
+    <string id="taom_cc_taom_parent_mordor_5_desc" text="Sua família vagava pelas planícies vulcânicas de Gorgoroth, caçando e rastreando presas para sustentar os exércitos de Mordor. Sua habilidade nas terras selvagens era inigualável." />
+    <string id="taom_cc_taom_parent_mordor_6_text" text="Supervisores Uruk" />
+    <string id="taom_cc_taom_parent_mordor_6_desc" text="Sua família serviu como supervisores das legiões Uruk-hai, impondo disciplina e mantendo a ordem dentro das fileiras de Sauron." />
+    <string id="taom_cc_taom_parent_erebor_1_text" text="Nobre da Montanha Solitária" />
+    <string id="taom_cc_taom_parent_erebor_1_desc" text="Sua família era da linhagem nobre de Erebor, parente do Rei Dain, empunhando machados poderosos e inspirando guerreiros a defender a honra da Montanha Solitária." />
+    <string id="taom_cc_taom_parent_erebor_2_text" text="Mestre Ferreiro" />
+    <string id="taom_cc_taom_parent_erebor_2_desc" text="Sua família forjou armas lendárias nos salões ardentes de Erebor, criando lâminas e armaduras cobiçadas por toda a Terra-média, e as negociava por riqueza." />
+    <string id="taom_cc_taom_parent_erebor_3_text" text="Minerador das Profundezas" />
+    <string id="taom_cc_taom_parent_erebor_3_desc" text="Sua família trabalhou nas minas mais profundas de Erebor, desenterrando mithril e gemas, e aprendeu a fortalecer a montanha contra invasores." />
+    <string id="taom_cc_taom_parent_erebor_4_text" text="Guerreiro Pés de Ferro" />
+    <string id="taom_cc_taom_parent_erebor_4_desc" text="Sua família lutou com os guerreiros de Dain Pés de Ferro, dominando machado e escudo e empunhando bestas para proteger os portões de Erebor." />
+    <string id="taom_cc_taom_parent_erebor_5_text" text="Guardião do Cofre" />
+    <string id="taom_cc_taom_parent_erebor_5_desc" text="Sua família guardava os vastos tesouros de Erebor, gerenciando suas riquezas e planejando defesas para proteger a fortuna da montanha de inimigos." />
+    <string id="taom_cc_taom_parent_erebor_6_text" text="Batedor da Montanha" />
+    <string id="taom_cc_taom_parent_erebor_6_desc" text="Sua família patrulhava as terras selvagens ao redor de Erebor, rastreando Orcs e disparando arcos para proteger as fronteiras da Montanha Solitária." />
+    <string id="taom_cc_taom_parent_rivendell_1_text" text="Nobres de Imladris" />
+    <string id="taom_cc_taom_parent_rivendell_1_desc" text="Sua família eram Elfos estimados de Imladris, jurados a servir Elrond. Carregavam a sabedoria das eras e a força para defender Rivendell em seus momentos de necessidade." />
+    <string id="taom_cc_taom_parent_rivendell_2_text" text="Artesãos de Rivendell" />
+    <string id="taom_cc_taom_parent_rivendell_2_desc" text="Sua família eram artesãos habilidosos e mestres do conhecimento, criando maravilhas da arte élfica e preservando o conhecimento ancestral da Terra-média." />
+    <string id="taom_cc_taom_parent_rivendell_3_text" text="Agricultores do Vale Escondido" />
+    <string id="taom_cc_taom_parent_rivendell_3_desc" text="Sua família cuidava dos campos férteis de Rivendell, garantindo que seu povo e convidados fossem bem alimentados e sustentados em seu refúgio pacífico." />
+    <string id="taom_cc_taom_parent_rivendell_4_text" text="Guardiões do Vale" />
+    <string id="taom_cc_taom_parent_rivendell_4_desc" text="Sua família serviu como batedores e guardiões, patrulhando as fronteiras de Imladris e garantindo que o vale permanecesse um santuário livre do mal." />
+    <string id="taom_cc_taom_parent_rivendell_5_text" text="Eruditos Élficos" />
+    <string id="taom_cc_taom_parent_rivendell_5_desc" text="Sua família eram estudiosos do conhecimento, cura e magia, preservando o conhecimento ancestral dos Elfos e auxiliando os povos livres da Terra-média." />
+    <string id="taom_cc_taom_parent_rivendell_6_text" text="Andarilhos das Terras Selvagens" />
+    <string id="taom_cc_taom_parent_rivendell_6_desc" text="Sua família era conhecida por aventurar-se além de Rivendell, auxiliando aqueles em necessidade e aprendendo sobre o mundo em mudança além do vale." />
+    <string id="taom_cc_taom_parent_mirkwood_1_text" text="Descendentes da Nobreza da Floresta" />
+    <string id="taom_cc_taom_parent_mirkwood_1_desc" text="Sua família descendia das casas nobres do Reino da Floresta, servindo como conselheiros próximos e protetores da corte do Rei Thranduil." />
+    <string id="taom_cc_taom_parent_mirkwood_2_text" text="Mercadores da Trilha da Floresta" />
+    <string id="taom_cc_taom_parent_mirkwood_2_desc" text="Sua família eram mercadores que viajavam pelos caminhos traiçoeiros da Floresta das Trevas, trazendo mercadorias e comércio aos salões do Rei Élfico." />
+    <string id="taom_cc_taom_parent_mirkwood_3_text" text="Agricultores da Floresta" />
+    <string id="taom_cc_taom_parent_mirkwood_3_desc" text="Sua família vivia nas franjas do Reino da Floresta, cultivando a terra e colhendo o pouco que a floresta sombria oferecia." />
+    <string id="taom_cc_taom_parent_mirkwood_4_text" text="Artesãos dos Salões da Floresta" />
+    <string id="taom_cc_taom_parent_mirkwood_4_desc" text="Sua família eram artesãos do Reino da Floresta, criando armas e ferramentas requintadas a partir dos recursos da floresta." />
+    <string id="taom_cc_taom_parent_mirkwood_5_text" text="Caçadores das Florestas Profundas" />
+    <string id="taom_cc_taom_parent_mirkwood_5_desc" text="Sua família eram caçadores habilidosos que enfrentavam as profundezas sombrias da Floresta das Trevas para prover comida e afastar as criaturas que espreitam dentro dela." />
+    <string id="taom_cc_taom_parent_mirkwood_6_text" text="Patrulheiros do Reino da Floresta" />
+    <string id="taom_cc_taom_parent_mirkwood_6_desc" text="Sua família serviu como patrulheiros, protegendo as fronteiras do Reino da Floresta e guardando os caminhos da floresta contra intrusos e ameaças." />
+    <string id="taom_cc_taom_parent_lothlorien_1_text" text="Nobres de Caras Galadhon" />
+    <string id="taom_cc_taom_parent_lothlorien_1_desc" text="Sua família serviu diretamente sob a orientação da Senhora Galadriel e Lorde Celeborn, defendendo o coração de Lothlórien com dedicação inabalável." />
+    <string id="taom_cc_taom_parent_lothlorien_2_text" text="Artesãos da Floresta Dourada" />
+    <string id="taom_cc_taom_parent_lothlorien_2_desc" text="Sua família era composta por mestres artesãos, tecendo a beleza da Floresta Dourada em suas criações, de armaduras a instrumentos musicais." />
+    <string id="taom_cc_taom_parent_lothlorien_3_text" text="Guardiões das Árvores Mallorn" />
+    <string id="taom_cc_taom_parent_lothlorien_3_desc" text="Sua família protegia as sagradas árvores Mallorn, garantindo que o esplendor de Lothlórien perdurasse contra qualquer ameaça." />
+    <string id="taom_cc_taom_parent_lothlorien_4_text" text="Patrulheiros do Vale do Dimrill" />
+    <string id="taom_cc_taom_parent_lothlorien_4_desc" text="Sua família patrulhava as fronteiras de Lothlórien, vigiando as passagens e defendendo contra Orcs e outros invasores." />
+    <string id="taom_cc_taom_parent_lothlorien_5_text" text="Curadores da Floresta Dourada" />
+    <string id="taom_cc_taom_parent_lothlorien_5_desc" text="Sua família cuidava dos feridos e preservava a antiga sabedoria da cura dentro da Floresta Dourada." />
+    <string id="taom_cc_taom_parent_lothlorien_6_text" text="Andarilhos dos Galadhrim" />
+    <string id="taom_cc_taom_parent_lothlorien_6_desc" text="Sua família percorria as terras além de Lothlórien, ajudando aliados e espalhando notícias do esplendor da Floresta Dourada." />
+    <string id="taom_cc_taom_parent_isengard_1_text" text="Servos de Saruman" />
+    <string id="taom_cc_taom_parent_isengard_1_desc" text="Sua família trabalhava sob as ordens de Saruman, o Branco, gerenciando seus domínios e auxiliando em seus planos de conquista." />
+    <string id="taom_cc_taom_parent_isengard_2_text" text="Artífices de Orthanc" />
+    <string id="taom_cc_taom_parent_isengard_2_desc" text="Sua família criava ferramentas e armas à sombra de Orthanc, forjando instrumentos da vontade de Saruman." />
+    <string id="taom_cc_taom_parent_isengard_3_text" text="Trabalhadores das Cavernas Profundas" />
+    <string id="taom_cc_taom_parent_isengard_3_desc" text="Sua família labutava nas profundas fossas de Isengard, extraindo pedra e minério para alimentar as ambições de Saruman." />
+    <string id="taom_cc_taom_parent_isengard_4_text" text="Guerreiros Uruk-Hai" />
+    <string id="taom_cc_taom_parent_isengard_4_desc" text="Sua família estava entre os primeiros Uruk-Hai criados por Saruman, guerreiros forjados para a guerra e dominação." />
+    <string id="taom_cc_taom_parent_isengard_5_text" text="Batedores do Wold" />
+    <string id="taom_cc_taom_parent_isengard_5_desc" text="Sua família era composta por batedores e rastreadores, garantindo que as forças de Saruman se movessem despercebidas pelas planícies de Rohan." />
+    <string id="taom_cc_taom_parent_isengard_6_text" text="Canalhas de Isengard" />
+    <string id="taom_cc_taom_parent_isengard_6_desc" text="Sua família operava nas sombras, reunindo informações e minando os inimigos de Saruman." />
+    <string id="taom_cc_taom_parent_gundabad_1_text" text="Nobres de Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_1_desc" text="Sua família estava entre a elite nobre de Gundabad, dedicada a reconquistar seu lar ancestral e defendê-lo de invasores." />
+    <string id="taom_cc_taom_parent_gundabad_2_text" text="Ferreiros de Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_2_desc" text="Sua família era composta por ferreiros habilidosos, criando ferramentas e armas para equipar os defensores de Gundabad." />
+    <string id="taom_cc_taom_parent_gundabad_3_text" text="Mineradores de Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_3_desc" text="Sua família trabalhava incansavelmente nas minas de Gundabad, descobrindo suas riquezas ocultas." />
+    <string id="taom_cc_taom_parent_gundabad_4_text" text="Guerreiros das Montanhas Cinzentas" />
+    <string id="taom_cc_taom_parent_gundabad_4_desc" text="Sua família lutava contra Orcs e outras ameaças nas Montanhas Cinzentas, defendendo a honra de seus parentes." />
+    <string id="taom_cc_taom_parent_gundabad_5_text" text="Patrulheiros de Gundabad" />
+    <string id="taom_cc_taom_parent_gundabad_5_desc" text="Sua família servia como patrulheiros, vigiando as terras selvagens ao redor de Gundabad e protegendo suas fronteiras do perigo." />
+    <string id="taom_cc_taom_parent_gundabad_6_text" text="Párias das Montanhas" />
+    <string id="taom_cc_taom_parent_gundabad_6_desc" text="Sua família vivia às margens da sociedade de Gundabad, sobrevivendo através de astúcia e crueldade nas implacáveis passagens das montanhas." />
+    <string id="taom_cc_taom_parent_dolguldur_1_text" text="Servos do Necromante" />
+    <string id="taom_cc_taom_parent_dolguldur_1_desc" text="Sua família servia diretamente ao Necromante, executando seus desígnios sombrios e impondo sua vontade por toda a região." />
+    <string id="taom_cc_taom_parent_dolguldur_2_text" text="Forjadores do Aço Sombrio" />
+    <string id="taom_cc_taom_parent_dolguldur_2_desc" text="Sua família forjava armas e armaduras imbuídas com a magia sombria de Dol Guldur, equipando seus exércitos para a conquista." />
+    <string id="taom_cc_taom_parent_dolguldur_3_text" text="Mineradores dos Salões Sombrios" />
+    <string id="taom_cc_taom_parent_dolguldur_3_desc" text="Sua família labutava nas profundezas das cavernas de Dol Guldur, extraindo recursos para alimentar sua máquina de guerra." />
+    <string id="taom_cc_taom_parent_dolguldur_4_text" text="Guerreiros do Bosque Encantado" />
+    <string id="taom_cc_taom_parent_dolguldur_4_desc" text="Sua família era composta por guerreiros ferozes que lutaram para estender a sombra de Dol Guldur sobre as terras circundantes." />
+    <string id="taom_cc_taom_parent_dolguldur_5_text" text="Caçadores da Floresta Negra" />
+    <string id="taom_cc_taom_parent_dolguldur_5_desc" text="Sua família caçava as criaturas distorcidas da floresta e rastreava aqueles que ousavam invadir o domínio do Necromante." />
+    <string id="taom_cc_taom_parent_dolguldur_6_text" text="Canalhas de Dol Guldur" />
+    <string id="taom_cc_taom_parent_dolguldur_6_desc" text="Sua família era composta por espiões e sabotadores, espalhando a influência de Dol Guldur através de decepção e medo." />
+    <string id="taom_cc_taom_parent_umbar_1_text" text="Capitães Corsários" />
+    <string id="taom_cc_taom_parent_umbar_1_desc" text="Sua família era composta por líderes entre os Corsários de Umbar, comandando navios e saqueando as costas de Gondor." />
+    <string id="taom_cc_taom_parent_umbar_2_text" text="Mercadores da Maré Negra" />
+    <string id="taom_cc_taom_parent_umbar_2_desc" text="Sua família conduzia comércio pelos mares, frequentemente contrabandeando mercadorias para financiar os empreendimentos dos Corsários." />
+    <string id="taom_cc_taom_parent_umbar_3_text" text="Construtores de Navios de Umbar" />
+    <string id="taom_cc_taom_parent_umbar_3_desc" text="Sua família construía as embarcações que levavam os Corsários à guerra, criando navios de velocidade e furtividade." />
+    <string id="taom_cc_taom_parent_umbar_4_text" text="Piratas das Costas" />
+    <string id="taom_cc_taom_parent_umbar_4_desc" text="Sua família era composta por Corsários que saqueavam as praias de Gondor e além, incutindo medo nos corações de seus inimigos." />
+    <string id="taom_cc_taom_parent_umbar_5_text" text="Navegadores do Alto-Mar" />
+    <string id="taom_cc_taom_parent_umbar_5_desc" text="Sua família era composta por navegadores habilidosos, mapeando os mares perigosos e liderando os Corsários à vitória." />
+    <string id="taom_cc_taom_parent_umbar_6_text" text="Contrabandistas de Umbar" />
+    <string id="taom_cc_taom_parent_umbar_6_desc" text="Sua família se movia nas sombras, contrabandeando mercadorias e informações vitais para a sobrevivência dos Corsários." />
+    <string id="taom_cc_taom_parent_empire_1_text" text="Descendentes de Antigos Chefes" />
+    <string id="taom_cc_taom_parent_empire_1_desc" text="Sua família detinha poder como chefes entre os clãs de Dunlendinos, comandando respeito através de linhagem e força. Seu pai reunia guerreiros em tempos de conflito, enquanto sua mãe administrava os assuntos do clã." />
+    <string id="taom_cc_taom_parent_empire_2_text" text="Mercadores do Clã" />
+    <string id="taom_cc_taom_parent_empire_2_desc" text="Sua família comercializava mercadorias entre os clãs de Dunlendinos e o mundo exterior. Seu conhecimento da terra e de seu povo trouxe prosperidade à sua casa." />
+    <string id="taom_cc_taom_parent_empire_3_text" text="Povo Livre do Clã" />
+    <string id="taom_cc_taom_parent_empire_3_desc" text="Sua família era composta por homens livres de Dunlândia, cultivando a terra e criando ovelhas entre as colinas. Respondiam ao chamado dos chefes quando a guerra chegava." />
+    <string id="taom_cc_taom_parent_empire_4_text" text="Artesãos Habilidosos" />
+    <string id="taom_cc_taom_parent_empire_4_desc" text="Sua família era composta por artesãos dos clãs de Dunlendinos, criando armas, ferramentas e ornamentos a partir dos recursos das colinas." />
+    <string id="taom_cc_taom_parent_empire_5_text" text="Coletores do Bosque" />
+    <string id="taom_cc_taom_parent_empire_5_desc" text="Sua família vivia das terras selvagens de Dunlândia, caçando animais e coletando ervas nas densas florestas que margeavam as Montanhas Nebulosas." />
+    <string id="taom_cc_taom_parent_empire_6_text" text="Andarilhos e Marginais" />
+    <string id="taom_cc_taom_parent_empire_6_desc" text="Sua família era composta por errantes, expulsos dos clãs ou que escolheram viver além de seu alcance. Sobreviviam por sua astúcia e ocasionalmente por meios menos honestos." />
+    <string id="taom_cc_taom_parent_vlandia_1_text" text="Vassalos do Marechal" />
+    <string id="taom_cc_taom_parent_vlandia_1_desc" text="Sua família servia aos marechais do Riddermark, cavalgando com eles na defesa das fronteiras de Rohan. Seu pai era um cavaleiro e guerreiro habilidoso." />
+    <string id="taom_cc_taom_parent_vlandia_2_text" text="Mercadores de Edoras" />
+    <string id="taom_cc_taom_parent_vlandia_2_desc" text="Sua família era composta por comerciantes na grande cidade-salão de Edoras, trazendo mercadorias de todo o Riddermark e além para o povo de Rohan." />
+    <string id="taom_cc_taom_parent_vlandia_3_text" text="Proprietários Livres do Folde Oeste" />
+    <string id="taom_cc_taom_parent_vlandia_3_desc" text="Sua família era composta por fazendeiros livres do Folde Oeste, criando cavalos e plantando nas planícies férteis. Serviam como milícia montada quando o rei convocava." />
+    <string id="taom_cc_taom_parent_vlandia_4_text" text="Ferreiros de Aldburg" />
+    <string id="taom_cc_taom_parent_vlandia_4_desc" text="Sua família era composta por ferreiros renomados em Aldburg, forjando as lâminas e armaduras que equipavam os Rohirrim para a batalha." />
+    <string id="taom_cc_taom_parent_vlandia_5_text" text="Caçadores do Folde Leste" />
+    <string id="taom_cc_taom_parent_vlandia_5_desc" text="Sua família era composta por caçadores e rastreadores no Folde Leste, habilidosos com o arco e conhecedores dos caminhos da selva." />
+    <string id="taom_cc_taom_parent_vlandia_6_text" text="Andarilhos da Charneca" />
+    <string id="taom_cc_taom_parent_vlandia_6_desc" text="Sua família vagou pela Charneca, as selvagens pradarias entre Rohan e as Terras Pardas. Eles sobreviveram pela astúcia e serviços ocasionais como batedores." />
+    <string id="taom_cc_taom_parent_sturgia_1_text" text="Servos do Rei de Dale" />
+    <string id="taom_cc_taom_parent_sturgia_1_desc" text="Sua família serviu diretamente sob a corte do Rei de Dale, administrando os assuntos do reino e defendendo seu povo." />
+    <string id="taom_cc_taom_parent_sturgia_2_text" text="Comerciantes Urbanos" />
+    <string id="taom_cc_taom_parent_sturgia_2_desc" text="Sua família eram mercadores de Dale, comercializando as finas mercadorias e brinquedos que tornaram a cidade famosa em todo o Norte." />
+    <string id="taom_cc_taom_parent_sturgia_3_text" text="Agricultores Livres" />
+    <string id="taom_cc_taom_parent_sturgia_3_desc" text="Sua família eram agricultores nas terras ao redor de Dale e Esgaroth, trabalhando nos campos e pescando no Lago Comprido." />
+    <string id="taom_cc_taom_parent_sturgia_4_text" text="Artesãos Urbanos" />
+    <string id="taom_cc_taom_parent_sturgia_4_desc" text="Sua família eram artesãos em Dale, famosos pela fabricação de brinquedos e trabalhos em metal que atraíam comerciantes de terras distantes." />
+    <string id="taom_cc_taom_parent_sturgia_5_text" text="Caçadores da Floresta" />
+    <string id="taom_cc_taom_parent_sturgia_5_desc" text="Sua família eram caçadores e lenhadores nas florestas ao redor de Dale, fornecendo peles e caça para os mercados da cidade." />
+    <string id="taom_cc_taom_parent_sturgia_6_text" text="Vagabundos" />
+    <string id="taom_cc_taom_parent_sturgia_6_desc" text="Sua família vivia à margem da sociedade em Dale, sobrevivendo através de bicos e às vezes meios menos respeitáveis." />
+    <string id="taom_cc_taom_parent_aserai_1_text" text="Aliados da Serpente Negra" />
+    <string id="taom_cc_taom_parent_aserai_1_desc" text="Sua família era leal à Serpente Negra, liderando bandos de guerra às terras do norte a mando do Senhor do Escuro." />
+    <string id="taom_cc_taom_parent_aserai_2_text" text="Guerreiros do Deserto" />
+    <string id="taom_cc_taom_parent_aserai_2_desc" text="Sua família eram guerreiros ferozes dos Haradrim, treinados desde a juventude para lutar nos desertos escaldantes do Sul." />
+    <string id="taom_cc_taom_parent_aserai_3_text" text="Comerciantes do Sul" />
+    <string id="taom_cc_taom_parent_aserai_3_desc" text="Sua família conduzia comércio ao longo das estradas do sul, trazendo mercadorias exóticas e especiarias para os mercados de Harad." />
+    <string id="taom_cc_taom_parent_aserai_4_text" text="Agricultores do Deserto" />
+    <string id="taom_cc_taom_parent_aserai_4_desc" text="Sua família trabalhava nos oásis e terras irrigadas de Harad, arrancando vida do solo árido com habilidade e paciência." />
+    <string id="taom_cc_taom_parent_aserai_5_text" text="Povos Tribais Nômades" />
+    <string id="taom_cc_taom_parent_aserai_5_desc" text="Sua família perambulava pelos vastos desertos, seguindo trilhas antigas entre fontes de água e comercializando com povos sedentários." />
+    <string id="taom_cc_taom_parent_aserai_6_text" text="Foras-da-Lei do Deserto" />
+    <string id="taom_cc_taom_parent_aserai_6_desc" text="Sua família sobrevivia nas franjas da sociedade Haradrim, saqueando caravanas e vivendo pela astúcia nas areias infinitas." />
+    <string id="taom_cc_taom_parent_battania_1_text" text="Senhores-Cavaleiros de Khand" />
+    <string id="taom_cc_taom_parent_battania_1_desc" text="Sua família eram senhores dos clãs de cavaleiros Variag, comandando guerreiros montados ferozes pelas estepes de Khand." />
+    <string id="taom_cc_taom_parent_battania_2_text" text="Curandeiros Nômades" />
+    <string id="taom_cc_taom_parent_battania_2_desc" text="Sua família eram curandeiros e sábios dos clãs Variag, cuidando dos doentes e preservando remédios ancestrais." />
+    <string id="taom_cc_taom_parent_battania_3_text" text="Guerreiros do Clã" />
+    <string id="taom_cc_taom_parent_battania_3_desc" text="Sua família eram guerreiros dos clãs Variag, hábeis em combate montado e ferozmente leais ao seu chefe." />
+    <string id="taom_cc_taom_parent_battania_4_text" text="Ferreiros das Estepes" />
+    <string id="taom_cc_taom_parent_battania_4_desc" text="Sua família eram ferreiros do povo Variag, forjando armas e equipamentos para cavalos dos metais das montanhas orientais." />
+    <string id="taom_cc_taom_parent_battania_5_text" text="Caçadores da Estepe" />
+    <string id="taom_cc_taom_parent_battania_5_desc" text="Sua família caçava pelas vastas estepes de Khand, rastreando caça e guardando os rebanhos de predadores." />
+    <string id="taom_cc_taom_parent_battania_6_text" text="Bardos de Khand" />
+    <string id="taom_cc_taom_parent_battania_6_desc" text="Sua família eram bardos e contadores de histórias itinerantes, mantendo vivas as tradições orais do povo Variag através de canções e contos." />
+    <string id="taom_cc_taom_parent_khuzait_1_text" text="Parentes do Chefe" />
+    <string id="taom_cc_taom_parent_khuzait_1_desc" text="Sua família eram parentes próximos do chefe Easterling, ocupando posições de poder e comandando respeito entre os clãs guerreiros." />
+    <string id="taom_cc_taom_parent_khuzait_2_text" text="Mercadores do Leste" />
+    <string id="taom_cc_taom_parent_khuzait_2_desc" text="Sua família comerciava ao longo das rotas orientais, trazendo mercadorias de terras distantes para os mercados de Rhûn." />
+    <string id="taom_cc_taom_parent_khuzait_3_text" text="Povo Tribal Nômade" />
+    <string id="taom_cc_taom_parent_khuzait_3_desc" text="Sua família era nômade das planícies orientais, movendo-se com as estações e vivendo da terra." />
+    <string id="taom_cc_taom_parent_khuzait_4_text" text="Fazendeiros das Estepes" />
+    <string id="taom_cc_taom_parent_khuzait_4_desc" text="Sua família trabalhava nos vales férteis próximos ao mar interior de Rhûn, cultivando grãos e criando gado." />
+    <string id="taom_cc_taom_parent_khuzait_5_text" text="Invocadores de Espíritos" />
+    <string id="taom_cc_taom_parent_khuzait_5_desc" text="Sua família era formada por xamãs e porta-vozes dos espíritos dos clãs Orientais, comungando com os espíritos da terra e do céu." />
+    <string id="taom_cc_taom_parent_khuzait_6_text" text="Batedores das Terras Remotas" />
+    <string id="taom_cc_taom_parent_khuzait_6_desc" text="Sua família servia como batedores e cavaleiros avançados para a hoste Oriental, percorrendo grandes distâncias à frente da força principal para reunir informações." />
+    <string id="taom_cc_taom_childhood_leadership_text" text="suas habilidades de liderança." />
+    <string id="taom_cc_taom_childhood_leadership_desc" text="À sombra de ruínas antigas, seu jovem bando de companheiros buscava em você orientação. Seja traçando um caminho seguro pela floresta ou reunindo coragem contra inimigos imaginários, sua liderança natural brilhava como os estandartes dos reis de outrora." />
+    <string id="taom_cc_taom_childhood_fighting_text" text="suas habilidades de combate." />
+    <string id="taom_cc_taom_childhood_fighting_desc" text="Sua força era matéria de histórias entre as crianças da vila. Elas maravilhavam-se com sua capacidade de carregar fardos como um guerreiro experiente e arremessar pedras com a força de um trabuco. Mesmo então, você era comparado aos heróis das lendas." />
+    <string id="taom_cc_taom_childhood_history_text" text="suas habilidades de história." />
+    <string id="taom_cc_taom_childhood_history_desc" text="Com olhos aguçados que não perdiam nenhum movimento e pés rápidos que superavam a maioria, você era frequentemente o primeiro a avistar uma trilha de veado ou o brilho de uma bugiganga escondida. Seus amigos comparavam você aos patrulheiros do norte, silenciosos e observadores." />
+    <string id="taom_cc_taom_childhood_convince_text" text="sua habilidade de convencer os outros." />
+    <string id="taom_cc_taom_childhood_convince_desc" text="Enquanto outros brincavam, você permanecia no mercado, observando mercadores regatearem sobre preços e calcular lucros. Você era fascinado pela arte do comércio, frequentemente imaginando-se como um intendente de Gondor ou um artesão anão contando gemas." />
+    <string id="taom_cc_taom_childhood_charge_text" text="sua habilidade de tomar controle da situação." />
+    <string id="taom_cc_taom_childhood_charge_desc" text="Você tinha um dom natural para entender os outros, frequentemente apaziguando discussões e conquistando amigos com facilidade. Seus anciãos diziam que você tinha o carisma de um senhor élfico, enquanto seus pares seguiam você com lealdade inabalável." />
+    <string id="taom_cc_taom_childhood_horses_text" text="sua habilidade com cavalos." />
+    <string id="taom_cc_taom_childhood_horses_desc" text="Você sentia um vínculo profundo com animais, particularmente cavalos. Os tratadores das estrebarias maravilhavam-se de como você podia acalmar até o corcel mais fogoso, e sua habilidade em tratar feridas trazia sussurros de que você poderia rivalizar com os mestres de cavalos de Rohan um dia." />
+    <string id="taom_cc_taom_youth_gondor_1_text" text="Treinou com os Cavaleiros do Cisne." />
+    <string id="taom_cc_taom_youth_gondor_1_desc" text="Você se juntou às fileiras dos Cavaleiros do Cisne de Dol Amroth, aprendendo a arte do combate montado e da guerra cavalheiresca sob os estandartes dos melhores de Gondor." />
+    <string id="taom_cc_taom_youth_gondor_2_text" text="Montou guarda em Minas Tirith." />
+    <string id="taom_cc_taom_youth_gondor_2_desc" text="Você serviu na guarnição de Minas Tirith, defendendo as muralhas da Cidade Branca e aprendendo a arte da defesa de cerco com seus comandantes veteranos." />
+    <string id="taom_cc_taom_youth_gondor_3_text" text="Cavalgou com os Patrulheiros de Ithilien." />
+    <string id="taom_cc_taom_youth_gondor_3_desc" text="Você patrulhou as selvas de Ithilien, golpeando o inimigo das sombras e aperfeiçoando suas habilidades como patrulheiro na tradição da companhia de Faramir." />
+    <string id="taom_cc_taom_youth_gondor_4_text" text="Treinou com a Guarda da Torre." />
+    <string id="taom_cc_taom_youth_gondor_4_desc" text="Você se juntou à elite da Guarda da Torre de Gondor, treinando em guerra de infantaria disciplinada para proteger a Cidadela e a Árvore Branca." />
+    <string id="taom_cc_taom_youth_gondor_5_text" text="Viveu pela astúcia nas ruínas de Osgiliath." />
+    <string id="taom_cc_taom_youth_gondor_5_desc" text="Você sobreviveu nas ruínas contestadas de Osgiliath, aprendendo a economia letal da luta de rua e o valor de uma pedra bem arremessada. A sobrevivência naquele labirinto meio afogado de pedra quebrada moldou você em alguém que podia improvisar qualquer coisa do nada." />
+    <string id="taom_cc_taom_youth_mordor_1_text" text="Treinou com os Cavaleiros de Warg." />
+    <string id="taom_cc_taom_youth_mordor_1_desc" text="Você foi escolhido para treinar com os elite Cavaleiros de Warg de Mordor, aprendendo a controlar as bestas temíveis e espalhar terror nos corações dos inimigos." />
+    <string id="taom_cc_taom_youth_mordor_2_text" text="Guarneceu as torres das fortalezas de Mordor." />
+    <string id="taom_cc_taom_youth_mordor_2_desc" text="Você foi posicionado nas torres de vigia e muralhas das fortalezas negras de Mordor, vasculhando o horizonte em busca de movimento e direcionando fogo sobre qualquer um que se aproximasse. O posto era adequado para aqueles que podiam pensar tão bem quanto atirar." />
+    <string id="taom_cc_taom_youth_mordor_3_text" text="Cavalgou com os Batedores Negros." />
+    <string id="taom_cc_taom_youth_mordor_3_desc" text="Você se juntou aos Batedores Negros, cavalgando rapidamente pelas terras devastadas para reunir informações e assediar os flancos inimigos." />
+    <string id="taom_cc_taom_youth_mordor_4_text" text="Marchou nas legiões Órquicas do Senhor Sombrio." />
+    <string id="taom_cc_taom_youth_mordor_4_desc" text="Você treinou nas formações implacáveis da infantaria de Sauron, aprendendo a investir com o ombro e cortar com lâmina e machado em fileiras que se moviam como um único punho blindado. A fraqueza era punida e a força recompensada em ferro." />
+    <string id="taom_cc_taom_youth_mordor_5_text" text="Juntou-se aos Escaramuçadores das Sombras." />
+    <string id="taom_cc_taom_youth_mordor_5_desc" text="Você se tornou um Escaramuçador das Sombras, assediando o inimigo com armas arremessadas e ataques rápidos antes de desaparecer novamente na escuridão." />
+    <string id="taom_cc_taom_youth_mordor_6_text" text="Viveu à margem do exército de Sauron." />
+    <string id="taom_cc_taom_youth_mordor_6_desc" text="Você não era nem soldado nem escravo, movendo-se nas margens sombrias do grande exército de Mordor — roubando o que podia, negociando informações e aprendendo quais oficiais eram subornáveis e quais era melhor evitar. A astúcia era a única moeda em que você confiava." />
+    <string id="taom_cc_taom_youth_erebor_1_text" text="Serviu na Guarda Real de Erebor." />
+    <string id="taom_cc_taom_youth_erebor_1_desc" text="Você jurou lealdade ao Rei Sob a Montanha, servindo na elite da Guarda Real e aprendendo a empunhar machado e martelo em defesa do reino." />
+    <string id="taom_cc_taom_youth_erebor_2_text" text="Defendeu os portões de Erebor." />
+    <string id="taom_cc_taom_youth_erebor_2_desc" text="Como parte da guarnição de Erebor, você operou as bestas e defendeu os portões contra todos que viessem, aprendendo a arte da defesa de cerco anã." />
+    <string id="taom_cc_taom_youth_erebor_3_text" text="Treinou com a Guarda de Ferro." />
+    <string id="taom_cc_taom_youth_erebor_3_desc" text="Você se juntou à Guarda de Ferro, as tropas de choque de Erebor, aprendendo a arremessar machados e lutar nos corredores apertados dos salões da montanha." />
+    <string id="taom_cc_taom_youth_erebor_4_text" text="Explorou as encostas da Montanha Solitária." />
+    <string id="taom_cc_taom_youth_erebor_4_desc" text="Você se aventurou nas terras selvagens ao redor de Erebor, rastreando Orcs e lobos e protegendo as aproximações da montanha." />
+    <string id="taom_cc_taom_youth_erebor_5_text" text="Ficou na vanguarda." />
+    <string id="taom_cc_taom_youth_erebor_5_desc" text="Você treinou como parte da vanguarda de Erebor, dominando o machado de duas mãos e a lança nas formações de batalha disciplinadas dos anões." />
+    <string id="taom_cc_taom_youth_erebor_6_text" text="Trabalhou com os guardas de caravana." />
+    <string id="taom_cc_taom_youth_erebor_6_desc" text="Você acompanhou caravanas comerciais entre Erebor e Valle, aprendendo os caminhos do comércio e a arte de defender cargas valiosas." />
+    <string id="taom_cc_taom_youth_rivendell_1_text" text="Treinou com a Guarda de Imladris." />
+    <string id="taom_cc_taom_youth_rivendell_1_desc" text="Você serviu sob os estandartes de Valfenda, treinando em combate montado e nas graciosas artes marciais élficas para defender a Última Casa Acolhedora." />
+    <string id="taom_cc_taom_youth_rivendell_2_text" text="Montou guarda nos salões de Elrond." />
+    <string id="taom_cc_taom_youth_rivendell_2_desc" text="Você serviu como sentinela nos salões de Elrond, aprendendo a ler a terra e antecipar ameaças antes que pudessem alcançar o vale escondido." />
+    <string id="taom_cc_taom_youth_rivendell_3_text" text="Percorreu os Trollshaws com os guardas da fronteira." />
+    <string id="taom_cc_taom_youth_rivendell_3_desc" text="Você se juntou aos guardas que patrulhavam muito além das fronteiras de Valfenda, adentrando os Trollshaws selvagens e os vales superiores do Anduin, aprendendo a rastrear inimigos e ler os sinais de movimento sombrio através da floresta antiga." />
+    <string id="taom_cc_taom_youth_rivendell_4_text" text="Treinou na arte da infantaria élfica." />
+    <string id="taom_cc_taom_youth_rivendell_4_desc" text="Você ficou nas fileiras dos guerreiros de Valfenda, dominando a lança e a espada no estilo preciso e mortal dos Altos Elfos." />
+    <string id="taom_cc_taom_youth_rivendell_5_text" text="Viajou com os mestres do conhecimento." />
+    <string id="taom_cc_taom_youth_rivendell_5_desc" text="Você acompanhou os mestres do conhecimento de Valfenda em suas jornadas, aprendendo diplomacia, persuasão e a arte da liderança entre os povos livres." />
+    <string id="taom_cc_taom_youth_mirkwood_1_text" text="Treinou com os Cavaleiros da Floresta." />
+    <string id="taom_cc_taom_youth_mirkwood_1_desc" text="Você cavalgou pelas florestas escuras em ágeis corcéis élficos, aprendendo a lutar montado entre as árvores antigas do reino de Thranduil." />
+    <string id="taom_cc_taom_youth_mirkwood_2_text" text="Patrulhou as clareiras sombrias." />
+    <string id="taom_cc_taom_youth_mirkwood_2_desc" text="Você se juntou aos guardas que patrulhavam as clareiras da Floresta das Trevas, mantendo vigilância contra aranhas, Orcs e a sombra rastejante de Dol Guldur." />
+    <string id="taom_cc_taom_youth_mirkwood_3_text" text="Ficou com a Guarda de Lanças Élfica." />
+    <string id="taom_cc_taom_youth_mirkwood_3_desc" text="Você tomou seu lugar entre a Guarda de Lanças do Reino da Floresta, aprendendo a lutar em formações disciplinadas sob o dossel da floresta." />
+    <string id="taom_cc_taom_youth_mirkwood_4_text" text="Armou armadilhas para as aranhas da Floresta das Trevas." />
+    <string id="taom_cc_taom_youth_mirkwood_4_desc" text="Você estava entre os caçadores encarregados de manter as grandes aranhas longe do coração do Reino da Floresta, aprendendo a armar laços e emboscadas na vegetação rasteira escura e a atacar com faca e lâmina arremessada antes que as criaturas pudessem se aproximar de você." />
+    <string id="taom_cc_taom_youth_mirkwood_5_text" text="Serviu nos salões do Rei da Floresta." />
+    <string id="taom_cc_taom_youth_mirkwood_5_desc" text="Você foi admitido na corte de Thranduil, aprendendo as artes diplomáticas e as canções dos Elfos da Floresta sob a tutela daqueles que cantavam desde a primeira era das estrelas. O salão do Rei Elfo exigia tanto da língua quanto do braço da espada." />
+    <string id="taom_cc_taom_youth_lothlorien_1_text" text="Treinou com a cavalaria Galadhrim." />
+    <string id="taom_cc_taom_youth_lothlorien_1_desc" text="Você se juntou à elite da cavalaria de Lothlórien, cavalgando cavalos velozes através do Bosque Dourado e aprendendo a lutar com a graça dos Galadhrim." />
+    <string id="taom_cc_taom_youth_lothlorien_2_text" text="Manteve vigília nas plataformas do Bosque Dourado." />
+    <string id="taom_cc_taom_youth_lothlorien_2_desc" text="Você ficou nas longas e silenciosas vigílias nas plataformas altas entre os galhos dos mallorn, seu arco prateado apontado através do limiar das fronteiras veladas. Nada passava pelos guardas Galadhrim sem ser visto — e você pretendia manter as coisas assim." />
+    <string id="taom_cc_taom_youth_lothlorien_3_text" text="Juntou-se aos arqueiros de Caras Galadhon." />
+    <string id="taom_cc_taom_youth_lothlorien_3_desc" text="Você treinou com os famosos arqueiros de Lothlórien, aprendendo a disparar flechas com precisão mortal das plataformas entre as árvores mallorn." />
+    <string id="taom_cc_taom_youth_lothlorien_4_text" text="Juntou-se aos guardiões das árvores." />
+    <string id="taom_cc_taom_youth_lothlorien_4_desc" text="Você se tornou um guardião das árvores, defendendo o coração de Lothlórien com lança e espada na antiga tradição élfica." />
+    <string id="taom_cc_taom_youth_lothlorien_5_text" text="Trilhou os caminhos do espelho como estudante da Dama." />
+    <string id="taom_cc_taom_youth_lothlorien_5_desc" text="Você estudou as artes mais profundas da Floresta Dourada sob aqueles mais próximos ao conselho de Galadriel, aprendendo as canções de poder e a persuasão silenciosa que poderia mudar a vontade dos senhores sem erguer uma lâmina. Você partiu com presentes não facilmente nomeados." />
+    <string id="taom_cc_taom_youth_isengard_1_text" text="Juntou-se aos Cavaleiros de Warg de Saruman." />
+    <string id="taom_cc_taom_youth_isengard_1_desc" text="Você treinou como cavaleiro para as forças de Saruman, aprendendo a controlar Wargs e atacar com velocidade devastadora pelas planícies." />
+    <string id="taom_cc_taom_youth_isengard_2_text" text="Guardou as fossas de Orthanc." />
+    <string id="taom_cc_taom_youth_isengard_2_desc" text="Você foi estacionado em Orthanc, manejando as bestas e defendendo as fossas de reprodução de qualquer um que se opusesse à vontade de Saruman." />
+    <string id="taom_cc_taom_youth_isengard_3_text" text="Lutou entre a infantaria Uruk-hai." />
+    <string id="taom_cc_taom_youth_isengard_3_desc" text="Você treinou com os ferozes Uruk-hai, aprendendo seu estilo brutal de combate corpo a corpo e construindo resistência através de treinos extenuantes." />
+    <string id="taom_cc_taom_youth_isengard_4_text" text="Bateou para os espiões de Saruman." />
+    <string id="taom_cc_taom_youth_isengard_4_desc" text="Você foi enviado como batedor e espião, percorrendo as terras para reunir informações para a máquina de guerra de Saruman." />
+    <string id="taom_cc_taom_youth_isengard_5_text" text="Juntou-se às fileiras dos piqueiros de Isengard." />
+    <string id="taom_cc_taom_youth_isengard_5_desc" text="Você se tornou membro dos formidáveis piqueiros de Isengard, aprendendo a lutar em formações cerradas que podiam quebrar qualquer carga de cavalaria." />
+    <string id="taom_cc_taom_youth_isengard_6_text" text="Lutou seu caminho através das hordas de guerra de Saruman." />
+    <string id="taom_cc_taom_youth_isengard_6_desc" text="Você se provou nas brutais hordas de guerra de Isengard, pegando todo estilo de arma que o mantinha vivo e deixando para trás tudo que não servia. Saruman só se importava com resultados e as hordas aplicavam essa filosofia sem misericórdia." />
+    <string id="taom_cc_taom_youth_gundabad_1_text" text="Cavalgou com os cavaleiros de Warg de Gundabad." />
+    <string id="taom_cc_taom_youth_gundabad_1_desc" text="Você treinou com os cavaleiros de Warg do Monte Gundabad, aprendendo a controlar as bestas selvagens através das traiçoeiras passagens das montanhas e a atacar com lança de suas costas." />
+    <string id="taom_cc_taom_youth_gundabad_2_text" text="Guardou as forjas de Gundabad." />
+    <string id="taom_cc_taom_youth_gundabad_2_desc" text="Você serviu na guarnição de Gundabad, defendendo as forjas e túneis de intrusos com arco e lança." />
+    <string id="taom_cc_taom_youth_gundabad_3_text" text="Treinou com os berserkers." />
+    <string id="taom_cc_taom_youth_gundabad_3_desc" text="Você estava entre os berserkers de Gundabad, aprendendo a lutar com fúria imprudente e força esmagadora." />
+    <string id="taom_cc_taom_youth_gundabad_4_text" text="Bateou as passagens das montanhas." />
+    <string id="taom_cc_taom_youth_gundabad_4_desc" text="Você percorreu os traiçoeiros caminhos das montanhas ao redor de Gundabad, rastreando inimigos e garantindo passagem segura para os seus." />
+    <string id="taom_cc_taom_youth_gundabad_5_text" text="Manteve a linha nas legiões de lança de Gundabad." />
+    <string id="taom_cc_taom_youth_gundabad_5_desc" text="Você treinou e marchou com as formações pesadas de lança do Monte Gundabad, aprendendo a resistir a uma carga e manter a posição sob brutais condições do norte até que a linha pudesse ser aliviada." />
+    <string id="taom_cc_taom_youth_gundabad_6_text" text="Correu com as bandas de saqueadores das passagens." />
+    <string id="taom_cc_taom_youth_gundabad_6_desc" text="Você viveu fora da estrutura dos clãs das montanhas, movendo-se com os oportunistas de dedos ágeis que seguiam hordas de guerra e recolhiam os restos de cada escaramuça. Armas de arremesso e um par de pernas rápidas o mantiveram vivo quando nada mais funcionaria." />
+    <string id="taom_cc_taom_youth_dolguldur_1_text" text="Serviu aos cavaleiros do Necromante." />
+    <string id="taom_cc_taom_youth_dolguldur_1_desc" text="Você cavalgou a serviço de Dol Guldur, comandando corcéis sombrios e espalhando terror pelas regiões do sul da Floresta das Trevas." />
+    <string id="taom_cc_taom_youth_dolguldur_2_text" text="Guardou os salões de sombra." />
+    <string id="taom_cc_taom_youth_dolguldur_2_desc" text="Você defendeu os salões sombrios de Dol Guldur, montando guarda sobre o domínio do Necromante com arco e lâmina." />
+    <string id="taom_cc_taom_youth_dolguldur_3_text" text="Treinou nas artes sombrias da guerra." />
+    <string id="taom_cc_taom_youth_dolguldur_3_desc" text="Você aprimorou suas habilidades nas artes sombrias da guerra, aprendendo a lutar com astúcia e decepção nos corredores ensombrecidos de Dol Guldur." />
+    <string id="taom_cc_taom_youth_dolguldur_4_text" text="Caçou invasores na Floresta Verde corrompida." />
+    <string id="taom_cc_taom_youth_dolguldur_4_desc" text="Você foi enviado para a vegetação retorcida do sul da Floresta das Trevas para rastrear e eliminar aqueles que se aproximavam do domínio do Necromante, aprendendo a perseguir presas pela floresta corrompida sem fazer um som ou deixar uma marca." />
+    <string id="taom_cc_taom_youth_dolguldur_5_text" text="Marchou nas legiões sombrias de Dol Guldur." />
+    <string id="taom_cc_taom_youth_dolguldur_5_desc" text="Você treinou nas fileiras de disciplina férrea das legiões sombrias de Dol Guldur, aprendendo a empunhar armas pesadas em formação enquanto a corrupção da fortaleza do Necromante se instalava em seu passo e seu silêncio." />
+    <string id="taom_cc_taom_youth_dolguldur_6_text" text="Moveu-se pela escuridão como mensageiro do Necromante." />
+    <string id="taom_cc_taom_youth_dolguldur_6_desc" text="Você carregava mensagens pela floresta corrompida que ninguém ousaria escrever, entregando-as pessoalmente a agentes que nunca mostravam seus rostos. O trabalho exigia silêncio, paciência e a habilidade de atacar sem aviso quando a sombra assim exigisse." />
+    <string id="taom_cc_taom_youth_umbar_1_text" text="Serviu na Frota Corsária." />
+    <string id="taom_cc_taom_youth_umbar_1_desc" text="Você se juntou à Frota Corsária de Umbar, aprendendo a lutar a bordo de navios e liderar grupos de abordagem contra as defesas costeiras de Gondor." />
+    <string id="taom_cc_taom_youth_umbar_2_text" text="Guardou os portos de Umbar." />
+    <string id="taom_cc_taom_youth_umbar_2_desc" text="Você serviu nas guarnições portuárias de Umbar, defendendo as docas e aprendendo a arte da defesa costeira." />
+    <string id="taom_cc_taom_youth_umbar_3_text" text="Saqueou as costas de Gondor com os Corsários." />
+    <string id="taom_cc_taom_youth_umbar_3_desc" text="Você liderou a investida sobre docas inimigas, arremessando dardos e abrindo caminho através dos defensores antes de recuar para os navios Negros com o que havia tomado. Os saques eram rápidos e brutais, e você aprendeu que hesitação custava vidas." />
+    <string id="taom_cc_taom_youth_umbar_4_text" text="Navegou pela Baía de Belfalas como batedor Corsário." />
+    <string id="taom_cc_taom_youth_umbar_4_desc" text="Você serviu no mastro e nos barcos de reconhecimento da frota Corsária, lendo marés e avistando presas em mar aberto enquanto aprendia a disparar um arco de um convés oscilante. O que você via decidia se um saque prosseguia ou era abandonado." />
+    <string id="taom_cc_taom_youth_umbar_5_text" text="Permaneceu na linha de lanças dos Númenorianos Negros." />
+    <string id="taom_cc_taom_youth_umbar_5_desc" text="Você treinou nas formações disciplinadas da infantaria de Umbar, aprendendo a manter uma cabeça de praia costeira com lança e escudo enquanto os navios descarregavam atrás de você. Os oficiais Númenorianos Negros esperavam precisão, e eles a obtinham." />
+    <string id="taom_cc_taom_youth_umbar_6_text" text="Correu com os fora-da-lei das docas de Umbar." />
+    <string id="taom_cc_taom_youth_umbar_6_desc" text="Você sobreviveu nas margens rudes da cidade portuária, movendo mercadorias que não podiam ser declaradas e adquirindo habilidades que não podiam ser ensinadas em escola alguma. O mundo Corsário tinha lugar para aqueles espertos o suficiente para ver oportunidades que ninguém mais havia notado." />
+    <string id="taom_cc_taom_youth_empire_1_text" text="Cavalgou com os Cavaleiros das Colinas." />
+    <string id="taom_cc_taom_youth_empire_1_desc" text="Montado em robustos pôneis de colina, você cavalgou com os Cavaleiros das Colinas de Dunlândia, aprendendo a lutar pelo terreno acidentado das terras altas." />
+    <string id="taom_cc_taom_youth_empire_2_text" text="Serviu na Casa Comunal Tribal." />
+    <string id="taom_cc_taom_youth_empire_2_desc" text="Dentro das casas comunais tribais de Dunlândia, você aprendeu táticas e a arte do comando, planejando saques e defesas para seu clã." />
+    <string id="taom_cc_taom_youth_empire_3_text" text="Fez guarda com a Vigilância da Fronteira." />
+    <string id="taom_cc_taom_youth_empire_3_desc" text="Você se juntou à Vigilância da Fronteira de Dunlândia, arremessando dardos e lutando com espada para defender o território de seu clã." />
+    <string id="taom_cc_taom_youth_empire_4_text" text="Explorou as terras altas." />
+    <string id="taom_cc_taom_youth_empire_4_desc" text="Você percorreu as terras altas e florestas como batedor, aprendendo a ler a terra e atirar a cavalo." />
+    <string id="taom_cc_taom_youth_empire_5_text" text="Juntou-se aos Irmãos de Lança." />
+    <string id="taom_cc_taom_youth_empire_5_desc" text="Você se tornou um dos Irmãos de Lança de Dunlândia, aprendendo a lutar em formações cerradas com lança e escudo." />
+    <string id="taom_cc_taom_youth_empire_6_text" text="Assediou os senhores-cavaleiros como Escaramuçador Tribal." />
+    <string id="taom_cc_taom_youth_empire_6_desc" text="Como Escaramuçador Tribal, você aprendeu a emboscar batedores Rohirrim nas passagens, arremessando dardos e desaparecendo nas cristas antes que pudessem contra-atacar. O antigo rancor contra os senhores-cavaleiros vivia em cada arremesso." />
+    <string id="taom_cc_taom_youth_vlandia_1_text" text="Treinou com os Cavaleiros da Marca." />
+    <string id="taom_cc_taom_youth_vlandia_1_desc" text="Você provou sua habilidade como cavaleiro entre os Rohirrim, aprendendo a carregar com lança e lutar a cavalo nas tradições de Eorl, o Jovem." />
+    <string id="taom_cc_taom_youth_vlandia_2_text" text="Serviu na guarda da cidade de Edoras." />
+    <string id="taom_cc_taom_youth_vlandia_2_desc" text="Você montou guarda sobre os portões e muralhas de Edoras, aprendendo táticas e disciplina a serviço do Salão Dourado." />
+    <string id="taom_cc_taom_youth_vlandia_3_text" text="Juntou-se aos escaramuçadores de Westfold." />
+    <string id="taom_cc_taom_youth_vlandia_3_desc" text="Você se juntou aos escaramuçadores de Westfold, aprendendo a lutar com armas arremessadas e espada nas planícies abertas." />
+    <string id="taom_cc_taom_youth_vlandia_4_text" text="Cavalgou com os batedores de Wold." />
+    <string id="taom_cc_taom_youth_vlandia_4_desc" text="Você cavalgou com os batedores de Wold, percorrendo grandes distâncias pelas planícies para vigiar ameaças vindas do Leste." />
+    <string id="taom_cc_taom_youth_vlandia_5_text" text="Permaneceu entre os lanceiros de Eastfold." />
+    <string id="taom_cc_taom_youth_vlandia_5_desc" text="Como lanceiro de Eastfold, você aprendeu a manter a muralha de escudos contra a investida do inimigo." />
+    <string id="taom_cc_taom_youth_vlandia_6_text" text="Viajou com os seguidores de acampamento de Rohan." />
+    <string id="taom_cc_taom_youth_vlandia_6_desc" text="Ao invés de pegar em armas diretamente, você viajou com os seguidores de acampamento, aprendendo a sobreviver na marcha e lucrar com o caos da guerra." />
+    <string id="taom_cc_taom_youth_sturgia_1_text" text="Serviu na Guarda Real de Dale." />
+    <string id="taom_cc_taom_youth_sturgia_1_desc" text="Você jurou lealdade ao Rei de Dale, servindo na Guarda Real e aprendendo as tradições marciais dos Homens do Norte." />
+    <string id="taom_cc_taom_youth_sturgia_2_text" text="Defendeu os portões de Dale." />
+    <string id="taom_cc_taom_youth_sturgia_2_desc" text="Como membro da guarnição, você defendeu os portões reconstruídos de Dale, aprendendo a arte da defesa de cerco com veteranos que viram a cidade cair e se erguer novamente." />
+    <string id="taom_cc_taom_youth_sturgia_3_text" text="Lutou na milícia da margem do Lago Comprido." />
+    <string id="taom_cc_taom_youth_sturgia_3_desc" text="Você treinou com a milícia da margem do lago, aprendendo a lutar com armas arremessáveis e espada na defesa dos assentamentos que se estendiam pela rota comercial entre Dale e o sul. Comércio e combate eram igualmente parte da vida diária." />
+    <string id="taom_cc_taom_youth_sturgia_4_text" text="Rastreou caça e Orcs na floresta ao leste de Dale." />
+    <string id="taom_cc_taom_youth_sturgia_4_desc" text="Você percorreu as florestas sombrias ao leste do Lago Comprido, caçando animais para o mercado e mantendo um olhar vigilante sobre as trilhas de Orcs vindas das montanhas. A floresta ensinou você a ler a terra e manter seu arco armado o tempo todo." />
+    <string id="taom_cc_taom_youth_sturgia_5_text" text="Juntou-se à muralha de escudos." />
+    <string id="taom_cc_taom_youth_sturgia_5_desc" text="Você tomou seu lugar na muralha de escudos de Dale, aprendendo a permanecer firme com lança e escudo contra qualquer inimigo que ameaçasse a cidade." />
+    <string id="taom_cc_taom_youth_sturgia_6_text" text="Viajou com as caravanas mercantes do Norte." />
+    <string id="taom_cc_taom_youth_sturgia_6_desc" text="Você seguiu com as caravanas que se moviam entre Dale, Erebor e os reinos do sul, aprendendo as artes do comércio, sobrevivência na estrada e o oportunismo que tornava alguns comerciantes muito bem-sucedidos e outros muito arrependidos." />
+    <string id="taom_cc_taom_youth_aserai_1_text" text="Treinou com os elefantes de guerra." />
+    <string id="taom_cc_taom_youth_aserai_1_desc" text="Você treinou ao lado dos poderosos elefantes de guerra de Harad, aprendendo a cavalgar e lutar de suas costas imponentes sob o sol escaldante do sul." />
+    <string id="taom_cc_taom_youth_aserai_2_text" text="Vigiou as muralhas das cidades desérticas de Harad." />
+    <string id="taom_cc_taom_youth_aserai_2_desc" text="Você serviu como sentinela nas ameias queimadas pelo sol das cidades fortificadas de Harad, aprendendo a observar o horizonte cintilante em busca de movimentos inimigos e a dirigir fogo de flechas contra invasores da borda do deserto." />
+    <string id="taom_cc_taom_youth_aserai_3_text" text="Cavalgou com os batedores do deserto." />
+    <string id="taom_cc_taom_youth_aserai_3_desc" text="Você se juntou aos velozes batedores de Harad, explorando o vasto deserto a cavalo e atacando os flancos do inimigo antes de desaparecer de volta na neblina de calor." />
+    <string id="taom_cc_taom_youth_aserai_4_text" text="Treinou com os soldados de infantaria da Serpente Negra." />
+    <string id="taom_cc_taom_youth_aserai_4_desc" text="Você treinou nas formações disciplinadas de lança que serviam sob o estandarte da Serpente Negra, aprendendo a manter posição no calor impiedoso do deserto e avançar em sincronia com guerreiros jurados a levar a guerra para o norte." />
+    <string id="taom_cc_taom_youth_aserai_5_text" text="Assediou inimigos como um escaramuçador de dardo de Harad." />
+    <string id="taom_cc_taom_youth_aserai_5_desc" text="Você lutou no estilo solto de escaramuça haradrim, arremessando dardos para enfraquecer o inimigo antes de se aproximar com espada e broquel. O calor e a areia estavam ao seu lado, e você aprendeu a usar ambos." />
+    <string id="taom_cc_taom_youth_aserai_6_text" text="Perambulou com as tribos nômades das Terras do Sol." />
+    <string id="taom_cc_taom_youth_aserai_6_desc" text="Você vagou com o povo errante do deserto profundo, aprendendo a ler sinais de água e navegar pelo mar de dunas pela luz das estrelas. Quando as moedas escasseavam, você encontrava outras formas de sobreviver, e as vastas Terras do Sol vazias lhe davam espaço para aperfeiçoá-las." />
+    <string id="taom_cc_taom_youth_battania_1_text" text="Cavalgou com os Patrulheiros do Norte." />
+    <string id="taom_cc_taom_youth_battania_1_desc" text="Você foi aceito na companhia dos Patrulheiros Dúnedain, aprendendo a cavalgar duro pelas ruínas de Arnor e lutar com a ferocidade disciplinada dos Herdeiros de Isildur. Os Patrulheiros cavalgavam longe e diziam pouco a quem encontravam na estrada." />
+    <string id="taom_cc_taom_youth_battania_2_text" text="Vigiou as encruzilhadas de Eriador." />
+    <string id="taom_cc_taom_youth_battania_2_desc" text="Você manteve vigília sobre as torres de vigia em ruínas e os antigos cruzamentos de estradas do Reino do Norte, aprendendo a ler a terra e detectar os sinais de movimento de Orcs antes que o problema chegasse. Os Patrulheiros não mantinham postos formais, apenas dever." />
+    <string id="taom_cc_taom_youth_battania_3_text" text="Percorreu as terras selvagens de Arnor como batedor Dúnadan." />
+    <string id="taom_cc_taom_youth_battania_3_desc" text="Você se moveu pelas ruínas cobertas de vegetação e charnecas do antigo reino como batedor patrulheiro, aprendendo a viver da terra selvagem e rastrear tanto bestas quanto inimigos por terreno que guardava memória em suas pedras. Velocidade e silêncio eram suas únicas ferramentas." />
+    <string id="taom_cc_taom_youth_battania_4_text" text="Permaneceu na linha dos Patrulheiros contra as hordas de Orcs." />
+    <string id="taom_cc_taom_youth_battania_4_desc" text="Você lutou nos confrontos de curta distância que mantinham os assentamentos do norte vivos, aprendendo a empunhar espada e lança com a firmeza de homens que sabiam ser a última linha entre o povo e a escuridão. Não havia reforços no Norte." />
+    <string id="taom_cc_taom_youth_battania_5_text" text="Moveu-se despercebido entre as vilas do Norte." />
+    <string id="taom_cc_taom_youth_battania_5_desc" text="Você manteve viva a rede oculta de informantes Dúnedain, transitando entre assentamentos sob nomes falsos e reunindo notícias de movimentos de Orcs, estranhos sombrios e ameaças ao povo. Os Patrulheiros dependiam daqueles que podiam passar por comuns, e você tinha o dom." />
+    <string id="taom_cc_taom_youth_battania_6_text" text="Rastreou e emboscou nas ruínas do Reino do Norte." />
+    <string id="taom_cc_taom_youth_battania_6_desc" text="Você aprendeu a preparar emboscadas nas antigas ruínas e matagais de Arnor arruinada, lendo trilhas e usando a paisagem quebrada a seu favor. Uma flecha bem posicionada de cobertura valia uma dúzia de homens a descoberto, e você fazia cada tiro contar." />
+    <string id="taom_cc_taom_youth_khuzait_1_text" text="Cavalgou com os Guerreiros Khelek." />
+    <string id="taom_cc_taom_youth_khuzait_1_desc" text="Você provou seu valor como cavaleiro entre os Guerreiros Khelek, aprendendo combate montado nas amplas estepes de Rhûn na tradição dos cavaleiros de guerra do leste." />
+    <string id="taom_cc_taom_youth_khuzait_2_text" text="Guardou os assentamentos de Rhûn." />
+    <string id="taom_cc_taom_youth_khuzait_2_desc" text="Você patrulhou as muralhas dos assentamentos de Rhûn, aprendendo arco e flecha e a arte da defesa contra invasores das estepes selvagens do leste." />
+    <string id="taom_cc_taom_youth_khuzait_3_text" text="Juntou-se às fileiras dos Uruk-thar." />
+    <string id="taom_cc_taom_youth_khuzait_3_desc" text="Como membro dos Uruk-thar, você aprendeu a lutar com armas arremessáveis e espada na tradição de escaramuça dos Orientais." />
+    <string id="taom_cc_taom_youth_khuzait_4_text" text="Patrulhou as margens do Mar de Rhun como batedor montado." />
+    <string id="taom_cc_taom_youth_khuzait_4_desc" text="Você cavalgou bem à frente das colunas orientais ao longo das margens do mar interior, interpretando a terra em busca de ameaças e oportunidades. A estepe lhe deu o olhar de um cavaleiro para distâncias e a paciência de um arqueiro para o momento certo." />
+    <string id="taom_cc_taom_youth_khuzait_5_text" text="Manteve a linha na formação de lanças dos Orientais." />
+    <string id="taom_cc_taom_youth_khuzait_5_desc" text="Você ficou ombro a ombro com seus parentes na disciplinada linha de lanças dos Orientais, aprendendo a resistir contra cavalaria e avançar em fileiras ordenadas sob os estandartes da alvorada vermelha que haviam marchado para o oeste antes." />
+    <string id="taom_cc_taom_youth_khuzait_6_text" text="Viajou com os bandos Karash." />
+    <string id="taom_cc_taom_youth_khuzait_6_desc" text="Você viveu fora da estrutura formal de clãs dos Orientais, movendo-se com os bandos Karash que seguiam os exércitos e lucravam com sua passagem. Astúcia e armas arremessadas mantiveram você alimentado às margens da grande hoste oriental." />
+    <string id="taom_cc_taom_education_gondor_1_text" text="Treinou com os filhos das casas nobres." />
+    <string id="taom_cc_taom_education_gondor_1_desc" text="Você cresceu treinando ao lado dos filhos das famílias nobres de Gondor nos pátios de Minas Tirith. Aprendeu a lutar com espada e lança sob cavaleiros jurados ao Regente, e passou longas horas praticando equitação no Pelennor." />
+    <string id="taom_cc_taom_education_gondor_2_text" text="Foi aprendiz nos mercados de Minas Tirith." />
+    <string id="taom_cc_taom_education_gondor_2_desc" text="Você passou sua adolescência fazendo recados e aprendendo contabilidade nos salões de mercado em camadas da Cidade Branca. Rapidamente aprendeu a arte da negociação, lisonjeando mercadores e contando moedas à sombra da Torre Branca." />
+    <string id="taom_cc_taom_education_gondor_3_text" text="Trabalhou nos campos do Pelennor." />
+    <string id="taom_cc_taom_education_gondor_3_desc" text="Você labutou do amanhecer ao anoitecer nas ricas terras cultivadas fora das muralhas da cidade, carregando feixes e conduzindo bois pelo Pelennor. Quando a convocação foi feita, você recebeu uma lança e foi treinado em formação por um veterano rabugento das guerras de fronteira." />
+    <string id="taom_cc_taom_education_gondor_4_text" text="Foi aprendiz de um armeiro da Cidade Branca." />
+    <string id="taom_cc_taom_education_gondor_4_desc" text="Você aprendeu seu ofício no distrito de ferreiros de Minas Tirith, soprando foles e afiando lâminas sob o olhar severo de um mestre armeiro. Quando cresceu, suas mãos estavam calejadas do trabalho com o martelo e você podia julgar a têmpera de uma lâmina pelo seu som." />
+    <string id="taom_cc_taom_education_gondor_5_text" text="Percorreu as terras selvagens de Ithilien." />
+    <string id="taom_cc_taom_education_gondor_5_desc" text="Você seguiu os Patrulheiros de Ithilien quando jovem, aprendendo a se mover sem som pelos jardins crescidos a leste do Anduin. Você armou seu primeiro arco antes de ser alto o suficiente para puxá-lo adequadamente e aprendeu a ler pegadas na lama." />
+    <string id="taom_cc_taom_education_gondor_6_text" text="Vasculhou entre as ruínas de Osgiliath." />
+    <string id="taom_cc_taom_education_gondor_6_desc" text="Você cresceu revirando as pedras despedaçadas de Osgiliath, vendendo salvados para soldados e correndo mensagens entre postos avançados por moedas. A cidade em ruínas lhe ensinou rapidez e astúcia — uma pedra arremessada podia afugentar um homem duas vezes maior que você." />
+    <string id="taom_cc_taom_education_mordor_1_text" text="Lutou nas arenas de treinamento de Barad-dûr." />
+    <string id="taom_cc_taom_education_mordor_1_desc" text="Você foi jogado nos pátios de luta da Torre Negra assim que pôde segurar uma arma. Os guerreiros mais velhos não mostravam misericórdia, e você aprendeu rapidamente que hesitação significava dor. A dor lhe ensinou a atacar primeiro e atacar com força." />
+    <string id="taom_cc_taom_education_mordor_2_text" text="Transportou comboios de suprimentos pela Estrada Negra." />
+    <string id="taom_cc_taom_education_mordor_2_desc" text="Você moveu mercadorias pelas estradas sombrias de Mordor, aprendendo a barganhar e blefar seu caminho por cobradores de pedágio e supervisores corruptos. O perigo aguçou sua sagacidade, e você descobriu que informação valia mais que ferro na Terra Negra." />
+    <string id="taom_cc_taom_education_mordor_3_text" text="Trabalhou nas forjas da Terra Negra." />
+    <string id="taom_cc_taom_education_mordor_3_desc" text="Você transportou pedras e trabalhou os foles nas forjas fumegantes que cercavam Barad-dûr, suportando calor e cinzas desde antes da primeira luz até muito depois do escurecer. O trabalho quebrava jovens mais fracos, mas você encontrou uma resistência sombria que nenhum capataz podia extinguir." />
+    <string id="taom_cc_taom_education_mordor_4_text" text="Manteve a ordem entre as turmas de trabalho de Orcs." />
+    <string id="taom_cc_taom_education_mordor_4_desc" text="Você recebeu uma clava e um canto do pátio e foi instruído a manter as turmas de trabalho na linha. Aprendeu rápido como ler uma multidão e onde bater para obter obediência sem matar. Estratégia e brutalidade se tornaram segunda natureza." />
+    <string id="taom_cc_taom_education_mordor_5_text" text="Caçou pelas planícies de Gorgoroth." />
+    <string id="taom_cc_taom_education_mordor_5_desc" text="Você rastreou presas pelas planícies vulcânicas devastadas de Gorgoroth, aprendendo a ler rastros de cinzas e navegar pelo brilho de fogos distantes. Havia pouco para caçar, e o pouco que havia revidava. Você voltou para casa magro e de olhar afiado." />
+    <string id="taom_cc_taom_education_mordor_6_text" text="Correu com os excluídos além do Portão Negro." />
+    <string id="taom_cc_taom_education_mordor_6_desc" text="Você sobreviveu nas margens do reino do Senhor do Escuro, correndo com os bandos de dedos ágeis que escapavam das patrulhas e viviam de roubo e subterfúgio. Você aprendeu cada sombra e cada preço de suborno à sombra do Morannon." />
+    <string id="taom_cc_taom_education_erebor_1_text" text="Treinou no grande salão com os irmãos de machado do Rei." />
+    <string id="taom_cc_taom_education_erebor_1_desc" text="Você praticou combate ao lado dos jovens guerreiros da casa de Dain, aprendendo a brandir o machado de duas mãos nos ecoantes salões de treinamento nas profundezas da Montanha Solitária. Cada cicatriz era uma lição; cada lição era um motivo de orgulho." />
+    <string id="taom_cc_taom_education_erebor_2_text" text="Foi aprendiz nas forjas de Erebor." />
+    <string id="taom_cc_taom_education_erebor_2_desc" text="Você passou sua juventude na bancada do ferreiro, aprendendo a trabalhar metal no coração flamejante da Montanha Solitária. Dominou os valores do artesanato e do comércio, carregando lâminas acabadas para os mercados de Dale quando a luz desaparecia da forja." />
+    <string id="taom_cc_taom_education_erebor_3_text" text="Trabalhou nas minas profundas da Montanha Solitária." />
+    <string id="taom_cc_taom_education_erebor_3_desc" text="Você balançou uma picareta nas galerias mais baixas de Erebor antes de ter idade para fazer a barba, aprendendo as passagens ocultas da montanha e a engenharia de túneis e suportes. A pedra profunda se tornou tão familiar para você quanto o céu aberto." />
+    <string id="taom_cc_taom_education_erebor_4_text" text="Treinou com a muralha de escudos dos Pés de Ferro." />
+    <string id="taom_cc_taom_education_erebor_4_desc" text="Você treinou no estilo disciplinado de combate próximo dos guerreiros de Dain Pés de Ferro, aprendendo a firmar um escudo e brandir um machado em formações apertadas de túnel. Sua passada curta era uma vantagem nos corredores onde pessoas mais altas tropeçavam." />
+    <string id="taom_cc_taom_education_erebor_5_text" text="Contou moedas nas câmaras do tesouro." />
+    <string id="taom_cc_taom_education_erebor_5_desc" text="Você ajudou a contabilizar a vasta riqueza de Erebor desde cedo, aprendendo a gerenciar livros-razão e entender a logística de abastecer um reino montanhoso. O trabalho o tornou metódico e lhe deu o olhar de um estrategista para recursos." />
+    <string id="taom_cc_taom_education_erebor_6_text" text="Patrulhou as encostas e trilhas da floresta." />
+    <string id="taom_cc_taom_education_erebor_6_desc" text="Você percorreu as encostas ao redor de Erebor como parte da vigília externa, aprendendo a rastrear grupos de ataque Orcs e atirar de tocaia na floresta de pinheiros. O ar da montanha aguçou seus sentidos e a distância tornou-se sua aliada." />
+    <string id="taom_cc_taom_education_rivendell_1_text" text="Treinou nas cortes de equitação de Imladris." />
+    <string id="taom_cc_taom_education_rivendell_1_desc" text="Você praticou as artes montadas nos campos de treinamento tranquilos de Rivendell, aprendendo a cavalgar e lutar com a graça fluida que a tradição Élfica exigia. A grande biblioteca nunca estava longe, e sua educação em lâmina e conhecimento caminhavam lado a lado." />
+    <string id="taom_cc_taom_education_rivendell_2_text" text="Estudou ofício e conhecimento nos salões de Elrond." />
+    <string id="taom_cc_taom_education_rivendell_2_desc" text="Você passou seus anos formadores aprendendo as artes do ofício e as histórias preservadas em Rivendell, trabalhando ao lado de mestres artesãos e mestres do conhecimento. Longas noites de conversa afiaram sua língua e seu entendimento do passado profundo do mundo." />
+    <string id="taom_cc_taom_education_rivendell_3_text" text="Cuidou dos jardins e pomares do Vale Escondido." />
+    <string id="taom_cc_taom_education_rivendell_3_desc" text="Você trabalhou nos jardins em terraços de Imladris, aprendendo paciência e diligência com Elfos que cuidaram daqueles mesmos canteiros por uma era. Entre as fileiras você praticou combate com espadas, descobrindo que cuidar de coisas vivas lhe dava um instinto para força medida." />
+    <string id="taom_cc_taom_education_rivendell_4_text" text="Percorreu as vigílias das fronteiras de Imladris." />
+    <string id="taom_cc_taom_education_rivendell_4_desc" text="Você acompanhou os guardiões Élficos em seus longos circuitos pelos caminhos ocultos do vale, aprendendo a ler a floresta e soltar uma flecha antes que sua presa ouvisse você se aproximar. A paz do vale foi conquistada com dificuldade e você ajudou a mantê-la." />
+    <string id="taom_cc_taom_education_rivendell_5_text" text="Aprendeu artes de cura nos salões de Elrond." />
+    <string id="taom_cc_taom_education_rivendell_5_desc" text="Você serviu nas salas de cura de Rivendell, aprendendo conhecimento de ervas e as artes de curar sob a orientação dos curandeiros de Elrond. Cuidar de viajantes cansados e Elfos feridos lhe deu tanto conhecimento quanto a empatia que vem com ele." />
+    <string id="taom_cc_taom_education_rivendell_6_text" text="Perambulou pelas estradas selvagens além do vale." />
+    <string id="taom_cc_taom_education_rivendell_6_desc" text="Você escapou além das fronteiras de Rivendell sempre que pôde, explorando as Terras dos Trolls e os vales das Montanhas Sombrias. Você desenvolveu um gosto pelo risco e descobriu que podia sobreviver com astúcia onde uma espada só traria problemas." />
+    <string id="taom_cc_taom_education_mirkwood_1_text" text="Treinou com a guarda doméstica da corte de Thranduil." />
+    <string id="taom_cc_taom_education_mirkwood_1_desc" text="Você treinou com os jovens guerreiros da casa do Rei da Floresta, aprendendo a se mover e lutar entre as grandes faias sob os salões da montanha. A corte era exigente, e esperava-se que você fosse tão afiado com palavras quanto com sua lâmina." />
+    <string id="taom_cc_taom_education_mirkwood_2_text" text="Transportou mercadorias pela Estrada da Floresta." />
+    <string id="taom_cc_taom_education_mirkwood_2_desc" text="Você escoltou mercadorias pelas sombras da Floresta das Trevas, aprendendo a ler a floresta e barganhar no final de uma jornada perigosa. O caminho nunca era seguro, e os mercadores que sobreviviam eram charmosos, rápidos e vigilantes." />
+    <string id="taom_cc_taom_education_mirkwood_3_text" text="Coletou e cultivou nas margens da floresta." />
+    <string id="taom_cc_taom_education_mirkwood_3_desc" text="Você cresceu cuidando das clareiras e áreas cultivadas nas bordas do Reino da Floresta, colhendo o que a floresta sombria permitia. Era um trabalho duro e perigoso, e você aprendeu a se mover rápido quando as coisas obscuras se aproximavam." />
+    <string id="taom_cc_taom_education_mirkwood_4_text" text="Confeccionou arcos e trabalhos em madeira nos salões do Rei Elfo." />
+    <string id="taom_cc_taom_education_mirkwood_4_desc" text="Você aprendeu seu ofício com os arqueiros Élficos da Floresta das Trevas, moldando hastes e encordoando os famosos arcos da Floresta. O trabalho exigia medidas iguais de paciência e precisão, e você saiu com mãos que podiam moldar uma arma tão facilmente quanto usá-la." />
+    <string id="taom_cc_taom_education_mirkwood_5_text" text="Caçou nas profundezas do bosque sombrio." />
+    <string id="taom_cc_taom_education_mirkwood_5_desc" text="Você seguiu os caçadores da Floresta nas partes mais escuras da Floresta das Trevas, rastreando cervos e javalis através da vegetação corrompida. Cada caçada arriscava um encontro com as criaturas da floresta, e você aprendeu a atirar antes de ouvir um som claramente." />
+    <string id="taom_cc_taom_education_mirkwood_6_text" text="Correu com a vigília das fronteiras da floresta." />
+    <string id="taom_cc_taom_education_mirkwood_6_desc" text="Você manteve companhia irregular com as patrulhas que vagavam fora das fronteiras formais de Thranduil, aprendendo a armar armadilhas e emboscadas para as criaturas-aranha e batedores Orcs que testavam as bordas do Reino da Floresta. A astúcia manteve você vivo onde apenas a coragem não bastaria." />
+    <string id="taom_cc_taom_education_lothlorien_1_text" text="Treinou com os guardiões de Caras Galadhon." />
+    <string id="taom_cc_taom_education_lothlorien_1_desc" text="Você praticou as artes guerreiras nas cortes prateadas de Caras Galadhon, aprendendo o estilo de espada amplo dos Galadhrim sob a luz do poder da Senhora. Todas as manhãs começavam com exercícios e todas as noites com luz estelar e memória longa." />
+    <string id="taom_cc_taom_education_lothlorien_2_text" text="Teceu e confeccionou na cidade-mallorn." />
+    <string id="taom_cc_taom_education_lothlorien_2_desc" text="Você aprendeu as artes têxteis e de ofício de Lothlórien, trabalhando com os famosos tecelões Élficos que produziam tecidos de prata e ouro. O trabalho exigia precisão incomum, e você descobriu que beleza e persuasão eram inseparáveis no Bosque Dourado." />
+    <string id="taom_cc_taom_education_lothlorien_3_text" text="Manteve vigília dos talans das árvores mallorn." />
+    <string id="taom_cc_taom_education_lothlorien_3_desc" text="Você manteve as longas vigílias silenciosas nas plataformas altas entre os galhos mallorn, aprendendo a ler a floresta abaixo e soltar flechas de ponta prateada com calma mortal. A paciência infinita dessas vigílias moldou seu olhar e acalmou sua mão." />
+    <string id="taom_cc_taom_education_lothlorien_4_text" text="Patrulhou as fronteiras prateadas do Bosque Dourado." />
+    <string id="taom_cc_taom_education_lothlorien_4_desc" text="Você percorreu as marchas externas de Lothlórien, aprendendo a identificar os sinais de incursão Orc nas passagens de Dimrill Dale. Longos dias de observação silenciosa seguidos por ação súbita moldaram você em um caçador tão paciente quanto o bosque e tão rápido quanto a flecha." />
+    <string id="taom_cc_taom_education_lothlorien_5_text" text="Estudou as artes de cura do Bosque Dourado." />
+    <string id="taom_cc_taom_education_lothlorien_5_desc" text="Você foi aprendiz entre os curandeiros de Lothlórien, colhendo athelas e aprendendo o conhecimento de ervas e ferimentos sob a instrução daqueles que praticaram a arte por séculos. A graça da Senhora tocava toda cura dentro daquelas fronteiras." />
+    <string id="taom_cc_taom_education_lothlorien_6_text" text="Perambulou além do bosque em missões privadas." />
+    <string id="taom_cc_taom_education_lothlorien_6_desc" text="Você frequentemente escapava além das fronteiras veladas de Lothlórien sozinho, explorando as margens do Anduin e as terras pardas além por curiosidade inquieta. Você aprendeu a passar despercebido e a usar dissimulação quando caminhos diretos estavam barrados para você." />
+    <string id="taom_cc_taom_education_isengard_1_text" text="Treinou no pátio de guerra de Orthanc." />
+    <string id="taom_cc_taom_education_isengard_1_desc" text="Você foi submetido a exercícios brutais nos pátios de terra batida de Isengard, aprendendo a empunhar alabarda e montante sob os olhos de sargentos Uruk-hai. As forças de Saruman treinavam sem piedade, e a fraqueza foi expulsa de você rapidamente." />
+    <string id="taom_cc_taom_education_isengard_2_text" text="Aprendiz nas oficinas de máquinas sob Orthanc." />
+    <string id="taom_cc_taom_education_isengard_2_desc" text="Você aprendeu a trabalhar metal e gerenciar materiais nas oficinas enfumaçadas que alimentavam a máquina de guerra de Saruman, adquirindo as artes da fabricação e do suprimento sob pressão. O trabalho era constante e inventivo, e Saruman recompensava a engenhosidade." />
+    <string id="taom_cc_taom_education_isengard_3_text" text="Cavou e carregou nas fossas de Isengard." />
+    <string id="taom_cc_taom_education_isengard_3_desc" text="Você foi colocado para trabalhar nas fossas assim que ficou forte o suficiente, quebrando rochas e carregando escombros para alimentar a construção interminável de Saruman. O trabalho construiu sua resistência além do que a maioria dos corpos humanos poderia suportar." />
+    <string id="taom_cc_taom_education_isengard_4_text" text="Treinou ao lado da infantaria Uruk-hai." />
+    <string id="taom_cc_taom_education_isengard_4_desc" text="Você realizou exercícios ao lado dos guerreiros criados de Isengard, aprendendo a se posicionar e resistir com lança e a cortar com espada em formação cerrada. Sendo nem Uruk nem Homem puro, você teve que ser duas vezes mais implacável para ser aceito." />
+    <string id="taom_cc_taom_education_isengard_5_text" text="Explorou as planícies de Rohan para os olhos de Saruman." />
+    <string id="taom_cc_taom_education_isengard_5_desc" text="Você percorreu o Wold e as aproximações do Abismo de Helm como batedor de Isengard, aprendendo a viajar rápido e invisível por campo aberto. Ler a terra e evitar as patrulhas dos Rohirrim afiou seus instintos até uma ponta fina." />
+    <string id="taom_cc_taom_education_isengard_6_text" text="Transportou informações pelas sombras de Isengard." />
+    <string id="taom_cc_taom_education_isengard_6_desc" text="Você era ágil e esperto o suficiente para ser usado como mensageiro e informante no mundo cinzento das redes de espionagem de Saruman. Você aprendeu quanto valia um segredo e quanta dor custava manter um." />
+    <string id="taom_cc_taom_education_gundabad_1_text" text="Treinou nos salões de guerra do Monte Gundabad." />
+    <string id="taom_cc_taom_education_gundabad_1_desc" text="Você teve seu batismo de sangue nos salões de treinamento iluminados por tochas da fortaleza da montanha, aprendendo a cavalgar duro e brandir armas pesadas na tradição dos clãs Orcs do norte. Status vinha para aqueles que podiam provar a si mesmos na arena diante de seus anciãos." />
+    <string id="taom_cc_taom_education_gundabad_2_text" text="Aprendiz nas forjas de armas de Gundabad." />
+    <string id="taom_cc_taom_education_gundabad_2_desc" text="Você aprendeu a forjar armas brutas mas eficazes nos barulhentos salões de ferraria da montanha, aprendendo a trocá-las por suprimentos e favores. O trabalho era feio, mas as habilidades eram reais, e você deixou a forja conhecendo tanto ferro quanto negociação." />
+    <string id="taom_cc_taom_education_gundabad_3_text" text="Cavou nas minas sob a montanha." />
+    <string id="taom_cc_taom_education_gundabad_3_desc" text="Você balançou uma picareta nos túneis sem luz de Gundabad, aprendendo a estrutura da montanha e a engenharia dos suportes das fossas. Os túneis eram seu lar e você podia navegá-los cego, o que era frequentemente como tinha que fazer." />
+    <string id="taom_cc_taom_education_gundabad_4_text" text="Lutou nos desfiladeiros das Montanhas Cinzentas." />
+    <string id="taom_cc_taom_education_gundabad_4_desc" text="Você correu com os bandos de ataque que investiam nas Montanhas Cinzentas, aprendendo a lutar com machado e lança no estilo brutal de ataque rápido dos clãs do norte. Você voltava mais cruel cada vez e um pouco mais certo de sua própria sobrevivência." />
+    <string id="taom_cc_taom_education_gundabad_5_text" text="Vagou pelas terras selvagens ao redor de Gundabad." />
+    <string id="taom_cc_taom_education_gundabad_5_desc" text="Você patrulhou o deserto rochoso ao redor da fortaleza da montanha, rastreando intrusos e lendo sinais de movimento inimigo. As terras selvagens geladas do norte lhe deram paciência e a quietude de um arqueiro que superava qualquer alvo." />
+    <string id="taom_cc_taom_education_gundabad_6_text" text="Sobreviveu sozinho nos desfiladeiros da montanha." />
+    <string id="taom_cc_taom_education_gundabad_6_desc" text="Expulso ou fugindo de alguma dívida, você se virou sozinho nos desfiladeiros traiçoeiros ao redor da montanha, sobrevivendo por roubo e pensamento rápido. A experiência não lhe deixou ilusões sobre lealdade e um talento afiado para sair de problemas." />
+    <string id="taom_cc_taom_education_dolguldur_1_text" text="Exercitou nos pátios sombrios de Dol Guldur." />
+    <string id="taom_cc_taom_education_dolguldur_1_desc" text="Você treinou nos pátios sem luz da fortaleza do Necromante, aprendendo a lutar com alabarda e lâmina grande sob o olhar de supervisores encapuzados. A sombra que jazia sobre o lugar infiltrou-se em seus ossos e afiou seus instintos para violência." />
+    <string id="taom_cc_taom_education_dolguldur_2_text" text="Forjou aço-sombrio nas oficinas escuras." />
+    <string id="taom_cc_taom_education_dolguldur_2_desc" text="Você trabalhou nas forjas de ferro negro de Dol Guldur, aprendendo a moldar armas sob condições que quebrariam um jovem mais fraco. Os materiais eram sombrios e os métodos mais sombrios ainda, e você saiu com conhecimento que poucos admitiriam ter." />
+    <string id="taom_cc_taom_education_dolguldur_3_text" text="Carregou pedras nas cavernas da fortaleza." />
+    <string id="taom_cc_taom_education_dolguldur_3_desc" text="Você trabalhou nas escavações subterrâneas de Dol Guldur, arrastando blocos e escoando túneis na escuridão permanente sob a colina corrompida. O trabalho era implacável, e resistência era a única moeda que comprava qualquer alívio." />
+    <string id="taom_cc_taom_education_dolguldur_4_text" text="Lutou nas patrulhas sombrias da Floresta Encantada." />
+    <string id="taom_cc_taom_education_dolguldur_4_desc" text="Você correu com as patrulhas sombrias que empurravam a corrupção de Dol Guldur mais para dentro do sul de Mirkwood, cortando a resistência com machado e lança. Cada incursão o levava mais fundo na floresta retorcida e deixava menos de seu eu anterior para trás." />
+    <string id="taom_cc_taom_education_dolguldur_5_text" text="Caçou nas bordas da floresta sombria." />
+    <string id="taom_cc_taom_education_dolguldur_5_desc" text="Você rastreou pela vegetação rasteira corrompida do sul de Mirkwood, matando qualquer criatura que chegasse muito perto da fortaleza e aprendendo a se mover sem fazer som numa floresta que torcia cada trilha. Seus olhos se ajustaram a um mundo sem luz solar." />
+    <string id="taom_cc_taom_education_dolguldur_6_text" text="Moveu-se pelas sombras como espião do Necromante." />
+    <string id="taom_cc_taom_education_dolguldur_6_desc" text="Você foi usado como mensageiro e agente na rede do Necromante, carregando mensagens pela floresta sombria e entregando-as a contatos que nunca mostravam seus rostos. Você aprendeu que sombras eram sua armadura e silêncio sua melhor arma." />
+    <string id="taom_cc_taom_education_umbar_1_text" text="Aprendeu navegação e esgrima a bordo dos navios Negros." />
+    <string id="taom_cc_taom_education_umbar_1_desc" text="Você foi levado ao mar jovem, aprendendo a manejar uma vela e lutar com o cutelo e machado de abordagem da tradição Corsária. O convés de um navio de guerra era seu campo de treinamento, e o Delta do Anduin era seu campo de provas." />
+    <string id="taom_cc_taom_education_umbar_2_text" text="Correu pelos cais e casas de contagem do porto." />
+    <string id="taom_cc_taom_education_umbar_2_desc" text="Você cresceu de língua e dedos rápidos nos movimentados estaleiros de Umbar, aprendendo a encantar compradores, detectar contas infladas e mover mercadorias pela alfândega sem fazer perguntas constrangedoras. O porto era uma escola em comércio e engano ao mesmo tempo." />
+    <string id="taom_cc_taom_education_umbar_3_text" text="Trabalhou nos estaleiros de Umbar." />
+    <string id="taom_cc_taom_education_umbar_3_desc" text="Você aprendeu a moldar madeira e calafetar tábuas nos grandes galpões de navios de Umbar, estudando a engenharia de embarcações que levavam guerra através do mar. Quando não estava construindo navios, estava pensando em como eles poderiam ser quebrados." />
+    <string id="taom_cc_taom_education_umbar_4_text" text="Saqueou vilas costeiras de Gondor com os Corsários." />
+    <string id="taom_cc_taom_education_umbar_4_desc" text="Você realizou seus primeiros saques nas costas de Gondor ainda quase um jovem, lutando na linha de frente de um grupo de abordagem com espada e faca de arremesso. Os saques eram brutais e rápidos, e te ensinaram exatamente quanto valia a violência." />
+    <string id="taom_cc_taom_education_umbar_5_text" text="Navegou pelas rotas dos Corsários do ninho de corvo." />
+    <string id="taom_cc_taom_education_umbar_5_desc" text="Você serviu como vigia e marinheiro-batedor, aprendendo a ler o mar e traçar um curso pelas águas perigosas da Baía de Belfalas. O que você avistava do alto do mastro determinava se um ataque seria bem-sucedido ou se tornaria uma catástrofe." />
+    <string id="taom_cc_taom_education_umbar_6_text" text="Transportou contrabando pelos becos de Umbar." />
+    <string id="taom_cc_taom_education_umbar_6_desc" text="Você atuou na economia das sombras da cidade portuária, transportando mercadorias que não podiam ser declaradas e mensagens que não podiam ser escritas. O trabalho pagava em segredos e moedas pequenas, e você aprendeu cada receptador, suborno e esconderijo em Umbar." />
+    <string id="taom_cc_taom_education_empire_1_text" text="Treinou com os jovens guerreiros do chefe do clã." />
+    <string id="taom_cc_taom_education_empire_1_desc" text="Você treinou com os filhos do chefe nos campos de prática lamacentos da fortaleza nas colinas, aprendendo a cavalgar com força e brandir uma espada de duas mãos no estilo bruto dos Dunlendings. Cada ferimento era uma lição e cada lição carregava o velho rancor contra os senhores dos cavalos." />
+    <string id="taom_cc_taom_education_empire_2_text" text="Comercializou entre os clãs das colinas e os mercados das planícies." />
+    <string id="taom_cc_taom_education_empire_2_desc" text="Você transportou mercadorias e notícias entre os assentamentos nas colinas e os mercados dos rios, aprendendo a negociar com firmeza e sorrir para compradores em quem não confiava. As estradas entre Dunland e o mundo exterior eram ásperas, e o charme era frequentemente mais barato que uma espada." />
+    <string id="taom_cc_taom_education_empire_3_text" text="Pastoreou ovelhas e afiou lanças nas colinas de Dunland." />
+    <string id="taom_cc_taom_education_empire_3_desc" text="Você passou sua juventude cuidando dos rebanhos pelas encostas varridas pelo vento de Dunland, e quando a convocação veio você recebeu uma lança e foi empurrado para a milícia. As colinas te fizeram resistente e a milícia te fez perigoso." />
+    <string id="taom_cc_taom_education_empire_4_text" text="Trabalhou na forja e na bancada de entalhe." />
+    <string id="taom_cc_taom_education_empire_4_desc" text="Você aprendeu a moldar metal e madeira nos ofícios práticos dos assentamentos Dunlendings, fazendo ferramentas, armas e acessórios para os clãs. O trabalho lhe deu mãos habilidosas e um olho para como as coisas eram montadas e como podiam ser desmontadas." />
+    <string id="taom_cc_taom_education_empire_5_text" text="Caçou e coletou alimentos nas florestas de Dunland." />
+    <string id="taom_cc_taom_education_empire_5_desc" text="Você aprendeu as cristas arborizadas que fazem fronteira com as Montanhas Sombrias como um jovem caçador, rastreando cervos e pegando o arco antes que a maioria das crianças pudesse segurá-lo adequadamente. A floresta guardava seus segredos, e você aprendeu a maioria deles." />
+    <string id="taom_cc_taom_education_empire_6_text" text="Vagou entre os clãs como um pária." />
+    <string id="taom_cc_taom_education_empire_6_desc" text="Você foi expulso ou fugiu, passando seus anos formativos às margens da sociedade Dunlending, pegando trabalho e encrenca em igual medida. Você aprendeu que um arremesso bem mirado ou uma mentira convincente podiam abrir portas que nenhum distintivo de clã abriria." />
+    <string id="taom_cc_taom_education_vlandia_1_text" text="Cavalgou em treinamento com a casa do Marechal." />
+    <string id="taom_cc_taom_education_vlandia_1_desc" text="Você passou sua juventude aprendendo a arte da guerra montada a serviço de um dos marechais da Marca dos Cavaleiros, treinando com lança e espada nas amplas planícies de Rohan. Equitação não era ensinada na Marca dos Cavaleiros — era respirada." />
+    <string id="taom_cc_taom_education_vlandia_2_text" text="Comercializou mercadorias pelos mercados da Marca dos Cavaleiros." />
+    <string id="taom_cc_taom_education_vlandia_2_desc" text="Você transportou mercadorias e preços entre os redutos de Edoras e as cidades menores de Rohan, aprendendo a ler pessoas e fechar um negócio antes que a luz do dia se apagasse. As planícies eram longas e vazias e a conversa nas bancas do mercado fazia o mundo girar." />
+    <string id="taom_cc_taom_education_vlandia_3_text" text="Criou cavalos e serviu na milícia no Folde Oeste." />
+    <string id="taom_cc_taom_education_vlandia_3_desc" text="Você trabalhou nas pastagens da sua família no Folde Oeste, aprendendo a lidar com cavalos quase antes de poder andar, e foi recrutado para a milícia assim que ficou alto o suficiente para a lança. As planícies ondulantes do oeste de Rohan foram sua escola." />
+    <string id="taom_cc_taom_education_vlandia_4_text" text="Foi aprendiz dos ferreiros de Aldburg." />
+    <string id="taom_cc_taom_education_vlandia_4_desc" text="Você aprendeu a moldar o aço brilhante de Rohan nas casas de forja de Aldburg, fazendo lâminas e acessórios para os Rohirrim. Você voltava para casa todas as noites com os braços doendo e um orgulho no ofício que nenhum campo de batalha poderia diminuir." />
+    <string id="taom_cc_taom_education_vlandia_5_text" text="Caçou no Folde Leste e vigiou o horizonte." />
+    <string id="taom_cc_taom_education_vlandia_5_desc" text="Você percorreu amplamente o Folde Leste com seu arco, caçando animais e mantendo um olhar atento no horizonte oriental por sinais de movimentação de Orcs. As amplas planícies te ensinaram a enxergar longe e se mover silenciosamente, e ambas as habilidades te serviram bem." />
+    <string id="taom_cc_taom_education_vlandia_6_text" text="Vagou pelo Wold sem lealdade fixa." />
+    <string id="taom_cc_taom_education_vlandia_6_desc" text="Você perambulou pelas pradarias selvagens do Wold sem clã ou reduto para chamar de seu, aprendendo a sobreviver com o que as planícies ofereciam e ocasionalmente com o que outras pessoas não tinham escondido bem o suficiente. A astúcia te manteve alimentado quando a sorte não quis." />
+    <string id="taom_cc_taom_education_sturgia_1_text" text="Treinou no salão real do Rei Brand." />
+    <string id="taom_cc_taom_education_sturgia_1_desc" text="Você foi instruído nas artes marciais de Dale, aprendendo a cavalgar e brandir armas pesadas sob a instrução da guarda da casa de Brand. A cidade reconstruída era próspera e orgulhosa, e esperava-se que seus soldados correspondessem à sua reputação." />
+    <string id="taom_cc_taom_education_sturgia_2_text" text="Trabalhou como escriturário nas casas comerciais de Dale." />
+    <string id="taom_cc_taom_education_sturgia_2_desc" text="Você aprendeu a manter contas e encantar compradores nos salões mercantis de Dale, onde mercadorias do Leste e do Sul encontravam mercadorias de Erebor e do Norte. O famoso comércio da cidade a tornava a sala de aula ideal para qualquer um que quisesse entender riqueza." />
+    <string id="taom_cc_taom_education_sturgia_3_text" text="Pescou no Lago Comprido e trabalhou nos campos ao redor." />
+    <string id="taom_cc_taom_education_sturgia_3_desc" text="Você cresceu puxando redes no Lago Comprido e cuidando das terras cultivadas ao redor de Esgaroth, construindo a resistência que a vida no lago exige. Quando a milícia foi convocada você pegou sua lança ao lado dos outros homens livres e marchou para manter seu lar seguro." />
+    <string id="taom_cc_taom_education_sturgia_4_text" text="Aprendeu o ofício nas oficinas de Dale." />
+    <string id="taom_cc_taom_education_sturgia_4_desc" text="Você foi aprendiz nas oficinas de Dale, famosas pelo trabalho em metal e pelos artigos finos que comerciantes levavam para bem ao sul. As mãos de um artesão e o orgulho de um artesão se tornaram seus, junto com uma lâmina afiada o suficiente para mantê-los." />
+    <string id="taom_cc_taom_education_sturgia_5_text" text="Caçou nas fronteiras da Floresta das Trevas e trilhas florestais." />
+    <string id="taom_cc_taom_education_sturgia_5_desc" text="Você percorreu a borda da floresta escura ao sul do Lago Comprido, aprendendo a rastrear caça e evitar a atenção de coisas piores. Seu arco era seu companheiro mais confiável e seu conhecimento das trilhas florestais te manteve vivo mais de uma vez." />
+    <string id="taom_cc_taom_education_sturgia_6_text" text="Sobreviveu nas margens das docas da Cidade do Lago." />
+    <string id="taom_cc_taom_education_sturgia_6_desc" text="Você cresceu entre os estivadores e pequenos ladrões de Esgaroth, aprendendo a complementar salários honestos com desonestos e a desaparecer antes que a guarda chegasse. Os movimentados cais da cidade lacustre foram uma ótima educação sobre como o mundo realmente funcionava." />
+    <string id="taom_cc_taom_education_aserai_1_text" text="Cavalgou com a hoste de guerra da Serpente Negra." />
+    <string id="taom_cc_taom_education_aserai_1_desc" text="Você treinou entre os guerreiros de estandarte da casa da Serpente Negra, aprendendo a lutar a cavalo e empunhar a pesada lâmina sob o calor do sol meridional. Cada treino terminava com a promessa do norte, e a glória que aguardava os guerreiros de Harad lá." />
+    <string id="taom_cc_taom_education_aserai_2_text" text="Treinou com os lanceiros do deserto de Harad." />
+    <string id="taom_cc_taom_education_aserai_2_desc" text="Você treinou no calor implacável dos desertos meridionais, aprendendo a manter formação com machado e lança na tradição inflexível dos soldados de infantaria Haradrim. Resistência sob o sol era valorizada acima de todas as outras qualidades." />
+    <string id="taom_cc_taom_education_aserai_3_text" text="Transportou mercadorias pelas estradas do deserto meridional." />
+    <string id="taom_cc_taom_education_aserai_3_desc" text="Você viajou pelas abrasadoras rotas de caravanas de Harad, negociando mercadorias exóticas nas cidades mercantes do deserto e aprendendo a arte da persuasão com mercadores experientes que haviam cruzado as Terras do Sol muitas vezes. A estrada ensinou mais do que qualquer salão poderia." />
+    <string id="taom_cc_taom_education_aserai_4_text" text="Trabalhou nos campos de oásis no coração de Harad." />
+    <string id="taom_cc_taom_education_aserai_4_desc" text="Você trabalhou nos campos irrigados ao redor dos oásis do deserto, aprendendo a arrancar cultivo da terra árida e a suportar as demandas físicas do trabalho agrícola sob um sol impiedoso. Quando a convocação de guerra veio, você estava magro, forte e pronto." />
+    <string id="taom_cc_taom_education_aserai_5_text" text="Cavalgou com as tribos nômades pelas Terras do Sol." />
+    <string id="taom_cc_taom_education_aserai_5_desc" text="Você viajou com as tribos errantes, aprendendo a navegar pelas estrelas e ler os sinais sutis do deserto. Seu arco era sua ferramenta mais confiável, e as vastas Terras do Sol abertas ensinaram você a avistar um alvo muito antes que ele avistasse você." />
+    <string id="taom_cc_taom_education_aserai_6_text" text="Correu com os bandos de saqueadores das areias além dos oásis." />
+    <string id="taom_cc_taom_education_aserai_6_desc" text="Você se juntou aos bandos de saqueadores que atacavam caravanas no deserto profundo, aprendendo a se mover rapidamente pelas areias e arremessar um dardo a cavalo antes que os guardas da caravana tivessem tempo de se formar. A vida dos fora-da-lei do deserto era brutal, mas educativa." />
+    <string id="taom_cc_taom_education_battania_1_text" text="Percorreu as terras selvagens do norte com os Dunedain." />
+    <string id="taom_cc_taom_education_battania_1_desc" text="Você foi tomado sob tutela pelos Patrulheiros do Norte ainda jovem, aprendendo a se mover pelas terras selvagens de Eriador em silêncio e rastrear inimigos através da arruinada Arnor. Os Patrulheiros pediam pouco e exigiam tudo, e você aprendeu a entregar." />
+    <string id="taom_cc_taom_education_battania_2_text" text="Estudou cura e conhecimento de ervas com um curandeiro Patrulheiro." />
+    <string id="taom_cc_taom_education_battania_2_desc" text="Você foi aprendiz de um dos curandeiros Dunedain que mantinham vivo o conhecimento de Oesternesse no norte, aprendendo a identificar plantas e tratar feridas com os recursos que as terras selvagens ofereciam. Sabedoria e conhecimento prático eram igualmente reverenciados." />
+    <string id="taom_cc_taom_education_battania_3_text" text="Lutou com as patrulhas dos Patrulheiros contra Orcs e lobos." />
+    <string id="taom_cc_taom_education_battania_3_desc" text="Você realizou patrulhas pelas ruínas de Arnor com os Dunedain, aprendendo a lutar com espada e lança contra as hordas de Orcs que testavam as marcas do norte. Os Patrulheiros não mantinham fortalezas, apenas vigilância, e você aprendeu o que isso custava." />
+    <string id="taom_cc_taom_education_battania_4_text" text="Trabalhou na forja em um assentamento Patrulheiro." />
+    <string id="taom_cc_taom_education_battania_4_desc" text="Você forjou lâminas e reparou equipamentos nos pequenos assentamentos escondidos onde os Dunedain invernavam, aprendendo a criar com economia — materiais eram escassos e cada peça tinha que ser feita para durar. Você desenvolveu a precisão de um artesão e o instinto de um guerreiro sobre o que uma arma precisava fazer." />
+    <string id="taom_cc_taom_education_battania_5_text" text="Rastreou caça e inimigos pelas terras selvagens de Eriador." />
+    <string id="taom_cc_taom_education_battania_5_desc" text="Você aprendeu a ler os sinais de passagem deixados por homens e bestas nas antigas florestas e charnecas de Eriador, caçando animais para a mesa e batedores Orcs para a segurança dos assentamentos. O arco era sua primeira língua e a selva seu segundo lar." />
+    <string id="taom_cc_taom_education_battania_6_text" text="Moveu-se entre vilas como um andarilho sem nome." />
+    <string id="taom_cc_taom_education_battania_6_desc" text="Você viveu de sua astúcia nas estradas do Norte, trocando pequenos trabalhos por comida e abrigo, e ocasionalmente levando o que não era oferecido. Os Dunedain passavam pelos mesmos assentamentos mas não falavam com ninguém, o que lhe ensinou que invisibilidade era seu próprio tipo de poder." />
+    <string id="taom_cc_taom_education_khuzait_1_text" text="Cavalgou e treinou com os cavaleiros de guerra Orientais." />
+    <string id="taom_cc_taom_education_khuzait_1_desc" text="Você treinou como um cavaleiro de guerra de Rhun, aprendendo combate montado na ampla tradição das estepes com anciãos cujos pais haviam cavalgado contra Gondor sob o estandarte da aurora vermelha. As grandes planícies orientais eram seu campo de prática e o cavalo sua arma mais confiável." />
+    <string id="taom_cc_taom_education_khuzait_2_text" text="Negociou ao longo das estradas comerciais do Leste." />
+    <string id="taom_cc_taom_education_khuzait_2_desc" text="Você viajou pelas rotas de comércio entre o Mar de Rhun e as terras ocidentais, aprendendo a lidar com mercadores de muitos povos e a se safar de disputas com lábia. As estradas orientais eram perigosas e sua língua tinha que ser mais afiada que qualquer espada." />
+    <string id="taom_cc_taom_education_khuzait_3_text" text="Moveu-se com os clãs nômades pelas estepes orientais." />
+    <string id="taom_cc_taom_education_khuzait_3_desc" text="Você seguiu as migrações sazonais dos clãs das estepes, aprendendo a montar e desmontar acampamento e cobrir grandes distâncias a pé e a cavalo em todos os climas. A vida nômade construiu uma dura resistência e uma relação fácil com a lança." />
+    <string id="taom_cc_taom_education_khuzait_4_text" text="Trabalhou nas fazendas do vale perto do Mar de Rhun." />
+    <string id="taom_cc_taom_education_khuzait_4_desc" text="Você cultivou os vales férteis ao redor do mar interior, aprendendo a criar ferramentas e aproveitar ao máximo materiais limitados à maneira Oriental. Quando o treinamento com a lâmina chegou, você se adaptou com a disciplina metódica que a fazenda lhe havia dado." />
+    <string id="taom_cc_taom_education_khuzait_5_text" text="Aprendeu conhecimento espiritual e cura com os anciãos do clã." />
+    <string id="taom_cc_taom_education_khuzait_5_desc" text="Você sentou com os xamãs e curandeiros dos clãs Orientais, aprendendo o conhecimento ritual e a medicina prática que mantinham o povo nômade vivo nas planícies abertas. Palavras e entendimento eram suas ferramentas muito antes de qualquer arma." />
+    <string id="taom_cc_taom_education_khuzait_6_text" text="Bateu muito à frente da hoste de guerra oriental." />
+    <string id="taom_cc_taom_education_khuzait_6_desc" text="Você cavalgou como batedor avançado das colunas de cavalaria Orientais, percorrendo dias à frente da força principal e relatando o que encontrava. O trabalho exigia que você permanecesse invisível, atirasse com precisão a cavalo e julgasse quando fugir ao invés de lutar." />
+    <string id="taom_cc_taom_adulthood_gondor_1_text" text="Você se distinguiu na defesa de Osgiliath." />
+    <string id="taom_cc_taom_adulthood_gondor_1_desc" text="Quando Mordor pressionou com força através do rio, você manteve sua seção da ponte até que a ordem de recuar fosse dada. O capitão encomendou seu nome ao arauto do Regente, e os homens de sua companhia lembraram o que você fez naquele dia." />
+    <string id="taom_cc_taom_adulthood_gondor_2_text" text="Você negociou um contrato vital de fornecimento de grãos para Minas Tirith." />
+    <string id="taom_cc_taom_adulthood_gondor_2_desc" text="Quando a seca ameaçou as fazendas externas, você arranjou termos com casas mercantes de lugares tão distantes quanto Pelargir para manter os celeiros da cidade cheios durante um inverno rigoroso. O camareiro do Regente anotou seu nome para serviços futuros." />
+    <string id="taom_cc_taom_adulthood_gondor_3_text" text="Você organizou a colheita do Pelennor sob ameaça de ataques Orcs." />
+    <string id="taom_cc_taom_adulthood_gondor_3_desc" text="Quando grupos invasores saíram das Ephel Duath, você coordenou as levas locais para proteger os colhedores e recolheu a safra antes da estação acabar. Os chefes das vilas ainda falam sobre o ano em que alguém realmente conseguiu fazer isso." />
+    <string id="taom_cc_taom_adulthood_gondor_4_text" text="Você forjou uma lâmina que foi apresentada a um capitão da Guarda da Torre." />
+    <string id="taom_cc_taom_adulthood_gondor_4_desc" text="O capitão tinha ouvido falar de seu trabalho e encomendou uma espada para a cerimônia de sua promoção. Quando ele a desembainhou diante da guarda reunida e ela ressoou verdadeira, você soube que o ofício havia recompensado cada manhã dolorida no distrito da forja." />
+    <string id="taom_cc_taom_adulthood_gondor_5_text" text="Você guiou uma companhia de Patrulheiros através de um cerco Orc em Ithilien." />
+    <string id="taom_cc_taom_adulthood_gondor_5_desc" text="Quando a patrulha foi isolada a leste do Anduin, você os conduziu por uma trilha que nenhum batedor Orc havia mapeado, sem perder um único homem. O tenente de Faramir apertou seu braço quando você chegou e disse que nada mais precisava ser dito." />
+    <string id="taom_cc_taom_adulthood_gondor_6_text" text="Você descobriu uma rede de contrabando operando na cidade baixa." />
+    <string id="taom_cc_taom_adulthood_gondor_6_desc" text="Por meses, contrabando havia se movido pelas ruínas de Osgiliath até Minas Tirith sem que ninguém soubesse como. Você mapeou as rotas, identificou o líder e entregou toda a operação à guarda da cidade. A recompensa pagou por sua primeira espada de verdade." />
+    <string id="taom_cc_taom_adulthood_mordor_1_text" text="Você sobreviveu ao julgamento dos Poços Negros e foi nomeado para a legião do Olho." />
+    <string id="taom_cc_taom_adulthood_mordor_1_desc" text="Poucos que entraram nos poços foram considerados dignos. Você não apenas sobreviveu — você quebrou três desafiantes em sucessão antes que os supervisores dessem por encerrado. A marca de legionário foi pressionada em seu braço antes que a multidão se dispersasse." />
+    <string id="taom_cc_taom_adulthood_mordor_2_text" text="Você transformou uma rota de suprimentos fracassada na estrada mais lucrativa da Terra Sombria." />
+    <string id="taom_cc_taom_adulthood_mordor_2_desc" text="O mensageiro anterior vinha sangrando comboios de suprimentos por meses através de rotas ruins e acordos piores. Você cortou o peso morto, renegociou os acordos de pedágio e dobrou a produção em uma estação. Os supervisores o recompensaram com uma parte melhor e uma consciência pior." />
+    <string id="taom_cc_taom_adulthood_mordor_3_text" text="Você completou a construção de uma torre-forja antes do prazo." />
+    <string id="taom_cc_taom_adulthood_mordor_3_desc" text="O supervisor havia prometido punição se a torre-forja não estivesse pronta antes da inspeção do Senhor das Trevas. Você pressionou as equipes de trabalho mais do que qualquer um pensava ser possível e a torre ficou completa com dois dias de sobra. O supervisor levou o crédito; você levou a sobrevivência." />
+    <string id="taom_cc_taom_adulthood_mordor_4_text" text="Você reprimiu uma revolta de trabalhadores sem perder a produção do dia." />
+    <string id="taom_cc_taom_adulthood_mordor_4_desc" text="Quando os trabalhadores exaustos largaram suas ferramentas e se recusaram a se mover, você entrou sozinho, identificou os três instigadores e resolveu a situação antes que os supervisores notassem o atraso. O grupo voltou ao trabalho. Os instigadores não causaram mais problemas." />
+    <string id="taom_cc_taom_adulthood_mordor_5_text" text="Você rastreou e matou um desertor que três patrulhas falharam em encontrar." />
+    <string id="taom_cc_taom_adulthood_mordor_5_desc" text="O desertor havia matado dois supervisores e desaparecido nas desolações de Gorgoroth. Você foi sozinho, seguiu o rastro por quatro dias pelas planícies de cinzas e voltou com prova do que encontrou. Ninguém pediu detalhes." />
+    <string id="taom_cc_taom_adulthood_mordor_6_text" text="Você expôs um porteiro corrupto e assumiu seu posto." />
+    <string id="taom_cc_taom_adulthood_mordor_6_desc" text="O porteiro do Morannon vinha taxando cada grupo que passava e embolsando metade do ganho. Você documentou o esquema, apresentou-o ao seu superior no momento exato e assistiu o posto mudar de mãos. Você garantiu que mudasse para as suas." />
+    <string id="taom_cc_taom_adulthood_erebor_1_text" text="Você repeliu um grupo invasor Orc nas colinas sozinho." />
+    <string id="taom_cc_taom_adulthood_erebor_1_desc" text="Retornando de uma patrulha externa, você encontrou um bando Orc que havia contornado a vigília. Não havia tempo de buscar ajuda. Você segurou a trilha estreita com seu machado até que o alarme alcançasse o portão. Três Orcs não chegaram lá." />
+    <string id="taom_cc_taom_adulthood_erebor_2_text" text="Você conseguiu o melhor acordo comercial com Dale em uma geração." />
+    <string id="taom_cc_taom_adulthood_erebor_2_desc" text="Os termos das exportações de ferro de Erebor não haviam sido renegociados desde a recuperação da Montanha. Você identificou o desequilíbrio, reuniu os fatos e apresentou o caso ao mordomo do Rei Dain com tanta clareza que o acordo foi revisado dentro do mês." />
+    <string id="taom_cc_taom_adulthood_erebor_3_text" text="Você descobriu uma galeria perdida e abriu uma nova veia de mithril." />
+    <string id="taom_cc_taom_adulthood_erebor_3_desc" text="Os mapas antigos mostravam um colapso, mas você seguiu o som da água na pedra profunda e encontrou a galeria intacta atrás dos escombros. A veia de mithril dentro era modesta, mas os engenheiros que a mapearam adicionaram seu nome ao registro de levantamento." />
+    <string id="taom_cc_taom_adulthood_erebor_4_text" text="Você manteve a muralha de escudos na Batalha sob a Montanha." />
+    <string id="taom_cc_taom_adulthood_erebor_4_desc" text="Quando a hoste Orc avançou nos portões inferiores, você ancorou sua seção da muralha de escudos enquanto outras cediam, dando tempo para o contra-ataque se formar. O capitão de Dain anotou seu nome no registro de batalha, que é o mais próximo que um Anão chega de poesia." />
+    <string id="taom_cc_taom_adulthood_erebor_5_text" text="Você equilibrou as contas do tesouro após anos de discrepância." />
+    <string id="taom_cc_taom_adulthood_erebor_5_desc" text="Os livros-razão haviam estado desalinhados desde a recuperação, com perdas que ninguém conseguia explicar. Você passou três meses fazendo referências cruzadas nos registros e identificou o erro — um simples erro de conversão acumulado ao longo de vinte anos de entradas. O tesoureiro do Rei apertou sua mão." />
+    <string id="taom_cc_taom_adulthood_erebor_6_text" text="Você rastreou um bando invasor Orc de volta ao seu covil e o marcou para a guarda." />
+    <string id="taom_cc_taom_adulthood_erebor_6_desc" text="O bando havia atacado três vezes da mesma direção e escapado antes que alguém pudesse seguir. Você foi sozinho aos pinheiros, encontrou o acampamento, os contou, esboçou a aproximação e trouxe o relatório a tempo da guarnição agir." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_text" text="Você cavalgou sozinho para escoltar um mensageiro ferido de volta a Imladris." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_desc" text="O mensageiro havia sido emboscado a leste do Vau e não podia cavalgar sem ajuda. Você o encontrou, repeliu os retardatários Orcs ainda procurando pela estrada e o trouxe. Elrond em pessoa falou brevemente com você antes de se voltar para a mensagem." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_text" text="Você completou uma obra de arte que os mestres do saber de Elrond escolheram preservar." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_desc" text="A peça — um mapa em relevo detalhado da antiga rede de estradas de Eriador, reconstruído de fontes fragmentárias — foi considerada precisa o suficiente para ser copiada nos arquivos da biblioteca. Três mestres do saber discordaram sobre dois vales; você estava certo sobre ambos." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_text" text="Você cuidou dos terraços do vale durante uma estação de praga sem perder uma colheita." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_desc" text="Uma praga fúngica se espalhou pelos pomares superiores e ameaçou os terraços inferiores. Você identificou as árvores afetadas cedo, impôs uma quarentena que os Elfos consideravam excessiva e impediu que a praga se espalhasse. A colheita daquele ano foi menor, mas inteira." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_text" text="Você alertou Imladris sobre um acampamento de Trolls antes que ameaçasse o Vau." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_desc" text="Três Trolls de Pedra haviam se estabelecido nas Colinas dos Trolls mais perto do Vau do que qualquer outro antes. Você avistou o acampamento deles, mapeou sua posição, estimou seu alcance e levou o relatório aos guardas antes que se movessem. Os guardas cuidaram do resto." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_text" text="Você salvou a vida de um viajante que os curandeiros de Elrond haviam abandonado." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_desc" text="O viajante havia sofrido um ferimento contaminado por Morgul e os curandeiros experientes já estavam preparando seus pêsames. Você havia lido um relato diferente sobre o comportamento da toxina nos textos mais antigos da biblioteca. Você aplicou o que havia lido e o viajante se recuperou." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_text" text="Você recuperou um documento roubado de um acampamento de Montaraz sem ser visto." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_desc" text="Uma carta particular da casa de Elrond havia desaparecido em circunstâncias que apontavam para a mochila de um convidado. Você a recuperou antes que alguém soubesse que havia sumido, recolocou o que havia sido mexido e devolveu a carta sem que uma palavra fosse dita sobre qualquer parte disso." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_text" text="Você capturou uma aranha-rainha que havia aterrorizado as trilhas ao sul." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_desc" text="A criatura havia repelido três grupos de batedor e matado dois. Você estudou os padrões de suas teias, identificou a árvore de ancoragem à qual ela retornava e a abateu ao amanhecer com uma lâmina élfica longa enquanto se alimentava. Os capitães de Thranduil penduraram o troféu na entrada da trilha." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_text" text="Você reabriu a rota comercial da Estrada da Floresta após anos de fechamento." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_desc" text="A estrada havia sido efetivamente fechada por duas estações devido ao assédio de aranhas e Orcs. Você mapeou os corredores mais seguros restantes, negociou arranjos de guarda com o capitão de Thranduil e liderou o primeiro comboio de mercadores até o sucesso. O comércio foi retomado dentro de um mês." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_text" text="Você limpou uma clareira corrompida e a replantou de volta à saúde." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_desc" text="A escuridão de Dol Guldur havia se infiltrado em uma clareira perto da borda do reino, enegrecendo o solo e matando o que crescia ali. Durante duas estações você trabalhou para remover a contaminação e replantar, e as mudas vingaram. Os silvicultores de Thranduil vieram ver por si mesmos." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_text" text="Você forjou um arco que o campeão do Rei Élfico escolheu carregar." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_desc" text="O campeão havia quebrado seu arco anterior na defesa dos desfiladeiros orientais e precisava de uma substituição antes do torneio da estação. Você trabalhou três dias sem descanso na vara. Quando o campeão o puxou pela primeira vez, ele acenou uma vez e foi embora sem falar. Isso foi suficiente." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_text" text="Você mapeou a rede de túneis de teias na floresta ao sul." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_desc" text="Ninguém havia conseguido mapear a extensão das passagens subterrâneas das aranhas sem ser capturado nelas. Você entrou discretamente, moveu-se com cuidado e saiu com um mapa que os batedores do Rei Élfico usam desde então. Você se recusou a descrever exatamente como saiu." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_text" text="Você libertou três cativos Élficos de um covil de teias sozinho." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_desc" text="Os batedores haviam sido levados para o fundo da floresta corrompida ao sul, onde as patrulhas não iriam. Você foi sozinho à noite, os libertou e os conduziu para fora através de três trilhas vigiadas por aranhas. Dois deles perguntaram como você conhecia o caminho. Você disse que foi instinto." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_text" text="Você montou a guarda no Vale de Dimrill sozinho quando seu parceiro adoeceu." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_desc" text="O posto cobria ambas as abordagens e não podia ficar sem vigilância. Você manteve a vigília completa sozinho durante uma noite fria e meio turno de um dia sem descanso, relatando três incidentes que a guarda de revezamento encontrou exatamente como você os descreveu." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_text" text="Você teceu um manto cerimonial que a Senhora da Floresta apresentou como presente." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_desc" text="Galadriel precisava de um manto digno de um presente diplomático para um senhor visitante. Você recebeu a encomenda, os materiais e uma semana. O manto que saiu de Caras Galadhon fez três tecelões Élficos perguntarem quem o havia feito. Galadriel sorriu e não disse." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_text" text="Você abateu três Orcs de um flet à noite durante uma incursão na fronteira." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_desc" text="Os batedores Orcs haviam passado pelos marcadores externos e estavam se movendo em direção ao coração da floresta. Você os avistou na escuridão de sessenta jardas — três tiros, três quedas, nenhum alarme dado. A patrulha os encontrou pela manhã e não conseguiu dizer de que direção as flechas haviam vindo." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_text" text="Você detectou a aproximação de um Nazgul antes que alcançasse as fronteiras da floresta." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_desc" text="O frio antinatural e a quietude dos pássaros foram os primeiros sinais. Você relatou o que sentiu ao comando Galadhrim antes que qualquer outro percebesse. O poder da Senhora se moveu para reforçar as fronteiras. Depois, Celeborn disse que seus instintos eram incomumente aguçados." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_text" text="Você curou um grave ferimento de Orc que outros disseram que não fecharia." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_desc" text="O ferimento havia sido tratado por dois curandeiros que concordaram que a recuperação era improvável. Você reconheceu uma preparação diferente de athelas de um texto mais antigo e a aplicou contra as objeções deles. O Elfo se recuperou. Os dois curandeiros posteriormente lhe perguntaram sobre a preparação." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_text" text="Você passou pelos piquetes externos de Dol Guldur e retornou com uma contagem de prisioneiros." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_desc" text="Os Galadhrim precisavam saber quantos estavam guarnecidos na fortaleza ao sul antes que qualquer ação fosse planejada. Você se ofereceu para ir e ver. Você ficou ausente seis dias. O que você trouxe de volta deu a Galadriel a informação de que ela precisava para tomar sua decisão." />
+    <string id="taom_cc_taom_adulthood_isengard_1_text" text="Você liderou a coluna de assalto no Abismo de Helm e rompeu a muralha externa." />
+    <string id="taom_cc_taom_adulthood_isengard_1_desc" text="O plano de Saruman exigia um rompimento antes do amanhecer. Sua coluna atingiu o portão primeiro e você foi quem colocou a carga de fogo explosivo em sua base. A explosão iluminou o céu. O assalto se seguiu. O que aconteceu dentro do Abismo é problema seu." />
+    <string id="taom_cc_taom_adulthood_isengard_2_text" text="Você projetou um novo processo de liga que dobrou a produção de armas de Isengard." />
+    <string id="taom_cc_taom_adulthood_isengard_2_desc" text="O processo existente desperdiçava um terço do aço através de falhas por fragilidade na têmpera. Você identificou a temperatura como o problema, propôs uma correção, testou contra o ceticismo do supervisor de Saruman e provou em um único turno. A produção dobrou dentro de um mês." />
+    <string id="taom_cc_taom_adulthood_isengard_3_text" text="Você completou o novo sistema de bueiros oriental de Isengard antes do prazo de Saruman." />
+    <string id="taom_cc_taom_adulthood_isengard_3_desc" text="O bueiro era necessário para manter os pisos das fossas secos durante a estação de inundações. Saruman havia dado trinta dias. Você reorganizou as turmas de trabalho, simplificou o trajeto e terminou em vinte e dois. Saruman examinou o trabalho sem comentários, o que significava que era aceitável." />
+    <string id="taom_cc_taom_adulthood_isengard_4_text" text="Você treinou uma companhia de recrutas inexperientes em uma unidade de infantaria disciplinada." />
+    <string id="taom_cc_taom_adulthood_isengard_4_desc" text="Os recrutas eram o pior alistamento que Isengard havia visto — subnutridos, indisciplinados e convencidos de sua própria inutilidade. Após doze semanas sob sua instrução, eles mantiveram a linha em um exercício de treinamento que os observadores Uruk-hai chamaram de adequado. Vindo deles, isso era um grande elogio." />
+    <string id="taom_cc_taom_adulthood_isengard_5_text" text="Você mapeou os padrões de patrulha Rohirrim e entregou a Saruman uma vantagem estratégica." />
+    <string id="taom_cc_taom_adulthood_isengard_5_desc" text="Por três meses você observou, registrou e cruzou referências dos movimentos Rohirrim ao longo do Isen. Quando você apresentou o mapa de padrões aos estrategistas de Saruman, eles rearranjaram toda a rotação de batedores orientais com base nele. Saruman o reconheceu pelo nome no briefing." />
+    <string id="taom_cc_taom_adulthood_isengard_6_text" text="Você converteu um espião de Rohan em um agente duplo trabalhando para Isengard." />
+    <string id="taom_cc_taom_adulthood_isengard_6_desc" text="Você identificou o espião através de inconsistências comportamentais, o confrontou em particular, e lhe deu uma escolha que tornou a decisão simples. Ele alimentou informações falsas de volta para Edoras por duas estações antes que alguém em Rohan suspeitasse. Você não recebeu nada por escrito pela conquista." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_text" text="Você venceu o Grande Torneio da Montanha e foi nomeado vassalo de um chefe de guerra." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_desc" text="O torneio foi disputado em três rodadas brutais no salão principal. Você entrou sem ser favorito de ninguém e saiu com um bracelete de prata de um chefe de guerra e um beliche melhor. Os outros competidores te respeitaram mais por vencer do que por qualquer coisa antes." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_text" text="Você estabeleceu um comércio lucrativo de armas com um clã Orc do sul." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_desc" text="O clã do sul tinha ferro mas nenhum ferreiro. Gundabad tinha ferreiros mas precisava de comida e peles. Você intermediou a primeira troca, estabeleceu os termos, e impediu que ambos os lados se matassem tempo suficiente para que o acordo se tornasse hábito. O chefe de guerra te deu uma porcentagem." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_text" text="Você reforçou as galerias inferiores da mina após um desabamento parcial." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_desc" text="O desabamento havia prendido oito Orcs na galeria inferior. Você avaliou o padrão de tensão, dirigiu o trabalho de reforço, e levou a equipe para segurança antes do desabamento secundário que se seguiu e que os teria matado. O engenheiro do chefe de guerra te deu os planos para guardar." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_text" text="Você liderou o ataque que destruiu o posto avançado Anão nas Montanhas Cinzentas." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_desc" text="Os Anões haviam fortificado uma passagem que Gundabad usava para ataques de inverno, cortando o acesso e custando à montanha uma estação completa de pilhagem. Você planejou o assalto, liderou a vanguarda, e derrubou o portão do posto em um único avanço. A passagem reabriu. Os Anões não voltaram." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_text" text="Você rastreou um grupo de reconhecimento Anão por quatro dias e trouxe seus mapas." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_desc" text="Os Anões estavam mapeando algo nas Montanhas Cinzentas e Gundabad precisava saber o quê. Você os seguiu através das passagens altas sem ser visto, esperou até acamparem, tomou os mapas, e estava de volta na fortaleza antes que dessem o alarme." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_text" text="Você incriminou um líder de guerra rival por roubo e tomou sua posição." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_desc" text="O rival vinha bloqueando seu avanço por dois anos através de subornos e melhores conexões. Você identificou o que ele valorizava, arranjou para que os objetos certos estivessem no lugar errado na hora errada, e fez a descoberta no momento certo. Você tinha a posição dele antes do fim do mês." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_text" text="Você comandou a patrulha que primeiro rompeu as defesas norte de Mirkwood." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_desc" text="Os guardas de fronteira Élficos haviam mantido a aproximação por duas estações. Você identificou a brecha na rotação deles, cronometrou sua travessia ao minuto, e trouxe sua patrulha de ida e volta sem uma baixa. Os mestres das sombras notaram seu relatório e te deram um comando permanente." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_text" text="Você forjou armas de aço-sombrio que passaram na inspeção de qualidade de Sauron." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_desc" text="Os inspetores do Necromante haviam rejeitado dois lotes anteriores dos ferreiros da fortaleza. Você reformulou o processo de fundição, não aceitou compromissos na têmpera, e entregou um lote que o inspetor examinou em silêncio antes de marcar como aprovado. Foi a primeira aprovação desse tipo em três anos." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_text" text="Você completou a expansão do nível de masmorra mais baixo da fortaleza." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_desc" text="O trabalho havia parado por uma estação devido a infiltração de água subterrânea e suportes falhando. Você redesenhou a drenagem, substituiu as vigas comprometidas, e completou o nível no cronograma revisado. Os supervisores do Necromante moveram prisioneiros na mesma semana." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_text" text="Você rompeu a vigilância externa Élfica e capturou um prisioneiro para interrogatório." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_desc" text="A inteligência obtida do guardião Élfico descreveu a rotação completa da patrulha da fronteira leste de Thranduil. Foi a informação estratégica mais útil que Dol Guldur havia recebido em um ano. Ninguém perguntou como você tirou o prisioneiro. Você não explicou." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_text" text="Você mapeou as rotas de patrulha Élficas no sul de Mirkwood ao longo de seis meses." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_desc" text="Trabalhando sozinho e ao longo de múltiplas estações, você construiu um quadro completo das disposições da fronteira sul de Thranduil. O mapa resultante deu aos planejadores de Dol Guldur algo que nunca haviam tido antes: certeza. Os agentes do Necromante o usaram por dois anos." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_text" text="Você se infiltrou na corte do Rei Élfico como comerciante e relatou o que ouviu." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_desc" text="Três meses nos salões de Thranduil sob uma identidade falsa te deram acesso a conversas que nenhum agente de Dol Guldur jamais havia escutado. Você voltou com nomes, planos e relacionamentos que os mestres das sombras usaram para moldar a estratégia da próxima estação. Você achou a experiência inesperadamente informativa sobre os Elfos." />
+    <string id="taom_cc_taom_adulthood_umbar_1_text" text="Você capitaneou o ataque mais rápido rio Anduin acima em uma década." />
+    <string id="taom_cc_taom_adulthood_umbar_1_desc" text="Seu navio passou pela corrente fluvial Gondoriana, atacou o depósito de suprimentos em Pelargir, e estava de volta ao mar antes que as fogueiras de sinalização da guarnição tivessem se apagado. Os capitães da frota Corsária ergueram uma taça em seu nome quando você chegou, que era o único tipo de cerimônia que conheciam." />
+    <string id="taom_cc_taom_adulthood_umbar_2_text" text="Você estabeleceu uma nova rota comercial através da Baía que dobrou a receita do porto." />
+    <string id="taom_cc_taom_adulthood_umbar_2_desc" text="As rotas existentes haviam sido taxadas a ponto de os mercadores procurarem alternativas. Você identificou uma passagem subutilizada pelas ilhas da baía, organizou as taxas, e trouxe três novas casas mercantes para o porto em uma estação. Os mestres do porto ficaram irritados, mas mais ricos." />
+    <string id="taom_cc_taom_adulthood_umbar_3_text" text="Você projetou a nova doca seca que resolveu o gargalo de manutenção da frota de Umbar." />
+    <string id="taom_cc_taom_adulthood_umbar_3_desc" text="A antiga doca seca só conseguia lidar com um casco por vez e a frota estava acumulando. Seu redesenho permitiu trabalho paralelo em duas embarcações simultaneamente. Os mestres de navio eram céticos até que a primeira conclusão simultânea chegou antes do prazo. Eles não eram céticos depois disso." />
+    <string id="taom_cc_taom_adulthood_umbar_4_text" text="Você liderou o grupo de abordagem que capturou o navio de guerra Gondoriano perto de Belfalas." />
+    <string id="taom_cc_taom_adulthood_umbar_4_desc" text="O navio de guerra era duas vezes o tamanho do seu e sua tripulação superava a sua em número. Você se aproximou em uma névoa, foi o primeiro a passar pela borda, tomou o leme, e tinha a tripulação desarmada antes que compreendessem completamente o que estava acontecendo. O navio estava no porto de Umbar em dois dias." />
+    <string id="taom_cc_taom_adulthood_umbar_5_text" text="Você avistou uma armadilha naval Gondoriana antes que sua frota navegasse nela." />
+    <string id="taom_cc_taom_adulthood_umbar_5_desc" text="A frota de suprimentos estava a três horas de distância quando você notou a forma como os pássaros costeiros estavam se comportando ao redor de um promontório específico. Você pediu uma parada, foi à frente em uma embarcação pequena, e encontrou um esquadrão Gondoriano esperando nas águas calmas atrás dele. A frota voltou. O almirante te deu o próximo comando." />
+    <string id="taom_cc_taom_adulthood_umbar_6_text" text="Você administrou o mercado negro de maior sucesso no porto inferior de Umbar por dois anos." />
+    <string id="taom_cc_taom_adulthood_umbar_6_desc" text="A operação movia mercadorias que não podiam ser declaradas através de canais que não existiam oficialmente, para compradores que pagavam em moedas que nunca eram contadas. Você administrou com limpeza suficiente para que nenhum capitão da guarda jamais conseguisse apresentar um caso. Quando você a fechou, fez isso porque escolheu." />
+    <string id="taom_cc_taom_adulthood_empire_1_text" text="Você uniu três clãs em disputa contra uma expedição punitiva Rohirrim." />
+    <string id="taom_cc_taom_adulthood_empire_1_desc" text="Os três chefes não se falavam há uma geração, e os Rohirrim contavam com sua divisão. Você cavalgou entre os acampamentos por uma semana, disse as coisas certas para as pessoas certas na ordem certa, e no dia da chegada da expedição, três clãs estavam juntos no cume. Os Rohirrim voltaram atrás." />
+    <string id="taom_cc_taom_adulthood_empire_2_text" text="Você estabeleceu uma relação comercial com Isengard que manteve seu clã alimentado durante o inverno." />
+    <string id="taom_cc_taom_adulthood_empire_2_desc" text="A colheita havia fracassado e os estoques de inverno estavam baixos. Você foi sozinho a Isengard, falou com o homem certo e voltou com grãos em troca do minério de ferro que o clã vinha guardando há anos. O chefe ficou atônito; o clã comeu." />
+    <string id="taom_cc_taom_adulthood_empire_3_text" text="Você repeliu um ataque de roubo de gado dos Rohirrim e recuperou o rebanho roubado." />
+    <string id="taom_cc_taom_adulthood_empire_3_desc" text="Os cavaleiros haviam levado o plantel de criação do clã antes que alguém desse o alarme. Você reuniu seis homens, rastreou o grupo durante a noite, os alcançou no vau do Isen e trouxe o gado de volta antes do amanhecer. O chefe adicionou seu nome à pedra da fortaleza." />
+    <string id="taom_cc_taom_adulthood_empire_4_text" text="Você construiu o salão do clã que substituiu aquele queimado pelos Rohirrim." />
+    <string id="taom_cc_taom_adulthood_empire_4_desc" text="O antigo salão havia resistido por três gerações antes que os cavaleiros pusessem fogo nele. Você projetou o novo, organizou o corte de madeira e liderou a construção pessoalmente. O salão que está de pé agora é mais forte e maior do que aquele que queimou. Esse era o objetivo." />
+    <string id="taom_cc_taom_adulthood_empire_5_text" text="Você guiou um bando de guerra Dunlendino pela borda de Fangorn sem perder um homem." />
+    <string id="taom_cc_taom_adulthood_empire_5_desc" text="O bando de guerra precisava alcançar as aproximações do sul sem cruzar o campo aberto onde as patrulhas Rohirrim pudessem vê-los. O único caminho corria ao longo da fronteira de Fangorn. Você os conduziu em duas noites, mantendo o grupo silencioso e os Ents imperturbados. Ambos os grupos chegaram em segurança, o que não era garantido." />
+    <string id="taom_cc_taom_adulthood_empire_6_text" text="Você obteve planos militares dos Rohirrim através de um contato em Edoras." />
+    <string id="taom_cc_taom_adulthood_empire_6_desc" text="O contato era um tratador de estábulos descontente que queria dinheiro mais do que lealdade à Marca. Você cultivou o relacionamento cuidadosamente e recebeu duas temporadas de programações de patrulha em troca de uma quantia que o chefe considerou modesta. O clã atacou sem incidentes pelo ano que se seguiu." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_text" text="Você cavalgou na carga nos Vaus do Isen e manteve a linha." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_desc" text="Quando as forças de Saruman avançaram através do Isen, a linha Rohirrim cedeu no centro. Você estava entre aqueles que mantiveram o vau tempo suficiente para que a retirada se tornasse uma evacuação em vez de uma debandada. O Marechal mencionou você em seu relato da batalha." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_text" text="Você negociou os melhores preços de feira de cavalos que Edoras havia visto em cinco anos." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_desc" text="Os compradores do sul haviam chegado esperando definir o preço como sempre faziam. Você organizou os vendedores Rohirrim antes da feira, concordou com um piso e o manteve. Os compradores pagaram o que os cavalos valiam. Os vendedores lembraram quem havia feito aquilo acontecer." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_text" text="Você repeliu um ataque Dunlendino que atingiu o Westfold no início do outono." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_desc" text="Os invasores haviam cronometrado seu ataque para o período de colheita quando as fazendas estavam expostas. Você havia antecipado a possibilidade, organizou as levas locais com antecedência e os enfrentou na entrada do vale. O ataque se despedaçou na linha de lanças antes de alcançar uma única fazenda." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_text" text="Você forjou uma espada que o Rei da Marca escolheu para sua guarda pessoal." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_desc" text="A encomenda veio dos estábulos — uma solicitação de uma lâmina que pudesse ser carregada a cavalo sem desconforto. Você estudou o problema, ajustou o equilíbrio e apresentou o resultado. O capitão de Théoden a testou no pátio e a enviou para o arsenal do rei na mesma tarde." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_text" text="Você rastreou os batedores de Isengard que estavam mapeando as aproximações do Abismo de Helm." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_desc" text="Você notou os sinais de observação cuidadosa — grama quebrada pressionada de volta para cima, pedras recolocadas — e percebeu que alguém vinha estudando as aproximações do Abismo há semanas. Você rastreou de volta ao longo de suas rotas, identificou o acampamento e o relatou ao capitão da guarnição. O Abismo de Helm se preparou adequadamente." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_text" text="Você expôs um espião Dunlendino operando dentro de Edoras." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_desc" text="O espião estava na cidade há dois anos, passando informações aos clãs sobre as forças das guarnições Rohirrim. Você notou o padrão no que dava errado em ataques onde apenas algumas pessoas haviam sido informadas dos detalhes. Três conversas depois você tinha o nome e o método de transferência." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_text" text="Você esteve ao lado do Rei Brand na Batalha de Dale." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_desc" text="Quando as forças Orientais desceram do norte e avançaram pelas ruas da cidade, você estava entre a guarda que manteve a praça central enquanto Brand dirigia a defesa. Você foi o último de pé ao lado do rei antes que o reforço viesse pelo portão leste." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_text" text="Você abriu a primeira casa comercial permanente entre Dale e os assentamentos da fronteira Oriental." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_desc" text="A fronteira estava tensa e ninguém queria ir primeiro. Você foi, estabeleceu contato, fez a primeira troca e sobreviveu tempo suficiente para fazer uma segunda. Dentro de um ano, dois outros mercadores haviam seguido. A casa comercial que você fundou se tornou o modelo para o resto." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_text" text="Você reconstruiu os viveiros de peixes do Lago Comprido depois que a guerra Oriental os danificou." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_desc" text="Os viveiros haviam sido destruídos nos ataques e a pesca do lago havia caído para uma fração de seu rendimento normal. Você organizou a reconstrução, resolveu o problema estrutural que atormentava o antigo projeto e colocou os novos viveiros produzindo dentro de um mês. Os pescadores nomearam um dos viveiros em sua homenagem." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_text" text="Você produziu um conjunto de obras que a guilda de artesãos de Dale exibiu em seu salão." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_desc" text="A guilda exibia doze peças por ano de artesãos de toda a região. Você submeteu três — uma lâmina, um mecanismo de fechadura e um acabamento decorativo — e todas as três foram aceitas. O mestre da guilda lhe disse que era a primeira vez que um único artesão colocava três peças no mesmo ano." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_text" text="Você guiou refugiados para fora da borda sul da Floresta das Trevas durante a expansão da sombra." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_desc" text="Quando a corrupção de Dol Guldur se infiltrou na floresta sul e expulsou os colonos, você se voluntariou para conduzi-los ao norte ao longo da borda da floresta. A rota não era óbvia e a perseguição veio duas vezes. Todas as quarenta e três pessoas com quem você começou chegaram a Esgaroth." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_text" text="Você recuperou carga roubada de um oficial portuário corrupto e guardou suas contas." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_desc" text="O oficial vinha desviando carga por três anos e todos sabiam disso, mas ninguém tinha a documentação. Você conseguiu a documentação, recuperou a carga em nome dos mercadores e apresentou as contas ao conselho da cidade junto com uma lista de destinatários. O oficial deixou Dale silenciosamente." />
+    <string id="taom_cc_taom_adulthood_aserai_1_text" text="Você cavalgou na vanguarda da marcha ao norte da Serpente Negra." />
+    <string id="taom_cc_taom_adulthood_aserai_1_desc" text="O exército Haradrim se movia em direção a Gondor e você cavalgou na frente da coluna de guerra, lutando as escaramuças que abriam caminho. Quando a grande batalha chegou, você estava entre aqueles cujo nome a Serpente Negra conhecia quando acabou — para aqueles que sobreviveram para contá-lo." />
+    <string id="taom_cc_taom_adulthood_aserai_2_text" text="Você guiou uma caravana de Mumakil em segurança através do interior hostil do deserto." />
+    <string id="taom_cc_taom_adulthood_aserai_2_desc" text="A caravana carregava tributo e foi atacada duas vezes por tribos rivais. Você lutou na frente ambas as vezes e manteve a ordem da coluna. Os Mumakil chegaram, o tributo foi entregue e os mercadores pagaram sua taxa sem discussão, que era o elogio mais forte que eles davam." />
+    <string id="taom_cc_taom_adulthood_aserai_3_text" text="Você negociou a paz entre duas tribos do deserto em conflito." />
+    <string id="taom_cc_taom_adulthood_aserai_3_desc" text="A rixa de sangue vinha ocorrendo há três anos e estava custando às duas tribos mais do que qualquer uma admitiria. Você pediu para falar na reunião, apresentou os números sem sentimentalismo e propôs termos que nenhum dos lados adorou, mas ambos puderam aceitar. Eles aceitaram." />
+    <string id="taom_cc_taom_adulthood_aserai_4_text" text="Você expandiu a rede de irrigação do oásis e dobrou sua produção." />
+    <string id="taom_cc_taom_adulthood_aserai_4_desc" text="Os canais existentes não eram estendidos há uma geração. Você inspecionou o terreno, propôs um novo ramal, organizou a mão de obra e terminou a construção antes das enchentes da primavera. O oásis produziu o dobro do ano anterior. Três outros assentamentos enviaram mensageiros para aprender como." />
+    <string id="taom_cc_taom_adulthood_aserai_5_text" text="Você navegou pelo deserto profundo sozinho e encontrou um oásis perdido mencionado em textos antigos." />
+    <string id="taom_cc_taom_adulthood_aserai_5_desc" text="O oásis era considerado lenda. Você leu os relatos antigos, identificou as pistas geográficas e foi ao deserto profundo com dez dias de água. No nono dia você o encontrou. O retorno levou mais tempo do que o esperado, mas a rota que você marcou trouxe caravanas para lá na mesma estação." />
+    <string id="taom_cc_taom_adulthood_aserai_6_text" text="Você roubou a caravana do tesouro de uma tribo rival e a redistribuiu para a sua própria." />
+    <string id="taom_cc_taom_adulthood_aserai_6_desc" text="A tribo rival prosperara por anos através de acordos de pedágio desfavoráveis impostos às suas rotas comerciais. Você estudou os horários das caravanas por uma estação, escolheu o momento certo no deserto profundo e retomou o que havia sido tomado. Sua tribo considerou justiça; a tribo rival chamou de outra coisa." />
+    <string id="taom_cc_taom_adulthood_battania_1_text" text="Você rastreou e destruiu um bando de guerra Orc que vinha atacando os assentamentos das Colinas do Norte." />
+    <string id="taom_cc_taom_adulthood_battania_1_desc" text="O bando de guerra havia atacado quatro assentamentos sem que os Patrulheiros os capturassem. Você leu o padrão, antecipou o próximo alvo e se moveu para interceptar em vez de perseguir. Três dos Patrulheiros com você disseram depois que não esperavam que você estivesse certo. Você estava." />
+    <string id="taom_cc_taom_adulthood_battania_2_text" text="Você manteve um grupo ferido vivo durante um inverno nas Montanhas Sombrias." />
+    <string id="taom_cc_taom_adulthood_battania_2_desc" text="A patrulha de Patrulheiros estava a três dias de ajuda quando uma queda de pedras aleijou dois membros. Você tratou os ferimentos mais graves, construiu abrigo com o que a montanha oferecia e manteve o grupo vivo por onze dias até que o grupo de resgate os encontrasse. Todos voltaram para casa." />
+    <string id="taom_cc_taom_adulthood_battania_3_text" text="Você defendeu sozinho uma passagem de montanha contra uma patrulha Orc para dar tempo à companhia de recuar." />
+    <string id="taom_cc_taom_adulthood_battania_3_desc" text="A passagem era estreita o suficiente para um defender, e alguém tinha que ficar. Você se voluntariou, conteve os Orcs por tempo suficiente e então recuou pelo caminho que haviam combinado. A companhia conseguiu sair. Você também, embora tenha escolhido não discutir como." />
+    <string id="taom_cc_taom_adulthood_battania_4_text" text="Você forjou equipamentos a partir de materiais Dunedain recuperados que duraram mais que qualquer coisa nova." />
+    <string id="taom_cc_taom_adulthood_battania_4_desc" text="A linha de suprimentos do assentamento havia sido cortada e as ferramentas estavam falhando. Você avaliou o que podia ser recuperado, resgatou o melhor material de peças quebradas e o reforjou em equipamento funcional. Três Patrulheiros pediram seu trabalho em vez de novo suprimento quando a linha foi reaberta." />
+    <string id="taom_cc_taom_adulthood_battania_5_text" text="Você encontrou o acampamento Orc escondido que vinha atacando as Colinas do Tempo por um ano." />
+    <string id="taom_cc_taom_adulthood_battania_5_desc" text="Sete patrulhas procuraram e não encontraram nada. Você adotou uma abordagem diferente — rastreou não os Orcs, mas as coisas que os evitavam, lendo o silêncio nos cantos dos pássaros e as lacunas nas pegadas dos lobos. O acampamento estava onde as ausências convergiam. Os Patrulheiros o limparam." />
+    <string id="taom_cc_taom_adulthood_battania_6_text" text="Você atravessou o Condado duas vezes sem que nenhum Hobbit soubesse que você esteve lá." />
+    <string id="taom_cc_taom_adulthood_battania_6_desc" text="Os Dunedain vigiavam o Condado de além de suas fronteiras, mas às vezes a informação exigia observação mais próxima. Você entrou, passou três dias se movendo pelas terras cultivadas, reuniu o que era necessário e saiu sem perturbar um único portão de jardim. Os Hobbits nunca souberam. Esse era o objetivo." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_text" text="Você liderou a carga de flanco que quebrou o quadrado de infantaria Gondoriano." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_desc" text="O quadrado Gondoriano resistira a três assaltos diretos e o senhor da batalha estava considerando a retirada. Você identificou o tempo de rotação dos escudos, solicitou a cavalaria de flanco e executou a carga no momento exato. O quadrado quebrou. A batalha foi vencida." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_text" text="Você abriu comércio com mercadores ocidentais que deram aos clãs acesso a ferramentas de aço." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_desc" text="Os clãs sempre comercializaram para o leste, mas o melhor aço vinha do oeste. Você fez o primeiro contato, encontrou um mercador disposto a fazer a jornada até o Mar de Rhûn e negociou termos que tornaram a troca valiosa para ambas as partes. As ferramentas que voltaram transformaram três invernos de trabalho." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_text" text="Você liderou a migração do clã para novas terras de pastagem sem perder o rebanho." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_desc" text="As terras antigas haviam sido esgotadas pelo pastoreio e o conselho de anciãos estava dividido sobre para onde ir em seguida. Você propôs uma rota, argumentou o caso com números e precedente, e liderou a migração pessoalmente. Trezentos animais e oitenta e duas pessoas chegaram às novas terras intactos." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_text" text="Você adaptou métodos agrícolas ocidentais ao assentamento do vale e triplicou sua produção." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_desc" text="O assentamento do vale vinha fazendo agricultura de subsistência com métodos antigos por uma geração. Você havia visto abordagens melhores nas rotas comerciais e as aplicou cuidadosamente, safra por safra, ano por ano. Na terceira estação, o assentamento estava produzindo excedente pela primeira vez que alguém se lembrava." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_text" text="Você trouxe de volta um chefe moribundo da beira da morte com conhecimento dos anciãos do clã." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="O veneno era de ação rápida e o xamã disse que não havia nada a fazer. Você se lembrou de um ensinamento diferente — uma preparação das plantas frias da estepe que funcionava contra este tipo de ferimento. Você a preparou, aplicou e ficou durante a noite. O chefe se recuperou. Ele lhe deu um lugar em seu conselho." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Você explorou a fortaleza Gondoriana em Cair Andros e mapeou suas fraquezas." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="O senhor da batalha precisava saber se a fortaleza podia ser contornada ou tinha que ser reduzida. Você foi à frente sozinho, passou quatro dias observando da margem oriental do rio e retornou com uma avaliação detalhada da força da guarnição, cronograma de suprimentos e a abordagem que dava as melhores chances. O senhor da batalha chamou de o relatório mais útil que havia recebido em uma campanha." />
+  </strings>
+</base>

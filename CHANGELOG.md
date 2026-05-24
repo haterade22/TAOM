@@ -2,6 +2,54 @@
 
 ## 2026-05-23
 
+### Feature: AI first-draft translation pipeline + 11-language coverage
+
+Built `tools/translate_with_claude.py` and `tools/rebuild_translation_files.py` — Python tooling that produces first-draft translations via the Claude API (Sonnet 4.5) for TAOM's loc XML files. 4-tier fallback chain: hand-curated overrides → cache → LLM → English fallback. Hardened with incremental cache persistence (resumable on interruption), UTF-8 stdout for non-ASCII error messages, JSON-decode error tolerance, and a placeholder-preservation validator that drops translations breaking `{VARIABLE}` or `{?GENDER}{?}{\?}` markup.
+
+Seeded `tools/translation_overrides/ru.json` with 49 canonical Russian Tolkien names (Kistyakovsky/Muravyov convention) — Беорнинги, Рохиррим, "Войти в Эпоху Людей", etc.
+
+Ran all 11 languages in parallel (RU, SP, DE, FR, IT, BR, JP, KO, TR, CNs, CNt). API credit was exhausted partway through, so coverage is partial on TAOM_Map + LOTRLOME_Armory for several languages — re-running once credit is replenished will resume from cache (effectively free).
+
+**Coverage achieved (translated / total entries per module):**
+
+| Lang | TAOM | TAOM_Map | LOTRLOME_Armory |
+|------|------|----------|-----------------|
+| RU   | 4673/4789 (97%) | 1101/1102 (99%) | 1613/2782 (57%) |
+| SP   | 4405/4789 (91%) | 722/1102 (65%)  | 1109/2782 (39%) |
+| DE   | 4557/4789 (95%) | 600/1102 (54%)  | 0/2782 (0%)     |
+| FR   | 4591/4789 (95%) | 594/1102 (53%)  | 826/2782 (29%)  |
+| IT   | 4578/4789 (95%) | 667/1102 (60%)  | 789/2782 (28%)  |
+| BR   | 4480/4789 (93%) | 652/1102 (59%)  | 829/2782 (29%)  |
+| JP   | 4222/4789 (88%) | 0/1102 (0%)     | 0/2782 (0%)     |
+| KO   | 3185/4789 (66%) | 0/1102 (0%)     | 0/2782 (0%)     |
+| TR   | 2650/4789 (55%) | 0/1102 (0%)     | 0/2782 (0%)     |
+| CNs  | 4743/4789 (99%) | 269/1102 (24%)  | 0/2782 (0%)     |
+| CNt  | 4688/4789 (97%) | 291/1102 (26%)  | 0/2782 (0%)     |
+
+Untranslated entries (placeholder-validation failures or credit-exhausted batches) fall back to English text rather than corrupting the file. Translators receive AI first drafts and refine, instead of starting from blank stubs.
+
+**Files in TAOM repo (git-tracked):**
+- `tools/translate_with_claude.py` — main translator (NEW)
+- `tools/rebuild_translation_files.py` — rebuild language XMLs from cache (NEW)
+- `tools/translation_overrides/ru.json` — canonical Russian Tolkien names (NEW)
+- `tools/translation_cache/*.json` — 11 language caches with all successful translations (NEW)
+- `Main/_Module/ModuleData/Languages/{BR,CNs,CNt,DE,FR,IT,JP,KO,RU,SP,TR}/std_taom_*.xml` — populated translations (existing PL untouched — human-translated)
+- `docs/localization/TRANSLATOR_GUIDE.md` — added AI workflow section
+- `tools/README.md` — added Localization Pipeline section
+
+**Files in game install (not git-tracked, mirror locations):**
+- `TAOM_Map/ModuleData/Languages/<LANG>/loc_settlements.xml`
+- `LOTRLOME_Armory/ModuleData/Languages/<LANG>/loc_*.xml`
+
+**Cost:** ~$140 in Anthropic API spend (Sonnet 4.5, 7.7M input + 7.8M output tokens). Cache makes incremental updates near-free.
+
+**Known limitations:**
+- Morphologically rich languages (RU, JP, KO, TR, CN_t) need more gender conditionals than English, which the strict validator rejects. ~25-65% of complex-conditional entries fall back to English in these languages.
+- TAOM_Map and LOTRLOME_Armory have low coverage for several languages because the Anthropic API credit balance was exhausted mid-run. Re-running with topped-up credit resumes from cache.
+- Re-translation of failed entries requires either a relaxed validator (risks asymmetric translations) or per-language human curation.
+
+Pilot validation (RU, 50 entries hand-audited): 100% variable preservation, 100% gender conditional preservation, canonical Tolkien names from overrides correctly applied, natural-sounding Russian narrative tone.
+
 ### fix(equipment): mark all 96 civilian rosters with `equipmentType="Civilian"` (16 culture files)
 
 Every `<EquipmentSet>` inside a `*_civ_*` / `*_civ_equipment` `<EquipmentRoster>` across `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml` was missing the `equipmentType="Civilian"` attribute that vanilla Bannerlord's standalone-roster schema requires (verified against `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml`). Without it, the engine treats those rosters as battle equipment regardless of roster-ID naming convention — silently breaking civilian-context rendering (encyclopedia preview, settlement walks, dialog scenes).

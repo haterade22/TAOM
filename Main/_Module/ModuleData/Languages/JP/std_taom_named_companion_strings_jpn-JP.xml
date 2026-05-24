@@ -1,12 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="日本語" />
-  </tags>
-  <strings>
-    <!-- Translate entries from named_companions/named_companion_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="nc_backstory_a.named_companion_aragorn_text" text="私は北方の野伏だ。ある者は私を馳夫(ストライダー)と呼ぶが、それが真の名ではない。" />
+    <string id="nc_prebackstory.named_companion_aragorn_text" text="野伏?単なる森の住人以上の者に見えるが。" />
+    <string id="nc_backstory_b.named_companion_aragorn_text" text="私は多くの道を歩み、民の多くが決して見ることのない影からこの地を守ってきた。" />
+    <string id="nc_backstory_c.named_companion_aragorn_text" text="私の血統は重荷であり義務でもある。私は長く空位の玉座の後継者だが、少なくとも今は王冠より荒野を選んできた。" />
+    <string id="nc_response_1.named_companion_aragorn_text" text="高潔な志だ。王国には影で守る者が必要だ。" />
+    <string id="nc_response_2.named_companion_aragorn_text" text="運命から逃げているのか?それとも準備しているのか?" />
+    <string id="nc_backstory_d.named_companion_aragorn_text" text="おそらく両方だ。今のところ、私の剣は自らを守れぬ者たちに仕える。野伏の技が必要なら、君の一行に加わろう。" />
+    <string id="nc_backstory_a.named_companion_legolas_text" text="私は森の王国のエルフ、弓と剣に長けている。我が民は私をレゴラスと呼ぶ。" />
+    <string id="nc_prebackstory.named_companion_legolas_text" text="エルフが一人で旅をしている?この地では珍しいな。" />
+    <string id="nc_backstory_b.named_companion_legolas_text" text="父の館は窮屈すぎた。我らが境界の向こうにある広い世界を理解したいのだ。" />
+    <string id="nc_backstory_c.named_companion_legolas_text" text="何世紀もの間、我が民は森に留まってきたが、今や多くの場所で闇が蠢いている。私は増大する影に対して他の種族と共に立たねばならぬと信じている。" />
+    <string id="nc_response_1.named_companion_legolas_text" text="君の技は歓迎される。王国には団結が必要だ。" />
+    <string id="nc_response_2.named_companion_legolas_text" text="王子が一介の弓兵として放浪している?謙虚なことだ。" />
+    <string id="nc_backstory_d.named_companion_legolas_text" text="真の悪に対しては称号など無意味だ。私の弓は王冠のためではなく正義のために歌う。君が善のために戦うなら、共に立とう。" />
+    <string id="nc_backstory_a.named_companion_gimli_text" text="私はギムリ、グローインの息子、山の館のドワーフだ。我が斧は価値ある戦いを求めている。" />
+    <string id="nc_prebackstory.named_companion_gimli_text" text="山から遠く離れたドワーフの戦士?何がここへ導いた?" />
+    <string id="nc_backstory_b.named_companion_gimli_text" text="歌を鼓舞する偉業がなければ鍛冶場は冷える。私は栄光と黄金を求める、あらゆる立派なドワーフがそうするようにな!" />
+    <string id="nc_backstory_c.named_companion_gimli_text" text="父は若き日の偉大な冒険について語った。今度は私が、ドワーフの鋼とドワーフの勇気が全王国において無比であることを証明する番だ。" />
+    <string id="nc_response_1.named_companion_gimli_text" text="戦士の魂だ!そのような強さが必要だ。" />
+    <string id="nc_response_2.named_companion_gimli_text" text="また栄光を求める者か?その豪語を実証できることを祈る。" />
+    <string id="nc_backstory_d.named_companion_gimli_text" text="豪語だと?ハッ!我が斧はお前が温かい食事を摂った数より多くの敵を倒してきた!だが私はドワーフの忠誠に値する仲間を求めている。おそらく君が相応しかろう。" />
+    <string id="nc_backstory_a.named_companion_swan_text" text="私はスワン、白鷲の騎士だ。剣と地図製作の両方を通じて王国に仕える。" />
+    <string id="nc_prebackstory.named_companion_swan_text" text="地図を作る騎士?珍しい組み合わせだな。" />
+    <string id="nc_backstory_b.named_companion_swan_text" text="土地の知識はあらゆる刃と同じくらい重要だ。私は他の者が踏むことを恐れる道を記録し、我らが軍勢が決して盲目で行軍せぬよう保証する。" />
+    <string id="nc_backstory_c.named_companion_swan_text" text="白鷲騎士団は、知恵と戦が手を携えると教えてくれた。記された峠のすべて、記録された渡河点のすべて―これらは単独の剣の一撃より多くの命を救う。" />
+    <string id="nc_response_1.named_companion_swan_text" text="戦略的頭脳と戦士の心臓。見事だ。" />
+    <string id="nc_response_2.named_companion_swan_text" text="地図と剣?器用貧乏、名人なしか?" />
+    <string id="nc_backstory_d.named_companion_swan_text" text="実際には両方の名人だ。私の地図は軍を勝利へ導き、必要な時には我が剣が彼らを守ってきた。準備を腕前と同じくらい重んじるなら、私の奉仕を申し出よう。" />
+    <string id="nc_backstory_a.named_companion_rcmcplayz_text" text="私はルクマジグ=カミーズ、「鍛冶師」として知られている。私は金属だけでなく、技によって世界そのものを鍛え上げるのだ。" />
+    <string id="nc_prebackstory.named_companion_rcmcplayz_text" text="鍛冶場から遠く離れてさまよう鍛冶師とは?何があなたをここに?" />
+    <string id="nc_backstory_b.named_companion_rcmcplayz_text" text="私の仕事は金床と鎚を超えたものだ。私は場面と空間を形作り、記憶の風景そのものを三次元で創造する。" />
+    <string id="nc_backstory_c.named_companion_rcmcplayz_text" text="あらゆる砦の壁、あらゆる村の広場、あらゆる山道――私はその本質を捉え、完璧な詳細で再構築する。芸術と呼ぶ者もいるが、私はそれを保存と呼ぶ。" />
+    <string id="nc_response_1.named_companion_rcmcplayz_text" text="世界を鍛える鍛冶師とは?稀有な才能だな。" />
+    <string id="nc_response_2.named_companion_rcmcplayz_text" text="凝った鍛冶仕事は戦いでは役に立たんぞ、職人殿。" />
+    <string id="nc_backstory_d.named_companion_rcmcplayz_text" text="驚くかもしれんぞ。私の構造を見る目はあらゆる壁の弱点を見抜き、空間の知識は戦術的優位をもたらす。それに、この鎚は創造と同じく戦いにも役立つ。私を雇ってくれるか?" />
+    <string id="nc_backstory_a.named_companion_leovsilva_text" text="私はシルヴァンのレオヴラス、形と光の達人職人。私の芸術はデジタル領域に命を吹き込む。" />
+    <string id="nc_prebackstory.named_companion_leovsilva_text" text="シルヴァンの職人とは?あなたの民は芸術性で伝説的だ。" />
+    <string id="nc_backstory_b.named_companion_leovsilva_text" text="我が一族の中で、私は真の職人技が物理的なものを超越することを学んだ。私は無から世界を形作り、自然そのものに匹敵する美を彫刻する。" />
+    <string id="nc_backstory_c.named_companion_leovsilva_text" text="この領域でこの技芸において私は最高の一人だと言われている。あらゆる質感、あらゆる影、あらゆる細部が完璧でなければならない――これがシルヴァンの流儀だ。私の作品は献身が成し遂げられるものの記念碑として立つ。" />
+    <string id="nc_response_1.named_companion_leovsilva_text" text="あなたの評判は先に届いている。そのような技はどんな仲間をも光栄にするだろう。" />
+    <string id="nc_response_2.named_companion_leovsilva_text" text="美しい工芸品は良いが、戦えるのか?" />
+    <string id="nc_backstory_d.named_companion_leovsilva_text" text="私の芸術を導く精密さが、私の刃をも導く。達人職人は自らの作品を守らねばならぬ。それに、かくも美を創造できる者は、敵をいかに破壊するかも正確に知っているものだ。私が加わってもよいか?" />
+    <string id="nc_backstory_a.named_companion_yotthani_text" text="私はサノール、コードの織り手にしてシステムの建築家。私はプログラミングという古の技によって、アイデアに命を与える。" />
+    <string id="nc_prebackstory.named_companion_yotthani_text" text="コーダー?この地では強力な魔法だな。" />
+    <string id="nc_backstory_b.named_companion_yotthani_text" text="他者が夢見るものを、私は現実にする。私は創造の織物そのものに深く潜り、純粋な論理と決意から機能を紡ぎ出す。" />
+    <string id="nc_backstory_c.named_companion_yotthani_text" text="どんなに複雑な概念でも私に与えてくれれば、それに命を吹き込もう。あらゆるシステム、あらゆる仕組み、あらゆる機能――私はそれらを虚空から作り上げ、一行一行、それらが生き呼吸するまで。" />
+    <string id="nc_response_1.named_companion_yotthani_text" text="無から創造する力とは?実に印象的だ。" />
+    <string id="nc_response_2.named_companion_yotthani_text" text="コードとシステム?本物の武器は扱えるのか?" />
+    <string id="nc_backstory_d.named_companion_yotthani_text" text="精神こそが最も鋭い武器だ。私は他者には見えぬ問題をデバッグし、私の解決策は優美にして致命的。戦いにおいてもコードにおいても、精密さこそが全てだ。あなたの大義に加わることで実証させてもらいたい。" />
+    <string id="nc_backstory_a.named_companion_whitegoat_text" text="私はホワイトゴート、道案内人。私は旅人たちを最も複雑な旅路――精神と機械の間の接点――を通じて導く。" />
+    <string id="nc_prebackstory.named_companion_whitegoat_text" text="道案内人?興味深い肩書きだな。" />
+    <string id="nc_backstory_b.named_companion_whitegoat_text" text="私は全ての者が我らの世界と対話する窓を作る。あらゆるボタン、あらゆるメニュー、あらゆる表示――私は使用者を目的地へと導く道を設計する。" />
+    <string id="nc_backstory_c.named_companion_whitegoat_text" text="美しい風景も、それを航行できなければ無意味だ。私は全ての魂が、熟練者から新参者まで、優雅さと容易さをもって道を見つけられることを保証する。これが私の技――複雑なものを単純に感じさせること。" />
+    <string id="nc_response_1.named_companion_whitegoat_text" text="デジタル領域の案内人か。それは確かに価値あるものだ。" />
+    <string id="nc_response_2.named_companion_whitegoat_text" text="メニューとボタン?それが戦いでどう役立つ?" />
+    <string id="nc_backstory_d.named_companion_whitegoat_text" text="戦略は情報から始まり、情報は明瞭さを必要とする。私は他者が見逃すパターンを見抜き、混沌を秩序へと整理する。私の技能は戦術と兵站にも良く転用できる。あなたと共に勝利への道を見つけさせてほしい。" />
+    <string id="nc_backstory_a.named_companion_igor_text" text="私はイゴール・ファールン、「迷い人」と呼ばれている。砂漠の砂から遠く離れたハラドリムであり、新たな世界を作ることに目的を見出した。" />
+    <string id="nc_prebackstory.named_companion_igor_text" text="迷い人?ハラドリムにとっては不吉な肩書きだな。" />
+    <string id="nc_backstory_b.named_companion_igor_text" text="私は名づけることのできぬ何かを求めて故郷からさまよい出た。三次元の幻視を形作る技の中で、私は自分が探していたとも知らなかったものを見つけた。" />
+    <string id="nc_backstory_c.named_companion_igor_text" text="砂漠は私に空虚の中に美を見ることを、無から何かを築くことを教えた。今、私は虚空から領域全体を彫刻する。それぞれの創造物は、背後ではなく内に抱える故郷の一片なのだ。" />
+    <string id="nc_response_1.named_companion_igor_text" text="時として、真の道を見つけるには自らを見失わねばならぬこともある。" />
+    <string id="nc_response_2.named_companion_igor_text" text="ハラドリムの芸術家?意外だな。" />
+    <string id="nc_backstory_d.named_companion_igor_text" text="意外なものこそが最も価値あることが多い。私の南国の目は他者が見逃す角度を見抜き、私の砂漠の遺産は北の地に異なる視点をもたらす。おそらく迷うことは、見つけられることの始まりに過ぎなかったのだ。あなたと旅をしてもよいだろうか?" />
+    <string id="nc_backstory_a.named_companion_thyrell_text" text="私は「黄金の」サイレル、黄金の花の騎士、裂け谷の古の広間の誓約守護者。" />
+    <string id="nc_prebackstory.named_companion_thyrell_text" text="黄金の花の騎士?その騎士団には伝説的な歴史がある。" />
+    <string id="nc_backstory_b.named_companion_thyrell_text" text="我らは過ぎ去りし時代の光を、この暗くなりゆく時代へと運ぶ。裂け谷の書庫から訓練場まで、私は伝承と刃の両方を極めた。" />
+    <string id="nc_backstory_c.named_companion_thyrell_text" text="黄金の花はかつて最大の闇に立ち向かい、名誉と共に倒れた。今その名を冠する我らは、彼らの犠牲が無駄でなかったことを確かにせねばならぬ。美、知恵、勇気――これらが我らの合言葉だ。" />
+    <string id="nc_response_1.named_companion_thyrell_text" text="かくも高貴な血統の者と会えるとは光栄だ。" />
+    <string id="nc_response_2.named_companion_thyrell_text" text="美しい称号と黄金の花か――お前は実際に戦えるのか?" />
+    <string id="nc_backstory_d.named_companion_thyrell_text" text="黄金の花は言葉ではなく行いによってその栄光を勝ち得た。我が刃は数世紀のエルフの技で歌い、我が誓いは全ての自由な民を守ることに縛られている。その同じ献身を貴殿の隊にもたらそう。" />
+    <string id="nc_backstory_a.named_companion_haterade_text" text="私はハテレイド、この領域そのものの名匠にして建築家だ。創造主と呼ぶ者もいるが、私はただ夢を持つドワーフに過ぎぬ。" />
+    <string id="nc_prebackstory.named_companion_haterade_text" text="創造主だと? つまりお前がこの全てを形作ったと?" />
+    <string id="nc_backstory_b.named_companion_haterade_text" text="そうだ、あらゆるシステム、あらゆる機能、この世界の生命の息吹全てが我が想像の炉から流れ出た。最高の職人たちを集め、彼らに目的を与えたのだ。" />
+    <string id="nc_backstory_c.named_companion_haterade_text" text="深く掘り進み偉大な広間を建てた我が祖先のように、私はより壮大なもの――伝説が再び歩む世界全体を築いた。全ての細部に我が刻印があるが、今やそれは我が手を離れて生きている。" />
+    <string id="nc_response_1.named_companion_haterade_text" text="この全てを可能にした方にお会いできて光栄です。" />
+    <string id="nc_response_2.named_companion_haterade_text" text="ドワーフが神気取りとは? これは新しいな。" />
+    <string id="nc_backstory_d.named_companion_haterade_text" text="ハッ! 神などではない、ただ夢を死なせることを拒んだ頑固なドワーフだ。創造主としてこの領域の全ての道を歩いてきた、今度は戦士として歩む。造り手の目を通してこの世界を見せてやろう。" />
+    <string id="nc_backstory_a.named_companion_hart_text" text="私はウォルドのエオハルト、景観の達人にして地平の形成者だ。全領域で最高の景観職人の一人と言われている。" />
+    <string id="nc_prebackstory.named_companion_hart_text" text="ウォルドの? 馬の領主たちの草原の?" />
+    <string id="nc_backstory_b.named_companion_hart_text" text="そうだ、果てしない平原と起伏する丘の間に生まれた。その広大さが、世界をあるがままではなくあり得る姿として見ることを教えてくれた。今や私はその壮麗さを行く先々で再現している。" />
+    <string id="nc_backstory_c.named_companion_hart_text" text="あらゆる谷、あらゆる山頂、あらゆる森の空き地――景観がその中で語られる物語を形作ることを知る者の心遣いで創り上げる。私の景観はただ存在するだけではない、生命と目的をもって息づいているのだ。" />
+    <string id="nc_response_1.named_companion_hart_text" text="名匠としての貴殿の評判は十分に値するものだ。" />
+    <string id="nc_response_2.named_companion_hart_text" text="美しい景色では戦には勝てんぞ、騎馬民よ。" />
+    <string id="nc_backstory_d.named_companion_hart_text" text="土地を知ることで戦況が変わると知れば驚くだろう。私が創る景観の全てが地形、視界、戦略的優位を教えてくれる。ウォルドは大地そのものを読む戦士を育てた。共に騎行させてもらえるか?" />
+    <string id="nc_backstory_a.named_companion_blackrose_text" text="私はブラックローズ、忘れられし領域の鍛冶の達人。破壊ではなく創造を行うウルク=ハイだ。" />
+    <string id="nc_prebackstory.named_companion_blackrose_text" text="創造するウルク=ハイだと? 貴様の種族について知る全てに反するな。" />
+    <string id="nc_backstory_b.named_companion_blackrose_text" text="サルマンは我らを破壊のために造った、確かに。だが私は別の力――創造を発見した。コードと技術を通じて、私は忘れられし領域を鍛え、死んだピクセルに命を吹き込んだ。かつて剣を握った我が爪は今や文明全体を形作る。" />
+    <string id="nc_backstory_c.named_companion_blackrose_text" text="戦利品を貯め込む同胞と違い、私は惜しみなく分かち合う。あらゆる素材、あらゆるコード、稼いだあらゆる金貨――私と共に築こうとする者たちに与えてきた。共同体が繁栄するのは、互いに引き上げるからであって、引き裂くからではない。これが我が本性への反逆だ。" />
+    <string id="nc_response_1.named_companion_blackrose_text" text="貴殿の寛大さは数え切れぬ創造者たちを助けた。それこそが真の力だ。" />
+    <string id="nc_response_2.named_companion_blackrose_text" text="奪うのではなく教えるウルクとは? サルマンが激怒するだろうな。" />
+    <string id="nc_backstory_d.named_companion_blackrose_text" text="させておけ。他者を引き上げることにいかなる征服も及ばぬ力を見出した。今や創造者としても戦士としてもこの地を歩む。築くことも戦うことも激しく行う者を迎え入れるか?" />
+    <string id="nc_backstory_a.named_companion_spartan_text" text="私はベレクサル、スパルタンだ。他の者が槍を振るう所、私はコードと構造を通じて世界を鍛える。" />
+    <string id="nc_prebackstory.named_companion_spartan_text" text="XMLで戦うスパルタンか? 変わった戦場だな。" />
+    <string id="nc_backstory_b.named_companion_spartan_text" text="スパルタの規律は多くの目的に役立つ。兄弟たちがファランクス陣形の訓練をする間、私はいかなる盾の壁よりも優雅なコードのパターンを見出した。全てのXMLノードは正確に配置され、全ての関数は計算された一撃だ。" />
+    <string id="nc_backstory_c.named_companion_spartan_text" text="スパルタ人は決して退却しないと言われる――私は決してコードを未完のまま放置しない。他の者が果てしないテキストを見る所で、私は現実そのものの構造を見る。体系的な組織化と容赦ない最適化を通じて、他者が立つことができる基盤を築く。" />
+    <string id="nc_response_1.named_companion_spartan_text" text="技術的精密さもそれ自体が一つの戦いの形だ。" />
+    <string id="nc_response_2.named_companion_spartan_text" text="盾をキーボードと交換したようだな。" />
+    <string id="nc_backstory_d.named_companion_spartan_text" text="どちらも規律を要する、友よ。私のコードは青銅の槍と同じく確実に戦場で試される。体系的解決策と戦士の決意を提供しよう。貴殿の隊に加われるか?" />
+    <string id="nc_backstory_a.named_companion_solus_text" text="私はソルス、ケルン、黄金の花の騎士。我が手はこの領域を武装させる武器そのものを形作ってきた。" />
+    <string id="nc_prebackstory.named_companion_solus_text" text="黄金の花? その騎士団はゴンドリンで遥か昔に滅んだはず..." />
+    <string id="nc_backstory_b.named_companion_solus_text" text="だがその精神は記憶する者たちを通じて生き続ける。裂け谷の鍛冶場で、古代の技術と新たな目的を融合させることを学んだ。私が鍛える全ての刃はゴンドリンの遺産を担う――グロールフィンデルがかつて教えた通り、美と機能が統一されている。" />
+    <string id="nc_backstory_c.named_companion_solus_text" text="私をケルンと呼ぶのは、古き技と新しき技が出会う場所に印を残すからだ。この領域のために鍛えた武器の一つ一つが記念石であり、過去を称えつつ現在に仕える。我が弓は研ぐ全ての刃に要求するのと同じ精密さで歌う。" />
+    <string id="nc_response_1.named_companion_solus_text" text="そのような手で鍛えられた武器を振るうとは光栄だ。" />
+    <string id="nc_response_2.named_companion_solus_text" text="戦う武器職人か? 珍しい組み合わせだな。" />
+    <string id="nc_backstory_d.named_companion_solus_text" text="創るものは試さねばならぬ。我が矢が真っ直ぐ飛ぶのは弓の魂を理解しているからだ――それに形を与えたのは私だ。英雄を武装させ、その中に立つ者を求めるなら、準備はできている。" />
+    <string id="nc_backstory_a.named_companion_maztog_text" text="私はマズトグ、馬屋番の恐怖――だが大抵はMODとして知られている。創造の迷宮を通じて迷える魂を導いている。" />
+    <string id="nc_prebackstory.named_companion_maztog_text" text="害するのではなく助けるウルク=ハイか? 前代未聞だな。" />
+    <string id="nc_backstory_b.named_companion_maztog_text" text="Discordの広間で、真の使命を見出した。兄弟たちが鋼で戦争を行う間、私は知識で平和を行う。答えられた全ての質問、解決された全ての問題、歓迎された全ての新参者――これが我が戦場であり、決して疲れることはない。" />
+    <string id="nc_backstory_c.named_companion_maztog_text" text="私は「厩番の恐怖」と呼ばれている。なぜなら、厩番が馬を世話するように、私はコミュニティの面倒を見るからだ――忍耐と厳格さ、そして思いやりをもって。昼も夜も、私は待機している。小さすぎる質問も、大きすぎる危機もない。サルマンは私を仕えさせるために造ったが、私は仕える――ただし彼が意図した通りではない。" />
+    <string id="nc_response_1.named_companion_maztog_text" text="コミュニティへの献身は伝説的だ。" />
+    <string id="nc_response_2.named_companion_maztog_text" text="ウルク=ハイの調停者だと?世界は本当に変わったものだ。" />
+    <string id="nc_backstory_d.named_companion_maztog_text" text="変化は選択から始まる。私は橋を焼く代わりに架けることを選んだ。紛争解決と実際の戦闘の両方に通じた者が必要なら、私は仕える準備ができている。" />
+    <string id="nc_backstory_a.named_companion_balakhor_text" text="私はバラコール、伝承の大導師だ。この領域のあらゆる物語、あらゆる戦い、あらゆる英雄――私はそのすべてを記録してきた。" />
+    <string id="nc_prebackstory.named_companion_balakhor_text" text="伝承の大導師だと?時の彼方に失われた秘密を知っているに違いない。" />
+    <string id="nc_backstory_b.named_companion_balakhor_text" text="三つの時代にわたり私は知識を集めてきたが、最大の智恵は我が戦友サイレルとの戦いを通じて得た。共に数え切れない戦いに立った――彼は黄金の剣、私は古の言葉とともに。血は兄弟を作るが、共有された目的は彼らを永遠にする。" />
+    <string id="nc_backstory_c.named_companion_balakhor_text" text="裂け谷の広間で、私は歴史だけでなくその意味を保存している。すべてのmod機能、すべての派閥の興隆、すべての英雄の旅――私はそれらを壮大な織物に織り込む。創造者が自らの道を疑うとき、私は彼らがより大きな図式のどこに当てはまるかを示す。この領域の伝承は私の生涯の仕事だ。" />
+    <string id="nc_response_1.named_companion_balakhor_text" text="伝承の大導師自身から学べるとは光栄だ。" />
+    <string id="nc_response_2.named_companion_balakhor_text" text="その全ての知識――重い負担ではないか?" />
+    <string id="nc_backstory_d.named_companion_balakhor_text" text="知識は貯め込まれたときだけ重い。自由に分かち合えば、それを受け取る全ての者を高める。我が兄弟サイレルのように、私はこの領域の栄光に仕える。あなたは我らの終わりなき物語に自らの章を加えるか?" />
+    <string id="nc_backstory_a.named_companion_noxix_text" text="私はノクシクス・イルーヴァタール、東方の炎だ。中つ国を歩く前、私は我が技によってウェスタロスに炎と血をもたらした。" />
+    <string id="nc_prebackstory.named_companion_noxix_text" text="「竜たちの舞踏」の創造者?その作品は諸領域を越えて伝説だ!" />
+    <string id="nc_backstory_b.named_companion_noxix_text" text="闇の森の影深い小道で、創造には光と闇の両方が必要だと学んだ。「竜たちの舞踏」を作ったとき、私は氷と炎、名誉と裏切りを織り合わせた。同じビジョンをここに持ち込み、この中つ国を最初のコードの行から誕生させるのを手伝った。" />
+    <string id="nc_backstory_c.named_companion_noxix_text" text="私が「東方の炎」と呼ばれるのは、他者の中に霊感を灯すからだ。ウェスタロスから中つ国まで、私は創造者たちの始まりに寄り添い、学んだことを分かち合ってきた。この領域が存在するのは、以前に世界を築いた我々が知っているからだ――最高の創造は孤立からではなく、協力から生まれると。" />
+    <string id="nc_response_1.named_companion_noxix_text" text="複数の世界にまたがる専門知識――驚くべきことだ。" />
+    <string id="nc_response_2.named_companion_noxix_text" text="竜から中つ国へ――まさに壮大な旅だ。" />
+    <string id="nc_backstory_d.named_companion_noxix_text" text="あらゆる領域は新たな教訓を与える。ウェスタロスは政治的複雑さを、中つ国は神話的深みを教えてくれた。私は両世界の智恵と決して外れない弓を提供する。共に新たな伝説を書かないか?" />
+  </strings>
+</base>

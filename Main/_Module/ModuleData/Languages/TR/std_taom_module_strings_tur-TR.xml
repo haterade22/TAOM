@@ -1,14 +1,645 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Türkçe" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_module_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" />
-         Variables like {RULER.NAME} and conditionals like {?RULER.GENDER}..{?}..{\?}
-         must be preserved verbatim. -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_str_faction_official.empire" text="Dunland'ın bir klan üyesi" />
+    <string id="taom_str_faction_official.empire_f" text="Dunland'ın bir klan kadını" />
+    <string id="taom_str_faction_ruler.empire" text="Klan Reisi" />
+    <string id="taom_str_faction_ruler.empire_f" text="Klan Reisi" />
+    <string id="taom_str_faction_ruler_term_in_speech.empire" text="Klan Reisi, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.empire" text="Klan Reisi {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.empire" text="Dunlending" />
+    <string id="taom_str_short_term_for_faction.empire" text="Dunland" />
+    <string id="taom_str_faction_formal_name_for_culture.empire" text="Dunland Klanları" />
+    <string id="taom_str_faction_informal_name_for_culture.empire" text="Dunland" />
+    <string id="taom_str_neutral_term_for_culture.empire" text="Dunlendingler" />
+    <string id="taom_str_faction_official.vlandia" text="Rohan'ın bir asilzadesi" />
+    <string id="taom_str_faction_official.vlandia_f" text="Rohan'ın bir leydisi" />
+    <string id="taom_str_faction_ruler.vlandia" text="Kral" />
+    <string id="taom_str_faction_ruler.vlandia_f" text="Kraliçe" />
+    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="Kral, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Kral {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.vlandia" text="Rohirrik" />
+    <string id="taom_str_short_term_for_faction.vlandia" text="Süvari" />
+    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Riddermark" />
+    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Rohan" />
+    <string id="taom_str_neutral_term_for_culture.vlandia" text="Rohirrim" />
+    <string id="taom_str_faction_official.battania" text="Khand'ın bir asilzadesi" />
+    <string id="taom_str_faction_official.battania_f" text="Khand'ın bir leydisi" />
+    <string id="taom_str_faction_ruler.battania" text="Khand Lordu" />
+    <string id="taom_str_faction_ruler.battania_f" text="Khand Leydisi" />
+    <string id="taom_str_faction_ruler_term_in_speech.battania" text="Lord, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.battania" text="Lord {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.battania" text="Variag" />
+    <string id="taom_str_short_term_for_faction.battania" text="Variag" />
+    <string id="taom_str_faction_formal_name_for_culture.battania" text="Khand Variagları" />
+    <string id="taom_str_faction_informal_name_for_culture.battania" text="Khand" />
+    <string id="taom_str_neutral_term_for_culture.battania" text="Variaglar" />
+    <string id="taom_str_faction_official.khuzait" text="Rhûn'un bir asilzadesi" />
+    <string id="taom_str_faction_official.khuzait_f" text="Rhûn'un bir leydisi" />
+    <string id="taom_str_faction_ruler.khuzait" text="Savaş Lordu" />
+    <string id="taom_str_faction_ruler.khuzait_f" text="Savaş Leydisi" />
+    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="Savaş Lordu, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Savaş Lordu {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.khuzait" text="Doğulu" />
+    <string id="taom_str_short_term_for_faction.khuzait" text="Rhun" />
+    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Rhûn Doğuluları" />
+    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Rhûn" />
+    <string id="taom_str_neutral_term_for_culture.khuzait" text="Doğulular" />
+    <string id="taom_str_faction_official.aserai" text="Harad soylusu" />
+    <string id="taom_str_faction_official.aserai_f" text="Harad leydisi" />
+    <string id="taom_str_faction_ruler.aserai" text="Kabile Reisi" />
+    <string id="taom_str_faction_ruler.aserai_f" text="Kabile Reisi" />
+    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="Kabile Reisi, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.aserai" text="Kabile Reisi {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.aserai" text="Haradrimli" />
+    <string id="taom_str_short_term_for_faction.aserai" text="Harad" />
+    <string id="taom_str_faction_formal_name_for_culture.aserai" text="Harad Krallığı" />
+    <string id="taom_str_faction_informal_name_for_culture.aserai" text="Harad" />
+    <string id="taom_str_neutral_term_for_culture.aserai" text="Haradrim" />
+    <string id="taom_str_faction_official.sturgia" text="Dale soylusu" />
+    <string id="taom_str_faction_official.sturgia_f" text="Dale leydisi" />
+    <string id="taom_str_faction_ruler.sturgia" text="Kral" />
+    <string id="taom_str_faction_ruler.sturgia_f" text="Kraliçe" />
+    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="Kral, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Kral {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.sturgia" text="Bardingli" />
+    <string id="taom_str_short_term_for_faction.sturgia" text="Dale" />
+    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Dale Krallığı" />
+    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Dale" />
+    <string id="taom_str_neutral_term_for_culture.sturgia" text="Bardinglar" />
+    <string id="taom_str_faction_official.dolguldur" text="Dol Guldur hizmetkârı" />
+    <string id="taom_str_faction_official.dolguldur_f" text="Dol Guldur hizmetkârı" />
+    <string id="taom_str_faction_ruler.dolguldur" text="Gözetmen" />
+    <string id="taom_str_faction_ruler.dolguldur_f" text="Gözetmen" />
+    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="Gözetmen, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Gözetmen" />
+    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.dolguldur" text="Guldurlu" />
+    <string id="taom_str_short_term_for_faction.dolguldur" text="Dol Guldur" />
+    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Dol Guldur Güçleri" />
+    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Dol Guldur" />
+    <string id="taom_str_neutral_term_for_culture.dolguldur" text="Dol Guldur Hizmetkârları" />
+    <string id="taom_str_faction_official.isengard" text="bir Isengard kaptanı" />
+    <string id="taom_str_faction_official.isengard_f" text="bir Isengard kaptanı" />
+    <string id="taom_str_faction_ruler.isengard" text="Beyaz El" />
+    <string id="taom_str_faction_ruler.isengard_f" text="Beyaz Leydi" />
+    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="Beyaz El, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.isengard" text="Beyaz El {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.isengard" text="Isengard" />
+    <string id="taom_str_short_term_for_faction.isengard" text="Isengard" />
+    <string id="taom_str_faction_formal_name_for_culture.isengard" text="Isengard Güçleri" />
+    <string id="taom_str_faction_informal_name_for_culture.isengard" text="Isengard" />
+    <string id="taom_str_neutral_term_for_culture.isengard" text="Isengard Güçleri" />
+    <string id="taom_str_faction_official.gundabad" text="bir Gundabad reisi" />
+    <string id="taom_str_faction_official.gundabad_f" text="bir Gundabad reisi" />
+    <string id="taom_str_faction_ruler.gundabad" text="Savaş Lordu" />
+    <string id="taom_str_faction_ruler.gundabad_f" text="Savaş Leydisi" />
+    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="Savaş Lordu, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Savaş Lordu {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.gundabad" text="Gundabad" />
+    <string id="taom_str_short_term_for_faction.gundabad" text="Gundabad" />
+    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Gundabad Orklarİ" />
+    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Gundabad" />
+    <string id="taom_str_neutral_term_for_culture.gundabad" text="Gundabad Orkları" />
+    <string id="taom_str_faction_official.umbar" text="bir Umbar korsanı" />
+    <string id="taom_str_faction_official.umbar_f" text="bir Umbar korsanı" />
+    <string id="taom_str_faction_ruler.umbar" text="Korsan Kaptanı" />
+    <string id="taom_str_faction_ruler.umbar_f" text="Korsan Kaptanı" />
+    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="Kaptan, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.umbar" text="Kaptan {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.umbar" text="Korsan" />
+    <string id="taom_str_short_term_for_faction.umbar" text="Umbar" />
+    <string id="taom_str_faction_formal_name_for_culture.umbar" text="Umbar Korsanları" />
+    <string id="taom_str_faction_informal_name_for_culture.umbar" text="Umbar" />
+    <string id="taom_str_neutral_term_for_culture.umbar" text="Korsanlar" />
+    <string id="taom_str_faction_official.gondor" text="asil bir lord" />
+    <string id="taom_str_faction_official.gondor_f" text="asil bir leydi" />
+    <string id="taom_str_faction_ruler.gondor" text="Kâhya" />
+    <string id="taom_str_faction_ruler.gondor_f" text="Leydi Kâhya" />
+    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}Leydi Kâhya{?}Kâhya{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Leydi Kâhya{?}Kâhya{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.gondor" text="Gondorlu" />
+    <string id="taom_str_short_term_for_faction.gondor" text="Gondorlu" />
+    <string id="taom_str_faction_formal_name_for_culture.gondor" text="Gondorlu" />
+    <string id="taom_str_faction_informal_name_for_culture.gondor" text="Gondorlular" />
+    <string id="taom_str_neutral_term_for_culture.gondor" text="Gondorlular" />
+    <string id="taom_str_faction_official.mordor" text="bir Sauron kaptanı" />
+    <string id="taom_str_faction_official.mordor_f" text="Karanlık Lord'un bir hizmetkârı" />
+    <string id="taom_str_faction_ruler.mordor" text="Karanlık Lord" />
+    <string id="taom_str_faction_ruler.mordor_f" text="Karanlık Leydi" />
+    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}Karanlık Leydi{?}Karanlık Lord{\?}, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Karanlık Leydi{?}Karanlık Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Muhafız{?}Gözetmen{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.mordor" text="Mordor" />
+    <string id="taom_str_short_term_for_faction.mordor" text="Mordor" />
+    <string id="taom_str_faction_formal_name_for_culture.mordor" text="Mordor" />
+    <string id="taom_str_faction_informal_name_for_culture.mordor" text="Sauron'un hizmetkârları" />
+    <string id="taom_str_neutral_term_for_culture.mordor" text="Mordor" />
+    <string id="taom_str_faction_official.mirkwood" text="bir orman koruyucusu" />
+    <string id="taom_str_faction_official.mirkwood_f" text="bir orman bekçisi" />
+    <string id="taom_str_faction_ruler.mirkwood" text="Kral" />
+    <string id="taom_str_faction_ruler.mirkwood_f" text="Kraliçe" />
+    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}Kraliçe{?}Kral{\?}, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Kraliçe{?}Kral{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Bekçi{?}Muhafız{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.mirkwood" text="Orman-Elf" />
+    <string id="taom_str_short_term_for_faction.mirkwood" text="Orman-Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Mirkwood Diyarı" />
+    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="Orman Diyarı" />
+    <string id="taom_str_neutral_term_for_culture.mirkwood" text="Orman-Elfleri" />
+    <string id="taom_str_faction_official.lothlorien" text="bir Lothlórien muhafızı" />
+    <string id="taom_str_faction_official.lothlorien_f" text="bir Lothlórien bekçisi" />
+    <string id="taom_str_faction_ruler.lothlorien" text="Lord" />
+    <string id="taom_str_faction_ruler.lothlorien_f" text="Leydi" />
+    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lothlorien" text="Galadhrim" />
+    <string id="taom_str_short_term_for_faction.lothlorien" text="Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Altın Orman" />
+    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Lothlórien" />
+    <string id="taom_str_neutral_term_for_culture.lothlorien" text="Altın Orman Elfleri" />
+    <string id="taom_str_faction_official.rivendell" text="Rivendell bilge ustası" />
+    <string id="taom_str_faction_official.rivendell_f" text="Rivendell şifacısı" />
+    <string id="taom_str_faction_ruler.rivendell" text="Lord" />
+    <string id="taom_str_faction_ruler.rivendell_f" text="Leydi" />
+    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.rivendell" text="Rivendellli" />
+    <string id="taom_str_short_term_for_faction.rivendell" text="Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Son Huzurlu Ev" />
+    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Rivendell" />
+    <string id="taom_str_neutral_term_for_culture.rivendell" text="Rivendell Elfleri" />
+    <string id="taom_str_culture_description.empire" text="Batı yaylalarının vahşi tepe insanları Dunlendliler, gururlu ve kadim bir halktır. Rohirrim'e düşmanlık besleyen bu halk, gerilla taktikleri ve savaştaki azmiyle bilinir. Güçlü liderler altında birleşerek, haklı olarak kendilerinin olduğuna inandıkları toprakları geri almak ve hayatta kalmak için savaşırlar." />
+    <string id="taom_str_culture_description.vlandia" text="At Lordları olarak bilinen Rohirrim, geniş ova ve yuvarlak tepelerle kaplı Rohan diyarının gururlu ve asil halkıdır. Binici yetenekleri ve askeri güçlerinin temelini oluşturan eşsiz süvarileriyle ünlüdürler. Sıkı bağlarla örülmüş feodal bir toplumda yaşayan Rohirrim'e, onur ve gelenekle topraklarını ve halkını korumakla yükümlü olan bir kral ve sadık bir soylular sınıfı liderlik eder. Şiddetle bağımsız olan bu halk, özgürlüğe her şeyden çok değer verir ve savaşçıları, güçlü atlarının sırtında mızrak, kılıç ve yay kullanmak üzere eğitilmiştir." />
+    <string id="taom_str_culture_description.battania" text="Khand Variagları, doğu bozkırlarından gelen acımasız ve savaşçı bir halktır. Atlara hakimiyetleri ve ölümcül savaş arabalarıyla tanınan bu halk, benzersiz ve acımasız bir savaş tarzı getirir. Sauron'la ittifak halinde olan Variaglar, güç ve yağma için savaşarak Orta Dünya'ya korku saçarlar." />
+    <string id="taom_str_culture_description.khuzait" text="Doğulular, Mordor'un ötesindeki uçsuz bucaksız doğu diyarlarından gelen gururlu ve disiplinli bir halktır. Dayanıklılıkları ve savaş ustalıklarıyla ünlü olan bu halk hem çiftçi hem de savaşçıdır; tarımsal gelenekleri şiddetli bir savaş kültürüyle harmanlarlar. Orduları, süslü zırhlara bürünmüş ve ölümcül mızrak ve yaylarla donanmış korkunç süvarileriyle bilinir. Zengin bir zanaatkarlık mirası ve akrabalarına sadakatle, Doğulular altın ve kırmızı renkli canlı sancakları altında düşmanlarının yüreğine korku salarak savaşa yürürler. Sauron'a bağlılıkları onları müthiş bir güç haline getirmiş, gölgesinin altında birleşerek Orta Dünya'daki egemenliklerini genişletmektedirler." />
+    <string id="taom_str_culture_description.aserai" text="Güney çöllerinin savaşçıları Haradrim, Sauron'la ittifak halindeki vahşi ve dayanıklı bir halktır. Egzotik savaş canavarları ve yetenekli süvarileriyle tanınan bu halk, kızıl sancakları altında savaşa yürür. Gururlu ve geleneklerine derinden bağlı olan Haradrim, çölün vahşetini Orta Dünya'nın savaş alanlarına taşır." />
+    <string id="taom_str_culture_description.sturgia" text="Yayşör Bard'ın torunları Dale Bardingleri, Erebor'un gölgesinde yaşayan gururlu ve çalışkan bir halktır. Yetenekli okçuları ve disiplinli savaşçılarıyla ünlü olan bu halk, gelişen şehirlerini ve kuzeyin ticaret yollarını korur. Güçlü bir topluluk ve onur duygusuyla birleşen Bardingler, topraklarını tehdit eden karanlığa karşı sağlam dururlar." />
+    <string id="taom_str_culture_description.erebor" text="Erebor'un asil Cüceleri, zanaatkarlıkları, dayanıklılıkları ve gurlarıyla ünlüdürler. Yalnız Dağ'daki salonlarından, eşsiz güzellikte güçlü silahlar ve hazineler yaratırlar. Zırha bürünmüş ve baltalarla silahlanmış olarak, soydaşlarını sarsılmaz cesaretle savunur, miraslarını geri kazanmaya ve ona tehdit oluşturan herkese karşı geleneklerini korumaya çalışırlar." />
+    <string id="taom_str_culture_description.rivendell" text="Son Huzurlu Ev olan Rivendell, Lord Elrond'un yönetiminde bilgelik ve güzelliğin sığınağıdır. Sisli Dağlar'a yerleşmiş olan halkı, Orta Dünya'nın kadim bilgisinin bilge ustaları ve koruyucularıdır. Rivendell Elfleri, karanlığa karşı direnenler için öğüt ve yardım sunarak, umut ve birlik ışığını korurlar." />
+    <string id="taom_str_culture_description.mirkwood" text="Kral Thranduil'in yönetimindeki Kara Orman Orman-Elfleri, uçsuz bucaksız ve gizemli ormanın koruyucularıdır. Çeviklikleri ve yay ustalıklarıyla tanınan bu halk, gölgelere karışır ve kesinlik ve zarafetle saldırır. Diyarları güzellik ve tehlikeyle dolu bir yerdir ve savaşçılarının kararlılığı ile krallarının ebedi bilgeliğiyle korunur. Şiddetle bağımsız olan Kara Orman Elfleri, ormanlarını büyüyen karanlığa karşı korumak için savaşırlar." />
+    <string id="taom_str_culture_description.lothlorien" text="Altın Orman sakinleri Lothlórien Galadhrim'leri, Leydi Galadriel ve Lord Celeborn tarafından yönetilen ruhani ve asil bir halktır. Okçuluk ve orman savaşının ustaları olarak, büyülü diyarlarını eşsiz bir yetenekle korurlar. Akrabalarına ve vatanlarına bağlılıkları sarsılmaz olup, ince büyüleri Lothlórien'i büyüyen gölgenin ortasında bir umut ve ışık sığınağı olarak korur." />
+    <string id="taom_str_culture_description.isengard" text="Beyaz Saruman'ın yönetimindeki Isengard orduları, Uruk-hai'ler ve paralı askerlerin müthiş bir gücüdür. Endüstrinin ateşlerinde dövülmüş olan silah ve zırhları yıkım için tasarlanmıştır. Isengard güçleri, fetih ve hakimiyet peşinde acımasız bir verimlilikle savaşa yürür." />
+    <string id="taom_str_culture_description.gundabad" text="Sis kaplı dağlarda ikamet eden Gundabad Orkları, acımasız ve vahşi bir güçtür. Savaş lordlarının yönetiminde, komşu topraklara sonsuz akınlar düzenlerler. Nefret ve zulüm tarafından yönlendirilen bu halk, kuzeye hakim olma arayışında amansızdır." />
+    <string id="taom_str_culture_description.umbar" text="Deniz akıncıları ve usta denizciler olan Umbar Korsanları, Sauron'la ittifak halindeki acımasız ve kurnaz bir halktır. Hızlı gemileri ve amansız deniz savaşlarıyla tanınan bu halk, Orta Dünya'nın kıyılarına korku salar. Denizcilik miraslarıyla gurur duyan Korsanlar, karanlık ittifakları adına yağma ve talan yaparak denizlerin kaosunu karaya taşırlar." />
+    <string id="taom_str_culture_description.dolguldur" text="Ölümcül'ün komutası altındaki Dol Guldur maşaları, karanlık ve uğursuz bir güçtür. Kara Orman'ın bozulmuş ormanı içinde gizlenerek, düşmanlarını zayıflatmak için ihanet ve gölge kullanırlar. Orklar, varglar ve diğer kötü yaratıklar, Orta Dünya'ya korku ve çürümeyi yaymak için ileri yürürler." />
+    <string id="taom_str_culture_description.gondor" text="Númenorlu sürgünlerin torunları Gondorlular, Orta Dünya'daki İnsanların en büyük krallığının gururlu kâhyalarıdır. Yükselen taş kaleleri ve sarsılmaz cesaretleriyle bilinen Gondor, Mordor'un tehditkâr gölgesine karşı bir umut kalesidir. Cesur piyade, yetenekli okçular ve atlı şövalyelerden oluşan disiplinli orduları, tüm özgür halklar için bir kalkan görevi görür. Asil kâhyalar ve kaptanların yönetimindeki Gondorlular, geleneklerine sıkı sıkıya bağlıdır ve diyarı ile mirasını koruma görevlerinde taviz vermezler." />
+    <string id="taom_str_culture_description.mordor" text="Azap Dağı'nın gölgesinde dövülmüş Mordor orduları, Kara Lord Sauron'un komutasındaki amansız bir karanlık gücüdür. Orklar, troller ve kötü insanlardan oluşan bu ordu, yanan Göz'ün altında korku ve yıkım saçarak savaşa yürür. Bu lejyonlar, zulmün ve kullukun pençesinde, pürüzlü kılıçlar ve kaba zırhlarla silahlanmıştır. Sauron'un demir iradesiyle bağlı olan Mordor güçleri, tüm Orta Dünya'yı gölgeye boğmayı amaçlayan ölümcül bir dalgadır." />
+    <string id="taom_str_culture_rich_name.empire" text="Dunlendli" />
+    <string id="taom_str_culture_rich_name.vlandia" text="Rohirrim" />
+    <string id="taom_str_culture_rich_name.battania" text="Variag" />
+    <string id="taom_str_culture_rich_name.khuzait" text="Doğulu" />
+    <string id="taom_str_culture_rich_name.aserai" text="Haradrim" />
+    <string id="taom_str_culture_rich_name.sturgia" text="Bardingler" />
+    <string id="taom_str_culture_rich_name.erebor" text="Cüceler" />
+    <string id="taom_str_culture_rich_name.rivendell" text="Ñoldor" />
+    <string id="taom_str_culture_rich_name.mirkwood" text="Silvan" />
+    <string id="taom_str_culture_rich_name.lothlorien" text="Galadhrim" />
+    <string id="taom_str_culture_rich_name.isengard" text="Uruk-hai" />
+    <string id="taom_str_culture_rich_name.gundabad" text="Gundabad Orkları" />
+    <string id="taom_str_culture_rich_name.umbar" text="Umbar" />
+    <string id="taom_str_culture_rich_name.dolguldur" text="Dol Guldur" />
+    <string id="taom_str_culture_rich_name.gondor" text="Gondorlular" />
+    <string id="taom_str_culture_rich_name.mordor" text="Mordor" />
+    <string id="taom_str_adjective_for_culture.empire" text="Dunlendingli" />
+    <string id="taom_str_adjective_for_culture.vlandia" text="Rohirrimli" />
+    <string id="taom_str_adjective_for_culture.battania" text="Variag" />
+    <string id="taom_str_adjective_for_culture.khuzait" text="Doğulu" />
+    <string id="taom_str_adjective_for_culture.aserai" text="Haradrimli" />
+    <string id="taom_str_adjective_for_culture.sturgia" text="Bardingli" />
+    <string id="taom_str_adjective_for_culture.erebor" text="Cüce" />
+    <string id="taom_str_adjective_for_culture.rivendell" text="Rivendelli" />
+    <string id="taom_str_adjective_for_culture.mirkwood" text="Mirkwood" />
+    <string id="taom_str_adjective_for_culture.lothlorien" text="Lothlorien" />
+    <string id="taom_str_adjective_for_culture.isengard" text="Isengardlı" />
+    <string id="taom_str_adjective_for_culture.gundabad" text="Gundabad" />
+    <string id="taom_str_adjective_for_culture.umbar" text="Umbarlı" />
+    <string id="taom_str_adjective_for_culture.dolguldur" text="Dol Guldur" />
+    <string id="taom_str_adjective_for_culture.gondor" text="Gondorlu" />
+    <string id="taom_str_adjective_for_culture.mordor" text="Mordorlu" />
+    <string id="taom_str_player_father_name.empire" text="Wulfgar" />
+    <string id="taom_str_player_mother_name.empire" text="Freca" />
+    <string id="taom_str_player_father_name.vlandia" text="Baldred" />
+    <string id="taom_str_player_mother_name.vlandia" text="Morwen" />
+    <string id="taom_str_player_father_name.battania" text="Variag" />
+    <string id="taom_str_player_mother_name.battania" text="Khara" />
+    <string id="taom_str_player_father_name.khuzait" text="Khamûl" />
+    <string id="taom_str_player_mother_name.khuzait" text="Adûnaphel" />
+    <string id="taom_str_player_father_name.aserai" text="Suladan" />
+    <string id="taom_str_player_mother_name.aserai" text="Haleth" />
+    <string id="taom_str_player_father_name.sturgia" text="Bard" />
+    <string id="taom_str_player_mother_name.sturgia" text="Sigrid" />
+    <string id="taom_str_player_father_name.erebor" text="Drúlin" />
+    <string id="taom_str_player_mother_name.erebor" text="Orrina" />
+    <string id="taom_str_player_father_name.rivendell" text="Celeforn" />
+    <string id="taom_str_player_mother_name.rivendell" text="Gilrien" />
+    <string id="taom_str_player_father_name.mirkwood" text="Galion" />
+    <string id="taom_str_player_mother_name.mirkwood" text="Lúthien" />
+    <string id="taom_str_player_father_name.lothlorien" text="Irophin" />
+    <string id="taom_str_player_mother_name.lothlorien" text="Oimrodel" />
+    <string id="taom_str_player_father_name.isengard" text="Grima" />
+    <string id="taom_str_player_mother_name.isengard" text="Lurka" />
+    <string id="taom_str_player_father_name.gundabad" text="Narzuk" />
+    <string id="taom_str_player_mother_name.gundabad" text="Borlia" />
+    <string id="taom_str_player_father_name.umbar" text="Castamir" />
+    <string id="taom_str_player_mother_name.umbar" text="Berúthiel" />
+    <string id="taom_str_player_father_name.dolguldur" text="Grishmak" />
+    <string id="taom_str_player_mother_name.dolguldur" text="Durgash" />
+    <string id="taom_str_player_father_name.gondor" text="Coromir" />
+    <string id="taom_str_player_mother_name.gondor" text="Finduilas" />
+    <string id="taom_str_player_father_name.mordor" text="Gorbag" />
+    <string id="taom_str_player_mother_name.mordor" text="Zhelob" />
+    <string id="taom_peace_news" text="{FACTION1} ve {FACTION2} barış yaptı." />
+    <string id="taom_war_news" text="{FACTION1_NAME} hükümdarı {RULER_NAME}, {FACTION2_NAME}'e savaş ilan ediyor." />
+    <string id="taom_war_news_direct" text="{FACTION1_NAME}, {FACTION2_NAME}'e savaş ilan ediyor." />
+    <string id="taom_siege_party_link" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} tarafından yönetilen güçler tarafından kuşatıldı!" />
+    <string id="taom_siege_party" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} tarafından yönetilen güçler tarafından kuşatıldı!" />
+    <string id="taom_siege_army_link" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} tarafından yönetilen ordu tarafından kuşatıldı!" />
+    <string id="taom_siege_army" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} tarafından yönetilen ordu tarafından kuşatıldı!" />
+    <string id="taom_raid_army" text="{SETTLEMENT}, {FACTION_NAME}'den {LORD.LINK} tarafından yönetilen ordu tarafından yağmalanıyor" />
+    <string id="taom_raid_party" text="{SETTLEMENT}, {FACTION_NAME}'den {LORD.LINK} tarafından yağmalanıyor" />
+    <string id="taom_destroy_party" text="{VICTOR_FACTION}'den {VICTOR_PARTY}, {DEFEATED_FACTION}'den {DEFEATED_PARTY}'yi yendi." />
+    <string id="taom_secondary_peace" text="{FACTION1} ve {FACTION2} barış yaptı." />
+    <string id="taom_change_faction" text="{CLAN_NAME} klanı {FACTION}'a katıldı." />
+    <string id="taom_merc_contract" text="{CLAN}, {KINGDOM} ile birlikte savaşmak için anlaştı." />
+    <string id="taom_merc_end" text="{CLAN} artık {KINGDOM}'a hizmet etmiyor." />
+    <string id="taom_minor_intro" text="Ben {CONVERSATION_CHARACTER.LINK}, {FACTION}'denim." />
+    <string id="taom_alliance_desc" text="{FACTION} ile İttifak Kur" />
+    <string id="taom_vassal_rank" text="{FACTION_INFORMAL_NAME} Vassalı" />
+    <string id="taom_ruler_rank" text="{FACTION_INFORMAL_NAME} Hükümdarı" />
+    <string id="taom_noble_rank" text="{FACTION_INFORMAL_NAME} Soylusu" />
+    <string id="taom_merc_rank" text="{FACTION_INFORMAL_NAME} için Savaşan Paralı Asker" />
+    <string id="taom_answer_call" text="{CALLING_KINGDOM} Çağrısına Yanıt Ver ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Savaş İlan Et" />
+    <string id="taom_propose_call" text="{CALLED_KINGDOM}'den {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Savaş İlan Etmesini İste" />
+    <string id="taom_raid_resist_peace" text="Yağmalamak için {SETTLEMENT}'a vardınız. Köylülerin bir kısmı size karşı direnmeye hazırlanıyor. Bu köyü yağmalamak {KINGDOM} ile savaşa yol açacak." />
+    <string id="taom_force_supply_peace" text="Köylüleri mallarını vermeye zorlamaya çalışırken, bazı sakinler size karşı direnmeye toplanıyor. Onlarla savaşmak {KINGDOM} ile savaşa yol açacak." />
+    <string id="taom_force_vol_peace" text="Eşrafı size asker vermeye zorlamaya çalışırken, bazı sakinler size karşı direnmeye toplanıyor. Onlarla savaşmak {KINGDOM} ile savaşa yol açacak." />
+    <string id="taom_raid_noresist_peace" text="Yağmalamak için {SETTLEMENT}'a vardınız. Herhangi bir direnişle karşılaşmadınız. Bu köyü yağmalamak {KINGDOM} ile savaşa yol açacak." />
+    <string id="taom_encounter_peace" text="{PARTY} ile karşılaştınız. Onlarla savaşmak {KINGDOM} ile savaşa yol açacak." />
+    <string id="0cdXddA9" text="{KINGDOM1_LINK}, {KINGDOM2_LINK} ile ittifak kurdu." />
+    <string id="1rbg3Hz2" text="{FACTION_1} ve {FACTION_2} artık düşman değil." />
+    <string id="2BVDp7Tg" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamasını durduracak. {POLICY_SUPPORT}" />
+    <string id="Lbs2bNlg" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamasına başlayacak. {POLICY_SUPPORT}" />
+    <string id="jnYwiCAz" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamasına devam edecek. {POLICY_SUPPORT}" />
+    <string id="faUooB7V" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamayacak. {POLICY_SUPPORT}" />
+    <string id="TauRjAud" text="{FACTION} mensubu {NAME}" />
+    <string id="2mVZORaE" text="{FACTION_NAME}'in hizmetkârı" />
+    <string id="6d4ZTvGv" text="{LORD.NAME}, {FACTION_NAME}'in {TITLE}'ı ve diyarın {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in reisidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
+    <string id="o5AUljbW" text="{LORD.NAME}, {FACTION_NAME}'in {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in bir üyesidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}, {FACTION_NAME} topraklarından {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in bir üyesidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}, {FACTION_NAME} topraklarından {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in reisidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
+    <string id="0bPb5btR" text="{LORD.NAME}, iç savaşta {RULER}'ı destekleyen {FACTION_NAME}'in {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in bir üyesidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
+    <string id="JuPUG5wX" text="{LORD.NAME}, {FACTION_NAME}'in {TITLE}'ı ve iç savaşta {RULER}'ı destekleyen {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in reisidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK} kalesi, {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK}'e aittir. {KEEP_INFO}" />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}, {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK} tarafından yönetilmektedir. {KEEP_INFO}" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK} çevresindeki topraklar çoğunlukla {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK}'e aittir. {PROSPERITY_INFO}" />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}, {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK} tarafından yönetilmektedir. {PROSPERITY_INFO} {MORALE_INFO}" />
+    <string id="yAOQnMVw" text="{FACTION}'dansın, değil mi? Bu da seni benim esirimin yaptı." />
+    <string id="YT4OvaAG" text="Peki öyle olsun. Kendini {FACTION_NAME}'in koruması altında sayabilirsin. Yolculuğunu tamamlamak için yarın bu vakte kadar vaktiniz var, yoksa sizden başka bir ödeme daha talep edebiliriz." />
+    <string id="taom_str_faction_official.erebor" text="asil bir cüce" />
+    <string id="taom_str_faction_official.erebor_f" text="soylu bir cüce hanımı" />
+    <string id="taom_str_faction_ruler.erebor" text="Dağın Altındaki Kral" />
+    <string id="taom_str_faction_ruler.erebor_f" text="Dağın Altındaki Kraliçe" />
+    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}Dağın Altındaki Kraliçe{?}Dağın Altındaki Kral{\?}, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Dağın Altındaki Kraliçe{?}Dağın Altındaki Kral{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.erebor" text="Ereborlu" />
+    <string id="taom_str_short_term_for_faction.erebor" text="Cüce" />
+    <string id="taom_str_faction_formal_name_for_culture.erebor" text="Dağın Altındaki Krallık" />
+    <string id="taom_str_faction_informal_name_for_culture.erebor" text="Erebor" />
+    <string id="taom_str_neutral_term_for_culture.erebor" text="Erebor Cüceleri" />
+    <string id="0aXG8dvJ" text="{KINGDOM_NAME} ile barış yap. Haraç ödenmeyecek." />
+    <string id="0CsbbwtN" text="{CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Karşı Savaşa Çağır" />
+    <string id="0nhqJewP" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {SETTLEMENT}'ı {LEADER.NAME}'e bağışlıyor." />
+    <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}'in hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {KINGDOM} ile barış yapmaya karar verdi." />
+    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} güçlü olabilir ama toprakları zengin ve ele geçirilmeye hazır." />
+    <string id="1o8vgwTf" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin muhalefetiyle rağmen {OTHER_KINGDOM} ile ticaret anlaşması imzalamaya karar verdi." />
+    <string id="1V8f9vRM" text="{PROPOSER_KINGDOM}'dan bir ittifak teklifi taşıyan bir ulak, krallığınızın sarayına ulaştı." />
+    <string id="21yUheIy" text="{KINGDOM_NAME}, {CREATION_YEAR} yılında yükselen bir {CULTURE_ADJECTIVE} savaş lordu olan {RULER.NAME} tarafından kuruldu." />
+    <string id="22LCyCoA" text="Krallığınıza {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan etmesi için {GOLD}{GOLD_ICON} teklif edebilirim." />
+    <string id="2b1xZGaQ" text="{KINGDOM_NAME} ile barış yap. Krallığımız {TRIBUTE_DURATION} gün boyunca günlük {TRIBUTE_AMOUNT} haraç ödeyecek." />
+    <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}'ın yağmalamaları birçok çiftçiyi evlerinden sürdü. Toprağı olanlar genellikle geri dönüyor ama yoksulların çoğu yaşayacak yeni bir yer arıyor. Köyünüzün dışında kamp kuranlardan birkaçıyla konuşuyorsunuz. Onlar için toprak yok. Kiracı olarak çalışmaya istekli görünüyorlar ancak köyün yerleşik aileleriyle gerginlik yaşanma ihtimali her zaman var." />
+    <string id="4fXpOe4N" text="{CLAN_NAME}'den bir ulak geliyor. {CAPTIVE_HERO.NAME}'i ellerinde tutuyorlar ve fidye olarak {GOLD_AMOUNT}{GOLD_ICON} talep ediyorlar." />
+    <string id="4GgfFDWG" text="{KINGDOM_NAME} ile barış yapılıyor" />
+    <string id="4JSzHkpt" text="{?IS_FEMALE}Kraliçe{?}Kral{\?} olarak, {KINGDOM_NAME}'e karşı savaş ilan edilip edilmeyeceğine karar vermelisiniz" />
+    <string id="4z1t75be" text="{CLAN_NAME}'den {FIRSTNAME}" />
+    <string id="5bBAOHmC" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyi eşit şekilde bölünmüşken {SETTLEMENT}'ı {?RULER.GENDER}kendi{?}kendi{\?} mülkü olarak alıyor." />
+    <string id="5bza9sDs" text="Bunu duyduğuma çok üzüldüm. {FACTION_NAME}'den daha iyi bir işveren bulamayacağınızdan emin olun." />
+    <string id="5DdbkWLu" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {OTHER_KINGDOM} ile ticaret anlaşması imzalamaya karar verdi." />
+    <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}'ın hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}onun{?}onun{\?} konseyi eşit şekilde bölünmüşken {KINGDOM} ile savaşa girmemeyi seçti." />
+    <string id="5pOKmHsf" text="{RULER.NAME}, {CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmaya karar verdi. Karar, {?RULER.GENDER}onun{?}onun{\?} konseyinin yarısının desteğini aldı." />
+    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} atalarımızın topraklarını işgal etti ve soydaşlarımıza zulmediyorlar." />
+    <string id="7ouzFASf" text="{OFFERED_KINGDOM_LEADER.NAME}'den bir mesaj taşıyan bir ulak geliyor. {?OFFERED_KINGDOM_LEADER.GENDER}O{?}O{\?}, artan itibarınızdan bahsediyor ve {OFFERED_KINGDOM_NAME}'in bir vassalı olarak kendinizi adayıp adamayacağınızı soruyor. İlgileniyorsanız bizzat konuşmalısınız." />
+    <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}'ın hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {KINGDOM} ile savaşa girmemeyi seçti." />
+    <string id="940TwBPs" text="{RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin itirazlarına rağmen {CLAN} klanını {KINGDOM}'dan kovmamayı seçti." />
+    <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}'ın hükümdarı {AGGRESSOR_RULER.NAME}, {KINGDOM} ile savaşa girmemeyi seçti." />
+    <string id="aE7OQDMS" text="{KINGDOM_NAME} ile ittifak kur." />
+    <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}'in hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}onun{?}onun{\?} konseyi bu konuda eşit şekilde bölünmüşken {KINGDOM} ile barış yapmaya karar verdi." />
+    <string id="AGdmoIUc" text="{RULER.NAME}, {CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmaya karar verdi. Karar, {?RULER.GENDER}onun{?}onun{\?} konseyinin tavsiyesine aykırı oldu." />
+    <string id="amdgO9Hr" text="Ben {CONVERSATION_HERO.FIRSTNAME}. {DIVINITY}'ın bu Çağ'da mesajlarını taşımak için seçtiği {FACTION_NAME} olarak bilinen kardeşliğin mütevazi bir takipçisiyim." />
+    <string id="aQAI99d4" text="{KINGDOM_NAME}'e Savaş İlan Ediliyor" />
+    <string id="AThZtg7U" text="{KINGDOM_CONSIDERING_PEACE}'in hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}onun{?}onun{\?} konseyi bu konuda eşit şekilde bölünmüşken {KINGDOM} ile barış yapmamaya karar verdi." />
+    <string id="AwCnrOan" text="{RULER_NAME_AND_TITLE} olarak, {CALLED_KINGDOM}'in {CALL_TO_WAR_COST}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağrılıp çağrılmayacağına karar vermelisiniz." />
+    <string id="AWm7Kb9Y" text="{RULER.NAME}, {CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmamaya karar verdi. Karar, {?RULER.GENDER}onun{?}onun{\?} konseyinin yarısının desteğini aldı." />
+    <string id="awoeb3br" text="{FACTION_LEADER}, {KINGDOM_CONSIDERING_PEACE_NAME}'in {KINGDOM_NAME} ile barış yapıp yapmayacağına karar verecek. Bu kararla ilgili tutumunuzu seçebilirsiniz." />
+    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK}, {ENEMYFACTION_INFORMALNAME} ile barış yaptı. {QUEST_GIVER.LINK} ile olan anlaşmanız iptal edildi." />
+    <string id="az3K3j4C" text="Şu anda {ENEMY_KINGDOM_INFORMAL_NAME}'den daha güçlüyüz. Yapabilecekken saldırmalıyız." />
+    <string id="B818zx3W" text="Klanınız, {KINGDOM}'ın barış içinde olduğu hiziplerle savaş halinde." />
+    <string id="bjEN2OzZ" text="Tarafsız bir köye karşı düşmanca niyetiniz sonucunda {KINGDOM} size savaş ilan ediyor." />
+    <string id="Bk3Wqy5j" text="{RULER.NAME}, {CALLING_KINGDOM}'in çağrısına yanıt vermemeye karar verdi ve {KINGDOM_TO_CALL_TO_WAR_AGAINST} ile savaşmayacak." />
+    <string id="BlVjIlZF" text="{FACTION_LEADER}, {KINGDOM_CONSIDERING_PEACE_NAME}'in {TRIBUTE_DURATION} gün boyunca {TRIBUTE_AMOUNT} haraç ödeyerek {KINGDOM_NAME} ile barış yapıp yapmayacağına karar verecek. Bu kararla ilgili tutumunuzu seçebilirsiniz." />
+    <string id="bMCZ5rWQ" text="{RULER.NAME}, {CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmamaya karar verdi. Karar, {?RULER.GENDER}onun{?}onun{\?} konseyinin desteğini aldı." />
+    <string id="bR7MIkFi" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
+    <string id="bXN2fbcv" text="Adamlarınız {SETTLEMENT_NAME} sakinlerine düşman değil de {SETTLEMENT_CULTURE_NAME}'nın yolunu şaşırmış tebaası gibi davranıyor ve onlara nispeten iyi davranıyor." />
+    <string id="bYmc9fi3" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin muhalefetine rağmen {KINGDOM_NAME} ile ittifak kurmaya karar verdi." />
+    <string id="Cf0amFBD" text="{CALLING_KINGDOM}'ın {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Karşı Savaş Çağrısını {CALL_TO_WAR_PAYMENT}{GOLD_ICON} Karşılığında Kabul Etme" />
+    <string id="cRpsjvOM" text="{AGGRESSOR_KINGDOM}'dan {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {KINGDOM}'a savaş ilan etti." />
+    <string id="CrzFdo2H" text="Evet. {ENEMYFACTION_INFORMALNAME} ile olan savaşla ilgili. [ib:hip][if:convo_excited]Onların bir kısım güçlerini bağlamamız gerekiyor. Topraklarında hızla hareket eden ve köylerini başarıyla yağmalayan nispeten küçük bir güç iyi bir oyalama olmalı. Lordları akıncıları kovalamak zorunda kalacak ve başka yerlerde bizi tehdit edemeyecekler. Bu iş için doğru {?PLAYER.GENDER}savaşçı{?}adam{\?} sen gibi görünüyorsun. Ne dersin? Minnettarlığımı kazanırsın ve başarırsan iyi bir şekilde ödüllendirileceksin." />
+    <string id="CswzBb02" text="{KINGDOM_CONSIDERING_PEACE}'dan {PEACEMAKER_RULER.NAME}, {KINGDOM} ile barış yapmaya karar verdi." />
+    <string id="d6KbdIWg" text="Tarafsız bir köye karşı düşmanca niyetiniz sonucunda, {MERCENARY_KINGDOM} sizinle olan sözleşmesini sonlandırdı ve {KINGDOM} size savaş ilan etti." />
+    <string id="dCDBqYsh" text="{KINGDOM}'dan {RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {OTHER_KINGDOM} ile ticaret anlaşması imzalamamayı seçti." />
+    <string id="dDsJyerw" text="{CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Karşı Savaşa Çağır." />
+    <string id="dEsIQDo3" text="Müttefikimiz {CALLED_KINGDOM}'ı savaşa çağırma zamanı!" />
+    <string id="dov3iRlt" text="{ENEMY_KINGDOM_INFORMAL_NAME}'dan {ENEMY_RULER.NAME} alçak ve tehlikeli. Çok geç olmadan {?ENEMY_RULER.GENDER}onunla{?}onunla{\?} ilgilenmemiz gerekiyor." />
+    <string id="DphlPaF9" text="{AGGRESSOR_KINGDOM}'dan {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}kendi{?}kendi{\?} konseyinin muhalefetine rağmen {KINGDOM}'a savaş ilan etti." />
+    <string id="dPOOmYGQ" text="{KINGDOM}'ın lordlarının ve savaşçılarının halkları kaçırıldığında öylece boş duracağını mı sanıyorsun? Bizi bıraksan iyi olur!" />
+    <string id="drZC1Frp" text="{KINGDOM_NAME}, {CREATION_YEAR} yılında bir grup {CULTURE_ADJECTIVE} isyancının lideri {RULER.NAME} tarafından kuruldu." />
+    <string id="eAhgrwkZ" text="{RULER_NAME_AND_TITLE} olarak, {KINGDOM_NAME} ile ittifak kurulup kurulmayacağına karar vermelisiniz." />
+    <string id="eEmFbQet" text="{RULER.NAME}, {CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmaya karar verdi. Karar {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğini aldı." />
+    <string id="efTah9rk" text="{ENEMY_INFORMAL_NAME} adına barış yapma yetkisine sahip değilim. Konseyimiz barış teklif edilip edilmeyeceğine ve şartların ne olacağına karar vermeli." />
+    <string id="eiGl6XBr" text="{CALLING_KINGDOM}'ın {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş çağrısına {CALL_TO_WAR_PAYMENT}{GOLD_ICON} karşılığında yanıt verilip verilmeyeceğine oy verin." />
+    <string id="EqevKYZD" text="{RULER_NAME_AND_TITLE} olarak, {CALLED_KINGDOM}'ın {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı {CALL_TO_WAR_COST}{GOLD_ICON} karşılığında savaşa çağrılıp çağrılmayacağına karar vermelisiniz." />
+    <string id="eTylgLCc" text="{KINGDOM_NAME}'dan bir ulak geldi. Size ittifak teklif ediyorlar. Krallığınız teklifi kabul edip etmeyeceğine oy verecek." />
+    <string id="eUWYqwE6" text="{CALLING_KINGDOM} artık {KINGDOM_TO_CALL_TO_WAR_AGAINST} ile savaş halinde değil." />
+    <string id="F7CMsDyG" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin muhalefetine rağmen {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
+    <string id="fcuUcjYV" text="{RULER.NAME}, {CALLING_KINGDOM}'ın çağrısına yanıt vermemeye ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş açmamaya karar verdi. Karar {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğini aldı." />
+    <string id="FNCq25P1" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {KINGDOM_NAME} ile ittifak kurmaya karar verdi." />
+    <string id="FuNbouTu" text="{KINGDOM_NAME}'dan bir ulak geldi. Krallığınızı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırıyorlar. Krallığınız teklifi kabul edip etmeyeceğine oy verecek." />
+    <string id="G3qGLAeQ" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin isteklerine karşın {CLAN} klanını {KINGDOM}'dan kovdu." />
+    <string id="gf2Lje7o" text="{RULER.NAME}, {CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmamaya karar verdi." />
+    <string id="GiaTh92Q" text="{QUEST_GIVER_FACTION} ordusuna komuta eden {QUEST_GIVER.LINK}, yaklaşan askeri seferleri için gıda malzemelerine ihtiyaçları olduğunu söyledi. {?QUEST_GIVER.GENDER}Kendisi{?}Kendisi{\?} {GRAIN_AMOUNT} çuval tahıl teslim etmenizi istedi ve zorunlu olmasa da {LIVESTOCK_AMOUNT} canlı hayvan ve {WINE_AMOUNT} fıçı şarap sağlarsanız {?QUEST_GIVER.GENDER}minnettar{?}minnettar{\?} olacak." />
+    <string id="Gj5d9y2g" text="{KINGDOM}'dan {RULER.NAME}, {OTHER_KINGDOM} ile ticaret anlaşması imzalamaya karar verdi." />
+    <string id="gNf0ALKw" text="{MAP_FACTION_NAME}'dan bir ulak geldi. Size beyaz barış teklif ediyorlar. Krallığınız teklifi kabul edip etmeyeceğine oy verecek." />
+    <string id="h5eTEYON" text="{RULER.NAME}, {CLAN} klanını {KINGDOM}'dan kovdu." />
+    <string id="h9bWTLgK" text="Müttefiklerimiz {KINGDOM_NAME}'a savaşlarında katılma zamanı." />
+    <string id="IB1xsVEr" text="{MAP_FACTION_NAME}'dan bir ulak geldi. Size beyaz barış teklif ediyorlar. Vasallarınız kararı size bıraktı." />
+    <string id="INfHUqxT" text="{RULER.NAME}, {KINGDOM_NAME} ile ittifak kurmaya karar verdi." />
+    <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}'dan {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}kendi{?}kendi{\?} konseyinin itirazlarına rağmen {KINGDOM} ile barış yapmamayı seçti." />
+    <string id="iOmgCFDI" text="{KINGDOM_NAME} ile ittifak kurmak için oy verin." />
+    <string id="ItueKmqd" text="Klanınız artık {QUEST_GIVER_SETTLEMENT_FACTION} ile savaş halinde. {QUEST_GIVER.LINK} ile sözleşmeniz iptal edildi." />
+    <string id="izwKmH2I" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin yarısının desteğiyle {KINGDOM_NAME} ile ittifak kurmaya karar verdi." />
+    <string id="jaioXYDc" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin yarısının desteğiyle {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
+    <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE} hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} muhalefetine rağmen {KINGDOM} ile barış yapmaya karar verdi." />
+    <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}'den bir ulak geldi. {MAP_FACTION_NAME}, diyarlarınız arasındaki savaşı sona erdirmek için her gün {GOLD_AMOUNT} {GOLD_ICON} haraç ödeyecek. Vassallarınız kararı size bıraktı." />
+    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} şu anda bizden daha güçlü. Gücümüzü artırmak için zamana ihtiyacımız var." />
+    <string id="JQligd8z" text="{KINGDOM} meclisi {KING.NAME}'i yeni hükümdar olarak seçti." />
+    <string id="JY717hPW" text="{ENEMY_INFORMAL_NAME} adına barış yapma yetkisine sahip değilim. {ENEMY_RULER.NAME} ve {?ENEMY_RULER.GENDER}meclisi{?}meclisi{\?} barış teklif edilip edilmeyeceğine ve şartların ne olacağına karar vermelidir." />
+    <string id="K5w135N9" text="{RULER.NAME}, {CALLING_KINGDOM} çağrısına cevap vermemeye ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşmamaya karar verdi. Karar, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} tavsiyesine karşı alındı." />
+    <string id="KFHj7ckm" text="Hükümdar olarak, {KINGDOM_NAME} ile barış yapılıp yapılmayacağına karar vermelisiniz" />
+    <string id="KlATZEbb" text="{KINGDOM_NAME} ile İttifak Kurma." />
+    <string id="KSrNutEO" text="{FACTION_LEADER}, {KINGDOM_NAME}'e karşı savaş ilan edilip edilmeyeceğine karar verecek. Bu karara ilişkin tutumunuzu seçebilirsiniz." />
+    <string id="Ktpia7Pa" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} muhalefetine rağmen {SETTLEMENT}'ı {LEADER.NAME}'e bahşetti." />
+    <string id="l5H9x7Lo" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}konseyi{?}konseyi{\?} eşit bölünmüşken {SETTLEMENT}'ı {LEADER.NAME}'e bahşetti." />
+    <string id="L802I9W2" text="Evet, {FACTION_NAME}'e katılacağım." />
+    <string id="L81DPSom" text="{RULER_NAME_AND_TITLE} olarak, diyarınızın {CALLING_KINGDOM} çağrısına cevap verip {CALL_TO_WAR_COST}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan edip etmeyeceğine karar vermelisiniz." />
+    <string id="Lalj0T1i" text="{RULER.NAME}, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} muhalefetine rağmen {CALLING_KINGDOM} çağrısına cevap verdi ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan etti." />
+    <string id="lseJ70y0" text="Diyarınız {KINGDOM_NAME} ile savaş halindedir." />
+    <string id="LVX2x6Jf" text="{SERVED_FACTION} ile olan sözleşmemi sonlandırmak istiyorum." />
+    <string id="m69pvful" text="{KINGDOM_LEADER}, diyarınızın {CALLING_KINGDOM} çağrısına cevap verip {CALL_TO_WAR_PAYMENT}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan edip etmeyeceğine karar verecek. Bu karara ilişkin tutumunuzu seçebilirsiniz." />
+    <string id="m6OVl6Dg" text="{RULER.NAME}, {?RULER.GENDER}konseyi{?}konseyi{\?} mesele konusunda eşit bölünmüşken {CLAN} klanını {KINGDOM}'dan kovdu." />
+    <string id="mfYzCeGR" text="{CHARACTER.NAME}, {CHARACTER_FACTION_SHORT}'un {TITLE}'iydi. {FURTHER_DETAILS}." />
+    <string id="mRrYn2qm" text="{KINGDOM_CONSIDERING_PEACE} hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} desteğiyle {KINGDOM} ile barış yapmamayı seçti." />
+    <string id="MSr3HRa1" text="{CLAN}'dan bir {?QUEST_GIVER.GENDER}leydi{?}lord{\?} olan {QUEST_GIVER.NAME}, klanın genç bir üyesinin savaş sanatlarında eğitilmesini istiyor." />
+    <string id="mvkKP6OE" text="{RULER.NAME}, {CLAN} klanını {KINGDOM}'dan kovmamayı seçti." />
+    <string id="MYIgSsfk" text="{RULER.NAME}, {CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmamaya karar verdi. Karar, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} tavsiyesine aykırıydı." />
+    <string id="n4I3pWOn" text="Hükümdar olarak, {TRIBUTE_DURATION} gün boyunca {TRIBUTE_AMOUNT} haraç ödeyerek {KINGDOM_NAME} ile barış yapılıp yapılmayacağına karar vermelisiniz." />
+    <string id="Nd0Vhkxn" text="{MAP_FACTION_NAME}'den bir ulak geldi. Günlük {GOLD_AMOUNT} {GOLD_ICON} haraç ödemeyi kabul ederseniz size barış teklif ediyorlar. Vassallarınız kararı size bıraktı." />
+    <string id="NFuezpbG" text="{CALLED_KINGDOM} zaten {KINGDOM_NAME} ile savaş halinde." />
+    <string id="NjPMRWbW" text="{KINGDOM_NAME} ile barış yap. Krallığımız {TRIBUTE_DURATION} gün boyunca günlük {TRIBUTE_AMOUNT} haraç alacak." />
+    <string id="nkvT88r2" text="{CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmak için yeterli paranız yok." />
+    <string id="NuYzgBZB" text="Çok ileri gidiyorsun. {KINGDOM}, kervanlarının yok edilmesine göz yummayacak." />
+    <string id="o4IxXHnB" text="{RULER.NAME}, {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
+    <string id="o69PZuce" text="{OLD_LEADER.LINK} artık {CLAN_NAME}'in başı değil. {NEW_LEADER.LINK} klanın hükümdarı olarak devraldı." />
+    <string id="O9XpB5Ah" text="Hükümdar olarak, {KINGDOM} ile bir ticaret anlaşması yapılıp yapılmayacağına karar vermelisiniz" />
+    <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE} olarak, diyarınızın {CALLING_KINGDOM} çağrısına cevap verip {CALL_TO_WAR_PAYMENT}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan edip etmeyeceğine karar vermelisiniz." />
+    <string id="Oe1NdVLe" text="{RULER.NAME}, {?RULER.GENDER}konseyi{?}konseyi{\?} mesele konusunda eşit bölünmüşken {CLAN} klanını {KINGDOM}'dan kovmamayı seçti." />
+    <string id="Oi20UrO2" text="{TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} ile savaşımız yeterince iyi gidiyor. Ama harcadığımız tüm kan ve gümüş karşılığında yeterince bir şey elde edemediğimizi söyleyenler var. Bu aşamada net bir zafer çok iyi olurdu. {TARGET_SETTLEMENT} kulelerinden sancağımızın dalgalanmasını görmek isterim.[ib:normal2][if:convo_thinking]" />
+    <string id="OlIWwLbP" text="Evet. {ENEMYFACTION_INFORMALNAME} ile olan savaş hakkında. [ib:closed][if:convo_pondering]Güçlerinin bir kısmını meşgul etmemiz gerekiyor ve bunu yapmanın en kolay yolu köylerini basmak olurdu. Acımasız bir iş ve halk için zor olacak ama lordları akıncıları kovalamak zorunda kalacak ve bu onların bize aynısını yapmalarını engelleyecek. Bunu üstlenirsen, başarılı olursan seni ödüllendireceğim." />
+    <string id="Ouj6eSWC" text="{RULER.NAME}, {CALLING_KINGDOM} çağrısına cevap vermemeye ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşmamaya karar verdi. Karar, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} yarısının desteğine sahipti." />
+    <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı {KINGDOM_NAME}'den bir savaş çağrısı teklifi taşıyan bir ulak, diyarınızın sarayına geldi." />
+    <string id="PP7KD7OC" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}konseyi{?}konseyi{\?} mesele konusunda eşit bölünmüşken {OTHER_KINGDOM} ile bir ticaret anlaşması imzalamaya karar verdi." />
+    <string id="PutoRsWp" text="{CLAN_NAME}'den bir ulak geldi. {CAPTIVE_HERO.NAME}'i serbest bırakırsanız size fidye olarak {GOLD_AMOUNT}{GOLD_ICON} teklif ediyorlar." />
+    <string id="q9DnHVcZ" text="{KINGDOM_NAME} ile savaşlarına katılmak çıkarlarımıza uygun değil." />
+    <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
+    <string id="qgN9o2ip" text="Müttefikimiz {KINGDOM_NAME}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırma zamanı geldi! Krallığınız onlara savaş çağrısı anlaşması teklif edilip edilmeyeceğini oylayacak." />
+    <string id="qN3x2usk" text="{CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı {CALL_TO_WAR_COST}{GOLD_ICON} karşılığında savaşa çağırıp çağırmama konusunu oylayın." />
+    <string id="R0bJS0pn" text="{OTHER_FACTION} ile barış yap" />
+    <string id="r0Kq0aeB" text="{FACTION_LEADER}, {CALLED_KINGDOM}'ın {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı {CALL_TO_WAR_COST}{GOLD_ICON} karşılığında savaşa çağrılıp çağrılmayacağına karar verecek. Bu karar hakkında tavrınızı seçebilirsiniz." />
+    <string id="rd229FYG" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {CLAN} klanını {KINGDOM}'dan kovdu." />
+    <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM} hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}kendi{?}kendi{\?} konseyinin yarısının desteğiyle {KINGDOM}'a savaş ilan etti." />
+    <string id="rJIuQ0hc" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin itirazlarına rağmen {OTHER_KINGDOM} ile ticaret anlaşması imzalamamayı seçti." />
+    <string id="rtfoywJl" text="{KINGDOM_NAME}'a savaş ilan et" />
+    <string id="sbFboHmV" text="{MAP_FACTION_NAME}'dan bir ulak geldi. Günlük {GOLD_AMOUNT} {GOLD_ICON} haraç ödemeyi kabul ederseniz size barış teklif ediyorlar. Krallığınız teklifi kabul edip etmemeyi oylayacak." />
+    <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM} hükümdarı {AGGRESSOR_RULER.NAME}, {KINGDOM}'a savaş ilan etti." />
+    <string id="SR9FC5jH" text="{MAP_FACTION_NAME}'dan barış teklifi getiren bir ulak geldi. {MAP_FACTION_NAME}, diyarlarınız arasındaki savaşı bitirmek için her gün {GOLD_AMOUNT} {GOLD_ICON} haraç ödeyecek. Krallığınız teklifi kabul edip etmemeyi oylayacak." />
+    <string id="syGyjjKE" text="{CALLING_KINGDOM}'ın çağrısını yanıtla ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş ilan et." />
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} is offering you work as a mercenary, paying {GOLD_AMOUNT}{GOLD_ICON} per influence point that you would gain from fighting on their behalf. Do you accept?" />
+    <string id="uc4M4bhG" text="Şey, istediğim bir şey var. {TARGET_FACTION}'dan uzun, çok uzun bir geçmişim olan bir {?TARGET_HERO.GENDER}hanımefendi{?}lord{\?} var. Ve dostane bir geçmiş değil. Şimdi savaştayken, {?TARGET_HERO.GENDER}o{?}o{\?} özgür olduğu sürece hayatımın ve topraklarımın güvende olmadığını biliyorum. Dediğim gibi, hiç kolay olmayacak. Ama bunu başaran, {?TARGET_HERO.GENDER}onu{?}onu{\?} bana canlı getiren kişi, minnettarlığımı bir kenara bırakırsak, gerçekten çok zengin bir adam olacak.[if:convo_grave][ib:closed2]" />
+    <string id="uiY3ds0Z" text="{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="UQq4ekeu" text="{KINGDOM} hükümdarı {RULER.NAME}, {OTHER_KINGDOM} ile ticaret anlaşması imzalamamayı seçti." />
+    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}, {CALLED_KINGDOM_LINK}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}'e karşı savaş ilan etmeye çağırdı." />
+    <string id="uWdj1X2c" text="{CHARACTER.NAME}, {CHARACTER_FACTION_SHORT}'ın bir üyesiydi. {FURTHER_DETAILS}." />
+    <string id="V097rA1v" text="{LORD.FIRSTNAME}, yükselen yeni bir klan olan {CLAN_NAME}'in başıdır. {?LORD.GENDER}O{?}O{\?} hâlâ {?LORD.GENDER}kendi{?}kendi{\?} itibarını kazanıyor." />
+    <string id="vf2pb7Ts" text="{RULER.NAME}, {CALLING_KINGDOM}'ın çağrısını yanıtladı ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş ilan etti." />
+    <string id="Vg5RmOqL" text="{FACTION_LEADER}, {KINGDOM}'ın {OTHER_KINGDOM} ile ticaret anlaşması imzalayıp imzalamayacağına karar verecek. Bu karar hakkında tavrınızı seçebilirsiniz." />
+    <string id="VWoHoUin" text="Kurtla koyun arasında barış olamayacağı gibi, bizimle {ENEMY_INFORMAL_NAME} arasında da barış olmayacak." />
+    <string id="wijL0mTy" text="{FACTION_LEADER}, {KINGDOM_NAME} ile ittifak kurulup kurulmayacağına karar verecek. Bu karar hakkında tavrınızı seçebilirsiniz." />
+    <string id="wsDNxArW" text="{KINGDOM_CONSIDERING_PEACE} hükümdarı {PEACEMAKER_RULER.NAME}, {KINGDOM} ile barış yapmamayı seçti." />
+    <string id="xAuejv91" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyi bu konuda eşit bölündüğü için {OTHER_KINGDOM} ile barış yapmamaya karar verdi." />
+    <string id="XaZyU3Cn" text="{AGGRESSOR_KINGDOM} hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}kendi{?}kendi{\?} konseyinin isteklerine rağmen {KINGDOM} ile savaşmamayı seçti." />
+    <string id="XbYCVCbR" text="Müttefikimiz {CALLED_KINGDOM}'ı savaşa çağırmaya karşıyız." />
+    <string id="xhK4zMec" text="{RULER.NAME}, {CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmaya karar verdi." />
+    <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}'ın {CALLED_KINGDOM_LINK}'a {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}'e karşı savaşa girmesi için yaptığı çağrı sona erdi." />
+    <string id="xM97H0oR" text="{KINGDOM_NAME}'a savaş ilan etmeyi oylayın." />
+    <string id="yBL3TzXw" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {CLAN} klanını {KINGDOM}'dan kovmamayı seçti." />
+    <string id="yUYNlQhU" text="Güzel, adamlarıma basit bir sözleşme yazdıracağım. {KINGDOM_FORMAL_NAME} adına seni hoş karşılıyorum. Umarım kılıcını düşmanlarımıza karşı iyi kullanırsın." />
+    <string id="Zckbdm4Z" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {SETTLEMENT}'i {?RULER.GENDER}kendi{?}kendi{\?} tımarı olarak aldı." />
+    <string id="zd9sawl9" text="{KINGDOM_NAME} ile zaten müttefiksiniz." />
+    <string id="zXuo0Wbj" text="{KINGDOM} ile ticaret anlaşması imzalama" />
+    <string id="ZZ1oLfEq" text="{RULER.NAME}, {CALLING_KINGDOM}'ın çağrısını yanıtladı ve {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş ilan etti." />
+    <string id="taom_shaghana_name" text="Shaghâna" />
+    <string id="taom_shaghana_short_name" text="Shaghâna" />
+    <string id="taom_shaghana_title" text="Taskralan of Shaghâna" />
+    <string id="taom_shaghana_ruler_title" text="Taskral" />
+    <string id="taom_shaghana_desc" text="Shaghâna is the eastern reach of Harad, a land of sun-scorched steppes and ancient fortresses. Its nine tribal clans are fierce warriors, bound together by oath and blood, striking fear into those who dare oppose them." />
+    <string id="aom_shaghana_name" text="Shaghâna" />
+    <string id="aom_shaghana_desc" text="The Shaghâna are a fierce tribal people of the eastern Harad steppes, renowned as relentless raiders and skilled horsemen. Bound by oath and clan, they answer to their Taskral and serve the dark designs of Sauron from their sun-scorched fortresses." />
+    <string id="aom_lord_SH1_1_name" text="Zarkan" />
+    <string id="aom_lord_SH2_1_name" text="Rakhim" />
+    <string id="aom_lord_SH3_1_name" text="Tadeen" />
+    <string id="aom_lord_SH4_1_name" text="Nakhel" />
+    <string id="aom_lord_SH5_1_name" text="Yazur" />
+    <string id="aom_lord_SH6_1_name" text="Kazan" />
+    <string id="aom_lord_SH7_1_name" text="Haluz" />
+    <string id="aom_lord_SH8_1_name" text="Farun" />
+    <string id="aom_lord_SH9_1_name" text="Saluz" />
+    <string id="aom_clan_shaghana_1_name" text="Ezarkia" />
+    <string id="aom_clan_shaghana_2_name" text="Kûmaraknis" />
+    <string id="aom_clan_shaghana_3_name" text="Taiymâkä" />
+    <string id="aom_clan_shaghana_4_name" text="Zayaknûri" />
+    <string id="aom_clan_shaghana_5_name" text="Selarkes" />
+    <string id="aom_clan_shaghana_6_name" text="Uzharês" />
+    <string id="aom_clan_shaghana_7_name" text="Alâranin" />
+    <string id="aom_clan_shaghana_8_name" text="Banûgand" />
+    <string id="aom_clan_shaghana_9_name" text="Acammes" />
+    <string id="aom_sh_notable_0" text="Shrewd Shaghâna trader" />
+    <string id="aom_sh_notable_0b" text="Shaghâna spice dealer" />
+    <string id="aom_sh_notable_1" text="Shaghâna caravan owner" />
+    <string id="aom_sh_notable_1b" text="Eastern steppes merchant" />
+    <string id="aom_sh_notable_2" text="Shaghâna silk trader" />
+    <string id="aom_sh_notable_2b" text="Harad steppe trader" />
+    <string id="aom_sh_notable_3" text="Shaghâna money-changer" />
+    <string id="aom_sh_notable_3b" text="Eastern goods broker" />
+    <string id="aom_sh_notable_4" text="Shaghâna bazaar master" />
+    <string id="aom_sh_notable_4b" text="Devious Shaghâna merchant" />
+    <string id="aom_sh_notable_5" text="Shaghâna sun-priest" />
+    <string id="aom_sh_notable_6" text="Shaghâna tribal elder" />
+    <string id="aom_sh_notable_7" text="Keeper of Shaghâna traditions" />
+    <string id="aom_sh_notable_8" text="Shaghâna metalworker" />
+    <string id="aom_sh_notable_9" text="Shaghâna weapon-crafter" />
+    <string id="aom_sh_notable_gl1" text="Shaghâna enforcer" />
+    <string id="aom_sh_notable_10" text="Shaghâna crime lord" />
+    <string id="aom_sh_notable_11" text="Shaghâna akıncıları patronu" />
+    <string id="aom_sh_notable_gl4" text="Shaghâna çete reisi" />
+    <string id="aom_sh_notable_12" text="Shaghâna sokak patronu" />
+    <string id="aom_sh_notable_13" text="Shaghâna karaborsa tüccarı" />
+    <string id="aom_sh_notable_21" text="Shaghâna toprak sahibi" />
+    <string id="aom_sh_notable_22" text="Shaghâna sürü ustası" />
+    <string id="aom_sh_headman_1" text="Shaghâna köy muhtarı" />
+    <string id="aom_sh_headman_2" text="Shaghâna yaşlı muhtar" />
+    <string id="aom_sh_headman_3" text="Shaghâna köy yaşlısı" />
+    <string id="taom_abanissa_name" text="Âbanissa" />
+    <string id="taom_abanissa_short_name" text="Âbanissa" />
+    <string id="taom_abanissa_title" text="Âbanissa Châjaphân'ı" />
+    <string id="taom_abanissa_ruler_title" text="Châjaphân" />
+    <string id="taom_abanissa_desc" text="Âbanissa, Harad'ın derin güneyinde, nemli ormanlar ve kadim taş hanedanlarının diyarında yer alır. Âbanissa'nın büyük Haneleri, korku salan savaş canavarlarına ve disiplinli savaşçı ordularına kumanda eder; güçleri sadece Sauron'un kendisine karşı sorumludur." />
+    <string id="aom_abanissa_name" text="Âbanissa" />
+    <string id="aom_abanissa_desc" text="Âbanissa'nın büyük Haneleri, Harad'ın derin güneyine, nemli ormanlar, kadim taş saraylar ve yükselen savaş canavarlarının diyarına hükmediyorlar. Orduları hanedan sancakları altında yürüyor ve güney topraklarında saygı ve dehşet yayıyorlar." />
+    <string id="aom_lord_AB1_1_name" text="Phaxar" />
+    <string id="aom_lord_AB2_1_name" text="Hoshed" />
+    <string id="aom_lord_AB3_1_name" text="Vasnar" />
+    <string id="aom_lord_AB4_1_name" text="Goraze" />
+    <string id="aom_lord_AB5_1_name" text="Azadan" />
+    <string id="aom_lord_AB6_1_name" text="Artash" />
+    <string id="aom_lord_AB7_1_name" text="Ardach" />
+    <string id="aom_lord_AB8_1_name" text="Tirdah" />
+    <string id="aom_clan_abanissa_1_name" text="Phaxsharân Hanesi" />
+    <string id="aom_clan_abanissa_2_name" text="Hoshêdharma Hanesi" />
+    <string id="aom_clan_abanissa_3_name" text="Vasnârad Hanesi" />
+    <string id="aom_clan_abanissa_4_name" text="Gorazehan Hanesi" />
+    <string id="aom_clan_abanissa_5_name" text="Azadafrozan Hanesi" />
+    <string id="aom_clan_abanissa_6_name" text="Artaxshâsan Hanesi" />
+    <string id="aom_clan_abanissa_7_name" text="Ardâcheran Hanesi" />
+    <string id="aom_clan_abanissa_8_name" text="Tîrdahanâ Hanesi" />
+    <string id="aom_ab_notable_0" text="Uzak Harad hanedanlık simsarı" />
+    <string id="aom_ab_notable_0b" text="Âbanissa fildişi tüccarı" />
+    <string id="aom_ab_notable_1" text="Âbanissa kervan lordu" />
+    <string id="aom_ab_notable_1b" text="Uzak Harad baharat tüccarı" />
+    <string id="aom_ab_notable_2" text="Âbanissa altın tüccarı" />
+    <string id="aom_ab_notable_2b" text="Hane kâhyası-tüccar" />
+    <string id="aom_ab_notable_3" text="Âbanissa mücevher kesici simsarı" />
+    <string id="aom_ab_notable_3b" text="Uzak Harad ipek tüccarı" />
+    <string id="aom_ab_notable_4" text="Âbanissa pazar gözetmeni" />
+    <string id="aom_ab_notable_4b" text="Kurnaz Âbanissa faktörü" />
+    <string id="aom_ab_notable_5" text="Âbanissa baş rahibi" />
+    <string id="aom_ab_notable_6" text="Âbanissa tapınak bekçisi" />
+    <string id="aom_ab_notable_7" text="Uzak Harad ayin ustası" />
+    <string id="aom_ab_notable_8" text="Âbanissa usta zanaatkârı" />
+    <string id="aom_ab_notable_9" text="Uzak Harad zırhçısı" />
+    <string id="aom_ab_notable_gl1" text="Âbanissa ev kabadayısı" />
+    <string id="aom_ab_notable_10" text="Âbanissa gölge lordu" />
+    <string id="aom_ab_notable_11" text="Uzak Harad savaş çetesi lideri" />
+    <string id="aom_ab_notable_gl4" text="Âbanissa çete patriği" />
+    <string id="aom_ab_notable_12" text="Âbanissa bölge patronu" />
+    <string id="aom_ab_notable_13" text="Uzak Harad kaçakçılık kralı" />
+    <string id="aom_ab_notable_21" text="Âbanissa mülk lordu" />
+    <string id="aom_ab_notable_22" text="Âbanissa plantasyon efendisi" />
+    <string id="aom_ab_headman_1" text="Âbanissa köy muhtarı" />
+    <string id="aom_ab_headman_2" text="Âbanissa yaşlı muhtar" />
+    <string id="aom_ab_headman_3" text="Âbanissa köy yaşlısı" />
+    <string id="TAOM_ghilman_name" text="Yılan Muhafızları" />
+    <string id="TAOM_ghilman_short" text="Yılan Muhafızları" />
+    <string id="TAOM_ghilman_text" text="Yılan Muhafızları, Yakın Harad'ın Yılan Lordu'nun hizmetindeki atlı askerlerdir. Ephel Dúath'ın güneyindeki engebeli ovalarda eyerde yetişen bu savaşçılar, Orta Dünya'nın güney topraklarında ok atıcı süvariler olarak eşsizdir. Harad ve Mordor arasında barış zamanlarında Muhafızlar hizmetlerini Haradrimli lordlara ve altın ücretlerini ödeyebilecek zenginlikte olan diğer güçlere kiralayabilir." />
+    <string id="TAOM_legion_name" text="Gri Takım" />
+    <string id="TAOM_legion_short" text="Gri Takım" />
+    <string id="TAOM_legion_text" text="Gri Takım, çağlar önce krallıklarını kaybetmiş Arnor krallarının soyundan gelen Dúnedain Korucularının son örgütlü kardeşliğidir. Kendi yurtları olmadan Kuzey'de at sürerler, isimlerini unutmuş topraklarda barışı korurlar. İlk sadakatleri Elendil soyuna olsa da, gezginlikleri onları medeni topraklara getirdiğinde Orta Dünya'nın dört bir yanındaki lordlardan sözleşmeler alırlar." />
+    <string id="TAOM_skolderbrotva_name" text="Erebor Baltacıları" />
+    <string id="TAOM_skolderbrotva_short" text="Baltacılar" />
+    <string id="TAOM_skolderbrotva_text" text="Erebor Baltacıları, barış zamanının mizaçlarına uymadığını keşfeden Kral Thorin'in savaşlarının gazileridir. Cüce salonlarının yakın çarpışma tekniklerinde eğitilmiş olan bu savaşçılar — kalkan duvarı, kısa balta, kazma — her arazide müthiştirler ama Erebor'u insanların krallıklarına bağlayan dağ geçitlerinde parlarlar. Ücretlerini ödeyebilecek herkesten sözleşme alırlar, ancak Erebor veya Rivendell'e karşı balta kaldırmazlar." />
+    <string id="TAOM_company_name" text="Korsan Kılıçları" />
+    <string id="TAOM_company_short" text="Korsanlar" />
+    <string id="TAOM_company_text" text="Korsan Kılıçları, Umbar limanlarından gelen ve becerilerini karada satmaya başlayan gazi deniz savaşçılarıdır. Gemi savaşının tercih edilen silahı olan tatar olarak savaşırlar ve bir kuşatmada dalgalanan bir güverte üzerindeki kadar rahattırlar. Yüzü yara izli Númenórlı sürgün kaptanları, itibarlarının en değerli yükleri olduğunu bilerek onları demir bir disiplinle sözleşmelerine bağlı tutar." />
+    <string id="TAOM_beni_zilal_name" text="Kör Göz" />
+    <string id="TAOM_beni_zilal_short" text="Kör Göz" />
+    <string id="TAOM_beni_zilal_text" text="Kör Göz, Harad kıyıları ve derin çöl boyunca faaliyet gösteren kaçakçılardan, malı götürenlerden ve kiralık katillerden oluşan bir kardeşliktir. Unutulmuş bir Haradrimli krala hizmet eden bir suikastçı tarikatından geldikleri söylenir ve yöntemleri — zehir, gölge ve sırları kullanma — değişmeden kalmıştır. Bir rakibini sessizce ortadan kaldırmak isteyen lordlar veya gümrük denetimi olmadan yük taşınması gereken tüccarlar, bir altın sikke ve mühürlü bir mektubun nereye bırakılacağını bilir." />
+    <string id="TAOM_wolfskins_name" text="Variag Yağmacıları" />
+    <string id="TAOM_wolfskins_short" text="Yağmacılar" />
+    <string id="TAOM_wolfskins_text" text="Variag Yağmacıları, Khand bozkırlarından gelen genç Variag savaşçılarının ritüel savaş halinde erken yetişkinliklerini geçiren savaş çeteleridir: pişmiş yiyecek sahibi olamazlar, kalıcı çatı altında uyuyamazlar ve merhamet gösteremezler. Çoğu sonunda klanlarının yerleşik yaşamına geri dönse de, bazıları hiç dönmez ve bunlar Yağmacıları oluşturur — Khand yollarını yağmalayan ve sınırlarını aşarak Harad ve Gondor'a baskınlar düzenleyen kanun kaçakları." />
+    <string id="TAOM_brotherhood_name" text="Dunlending Akıncıları" />
+    <string id="TAOM_brotherhood_short" text="Akıncılar" />
+    <string id="TAOM_brotherhood_text" text="Dunlending Akıncıları, bir zamanlar şimdi Rohirrim'in yönettiği vadilerde yaşayan bir tepe klanının kırık kalıntısıdır. Büyükbabaları verimli topraklardan kayalık yüksekliklere sürüldü ve onlar bu acıyı bir akıncı felsefesine dönüştürdü: bir güneyden veya kralın adamından alınan her şey yalnızca çalınanın iadesiydi. Pratikte eşkıyadırlar, ama tepelerdeki her keçi yolunu bilen tehlikeli eşkıyalardır." />
+    <string id="TAOM_hidden_hand_name" text="Ağız'ın Hizmetkârları" />
+    <string id="TAOM_hidden_hand_short" text="Hizmetkârlar" />
+    <string id="TAOM_hidden_hand_text" text="Ağız'ın Hizmetkârları, Kara Kapı'nın ötesinde faaliyet gösteren Barad-dûr'un Gözleridir — Mordor'a komşu halklar arasına sızmış muhbirler, tetikçiler ve casuslar. Sauron'un orduları henüz ulaşamadığı yerlerde, bu ajanlar haraç toplar ve muhalefeti susturur. Rüşvet, şantaj ve sessiz cinayetlerle çalışırlar, Karanlık Efendi'ye karşı hiçbir komployu kök salmadan söküp yok etmek için." />
+    <string id="TAOM_lakepike_name" text="Uzun Göl'ün Yağmacıları" />
+    <string id="TAOM_lakepike_short" text="Yağmacılar" />
+    <string id="TAOM_lakepike_text" text="Uzun Göl'ün Yağmacıları, Esgaroth'un saygın ışıklarından uzakta, Uzun Göl'ün gölgeli kıyılarındaki kamışlıklarda ve çürümüş eski iskelelerde yaşarlar. Geçimlerini sahte fenerlerle mavnaları gizli sığlıklara çekerek, ardından yükü soyup kasabanın içindeki aracılar vasıtasıyla satarak sağlarlar. Göl-kasabası Efendisi ve Dale tüccarlarının çabalarına rağmen, Yağmacıların rıhtım tavernalarında o kadar çok dostu vardır ki kolayca kovulamazlar." />
+    <string id="TAOM_embers_name" text="Göz Kapaksız Tarikatı" />
+    <string id="TAOM_embers_short" text="Göz Tarikatı" />
+    <string id="TAOM_embers_text" text="Göz Kapaksız Tarikatı, Kara Númenor geleneğine dayanan gizli bir topluluktur ve Sauron'u yeniden yükseldiğinde sadık kullarını ihtişama kavuşturacak bir tanrı-kral olarak tapar. Dunland'ın mülksüzleri ve diyarın unutulmuş köşeleri arasında üye toplarlar, ilahi lütuf ve dünyevi güç vaat ederler. Gerçekte liderleri Barad-dûr'un ajanlarına hesap verir ve hücre tabanlı yapıları onları herhangi bir lordun adaleti için neredeyse yok edilemez kılar." />
+    <string id="TAOM_jawwal_name" text="Kum-Binicileri" />
+    <string id="TAOM_jawwal_short" text="Kum-Binicileri" />
+    <string id="TAOM_jawwal_text" text="Kum-Binicileri, derin Harad içlerinin göçebe çöl klanlarıdır, Ephel Dúath ile uzak güney denizi arasındaki susuz çöllerin efendileridir. Sadece kendilerinin bildiği yollar boyunca dolaşırlar, topraklarından geçmeye cüret eden her kervan kuşağından haraç alırlar. Yakın Harad'ın yerleşik lordları onları baş belası olarak görür; Kum-Binicileri ise yerleşik lordları çölün zaten özgürce verdiğini çalan hırsızlar sayar." />
+    <string id="TAOM_karakhuzaits_name" text="Vahşi Doğulular" />
+    <string id="TAOM_karakhuzaits_short" text="Vahşiler" />
+    <string id="TAOM_karakhuzaits_text" text="Vahşi Doğulular, Rhûn Denizi'nin fethedilmemiş bozkır klanlarıdır, onları dizginlemeye çalışan her lordun otoritesine — Rhûn reisi, Mordor teğmeni ve Dale Kralı fark etmez — karşı durmuşlardır. Celduin'in doğusundaki otlaklarda dolaşırlar, at toplar, sürüleri yağmalar ve silahlı bir koruma olmadan bozkırlarını geçmeye cüret eden her kervan kuşağından yol haracı alırlar." />
+    <string id="TAOM_forest_people_name" text="Drúedain" />
+    <string id="TAOM_forest_people_short" text="Woseler" />
+    <string id="TAOM_forest_people_text" text="İnsanlarca Wose veya Ormanların Vahşi İnsanları olarak bilinen Drúedain, Drúadan'ın derin ormanlarında ve Beyaz Dağlar'ın gizli vadilerinde yaşayan kadim bir halktır. Ateşle toprak temizler, kül açısından zengin toprakta ihtiyaçlarını yetiştirirler ve toprak tükendiğinde göç ederler — Orta Dünya'nın yerleşik halkalarının asla anlamadığı ve anlamaya tenezzül etmediği bir yaşam tarzı. Drúedain lord istemez, vergi ödemez ve yalnızca ormanın sessizliğinde bırakılmayı ister." />
+    <string id="TAOM_eleftheroi_name" text="Beorningler" />
+    <string id="TAOM_eleftheroi_short" text="Beorningler" />
+    <string id="TAOM_eleftheroi_text" text="Beorningler, Sisli Dağlar ile Mirkwood arasında Anduin vadisinde yaşayan büyük ormancılardır, Beorn soyunun deri-değiştiricileri tarafından yönetilirler. Topraklarından hiçbir Ork geçmesine izin vermezler, nöbetlerini finanse etmek için Carrock Geçidi'nde haraç alırlar ve Orta Dünya'da hiçbir krala hesap vermezler. Elfler ve Cücelerle ticaret yapar ve konuşsalar da, izinsiz ormanlarından geçmeye cüret eden herhangi bir ordu Beorninglerin çok büyük dişlere sahip olduğunu keşfeder." />
+    <string id="taom_career" text="Kariyer" />
+    <string id="taom_alliance_lore" text="Hikâye Uyumu" />
+    <string id="taom_alliance_blocked" text="Bu krallıklar asla müttefik olamaz." />
+    <string id="taom_war_blocked" text="Bu krallıklar bozulamaz bir ittifakla bağlıdır." />
+    <string id="taom_wotr_no_peace" text="Yüzük Savaşı kızışıyor. Barış mümkün değil." />
+    <string id="taom_precompile_shaders" text="Gölgelendiricileri Ön-Derle" />
+    <string id="taom_precompile_hint" text="Oyun içi takılmaları ortadan kaldırmak için gölgelendiricileri ön-derler. TAOM'u yükledikten sonra bir kez çalıştırın." />
+    <string id="taom_main_menu_new_game" text="İnsanlar Çağı'na Gir" />
+    <string id="taom_career_screen_title" text="Kariyer" />
+    <string id="taom_career_done" text="Tamam" />
+    <string id="taom_career_ability_label" text="Kariyer Yeteneği" />
+    <string id="taom_career_tier1" text="1. Seviye" />
+    <string id="taom_career_tier2" text="2. Seviye" />
+    <string id="taom_career_tier3" text="3. Seviye" />
+    <string id="taom_career_free_points" text="Serbest Puan: {COUNT}" />
+  </strings>
+</base>

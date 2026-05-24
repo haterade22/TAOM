@@ -1,12 +1,782 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="한국어" />
-  </tags>
-  <strings>
-    <!-- Translate entries from taom_cc_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="taom_cc_taom_parent_gondor_1_text" text="곤도르의 귀족 가문" />
+    <string id="taom_cc_taom_parent_gondor_1_desc" text="당신의 가문은 곤도르의 귀족 가문 중 하나로 백색나무를 수호하기로 맹세했소. 당신의 아버지는 집정관을 섬기며 용감하게 싸운 기사였고, 어머니는 가문의 영지와 사무를 관리했소." />
+    <string id="taom_cc_taom_parent_gondor_2_text" text="백색의 도시의 상인들" />
+    <string id="taom_cc_taom_parent_gondor_2_desc" text="당신의 가문은 미나스 티리스 내에서 고급 상품과 물품을 다루는 번영한 무역상이었소. 도시 상인 길드 내에서의 그들의 영향력은 가문에 부와 명성을 가져다주었소." />
+    <string id="taom_cc_taom_parent_gondor_3_text" text="펠렌노르의 농부들" />
+    <string id="taom_cc_taom_parent_gondor_3_desc" text="당신의 가문은 펠렌노르 들판의 비옥한 땅을 경작하며 미나스 티리스에 양식을 제공했소. 그들은 또한 징집 병사로서 전쟁 시기에 도시를 방어하는 데 섰소." />
+    <string id="taom_cc_taom_parent_gondor_4_text" text="미나스 티리스의 장인들" />
+    <string id="taom_cc_taom_parent_gondor_4_desc" text="당신의 가문은 미나스 티리스의 숙련된 장인으로, 백색의 도시의 전당을 장식하는 훌륭한 갑옷, 무기, 태피스트리를 만들었소. 그들의 기술은 곤도르 전역에서 명성이 자자했소." />
+    <string id="taom_cc_taom_parent_gondor_5_text" text="이실리엔의 야전특공대" />
+    <string id="taom_cc_taom_parent_gondor_5_desc" text="당신의 가문은 이실리엔의 야전특공대의 일원으로, 은신과 궁술에 능했소. 그들은 야생을 순찰하며 모르도르의 세력으로부터 곤도르의 국경을 보호했소." />
+    <string id="taom_cc_taom_parent_gondor_6_text" text="오스길리아스의 거리 부랑아들" />
+    <string id="taom_cc_taom_parent_gondor_6_desc" text="당신의 가문은 오스길리아스의 폐허 사이에 살며 교활함과 지략으로 생존했소. 그들은 가능한 것을 수색했고 때때로 곤도르의 깃발 아래 비정규 부대로 복무했소." />
+    <string id="taom_cc_taom_parent_mordor_1_text" text="어둠의 탑의 하인들" />
+    <string id="taom_cc_taom_parent_mordor_1_desc" text="당신의 가문은 어둠의 탑의 명령 아래 직접 섬겼소. 당신의 아버지는 잔인한 집행자였고, 어머니는 하급 민중들 사이에 사우론의 의지를 심기 위해 일했소." />
+    <string id="taom_cc_taom_parent_mordor_2_text" text="검은 길의 상인들" />
+    <string id="taom_cc_taom_parent_mordor_2_desc" text="당신의 가문은 모르도르 내에서 무역과 보급을 관리하여, 사우론의 군대가 전쟁을 위한 장비를 갖추도록 했소. 그들의 거래는 음모와 폭력으로 그림자져 있었소." />
+    <string id="taom_cc_taom_parent_mordor_3_text" text="바라드두르의 노예들" />
+    <string id="taom_cc_taom_parent_mordor_3_desc" text="당신의 가문은 노예 노동자로, 암흑군주의 전쟁 기계에 연료를 공급하기 위해 모르도르의 대장간과 채석장에서 고역을 했소. 그들의 회복력은 생존 의지에 대한 증거가 되었소." />
+    <string id="taom_cc_taom_parent_mordor_4_text" text="오크 감독관들" />
+    <string id="taom_cc_taom_parent_mordor_4_desc" text="당신의 가문은 오크와 인간들의 노동을 감독하는 임무를 맡아, 사우론의 명령이 무자비한 효율성으로 실행되도록 했소." />
+    <string id="taom_cc_taom_parent_mordor_5_text" text="고르고로스의 사냥꾼들" />
+    <string id="taom_cc_taom_parent_mordor_5_desc" text="당신의 가문은 고르고로스의 화산 평원을 돌아다니며, 모르도르의 군대를 유지하기 위해 먹이를 사냥하고 추적했소. 야생에서의 그들의 기술은 타의 추종을 불허했소." />
+    <string id="taom_cc_taom_parent_mordor_6_text" text="우르크 감독관" />
+    <string id="taom_cc_taom_parent_mordor_6_desc" text="당신의 가문은 우르크하이 군단의 감독관으로 복무하며, 사우론의 대열 내에서 규율을 집행하고 질서를 유지했습니다." />
+    <string id="taom_cc_taom_parent_erebor_1_text" text="외로운 산의 귀족" />
+    <string id="taom_cc_taom_parent_erebor_1_desc" text="당신의 가문은 에레보르의 귀족 혈통으로, 다인 왕의 친족이며, 강력한 도끼를 휘두르고 전사들을 고무하여 외로운 산의 명예를 수호했습니다." />
+    <string id="taom_cc_taom_parent_erebor_2_text" text="대장장이 명인" />
+    <string id="taom_cc_taom_parent_erebor_2_desc" text="당신의 가문은 에레보르의 불타는 전당에서 전설적인 무기를 단조하며, 중간계 전역에서 탐내는 검과 갑옷을 제작하여 부를 얻었습니다." />
+    <string id="taom_cc_taom_parent_erebor_3_text" text="광맥 채굴꾼" />
+    <string id="taom_cc_taom_parent_erebor_3_desc" text="당신의 가문은 에레보르의 가장 깊은 광산에서 노역하며 미스릴과 보석을 캐내고, 침략자들로부터 산을 요새화하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_parent_erebor_4_text" text="철족 전사" />
+    <string id="taom_cc_taom_parent_erebor_4_desc" text="당신의 가문은 다인 철족의 전사들과 함께 싸우며 도끼와 방패를 숙달하고, 석궁을 휘두르며 에레보르의 성문을 지켰습니다." />
+    <string id="taom_cc_taom_parent_erebor_5_text" text="금고 관리인" />
+    <string id="taom_cc_taom_parent_erebor_5_desc" text="당신의 가문은 에레보르의 방대한 보물고를 지키며, 그 부를 관리하고 적으로부터 산의 재산을 보호하기 위한 방어를 계획했습니다." />
+    <string id="taom_cc_taom_parent_erebor_6_text" text="산악 정찰병" />
+    <string id="taom_cc_taom_parent_erebor_6_desc" text="당신의 가문은 에레보르 주변의 황야를 순찰하며 오크를 추적하고 활을 쏘아 외로운 산의 국경을 수호했습니다." />
+    <string id="taom_cc_taom_parent_rivendell_1_text" text="이ムladris의 귀족" />
+    <string id="taom_cc_taom_parent_rivendell_1_desc" text="당신의 가문은 이ムladris의 존경받는 엘프로, 엘론드를 섬기기로 맹세했습니다. 그들은 시대의 지혜와 리벤델이 필요로 할 때 그것을 수호할 힘을 지녔습니다." />
+    <string id="taom_cc_taom_parent_rivendell_2_text" text="리벤델의 장인" />
+    <string id="taom_cc_taom_parent_rivendell_2_desc" text="당신의 가문은 숙련된 장인이자 전승가로서, 엘프 공예의 경이로움을 창조하고 중간계의 고대 지식을 보존했습니다." />
+    <string id="taom_cc_taom_parent_rivendell_3_text" text="숨은 골짜기의 농부" />
+    <string id="taom_cc_taom_parent_rivendell_3_desc" text="당신의 가문은 리벤델의 비옥한 들판을 경작하며, 평화로운 피난처에서 그곳의 주민들과 손님들이 잘 먹고 지낼 수 있도록 했습니다." />
+    <string id="taom_cc_taom_parent_rivendell_4_text" text="골짜기의 수호자" />
+    <string id="taom_cc_taom_parent_rivendell_4_desc" text="당신의 가문은 정찰병이자 수호자로 복무하며, 이ムladris의 국경을 순찰하고 골짜기가 악으로부터 자유로운 성역으로 남도록 보장했습니다." />
+    <string id="taom_cc_taom_parent_rivendell_5_text" text="엘프 학자" />
+    <string id="taom_cc_taom_parent_rivendell_5_desc" text="당신의 가문은 전승, 치유, 마법의 학자로서, 엘프의 고대 지식을 보존하고 중간계의 자유 종족들을 도왔습니다." />
+    <string id="taom_cc_taom_parent_rivendell_6_text" text="야생의 방랑자" />
+    <string id="taom_cc_taom_parent_rivendell_6_desc" text="당신의 가문은 리벤델 너머로 모험을 떠나 도움이 필요한 이들을 돕고 골짜기 너머의 변화하는 세계에 대해 배우는 것으로 알려졌습니다." />
+    <string id="taom_cc_taom_parent_mirkwood_1_text" text="숲속 왕국 귀족의 후예" />
+    <string id="taom_cc_taom_parent_mirkwood_1_desc" text="당신의 가문은 숲속 왕국의 귀족 가문 출신으로, 스란두일 왕의 궁정에서 측근 조언자이자 수호자로 복무했습니다." />
+    <string id="taom_cc_taom_parent_mirkwood_2_text" text="숲길의 상인" />
+    <string id="taom_cc_taom_parent_mirkwood_2_desc" text="당신의 가문은 어둠숲의 위험한 길을 여행하며 물품과 교역을 엘프 왕의 전당으로 가져온 상인이었습니다." />
+    <string id="taom_cc_taom_parent_mirkwood_3_text" text="숲속 농부" />
+    <string id="taom_cc_taom_parent_mirkwood_3_desc" text="당신의 가문은 숲속 왕국의 변두리에 살며, 땅을 경작하고 그림자 드리운 숲이 제공하는 얼마 안 되는 것들을 수집했습니다." />
+    <string id="taom_cc_taom_parent_mirkwood_4_text" text="숲속 전당의 장인" />
+    <string id="taom_cc_taom_parent_mirkwood_4_desc" text="당신의 가문은 숲속 왕국의 장인으로, 숲의 자원으로 정교한 무기와 도구를 제작했습니다." />
+    <string id="taom_cc_taom_parent_mirkwood_5_text" text="깊은 숲의 사냥꾼" />
+    <string id="taom_cc_taom_parent_mirkwood_5_desc" text="당신의 가문은 어둠숲의 그림자 드리운 깊은 곳을 용감히 탐험하여 식량을 제공하고 그 안에 숨어 있는 생물들을 물리친 숙련된 사냥꾼이었습니다." />
+    <string id="taom_cc_taom_parent_mirkwood_6_text" text="숲속 왕국의 순찰대" />
+    <string id="taom_cc_taom_parent_mirkwood_6_desc" text="당신의 가문은 순찰대로 복무하며, 숲속 왕국의 국경을 보호하고 침입자와 위협으로부터 숲길을 지켰습니다." />
+    <string id="taom_cc_taom_parent_lothlorien_1_text" text="카라스 갈라돈의 귀족" />
+    <string id="taom_cc_taom_parent_lothlorien_1_desc" text="당신의 가문은 갈라드리엘 여군주와 켈레보른 군주의 직접적인 지도 아래 복무하며, 흔들림 없는 헌신으로 로스로리엔의 심장부를 수호했습니다." />
+    <string id="taom_cc_taom_parent_lothlorien_2_text" text="황금 숲의 장인들" />
+    <string id="taom_cc_taom_parent_lothlorien_2_desc" text="당신의 가문은 황금 숲의 아름다움을 갑옷에서 악기에 이르기까지 그들의 작품에 담아내는 대장인들이었습니다." />
+    <string id="taom_cc_taom_parent_lothlorien_3_text" text="말로른 나무의 수호자들" />
+    <string id="taom_cc_taom_parent_lothlorien_3_desc" text="당신의 가문은 신성한 말로른 나무를 보호하며, 어떠한 위협에도 로스로리엔의 광채가 지속되도록 했습니다." />
+    <string id="taom_cc_taom_parent_lothlorien_4_text" text="디림릴 계곡의 순찰대" />
+    <string id="taom_cc_taom_parent_lothlorien_4_desc" text="당신의 가문은 로스로리엔의 경계를 순찰하며, 고갯길을 지키고 오크와 다른 침입자들로부터 방어했습니다." />
+    <string id="taom_cc_taom_parent_lothlorien_5_text" text="황금 숲의 치유사들" />
+    <string id="taom_cc_taom_parent_lothlorien_5_desc" text="당신의 가문은 부상자들을 돌보고 황금 숲 내에서 치유의 고대 지혜를 보존했습니다." />
+    <string id="taom_cc_taom_parent_lothlorien_6_text" text="갈라드림의 방랑자들" />
+    <string id="taom_cc_taom_parent_lothlorien_6_desc" text="당신의 가문은 로스로리엔 너머의 땅을 떠돌며, 동맹을 돕고 황금 숲의 광채에 대한 소식을 전파했습니다." />
+    <string id="taom_cc_taom_parent_isengard_1_text" text="사루만의 하인들" />
+    <string id="taom_cc_taom_parent_isengard_1_desc" text="당신의 가문은 백색의 사루만의 명령 아래에서 일하며, 그의 영지를 관리하고 그의 정복 계획을 보좌했습니다." />
+    <string id="taom_cc_taom_parent_isengard_2_text" text="오르상크의 장인들" />
+    <string id="taom_cc_taom_parent_isengard_2_desc" text="당신의 가문은 오르상크의 그림자 아래에서 도구와 무기를 제작하며, 사루만의 의지를 위한 도구들을 벼려냈습니다." />
+    <string id="taom_cc_taom_parent_isengard_3_text" text="디핑 동굴의 노역자들" />
+    <string id="taom_cc_taom_parent_isengard_3_desc" text="당신의 가문은 아이센가드의 깊은 갱도에서 고된 노동을 하며, 사루만의 야망에 필요한 돌과 광석을 채굴했습니다." />
+    <string id="taom_cc_taom_parent_isengard_4_text" text="우루크-하이 전사들" />
+    <string id="taom_cc_taom_parent_isengard_4_desc" text="당신의 가문은 사루만이 만들어낸 최초의 우루크-하이들 중 하나로, 전쟁과 지배를 위해 창조된 전사들이었습니다." />
+    <string id="taom_cc_taom_parent_isengard_5_text" text="황야의 정찰병들" />
+    <string id="taom_cc_taom_parent_isengard_5_desc" text="당신의 가문은 정찰병이자 추적자로서, 사루만의 군대가 로한의 평원을 은밀히 이동하도록 보장했습니다." />
+    <string id="taom_cc_taom_parent_isengard_6_text" text="아이센가드의 무법자들" />
+    <string id="taom_cc_taom_parent_isengard_6_desc" text="당신의 가문은 그림자 속에서 활동하며, 정보를 수집하고 사루만의 적들을 약화시켰습니다." />
+    <string id="taom_cc_taom_parent_gundabad_1_text" text="군다바드의 귀족들" />
+    <string id="taom_cc_taom_parent_gundabad_1_desc" text="당신의 가문은 군다바드의 귀족 엘리트 중 하나로, 조상의 고향을 되찾고 침략자들로부터 방어하는 데 헌신했습니다." />
+    <string id="taom_cc_taom_parent_gundabad_2_text" text="군다바드의 대장장이들" />
+    <string id="taom_cc_taom_parent_gundabad_2_desc" text="당신의 가문은 숙련된 대장장이로, 군다바드의 수호자들을 위한 도구와 무기를 제작했습니다." />
+    <string id="taom_cc_taom_parent_gundabad_3_text" text="군다바드의 광부들" />
+    <string id="taom_cc_taom_parent_gundabad_3_desc" text="당신의 가문은 군다바드의 광산에서 끊임없이 일하며, 숨겨진 부를 발굴했습니다." />
+    <string id="taom_cc_taom_parent_gundabad_4_text" text="회색 산맥의 전사들" />
+    <string id="taom_cc_taom_parent_gundabad_4_desc" text="당신의 가문은 회색 산맥에서 오크와 다른 위협들과 싸우며, 동족의 명예를 지켰습니다." />
+    <string id="taom_cc_taom_parent_gundabad_5_text" text="군다바드의 순찰대" />
+    <string id="taom_cc_taom_parent_gundabad_5_desc" text="당신의 가문은 순찰대로 복무하며, 군다바드 주변의 야생을 순찰하고 위험으로부터 경계를 지켰습니다." />
+    <string id="taom_cc_taom_parent_gundabad_6_text" text="산맥의 추방자들" />
+    <string id="taom_cc_taom_parent_gundabad_6_desc" text="당신의 가문은 군다바드 사회의 변두리에서 살며, 가혹한 산악 고갯길에서 교활함과 무자비함으로 생존했습니다." />
+    <string id="taom_cc_taom_parent_dolguldur_1_text" text="강령술사의 하인들" />
+    <string id="taom_cc_taom_parent_dolguldur_1_desc" text="당신의 가문은 강령술사 직속으로 섬기며, 그의 어두운 명령을 수행하고 지역 전역에 그의 의지를 강제했습니다." />
+    <string id="taom_cc_taom_parent_dolguldur_2_text" text="그림자 강철의 제작자들" />
+    <string id="taom_cc_taom_parent_dolguldur_2_desc" text="당신의 가문은 돌 굴두르의 어두운 마법이 깃든 무기와 갑옷을 벼려내며, 그 군대를 정복을 위해 무장시켰습니다." />
+    <string id="taom_cc_taom_parent_dolguldur_3_text" text="그림자 홀의 광부들" />
+    <string id="taom_cc_taom_parent_dolguldur_3_desc" text="당신의 가문은 돌 굴두르의 동굴 깊은 곳에서 노동하며, 전쟁 기계를 먹여 살릴 자원을 채굴했습니다." />
+    <string id="taom_cc_taom_parent_dolguldur_4_text" text="마법의 숲의 전사들" />
+    <string id="taom_cc_taom_parent_dolguldur_4_desc" text="당신의 가문은 돌 굴두르의 그림자를 주변 땅에 확장하기 위해 싸운 맹렬한 전사들이었습니다." />
+    <string id="taom_cc_taom_parent_dolguldur_5_text" text="어둠의 숲의 사냥꾼들" />
+    <string id="taom_cc_taom_parent_dolguldur_5_desc" text="당신의 가문은 숲의 뒤틀린 생물들을 사냥하고 강령술사의 영역에 감히 침입하는 자들을 추적했습니다." />
+    <string id="taom_cc_taom_parent_dolguldur_6_text" text="돌 굴두르의 무법자들" />
+    <string id="taom_cc_taom_parent_dolguldur_6_desc" text="당신의 가문은 첩자이자 파괴 공작원으로, 기만과 공포를 통해 돌 굴두르의 영향력을 퍼뜨렸습니다." />
+    <string id="taom_cc_taom_parent_umbar_1_text" text="해적 선장들" />
+    <string id="taom_cc_taom_parent_umbar_1_desc" text="당신의 가문은 움바르의 해적들 중 지도자로서, 배를 지휘하고 곤도르의 해안을 약탈했습니다." />
+    <string id="taom_cc_taom_parent_umbar_2_text" text="흑조의 상인들" />
+    <string id="taom_cc_taom_parent_umbar_2_desc" text="당신의 가문은 바다를 건너 무역을 했으며, 종종 해적들의 사업에 자금을 대기 위해 밀수품을 거래했습니다." />
+    <string id="taom_cc_taom_parent_umbar_3_text" text="움바르의 조선공들" />
+    <string id="taom_cc_taom_parent_umbar_3_desc" text="당신의 가문은 해적들을 전쟁터로 실어 나르는 선박을 건조하며, 속도와 은밀함을 갖춘 배를 만들었습니다." />
+    <string id="taom_cc_taom_parent_umbar_4_text" text="해안의 해적들" />
+    <string id="taom_cc_taom_parent_umbar_4_desc" text="당신의 가문은 곤도르와 그 너머의 해안을 약탈하며 적들의 마음에 공포를 심어준 해적들이었습니다." />
+    <string id="taom_cc_taom_parent_umbar_5_text" text="대양의 항해사들" />
+    <string id="taom_cc_taom_parent_umbar_5_desc" text="당신의 가문은 숙련된 항해사로서, 위험한 바다를 항해하고 해적들을 승리로 이끌었습니다." />
+    <string id="taom_cc_taom_parent_umbar_6_text" text="움바르의 밀수꾼들" />
+    <string id="taom_cc_taom_parent_umbar_6_desc" text="당신의 가문은 그림자 속에서 움직이며, 해적들의 생존에 필수적인 물자와 정보를 밀수했습니다." />
+    <string id="taom_cc_taom_parent_empire_1_text" text="옛 족장의 후손들" />
+    <string id="taom_cc_taom_parent_empire_1_desc" text="당신의 가문은 던랜드 씨족들 사이에서 족장으로 권력을 쥐었으며, 혈통과 힘을 통해 존경을 받았습니다. 당신의 아버지는 분쟁 시기에 전사들을 결집시켰고, 어머니는 씨족의 업무를 관리했습니다." />
+    <string id="taom_cc_taom_parent_empire_2_text" text="씨족 상인들" />
+    <string id="taom_cc_taom_parent_empire_2_desc" text="당신의 가문은 던랜드 씨족들과 외부 세계 사이에서 물자를 거래했습니다. 그들의 땅과 사람들에 대한 지식은 당신의 가정에 번영을 가져다주었습니다." />
+    <string id="taom_cc_taom_parent_empire_3_text" text="자유로운 씨족민들" />
+    <string id="taom_cc_taom_parent_empire_3_desc" text="당신의 가문은 던랜드의 자유민으로, 언덕 사이에서 땅을 갈고 양을 치며 살았습니다. 전쟁이 일어나면 족장의 부름에 응했습니다." />
+    <string id="taom_cc_taom_parent_empire_4_text" text="숙련된 장인들" />
+    <string id="taom_cc_taom_parent_empire_4_desc" text="당신의 가문은 던랜드 씨족의 장인으로, 언덕의 자원으로 무기, 도구, 장신구를 제작했습니다." />
+    <string id="taom_cc_taom_parent_empire_5_text" text="숲의 채집인들" />
+    <string id="taom_cc_taom_parent_empire_5_desc" text="당신의 가문은 던랜드의 야생지에서 살아가며, 안개산맥과 접한 울창한 숲에서 사냥감을 잡고 약초를 채집했습니다." />
+    <string id="taom_cc_taom_parent_empire_6_text" text="방랑자들과 추방자들" />
+    <string id="taom_cc_taom_parent_empire_6_desc" text="당신의 가문은 떠돌이로, 씨족에서 추방당했거나 그들의 영향권 밖에서 살기를 선택했습니다. 그들은 지혜로, 때로는 덜 정직한 방법으로 생존했습니다." />
+    <string id="taom_cc_taom_parent_vlandia_1_text" text="원수의 종사들" />
+    <string id="taom_cc_taom_parent_vlandia_1_desc" text="당신의 가문은 리더마크의 원수들을 섬기며, 로한의 국경을 방어하기 위해 그들과 함께 말을 탔습니다. 당신의 아버지는 숙련된 기마병이자 전사였습니다." />
+    <string id="taom_cc_taom_parent_vlandia_2_text" text="에도라스의 상인들" />
+    <string id="taom_cc_taom_parent_vlandia_2_desc" text="당신의 가문은 위대한 홀 도시 에도라스의 상인으로, 리더마크와 그 너머에서 로한 사람들에게 물자를 가져다주었습니다." />
+    <string id="taom_cc_taom_parent_vlandia_3_text" text="웨스트폴드의 자유 토지 보유자들" />
+    <string id="taom_cc_taom_parent_vlandia_3_desc" text="당신의 가문은 웨스트폴드의 자유 농민으로, 비옥한 평원에서 말과 작물을 키웠습니다. 왕이 부르면 기마 징집병으로 복무했습니다." />
+    <string id="taom_cc_taom_parent_vlandia_4_text" text="알드부르크의 대장장이들" />
+    <string id="taom_cc_taom_parent_vlandia_4_desc" text="당신의 가문은 알드부르크의 명망 있는 대장장이로, 로히림들이 전투에 사용할 검과 갑옷을 벼렸습니다." />
+    <string id="taom_cc_taom_parent_vlandia_5_text" text="이스트폴드의 사냥꾼들" />
+    <string id="taom_cc_taom_parent_vlandia_5_desc" text="당신의 가문은 이스트폴드의 사냥꾼이자 추적자로, 활에 능숙하고 야생의 방식에 정통했습니다." />
+    <string id="taom_cc_taom_parent_vlandia_6_text" text="황야의 방랑자들" />
+    <string id="taom_cc_taom_parent_vlandia_6_desc" text="당신의 가문은 로한과 갈색 땅 사이의 야생 초원지대인 황야를 떠돌았습니다. 그들은 재치와 때때로 정찰병으로서의 임무를 통해 생존했습니다." />
+    <string id="taom_cc_taom_parent_sturgia_1_text" text="골짜기 왕의 신하" />
+    <string id="taom_cc_taom_parent_sturgia_1_desc" text="당신의 가문은 골짜기 왕의 궁정 직속으로 섬기며, 왕국의 업무를 관리하고 백성들을 수호했습니다." />
+    <string id="taom_cc_taom_parent_sturgia_2_text" text="도시 상인" />
+    <string id="taom_cc_taom_parent_sturgia_2_desc" text="당신의 가문은 골짜기의 상인으로, 북부 전역에 걸쳐 그 도시를 유명하게 만든 정교한 물품과 장난감을 거래했습니다." />
+    <string id="taom_cc_taom_parent_sturgia_3_text" text="자유 농민" />
+    <string id="taom_cc_taom_parent_sturgia_3_desc" text="당신의 가문은 골짜기와 에스가로스 주변 땅의 농민으로, 들판을 경작하고 긴 호수에서 고기를 잡았습니다." />
+    <string id="taom_cc_taom_parent_sturgia_4_text" text="도시 장인" />
+    <string id="taom_cc_taom_parent_sturgia_4_desc" text="당신의 가문은 골짜기의 장인으로, 먼 땅에서 온 상인들을 끌어들인 장난감 제작과 금속 세공으로 유명했습니다." />
+    <string id="taom_cc_taom_parent_sturgia_5_text" text="숲의 사냥꾼" />
+    <string id="taom_cc_taom_parent_sturgia_5_desc" text="당신의 가문은 골짜기 주변 숲의 사냥꾼이자 나무꾼으로, 도시 시장에 모피와 사냥감을 제공했습니다." />
+    <string id="taom_cc_taom_parent_sturgia_6_text" text="떠돌이" />
+    <string id="taom_cc_taom_parent_sturgia_6_desc" text="당신의 가문은 골짜기 사회의 변두리에 살며, 잡일과 때로는 덜 명예로운 수단을 통해 생존했습니다." />
+    <string id="taom_cc_taom_parent_aserai_1_text" text="검은 뱀의 동맹" />
+    <string id="taom_cc_taom_parent_aserai_1_desc" text="당신의 가문은 검은 뱀에게 충성했으며, 암흑 군주의 명령에 따라 전쟁 무리를 이끌고 북부 땅으로 진격했습니다." />
+    <string id="taom_cc_taom_parent_aserai_2_text" text="사막 전사" />
+    <string id="taom_cc_taom_parent_aserai_2_desc" text="당신의 가문은 하라드의 맹렬한 전사로, 어린 시절부터 남부의 작열하는 사막에서 싸우도록 훈련받았습니다." />
+    <string id="taom_cc_taom_parent_aserai_3_text" text="남부의 상인" />
+    <string id="taom_cc_taom_parent_aserai_3_desc" text="당신의 가문은 남부 도로를 따라 교역을 하며, 이국적인 물품과 향신료를 하라드의 시장으로 가져왔습니다." />
+    <string id="taom_cc_taom_parent_aserai_4_text" text="사막 농민" />
+    <string id="taom_cc_taom_parent_aserai_4_desc" text="당신의 가문은 하라드의 오아시스와 관개 지대를 경작하며, 기술과 인내로 건조한 땅에서 생명을 이끌어냈습니다." />
+    <string id="taom_cc_taom_parent_aserai_5_text" text="유목 부족민" />
+    <string id="taom_cc_taom_parent_aserai_5_desc" text="당신의 가문은 광대한 사막을 떠돌며, 수원지 사이의 고대 길을 따라 정착민들과 교역했습니다." />
+    <string id="taom_cc_taom_parent_aserai_6_text" text="사막 무법자" />
+    <string id="taom_cc_taom_parent_aserai_6_desc" text="당신의 가문은 하라드 사회의 변두리에서 생존하며, 카라반을 약탈하고 끝없는 모래 속에서 교활함으로 살아갔습니다." />
+    <string id="taom_cc_taom_parent_battania_1_text" text="칸드의 말 군주" />
+    <string id="taom_cc_taom_parent_battania_1_desc" text="당신의 가문은 바리아그 기마 부족의 군주로, 칸드의 초원을 가로질러 맹렬한 기마 전사들을 지휘했습니다." />
+    <string id="taom_cc_taom_parent_battania_2_text" text="유목 치료사" />
+    <string id="taom_cc_taom_parent_battania_2_desc" text="당신의 가문은 바리아그 부족의 치료사이자 현자로, 병든 이들을 돌보고 고대의 치료법을 보존했습니다." />
+    <string id="taom_cc_taom_parent_battania_3_text" text="부족 전사" />
+    <string id="taom_cc_taom_parent_battania_3_desc" text="당신의 가문은 바리아그 부족의 전사로, 기마 전투에 능숙하고 족장에게 맹렬히 충성했습니다." />
+    <string id="taom_cc_taom_parent_battania_4_text" text="초원의 대장장이" />
+    <string id="taom_cc_taom_parent_battania_4_desc" text="당신의 가문은 바리아그 민족의 대장장이로, 동쪽 산맥의 금속으로 무기와 마구를 제작했습니다." />
+    <string id="taom_cc_taom_parent_battania_5_text" text="초원 사냥꾼" />
+    <string id="taom_cc_taom_parent_battania_5_desc" text="당신의 가문은 칸드의 광대한 초원을 가로지르며 사냥하고, 사냥감을 추적하며 포식자로부터 가축 떼를 지켰습니다." />
+    <string id="taom_cc_taom_parent_battania_6_text" text="칸드의 음유시인" />
+    <string id="taom_cc_taom_parent_battania_6_desc" text="당신의 가문은 떠도는 음유시인이자 이야기꾼으로, 노래와 이야기를 통해 바리아그 민족의 구전 전통을 지켜왔습니다." />
+    <string id="taom_cc_taom_parent_khuzait_1_text" text="족장의 친족" />
+    <string id="taom_cc_taom_parent_khuzait_1_desc" text="당신의 가문은 이스터링 족장의 가까운 혈족으로, 권력의 자리를 차지하고 전사 부족들 사이에서 존경을 받았습니다." />
+    <string id="taom_cc_taom_parent_khuzait_2_text" text="동방의 상인" />
+    <string id="taom_cc_taom_parent_khuzait_2_desc" text="당신의 가문은 동방 무역로를 따라 장사를 하며, 먼 땅에서 온 물품들을 룬의 시장으로 가져왔습니다." />
+    <string id="taom_cc_taom_parent_khuzait_3_text" text="유목 부족민" />
+    <string id="taom_cc_taom_parent_khuzait_3_desc" text="당신의 가문은 동방 평원의 유목민으로, 계절에 따라 이동하며 땅에서 나는 것으로 살아갔습니다." />
+    <string id="taom_cc_taom_parent_khuzait_4_text" text="초원의 농부" />
+    <string id="taom_cc_taom_parent_khuzait_4_desc" text="당신의 가문은 룬의 내륙해 근처 비옥한 계곡에서 곡물을 재배하고 가축을 기르며 일했습니다." />
+    <string id="taom_cc_taom_parent_khuzait_5_text" text="영혼 소환사" />
+    <string id="taom_cc_taom_parent_khuzait_5_desc" text="당신의 가문은 동방인 부족의 샤먼이자 영혼과 대화하는 자로서, 땅과 하늘의 영혼들과 교감했습니다." />
+    <string id="taom_cc_taom_parent_khuzait_6_text" text="변경의 정찰병" />
+    <string id="taom_cc_taom_parent_khuzait_6_desc" text="당신의 가문은 동방인 군대의 정찰병이자 전위대로 복무하며, 본대보다 훨씬 앞서 나가 정보를 수집했습니다." />
+    <string id="taom_cc_taom_childhood_leadership_text" text="당신의 지도력." />
+    <string id="taom_cc_taom_childhood_leadership_desc" text="고대 유적의 그림자 속에서, 당신의 어린 동료들은 당신에게 인도를 구했습니다. 숲을 통과하는 안전한 길을 찾든, 상상 속의 적에 맞서 용기를 북돋우든, 당신의 타고난 지도력은 옛 왕들의 깃발처럼 빛났습니다." />
+    <string id="taom_cc_taom_childhood_fighting_text" text="당신의 전투 기술." />
+    <string id="taom_cc_taom_childhood_fighting_desc" text="당신의 힘은 마을 아이들 사이에서 전설이었습니다. 그들은 당신이 숙련된 전사처럼 짐을 나르고 투석기의 힘으로 돌을 던지는 능력에 경탄했습니다. 그때부터 당신은 전설의 영웅들과 비교되었습니다." />
+    <string id="taom_cc_taom_childhood_history_text" text="당신의 역사 지식." />
+    <string id="taom_cc_taom_childhood_history_desc" text="어떤 움직임도 놓치지 않는 예리한 눈과 대부분을 앞지르는 빠른 발로, 당신은 종종 사슴의 발자국이나 숨겨진 장신구의 반짝임을 가장 먼저 발견했습니다. 친구들은 당신을 북방의 순찰대처럼 조용하고 관찰력이 뛰어나다고 말했습니다." />
+    <string id="taom_cc_taom_childhood_convince_text" text="남들을 설득하는 당신의 능력." />
+    <string id="taom_cc_taom_childhood_convince_desc" text="다른 아이들이 놀 때, 당신은 시장에 머물며 상인들이 가격을 흥정하고 이익을 계산하는 것을 지켜봤습니다. 당신은 거래의 기술에 매혹되어, 종종 자신을 곤도르의 집사나 보석을 세는 드워프 장인으로 상상했습니다." />
+    <string id="taom_cc_taom_childhood_charge_text" text="상황을 장악하는 당신의 능력." />
+    <string id="taom_cc_taom_childhood_charge_desc" text="당신은 다른 사람을 이해하는 타고난 재능이 있어, 종종 논쟁을 진정시키고 쉽게 친구를 얻었습니다. 어른들은 당신에게 엘프 영주의 카리스마가 있다고 말했고, 동료들은 흔들림 없는 충성심으로 당신을 따랐습니다." />
+    <string id="taom_cc_taom_childhood_horses_text" text="말을 다루는 당신의 기술." />
+    <string id="taom_cc_taom_childhood_horses_desc" text="당신은 동물들, 특히 말들과 깊은 유대감을 느꼈습니다. 마구간지기들은 당신이 가장 사나운 말조차 진정시킬 수 있다는 것에 감탄했고, 상처를 치료하는 당신의 기술에 언젠가 로한의 마술사들과 겨룰 수 있을 것이라는 속삭임이 퍼졌습니다." />
+    <string id="taom_cc_taom_youth_gondor_1_text" text="백조 기사단과 훈련했다." />
+    <string id="taom_cc_taom_youth_gondor_1_desc" text="당신은 돌 암로스의 백조 기사단 대열에 합류하여, 곤도르 최정예의 깃발 아래 기마 전투와 기사도적 전쟁술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_gondor_2_text" text="미나스 티리스에서 경비를 섰다." />
+    <string id="taom_cc_taom_youth_gondor_2_desc" text="당신은 미나스 티리스의 수비대에서 복무하며, 백색 도시의 성벽을 방어하고 노련한 지휘관들로부터 공성전 방어술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_gondor_3_text" text="이실리엔의 순찰대와 함께 기마했다." />
+    <string id="taom_cc_taom_youth_gondor_3_desc" text="당신은 이실리엔의 황야를 순찰하며, 그림자 속에서 적을 공격하고 파라미르 부대의 전통에 따라 순찰대로서의 기술을 연마했습니다." />
+    <string id="taom_cc_taom_youth_gondor_4_text" text="탑 근위대와 훈련했다." />
+    <string id="taom_cc_taom_youth_gondor_4_desc" text="당신은 곤도르의 정예 탑 근위대에 합류하여, 성채와 백색 나무를 지키기 위한 규율 잡힌 보병 전투를 훈련받았습니다." />
+    <string id="taom_cc_taom_youth_gondor_5_text" text="오스길리아스의 폐허에서 지혜로 살았다." />
+    <string id="taom_cc_taom_youth_gondor_5_desc" text="당신은 분쟁 중인 오스길리아스의 폐허에서 근근이 살아가며, 거리 전투의 치명적인 경제학과 잘 던진 돌의 가치를 배웠습니다. 그 반쯤 물에 잠긴 부서진 돌의 미로에서의 생존은 당신을 무에서 무엇이든 즉흥적으로 만들어낼 수 있는 사람으로 만들었습니다." />
+    <string id="taom_cc_taom_youth_mordor_1_text" text="와르그 기수와 훈련했다." />
+    <string id="taom_cc_taom_youth_mordor_1_desc" text="당신은 모르도르의 정예 와르그 기수와 훈련하도록 선발되어, 무시무시한 짐승들을 제어하고 적의 마음에 공포를 심는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_mordor_2_text" text="모르도르 요새의 탑에 배치되었다." />
+    <string id="taom_cc_taom_youth_mordor_2_desc" text="당신은 모르도르의 검은 요새의 망루와 성벽에 배치되어, 지평선을 살피며 움직임을 찾고 접근하는 모든 자에게 사격을 지휘했습니다. 이 임무는 쏠 수 있는 것만큼 생각할 수 있는 자들에게 적합했습니다." />
+    <string id="taom_cc_taom_youth_mordor_3_text" text="흑색 정찰대와 함께 기마했다." />
+    <string id="taom_cc_taom_youth_mordor_3_desc" text="당신은 흑색 정찰대에 합류하여, 황무지를 빠르게 달리며 정보를 수집하고 적의 측면을 괴롭혔습니다." />
+    <string id="taom_cc_taom_youth_mordor_4_text" text="암흑 군주의 오크 군단에서 행군했다." />
+    <string id="taom_cc_taom_youth_mordor_4_desc" text="당신은 사우론 보병의 끈질긴 진형에서 훈련하며, 하나의 갑옷 입은 주먹처럼 움직이는 대열에서 칼과 도끼로 돌격하고 베는 법을 배웠습니다. 약함은 처벌받고 강함은 철로 보상받았습니다." />
+    <string id="taom_cc_taom_youth_mordor_5_text" text="어둠의 척후병에 합류했다." />
+    <string id="taom_cc_taom_youth_mordor_5_desc" text="당신은 어둠의 척후병이 되어 투척 무기와 신속한 공격으로 적을 괴롭힌 뒤 어둠 속으로 사라졌습니다." />
+    <string id="taom_cc_taom_youth_mordor_6_text" text="사우론의 전쟁 군단 변두리에서 살았다." />
+    <string id="taom_cc_taom_youth_mordor_6_desc" text="당신은 병사도 노예도 아닌 채로 모르도르의 대군 그림자 변방을 오가며 — 훔칠 수 있는 것을 훔치고, 정보를 거래하고, 어느 장교가 매수 가능하고 어느 장교를 피해야 하는지 배웠습니다. 교활함만이 당신이 믿는 유일한 화폐였습니다." />
+    <string id="taom_cc_taom_youth_erebor_1_text" text="에레보르의 왕실 근위대에 복무했다." />
+    <string id="taom_cc_taom_youth_erebor_1_desc" text="당신은 산 아래 왕에게 충성을 맹세하고 정예 왕실 근위대에 복무하며 왕국을 지키기 위해 도끼와 망치를 다루는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_erebor_2_text" text="에레보르의 문을 방어했다." />
+    <string id="taom_cc_taom_youth_erebor_2_desc" text="에레보르 수비대의 일원으로서 당신은 석궁을 다루고 모든 침입자에 맞서 문을 지키며 드워프의 공성 방어술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_erebor_3_text" text="강철 근위대와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_erebor_3_desc" text="당신은 에레보르의 돌격부대인 강철 근위대에 합류하여 투척 도끼를 던지고 산의 좁은 회랑에서 싸우는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_erebor_4_text" text="외로운 산의 구릉지를 정찰했다." />
+    <string id="taom_cc_taom_youth_erebor_4_desc" text="당신은 에레보르 주변의 야생지로 나아가 오크와 늑대를 추적하고 산의 접근로를 지켰습니다." />
+    <string id="taom_cc_taom_youth_erebor_5_text" text="선봉대에 섰다." />
+    <string id="taom_cc_taom_youth_erebor_5_desc" text="당신은 에레보르 선봉대의 일원으로 훈련하며 규율 잡힌 드워프 전투 대형에서 양손 도끼와 장창을 마스터했습니다." />
+    <string id="taom_cc_taom_youth_erebor_6_text" text="대상 호위대와 함께 일했다." />
+    <string id="taom_cc_taom_youth_erebor_6_desc" text="당신은 에레보르와 골짜기 마을 사이를 오가는 교역 대상을 호위하며 상업의 방식과 귀중한 화물을 지키는 기술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_rivendell_1_text" text="이ムラ드리스의 근위대와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_rivendell_1_desc" text="당신은 리븐델의 깃발 아래 복무하며 마지막 아늑한 집을 지키기 위해 기마 전투와 우아한 엘프 무술을 훈련했습니다." />
+    <string id="taom_cc_taom_youth_rivendell_2_text" text="엘론드의 전당에서 경비를 섰다." />
+    <string id="taom_cc_taom_youth_rivendell_2_desc" text="당신은 엘론드의 전당에서 보초로 복무하며 땅을 읽고 위협이 숨겨진 계곡에 도달하기 전에 예측하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_rivendell_3_text" text="국경 수비대와 함께 트롤고원을 순찰했다." />
+    <string id="taom_cc_taom_youth_rivendell_3_desc" text="당신은 리븐델의 국경 너머 야생의 트롤고원과 안두인 상류 계곡까지 순찰하는 수비대에 합류하여 적을 추적하고 고대 숲을 지나는 어둠의 움직임 흔적을 읽는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_rivendell_4_text" text="엘프 보병술을 배웠다." />
+    <string id="taom_cc_taom_youth_rivendell_4_desc" text="당신은 리븐델 전사들의 대열에 서서 상급 엘프의 정밀하고 치명적인 방식으로 창과 검을 마스터했습니다." />
+    <string id="taom_cc_taom_youth_rivendell_5_text" text="현자들과 함께 여행했다." />
+    <string id="taom_cc_taom_youth_rivendell_5_desc" text="당신은 리븐델의 현자들과 함께 여행하며 외교, 설득, 그리고 자유 민족들 사이의 지도력 기술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_mirkwood_1_text" text="숲속 기병대와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_mirkwood_1_desc" text="당신은 날렵한 엘프 말을 타고 어두운 숲을 달리며 스란두일 왕국의 고대 나무들 사이에서 기마 전투를 배웠습니다." />
+    <string id="taom_cc_taom_youth_mirkwood_2_text" text="어두운 숲의 공터를 순찰했다." />
+    <string id="taom_cc_taom_youth_mirkwood_2_desc" text="당신은 어둠숲의 공터를 순찰하는 수비대에 합류하여 거미, 오크, 그리고 돌 굴두르의 기어오는 그림자를 경계했습니다." />
+    <string id="taom_cc_taom_youth_mirkwood_3_text" text="엘프 창 근위대와 함께 섰다." />
+    <string id="taom_cc_taom_youth_mirkwood_3_desc" text="당신은 숲속 왕국의 창 근위대 대열에 자리 잡고 숲 지붕 아래에서 규율 잡힌 대형으로 싸우는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_mirkwood_4_text" text="어둠숲의 거미들을 위한 덫을 놓았다." />
+    <string id="taom_cc_taom_youth_mirkwood_4_desc" text="당신은 숲속 왕국의 심장부에서 거대 거미들을 막는 임무를 맡은 사냥꾼 중 하나였으며, 어두운 덤불 속에 올가미와 매복을 설치하고 생물들이 접근하기 전에 칼과 투척 날로 공격하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_mirkwood_5_text" text="숲속 왕의 전당에서 복무했다." />
+    <string id="taom_cc_taom_youth_mirkwood_5_desc" text="당신은 스란두일의 궁정에 입궐하여 별들의 첫 시대부터 노래해온 이들의 가르침 아래 외교술과 숲속 엘프의 노래를 배웠습니다. 엘프왕의 전당은 검만큼이나 혀에서도 많은 것을 요구했습니다." />
+    <string id="taom_cc_taom_youth_lothlorien_1_text" text="갈라드림 기병대와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_lothlorien_1_desc" text="당신은 로스로리엔의 정예 기병대에 합류하여 황금 숲을 가로지르는 날렵한 말을 타고 갈라드림의 우아함으로 싸우는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_lothlorien_2_text" text="황금 숲의 탈란에서 경계를 섰다." />
+    <string id="taom_cc_taom_youth_lothlorien_2_desc" text="당신은 말로른 나뭇가지 사이 높은 탈란에서 긴 고요한 경계를 서며 베일에 싸인 국경의 문턱을 가로질러 은빛 활을 당겼습니다. 갈라드림 수비대의 눈을 피해 지나가는 것은 아무것도 없었습니다 — 그리고 당신은 그것을 유지할 생각이었습니다." />
+    <string id="taom_cc_taom_youth_lothlorien_3_text" text="카라스 갈라돈의 궁수대에 합류했다." />
+    <string id="taom_cc_taom_youth_lothlorien_3_desc" text="당신은 로스로리엔의 유명한 궁수들과 함께 훈련하며, 말로른 나무 사이의 발판에서 치명적인 정확도로 화살을 쏘는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_lothlorien_4_text" text="나무의 수호자가 되었다." />
+    <string id="taom_cc_taom_youth_lothlorien_4_desc" text="당신은 나무의 수호자가 되어, 고대 엘프의 전통에 따라 창과 검으로 로스로리엔의 심장부를 지켰다." />
+    <string id="taom_cc_taom_youth_lothlorien_5_text" text="여군주의 제자로서 거울의 길을 걸었다." />
+    <string id="taom_cc_taom_youth_lothlorien_5_desc" text="당신은 갈라드리엘의 조언자들 가까이에서 황금 숲의 더 깊은 기술을 배웠고, 칼을 들지 않고도 군주들의 의지를 바꿀 수 있는 힘의 노래와 조용한 설득을 익혔다. 당신은 쉽게 이름 붙일 수 없는 선물들을 가지고 떠났다." />
+    <string id="taom_cc_taom_youth_isengard_1_text" text="사루만의 와르그 기병대에 합류했다." />
+    <string id="taom_cc_taom_youth_isengard_1_desc" text="당신은 사루만의 군대에서 기병으로 훈련받으며, 와르그를 제어하고 평원을 가로질러 파괴적인 속도로 공격하는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_isengard_2_text" text="오르상크의 구덩이를 지켰다." />
+    <string id="taom_cc_taom_youth_isengard_2_desc" text="당신은 오르상크에 배치되어, 석궁을 다루며 사루만의 뜻에 반대하는 모든 자들로부터 번식장을 방어했다." />
+    <string id="taom_cc_taom_youth_isengard_3_text" text="우루크하이 보병대에서 싸웠다." />
+    <string id="taom_cc_taom_youth_isengard_3_desc" text="당신은 사나운 우루크하이들과 함께 훈련하며, 그들의 잔혹한 근접 전투 방식을 배우고 가혹한 훈련을 통해 지구력을 키웠다." />
+    <string id="taom_cc_taom_youth_isengard_4_text" text="사루만의 첩자로 정찰했다." />
+    <string id="taom_cc_taom_youth_isengard_4_desc" text="당신은 정찰병이자 첩자로 파견되어, 사루만의 전쟁 기계를 위해 정보를 수집하기 위해 여러 땅을 누볐다." />
+    <string id="taom_cc_taom_youth_isengard_5_text" text="아이센가드의 창병대에 합류했다." />
+    <string id="taom_cc_taom_youth_isengard_5_desc" text="당신은 아이센가드의 강력한 장창병이 되어, 어떤 기병 돌격도 막아낼 수 있는 밀집 대형으로 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_isengard_6_text" text="사루만의 전투단에서 싸워 나갔다." />
+    <string id="taom_cc_taom_youth_isengard_6_desc" text="당신은 아이센가드의 잔혹한 전투단에서 자신을 증명했고, 생존을 위해 모든 무기 방식을 익혔으며 도움이 되지 않는 것은 모두 버렸다. 사루만은 오직 결과만을 중요하게 여겼고, 전투단은 그 철학을 자비 없이 강요했다." />
+    <string id="taom_cc_taom_youth_gundabad_1_text" text="군다바드의 와르그 기병대와 함께 달렸다." />
+    <string id="taom_cc_taom_youth_gundabad_1_desc" text="당신은 군다바드 산의 와르그 기병대와 함께 훈련하며, 위험한 산길을 지나는 야만적인 짐승들을 제어하고 그 등에서 창과 창으로 공격하는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_gundabad_2_text" text="군다바드의 대장간을 지켰다." />
+    <string id="taom_cc_taom_youth_gundabad_2_desc" text="당신은 군다바드의 수비대에서 복무하며, 활과 창으로 침입자들로부터 대장간과 터널을 방어했다." />
+    <string id="taom_cc_taom_youth_gundabad_3_text" text="광전사들과 훈련했다." />
+    <string id="taom_cc_taom_youth_gundabad_3_desc" text="당신은 군다바드의 광전사들 사이에 있었고, 무모한 분노와 압도적인 힘으로 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_gundabad_4_text" text="산길을 정찰했다." />
+    <string id="taom_cc_taom_youth_gundabad_4_desc" text="당신은 군다바드 주변의 위험한 산길을 돌아다니며, 적을 추적하고 동족들의 안전한 통행을 보장했다." />
+    <string id="taom_cc_taom_youth_gundabad_5_text" text="군다바드의 창 군단에서 전선을 지켰다." />
+    <string id="taom_cc_taom_youth_gundabad_5_desc" text="당신은 군다바드 산의 중창병 대형과 함께 훈련하고 행군했으며, 돌격에 맞서 버티고 잔혹한 북부 환경에서 전선이 교체될 때까지 위치를 지키는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_gundabad_6_text" text="고개의 약탈단과 함께 달렸다." />
+    <string id="taom_cc_taom_youth_gundabad_6_desc" text="당신은 산악 부족의 구조 밖에서 살았고, 전투단을 따라다니며 모든 소규모 전투의 전리품을 챙기는 손재주 빠른 기회주의자들과 함께 움직였다. 투척 무기와 빠른 다리가 아무것도 당신을 지켜주지 못할 때 당신을 살려주었다." />
+    <string id="taom_cc_taom_youth_dolguldur_1_text" text="사령술사의 기병대에 복무했다." />
+    <string id="taom_cc_taom_youth_dolguldur_1_desc" text="당신은 돌 굴두르를 위해 기병으로 복무하며, 어둠의 말들을 지휘하고 미르크우드 남부 전역에 공포를 퍼뜨렸다." />
+    <string id="taom_cc_taom_youth_dolguldur_2_text" text="그림자의 전당을 지켰다." />
+    <string id="taom_cc_taom_youth_dolguldur_2_desc" text="당신은 돌 굴두르의 어두운 전당을 방어하며, 활과 검으로 사령술사의 영역을 지켰다." />
+    <string id="taom_cc_taom_youth_dolguldur_3_text" text="전쟁의 암흑술을 배웠다." />
+    <string id="taom_cc_taom_youth_dolguldur_3_desc" text="당신은 전쟁의 암흑술로 기술을 연마했고, 돌 굴두르의 그림자진 복도에서 교활함과 기만으로 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_dolguldur_4_text" text="타락한 녹색숲에서 침입자를 사냥했다." />
+    <string id="taom_cc_taom_youth_dolguldur_4_desc" text="당신은 사령술사의 영역 근처를 배회하는 자들을 추적하고 제거하기 위해 미르크우드 남부의 뒤틀린 덤불 속으로 보내졌고, 소리나 발자국을 남기지 않고 타락한 숲을 통과하여 목표를 추적하는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_dolguldur_5_text" text="돌 굴두르의 그림자 군단에서 행군했다." />
+    <string id="taom_cc_taom_youth_dolguldur_5_desc" text="당신은 돌 굴두르의 어둠의 군단의 철저한 규율 대열에서 훈련받았고, 사령술사 요새의 타락이 당신의 발걸음과 침묵 속으로 스며들면서 대형으로 중무기를 휘두르는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_dolguldur_6_text" text="네크로맨서의 전령으로 어둠 속을 누볐다." />
+    <string id="taom_cc_taom_youth_dolguldur_6_desc" text="당신은 아무도 글로 적지 않는 메시지를 타락한 숲을 통해 전달했고, 결코 얼굴을 드러내지 않는 요원들에게 직접 전했다. 이 임무는 침묵과 인내, 그리고 그림자가 요구할 때 경고 없이 타격할 수 있는 능력을 요구했다." />
+    <string id="taom_cc_taom_youth_umbar_1_text" text="해적 함대에서 복무했다." />
+    <string id="taom_cc_taom_youth_umbar_1_desc" text="당신은 움바르의 해적 함대에 합류하여 배 위에서 싸우고 곤도르의 해안 방어선에 대한 접선 공격을 이끄는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_umbar_2_text" text="움바르의 항구를 경비했다." />
+    <string id="taom_cc_taom_youth_umbar_2_desc" text="당신은 움바르의 항구 수비대에서 복무하며 부두를 방어하고 해안 방어 기술을 배웠다." />
+    <string id="taom_cc_taom_youth_umbar_3_text" text="해적들과 함께 곤도르 해안을 습격했다." />
+    <string id="taom_cc_taom_youth_umbar_3_desc" text="당신은 적의 부두로 돌격하는 선봉에 섰고, 투창을 던지고 방어자들을 베어 가르며 약탈물을 싣고 검은 배로 돌아왔다. 습격은 빠르고 잔혹했으며, 당신은 망설임이 목숨을 앗아간다는 것을 배웠다." />
+    <string id="taom_cc_taom_youth_umbar_4_text" text="해적 정찰병으로 벨팔라스 만을 항해했다." />
+    <string id="taom_cc_taom_youth_umbar_4_desc" text="당신은 해적 함대의 돛대 정찰대와 정찰선에서 복무하며 조류를 읽고 넓은 바다를 가로질러 먹잇감을 찾아냈고, 흔들리는 갑판에서 활을 쏘는 법을 배웠다. 당신이 본 것이 습격의 진행 여부를 결정했다." />
+    <string id="taom_cc_taom_youth_umbar_5_text" text="검은 누메노르인의 창병 전열에 섰다." />
+    <string id="taom_cc_taom_youth_umbar_5_desc" text="당신은 움바르 보병의 규율 잡힌 지상 진형에서 훈련하며, 배들이 뒤에서 하역하는 동안 창과 방패로 해안 교두보를 지키는 법을 배웠다. 검은 누메노르인 장교들은 정확성을 요구했고, 그것을 얻어냈다." />
+    <string id="taom_cc_taom_youth_umbar_6_text" text="움바르 부두가의 무법자들과 어울렸다." />
+    <string id="taom_cc_taom_youth_umbar_6_desc" text="당신은 항구 도시의 거친 변두리에서 생존했고, 신고할 수 없는 물품들을 이동시키며 어떤 학교에서도 가르칠 수 없는 기술들을 습득했다. 해적 세계는 아무도 눈치채지 못한 기회를 볼 수 있을 만큼 영리한 자들을 위한 자리가 있었다." />
+    <string id="taom_cc_taom_youth_empire_1_text" text="언덕 기병대와 함께 말을 탔다." />
+    <string id="taom_cc_taom_youth_empire_1_desc" text="튼튼한 언덕 조랑말을 타고 당신은 던랜드의 언덕 기병대와 함께 달리며 고원의 험난한 지형에서 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_empire_2_text" text="부족 장옥에서 복무했다." />
+    <string id="taom_cc_taom_youth_empire_2_desc" text="던랜드의 부족 장옥 안에서 당신은 전술과 지휘 기술을 배웠고, 당신의 씨족을 위한 습격과 방어를 계획했다." />
+    <string id="taom_cc_taom_youth_empire_3_text" text="국경 경비대와 함께 경비를 섰다." />
+    <string id="taom_cc_taom_youth_empire_3_desc" text="당신은 던랜드의 국경 경비대에 합류하여 투창을 던지고 검으로 싸우며 당신의 씨족 영토를 방어했다." />
+    <string id="taom_cc_taom_youth_empire_4_text" text="고원지대를 정찰했다." />
+    <string id="taom_cc_taom_youth_empire_4_desc" text="당신은 정찰병으로서 고원지대와 숲을 돌아다니며 땅을 읽고 말 위에서 활을 쏘는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_empire_5_text" text="창의 형제단에 합류했다." />
+    <string id="taom_cc_taom_youth_empire_5_desc" text="당신은 던랜드의 창의 형제단 중 한 명이 되어 창과 방패로 밀집 대형에서 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_empire_6_text" text="부족 경보병으로 말-영주들을 괴롭혔다." />
+    <string id="taom_cc_taom_youth_empire_6_desc" text="부족 경보병으로서 당신은 협곡에서 로히림 외곽 기병들을 매복 공격하고, 투창을 던진 뒤 그들이 반격하기 전에 능선 속으로 사라지는 법을 배웠다. 말-영주들에 대한 오래된 원한은 모든 투척에 담겨 있었다." />
+    <string id="taom_cc_taom_youth_vlandia_1_text" text="로한의 기병대와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_vlandia_1_desc" text="당신은 로히림 사이에서 기수로서의 기량을 증명했고, 에오를 영의 전통에 따라 창을 들고 돌격하고 말 위에서 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_vlandia_2_text" text="에도라스의 도시 경비대에서 복무했다." />
+    <string id="taom_cc_taom_youth_vlandia_2_desc" text="당신은 에도라스의 성문과 성벽을 지키며 황금 전당을 섬기는 전술과 규율을 배웠다." />
+    <string id="taom_cc_taom_youth_vlandia_3_text" text="서부골의 경보병에 합류했다." />
+    <string id="taom_cc_taom_youth_vlandia_3_desc" text="당신은 서부골 경보병에 합류하여 넓은 평원에서 투척 무기와 검으로 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_vlandia_4_text" text="황야지대의 정찰대와 함께 말을 탔다." />
+    <string id="taom_cc_taom_youth_vlandia_4_desc" text="당신은 황야지대의 정찰대와 함께 말을 타고 평원을 가로질러 멀리까지 나아가며 동쪽의 위협을 감시했다." />
+    <string id="taom_cc_taom_youth_vlandia_5_text" text="동부골의 창병들 사이에 섰다." />
+    <string id="taom_cc_taom_youth_vlandia_5_desc" text="동부골의 창병으로서 당신은 적의 돌격에 맞서 방패벽을 지키는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_vlandia_6_text" text="로한의 종군 상인들과 함께 여행했다." />
+    <string id="taom_cc_taom_youth_vlandia_6_desc" text="직접 무기를 드는 대신, 당신은 종군 상인들과 함께 여행하며 행군 중에 생존하고 전쟁의 혼란에서 이익을 얻는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_sturgia_1_text" text="골짜기 왕국의 왕실 근위대에서 복무했다." />
+    <string id="taom_cc_taom_youth_sturgia_1_desc" text="당신은 골짜기 왕국의 왕에게 충성을 맹세하고 왕실 근위대에서 복무하며 북방인들의 무예 전통을 배웠다." />
+    <string id="taom_cc_taom_youth_sturgia_2_text" text="데일의 성문을 수비했다." />
+    <string id="taom_cc_taom_youth_sturgia_2_desc" text="수비대의 일원으로서, 당신은 재건된 데일의 성문을 지키며 도시가 무너지고 다시 일어서는 것을 목격한 베테랑들로부터 공성 방어의 기술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_sturgia_3_text" text="긴 호수 기슭의 민병대에서 싸웠다." />
+    <string id="taom_cc_taom_youth_sturgia_3_desc" text="당신은 호숫가 민병대와 함께 훈련하며, 데일과 남부 사이의 교역로에 걸쳐 있는 정착지를 방어하기 위해 투척 무기와 검으로 싸우는 법을 배웠습니다. 상업과 전투는 일상생활의 동등한 일부였습니다." />
+    <string id="taom_cc_taom_youth_sturgia_4_text" text="데일 동쪽 숲에서 사냥감과 오크를 추적했다." />
+    <string id="taom_cc_taom_youth_sturgia_4_desc" text="당신은 긴 호수 동쪽의 어두운 숲을 누비며 시장을 위한 사냥감을 쫓고 산에서 내려오는 오크 경로를 경계했습니다. 숲은 당신에게 땅을 읽는 법과 항상 활시위를 당겨 놓는 법을 가르쳐 주었습니다." />
+    <string id="taom_cc_taom_youth_sturgia_5_text" text="방패벽에 합류했다." />
+    <string id="taom_cc_taom_youth_sturgia_5_desc" text="당신은 데일의 방패벽에서 자리를 차지하며, 도시를 위협하는 어떤 적에 맞서서도 창과 방패를 들고 굳건히 서는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_sturgia_6_text" text="북부의 상인 대상과 함께 여행했다." />
+    <string id="taom_cc_taom_youth_sturgia_6_desc" text="당신은 데일, 에레보르, 그리고 남부 왕국들 사이를 오가는 대상과 함께 다니며, 상업의 기술, 도로에서의 생존, 그리고 일부 상인들을 매우 성공적으로 만들고 다른 이들을 매우 후회하게 만드는 기회주의를 배웠습니다." />
+    <string id="taom_cc_taom_youth_aserai_1_text" text="전쟁 코끼리와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_aserai_1_desc" text="당신은 하라드의 거대한 전쟁 코끼리와 함께 훈련하며, 타오르는 남부의 태양 아래서 그들의 높이 솟은 등에서 타고 싸우는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_aserai_2_text" text="하라드 사막 도시의 성벽을 감시했다." />
+    <string id="taom_cc_taom_youth_aserai_2_desc" text="당신은 하라드의 요새화된 도시의 뜨거운 햇살에 구워진 성벽에서 보초로 복무하며, 반짝이는 지평선을 훑어 적의 움직임을 찾고 사막 변경의 약탈자들을 향해 화살 공격을 지휘하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_aserai_3_text" text="사막 전초 기병대와 함께 탔다." />
+    <string id="taom_cc_taom_youth_aserai_3_desc" text="당신은 하라드의 신속한 전초 기병대에 합류하여, 광활한 사막을 말을 타고 정찰하며 적의 측면을 공격한 뒤 열기 아지랑이 속으로 다시 사라지는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_aserai_4_text" text="검은 뱀의 보병들과 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_aserai_4_desc" text="당신은 검은 뱀 깃발 아래에서 복무하는 규율 잡힌 창 부대에서 훈련하며, 무자비한 사막의 열기 속에서 진지를 지키고 북부로 전쟁을 가져갈 것을 맹세한 전사들과 보조를 맞춰 진격하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_aserai_5_text" text="하라드의 투창 경보병으로 적을 괴롭혔다." />
+    <string id="taom_cc_taom_youth_aserai_5_desc" text="당신은 느슨한 하라드림 경보병 스타일로 싸우며, 적을 약화시키기 위해 투창을 던진 뒤 검과 작은 방패로 접근전을 벌였습니다. 열기와 모래는 당신의 편이었고, 당신은 둘 다를 활용하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_aserai_6_text" text="태양의 땅의 유목 부족과 함께 방랑했다." />
+    <string id="taom_cc_taom_youth_aserai_6_desc" text="당신은 깊은 사막의 방랑민들과 함께 떠돌며, 물의 징후를 읽고 별빛으로 모래 바다를 항해하는 법을 배웠습니다. 돈이 떨어지면 다른 방법으로 생존했고, 광활하고 텅 빈 태양의 땅은 당신에게 그것들을 완벽히 익힐 공간을 주었습니다." />
+    <string id="taom_cc_taom_youth_battania_1_text" text="북부의 순찰대와 함께 탔다." />
+    <string id="taom_cc_taom_youth_battania_1_desc" text="당신은 두네다인 순찰대의 일원이 되어, 아르노르의 폐허를 거칠게 달리고 이실두르의 후계자들의 규율 잡힌 맹렬함으로 싸우는 법을 배웠습니다. 순찰대는 멀리 달렸고 길에서 만난 누구에게도 많은 것을 말하지 않았습니다." />
+    <string id="taom_cc_taom_youth_battania_2_text" text="에리아도르의 교차로를 감시했다." />
+    <string id="taom_cc_taom_youth_battania_2_desc" text="당신은 북부 왕국의 무너져가는 망루와 옛 교차로를 경계하며, 땅을 읽고 문제가 도착하기 전에 오크의 움직임 징후를 발견하는 법을 배웠습니다. 순찰대는 공식적인 초소가 아니라 오직 의무만을 지켰습니다." />
+    <string id="taom_cc_taom_youth_battania_3_text" text="두네다인 정찰병으로서 아르노르의 야생을 누볐다." />
+    <string id="taom_cc_taom_youth_battania_3_desc" text="당신은 옛 왕국의 덤불이 우거진 폐허와 황야를 순찰병으로 이동하며, 야생 땅에서 생존하고 돌에 기억이 깃든 지형을 가로질러 야수와 적 모두를 추적하는 법을 배웠습니다. 속도와 침묵이 당신의 유일한 도구였습니다." />
+    <string id="taom_cc_taom_youth_battania_4_text" text="오크 전투 무리에 맞서 순찰대 전열에 섰다." />
+    <string id="taom_cc_taom_youth_battania_4_desc" text="당신은 북부 정착지를 살아있게 유지하는 근접 교전에서 싸우며, 자신들이 백성과 어둠 사이의 마지막 방어선임을 아는 사람들의 꿋꿋함으로 검과 창을 휘두르는 법을 배웠습니다. 북부에는 증원군이 없었습니다." />
+    <string id="taom_cc_taom_youth_battania_5_text" text="북부의 마을들 사이에서 눈에 띄지 않게 움직였다." />
+    <string id="taom_cc_taom_youth_battania_5_desc" text="당신은 두네다인 정보원들의 은밀한 네트워크를 유지하며, 가명으로 정착지들 사이를 이동하고 오크의 움직임, 수상한 이방인들, 그리고 백성에 대한 위협에 관한 소식을 수집했습니다. 순찰대는 평범하게 보일 수 있는 사람들에게 의존했고, 당신은 그 재능이 있었습니다." />
+    <string id="taom_cc_taom_youth_battania_6_text" text="북부 왕국의 폐허에서 추적하고 매복했다." />
+    <string id="taom_cc_taom_youth_battania_6_desc" text="당신은 폐허가 된 아르노르의 옛 유적과 덤불에서 매복을 설치하는 법을 배우며, 흔적을 읽고 부서진 지형을 유리하게 활용했습니다. 은폐 지점에서 잘 맞춘 화살 한 발은 개활지의 열두 명의 가치가 있었고, 당신은 모든 사격을 가치 있게 만들었습니다." />
+    <string id="taom_cc_taom_youth_khuzait_1_text" text="켈렉 전사들과 함께 탔다." />
+    <string id="taom_cc_taom_youth_khuzait_1_desc" text="당신은 켈렉 전사들 사이에서 기병으로서의 가치를 증명하며, 동부 전쟁 기수들의 전통에 따라 룬의 광활한 초원에서 기마 전투를 배웠습니다." />
+    <string id="taom_cc_taom_youth_khuzait_2_text" text="룬의 정착지를 경비했다." />
+    <string id="taom_cc_taom_youth_khuzait_2_desc" text="당신은 룬의 정착지 성벽을 순찰하며, 활쏘기와 야생 동부 초원에서 온 약탈자들에 대한 방어술을 배웠습니다." />
+    <string id="taom_cc_taom_youth_khuzait_3_text" text="우룩-타르의 대열에 합류했다." />
+    <string id="taom_cc_taom_youth_khuzait_3_desc" text="우룩-타르의 일원으로서, 당신은 동부인의 경보병 전통에 따라 투척 무기와 검으로 싸우는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_khuzait_4_text" text="룬의 바다 해안을 기마 정찰병으로 순찰했다." />
+    <string id="taom_cc_taom_youth_khuzait_4_desc" text="당신은 내륙 바다의 해안을 따라 동부 종대보다 훨씬 앞서 말을 타고 나아가며, 위협과 기회를 찾아 땅을 살폈습니다. 대초원은 당신에게 기병의 거리감각과 궁수의 인내심을 주었습니다." />
+    <string id="taom_cc_taom_youth_khuzait_5_text" text="동부인 창 진형에서 전열을 지켰다." />
+    <string id="taom_cc_taom_youth_khuzait_5_desc" text="당신은 동족들과 어깨를 나란히 하고 규율 잡힌 동부인 창 전열에 섰으며, 기병에 맞서 버티고 서쪽으로 진군했던 붉은 여명의 깃발 아래 정렬된 대오로 전진하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_youth_khuzait_6_text" text="카라쉬 무리와 함께 여행했다." />
+    <string id="taom_cc_taom_youth_khuzait_6_desc" text="당신은 공식적인 동부인 씨족 구조 밖에서 살았으며, 군대를 따라다니며 그들의 행군에서 이익을 취하는 카라쉬 무리와 함께 이동했습니다. 교활함과 투척 무기가 거대한 동부 군단의 변방에서 당신을 먹여 살렸습니다." />
+    <string id="taom_cc_taom_education_gondor_1_text" text="귀족 가문의 자제들과 함께 훈련했다." />
+    <string id="taom_cc_taom_education_gondor_1_desc" text="당신은 미나스 티리스의 연병장에서 곤도르 귀족 가문의 자녀들과 함께 성장하며 훈련했습니다. 집정관에게 충성을 맹세한 기사들 아래서 검과 창으로 싸우는 법을 배웠고, 펠렌노르 평원에서 승마술을 연마하는 데 오랜 시간을 보냈습니다." />
+    <string id="taom_cc_taom_education_gondor_2_text" text="미나스 티리스의 시장에서 견습생으로 일했다." />
+    <string id="taom_cc_taom_education_gondor_2_desc" text="당신은 청소년기를 백색 도시의 계단식 시장 회관에서 심부름을 하고 장부를 익히며 보냈습니다. 백색 탑의 그늘 아래서 상인들에게 아첨하고 동전을 세며 거래의 기술을 빠르게 배웠습니다." />
+    <string id="taom_cc_taom_education_gondor_3_text" text="펠렌노르의 들판에서 노동했다." />
+    <string id="taom_cc_taom_education_gondor_3_desc" text="당신은 성벽 밖의 비옥한 농지에서 새벽부터 해질 무렵까지 일했으며, 곡물 다발을 운반하고 펠렌노르를 가로질러 소를 몰았습니다. 징집령이 내려졌을 때 창을 건네받았고, 국경 전쟁의 거친 참전용사에게 진형 훈련을 받았습니다." />
+    <string id="taom_cc_taom_education_gondor_4_text" text="백색 도시의 갑옷 제작자에게 도제 수업을 받았다." />
+    <string id="taom_cc_taom_education_gondor_4_desc" text="당신은 미나스 티리스의 대장간 구역에서 기술을 배웠으며, 엄격한 숙련 갑옷 제작자의 감독 아래 풀무를 불고 칼날을 갈았습니다. 성인이 될 무렵에는 망치질로 손에 굳은살이 박였고, 칼날의 뜨임질을 울림으로 판단할 수 있었습니다." />
+    <string id="taom_cc_taom_education_gondor_5_text" text="이실리엔의 황야를 돌아다녔다." />
+    <string id="taom_cc_taom_education_gondor_5_desc" text="당신은 어린 시절 이실리엔의 순찰대를 따라다니며, 안두인 동쪽의 무성한 정원을 소리 없이 이동하는 법을 배웠습니다. 제대로 당길 키가 되기 전에 첫 활시위를 당겼고, 진흙 속 발자국을 읽는 법을 익혔습니다." />
+    <string id="taom_cc_taom_education_gondor_6_text" text="오스길리아스의 폐허에서 물건을 뒤졌다." />
+    <string id="taom_cc_taom_education_gondor_6_desc" text="당신은 오스길리아스의 부서진 돌들을 뒤지며 자랐으며, 병사들에게 고물을 팔고 동전을 받고 전초기지 사이에서 전갈을 전했습니다. 폐허가 된 도시는 당신에게 민첩함과 교활함을 가르쳤습니다 — 던진 돌 하나로 자신보다 두 배나 큰 사람을 쫓아낼 수 있었습니다." />
+    <string id="taom_cc_taom_education_mordor_1_text" text="바라드두르의 훈련장에서 싸웠다." />
+    <string id="taom_cc_taom_education_mordor_1_desc" text="당신은 무기를 쥘 수 있게 되자마자 어둠의 탑의 투기장으로 던져졌습니다. 선배 전사들은 자비를 베풀지 않았고, 당신은 망설임이 고통을 의미한다는 것을 빠르게 배웠습니다. 고통은 당신에게 먼저 치고 강하게 치는 법을 가르쳤습니다." />
+    <string id="taom_cc_taom_education_mordor_2_text" text="검은 길을 따라 보급 수송대를 끌었다." />
+    <string id="taom_cc_taom_education_mordor_2_desc" text="당신은 모르도르의 그늘진 도로를 따라 물자를 운반하며, 관세 징수원과 부패한 감독관을 거래와 허세로 넘기는 법을 배웠습니다. 위험은 당신의 지혜를 날카롭게 했고, 어둠의 땅에서 정보가 철보다 가치 있다는 것을 발견했습니다." />
+    <string id="taom_cc_taom_education_mordor_3_text" text="어둠의 땅 대장간에서 노동했다." />
+    <string id="taom_cc_taom_education_mordor_3_desc" text="당신은 바라드두르를 둘러싼 연기 나는 대장간에서 돌을 나르고 풀무를 작동했으며, 첫 새벽부터 어두워진 지 한참 후까지 열기와 재를 견뎌냈습니다. 그 일은 약한 청년들을 부러뜨렸지만, 당신은 어떤 감독관도 꺼뜨릴 수 없는 냉혹한 인내심을 찾아냈습니다." />
+    <string id="taom_cc_taom_education_mordor_4_text" text="오크 작업반 사이에서 질서를 유지했다." />
+    <string id="taom_cc_taom_education_mordor_4_desc" text="당신은 곤봉과 마당 한 구석을 받고 작업반을 통제하라는 지시를 받았습니다. 군중을 읽는 법과 죽이지 않고 복종을 얻어내려면 어디를 쳐야 하는지 빠르게 배웠습니다. 전략과 잔혹함이 본능이 되었습니다." />
+    <string id="taom_cc_taom_education_mordor_5_text" text="고르고로스 평원을 가로질러 사냥했다." />
+    <string id="taom_cc_taom_education_mordor_5_desc" text="당신은 고르고로스의 황폐한 화산 평지를 가로질러 먹잇감을 추적하며, 재의 흔적을 읽고 먼 불빛의 빛으로 길을 찾는 법을 배웠습니다. 사냥감은 거의 없었고, 있는 것들은 맞서 싸웠습니다. 당신은 말라 있고 날카로운 눈을 가지고 집으로 돌아왔습니다." />
+    <string id="taom_cc_taom_education_mordor_6_text" text="검은 문 너머의 추방자들과 함께 달렸다." />
+    <string id="taom_cc_taom_education_mordor_6_desc" text="당신은 암흑군주 영역의 변방에서 살아남았으며, 순찰을 피해 빠져나가고 절도와 속임수로 살아가는 날렵한 무리와 함께 달렸습니다. 모란논의 그늘 아래 모든 그림자와 모든 뇌물 가격을 익혔습니다." />
+    <string id="taom_cc_taom_education_erebor_1_text" text="왕의 도끼 형제들과 함께 대연회장에서 훈련했다." />
+    <string id="taom_cc_taom_education_erebor_1_desc" text="당신은 외로운 산 깊숙한 곳의 울리는 훈련장에서 다인의 가신 젊은 전사들과 함께 전투를 연습했으며, 양손 도끼를 휘두르는 법을 배웠습니다. 모든 흉터는 교훈이었고, 모든 교훈은 자랑거리였습니다." />
+    <string id="taom_cc_taom_education_erebor_2_text" text="에레보르의 대장간에서 도제 수업을 받았다." />
+    <string id="taom_cc_taom_education_erebor_2_desc" text="당신은 청소년기를 대장장이 작업대에서 보내며, 외로운 산의 타오르는 심장부에서 금속을 다루는 법을 배웠습니다. 기술과 거래의 가치를 숙달했고, 대장간의 불이 꺼지면 완성된 칼날을 들고 데일의 시장으로 갔습니다." />
+    <string id="taom_cc_taom_education_erebor_3_text" text="외로운 산의 깊은 광산에서 일했다." />
+    <string id="taom_cc_taom_education_erebor_3_desc" text="당신은 수염이 나기 전부터 에레보르의 가장 낮은 갱도에서 곡괭이를 휘둘렀으며, 산의 숨겨진 통로와 터널 및 지지대의 공학을 배웠습니다. 깊은 돌은 당신에게 열린 하늘만큼이나 익숙해졌습니다." />
+    <string id="taom_cc_taom_education_erebor_4_text" text="아이언풋 방패벽과 함께 훈련했다." />
+    <string id="taom_cc_taom_education_erebor_4_desc" text="당신은 다인 아이언풋 전사들의 규율 잡힌 근접 전투 방식으로 훈련했으며, 좁은 터널 진형에서 방패를 버티고 도끼를 휘두르는 법을 배웠습니다. 키 큰 이들이 비틀거리는 복도에서 짧은 보폭은 장점이었습니다." />
+    <string id="taom_cc_taom_education_erebor_5_text" text="보물 금고에서 동전을 세었다." />
+    <string id="taom_cc_taom_education_erebor_5_desc" text="당신은 어린 나이부터 에레보르의 방대한 부를 계산하는 일을 도우며, 장부를 관리하고 산악 왕국에 보급하는 물류를 이해하는 법을 배웠습니다. 그 일은 당신을 체계적으로 만들었고 전략가의 자원 감각을 주었습니다." />
+    <string id="taom_cc_taom_education_erebor_6_text" text="산기슭과 숲길을 순찰했습니다." />
+    <string id="taom_cc_taom_education_erebor_6_desc" text="당신은 외곽 경비대의 일원으로 에레보르 주변 산비탈을 정찰하며, 오크 약탈대를 추적하고 소나무 숲의 은폐 지점에서 사격하는 법을 배웠습니다. 산의 공기는 당신의 감각을 날카롭게 했고 거리는 당신의 동맹이 되었습니다." />
+    <string id="taom_cc_taom_education_rivendell_1_text" text="임라드리스의 마상 훈련장에서 훈련했습니다." />
+    <string id="taom_cc_taom_education_rivendell_1_desc" text="당신은 리븐델의 고요한 훈련장에서 기마 기술을 연마하며, 엘프 전통이 요구하는 유려한 우아함으로 말을 타고 싸우는 법을 배웠습니다. 거대한 도서관은 결코 멀지 않았고, 검술과 지식에 대한 당신의 교육은 함께 진행되었습니다." />
+    <string id="taom_cc_taom_education_rivendell_2_text" text="엘론드의 궁전에서 공예와 지식을 배웠습니다." />
+    <string id="taom_cc_taom_education_rivendell_2_desc" text="당신은 성장기를 리븐델에 보존된 공예 기술과 역사를 배우며 보냈고, 숙련된 장인과 지식의 대가들과 함께 일했습니다. 긴 저녁의 대화는 당신의 언변과 세계의 오랜 과거에 대한 이해를 날카롭게 만들었습니다." />
+    <string id="taom_cc_taom_education_rivendell_3_text" text="숨겨진 계곡의 정원과 과수원을 돌보았습니다." />
+    <string id="taom_cc_taom_education_rivendell_3_desc" text="당신은 임라드리스의 계단식 정원을 가꾸며, 한 시대 동안 그 화단을 돌본 엘프들로부터 인내와 근면을 배웠습니다. 이랑 사이에서 당신은 검술을 연습했고, 생명을 돌보는 일이 절제된 힘에 대한 본능을 준다는 것을 깨달았습니다." />
+    <string id="taom_cc_taom_education_rivendell_4_text" text="임라드리스의 경계 초소를 순찰했습니다." />
+    <string id="taom_cc_taom_education_rivendell_4_desc" text="당신은 엘프 수호자들과 함께 계곡의 숨겨진 길 주변을 긴 순찰로 돌며, 숲을 읽고 사냥감이 당신의 존재를 알아채기 전에 화살을 쏘는 법을 배웠습니다. 계곡의 평화는 힘들게 쟁취한 것이었고 당신은 그것을 지키는 데 일조했습니다." />
+    <string id="taom_cc_taom_education_rivendell_5_text" text="엘론드의 궁전에서 치유 기술을 배웠습니다." />
+    <string id="taom_cc_taom_education_rivendell_5_desc" text="당신은 리븐델의 치유실에서 봉사하며, 엘론드의 치유사들의 지도 아래 약초 지식과 치료 기술을 배웠습니다. 지친 여행자들과 부상당한 엘프들을 돌보는 일은 당신에게 지식과 그것에 동반되는 공감 능력을 모두 주었습니다." />
+    <string id="taom_cc_taom_education_rivendell_6_text" text="계곡 너머의 야생 길을 방랑했습니다." />
+    <string id="taom_cc_taom_education_rivendell_6_desc" text="당신은 가능한 한 자주 리븐델의 경계를 벗어나, 트롤샤우즈와 안개산맥의 계곡들을 탐험했습니다. 당신은 위험에 대한 취향을 발달시켰고, 검이 단지 문제만 가져올 곳에서 교활함으로 살아남을 수 있다는 것을 발견했습니다." />
+    <string id="taom_cc_taom_education_mirkwood_1_text" text="스란두일의 궁정 호위대와 훈련했습니다." />
+    <string id="taom_cc_taom_education_mirkwood_1_desc" text="당신은 숲의 왕 가문의 젊은 전사들과 함께 훈련하며, 산 아래 궁전의 거대한 너도밤나무 사이에서 움직이고 싸우는 법을 배웠습니다. 궁정은 엄격했고, 당신은 검만큼이나 말로도 날카로워야 했습니다." />
+    <string id="taom_cc_taom_education_mirkwood_2_text" text="숲길을 따라 물품을 운반했습니다." />
+    <string id="taom_cc_taom_education_mirkwood_2_desc" text="당신은 미르크우드의 그림자를 통해 무역 물품을 호송하며, 숲을 읽고 위험한 여정의 끝에서 흥정하는 법을 배웠습니다. 길은 결코 안전하지 않았고, 살아남은 상인들은 매력적이고 빠르며 주의 깊었습니다." />
+    <string id="taom_cc_taom_education_mirkwood_3_text" text="숲 가장자리에서 채집하고 농사지었습니다." />
+    <string id="taom_cc_taom_education_mirkwood_3_desc" text="당신은 숲 왕국의 가장자리에 있는 개간지와 경작지를 돌보며 자랐고, 그림자진 숲이 내어주는 것을 수확했습니다. 그것은 힘들고 위험한 일이었으며, 당신은 어두운 것들이 다가올 때 빠르게 움직이는 법을 배웠습니다." />
+    <string id="taom_cc_taom_education_mirkwood_4_text" text="엘프 왕의 궁전에서 활과 목공예품을 제작했습니다." />
+    <string id="taom_cc_taom_education_mirkwood_4_desc" text="당신은 미르크우드의 엘프 활 제작자들로부터 기술을 배우며, 나무를 깎고 유명한 숲 왕국의 활을 만들었습니다. 이 작업은 인내와 정밀함을 동등하게 요구했고, 당신은 무기를 사용하는 것만큼이나 쉽게 만들 수 있는 손을 가지고 떠났습니다." />
+    <string id="taom_cc_taom_education_mirkwood_5_text" text="그림자진 숲 깊은 곳에서 사냥했습니다." />
+    <string id="taom_cc_taom_education_mirkwood_5_desc" text="당신은 숲 왕국의 사냥꾼들을 따라 미르크우드의 가장 어두운 곳으로 들어가, 부패한 덤불을 통해 사슴과 멧돼지를 추적했습니다. 모든 사냥은 숲의 생물들과의 조우 위험을 내포했고, 당신은 소리를 명확히 듣기 전에 쏘는 법을 배웠습니다." />
+    <string id="taom_cc_taom_education_mirkwood_6_text" text="숲 경계 순찰대와 함께 다녔습니다." />
+    <string id="taom_cc_taom_education_mirkwood_6_desc" text="당신은 스란두일의 공식 경계 밖을 돌아다니는 순찰대와 비정기적인 동행을 하며, 숲 왕국의 가장자리를 시험하는 거미족과 오크 정찰병들을 위한 함정과 매복을 설치하는 법을 배웠습니다. 교활함은 용기만으로는 할 수 없는 곳에서 당신을 살렸습니다." />
+    <string id="taom_cc_taom_education_lothlorien_1_text" text="카라스 갈라돈의 수호자들과 훈련했습니다." />
+    <string id="taom_cc_taom_education_lothlorien_1_desc" text="당신은 카라스 갈라돈의 은빛 궁정에서 전사의 기술을 연마하며, 여군주의 힘이 비추는 아래에서 갈라드림의 유려한 검술을 배웠습니다. 매일 아침은 훈련으로 시작했고 매일 저녁은 별빛과 긴 기억으로 끝났습니다." />
+    <string id="taom_cc_taom_education_lothlorien_2_text" text="말로른 나무의 도시에서 직조하고 공예품을 만들었습니다." />
+    <string id="taom_cc_taom_education_lothlorien_2_desc" text="당신은 로스로리엔의 직물과 공예 기술을 배우며, 은과 금의 천을 만드는 유명한 엘프 직조공들과 함께 일했습니다. 이 작업은 보기 드문 정밀함을 요구했고, 당신은 황금 숲에서 아름다움과 설득력이 분리될 수 없음을 깨달았습니다." />
+    <string id="taom_cc_taom_education_lothlorien_3_text" text="말로른 나무의 전망대에서 감시했습니다." />
+    <string id="taom_cc_taom_education_lothlorien_3_desc" text="당신은 말로른 가지 사이의 높은 전망대에서 긴 고요한 경비를 서며, 아래 숲을 읽고 은촉 화살을 치명적인 침착함으로 쏘는 법을 배웠습니다. 그 경비의 끝없는 인내는 당신의 눈을 형성하고 손을 고요하게 만들었습니다." />
+    <string id="taom_cc_taom_education_lothlorien_4_text" text="황금 숲의 은빛 경계를 순찰했습니다." />
+    <string id="taom_cc_taom_education_lothlorien_4_desc" text="당신은 로스로리엔의 외곽 국경을 걸으며, 딤릴 계곡 고개에서 오크 침입의 징후를 발견하는 법을 배웠습니다. 긴 침묵의 관찰 후 갑작스런 행동이 뒤따르는 날들은 당신을 숲처럼 인내심 있고 화살처럼 빠른 사냥꾼으로 만들었습니다." />
+    <string id="taom_cc_taom_education_lothlorien_5_text" text="황금 숲의 치유 기술을 배웠습니다." />
+    <string id="taom_cc_taom_education_lothlorien_5_desc" text="당신은 로스로리엔의 치유사들 사이에서 견습생으로 일하며, 수세기 동안 그 기술을 연마해온 이들의 지도 아래 아셀라스를 채집하고 약초와 상처의 지식을 배웠습니다. 여군주의 은총은 그 경계 안의 모든 치유에 닿아 있었습니다." />
+    <string id="taom_cc_taom_education_lothlorien_6_text" text="사적인 용무로 숲 너머를 방랑했습니다." />
+    <string id="taom_cc_taom_education_lothlorien_6_desc" text="당신은 종종 혼자 로스로리엔의 베일에 싸인 경계를 벗어나, 끝없는 호기심으로 안두인 강변과 그 너머의 갈색 땅을 탐험했습니다. 당신은 보이지 않게 지나가는 법과, 정면 길이 막혔을 때 속임수를 사용하는 법을 배웠습니다." />
+    <string id="taom_cc_taom_education_isengard_1_text" text="오르상크의 훈련장에서 훈련했습니다." />
+    <string id="taom_cc_taom_education_isengard_1_desc" text="당신은 아이센가드의 다져진 흙 마당에서 잔인한 훈련을 받으며, 우루크-하이 부사관들의 눈 아래에서 미늘창과 양손검을 다루는 법을 배웠습니다. 사루만의 군대는 자비 없이 훈련했고, 나약함은 빠르게 당신에게서 몰아내졌습니다." />
+    <string id="taom_cc_taom_education_isengard_2_text" text="오르상크 아래 기계 작업장에서 견습공 생활." />
+    <string id="taom_cc_taom_education_isengard_2_desc" text="사루만의 전쟁 기계에 연료를 공급하던 연기 자욱한 작업장에서 금속을 다루고 자재를 관리하는 법을 배웠으며, 압박 속에서 제작과 보급의 기술을 익혔습니다. 일은 끊임없고 창의적이었으며, 사루만은 독창성에 보상했습니다." />
+    <string id="taom_cc_taom_education_isengard_3_text" text="아이센가드의 구덩이에서 땅을 파고 운반." />
+    <string id="taom_cc_taom_education_isengard_3_desc" text="당신은 힘이 충분해지자마자 구덩이에서 일하게 되었고, 사루만의 끝없는 건설을 위해 바위를 깨고 버력을 운반했습니다. 이 일은 당신의 지구력을 대부분의 인간이 견딜 수 있는 한계를 넘어서도록 만들었습니다." />
+    <string id="taom_cc_taom_education_isengard_4_text" text="우루크하이 보병과 함께 훈련." />
+    <string id="taom_cc_taom_education_isengard_4_desc" text="당신은 아이센가드의 창조된 전사들과 함께 훈련을 받았고, 밀집 대형에서 창으로 버티고 검으로 베는 법을 배웠습니다. 우루크도 순수한 인간도 아니었기에, 인정받기 위해서는 두 배로 냉혹해야 했습니다." />
+    <string id="taom_cc_taom_education_isengard_5_text" text="사루만의 눈을 위해 로한 평원을 정찰." />
+    <string id="taom_cc_taom_education_isengard_5_desc" text="당신은 아이센가드의 정찰병으로 올드와 투구 골짜기 진입로를 돌아다니며, 탁 트인 지형을 빠르고 은밀하게 이동하는 법을 배웠습니다. 땅을 읽고 로한 순찰대를 피하는 일은 당신의 본능을 날카롭게 벼렸습니다." />
+    <string id="taom_cc_taom_education_isengard_6_text" text="아이센가드의 그림자 속에서 정보 전달." />
+    <string id="taom_cc_taom_education_isengard_6_desc" text="당신은 손이 빠르고 영리해서 사루만의 첩보망에서 전령이자 정보원으로 사용되었습니다. 비밀이 얼마나 가치 있는지, 그리고 그것을 지키는 데 얼마나 고통이 따르는지 배웠습니다." />
+    <string id="taom_cc_taom_education_gundabad_1_text" text="군다바드 산의 전쟁 홀에서 훈련." />
+    <string id="taom_cc_taom_education_gundabad_1_desc" text="당신은 산의 요새에 있는 횃불 밝힌 훈련장에서 피를 보았고, 북부 오크 씨족의 전통에 따라 거친 말 타기와 무거운 무기 다루기를 배웠습니다. 지위는 원로들 앞의 투기장에서 자신을 증명할 수 있는 자들에게 주어졌습니다." />
+    <string id="taom_cc_taom_education_gundabad_2_text" text="군다바드의 무기 대장장이에서 견습." />
+    <string id="taom_cc_taom_education_gundabad_2_desc" text="당신은 산의 시끄러운 대장간에서 조잡하지만 효과적인 무기를 벼리는 법을 배웠고, 그것을 보급품이나 호의와 거래하는 법을 익혔습니다. 일은 추했지만 기술은 진짜였고, 당신은 철과 거래 모두를 알고 대장간을 떠났습니다." />
+    <string id="taom_cc_taom_education_gundabad_3_text" text="산 아래 광산에서 굴착." />
+    <string id="taom_cc_taom_education_gundabad_3_desc" text="당신은 군다바드의 빛 없는 갱도에서 곡괭이를 휘둘렀고, 산의 구조와 갱도 지지대의 공학을 배웠습니다. 터널이 당신의 집이었고, 눈을 감고도 그곳을 탐색할 수 있었으며, 그렇게 해야 하는 경우도 많았습니다." />
+    <string id="taom_cc_taom_education_gundabad_4_text" text="회색 산�맥의 고갯길에서 전투." />
+    <string id="taom_cc_taom_education_gundabad_4_desc" text="당신은 회색 산맥을 공격하는 약탈단과 함께 달렸고, 북부 씨족의 잔혹한 기습 전술로 도끼와 창을 다루는 법을 배웠습니다. 돌아올 때마다 더 난폭해졌고 자신의 생존에 대해 조금 더 확신하게 되었습니다." />
+    <string id="taom_cc_taom_education_gundabad_5_text" text="군다바드 주변의 황야를 배회." />
+    <string id="taom_cc_taom_education_gundabad_5_desc" text="당신은 산 요새를 둘러싼 바위투성이 황무지를 순찰했고, 침입자를 추적하고 적의 움직임 흔적을 읽었습니다. 추운 북부 황야는 당신에게 인내심과 어떤 목표물보다도 오래 버티는 궁수의 고요함을 주었습니다." />
+    <string id="taom_cc_taom_education_gundabad_6_text" text="산악 고갯길에서 홀로 생존." />
+    <string id="taom_cc_taom_education_gundabad_6_desc" text="추방당했거나 어떤 빚에서 도망친 당신은 산 주변의 위험한 고갯길에서 스스로를 지켜냈고, 절도와 재빠른 사고로 살아남았습니다. 그 경험은 당신에게 충성심에 대한 환상을 버리게 했고, 곤경에서 벗어나는 예리한 재능을 주었습니다." />
+    <string id="taom_cc_taom_education_dolguldur_1_text" text="돌 굴두르의 그림자 마당에서 훈련." />
+    <string id="taom_cc_taom_education_dolguldur_1_desc" text="당신은 강령술사의 요새에 있는 빛 없는 중정에서 훈련받았고, 두건 쓴 감독관들의 눈 아래에서 미늘창과 대검으로 싸우는 법을 배웠습니다. 그곳을 덮고 있던 그림자는 당신의 뼛속으로 스며들어 폭력에 대한 본능을 날카롭게 했습니다." />
+    <string id="taom_cc_taom_education_dolguldur_2_text" text="어둠의 작업장에서 그림자강철 단조." />
+    <string id="taom_cc_taom_education_dolguldur_2_desc" text="당신은 돌 굴두르의 흑철 대장간에서 일했고, 약한 젊은이라면 부러질 조건에서 무기를 만드는 법을 배웠습니다. 재료는 어둡고 방법은 더 어두웠으며, 당신은 가지고 있다고 인정할 사람이 거의 없는 지식을 가지고 떠났습니다." />
+    <string id="taom_cc_taom_education_dolguldur_3_text" text="요새의 동굴에서 돌 운반." />
+    <string id="taom_cc_taom_education_dolguldur_3_desc" text="당신은 돌 굴두르의 지하 발굴 현장에서 노동했고, 타락한 언덕 아래 영구적인 어둠 속에서 석재를 끌고 터널을 지지했습니다. 일은 끊임없었고, 지구력만이 어떤 안도감도 살 수 있는 유일한 통화였습니다." />
+    <string id="taom_cc_taom_education_dolguldur_4_text" text="마법 걸린 숲의 그림자 순찰에서 전투." />
+    <string id="taom_cc_taom_education_dolguldur_4_desc" text="당신은 돌 굴두르의 타락을 남부 미르크우드 깊숙이 밀어넣는 어둠의 순찰대와 함께 달렸고, 도끼와 창으로 저항을 베어냈습니다. 각 출격은 당신을 뒤틀린 숲 더 깊이 데려갔고, 이전의 자아를 덜 남겼습니다." />
+    <string id="taom_cc_taom_education_dolguldur_5_text" text="어두운 숲의 가장자리를 사냥." />
+    <string id="taom_cc_taom_education_dolguldur_5_desc" text="당신은 남부 미르크우드의 타락한 숲속을 추적했고, 요새에 너무 가까이 오는 모든 생명체를 죽이며 모든 길을 뒤틀어버리는 숲에서 소리 없이 움직이는 법을 배웠습니다. 당신의 눈은 햇빛 없는 세계에 적응했습니다." />
+    <string id="taom_cc_taom_education_dolguldur_6_text" text="강령술사의 첩자로서 그림자 속을 이동." />
+    <string id="taom_cc_taom_education_dolguldur_6_desc" text="당신은 강령술사의 네트워크에서 전령이자 요원으로 사용되었고, 어두운 숲을 통해 메시지를 운반하고 얼굴을 드러내지 않는 연락책에게 전달했습니다. 그림자가 당신의 갑옷이고 침묵이 최고의 무기라는 것을 배웠습니다." />
+    <string id="taom_cc_taom_education_umbar_1_text" text="검은 배에서 항해술과 검술 학습." />
+    <string id="taom_cc_taom_education_umbar_1_desc" text="당신은 어릴 때 바다로 나갔고, 해적 전통의 커틀라스와 승선용 도끼로 싸우며 돛을 다루는 법을 배웠습니다. 군함의 갑판이 당신의 훈련장이었고, 안두인 삼각주가 당신의 증명장이었습니다." />
+    <string id="taom_cc_taom_education_umbar_2_text" text="항구의 부두와 계산소를 누빔." />
+    <string id="taom_cc_taom_education_umbar_2_desc" text="당신은 움바르의 분주한 조선소에서 말이 빠르고 손이 빠르게 자랐고, 구매자를 매혹시키고, 부풀려진 청구서를 알아채고, 곤란한 질문 없이 세관을 통과해 물건을 옮기는 법을 배웠습니다. 항구는 상업과 속임수 모두의 학교였습니다." />
+    <string id="taom_cc_taom_education_umbar_3_text" text="움바르의 조선소에서 작업." />
+    <string id="taom_cc_taom_education_umbar_3_desc" text="당신은 움바르의 거대한 조선소에서 목재를 다듬고 판자를 틈새 메우기를 배웠고, 바다를 가로질러 전쟁을 운반하는 선박의 공학을 연구했습니다. 배를 만들지 않을 때는 그것을 어떻게 부술지 생각하고 있었습니다." />
+    <string id="taom_cc_taom_education_umbar_4_text" text="해적들과 함께 곤도르의 해안 마을을 습격했다." />
+    <string id="taom_cc_taom_education_umbar_4_desc" text="당신은 거의 젊은이에 불과했을 때 곤도르 해안에서 첫 습격을 감행했으며, 검과 투척 단도를 들고 승선 공격대의 선두에서 싸웠다. 습격은 잔혹하고 신속했으며, 폭력이 얼마나 가치 있는지 정확히 가르쳐주었다." />
+    <string id="taom_cc_taom_education_umbar_5_text" text="감시대에서 해적 항로를 항해했다." />
+    <string id="taom_cc_taom_education_umbar_5_desc" text="당신은 감시병이자 정찰 선원으로 복무하며 바다를 읽고 벨팔라스 만의 위험한 해역을 통과하는 항로를 계획하는 법을 배웠다. 돛대 꼭대기에서 당신이 발견한 것이 습격의 성공과 재앙을 가르는 기준이었다." />
+    <string id="taom_cc_taom_education_umbar_6_text" text="움바르의 뒷골목을 통해 밀수품을 운반했다." />
+    <string id="taom_cc_taom_education_umbar_6_desc" text="당신은 항구 도시의 암시장에서 활동하며 신고할 수 없는 물건과 기록할 수 없는 메시지를 운반했다. 이 일은 비밀과 작은 동전으로 보수를 받았으며, 당신은 움바르의 모든 장물아비, 뇌물, 그리고 탈출구를 익혔다." />
+    <string id="taom_cc_taom_education_empire_1_text" text="부족장의 젊은 전사들과 함께 훈련했다." />
+    <string id="taom_cc_taom_education_empire_1_desc" text="당신은 언덕 요새의 진흙 훈련장에서 족장의 아들들과 함께 훈련하며 거친 던랜드 방식으로 말을 타고 양손검을 휘두르는 법을 배웠다. 모든 상처는 교훈이었고 모든 교훈은 말을 타는 자들에 대한 오래된 원한을 담고 있었다." />
+    <string id="taom_cc_taom_education_empire_2_text" text="언덕 부족과 저지대 시장 사이에서 교역했다." />
+    <string id="taom_cc_taom_education_empire_2_desc" text="당신은 언덕 정착지와 강변 시장 사이에서 물품과 소식을 나르며 거칠게 흥정하고 신뢰할 수 없는 구매자에게 미소 짓는 법을 배웠다. 던랜드와 더 넓은 세계 사이의 길은 험했고, 매력은 종종 칼보다 저렴했다." />
+    <string id="taom_cc_taom_education_empire_3_text" text="던랜드 언덕에서 양을 치고 창을 벼렸다." />
+    <string id="taom_cc_taom_education_empire_3_desc" text="당신은 바람에 휩쓸린 던랜드 언덕을 가로질러 양떼를 돌보며 청춘을 보냈고, 소집령이 내려지자 창을 건네받고 민병대로 밀려 들어갔다. 언덕은 당신을 강하게 만들었고 민병대는 당신을 위험하게 만들었다." />
+    <string id="taom_cc_taom_education_empire_4_text" text="대장간과 목각 작업대에서 일했다." />
+    <string id="taom_cc_taom_education_empire_4_desc" text="당신은 던랜드 정착지의 실용적인 공예에서 금속과 목재를 다루는 법을 배우며 부족을 위한 도구, 무기, 그리고 부속품을 만들었다. 이 일은 당신에게 영리한 손과 물건이 어떻게 조립되고 어떻게 분해될 수 있는지 보는 눈을 주었다." />
+    <string id="taom_cc_taom_education_empire_5_text" text="던랜드의 숲에서 사냥하고 식량을 구했다." />
+    <string id="taom_cc_taom_education_empire_5_desc" text="당신은 안개산맥과 접한 숲이 우거진 능선을 젊은 사냥꾼으로서 배웠고, 대부분의 아이들이 제대로 잡기도 전에 사슴을 추적하고 활을 들었다. 숲은 그 비밀을 지켰고 당신은 그 대부분을 배웠다." />
+    <string id="taom_cc_taom_education_empire_6_text" text="추방자로서 부족들 사이를 떠돌았다." />
+    <string id="taom_cc_taom_education_empire_6_desc" text="당신은 추방당하거나 떠나돌아다녔고, 던랜드 사회의 가장자리에서 형성기를 보내며 일과 문제를 동등하게 주워 담았다. 당신은 잘 겨냥된 투척이나 설득력 있는 거짓말이 어떤 부족 배지로도 열 수 없는 문을 열 수 있다는 것을 배웠다." />
+    <string id="taom_cc_taom_education_vlandia_1_text" text="원수의 가문에서 훈련을 받으며 말을 탔다." />
+    <string id="taom_cc_taom_education_vlandia_1_desc" text="당신은 리더마크의 원수 중 한 명을 섬기며 청춘을 보내고, 로한의 넓은 초원에서 창과 검으로 기마전의 기술을 배웠다. 기마술은 리더마크에서 가르쳐지는 것이 아니었다 — 그것은 숨쉬어지는 것이었다." />
+    <string id="taom_cc_taom_education_vlandia_2_text" text="리더마크 시장을 통해 물품을 거래했다." />
+    <string id="taom_cc_taom_education_vlandia_2_desc" text="당신은 에도라스의 거점과 로한의 작은 마을들 사이에서 상품과 가격을 나르며 사람들을 읽고 하루의 빛이 사라지기 전에 거래를 성사시키는 법을 배웠다. 평원은 길고 비었으며 시장 좌판에서의 대화가 세상을 돌아가게 했다." />
+    <string id="taom_cc_taom_education_vlandia_3_text" text="웨스트폴드에서 말을 기르고 민병으로 복무했다." />
+    <string id="taom_cc_taom_education_vlandia_3_desc" text="당신은 웨스트폴드의 가족 목초지에서 일하며 거의 걷기 전에 말을 다루는 법을 배웠고, 창을 들기에 충분히 큰 키가 되자마자 민병대에 징집되었다. 서부 로한의 구르는 평원이 당신의 학교였다." />
+    <string id="taom_cc_taom_education_vlandia_4_text" text="알드부르그의 대장장이에게 도제로 들어갔다." />
+    <string id="taom_cc_taom_education_vlandia_4_desc" text="당신은 알드부르그의 대장간에서 로한의 밝은 강철을 빚는 법을 배우며 로히림을 위한 칼날과 부속품을 만들었다. 당신은 매일 밤 팔이 아프고 어떤 전장도 꺾을 수 없는 기술에 대한 자부심을 안고 집에 돌아갔다." />
+    <string id="taom_cc_taom_education_vlandia_5_text" text="이스트폴드에서 사냥하고 지평선을 감시했다." />
+    <string id="taom_cc_taom_education_vlandia_5_desc" text="당신은 활을 들고 이스트폴드 전역을 넓게 돌아다니며 사냥감을 쫓고 오크 이동의 징후를 찾아 동쪽 지평선을 예리하게 감시했다. 넓은 평원은 당신에게 멀리 보고 조용히 움직이는 법을 가르쳤고, 두 기술 모두 당신에게 큰 도움이 되었다." />
+    <string id="taom_cc_taom_education_vlandia_6_text" text="고정된 충성 없이 월드를 떠돌았다." />
+    <string id="taom_cc_taom_education_vlandia_6_desc" text="당신은 자신의 것이라고 부를 씨족이나 거점 없이 월드의 야생 초원을 떠돌며 평원이 제공하는 것과 때로는 다른 사람들이 충분히 잘 숨기지 못한 것으로 생존하는 법을 배웠다. 교활함은 운이 허락하지 않을 때 당신을 먹여 살렸다." />
+    <string id="taom_cc_taom_education_sturgia_1_text" text="브란드 왕의 왕실 전당에서 훈련했다." />
+    <string id="taom_cc_taom_education_sturgia_1_desc" text="당신은 데일의 무술 교육을 받으며 브란드의 가문 호위대의 지도 아래 말을 타고 중무기를 휘두르는 법을 배웠다. 재건된 도시는 번영하고 자랑스러웠으며, 그 병사들은 도시의 명성에 부합할 것으로 기대되었다." />
+    <string id="taom_cc_taom_education_sturgia_2_text" text="데일의 무역상 건물에서 서기로 일했다." />
+    <string id="taom_cc_taom_education_sturgia_2_desc" text="당신은 동쪽과 남쪽의 물품이 에레보르와 북쪽의 물품과 만나는 데일의 상인 회관에서 장부를 기록하고 구매자를 매혹시키는 법을 배웠다. 도시의 유명한 무역은 부를 이해하고 싶은 사람에게 이상적인 교실이었다." />
+    <string id="taom_cc_taom_education_sturgia_3_text" text="긴호수에서 고기를 잡고 주변 들판에서 일했다." />
+    <string id="taom_cc_taom_education_sturgia_3_desc" text="당신은 긴호수에서 그물을 끌어올리고 에스가로스 주변의 농지를 돌보며 자랐고, 호수 생활이 요구하는 체력을 길렀다. 민병대가 소집되었을 때 당신은 다른 자유민들과 함께 창을 들고 고향을 지키기 위해 행진했다." />
+    <string id="taom_cc_taom_education_sturgia_4_text" text="데일의 작업장에서 공예를 배웠다." />
+    <string id="taom_cc_taom_education_sturgia_4_desc" text="당신은 금속세공과 상인들이 멀리 남쪽으로 가져가는 정교한 물품으로 유명한 데일의 작업장에서 도제 수업을 받았다. 장인의 손과 장인의 자부심이 당신의 것이 되었고, 그것들을 지킬 만큼 날카로운 칼날도 함께였다." />
+    <string id="taom_cc_taom_education_sturgia_5_text" text="어둠숲 경계와 숲길에서 사냥했다." />
+    <string id="taom_cc_taom_education_sturgia_5_desc" text="당신은 긴호수 남쪽의 어두운 숲 가장자리를 돌아다니며 사냥감을 추적하고 더 나쁜 것들의 주의를 피하는 법을 배웠다. 당신의 활은 가장 믿을 만한 동반자였고 숲길에 대한 당신의 지식은 당신을 여러 번 살려주었다." />
+    <string id="taom_cc_taom_education_sturgia_6_text" text="호수 마을 부두의 변두리에서 근근이 살아갔다." />
+    <string id="taom_cc_taom_education_sturgia_6_desc" text="당신은 에스가로스의 부두 노동자들과 소매치기들 사이에서 자라났으며, 정직한 임금을 부정직한 방법으로 보충하는 법과 순찰대가 도착하기 전에 사라지는 법을 배웠습니다. 호수 마을의 분주한 부두는 세상이 실제로 어떻게 돌아가는지에 대한 훌륭한 교육장이었습니다." />
+    <string id="taom_cc_taom_education_aserai_1_text" text="검은 뱀의 전쟁 군대와 함께 말을 탔다." />
+    <string id="taom_cc_taom_education_aserai_1_desc" text="당신은 검은 뱀의 가문 기사들 사이에서 훈련받았으며, 남쪽의 뜨거운 태양 아래서 말을 타고 싸우는 법과 무거운 검을 휘두르는 법을 배웠습니다. 모든 훈련은 북쪽에 대한 약속과 하라드의 전사들을 기다리는 영광으로 끝났습니다." />
+    <string id="taom_cc_taom_education_aserai_2_text" text="하라드의 사막 창병들과 함께 훈련했다." />
+    <string id="taom_cc_taom_education_aserai_2_desc" text="당신은 남쪽 사막의 가혹한 더위 속에서 훈련받았으며, 하라드림 보병의 가차없는 방식으로 도끼와 창으로 대형을 유지하는 법을 배웠습니다. 태양 아래서의 인내력이 다른 모든 자질보다 중요시되었습니다." />
+    <string id="taom_cc_taom_education_aserai_3_text" text="남부 사막 도로를 따라 무역품을 운반했다." />
+    <string id="taom_cc_taom_education_aserai_3_desc" text="당신은 하라드의 타오르는 대상 무역로를 여행하며, 사막 시장 마을에서 이국적인 상품을 거래하고 태양의 땅을 여러 번 건넌 노련한 상인들로부터 설득의 기술을 배웠습니다. 길은 어떤 홀보다도 더 많은 것을 가르쳐주었습니다." />
+    <string id="taom_cc_taom_education_aserai_4_text" text="하라드의 심장부에 있는 오아시스 농장에서 일했다." />
+    <string id="taom_cc_taom_education_aserai_4_desc" text="당신은 사막 오아시스 주변의 관개된 밭에서 노동하며, 메마른 땅에서 작물을 키우는 법과 무자비한 태양 아래서 농장 일의 육체적 요구를 견디는 법을 배웠습니다. 전쟁 징집이 왔을 때 당신은 날렵하고 강하며 준비되어 있었습니다." />
+    <string id="taom_cc_taom_education_aserai_5_text" text="태양의 땅을 가로지르는 유목 부족들과 함께 말을 탔다." />
+    <string id="taom_cc_taom_education_aserai_5_desc" text="당신은 방랑하는 부족들과 함께 여행하며, 별로 항해하는 법과 사막의 미묘한 신호를 읽는 법을 배웠습니다. 활은 당신의 가장 믿을 만한 도구였으며, 광활한 태양의 땅은 목표물이 당신을 발견하기 훨씬 전에 그것을 조준하는 법을 가르쳐주었습니다." />
+    <string id="taom_cc_taom_education_aserai_6_text" text="오아시스 너머의 모래 약탈자 무리와 함께 달렸다." />
+    <string id="taom_cc_taom_education_aserai_6_desc" text="당신은 깊은 사막에서 대상을 습격하는 약탈자 무리와 어울렸으며, 모래를 가로질러 빠르게 이동하는 법과 대상 경비대가 대형을 갖추기 전에 말 위에서 투창을 던지는 법을 배웠습니다. 사막 무법자의 삶은 잔인했지만 교육적이었습니다." />
+    <string id="taom_cc_taom_education_battania_1_text" text="두네다인과 함께 북부 황야를 누볐다." />
+    <string id="taom_cc_taom_education_battania_1_desc" text="당신은 아직 어렸을 때 북부의 순찰대에게 훈련받았으며, 에리아도르의 야생 지대를 조용히 이동하는 법과 폐허가 된 아르노르를 가로질러 적을 추적하는 법을 배웠습니다. 순찰대는 많은 것을 요구하지 않았지만 모든 것을 요구했고, 당신은 그것을 주는 법을 배웠습니다." />
+    <string id="taom_cc_taom_education_battania_2_text" text="순찰대 치료사 밑에서 치유술과 약초학을 공부했다." />
+    <string id="taom_cc_taom_education_battania_2_desc" text="당신은 북부에서 웨스터네세의 지식을 살아있게 유지하는 두네다인 치료사 중 한 명의 견습생이 되었으며, 야생 지대가 제공하는 자원으로 식물을 식별하고 상처를 치료하는 법을 배웠습니다. 지혜와 실용적 지식은 똑같이 존중받았습니다." />
+    <string id="taom_cc_taom_education_battania_3_text" text="오크와 늑대를 상대로 순찰대와 함께 싸웠다." />
+    <string id="taom_cc_taom_education_battania_3_desc" text="당신은 두네다인과 함께 아르노르의 폐허를 순찰하며, 북부 변경을 시험하는 오크 전단과 검과 창으로 싸우는 법을 배웠습니다. 순찰대는 요새를 유지하지 않았고 오직 경계만 했으며, 당신은 그것이 무엇을 요구하는지 배웠습니다." />
+    <string id="taom_cc_taom_education_battania_4_text" text="순찰대 정착지의 대장간에서 일했다." />
+    <string id="taom_cc_taom_education_battania_4_desc" text="당신은 두네다인이 겨울을 나는 작은 은신 정착지에서 검을 만들고 장비를 수리했으며, 경제적으로 제작하는 법을 배웠습니다 — 재료는 희소했고 모든 물건은 오래 지속되도록 만들어져야 했습니다. 당신은 장인의 정밀함과 무기가 해야 할 일에 대한 전사의 본능을 개발했습니다." />
+    <string id="taom_cc_taom_education_battania_5_text" text="에리아도르의 황야를 통해 사냥감과 적을 추적했다." />
+    <string id="taom_cc_taom_education_battania_5_desc" text="당신은 에리아도르의 오래된 숲과 황무지에서 사람과 짐승이 남긴 통행의 흔적을 읽는 법을 배웠으며, 식탁을 위한 사냥감과 정착지의 안전을 위한 오크 정찰병을 사냥했습니다. 활은 당신의 첫 번째 언어였고 황야는 당신의 두 번째 고향이었습니다." />
+    <string id="taom_cc_taom_education_battania_6_text" text="이름 없는 방랑자로 마을들 사이를 떠돌았다." />
+    <string id="taom_cc_taom_education_battania_6_desc" text="당신은 북부의 길에서 재치로 살아가며, 작은 일을 음식과 숙소로 바꾸고 때로는 제공되지 않은 것을 들어올렸습니다. 두네다인은 같은 정착지를 지나갔지만 아무에게도 말을 걸지 않았으며, 이것은 투명성이 그 자체로 힘의 한 종류라는 것을 가르쳐주었습니다." />
+    <string id="taom_cc_taom_education_khuzait_1_text" text="이스터링 전쟁 기수들과 함께 말을 타고 훈련했다." />
+    <string id="taom_cc_taom_education_khuzait_1_desc" text="당신은 룬의 전쟁 기수로 훈련받았으며, 붉은 새벽 깃발 아래 곤도르와 싸운 아버지들을 둔 장로들로부터 광활한 초원 전통의 기마 전투를 배웠습니다. 위대한 동부 평원은 당신의 연습장이었고 말은 당신의 가장 믿을 만한 무기였습니다." />
+    <string id="taom_cc_taom_education_khuzait_2_text" text="동부의 무역로를 따라 거래했다." />
+    <string id="taom_cc_taom_education_khuzait_2_desc" text="당신은 룬의 바다와 서부 땅 사이의 상업 노선을 여행하며, 많은 민족의 상인들과 거래하는 법과 분쟁을 매력으로 해결하는 법을 배웠습니다. 동부의 길은 위험했고 당신의 혀는 어떤 검보다도 날카로워야 했습니다." />
+    <string id="taom_cc_taom_education_khuzait_3_text" text="동부 초원을 가로질러 유목 씨족들과 함께 이동했다." />
+    <string id="taom_cc_taom_education_khuzait_3_desc" text="당신은 초원 씨족의 계절별 이동을 따랐으며, 모든 날씨를 통해 도보와 말을 타고 야영지를 철수하고 먼 거리를 이동하는 법을 배웠습니다. 유목 생활은 강인한 인내력과 창과의 편안한 관계를 만들어냈습니다." />
+    <string id="taom_cc_taom_education_khuzait_4_text" text="룬의 바다 근처 계곡 농장에서 일했다." />
+    <string id="taom_cc_taom_education_khuzait_4_desc" text="당신은 내해 주변의 비옥한 계곡에서 농사를 지었으며, 이스터링 방식으로 도구를 만들고 제한된 재료를 최대한 활용하는 법을 배웠습니다. 검 훈련이 시작되었을 때 당신은 농장이 준 체계적인 규율로 그것을 받아들였습니다." />
+    <string id="taom_cc_taom_education_khuzait_5_text" text="씨족 장로들과 함께 영혼 지식과 치유술을 배웠다." />
+    <string id="taom_cc_taom_education_khuzait_5_desc" text="당신은 이스터링 씨족의 샤먼과 치료사들과 함께 앉아, 개방된 평원에서 유목민들을 살아있게 유지하는 의례적 지식과 실용적 의술을 배웠습니다. 말과 이해는 어떤 무기보다도 훨씬 전에 당신의 도구였습니다." />
+    <string id="taom_cc_taom_education_khuzait_6_text" text="동부 전쟁 군대의 훨씬 앞에서 정찰했다." />
+    <string id="taom_cc_taom_education_khuzait_6_desc" text="당신은 이스터링 기병대의 선발 정찰병으로 말을 탔으며, 주력부대보다 며칠 앞서 나가 발견한 것을 보고했습니다. 이 일은 당신이 보이지 않게 머물고, 말 위에서 정확히 쏘고, 싸우기보다는 도망칠 때를 판단할 것을 요구했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_1_text" text="당신은 오스길리아스 방어전에서 자신을 돋보이게 했다." />
+    <string id="taom_cc_taom_adulthood_gondor_1_desc" text="모르도르가 강을 건너 강하게 압박했을 때, 당신은 후퇴 명령이 내려질 때까지 다리의 당신 구역을 지켰습니다. 대장은 당신의 이름을 집정관의 전령에게 칭찬했고, 당신 중대의 병사들은 그날 당신이 한 일을 기억했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_2_text" text="당신은 미나스 티리스를 위한 중요한 곡물 공급 계약을 협상했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_2_desc" text="가뭄이 외곽 농장들을 위협했을 때, 당신은 펠라르기르에서 온 상인들과 협상하여 혹독한 겨울 동안 도시의 곡물 창고를 가득 채웠습니다. 집정관의 시종장은 향후 임무를 위해 당신의 이름을 기록했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_3_text" text="당신은 오크 습격의 위협 속에서 펠렌노르 수확을 조직했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_3_desc" text="에펠 두아스에서 습격대가 나타났을 때, 당신은 지역 징집병들을 조율하여 수확자들을 보호하고 계절이 끝나기 전에 작물을 거두어들였습니다. 마을 대표들은 아직도 누군가가 실제로 해냈던 그 해에 대해 이야기합니다." />
+    <string id="taom_cc_taom_adulthood_gondor_4_text" text="당신은 탑 수비대 대장에게 헌정된 검을 벼렸습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_4_desc" text="대장은 당신의 작업에 대해 듣고 승진 의식을 위한 검을 의뢰했습니다. 그가 모인 수비대 앞에서 검을 뽑았을 때 그것이 맑은 소리를 냈고, 당신은 대장간 구역에서의 모든 고된 아침이 보상받았음을 알았습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_5_text" text="당신은 이실리엔에서 오크 포위망에 갇힌 야전대를 안내했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_5_desc" text="순찰대가 안두인 동쪽에서 고립되었을 때, 당신은 오크 정찰병이 지도화하지 못한 길을 통해 그들을 이끌었고 단 한 명의 손실도 없었습니다. 파라미르의 부관은 당신이 들어왔을 때 당신의 팔을 잡았고 더 이상 말할 필요가 없었습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_6_text" text="당신은 하층 도시에서 활동하는 밀수 조직을 적발했습니다." />
+    <string id="taom_cc_taom_adulthood_gondor_6_desc" text="수개월 동안 밀수품이 오스길리아스의 폐허를 통해 미나스 티리스로 들어왔지만 아무도 그 방법을 알지 못했습니다. 당신은 경로를 파악하고 주모자를 식별하여 전체 조직을 도시 경비대에 넘겼습니다. 보상금으로 당신의 첫 번째 진짜 검을 살 수 있었습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_1_text" text="당신은 검은 구덩이의 시련을 생존하고 눈의 군단에 임명되었습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_1_desc" text="구덩이에 들어간 자 중 가치 있다고 인정받은 자는 거의 없었습니다. 당신은 단순히 살아남은 것이 아니라 감독관들이 끝났다고 선언하기 전에 연속으로 세 명의 도전자를 꺾었습니다. 군단병의 낙인이 군중이 흩어지기 전에 당신의 팔에 찍혔습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_2_text" text="당신은 패배하던 보급로를 어둠의 땅에서 가장 수익성 높은 길로 바꾸었습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_2_desc" text="이전 운송인은 잘못된 경로와 더 나쁜 거래로 수개월 동안 보급 호송대를 망쳐왔습니다. 당신은 불필요한 부분을 제거하고 통행료 협정을 재협상하여 한 계절 안에 처리량을 두 배로 늘렸습니다. 감독관들은 당신에게 더 나은 몫과 더 나쁜 양심을 보상으로 주었습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_3_text" text="당신은 대장간 탑의 건설을 예정보다 앞당겨 완료했습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_3_desc" text="감독관은 암흑군주의 검열 전에 대장간 탑이 완성되지 않으면 처벌하겠다고 약속했습니다. 당신은 작업단을 누구도 가능하다고 생각하지 못할 만큼 혹독하게 몰아붙였고 탑은 이틀의 여유를 두고 완성되었습니다. 감독관은 공로를 가져갔고, 당신은 생존을 가져갔습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_4_text" text="당신은 그날의 생산량을 잃지 않고 작업단 반란을 진압했습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_4_desc" text="지친 노동자들이 도구를 내려놓고 움직이기를 거부했을 때, 당신은 혼자 개입하여 세 명의 선동자를 식별하고 감독관들이 지연을 눈치채기 전에 상황을 처리했습니다. 작업단은 다시 일터로 돌아갔습니다. 선동자들은 더 이상 문제를 일으키지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_5_text" text="당신은 세 순찰대가 찾지 못한 탈영병을 추적하여 죽였습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_5_desc" text="탈영병은 두 명의 감독관을 죽이고 고르고로스의 황무지로 사라졌습니다. 당신은 혼자 가서 재 평원을 가로질러 나흘 동안 흔적을 따라갔고, 당신이 발견한 것의 증거를 가지고 돌아왔습니다. 아무도 세부 사항을 묻지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_6_text" text="당신은 부패한 문지기를 폭로하고 그의 자리를 차지했습니다." />
+    <string id="taom_cc_taom_adulthood_mordor_6_desc" text="모란논의 문지기는 통과하는 모든 무리에게 세금을 부과하고 그 중 절반을 착복하고 있었습니다. 당신은 그 계획을 문서화하고 정확한 순간에 그의 상관에게 제시했으며, 자리가 바뀌는 것을 지켜봤습니다. 당신은 그 자리가 당신에게 오도록 확실히 했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_1_text" text="당신은 산기슭에서 혼자 오크 습격대를 격퇴했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_1_desc" text="외곽 순찰에서 돌아오다가 당신은 경계를 우회한 오크 무리를 발견했습니다. 도움을 요청할 시간이 없었습니다. 당신은 도끼로 좁은 길목을 지키며 경보가 문에 도달할 때까지 버텼습니다. 세 오크는 문에 도달하지 못했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_2_text" text="당신은 한 세대에서 가장 좋은 데일과의 무역 협정을 체결했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_2_desc" text="에레보르의 철 수출 조건은 산의 재탈환 이후 재협상되지 않았습니다. 당신은 불균형을 파악하고 사실을 수집하여 다인 왕의 집사에게 매우 명확하게 제시했고, 협정은 한 달 안에 수정되었습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_3_text" text="당신은 잃어버린 갤러리를 발견하고 새로운 미스릴 광맥을 개방했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_3_desc" text="오래된 지도는 붕괴를 보여주었지만, 당신은 깊은 돌 속 물소리를 따라갔고 잔해 뒤에서 갤러리가 온전한 것을 발견했습니다. 그 안의 미스릴 광맥은 적당했지만, 그것을 지도화한 기술자들은 조사 기록에 당신의 이름을 추가했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_4_text" text="당신은 산 아래 전투에서 방패벽을 지켰습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_4_desc" text="오크 군대가 하층 문으로 밀고 들어왔을 때, 당신은 다른 이들이 무너지는 동안 방패벽의 당신 구역을 지켜내어 반격이 형성될 시간을 벌었습니다. 다인의 대장은 전투 기록에 당신의 이름을 적었는데, 이것이 드워프가 시에 가장 가까이 가는 것입니다." />
+    <string id="taom_cc_taom_adulthood_erebor_5_text" text="당신은 수년간의 불일치 끝에 재무 장부를 정리했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_5_desc" text="장부는 재탈환 이후 어긋나 있었고 아무도 설명할 수 없는 손실이 있었습니다. 당신은 석 달 동안 기록을 대조하여 오류를 식별했습니다 — 이십 년의 항목에 걸쳐 복합된 단순한 환산 실수였습니다. 왕의 재무관이 당신의 손을 잡았습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_6_text" text="당신은 오크 습격대를 그들의 소굴까지 추적하고 수비대를 위해 표시했습니다." />
+    <string id="taom_cc_taom_adulthood_erebor_6_desc" text="그 무리는 같은 방향에서 세 번 습격했고 누구도 따라가기 전에 빠져나갔습니다. 당신은 혼자 소나무 숲으로 들어가 야영지를 찾고 그들을 세고 접근로를 스케치하여 수비대가 행동할 시간에 맞춰 보고서를 가져왔습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_text" text="당신은 부상당한 전령을 이ムladris로 호위하기 위해 혼자 출발했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_desc" text="전령은 여울 동쪽에서 매복을 당했고 혼자서는 말을 탈 수 없었습니다. 당신은 그를 찾고 아직 길을 수색하던 오크 잔당들을 격퇴하고 그를 데려왔습니다. 엘론드는 메시지로 돌아가기 전에 당신에게 잠깐 말을 걸었습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_text" text="당신은 엘론드의 학자들이 보존하기로 선택한 공예 작품을 완성했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_2_desc" text="그 작품 — 단편적인 자료에서 재구성한 에리아도르의 고대 도로망의 상세한 양각 지도 — 은 도서관 기록 보관소에 복사될 만큼 정확하다고 여겨졌습니다. 세 명의 학자들이 두 계곡에 대해 의견이 달랐습니다. 당신은 둘 다 옳았습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_text" text="당신은 역병 시즌 동안 계곡의 계단식 농장을 돌보며 수확을 잃지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_3_desc" text="곰팡이 역병이 위쪽 과수원에 퍼져 아래쪽 계단식 농장을 위협했습니다. 당신은 감염된 나무들을 조기에 식별하고 엘프들이 과도하다고 여긴 격리 조치를 시행하여 역병이 퍼지는 것을 막았습니다. 그 해의 수확은 적었지만 온전했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_text" text="당신은 여울목을 위협하기 전에 트롤 야영지를 이야기하여 임라드리스에 경고했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_4_desc" text="세 마리의 석화 트롤이 이전 어느 때보다 여울목에 가까운 트롤샤우에 정착했습니다. 당신은 그들의 야영지를 발견하고, 위치를 지도에 표시하며, 활동 범위를 추정하여 그들이 움직이기 전에 수호자들에게 보고했습니다. 수호자들이 나머지를 처리했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_text" text="당신은 엘론드의 치유사들이 포기한 여행자의 생명을 구했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_5_desc" text="그 여행자는 모르굴 독에 오염된 상처를 입었고 선임 치유사들은 이미 유감의 말을 준비하고 있었습니다. 당신은 서고의 오래된 문헌에서 그 독소의 작용에 대한 다른 기록을 읽었습니다. 당신이 읽은 내용을 적용했고 여행자는 회복했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_text" text="당신은 레인저 야영지에서 도난당한 문서를 들키지 않고 회수했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_6_desc" text="엘론드의 저택에서 온 사적인 편지가 손님의 배낭을 가리키는 정황 속에서 사라졌습니다. 당신은 누구도 그것이 사라진 것을 알기 전에 회수하고, 어지럽혀진 것들을 제자리에 놓고, 그 어떤 말도 없이 편지를 돌려놓았습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_text" text="당신은 남쪽 길을 공포에 떨게 하던 거미 여왕을 포획했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_1_desc" text="그 괴물은 세 정찰대를 후퇴시키고 두 명을 죽였습니다. 당신은 그것의 거미줄 패턴을 연구하고, 그것이 돌아가는 고정 나무를 식별하여, 새벽에 그것이 먹이를 먹고 있을 때 긴 엘프 칼날로 처치했습니다. 스란두일의 대장들이 그 전리품을 길 입구에 걸었습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_text" text="당신은 수년간 폐쇄된 숲길 무역로를 재개통했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_2_desc" text="그 길은 거미와 오크의 괴롭힘으로 두 계절 동안 사실상 폐쇄되어 있었습니다. 당신은 가장 안전한 남은 통로를 지도로 작성하고, 스란두일의 대장과 경비 배치를 협상하여, 첫 상인 호송대를 성공적으로 이끌었습니다. 한 달 안에 무역이 재개되었습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_text" text="당신은 타락한 공터를 정화하고 건강하게 다시 심었습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_3_desc" text="돌 굴두르에서 온 어둠이 영역 가장자리 근처의 공터로 스며들어 토양을 검게 만들고 그곳에서 자라는 것들을 죽였습니다. 두 계절 동안 당신은 오염을 제거하고 다시 심기 위해 노력했고, 묘목들이 뿌리를 내렸습니다. 스란두일의 산림관들이 직접 보러 왔습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_text" text="당신은 엘프왕의 챔피언이 들고 다니기로 선택한 활을 제작했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_4_desc" text="챔피언은 동쪽 고개 방어 중 이전 활을 부러뜨렸고 시즌 토너먼트 전에 대체품이 필요했습니다. 당신은 활대에 쉬지 않고 사흘을 작업했습니다. 챔피언이 처음 그것을 당겼을 때 한 번 고개를 끄덕이고 말없이 걸어갔습니다. 그것으로 충분했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_text" text="당신은 남쪽 숲의 거미줄 터널 네트워크를 지도로 작성했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_5_desc" text="아무도 거미들의 지하 통로 범위를 그 안에 갇히지 않고 지도로 그릴 수 없었습니다. 당신은 작게 들어가서 조심스럽게 움직였고, 엘프왕의 정찰병들이 그 이후로 사용해 온 지도를 가지고 나왔습니다. 당신은 정확히 어떻게 빠져나왔는지 설명하기를 거부했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_text" text="당신은 혼자 힘으로 거미줄 소굴에서 세 명의 엘프 포로를 구출했습니다." />
+    <string id="taom_cc_taom_adulthood_mirkwood_6_desc" text="정찰병들은 순찰대가 가지 않는 타락한 남쪽 숲 깊숙한 곳에서 붙잡혔습니다. 당신은 밤에 혼자 가서 그들을 풀어주고, 세 개의 거미가 지키는 길을 통해 그들을 이끌고 나왔습니다. 그들 중 두 명이 어떻게 길을 알았냐고 물었습니다. 당신은 본능이었다고 말했습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_text" text="당신은 동료가 병들었을 때 홀로 딤릴 계곡의 망을 섰습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_1_desc" text="그 초소는 두 접근로를 모두 감시했고 무인으로 둘 수 없었습니다. 당신은 추운 밤과 반나절의 교대 근무를 쉬지 않고 혼자 완수했으며, 교대조가 당신이 설명한 그대로 발견한 세 건의 사건을 보고했습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_text" text="당신은 숲의 여주인이 선물로 제공한 의례용 망토를 짰습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_2_desc" text="갈라드리엘은 방문하는 군주에게 줄 외교 선물로 합당한 망토가 필요했습니다. 당신은 의뢰와 재료를 받고 일주일을 받았습니다. 카라스 갈라돈을 떠난 망토는 세 명의 엘프 직조공이 누가 만들었냐고 묻게 만들었습니다. 갈라드리엘은 미소 지으며 말하지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_text" text="당신은 국경 침입 중 밤에 나무 위 전망대에서 세 마리의 오크를 쏘았습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_3_desc" text="오크 정찰병들은 외곽 표지를 지나쳐 숲의 중심을 향해 이동하고 있었습니다. 당신은 60야드 떨어진 어둠 속에서 그들을 골라냈습니다 — 세 발, 세 번의 낙하, 경보 없음. 순찰대가 아침에 그들을 발견했지만 화살이 어느 방향에서 왔는지 알 수 없었습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_text" text="당신은 나즈굴이 숲의 경계에 도달하기 전에 접근을 감지했습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_4_desc" text="부자연스러운 추위와 새들의 고요함이 첫 징조였습니다. 당신은 다른 누구보다 먼저 느낀 것을 갈라드림 사령부에 보고했습니다. 여주인의 힘이 국경을 강화하기 위해 움직였습니다. 나중에 켈레보른은 당신의 본능이 비정상적으로 예리하다고 말했습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_text" text="당신은 다른 이들이 치유되지 않을 것이라고 말한 심각한 오크 상처를 치유했습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_5_desc" text="그 상처는 회복이 불가능하다고 동의한 두 명의 치유사에 의해 치료되었습니다. 당신은 오래된 문헌에서 킹스포일의 다른 조제법을 알아보고 그들의 반대에도 불구하고 적용했습니다. 그 엘프는 회복했습니다. 두 치유사는 나중에 당신에게 그 조제법에 대해 물었습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_text" text="당신은 돌 굴두르의 외곽 보초를 빠져나가 포로 수를 가지고 돌아왔습니다." />
+    <string id="taom_cc_taom_adulthood_lothlorien_6_desc" text="갈라드림은 어떤 행동을 계획하기 전에 남쪽 요새에 얼마나 많은 병력이 주둔하고 있는지 알아야 했습니다. 당신은 가서 보겠다고 자원했습니다. 당신은 6일 동안 사라졌습니다. 당신이 가져온 정보는 갈라드리엘이 결정을 내리는 데 필요한 정보를 제공했습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_1_text" text="당신은 헬름 협곡에서 돌격 종대를 이끌고 외벽을 돌파했습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_1_desc" text="사루만의 계획은 새벽 전 돌파를 요구했습니다. 당신의 종대가 문을 먼저 공격했고 당신이 문 밑에 폭약을 설치한 사람이었습니다. 폭발이 하늘을 밝혔습니다. 공격이 뒤따랐습니다. 협곡 안에서 무슨 일이 일어났는지는 당신의 일입니다." />
+    <string id="taom_cc_taom_adulthood_isengard_2_text" text="당신은 아이센가드의 무기 생산량을 두 배로 늘린 새로운 합금 공정을 설계했습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_2_desc" text="기존 공정은 담금질에서 취성 파손으로 강철의 3분의 1을 낭비했습니다. 당신은 온도가 문제임을 확인하고, 해결책을 제안하고, 사루만의 감독관의 회의론에 맞서 시험하여, 한 교대 근무에서 그것을 증명했습니다. 한 달 안에 생산량이 두 배가 되었습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_3_text" text="당신은 아이센가드의 새 동쪽 배수로 시스템을 사루만의 마감일보다 앞서 완공했습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_3_desc" text="배수로는 홍수기 동안 구덩이 바닥을 건조하게 유지하기 위해 필요했습니다. 사루만은 30일을 주었습니다. 당신은 노동 집단을 재조직하고, 경로를 단순화하여, 22일 만에 완료했습니다. 사루만은 논평 없이 작업을 검토했는데, 이는 그것이 받아들여졌다는 의미였습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_4_text" text="당신은 미숙한 신병 중대를 훈련된 보병 부대로 훈련시켰습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_4_desc" text="신병들은 아이센가드가 본 최악의 징집병들이었습니다 — 영양실조에, 무질서하고, 자신들의 무가치함을 확신하고 있었습니다. 당신의 지도 아래 12주 후 그들은 우루크하이 관찰자들이 적절하다고 부른 훈련 연습에서 전선을 지켰습니다. 그들에게서 나온 말로는 그것이 높은 칭찬이었습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_5_text" text="당신은 로히림 순찰 패턴을 지도로 작성하여 사루만에게 전략적 우위를 제공했습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_5_desc" text="3개월 동안 당신은 아이센 강을 따라 로히림의 움직임을 관찰하고, 기록하고, 상호 참조했습니다. 당신이 사루만의 전략가들에게 패턴 지도를 제출했을 때 그들은 그것을 기반으로 전체 동쪽 정찰 순환을 재배치했습니다. 사루만은 브리핑에서 당신을 이름으로 언급했습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_6_text" text="당신은 로한의 간첩을 이센가드를 위해 일하는 이중 첩자로 전향시켰습니다." />
+    <string id="taom_cc_taom_adulthood_isengard_6_desc" text="당신은 행동의 불일치를 통해 간첩을 식별하고, 그를 은밀히 대면하여 결정을 단순하게 만드는 선택지를 주었습니다. 그는 로한의 누구도 의심하기 전까지 두 계절 동안 에도라스에 거짓 정보를 흘려보냈습니다. 당신은 이 업적에 대한 어떠한 서면 기록도 받지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_text" text="당신은 위대한 산의 무술 대회에서 우승하여 전쟁 추장의 부하로 임명되었습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_1_desc" text="이 대회는 대광장에서 세 차례의 잔혹한 라운드를 거쳐 진행되었습니다. 당신은 아무도 주목하지 않는 자로 참가했지만, 전쟁 추장의 은 완장과 더 나은 침대를 얻고 떠났습니다. 다른 경쟁자들은 이전의 그 어떤 일보다도 당신의 승리를 존경했습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_text" text="당신은 남쪽 오크 부족과 수익성 있는 무기 거래를 확립했습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_2_desc" text="남쪽 부족은 철은 있었지만 대장장이가 없었습니다. 군다바드는 대장장이는 있었지만 식량과 모피가 필요했습니다. 당신은 첫 거래를 중개하고 조건을 설정했으며, 거래가 습관이 될 때까지 양측이 서로를 죽이지 않도록 했습니다. 전쟁 추장은 당신에게 수수료를 주었습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_text" text="당신은 부분적인 붕괴 후 하부 광산 갱도를 보강했습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_3_desc" text="붕괴로 하부 갱도에 여덟 명의 오크가 갇혔습니다. 당신은 응력 패턴을 평가하고 보강 작업을 지휘하여, 그들을 죽였을 2차 붕괴가 일어나기 전에 인원들을 안전하게 구출했습니다. 전쟁 추장의 기술자는 당신에게 도면을 보관하도록 주었습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_text" text="당신은 회색 산맥의 드워프 전초기지를 격파한 습격을 이끌었습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_4_desc" text="드워프들은 군다바드가 겨울 습격에 사용하던 고개를 요새화하여 접근을 차단하고 산에 한 계절 전체의 약탈 기회를 빼앗았습니다. 당신은 공격을 계획하고 선봉을 이끌었으며, 단 한 번의 돌격으로 전초기지의 문을 격파했습니다. 고개가 다시 열렸습니다. 드워프들은 돌아오지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_text" text="당신은 드워프 정찰대를 나흘 동안 추적하여 그들의 지도를 가져왔습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_5_desc" text="드워프들은 회색 산맥에서 무언가를 지도에 그리고 있었고 군다바드는 그것이 무엇인지 알아야 했습니다. 당신은 들키지 않고 높은 고개를 지나 그들을 따라갔고, 그들이 야영할 때까지 기다렸다가 지도를 가져왔으며, 그들이 경보를 울리기 전에 요새로 돌아왔습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_text" text="당신은 경쟁 전쟁지도자를 절도 혐의로 모함하여 그의 지위를 빼앗았습니다." />
+    <string id="taom_cc_taom_adulthood_gundabad_6_desc" text="그 경쟁자는 뇌물과 더 나은 인맥을 통해 2년 동안 당신의 승진을 막고 있었습니다. 당신은 그가 소중히 여기는 것을 파악하고, 적절한 물건이 잘못된 시간에 잘못된 장소에 있도록 준비했으며, 적절한 순간에 발견했습니다. 당신은 한 달도 안 되어 그의 지위를 차지했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_text" text="당신은 미르크우드의 북부 방어선을 처음으로 돌파한 순찰대를 지휘했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_1_desc" text="엘프 국경 수비대는 두 계절 동안 접근로를 지키고 있었습니다. 당신은 그들의 교대 순환에서 틈을 찾아내고, 분 단위로 횡단 시간을 맞춰, 한 명의 사상자도 없이 순찰대를 데리고 통과하여 돌아왔습니다. 어둠의 주인들은 당신의 보고를 주목하고 영구적인 지휘권을 부여했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_text" text="당신은 사우론의 품질 검사를 통과한 그림자 강철 무기를 단조했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_2_desc" text="강령술사의 검사관들은 요새 대장장이들의 이전 두 배치를 거부했습니다. 당신은 제련 공정을 재작업하고 담금질에서 어떤 타협도 받아들이지 않았으며, 검사관이 침묵 속에 검토한 후 승인 표시를 한 배치를 납품했습니다. 그것은 3년 만의 첫 승인이었습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_text" text="당신은 요새의 최하층 지하 감옥 확장을 완료했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_3_desc" text="작업은 스며드는 지하수와 무너지는 지지대 때문에 한 계절 동안 중단되었습니다. 당신은 배수 시스템을 재설계하고 손상된 목재를 교체했으며, 수정된 일정에 맞춰 층을 완성했습니다. 강령술사의 감독관들은 같은 주에 죄수들을 이송했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_text" text="당신은 엘프의 외곽 경계를 돌파하고 심문을 위해 포로를 잡아왔습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_4_desc" text="엘프 수비대장으로부터 얻은 정보는 스란두일의 동쪽 국경 순찰대의 완전한 교대 순환을 설명했습니다. 그것은 돌 굴두르가 1년 동안 받은 가장 유용한 전략 정보였습니다. 아무도 당신이 어떻게 포로를 빼냈는지 묻지 않았습니다. 당신도 설명하지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_text" text="당신은 6개월에 걸쳐 남부 미르크우드의 엘프 순찰 경로를 지도화했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_5_desc" text="홀로 여러 계절에 걸쳐 작업하면서, 당신은 스란두일의 남부 국경 배치에 대한 완전한 그림을 구축했습니다. 그 결과 만들어진 지도는 돌 굴두르의 계획자들에게 이전에 결코 가지지 못했던 것을 주었습니다: 확실성. 강령술사의 요원들은 그것을 2년 동안 사용했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_text" text="당신은 상인으로 위장하여 엘프왕의 궁정에 잠입하고 들은 것을 보고했습니다." />
+    <string id="taom_cc_taom_adulthood_dolguldur_6_desc" text="거짓 신분으로 스란두일의 전당에서 보낸 석 달은 돌 굴두르의 어떤 요원도 엿들은 적 없는 대화에 접근할 수 있게 했습니다. 당신은 어둠의 주인들이 다음 계절 전략을 구상하는 데 사용한 이름, 계획, 관계들을 가지고 돌아왔습니다. 당신은 그 경험이 엘프들에 대해 예상 외로 유익했다는 것을 발견했습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_1_text" text="당신은 10년 만에 가장 빠른 안두인 강 습격의 선장이었습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_1_desc" text="당신의 배는 곤도르의 강 쇄도를 통과하고, 펠라르기르의 보급 창고를 공격했으며, 수비대의 신호 봉화가 다 타기도 전에 바다로 돌아왔습니다. 해적 함대 선장들은 당신이 돌아왔을 때 당신의 이름으로 잔을 들었는데, 그것이 그들이 아는 유일한 종류의 의식이었습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_2_text" text="당신은 만을 통과하는 새로운 무역로를 확립하여 항구 수입을 두 배로 늘렸습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_2_desc" text="기존 노선들은 상인들이 대안을 찾을 정도로 과세되었습니다. 당신은 만의 섬들을 통과하는 덜 사용되는 통로를 찾아내고 통행료를 정했으며, 한 계절 안에 세 개의 새로운 상인 조합을 항구로 데려왔습니다. 항만 관리자들은 짜증났지만 더 부유해졌습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_3_text" text="당신은 움바르의 함대 정비 병목을 해결한 새로운 선거를 설계했습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_3_desc" text="기존 선거는 한 번에 하나의 선체만 처리할 수 있었고 함대가 밀리고 있었습니다. 당신의 재설계는 두 척의 선박을 동시에 병렬 작업할 수 있게 했습니다. 선박 장인들은 첫 동시 완료가 예정보다 빨리 이루어질 때까지 회의적이었습니다. 그 후로는 회의적이지 않았습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_4_text" text="당신은 벨팔라스 앞바다에서 곤도르의 전함을 나포한 승선 부대를 이끌었습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_4_desc" text="그 전함은 당신 배의 두 배 크기였고 선원들도 당신보다 많았습니다. 당신은 안개 속에서 접근하여 먼저 측면으로 넘어갔고, 키를 장악했으며, 그들이 무슨 일이 일어났는지 완전히 이해하기 전에 선원들을 무장 해제시켰습니다. 그 배는 이틀 안에 움바르의 항구에 있었습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_5_text" text="당신은 함대가 빠지기 전에 곤도르의 해군 함정을 발견했습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_5_desc" text="보급 함대가 세 시간 밖에 나왔을 때 당신은 특정 곶 주변에서 해안 새들이 행동하는 방식을 알아차렸습니다. 당신은 정지를 요청하고 작은 배를 타고 앞서 나갔으며, 그 뒤편의 잔잔한 물 속에서 대기 중인 곤도르 함대를 발견했습니다. 함대는 돌아섰습니다. 제독은 당신에게 다음 지휘권을 주었습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_6_text" text="당신은 움바르 하항에서 2년 동안 가장 성공적인 암시장을 운영했습니다." />
+    <string id="taom_cc_taom_adulthood_umbar_6_desc" text="그 사업은 공식적으로 존재하지 않는 경로를 통해 공식적으로 신고할 수 없는 물품을 이동시켜, 결코 계산되지 않는 화폐로 지불하는 구매자들에게 판매했습니다. 당신은 어떤 경비대장도 사건을 만들 수 없을 만큼 깨끗하게 운영했습니다. 폐쇄할 때, 당신이 선택했기 때문에 그렇게 했습니다." />
+    <string id="taom_cc_taom_adulthood_empire_1_text" text="당신은 로한의 징벌 원정대에 맞서 불화하던 세 부족을 통합했습니다." />
+    <string id="taom_cc_taom_adulthood_empire_1_desc" text="세 추장은 한 세대 동안 말을 하지 않았고, 로한 기병들은 그들의 분열을 기대하고 있었습니다. 당신은 일주일 동안 야영지 사이를 오가며, 올바른 순서로 올바른 사람들에게 올바른 말을 했고, 원정대가 도착한 날, 세 부족이 능선 위에 함께 섰습니다. 로한 기병들은 돌아갔습니다." />
+    <string id="taom_cc_taom_adulthood_empire_2_text" text="당신은 아이센가드와 교역 관계를 맺어 겨울 동안 일족이 굶주리지 않게 했습니다." />
+    <string id="taom_cc_taom_adulthood_empire_2_desc" text="수확이 실패했고 겨울 비축량이 부족했습니다. 당신은 홀로 아이센가드로 가서 적절한 사람과 대화했고, 일족이 수년간 보유하고 있던 철광석과 곡물을 교환해 돌아왔습니다. 족장은 놀랐고, 일족은 먹을 수 있었습니다." />
+    <string id="taom_cc_taom_adulthood_empire_3_text" text="당신은 로한 기병대의 가축 약탈을 격퇴하고 도난당한 가축 떼를 되찾았습니다." />
+    <string id="taom_cc_taom_adulthood_empire_3_desc" text="기병들은 누군가 경보를 울리기 전에 일족의 번식용 가축을 가져갔습니다. 당신은 여섯 명을 소집하고, 밤새 그들을 추적하여 아이센 여울에서 따라잡아 아침 전에 가축을 되찾아왔습니다. 족장은 당신의 이름을 요새의 돌에 새겼습니다." />
+    <string id="taom_cc_taom_adulthood_empire_4_text" text="당신은 로한 기병대에 의해 불탄 홀을 대체할 일족 홀을 건설했습니다." />
+    <string id="taom_cc_taom_adulthood_empire_4_desc" text="오래된 홀은 기병들이 횃불로 불태우기 전까지 3대에 걸쳐 서 있었습니다. 당신은 새 홀을 설계하고, 목재 벌채를 조직하며, 직접 건설을 이끌었습니다. 지금 서 있는 홀은 불탄 것보다 더 튼튼하고 큽니다. 그것이 목적이었습니다." />
+    <string id="taom_cc_taom_adulthood_empire_5_text" text="당신은 던랜드 전투 부대를 팡고른 숲 가장자리를 통해 한 명도 잃지 않고 안내했습니다." />
+    <string id="taom_cc_taom_adulthood_empire_5_desc" text="전투 부대는 로한 기병대 순찰이 볼 수 있는 개활지를 건너지 않고 남쪽 접근로에 도달해야 했습니다. 유일한 길은 팡고른의 경계를 따라 이어져 있었습니다. 당신은 이틀 밤 동안 그들을 이끌며, 일행을 조용하게 유지하고 엔트들을 방해하지 않았습니다. 두 집단 모두 안전하게 도착했으며, 이는 보장된 것이 아니었습니다." />
+    <string id="taom_cc_taom_adulthood_empire_6_text" text="당신은 에도라스의 접선을 통해 로한의 군사 계획을 입수했습니다." />
+    <string id="taom_cc_taom_adulthood_empire_6_desc" text="접선자는 로한에 대한 충성심보다 돈을 더 원하는 불만을 품은 마구간지기였습니다. 당신은 신중하게 관계를 구축했고, 족장이 적당하다고 여긴 금액과 교환하여 두 계절 동안의 순찰 일정을 받았습니다. 일족은 그 다음 해 동안 사고 없이 약탈했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_text" text="당신은 아이센 여울 전투에서 돌격에 참가하여 전선을 지켰습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_1_desc" text="사루만의 군대가 아이센을 건너 밀고 들어왔을 때, 로한 전선의 중앙이 무너졌습니다. 당신은 후퇴가 패주가 아닌 철수가 될 수 있도록 충분히 오래 여울을 지킨 이들 중 하나였습니다. 원수는 전투 보고서에 당신을 언급했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_text" text="당신은 에도라스가 5년 만에 본 최고의 말 시장 가격을 협상했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_2_desc" text="남쪽에서 온 구매자들은 항상 그랬듯이 자신들이 가격을 정할 것으로 예상하고 왔습니다. 당신은 시장 전에 로한의 판매자들을 조직하고, 최저가에 합의하며, 그것을 유지했습니다. 구매자들은 말의 가치만큼 지불했습니다. 판매자들은 누가 이를 가능하게 했는지 기억했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_text" text="당신은 초가을에 서부곡을 강타한 던랜드 약탈을 격퇴했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_3_desc" text="약탈자들은 농가가 노출되는 수확기를 노려 공격 시기를 맞췄습니다. 당신은 그 가능성을 예상하고, 미리 지역 징집병을 조직하여 계곡 입구에서 그들을 맞이했습니다. 약탈대는 단 하나의 농가에도 도달하기 전에 창 전열에서 무너졌습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_text" text="당신은 로한의 왕이 친위대를 위해 선택한 검을 벼렸습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_4_desc" text="의뢰는 마구간에서 왔습니다 — 말을 타고 다닐 때 불편하지 않게 휴대할 수 있는 검에 대한 요청이었습니다. 당신은 문제를 연구하고, 균형을 조정하여 결과물을 제시했습니다. 세오덴의 대장은 훈련장에서 그것을 시험했고 같은 날 오후에 왕의 무기고로 보냈습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_text" text="당신은 투구 협곡 접근로를 지도화하던 아이센가드 정찰병을 추적했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_5_desc" text="당신은 신중한 관찰의 흔적들을 알아챘습니다 — 부러진 풀이 다시 곧게 세워지고, 돌이 다시 놓여진 것 — 그리고 누군가가 수 주 동안 협곡으로의 접근로를 살펴왔음을 깨달았습니다. 당신은 그들의 경로를 역추적하여, 야영지를 확인하고 수비대 대장에게 보고했습니다. 투구 협곡은 그에 따라 준비했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_text" text="당신은 에도라스 내부에서 활동하던 던랜드 첩자를 폭로했습니다." />
+    <string id="taom_cc_taom_adulthood_vlandia_6_desc" text="첩자는 2년 동안 도시에 있으면서 로한 수비대 병력에 대한 정보를 일족들에게 전달하고 있었습니다. 당신은 소수의 사람들만 세부 사항을 알고 있던 약탈에서 잘못된 패턴을 알아챘습니다. 세 번의 대화 후 당신은 이름과 전달 방법을 알아냈습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_text" text="당신은 데일 전투에서 브랜드 왕과 함께 섰습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_1_desc" text="동방인 군대가 북쪽에서 몰려와 도시 거리로 밀고 들어왔을 때, 당신은 브랜드가 방어를 지휘하는 동안 중앙 광장을 지킨 근위대 중 하나였습니다. 동쪽 문을 통해 구원이 오기 전까지 당신은 왕 곁에 서 있던 마지막 사람이었습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_text" text="당신은 데일과 동방인 국경 정착촌 사이 최초의 상설 교역소를 열었습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_2_desc" text="국경은 긴장되어 있었고 아무도 먼저 가려 하지 않았습니다. 당신이 갔고, 접촉을 확립하며, 첫 교환을 했고, 두 번째 교환을 할 만큼 충분히 살아남았습니다. 일 년 안에 두 명의 다른 상인이 뒤따랐습니다. 당신이 설립한 교역소는 나머지의 모델이 되었습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_text" text="당신은 동방인 전쟁으로 손상된 긴 호수 어살을 재건했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_3_desc" text="어살은 습격으로 파괴되었고 호수 어획량이 정상 수확량의 일부로 떨어졌습니다. 당신은 재건을 조직하고, 오래된 설계를 괴롭히던 구조적 문제를 해결하며, 한 달 안에 새 어살이 생산하도록 했습니다. 어부들은 당신의 이름을 따서 어살 중 하나를 명명했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_text" text="당신은 데일 장인 길드가 홀에 전시한 작품들을 제작했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_4_desc" text="길드는 지역 전역의 장인들로부터 연간 12점을 전시했습니다. 당신은 세 점 — 검, 자물쇠 장치, 장식 부속품 — 을 제출했고 세 점 모두 선택되었습니다. 길드장은 단일 장인이 같은 해에 세 점을 전시한 것은 처음이라고 말했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_text" text="당신은 어둠의 확장 중에 어둠숲 남쪽 가장자리에서 피난민을 안내했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_5_desc" text="돌 굴두르의 타락이 남쪽 숲으로 스며들어 정착민들을 몰아냈을 때, 당신은 자원하여 그들을 숲 가장자리를 따라 북쪽으로 인도했습니다. 경로는 명확하지 않았고 추격은 두 번 왔습니다. 당신이 시작했던 43명 모두 에스가로스에 도착했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_text" text="당신은 부패한 부두 관리로부터 도난당한 화물을 되찾고 그의 장부를 보관했습니다." />
+    <string id="taom_cc_taom_adulthood_sturgia_6_desc" text="관리는 3년 동안 화물을 빼돌리고 있었고 모두가 알고 있었지만, 아무도 문서를 가지고 있지 않았습니다. 당신은 문서를 확보하고, 상인들을 대신하여 화물을 되찾았으며, 수령인 목록과 함께 장부를 시의회에 제출했습니다. 관리는 조용히 데일을 떠났습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_1_text" text="당신은 검은 뱀의 북진 전위에서 기병으로 참전했습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_1_desc" text="하라드림 군대가 곤도르를 향해 이동했고 당신은 전쟁 종대의 선두에서 기병으로 달리며 길을 여는 소규모 전투를 치렀습니다. 대전투가 왔을 때 당신은 전투가 끝난 후 검은 뱀이 이름을 기억한 이들 중 하나였습니다 — 그에게 말할 수 있도록 살아남은 이들을 위해." />
+    <string id="taom_cc_taom_adulthood_aserai_2_text" text="당신은 무막 대상을 적대적인 사막 내륙을 통해 안전하게 안내했습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_2_desc" text="대상은 조공을 운반했고 적대적인 부족들에 의해 두 번 공격받았습니다. 당신은 두 번 모두 선두에서 싸웠고 종대의 질서를 유지했습니다. 무막이 도착했고, 조공이 전달되었으며, 상인들은 이의 없이 당신의 수수료를 지불했는데, 이는 그들이 주는 가장 강한 칭찬이었습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_3_text" text="당신은 대립하는 두 사막 부족 간의 평화를 협상했습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_3_desc" text="혈족 간의 원한은 3년 동안 이어져 왔고 양측 부족 모두에게 인정하고 싶은 것보다 더 많은 대가를 치르고 있었습니다. 당신은 회합에서 발언을 요청했고, 감정 없이 숫자를 제시하며, 어느 쪽도 좋아하지 않지만 둘 다 받아들일 수 있는 조건을 제안했습니다. 그들은 받아들였습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_4_text" text="당신은 오아시스 관개 수로망을 확장하여 생산량을 두 배로 늘렸습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_4_desc" text="기존 수로는 한 세대 동안 확장되지 않았습니다. 당신은 지형을 조사하고 새로운 분기를 제안하며 노동력을 조직하여 봄철 홍수 전에 건설을 완료했습니다. 오아시스는 전년도의 두 배를 생산했습니다. 세 개의 다른 정착지가 배우기 위해 사절을 보냈습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_5_text" text="당신은 혼자서 깊은 사막을 횡단하여 오래된 문헌에 언급된 잃어버린 오아시스를 찾았습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_5_desc" text="그 오아시스는 전설로 여겨져 왔습니다. 당신은 오래된 기록을 읽고 지리적 단서를 식별한 후 열흘치 물을 가지고 깊은 사막으로 들어갔습니다. 아홉째 날 당신은 그것을 찾았습니다. 귀환은 예상보다 오래 걸렸지만 당신이 표시한 경로는 그 계절 안에 대상들을 그곳으로 이끌었습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_6_text" text="당신은 적대 부족의 금고 대상을 약탈하여 자신의 부족에게 재분배했습니다." />
+    <string id="taom_cc_taom_adulthood_aserai_6_desc" text="적대 부족은 당신의 무역로에 부과된 불리한 통행료 협정을 통해 수년간 번영해왔습니다. 당신은 한 계절 동안 그들의 대상 일정을 연구하고 깊은 사막에서 적절한 순간을 선택하여 빼앗긴 것을 되찾았습니다. 당신의 부족은 그것을 정의로 여겼고, 적대 부족은 다르게 불렀습니다." />
+    <string id="taom_cc_taom_adulthood_battania_1_text" text="당신은 북부 구릉지 정착지들을 약탈하던 오크 전쟁무리를 추적하여 섬멸했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_1_desc" text="그 전쟁무리는 레인저들이 잡지 못한 채 네 개의 정착지를 습격했습니다. 당신은 패턴을 읽고 다음 목표를 예측하여 추격이 아닌 요격으로 움직였습니다. 함께했던 세 명의 레인저는 나중에 당신이 옳을 것이라 예상하지 못했다고 말했습니다. 당신은 옳았습니다." />
+    <string id="taom_cc_taom_adulthood_battania_2_text" text="당신은 안개산맥의 겨울 동안 부상당한 일행을 살아있게 했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_2_desc" text="레인저 순찰대는 도움에서 사흘 떨어진 곳에 있었는데 낙석으로 두 명의 대원이 중상을 입었습니다. 당신은 최악의 부상을 치료하고 산이 제공한 것으로 은신처를 만들어 구조대가 찾을 때까지 열하루 동안 일행을 살렸습니다. 모두가 집으로 돌아왔습니다." />
+    <string id="taom_cc_taom_adulthood_battania_3_text" text="당신은 중대가 후퇴할 시간을 벌기 위해 혼자서 오크 정찰대에 맞서 산길을 지켰습니다." />
+    <string id="taom_cc_taom_adulthood_battania_3_desc" text="그 고갯길은 한 사람이 지킬 수 있을 만큼 좁았고, 누군가는 남아야 했습니다. 당신은 자원했고, 충분히 오래 오크들을 막은 후 합의한 길로 후퇴했습니다. 중대는 빠져나갔습니다. 당신도 그랬지만, 어떻게 했는지는 논하지 않기로 선택했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_4_text" text="당신은 회수한 두네다인 재료로 새것보다 오래가는 장비를 제작했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_4_desc" text="정착지의 보급선이 끊기고 도구들이 고장 나고 있었습니다. 당신은 회수 가능한 것을 평가하고 부러진 조각들에서 최고의 재료를 회수하여 작동하는 장비로 재제작했습니다. 세 명의 레인저가 보급선이 재개되었을 때 새 보급품 대신 당신의 작품을 요청했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_5_text" text="당신은 일 년 동안 웨더 힐스를 습격해온 숨겨진 오크 야영지를 발견했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_5_desc" text="일곱 순찰대가 찾았지만 아무것도 발견하지 못했습니다. 당신은 다른 접근법을 취했습니다 - 오크가 아니라 그들을 피하는 것들을 추적하며, 새 울음소리의 침묵과 늑대 발자국의 공백을 읽었습니다. 야영지는 부재들이 수렴하는 곳에 있었습니다. 레인저들이 소탕했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_6_text" text="당신은 어떤 호빗도 당신이 거기 있었던 것을 모르게 샤이어를 두 번 통과했습니다." />
+    <string id="taom_cc_taom_adulthood_battania_6_desc" text="두네다인은 샤이어를 국경 너머에서 지켰지만, 때로는 정보를 위해 더 가까운 관찰이 필요했습니다. 당신은 들어가서 농경지를 통과하며 사흘을 보내고 필요한 것을 수집한 후 정원 문 하나 건드리지 않고 떠났습니다. 호빗들은 결코 알지 못했습니다. 그것이 요점이었습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_text" text="당신은 곤도르 보병 방진을 무너뜨린 측면 돌격을 이끌었습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_1_desc" text="곤도르 방진은 세 번의 정면 공격을 견뎌냈고 전투 지휘관은 철수를 고려하고 있었습니다. 당신은 그들의 방패 교체 타이밍을 파악하고 측면 기병대를 요청하여 정확히 적절한 순간에 돌격을 감행했습니다. 방진은 무너졌습니다. 전투는 승리했습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_text" text="당신은 서방 상인들과 무역을 개시하여 부족들이 강철 도구를 얻을 수 있게 했습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_2_desc" text="부족들은 항상 동쪽과 교역했지만, 최고의 강철은 서쪽에서 왔습니다. 당신은 첫 접촉을 하고 룬 해까지 여행할 의향이 있는 상인을 찾아 양측에게 교환이 가치 있게 만드는 조건을 협상했습니다. 돌아온 도구들은 세 번의 겨울 작업을 변화시켰습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_text" text="당신은 가축 떼를 잃지 않고 새로운 방목지로 부족 이주를 이끌었습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_3_desc" text="오래된 땅은 방목이 끝났고 장로 회의는 다음 장소에 대해 의견이 갈렸습니다. 당신은 경로를 제안하고 숫자와 선례로 주장을 펼친 후 직접 이주를 이끌었습니다. 삼백 마리의 동물과 팔십이 명의 사람들이 새로운 땅에 온전히 도착했습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_text" text="당신은 서방 농업 방법을 계곡 정착지에 적용하여 생산량을 세 배로 늘렸습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_4_desc" text="계곡 정착지는 한 세대 동안 오래된 방법으로 자급자족 농사를 지어왔습니다. 당신은 무역로에서 더 나은 접근법을 보았고 작물별로, 해마다 신중하게 적용했습니다. 세 번째 계절에 정착지는 누구나 기억하는 최초로 잉여를 생산하고 있었습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_text" text="당신은 부족 장로들의 지식으로 죽어가는 족장을 되살렸습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="독은 빠르게 작용했고 주술사는 할 수 있는 일이 없다고 말했습니다. 당신은 다른 가르침을 기억했습니다 - 이러한 유형의 상처에 효과가 있는 추운 초원 식물의 조제법. 당신은 그것을 준비하고 적용한 후 밤새 앉아 있었습니다. 족장은 회복했습니다. 그는 당신에게 그의 의회에 자리를 주었습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_text" text="당신은 카이르 안드로스의 곤도르 요새를 정찰하고 약점을 지도화했습니다." />
+    <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="전투 지휘관은 요새를 우회할 수 있는지 또는 함락해야 하는지 알아야 했습니다. 당신은 혼자 전진하여 강의 동쪽 둑에서 나흘을 관찰하며 수비대 병력, 보급 일정, 그리고 최상의 확률을 주는 접근법에 대한 상세한 평가를 가지고 돌아왔습니다. 전투 지휘관은 그것을 작전에서 받은 가장 유용한 보고서라고 불렀습니다." />
+  </strings>
+</base>

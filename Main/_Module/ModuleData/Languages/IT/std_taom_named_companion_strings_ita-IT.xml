@@ -1,12 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Italiano" />
-  </tags>
-  <strings>
-    <!-- Translate entries from named_companions/named_companion_strings.xml here.
-         Format: <string id="LOCALIZATION_KEY" text="translated text" /> -->
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Italian" />
+  </tags>
+  <strings>
+    <string id="nc_backstory_a.named_companion_aragorn_text" text="Sono un Ramingo del Nord. Alcuni mi chiamano Passolesto, sebbene quello non sia il mio vero nome." />
+    <string id="nc_prebackstory.named_companion_aragorn_text" text="Un ramingo? Sembrate più di un semplice uomo dei boschi." />
+    <string id="nc_backstory_b.named_companion_aragorn_text" text="Ho percorso molti sentieri e protetto queste terre da ombre che la maggior parte della gente non vede mai." />
+    <string id="nc_backstory_c.named_companion_aragorn_text" text="La mia eredità è sia un peso che un dovere. Sono erede di un trono da tempo vuoto, eppure ho scelto le terre selvagge piuttosto che la corona, almeno per ora." />
+    <string id="nc_response_1.named_companion_aragorn_text" text="Una nobile causa. Il regno ha bisogno di protettori nell'ombra." />
+    <string id="nc_response_2.named_companion_aragorn_text" text="Fuggite dal vostro destino? O vi state preparando ad esso?" />
+    <string id="nc_backstory_d.named_companion_aragorn_text" text="Forse entrambe le cose. Per ora, la mia spada serve coloro che non possono difendersi. Se avete bisogno delle abilità di un ramingo, mi unirei alla vostra compagnia." />
+    <string id="nc_backstory_a.named_companion_legolas_text" text="Sono un elfo del reame boscoso, esperto con arco e lama. Il mio popolo mi chiama Legolas." />
+    <string id="nc_prebackstory.named_companion_legolas_text" text="Un elfo che viaggia solo? È insolito in queste terre." />
+    <string id="nc_backstory_b.named_companion_legolas_text" text="Le sale di mio padre sono diventate troppo opprimenti. Cerco di comprendere il mondo più vasto oltre i nostri confini." />
+    <string id="nc_backstory_c.named_companion_legolas_text" text="Per secoli, il mio popolo si è confinato nelle nostre foreste, ma l'oscurità si agita in molti luoghi ora. Credo che dobbiamo unirci ad altri contro le ombre crescenti." />
+    <string id="nc_response_1.named_companion_legolas_text" text="Le vostre abilità sarebbero benvenute. Il regno ha bisogno di unità." />
+    <string id="nc_response_2.named_companion_legolas_text" text="Un principe che vaga come un comune arciere? Quanto umile." />
+    <string id="nc_backstory_d.named_companion_legolas_text" text="I titoli significano poco contro il vero male. Il mio arco canta per la giustizia, non per le corone. Se combattete per il bene, starei al vostro fianco." />
+    <string id="nc_backstory_a.named_companion_gimli_text" text="Sono Gimli, figlio di Glóin, un nano delle sale di montagna. La mia ascia cerca battaglie degne." />
+    <string id="nc_prebackstory.named_companion_gimli_text" text="Un guerriero nano lontano dalle montagne? Cosa vi porta qui?" />
+    <string id="nc_backstory_b.named_companion_gimli_text" text="La fucina si raffredda quando non ci sono imprese a ispirare i canti. Cerco gloria e oro, come ogni nano che si rispetti!" />
+    <string id="nc_backstory_c.named_companion_gimli_text" text="Mio padre parlava di grandi avventure nella sua giovinezza. Ora è il mio turno di provare che l'acciaio e il coraggio dei nani restano insuperati in tutto il regno." />
+    <string id="nc_response_1.named_companion_gimli_text" text="Uno spirito guerriero! Potremmo usare tale forza." />
+    <string id="nc_response_2.named_companion_gimli_text" text="Un altro cacciatore di gloria? Spero che possiate sostenere quelle vanterie." />
+    <string id="nc_backstory_d.named_companion_gimli_text" text="Vanterie? Ah! La mia ascia ha abbattuto più nemici di quanti pasti caldi abbiate fatto voi! Ma cerco compagni degni della lealtà di un nano. Forse andrete bene." />
+    <string id="nc_backstory_a.named_companion_swan_text" text="Sono Swan, Cavaliere del Cigno d'Argento. Servo il regno sia con la spada che con la cartografia." />
+    <string id="nc_prebackstory.named_companion_swan_text" text="Un cavaliere che fa mappe? È una combinazione insolita." />
+    <string id="nc_backstory_b.named_companion_swan_text" text="La conoscenza del territorio è vitale quanto qualsiasi lama. Traccio i percorsi che altri temono di percorrere, assicurando che le nostre forze non marcino mai alla cieca." />
+    <string id="nc_backstory_c.named_companion_swan_text" text="L'Ordine del Cigno d'Argento mi ha insegnato che saggezza e guerra vanno di pari passo. Ogni passo montano segnato, ogni guado annotato - questi salvano più vite di qualsiasi singolo colpo di spada." />
+    <string id="nc_response_1.named_companion_swan_text" text="Una mente strategica e un cuore da guerriero. Impressionante." />
+    <string id="nc_response_2.named_companion_swan_text" text="Mappe e spade? Tuttofare e buono a nulla?" />
+    <string id="nc_backstory_d.named_companion_swan_text" text="Maestro in entrambi, in realtà. Le mie mappe hanno guidato eserciti alla vittoria, e la mia lama li ha difesi quando necessario. Se valorizzate la preparazione tanto quanto l'abilità, offro i miei servizi." />
+    <string id="nc_backstory_a.named_companion_rcmcplayz_text" text="Sono Rukumazig-khamîz, conosciuto come il Fabbro. Non forgio solo metallo, ma interi mondi attraverso la mia arte." />
+    <string id="nc_prebackstory.named_companion_rcmcplayz_text" text="Un fabbro che vaga lontano dalla fucina? Cosa ti porta qui?" />
+    <string id="nc_backstory_b.named_companion_rcmcplayz_text" text="Il mio lavoro va oltre incudine e martello. Plasmo scene e spazi, creando i paesaggi stessi della memoria in tre dimensioni." />
+    <string id="nc_backstory_c.named_companion_rcmcplayz_text" text="Ogni muro di fortezza, ogni piazza di villaggio, ogni passo montano - catturo la loro essenza e li ricostruisco in perfetti dettagli. Alcuni lo chiamano arte, io lo chiamo preservazione." />
+    <string id="nc_response_1.named_companion_rcmcplayz_text" text="Un fabbro che forgia mondi? È un dono raro." />
+    <string id="nc_response_2.named_companion_rcmcplayz_text" text="La forgiatura raffinata non aiuterà in battaglia, artigiano." />
+    <string id="nc_backstory_d.named_companion_rcmcplayz_text" text="Ti sorprenderesti. Il mio occhio per le strutture rivela i punti deboli di qualsiasi muro, e la mia conoscenza degli spazi fornisce vantaggio tattico. Inoltre, questo martello serve tanto in battaglia quanto nella creazione. Mi accetterai?" />
+    <string id="nc_backstory_a.named_companion_leovsilva_text" text="Sono Leovlas dei Silvani, maestro artigiano di forme e luce. La mia arte infonde vita nel regno digitale." />
+    <string id="nc_prebackstory.named_companion_leovsilva_text" text="Un artigiano Silvano? Il vostro popolo è leggendario per la sua arte." />
+    <string id="nc_backstory_b.named_companion_leovsilva_text" text="Tra la mia gente, ho imparato che la vera maestria artigianale trascende il fisico. Plasmo mondi dal nulla, scolpendo bellezza che rivaleggia con la natura stessa." />
+    <string id="nc_backstory_c.named_companion_leovsilva_text" text="Dicono che sia uno dei migliori del reame in quest'arte. Ogni texture, ogni ombra, ogni dettaglio deve essere perfetto - questa è la via dei Silvani. Le mie opere si ergono come monumenti a ciò che la dedizione può raggiungere." />
+    <string id="nc_response_1.named_companion_leovsilva_text" text="La tua reputazione ti precede. Tale abilità onorerebbe qualsiasi compagnia." />
+    <string id="nc_response_2.named_companion_leovsilva_text" text="Le belle arti sono piacevoli, ma sai combattere?" />
+    <string id="nc_backstory_d.named_companion_leovsilva_text" text="La stessa precisione che guida la mia arte guida la mia lama. Un maestro artigiano deve difendere le proprie opere. Inoltre, chi può creare tale bellezza sa esattamente come disfare i propri nemici. Devo unirmi a te?" />
+    <string id="nc_backstory_a.named_companion_yotthani_text" text="Sono Thanor, un tessitore di codici e architetto di sistemi. Dono vita alle idee attraverso l'antica arte della programmazione." />
+    <string id="nc_prebackstory.named_companion_yotthani_text" text="Un programmatore? È magia potente in queste terre." />
+    <string id="nc_backstory_b.named_companion_yotthani_text" text="Ciò che altri sognano, io lo rendo realtà. Mi immergo nel tessuto stesso della creazione, tessendo funzionalità da pura logica e determinazione." />
+    <string id="nc_backstory_c.named_companion_yotthani_text" text="Dammi un concetto, non importa quanto complesso, e gli infonderò vita. Ogni sistema, ogni meccanica, ogni funzionalità - li creo dal vuoto, riga per riga, finché non vivono e respirano." />
+    <string id="nc_response_1.named_companion_yotthani_text" text="Il potere di creare dal nulla? Davvero impressionante." />
+    <string id="nc_response_2.named_companion_yotthani_text" text="Codici e sistemi? Sai brandire un'arma vera?" />
+    <string id="nc_backstory_d.named_companion_yotthani_text" text="La mente è l'arma più affilata. Risolvo problemi che altri non possono nemmeno vedere, e le mie soluzioni sono eleganti e letali. In battaglia o nel codice, la precisione è tutto. Permettimi di dimostrarlo unendomi alla tua causa." />
+    <string id="nc_backstory_a.named_companion_whitegoat_text" text="Sono Whitegoat, il Battistrada. Guido i viaggiatori attraverso i percorsi più complessi - l'interfaccia tra mente e macchina." />
+    <string id="nc_prebackstory.named_companion_whitegoat_text" text="Il Battistrada? È un titolo intrigante." />
+    <string id="nc_backstory_b.named_companion_whitegoat_text" text="Creo le finestre attraverso cui tutti interagiscono col nostro mondo. Ogni pulsante, ogni menu, ogni schermata - disegno i sentieri che conducono gli utenti alle loro destinazioni." />
+    <string id="nc_backstory_c.named_companion_whitegoat_text" text="Un paesaggio bellissimo non significa nulla se non puoi navigarlo. Garantisco che ogni anima, da veterano a novizio, possa trovare la propria strada con grazia e facilità. Questa è la mia arte - rendere il complesso semplice." />
+    <string id="nc_response_1.named_companion_whitegoat_text" text="Una guida per il regno digitale. È davvero prezioso." />
+    <string id="nc_response_2.named_companion_whitegoat_text" text="Menu e pulsanti? Come aiuta questo in battaglia?" />
+    <string id="nc_backstory_d.named_companion_whitegoat_text" text="La strategia inizia con l'informazione, e l'informazione richiede chiarezza. Vedo schemi che altri non notano, organizzo il caos in ordine. Le mie abilità si traducono bene in tattica e logistica. Lasciami trovare il sentiero verso la vittoria con te." />
+    <string id="nc_backstory_a.named_companion_igor_text" text="Sono Igor Fahlun, chiamato il Perduto. Un Haradrim lontano dalle sabbie del deserto, che trova scopo nel creare nuovi mondi." />
+    <string id="nc_prebackstory.named_companion_igor_text" text="Il Perduto? È un titolo inquietante per un Haradrim." />
+    <string id="nc_backstory_b.named_companion_igor_text" text="Vagavo dalla mia terra natale cercando qualcosa che non sapevo nominare. Nell'arte di plasmare visioni tridimensionali, ho trovato ciò che non sapevo di cercare." />
+    <string id="nc_backstory_c.named_companion_igor_text" text="Il deserto mi ha insegnato a vedere la bellezza nel vuoto, a costruire qualcosa dal nulla. Ora scolpisco interi reami dal vuoto, ogni creazione un pezzo della casa che porto dentro piuttosto che dietro di me." />
+    <string id="nc_response_1.named_companion_igor_text" text="A volte dobbiamo perderci per trovare il nostro vero cammino." />
+    <string id="nc_response_2.named_companion_igor_text" text="Un artista Haradrim? È inaspettato." />
+    <string id="nc_backstory_d.named_companion_igor_text" text="L'inaspettato spesso si rivela il più prezioso. I miei occhi meridionali vedono angoli che altri perdono, la mia eredità del deserto porta prospettive diverse alle terre settentrionali. Forse perdersi era solo l'inizio dell'essere trovato. Posso viaggiare con te?" />
+    <string id="nc_backstory_a.named_companion_thyrell_text" text="Sono Thyrell il Dorato, Cavaliere del Fiore Dorato, difensore giurato delle antiche sale di Gran Burrone." />
+    <string id="nc_prebackstory.named_companion_thyrell_text" text="Un Cavaliere del Fiore Dorato? Quell'ordine ha una storia leggendaria." />
+    <string id="nc_backstory_b.named_companion_thyrell_text" text="Portiamo la luce delle ere passate in questi tempi che si oscurano. Dalle biblioteche di Gran Burrone ai suoi campi di addestramento, ho padroneggiato sia la sapienza che la lama." />
+    <string id="nc_backstory_c.named_companion_thyrell_text" text="Il Fiore Dorato un tempo si oppose alla più grande oscurità e cadde con onore. Noi che portiamo il loro nome ora dobbiamo assicurarci che il loro sacrificio non sia stato vano. Bellezza, saggezza e valore - queste sono le nostre parole d'ordine." />
+    <string id="nc_response_1.named_companion_thyrell_text" text="Un onore incontrare uno di tale nobile lignaggio." />
+    <string id="nc_response_2.named_companion_thyrell_text" text="Bei titoli e fiori dorati - sai davvero combattere?" />
+    <string id="nc_backstory_d.named_companion_thyrell_text" text="Il Fiore Dorato ha guadagnato la sua gloria con i fatti, non con le parole. La mia lama canta con secoli di tecnica elfica, e il mio giuramento mi vincola a proteggere tutti i popoli liberi. Porterei la stessa dedizione alla vostra compagnia." />
+    <string id="nc_backstory_a.named_companion_haterade_text" text="Sono Hatérade, maestro artigiano e architetto di questo stesso reame che calpesti. Alcuni mi chiamano il Creatore, anche se sono solo un nano con una visione." />
+    <string id="nc_prebackstory.named_companion_haterade_text" text="Il Creatore? Intendi dire che hai plasmato tutto questo?" />
+    <string id="nc_backstory_b.named_companion_haterade_text" text="Sì, ogni sistema, ogni caratteristica, ogni respiro di vita in questo mondo scaturisce dalla fucina della mia immaginazione. Ho riunito i migliori artigiani e ho dato loro uno scopo." />
+    <string id="nc_backstory_c.named_companion_haterade_text" text="Come i miei antenati che scavarono in profondità e costruirono grandi sale, ho costruito qualcosa di più grandioso - un intero mondo dove le leggende camminano di nuovo. Ogni dettaglio porta il mio marchio, eppure ora vive oltre la mia mano." />
+    <string id="nc_response_1.named_companion_haterade_text" text="È un onore incontrare colui che ha reso possibile tutto questo." />
+    <string id="nc_response_2.named_companion_haterade_text" text="Un complesso di divinità per un nano? Questa è nuova." />
+    <string id="nc_backstory_d.named_companion_haterade_text" text="Ah! Nessun dio, solo un nano testardo che si è rifiutato di lasciar morire un sogno. Ho percorso ogni sentiero in questo reame come suo creatore, ora li percorro come guerriero. Lascia che ti mostri il mondo attraverso gli occhi del suo creatore." />
+    <string id="nc_backstory_a.named_companion_hart_text" text="Sono Éohart della Marca, maestro di paesaggi e modellatore di orizzonti. Dicono che io sia tra i migliori artigiani di scene in tutto il reame." />
+    <string id="nc_prebackstory.named_companion_hart_text" text="Della Marca? Le praterie dei signori dei cavalli?" />
+    <string id="nc_backstory_b.named_companion_hart_text" text="Sì, nato tra pianure infinite e colline ondulate. Quella vastità mi ha insegnato a vedere il mondo come potrebbe essere, non solo come è. Ora ricreò quella maestosità ovunque vada." />
+    <string id="nc_backstory_c.named_companion_hart_text" text="Ogni valle, ogni vetta montana, ogni radura boschiva - le plasmo con la cura di chi sa che i paesaggi plasmano le storie che si narrano al loro interno. Le mie scene non esistono semplicemente, respirano di vita e scopo." />
+    <string id="nc_response_1.named_companion_hart_text" text="La tua reputazione come maestro artigiano è ben meritata." />
+    <string id="nc_response_2.named_companion_hart_text" text="Bei paesaggi non vincono guerre, cavaliere." />
+    <string id="nc_backstory_d.named_companion_hart_text" text="Ti sorprenderebbe come le battaglie dipendano dalla conoscenza del territorio. Ogni scena che creo mi insegna terreno, linee di vista e vantaggio strategico. La Marca ha allevato guerrieri che leggono la terra stessa. Devo cavalcare con te?" />
+    <string id="nc_backstory_a.named_companion_blackrose_text" text="Sono BlackRose, maestro di forgia dei Reami Dimenticati. Un Uruk-Hai tra i creatori, che costruisce mondi invece di distruggerli." />
+    <string id="nc_prebackstory.named_companion_blackrose_text" text="Un Uruk-Hai che crea? Questo sfida tutto ciò che conosco della tua razza." />
+    <string id="nc_backstory_b.named_companion_blackrose_text" text="Saruman ci ha creati per distruggere, sì, ma io ho scoperto un potere diverso - la creazione. Attraverso codice e artigianato, ho forgiato i Reami Dimenticati, dando vita a pixel morti. I miei artigli che un tempo impugnavano spade ora plasmano intere civiltà." />
+    <string id="nc_backstory_c.named_companion_blackrose_text" text="A differenza dei miei simili che accumulano il loro bottino, io condivido liberamente. Ogni risorsa, ogni riga di codice, ogni moneta guadagnata - l'ho data a coloro che costruirebbero al mio fianco. La comunità prospera perché ci solleviamo a vicenda, non abbattiamo. Questa è la mia ribellione contro la mia natura." />
+    <string id="nc_response_1.named_companion_blackrose_text" text="La tua generosità ha aiutato innumerevoli creatori. Questa è vera forza." />
+    <string id="nc_response_2.named_companion_blackrose_text" text="Un Uruk che insegna invece di prendere? Saruman sarebbe inorridito." />
+    <string id="nc_backstory_d.named_companion_blackrose_text" text="Che lo sia pure. Ho trovato un potere nel sollevare gli altri che nessuna conquista potrebbe eguagliare. Ora cammino per queste terre sia come creatore che come guerriero. Accetterai uno che costruisce con la stessa ferocia con cui combatte?" />
+    <string id="nc_backstory_a.named_companion_spartan_text" text="Sono Belecthar, lo Spartano. Dove altri impugnano lance, io forgio mondi attraverso codice e struttura." />
+    <string id="nc_prebackstory.named_companion_spartan_text" text="Uno spartano che combatte con l'XML? È un campo di battaglia insolito." />
+    <string id="nc_backstory_b.named_companion_spartan_text" text="La disciplina di Sparta serve molti scopi. Mentre i miei fratelli si addestravano per le formazioni di falange, io trovai schemi nel codice più eleganti di qualsiasi muro di scudi. Ogni nodo XML precisamente posizionato, ogni funzione un colpo calcolato." />
+    <string id="nc_backstory_c.named_companion_spartan_text" text="Dicono che gli spartani non si ritirino mai - io non lascio mai il codice incompiuto. Dove altri vedono testo infinito, io vedo l'architettura stessa della realtà. Attraverso organizzazione sistematica e ottimizzazione implacabile, costruisco fondamenta su cui altri possono reggersi." />
+    <string id="nc_response_1.named_companion_spartan_text" text="La precisione tecnica è una sua propria forma di guerra." />
+    <string id="nc_response_2.named_companion_spartan_text" text="Sembra che tu abbia scambiato il tuo scudo per una tastiera." />
+    <string id="nc_backstory_d.named_companion_spartan_text" text="Entrambi richiedono disciplina, amico. Il mio codice è testato in battaglia tanto quanto qualsiasi lancia di bronzo. Offro soluzioni sistematiche e determinazione da guerriero. Mi accetterai nella tua compagnia?" />
+    <string id="nc_backstory_a.named_companion_solus_text" text="Sono Solus, il Cairn, Cavaliere del Fiore Dorato. Le mie mani hanno plasmato le armi stesse che armano questo reame." />
+    <string id="nc_prebackstory.named_companion_solus_text" text="Il Fiore Dorato? Quell'ordine cadde molto tempo fa a Gondolin..." />
+    <string id="nc_backstory_b.named_companion_solus_text" text="Eppure il suo spirito perdura attraverso coloro che ricordano. Nelle fucine di Gran Burrone, ho imparato a fondere tecniche antiche con un nuovo scopo. Ogni lama che forgio porta l'eredità di Gondolin - bellezza e funzione unite, come Glorfindel insegnò un tempo." />
+    <string id="nc_backstory_c.named_companion_solus_text" text="Mi chiamano il Cairn perché segno dove l'antica arte incontra la nuova. Ogni arma che ho forgiato per questo reame è una pietra commemorativa, che onora ciò che fu servendo ciò che è. Il mio arco canta la stessa precisione che richiedo da ogni lama che affilo." />
+    <string id="nc_response_1.named_companion_solus_text" text="Impugnare armi forgiate da tali mani è un onore." />
+    <string id="nc_response_2.named_companion_solus_text" text="Un fabbro d'armi che combatte? Combinazione insolita." />
+    <string id="nc_backstory_d.named_companion_solus_text" text="Si deve testare ciò che si crea. Le mie frecce volano vere perché comprendo l'anima dell'arco - io l'ho plasmata. Se cerchi uno che arma eroi e sta in mezzo a loro, sono pronto." />
+    <string id="nc_backstory_a.named_companion_maztog_text" text="Sono Maztog, il Terrore dello Stalliere - anche se i più mi conoscono semplicemente come MOD. Guido anime perdute attraverso il labirinto della creazione." />
+    <string id="nc_prebackstory.named_companion_maztog_text" text="Un Uruk-hai che aiuta invece di nuocere? È senza precedenti." />
+    <string id="nc_backstory_b.named_companion_maztog_text" text="Nelle sale di Discord, ho trovato la mia vera vocazione. Mentre i miei fratelli fanno guerra con l'acciaio, io faccio pace con la conoscenza. Ogni domanda a cui rispondo, ogni problema risolto, ogni nuovo arrivato accolto - questo è il mio campo di battaglia, e non mi stanco mai." />
+    <string id="nc_backstory_c.named_companion_maztog_text" text="Mi chiamano il Terrore degli Stallieri perché mi prendo cura della comunità come uno stalliere si prende cura dei cavalli - con pazienza, fermezza e attenzione. Giorno e notte, sono sempre pronto. Nessuna domanda è troppo piccola, nessuna crisi troppo grande. Saruman mi ha creato per servire, e io servo - solo non come lui intendeva." />
+    <string id="nc_response_1.named_companion_maztog_text" text="La tua dedizione alla comunità è leggendaria." />
+    <string id="nc_response_2.named_companion_maztog_text" text="Un Uruk moderatore? Il mondo è davvero cambiato." />
+    <string id="nc_backstory_d.named_companion_maztog_text" text="Il cambiamento inizia con una scelta. Ho scelto di costruire ponti invece di bruciarli. Se hai bisogno di qualcuno che conosca sia la risoluzione dei conflitti che il conflitto stesso, sono pronto a servire." />
+    <string id="nc_backstory_a.named_companion_balakhor_text" text="Sono Balakhôr, il Gran Maestro della Sapienza. Ogni racconto, ogni battaglia, ogni eroe di questo reame - li ho cronacati tutti." />
+    <string id="nc_prebackstory.named_companion_balakhor_text" text="Un Gran Maestro della Sapienza? Devi conoscere segreti perduti nel tempo stesso." />
+    <string id="nc_backstory_b.named_companion_balakhor_text" text="Per tre ere ho raccolto conoscenza, ma la mia saggezza più grande è giunta attraverso la battaglia al fianco di Thyrell, mio fratello d'armi. Insieme abbiamo combattuto in innumerevoli scontri - lui con la lama dorata, io con antiche parole. Il sangue crea fratelli, ma uno scopo condiviso li rende eterni." />
+    <string id="nc_backstory_c.named_companion_balakhor_text" text="Nelle sale di Gran Burrone, preservo non solo la storia ma il suo significato. Ogni caratteristica della mod, l'ascesa di ogni fazione, il viaggio di ogni eroe - li intesso nel grande arazzo. Quando i creatori dubitano del loro cammino, mostro loro dove si inseriscono nel disegno più grande. La sapienza di questo reame è l'opera della mia vita." />
+    <string id="nc_response_1.named_companion_balakhor_text" text="Apprendere dal Gran Maestro della Sapienza in persona sarebbe un onore." />
+    <string id="nc_response_2.named_companion_balakhor_text" text="Tutta quella conoscenza - pesa molto?" />
+    <string id="nc_backstory_d.named_companion_balakhor_text" text="La conoscenza è pesante solo quando viene accumulata. Condivisa liberamente, eleva tutti coloro che la ricevono. Come mio fratello Thyrell, servo la gloria di questo reame. Aggiungerai il tuo capitolo al nostro racconto senza fine?" />
+    <string id="nc_backstory_a.named_companion_noxix_text" text="Sono Noxix Ilúvatar, Fiamma dell'Est. Prima di camminare nella Terra di Mezzo, ho portato fuoco e sangue a Westeros attraverso la mia arte." />
+    <string id="nc_prebackstory.named_companion_noxix_text" text="Il creatore di A Dance of Dragons? La tua opera è leggendaria attraverso i reami!" />
+    <string id="nc_backstory_b.named_companion_noxix_text" text="Nei sentieri ombrosi di Bosco Atro, ho imparato che la creazione richiede sia luce che oscurità. Quando ho forgiato la Danza dei Draghi, ho intessuto insieme ghiaccio e fuoco, onore e tradimento. Quella stessa visione l'ho portata qui, aiutando a far nascere questa Terra di Mezzo dalle sue prime righe di codice." />
+    <string id="nc_backstory_c.named_companion_noxix_text" text="Mi chiamano Fiamma dell'Est perché accendo l'ispirazione negli altri. Da Westeros alla Terra di Mezzo, ho affiancato i creatori ai loro inizi, condividendo ciò che ho appreso. Questo reame esiste perché noi che abbiamo costruito mondi prima sappiamo - le più grandi creazioni nascono dalla collaborazione, non dall'isolamento." />
+    <string id="nc_response_1.named_companion_noxix_text" text="La tua esperienza abbraccia molteplici mondi - incredibile." />
+    <string id="nc_response_2.named_companion_noxix_text" text="Dai draghi alla Terra di Mezzo - un bel viaggio." />
+    <string id="nc_backstory_d.named_companion_noxix_text" text="Ogni reame insegna nuove lezioni. Westeros mi ha insegnato la complessità politica, la Terra di Mezzo insegna profondità mitica. Offro la saggezza di entrambi i mondi e un arco che non sbaglia mai. Scriveremo insieme nuove leggende?" />
+  </strings>
+</base>

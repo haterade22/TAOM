@@ -1,0 +1,58 @@
+{
+  "_comment": "Canonical Russian Tolkien translations — overrides for AI translator. Source: Kistyakovsky/Muravyov (KKM) where canonical, with fallback to phonetic transliteration. Extend as needed.",
+
+  "TAOM_eleftheroi_name": "Беорнинги",
+  "TAOM_eleftheroi_short": "Беорнинги",
+  "TAOM_forest_people_name": "Друэдайн",
+  "TAOM_forest_people_short": "Дикари",
+  "TAOM_karakhuzaits_name": "Дикие истерлинги",
+  "TAOM_karakhuzaits_short": "Дикари",
+  "TAOM_jawwal_name": "Песчаные всадники",
+  "TAOM_jawwal_short": "Песчаные всадники",
+
+  "taom_str_faction_official.empire": "клансмен из Дунланда",
+  "taom_str_faction_official.empire_f": "клансвумен из Дунланда",
+  "taom_str_faction_ruler.empire": "Вождь",
+  "taom_str_faction_ruler.empire_f": "Вождь",
+  "taom_str_adjective_for_faction.empire": "Дунландский",
+  "taom_str_short_term_for_faction.empire": "Дунланд",
+  "taom_str_faction_formal_name_for_culture.empire": "Кланы Дунланда",
+  "taom_str_faction_informal_name_for_culture.empire": "Дунланд",
+  "taom_str_neutral_term_for_culture.empire": "Дунлендинги",
+
+  "taom_str_faction_official.vlandia": "благородный из Рохана",
+  "taom_str_faction_official.vlandia_f": "леди из Рохана",
+  "taom_str_faction_ruler.vlandia": "Король",
+  "taom_str_faction_ruler.vlandia_f": "Королева",
+  "taom_str_adjective_for_faction.vlandia": "Рохиррим",
+  "taom_str_short_term_for_faction.vlandia": "Всадник",
+  "taom_str_faction_formal_name_for_culture.vlandia": "Ристания",
+  "taom_str_faction_informal_name_for_culture.vlandia": "Рохан",
+  "taom_str_neutral_term_for_culture.vlandia": "Рохиррим",
+
+  "taom_str_faction_official.battania": "благородный из Кханда",
+  "taom_str_faction_official.battania_f": "леди из Кханда",
+  "taom_str_faction_ruler.battania": "Лорд Кханда",
+  "taom_str_faction_ruler.battania_f": "Леди Кханда",
+  "taom_str_adjective_for_faction.battania": "Варягский",
+  "taom_str_short_term_for_faction.battania": "Варяг",
+  "taom_str_faction_formal_name_for_culture.battania": "Варяги Кханда",
+  "taom_str_faction_informal_name_for_culture.battania": "Кханд",
+  "taom_str_neutral_term_for_culture.battania": "Варяги",
+
+  "nc_backstory_a.named_companion_aragorn_text": "Я Следопыт Севера. Некоторые зовут меня Бродяжником, хотя это и не моё истинное имя.",
+  "nc_backstory_a.named_companion_legolas_text": "Я эльф из лесного королевства, искусный в стрельбе и владении клинком. Мой народ зовёт меня Леголасом.",
+  "nc_backstory_a.named_companion_gimli_text": "Я Гимли, сын Глоина, гном из горных чертогов. Мой топор ищет достойных битв.",
+
+  "taom_career_screen_title": "Карьера",
+  "taom_career_done": "Готово",
+  "taom_career_ability_label": "Карьерная способность",
+  "taom_career_tier1": "Уровень 1",
+  "taom_career_tier2": "Уровень 2",
+  "taom_career_tier3": "Уровень 3",
+  "taom_career_free_points": "Свободных очков: {COUNT}",
+
+  "taom_main_menu_new_game": "Войти в Эпоху Людей",
+  "taom_precompile_shaders": "Предкомпиляция шейдеров",
+  "taom_precompile_hint": "Предкомпилирует шейдеры для устранения подвисаний в игре. Запустите один раз после установки TAOM."
+}
