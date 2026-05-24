@@ -2,6 +2,32 @@
 
 ## 2026-05-23
 
+### fix(lords): re-equip Faramir as Ithilien Ranger Captain (was rendering as a peasant)
+
+Faramir's battle and civilian rosters in [taom_equipment_sets_gondor.xml](Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml) previously used `ithilien_jerkin_long` (30 body armor, brown leather) + `sk_gd_ano_pauld_noble_med_a` + `sk_gd_ano_grvs_noble_med_a` + `sk_gd_ith_noble_helmet_heavy_a` — visually indistinguishable from a peasant in portrait view next to Boromir's heavy Osgiliath plate. Swapped to Faramir's dedicated character-specific kit (all items already in LOTRLOME_Armory):
+
+| Slot | Was | Now |
+|---|---|---|
+| Head | `sk_gd_ith_noble_helmet_heavy_a` | `ithilien_hood` |
+| Body | `ithilien_jerkin_long` | `faramir_armor` (Faramir's Armour) |
+| Cape | `sk_gd_ano_pauld_noble_med_a` | `ithilien_cloak_var` (Ithilien Cloak Two) |
+| Leg | `sk_gd_ano_grvs_noble_med_a` | `ithilien_boots_heavy` (Ithilien Heavy Leather Boots) |
+| Gloves | `faramir_bracers` | (unchanged) |
+
+Weapons + horse unchanged on battle roster: Faramir's Sword + Ithilien Bow III + Noldar Elven Arrow X + charger. Civilian mirrors battle minus weapons + horse (matches Boromir's roster pattern).
+
+Save-compat: per-slot replacement, roster IDs `faramir_bat_equipment` and `faramir_civ_equipment` preserved. `lords.xslt` (lines 1602–1638) references roster IDs only, no edit needed. Existing saves keep currently-spawned equipment; new loadout applies on next equipment refresh.
+
+Item-ID verification: all 5 new IDs grepped against `LOTRLOME_Armory\ModuleData\LOTRLOME_items\gondor\*.xml` before writing. XML well-formedness confirmed via `[xml]Get-Content` parse (26 rosters preserved, no schema change).
+
+Build verification: full `./build.ps1` blocked by Bannerlord running (BehaviorTrees.dll locked, environment issue per `.claude/rules/environment-failures.md`); XML edit is pure ID substitution against verified-existing IDs.
+
+### feat(lords): add Patreon supporter Chägermeister + Elen-Nolmarë clan (Rivendell tier-2)
+
+First Patreon-supporter clan in TAOM. Added `clan_rivendell_3` (Elen-Nolmarë, tier 2, owned by `lord_R3_1` Chägermeister) under Imladris, plus the lord himself (elf, Cavalry archetype, custom skills/traits per supporter spec) and a `<Hero text=…/>` biography rendered in the encyclopedia. Establishes the lightweight "Patreon supporter" convention as XML comments on both `clans.xml` and `lords.xml` entries — no new file, no new feature module. Banner reuses Imladris's flag as a placeholder; equipment uses the existing `rivendell_bat_template_medium_c` / `rivendell_civ_template_default_c` template pair.
+
+Files: `Main/_Module/ModuleData/characters/clans.xml`, `characters/heroes.xml`, `characters/lords.xml`.
+
 ### feat(troops): Rhun recruitment + Easterling → Loke-Rim + conditional-pool API (#215, commit bce0824)
 
 Per-settlement Rhûn volunteer pools (the last major TAOM culture without recruitment overrides — every Rhun notable previously fell through to vanilla `DefaultVolunteerModel.GetBasicVolunteer()` and produced an `easterling_recruit`). Easterling line retired and replaced by Loke-Rim throughout. Wainrider elite cavalry get proper tier-4 Rhun barding. Gondor recruitment moved to JSON config with a new conditional-pool API for ownership-gated pools. Ithil Guard line re-equipped.
@@ -37,6 +63,22 @@ Per-settlement Rhûn volunteer pools (the last major TAOM culture without recrui
 Feature doc: [`docs/features/volunteer-recruitment.md`](docs/features/volunteer-recruitment.md). RCA: [`docs/reviews/rca-rhun-gondor-recruitment-2026-05-23.md`](docs/reviews/rca-rhun-gondor-recruitment-2026-05-23.md).
 
 **Pre-existing horse-armor audit gap (flagged, NOT fixed this PR):** 8 Rhun cavalry troops at level 21-26 still use `lrd_horse_armour_4` despite the new "tier-4 → level 31+ only" rule (`balcoth_horse_archer`, `far_rhun_cavalry`, `far_rhun_horse_master`, `kharaghul_raider`, `kharaghul_horse_scout`, `kharaghul_horse_archer`, `kharaghul_horse_master`, `darkhun_horseman`, `darkhun_cavalry`). Will be addressed in a follow-up.
+
+### fix(armory): correct `covers_hands` on 4 LOTRLOME bracers
+
+User-reported render mismatches across four bracers in `LOTRLOME_Armory/ModuleData/LOTRLOME_items/`. Each was the opposite of the intended visual. Per `feedback_lotrlome_armor_cover_attributes.md`, the engine equips an item but skips the mesh over the hand when `covers_hands="false"` (and vice versa) — so the wrong value silently produces either bare-skin-where-armor-should-be or armor-cuff-with-no-glove.
+
+| Item id | Display | File | Was | Now |
+|---|---|---|---|---|
+| `sk_ar_art_bracer_noble_med_a` | [Arnor] Noble Bracers | `arnor/arm_armors.xml` | `false` | **`true`** |
+| `sk_dg_uruk_bracer_elite_j` | [Dol Guldur] Uruk Archer Elite Bracer J | `dol_guldur/arm_armors.xml` | `true` | **`false`** |
+| `sk_uruk_hai_bracer_elite_a1` | [Isengard] Elite Plate Bracer I | `isengard/arm_armors.xml` | `true` | **`false`** |
+| `sk_md_orc_bracer_med_a` | [Mordor] Mordor Orc Bracer I | `mordor/arm_armors.xml` | `true` | **`false`** |
+
+Item ids, `arm_armor` values, `modifier_group`, and `material_type` unchanged on all four. Single-attribute flip per item.
+
+Not-tested: in-game render — automated tests don't cover armor cover attributes; user verifies visually.
+Save-compat: none — attribute flip only.
 
 ### chore(build): vendor warg + native DLLs in Main/_Module/bin, drop redundant MCMv5 ref
 

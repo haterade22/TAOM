@@ -172,11 +172,11 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_faramir_sword" />
 			<Equipment slot="Item2" id="Item.wm_ithilien_bow_c" />
 			<Equipment slot="Item3" id="Item.wm_elven_arrow_v2_d" />
-			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Head" id="Item.ithilien_hood" />
+			<Equipment slot="Body" id="Item.faramir_armor" />
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />
-			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
-			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
+			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+			<Equipment slot="Cape" id="Item.ithilien_cloak_var" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -184,11 +184,11 @@
 
 	<EquipmentRoster id="faramir_civ_equipment" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Head" id="Item.ithilien_hood" />
+			<Equipment slot="Body" id="Item.faramir_armor" />
 			<Equipment slot="Gloves" id="Item.faramir_bracers" />
-			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_med_a" />
-			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_med_a" />
+			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+			<Equipment slot="Cape" id="Item.ithilien_cloak_var" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
