@@ -73,35 +73,63 @@ All Python scripts support `--dry-run` (preview) and `--apply` (write). Run from
 
 ## Localization Pipeline
 
+Four scripts that together produce, translate, validate, and inject loc XMLs across all 12 supported languages × 3 modules (TAOM + TAOM_Map + LOTRLOME_Armory). Per-language full coverage is **~10,019 strings** across 27 files (7 TAOM + 1 Map + 19 Armory).
+
 | Script | Purpose | Output |
 |--------|---------|--------|
-| `generate_translation_template.py` | Generate English templates for a target language across the 6 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
-| `translate_with_claude.py` | AI first-draft translation via Claude API (Sonnet 4.5). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. | All 26 language XMLs for `<LANG>` |
+| `generate_translation_template.py` | Generate English templates for a target language across the 7 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
+| `translate_with_claude.py` | AI first-draft translation via Claude API (Sonnet 4.5). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. | All 27 language XMLs for `<LANG>` |
+| `rebuild_translation_files.py` | Inject cached translations into XML files from scratch (rebuilds the language file structure using English source + overrides + cache). Use after API runs to apply translations cleanly. | All 27 language XMLs for `<LANG>` (or `--all` for every language) |
+| `translation_status.sh` | One-shot status dashboard: per-language cache size + last batch line + running process count. | (stdout) |
+
+**Source XMLs** (the engine's English fallback + translator's discoverable list):
+- `Main/_Module/ModuleData/taom_module_strings.xml` (~653 — faction names, UI labels)
+- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,177 — wanderer backstories)
+- `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` (~126 — Aragorn etc.)
+- `Main/_Module/ModuleData/taom_cc_strings.xml` (~772 — CC narratives)
+- `Main/_Module/ModuleData/taom_career_strings.xml` (~2,050 — career names + tooltips)
+- `Main/_Module/ModuleData/taom_messenger_strings.xml` (~29 — Messenger UI)
+- `Main/_Module/ModuleData/taom_xslt_strings.xml` (~1,431 — kingdom/culture/clan/lord/hero descriptions extracted from XSLT)
+
+**External-module source XMLs** (not in repo, in game install — already include English text with inline `{=KEY}`):
+- `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` (~1,102 settlement names)
+- `<game>/Modules/LOTRLOME_Armory/ModuleData/Languages/loc_*.xml` (~2,782 equipment names across 19 files)
 
 **Configuration:**
 - Overrides (hand-curated canonical translations, e.g. Tolkien proper nouns): `tools/translation_overrides/<lang>.json` — git-tracked, edit freely
-- Cache (machine-written API results): `tools/translation_cache/<lang>.json` — git-tracked, persists across runs so re-runs are free
+- Cache (machine-written API results): `tools/translation_cache/<lang>.json` — git-tracked, ~700KB-1.3MB per language
 
-**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~8,600 strings).
+**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~10,000 strings). Cache makes re-runs effectively free.
 
 **Usage:**
 ```bash
-# Preview what would be translated and rough cost:
+# Preview what would be translated and rough cost (no API calls):
 python tools/translate_with_claude.py --lang RU --dry-run
 
-# Pilot a small batch first:
+# Pilot a small batch first to validate prompt quality:
 python tools/translate_with_claude.py --lang RU --module TAOM --max-entries 50 --apply
 
-# Full run for a language (all 26 files):
+# Full run for a language (all 27 files across 3 modules):
 python tools/translate_with_claude.py --lang RU --apply
 
 # Translate just one module:
 python tools/translate_with_claude.py --lang RU --module Armory --apply
+
+# After API runs: rebuild XML files from cache + overrides
+python tools/rebuild_translation_files.py --lang RU
+python tools/rebuild_translation_files.py --all  # all 12 langs
+
+# Status check on a running parallel batch:
+bash tools/translation_status.sh
 ```
 
-Quality enforcement: the script validates that every `{VARIABLE}`, `{?GENDER}{?}{\?}` placeholder/conditional present in the English source is preserved verbatim in the translation. Failed entries (mismatch detected) keep the English text — never get poisoned with broken markup.
+**Parallel runs:** `translate_with_claude.py` can be safely run for multiple languages in parallel (each language uses its own cache file — no contention). Recommended for full-suite refresh.
 
-See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow.
+**Quality enforcement:** the script validates that every `{VARIABLE}` and `{?GENDER}{?}{\?}` placeholder/conditional present in the English source is preserved verbatim in the translation. Translations that fail validation keep the English text — never get poisoned with broken markup.
+
+**Idempotent / resumable:** cache persists every batch, so an interrupted run resumes from where it stopped on the next invocation. Re-running a fully-translated language is a no-op.
+
+See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow + canonical Tolkien name conventions per language.
 
 ---
 

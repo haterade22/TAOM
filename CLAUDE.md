@@ -214,6 +214,28 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | Update BUTR/MCM/ButterLib dependencies | [migration/dr3-maintenance.md](./docs/migration/dr3-maintenance.md) — version pinning, Steam Workshop fallback, smoke test, risk scenarios |
 | Use agent teams | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
 | Plan future GameModel overrides | [roadmap.md](./docs/roadmap.md) |
+| Add or update translations | [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md) + [tools/README.md](./tools/README.md#localization-pipeline) |
+
+## Localization
+
+12 supported languages (BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR) × 3 modules (TAOM, TAOM_Map, LOTRLOME_Armory) = ~10K strings per language. PL is community-hand-translated; the other 11 have AI first-draft translations (Claude Sonnet 4.5 via `tools/translate_with_claude.py`).
+
+| Component | Location | Notes |
+|-----------|----------|-------|
+| **Translator-facing guide** | [docs/localization/TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md) | Full workflow, AI pipeline, manual fallback, Tolkien naming conventions |
+| **Source loc XMLs** (English defaults + translator's discoverable key list) | `Main/_Module/ModuleData/taom_*_strings.xml` (×6) + `taom_xslt_strings.xml` | 7 source files, ~6,238 entries. Each entry uses `text="{=KEY}default"` format. |
+| **Per-language translation files** | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` | 7 files per language. Engine auto-discovers via `language_data.xml`. |
+| **External module translations** | `<game>/Modules/TAOM_Map/ModuleData/Languages/<LANG>/loc_settlements.xml`, `<game>/Modules/LOTRLOME_Armory/ModuleData/Languages/<LANG>/loc_*.xml` | Not in repo (deployed straight to game install). |
+| **Translation tools** | [tools/translate_with_claude.py](./tools/translate_with_claude.py), [tools/rebuild_translation_files.py](./tools/rebuild_translation_files.py), [tools/generate_translation_template.py](./tools/generate_translation_template.py), [tools/translation_status.sh](./tools/translation_status.sh) | See [tools/README.md](./tools/README.md#localization-pipeline). |
+| **Overrides** (hand-curated canonical translations) | `tools/translation_overrides/<lang>.json` | E.g., Russian Tolkien names: Бродяжник, Мордор. Always wins over LLM. |
+| **Cache** (machine-translated, resumable) | `tools/translation_cache/<lang>.json` | Git-tracked. Re-runs free. ~700KB-1.3MB per lang. |
+| **Validation tests** | [TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs](./TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs) | Enforces 7 LanguageFile refs per language, well-formed XML, no missing files. |
+
+**When adding new TAOM C# code that displays text to the player:** wrap with `{=KEY}default` format (e.g., `new TextObject("{=taom_my_feature_label}My Feature")`) and add the key to `taom_module_strings.xml`. Then re-run the translation tool to propagate to all 11 AI-translated languages.
+
+**When adding new source XML files for in-game text:** add the file path to `SubModule.xml` as a `<XmlNode><XmlName id="GameText" path="..."/>` entry, add a `<LanguageFile>` reference in all 12 `language_data.xml` files, create empty stubs per language, and bump the `LanguageDataXmlTests.HaveExactlyXLanguageFiles` test count.
+
+**When XSLT files inject new text with `{=KEY}default`:** the keys need to be harvested into `taom_xslt_strings.xml` (see commit `20713a1` for the precedent). Run `tools/translate_with_claude.py` after the harvest to propagate.
 
 ## Key Paths
 
@@ -627,6 +649,7 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | **Global items** | `LOTRLOME_items\LOTRAOM_weapons.xml`, `LOTRAOM_shields.xml`, `LOTRAOM_horses.xml` |
 | **Gondor prefix** | `sk_gd_ano_` (Anorien), `sk_gd_mns_` (Minas Tirith), `sk_gd_osg_` (Osgiliath), `sk_gd_cair_` (Cair Andros), `sk_gd_ith_` (Ithilien) |
 | **KEYforce spec drops** | `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` — per-culture item lists + unit progression specs |
+| **CC facegen action_sets** | LIVE at `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml` (TAOM's own copy was removed 2026-05-04). Tracked snapshot at [`docs/reference/lotrlome-armory-snapshot/action_sets.xml`](docs/reference/lotrlome-armory-snapshot/action_sets.xml). Every TAOM-consumed race id MUST have `as_<race>_facegen` + `as_<race>_female_facegen` entries with the full ~106-action surface (copy `as_dwarf_facegen` verbatim, rename `id` + `base_set` only). Slim entries break post-parent CC stages. See [`docs/features/character-creation.md`](docs/features/character-creation.md#lotrlome-as_race_facegen-action_set-requirement-live-in-lotrlome_armory-not-taom) + memory `feedback_lotrlome_action_set_aliases.md`. |
 
 ### Armory folder canonical home per item-id prefix
 
