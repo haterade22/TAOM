@@ -373,6 +373,7 @@
 	<!-- MIRKWOOD - reuses vanilla empire clothing, elf face via BodyProperty -->
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_0_mirkwood"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_0_mirkwood"
 		age="45"
 		default_group="Infantry"
@@ -401,6 +402,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_1_mirkwood"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_1_mirkwood"
 		age="45"
 		default_group="Infantry"
@@ -432,6 +434,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_2_mirkwood"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_2_mirkwood"
 		age="45"
 		default_group="Infantry"
@@ -460,6 +463,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_3_mirkwood"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_3_mirkwood"
 		age="45"
 		default_group="Infantry"
@@ -488,6 +492,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_4_mirkwood"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_4_mirkwood"
 		age="45"
 		default_group="Infantry"
@@ -516,6 +521,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_5_mirkwood"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_5_mirkwood"
 		age="45"
 		default_group="Infantry"
@@ -734,6 +740,7 @@
 	<!-- RIVENDELL - reuses vanilla empire clothing, elf face via BodyProperty -->
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_0_rivendell"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_0_rivendell"
 		age="45"
 		default_group="Infantry"
@@ -762,6 +769,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_1_rivendell"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_1_rivendell"
 		age="45"
 		default_group="Infantry"
@@ -793,6 +801,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_2_rivendell"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_2_rivendell"
 		age="45"
 		default_group="Infantry"
@@ -821,6 +830,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_3_rivendell"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_3_rivendell"
 		age="45"
 		default_group="Infantry"
@@ -849,6 +859,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_4_rivendell"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_4_rivendell"
 		age="45"
 		default_group="Infantry"
@@ -877,6 +888,7 @@
 	</NPCCharacter>
 	<NPCCharacter
 		id="child_education_templates_stage_2_page_0_branch_5_rivendell"
+		race="elf"
 		name="{=!}stage_2_page_0_branch_5_rivendell"
 		age="45"
 		default_group="Infantry"

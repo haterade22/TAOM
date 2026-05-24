@@ -5,7 +5,7 @@
 	<!-- Elves use default human race (no race attribute) -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_rivendell" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.rivendell" name="{=aom_rv_arena}Arena Master">
+	<NPCCharacter id="tournament_master_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.rivendell" name="{=aom_rv_arena}Arena Master">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -18,7 +18,7 @@
 	</NPCCharacter>
 
 	<!-- Villager (upgrades to imladris_recruit) -->
-	<NPCCharacter id="villager_rivendell" default_group="Infantry" level="1" name="{=aom_rv_villager}Villager" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_rivendell" race="elf" default_group="Infantry" level="1" name="{=aom_rv_villager}Villager" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<upgrade_targets>
@@ -41,7 +41,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_rivendell" default_group="Infantry" level="26" name="{=aom_rv_caravan_master}Rivendell Caravan Master" occupation="CaravanGuard" culture="Culture.rivendell">
+	<NPCCharacter id="caravan_master_rivendell" race="elf" default_group="Infantry" level="26" name="{=aom_rv_caravan_master}Rivendell Caravan Master" occupation="CaravanGuard" culture="Culture.rivendell">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -61,7 +61,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_rivendell" default_group="Infantry" level="16" name="{=aom_rv_armed_trader}Rivendell Armed Trader" occupation="CaravanGuard" culture="Culture.rivendell">
+	<NPCCharacter id="armed_trader_rivendell" race="elf" default_group="Infantry" level="16" name="{=aom_rv_armed_trader}Rivendell Armed Trader" occupation="CaravanGuard" culture="Culture.rivendell">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -77,7 +77,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_rivendell" default_group="Infantry" level="21" name="{=aom_rv_caravan_guard}Rivendell Caravan Guard" occupation="CaravanGuard" culture="Culture.rivendell">
+	<NPCCharacter id="caravan_guard_rivendell" race="elf" default_group="Infantry" level="21" name="{=aom_rv_caravan_guard}Rivendell Caravan Guard" occupation="CaravanGuard" culture="Culture.rivendell">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -96,7 +96,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_rivendell" default_group="Infantry" level="26" name="{=aom_rv_vet_caravan_guard}Rivendell Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.rivendell">
+	<NPCCharacter id="veteran_caravan_guard_rivendell" race="elf" default_group="Infantry" level="26" name="{=aom_rv_vet_caravan_guard}Rivendell Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.rivendell">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -117,7 +117,7 @@
 	</NPCCharacter>
 
 	<!-- Town Population -->
-	<NPCCharacter id="townsman_rivendell" default_group="Infantry" name="{=aom_rv_townsman}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townsman_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townsman}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -128,7 +128,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_rivendell" default_group="Infantry" name="{=aom_rv_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -139,7 +139,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="town_child_rivendell" default_group="Infantry" name="{=aom_rv_town_child}Town Child" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="town_child_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_town_child}Town Child" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -149,7 +149,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="town_teenager_rivendell" default_group="Infantry" name="{=aom_rv_town_teen}Town Teenager" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="town_teenager_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_town_teen}Town Teenager" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -161,7 +161,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_rivendell" default_group="Infantry" name="{=aom_rv_village_woman}Village Woman" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_village_woman}Village Woman" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -172,7 +172,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_child_rivendell" default_group="Infantry" name="{=aom_rv_village_child}Village Child" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_child_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_village_child}Village Child" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -182,7 +182,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_teenager_rivendell" default_group="Infantry" name="{=aom_rv_village_teen}Village Teenager" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_teenager_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_village_teen}Village Teenager" occupation="Villager" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -194,7 +194,7 @@
 	</NPCCharacter>
 
 	<!-- Merchants -->
-	<NPCCharacter id="merchant_rivendell" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.rivendell" name="{=aom_rv_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="merchant_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.rivendell" name="{=aom_rv_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -207,7 +207,7 @@
 	</NPCCharacter>
 
 	<!-- Crafters -->
-	<NPCCharacter id="blacksmith_rivendell" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.rivendell" name="{=aom_rv_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="blacksmith_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.rivendell" name="{=aom_rv_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -218,7 +218,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="weaponsmith_rivendell" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.rivendell" name="{=aom_rv_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="weaponsmith_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.rivendell" name="{=aom_rv_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -230,7 +230,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armorer_rivendell" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.rivendell" name="{=aom_rv_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="armorer_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.rivendell" name="{=aom_rv_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -242,7 +242,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="horseMerchant_rivendell" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.rivendell" name="{=aom_rv_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="horseMerchant_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.rivendell" name="{=aom_rv_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -254,7 +254,7 @@
 	</NPCCharacter>
 
 	<!-- Tavern -->
-	<NPCCharacter id="tavernkeeper_rivendell" default_group="Infantry" is_hero="false" name="{=aom_rv_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavernkeeper_rivendell" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -265,7 +265,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="taverngamehost_rivendell" default_group="Infantry" is_hero="false" name="{=aom_rv_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="taverngamehost_rivendell" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -276,7 +276,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_rivendell" default_group="Infantry" is_hero="false" name="{=aom_rv_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_rivendell" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -287,7 +287,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="musician_rivendell" default_group="Infantry" is_hero="false" name="{=aom_rv_musician}Musician" occupation="Musician" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="musician_rivendell" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_musician}Musician" occupation="Musician" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -300,7 +300,7 @@
 	</NPCCharacter>
 
 	<!-- Services -->
-	<NPCCharacter id="shop_worker_rivendell" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.rivendell" name="{=aom_rv_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="shop_worker_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.rivendell" name="{=aom_rv_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -311,7 +311,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="barber_rivendell" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="barber_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -322,7 +322,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="ransom_broker_rivendell" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.rivendell" name="{=aom_rv_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="ransom_broker_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.rivendell" name="{=aom_rv_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -336,7 +336,7 @@
 	</NPCCharacter>
 
 	<!-- Guards -->
-	<NPCCharacter id="prison_guard_rivendell" default_group="Infantry" level="4" culture="Culture.rivendell" occupation="PrisonGuard" name="{=aom_rv_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="prison_guard_rivendell" race="elf" default_group="Infantry" level="4" culture="Culture.rivendell" occupation="PrisonGuard" name="{=aom_rv_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="OneHanded" value="50" />
@@ -351,7 +351,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="guard_rivendell" default_group="Infantry" level="16" name="{=aom_rv_guard}Guard" occupation="Soldier" culture="Culture.rivendell">
+	<NPCCharacter id="guard_rivendell" race="elf" default_group="Infantry" level="16" name="{=aom_rv_guard}Guard" occupation="Soldier" culture="Culture.rivendell">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -370,7 +370,7 @@
 	</NPCCharacter>
 
 	<!-- Gang -->
-	<NPCCharacter id="gangleader_bodyguard_rivendell" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+	<NPCCharacter id="gangleader_bodyguard_rivendell" race="elf" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -384,7 +384,7 @@
 	</NPCCharacter>
 
 	<!-- Beggars / Dancers -->
-	<NPCCharacter id="beggar_rivendell" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="beggar_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -395,7 +395,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_rivendell" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -406,7 +406,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_rivendell" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.rivendell" name="{=aom_rv_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -419,7 +419,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_rivendell_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_0}Cautious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_0" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_0}Cautious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -431,7 +431,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_0b}Elven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_0b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_0b}Elven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -442,7 +442,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_1}Stern elven trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_1}Stern elven trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -454,7 +454,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_1b}Aloof elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_1b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_1b}Aloof elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -465,7 +465,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_2}Elven gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_2}Elven gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
@@ -477,7 +477,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_2b}Wise elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_2b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_2b}Wise elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
@@ -489,7 +489,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_3}Self-made elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_3" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_3}Self-made elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
@@ -500,7 +500,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_3b}Elven lorekeeper of trade" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_3b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_3b}Elven lorekeeper of trade" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
@@ -511,7 +511,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_4}Shrewd elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_4" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_4}Shrewd elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
@@ -523,7 +523,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_4b}Devious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rivendell_4b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_4b}Devious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -537,7 +537,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Preachers (3) -->
-	<NPCCharacter id="spc_notable_rivendell_5" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_5}Zealous elven loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_rivendell_5" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_5}Zealous elven loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -548,7 +548,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_6}Stern elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_rivendell_6" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_6}Stern elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
@@ -558,7 +558,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_7}Elven keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_rivendell_7" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_7}Elven keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -571,7 +571,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Artisans (2) -->
-	<NPCCharacter id="spc_notable_rivendell_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_8}Meticulous elven smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+	<NPCCharacter id="spc_notable_rivendell_8" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_8}Meticulous elven smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
@@ -582,7 +582,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_9}Gifted elven craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+	<NPCCharacter id="spc_notable_rivendell_9" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_9}Gifted elven craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -594,7 +594,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_rivendell_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_gl1}Protective elven ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rivendell_gl1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_gl1}Protective elven ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -605,7 +605,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_10}Sardonic elven outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rivendell_10" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_10}Sardonic elven outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -615,7 +615,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_11}Intimidating elven enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rivendell_11" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_11}Intimidating elven enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
@@ -625,7 +625,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_gl4}Ruthless elven exile" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rivendell_gl4" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_gl4}Ruthless elven exile" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
@@ -636,7 +636,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_12" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_12}Cunning elven smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rivendell_12" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_12}Cunning elven smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
@@ -646,7 +646,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_13}Menacing elven schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rivendell_13" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_13}Menacing elven schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
@@ -659,7 +659,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Rural Notables (2) -->
-	<NPCCharacter id="spc_notable_rivendell_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_21}Stern elven landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+	<NPCCharacter id="spc_notable_rivendell_21" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_21}Stern elven landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -670,7 +670,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rivendell_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_22}Agreeable elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+	<NPCCharacter id="spc_notable_rivendell_22" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_22}Agreeable elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
@@ -682,7 +682,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Headmen (3) -->
-	<NPCCharacter id="spc_rivendell_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_headman_1}Rebellious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+	<NPCCharacter id="spc_rivendell_headman_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_headman_1}Rebellious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
@@ -693,7 +693,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_rivendell_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_headman_2}Conservative elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+	<NPCCharacter id="spc_rivendell_headman_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_headman_2}Conservative elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -703,7 +703,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_rivendell_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_headman_3}Devious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+	<NPCCharacter id="spc_rivendell_headman_3" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_headman_3}Devious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
@@ -716,7 +716,7 @@
 	</NPCCharacter>
 
 	<!-- Practice Dummies -->
-	<NPCCharacter id="gear_practice_dummy_rivendell" default_group="Infantry" name="{=aom_rv_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="gear_practice_dummy_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -727,7 +727,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="weapon_practice_stage_1_rivendell" default_group="Infantry" name="{=aom_rv_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="weapon_practice_stage_1_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -739,7 +739,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="weapon_practice_stage_2_rivendell" default_group="Infantry" name="{=aom_rv_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="weapon_practice_stage_2_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -751,7 +751,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="weapon_practice_stage_3_rivendell" default_group="Infantry" name="{=aom_rv_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="weapon_practice_stage_3_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -764,7 +764,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="gear_dummy_rivendell" default_group="Infantry" name="{=aom_rv_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="gear_dummy_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -776,7 +776,7 @@
 	</NPCCharacter>
 
 	<!-- Child/Infant/Teenager variants for culture definition -->
-	<NPCCharacter id="townsman_infant_rivendell" default_group="Infantry" name="{=aom_rv_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townsman_infant_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -786,7 +786,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townsman_child_rivendell" default_group="Infantry" name="{=aom_rv_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townsman_child_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -797,7 +797,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townsman_teenager_rivendell" default_group="Infantry" name="{=aom_rv_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townsman_teenager_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -808,7 +808,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_rivendell" default_group="Infantry" name="{=aom_rv_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -818,7 +818,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_rivendell" default_group="Infantry" name="{=aom_rv_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -829,7 +829,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_rivendell" default_group="Infantry" name="{=aom_rv_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -840,7 +840,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_rivendell" default_group="Infantry" name="{=aom_rv_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -850,7 +850,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_rivendell" default_group="Infantry" name="{=aom_rv_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -861,7 +861,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="villager_child_rivendell" default_group="Infantry" name="{=aom_rv_villager_child}Village Child" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_child_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_villager_child}Village Child" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
@@ -871,7 +871,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="villager_teenager_rivendell" default_group="Infantry" name="{=aom_rv_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_teenager_rivendell" race="elf" default_group="Infantry" name="{=aom_rv_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.rivendell" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>

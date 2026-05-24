@@ -4,6 +4,7 @@
 
     <NPCCharacter
         id="mirkwood_recruit"
+        race="elf"
         default_group="Infantry"
         level="36"
         name="{=aom_mirkwood_recruit_name}[Mirkwood] Silvan Levy"
@@ -84,6 +85,7 @@
 
     <NPCCharacter
         id="mirkwood_woodsman"
+        race="elf"
         default_group="Infantry"
         level="41"
         name="{=aom_mirkwood_woodsman_name}[Mirkwood] Greenwood Woodsman"
@@ -152,6 +154,7 @@
 
     <NPCCharacter
         id="mirkwood_guards"
+        race="elf"
         default_group="Infantry"
         level="41"
         name="{=aom_mirkwood_guards_name}[Mirkwood] Greenwood Guards"
@@ -223,6 +226,7 @@
 
     <NPCCharacter
         id="mirkwood_wardens"
+        race="elf"
         default_group="Infantry"
         level="41"
         name="{=aom_mirkwood_wardens_name}[Mirkwood] Greenwood Wardens"
@@ -294,6 +298,7 @@
 
     <NPCCharacter
         id="mirkwood_sentinels"
+        race="elf"
         default_group="Ranged"
         level="41"
         name="{=aom_mirkwood_sentinels_name}[Mirkwood] Silvan Sentinels"
@@ -371,6 +376,7 @@
 
     <NPCCharacter
         id="mirkwood_rochenlas"
+        race="elf"
         default_group="Cavalry"
         level="41"
         name="{=aom_mirkwood_rochenlas_name}[Mirkwood] Mirkwood Róchenlas"
@@ -451,6 +457,7 @@
 
     <NPCCharacter
         id="mirkwood_beleglas"
+        race="elf"
         default_group="Cavalry"
         level="46"
         name="{=aom_mirkwood_beleglas_name}[Mirkwood] Mirkwood Béleglas"
@@ -528,6 +535,7 @@
 
     <NPCCharacter
         id="mirkwood_borderwardens"
+        race="elf"
         default_group="Ranged"
         level="46"
         name="{=aom_mirkwood_borderwardens_name}[Mirkwood] Silvan Borderwarden"
@@ -605,6 +613,7 @@
 
     <NPCCharacter
         id="mirkwood_guardians"
+        race="elf"
         default_group="Infantry"
         level="46"
         name="{=aom_mirkwood_guardians_name}[Mirkwood] Guardians of Felegoth"
@@ -676,6 +685,7 @@
 
     <NPCCharacter
         id="mirkwood_glaivesman"
+        race="elf"
         default_group="Infantry"
         level="46"
         name="{=aom_mirkwood_glaivesman_name}[Mirkwood] Glaivesman of Amon"
@@ -741,6 +751,7 @@
 
     <NPCCharacter
         id="mirkwood_swordsman"
+        race="elf"
         default_group="Infantry"
         level="46"
         name="{=aom_mirkwood_swordsman_name}[Mirkwood] Greenwood Swordsman"
@@ -809,6 +820,7 @@
 
     <NPCCharacter
         id="mirkwood_palaceguard"
+        race="elf"
         default_group="Infantry"
         level="51"
         name="{=aom_mirkwood_palaceguard_name}[Mirkwood] Palace Guard"
@@ -877,6 +889,7 @@
 
     <NPCCharacter
         id="mirkwood_thingolheir"
+        race="elf"
         default_group="Ranged"
         level="51"
         name="{=aom_mirkwood_thingolheir_name}[Mirkwood] Thingol's Heirs"
@@ -953,6 +966,7 @@
 
     <NPCCharacter
         id="mirkwood_militia_spearman"
+        race="elf"
         default_group="Infantry"
         level="11"
         name="{=aom_mk_militia_spear}[Mirkwood] Militia Spearman"
@@ -1059,6 +1073,7 @@
 
     <NPCCharacter
         id="mirkwood_militia_archer"
+        race="elf"
         default_group="Ranged"
         level="11"
         name="{=aom_mk_militia_archer}[Mirkwood] Militia Archer"
@@ -1174,6 +1189,7 @@
 
     <NPCCharacter
         id="mirkwood_militia_veteran_spearman"
+        race="elf"
         default_group="Infantry"
         level="16"
         name="{=aom_mk_militia_vet_spear}[Mirkwood] Militia Veteran Spearman"
@@ -1298,6 +1314,7 @@
 
     <NPCCharacter
         id="mirkwood_militia_veteran_archer"
+        race="elf"
         default_group="Ranged"
         level="16"
         name="{=aom_mk_militia_vet_archer}[Mirkwood] Militia Veteran Archer"

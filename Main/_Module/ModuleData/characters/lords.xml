@@ -16864,7 +16864,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.lothlorien -->
-    <NPCCharacter id="lord_L1_1" name="{=aom_lord_L1_1_name}Galadriel, Lady of Lothlórien" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
+    <NPCCharacter id="lord_L1_1" race="elf" name="{=aom_lord_L1_1_name}Galadriel, Lady of Lothlórien" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills">
         <face>
             <BodyProperties version="4" age="28.01" weight="0.0139" build="0.9583" key="0000700000003005E77CE80EEFF01FF018FE88105FBF11800FF60FEE8EBF68F100DE06030D71E0E0000000000000000000000000000000000000000043AC2103" />
             <hair_tags>
@@ -16909,7 +16909,7 @@
             <EquipmentSet id="galadriel_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_2" name="{=aom_lord_L1_2_name}Celeborn, Lord of Lothlórien" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_L1_2" race="elf" name="{=aom_lord_L1_2_name}Celeborn, Lord of Lothlórien" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.1968" build="0.9583" key="0000CC0000003003E77FF80E81B7100118EE88105FBF11800FF60FEE8F86686000EE36030E71E0E0000000000000000000000000000000000000000043CC4142" />
             <hair_tags>
@@ -16957,7 +16957,7 @@
             <EquipmentSet id="lothlorien_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_3" name="{=aom_lord_L1_3_name}Child Placeholder" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_L1_3" race="elf" name="{=aom_lord_L1_3_name}Child Placeholder" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="00282b5fd7fc23c299c2761c4ac1a5954778548899a66659788878746a9d96290006165d06a7699c0000000000000000000000000000000000000000011c7140"
@@ -17013,7 +17013,7 @@
             <EquipmentSet id="lothlorien_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L2_1" name="{=aom_lord_L2_1_name}Caurmínas" age="25" voice="curt" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_L2_1" race="elf" name="{=aom_lord_L2_1_name}Caurmínas" age="25" voice="curt" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.0294" build="0.128" key="0005B40A400000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
             <hair_tags>
@@ -17062,7 +17062,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.mirkwood -->
-    <NPCCharacter id="lord_M1_1" name="{=aom_lord_M1_1_name}Thranduil" age="30" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+    <NPCCharacter id="lord_M1_1" race="elf" name="{=aom_lord_M1_1_name}Thranduil" age="30" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17110,7 +17110,7 @@
             <EquipmentSet id="thranduil_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_2" name="{=aom_lord_M1_2_name}Lothuial" age="28" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M1_2" race="elf" name="{=aom_lord_M1_2_name}Lothuial" age="28" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17155,7 +17155,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_3" name="{=aom_lord_M1_3_name}Feren" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_M1_3" race="elf" name="{=aom_lord_M1_3_name}Feren" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17203,7 +17203,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_4" name="{=aom_lord_M1_4_name}Galion" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
+    <NPCCharacter id="lord_M1_4" race="elf" name="{=aom_lord_M1_4_name}Galion" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17251,7 +17251,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_5" name="{=aom_lord_M1_5_name}Nimrodel" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M1_5" race="elf" name="{=aom_lord_M1_5_name}Nimrodel" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17296,7 +17296,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_11" name="{=aom_lord_M1_11_name}Legolas" age="21" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_archer_skills_rookie">
+    <NPCCharacter id="lord_M1_11" race="elf" name="{=aom_lord_M1_11_name}Legolas" age="21" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_archer_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17344,7 +17344,7 @@
             <EquipmentSet id="legolas_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_12" name="{=aom_lord_M1_12_name}PlaceHolder Child To Not Break Game" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
+    <NPCCharacter id="lord_M1_12" race="elf" name="{=aom_lord_M1_12_name}PlaceHolder Child To Not Break Game" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17396,7 +17396,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M2_1" name="{=aom_lord_M2_1_name}Oropherion" age="29" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
+    <NPCCharacter id="lord_M2_1" race="elf" name="{=aom_lord_M2_1_name}Oropherion" age="29" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17444,7 +17444,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M2_2" name="{=aom_lord_M2_2_name}Ailinel" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M2_2" race="elf" name="{=aom_lord_M2_2_name}Ailinel" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17489,7 +17489,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M2_3" name="{=aom_lord_M2_3_name}Beleg" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
+    <NPCCharacter id="lord_M2_3" race="elf" name="{=aom_lord_M2_3_name}Beleg" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17537,7 +17537,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M2_4" name="{=aom_lord_M2_4_name}Anairë" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M2_4" race="elf" name="{=aom_lord_M2_4_name}Anairë" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17582,7 +17582,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M2_5" name="{=aom_lord_M2_5_name}Daeron" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
+    <NPCCharacter id="lord_M2_5" race="elf" name="{=aom_lord_M2_5_name}Daeron" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17630,7 +17630,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M3_1" name="{=aom_lord_M3_1_name}Taurion" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_M3_1" race="elf" name="{=aom_lord_M3_1_name}Taurion" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17678,7 +17678,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M3_2" name="{=aom_lord_M3_2_name}Finduilas" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M3_2" race="elf" name="{=aom_lord_M3_2_name}Finduilas" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17723,7 +17723,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M3_3" name="{=aom_lord_M3_3_name}Haldir" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_M3_3" race="elf" name="{=aom_lord_M3_3_name}Haldir" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17771,7 +17771,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M3_4" name="{=aom_lord_M3_4_name}Aredhel" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M3_4" race="elf" name="{=aom_lord_M3_4_name}Aredhel" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17816,7 +17816,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M4_1" name="{=aom_lord_M4_1_name}Galenor" age="29" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
+    <NPCCharacter id="lord_M4_1" race="elf" name="{=aom_lord_M4_1_name}Galenor" age="29" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_cavalry_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17864,7 +17864,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M4_2" name="{=aom_lord_M4_2_name}Amarië" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M4_2" race="elf" name="{=aom_lord_M4_2_name}Amarië" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -17909,7 +17909,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M4_3" name="{=aom_lord_M4_3_name}Rumil" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
+    <NPCCharacter id="lord_M4_3" race="elf" name="{=aom_lord_M4_3_name}Rumil" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -17957,7 +17957,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M4_4" name="{=aom_lord_M4_4_name}Nellas" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M4_4" race="elf" name="{=aom_lord_M4_4_name}Nellas" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -18002,7 +18002,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M4_5" name="{=aom_lord_M4_5_name}Orophin" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
+    <NPCCharacter id="lord_M4_5" race="elf" name="{=aom_lord_M4_5_name}Orophin" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -18050,7 +18050,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M5_1" name="{=aom_lord_M5_1_name}Alenon" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_M5_1" race="elf" name="{=aom_lord_M5_1_name}Alenon" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -18098,7 +18098,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M5_2" name="{=aom_lord_M5_2_name}Calathiel" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M5_2" race="elf" name="{=aom_lord_M5_2_name}Calathiel" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -18143,7 +18143,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M5_3" name="{=aom_lord_M5_3_name}Thalion" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
+    <NPCCharacter id="lord_M5_3" race="elf" name="{=aom_lord_M5_3_name}Thalion" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -18191,7 +18191,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M5_4" name="{=aom_lord_M5_4_name}Arien" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M5_4" race="elf" name="{=aom_lord_M5_4_name}Arien" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -18236,7 +18236,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M6_1" name="{=aom_lord_M6_1_name}Iminyar" age="29" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
+    <NPCCharacter id="lord_M6_1" race="elf" name="{=aom_lord_M6_1_name}Iminyar" age="29" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -18284,7 +18284,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M6_2" name="{=aom_lord_M6_2_name}Elbereth" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M6_2" race="elf" name="{=aom_lord_M6_2_name}Elbereth" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -18329,7 +18329,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M6_3" name="{=aom_lord_M6_3_name}Dagnir" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
+    <NPCCharacter id="lord_M6_3" race="elf" name="{=aom_lord_M6_3_name}Dagnir" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -18377,7 +18377,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M6_4" name="{=aom_lord_M6_4_name}Arindor" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
+    <NPCCharacter id="lord_M6_4" race="elf" name="{=aom_lord_M6_4_name}Arindor" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -18425,7 +18425,7 @@
             <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M6_5" name="{=aom_lord_M6_5_name}Nimrien" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
+    <NPCCharacter id="lord_M6_5" race="elf" name="{=aom_lord_M6_5_name}Nimrien" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>
@@ -20572,7 +20572,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.rivendell -->
-    <NPCCharacter id="lord_R1_1" name="{=aom_lord_R1_1_name}Elrond" age="28" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
+    <NPCCharacter id="lord_R1_1" race="elf" name="{=aom_lord_R1_1_name}Elrond" age="28" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20620,7 +20620,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R1_2" name="{=aom_lord_R1_2_name}Celebrían" age="20" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
+    <NPCCharacter id="lord_R1_2" race="elf" name="{=aom_lord_R1_2_name}Celebrían" age="20" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="00020000000016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20665,7 +20665,7 @@
             <EquipmentSet id="rivendell_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R1_3" name="{=aom_lord_R1_3_name}Elladan" age="19" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_R1_3" race="elf" name="{=aom_lord_R1_3_name}Elladan" age="19" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.0727" build="0.3588" key="0000000F000016029A797961AA0103D841B0830030ECF600921531198EF3BC9400951603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20713,7 +20713,7 @@
             <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R1_4" name="{=aom_lord_R1_4_name}Elrohir" age="19" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_R1_4" race="elf" name="{=aom_lord_R1_4_name}Elrohir" age="19" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.0727" build="0.3588" key="0000000F000016029A797961AA0103D841B0830030ECF600921531198EF3BC9400951603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -20761,7 +20761,7 @@
             <EquipmentSet id="rivendell_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R1_5" name="{=aom_lord_R1_5_name}Arwen" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Ranged" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
+    <NPCCharacter id="lord_R1_5" race="elf" name="{=aom_lord_R1_5_name}Arwen" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Ranged" face_mesh_cache="true" skill_template="SkillSet.spc_huntress_skills_rookie">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0002000FC00010029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D244003" />
             <hair_tags>
@@ -20806,7 +20806,7 @@
             <EquipmentSet id="rivendell_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R1_11" name="{=aom_lord_R1_11_name}Argon" age="11" voice="earnest" is_female="false" is_hero="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_R1_11" race="elf" name="{=aom_lord_R1_11_name}Argon" age="11" voice="earnest" is_female="false" is_hero="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -20861,7 +20861,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R2_1" name="{=aom_lord_R2_1_name}Glorfindel" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
+    <NPCCharacter id="lord_R2_1" race="elf" name="{=aom_lord_R2_1_name}Glorfindel" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="00020000000010029AD7969B978B596C89A4830030ECF600CA384656B1351968009B3603094A67A932430001330223550000000000001977000000004D2450C2" />
             <hair_tags>
@@ -20909,7 +20909,7 @@
             <EquipmentSet id="glorfindel_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_R2_11" name="{=aom_lord_R2_11_name}Istilmo" age="12" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_R2_11" race="elf" name="{=aom_lord_R2_11_name}Istilmo" age="12" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -20966,7 +20966,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Patreon supporter lord: Chägermeister (clan Elen-Nolmarë) -->
-    <NPCCharacter id="lord_R3_1" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" race ="elf" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
+    <NPCCharacter id="lord_R3_1" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" race="elf" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
         <face>
             <BodyProperties version="4" age="30" weight="0.3102" build="0.7477" key="001BD40E4000101A5E8726A491898A7707C4789A37B9B8C50D30207281B0104001FB56140FD6DA7D000000000000000000000000000000000000000045F40142" />
             <hair_tags>

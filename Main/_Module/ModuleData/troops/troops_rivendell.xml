@@ -4,6 +4,7 @@
 
     <NPCCharacter
         id="imladris_recruit"
+        race="elf"
         default_group="Infantry"
         level="21"
         name="{=aom_imladris_recruit_name}[Rivendell] Imladris Recruit"
@@ -315,6 +316,7 @@
 
     <NPCCharacter
         id="imladris_infantry"
+        race="elf"
         default_group="Infantry"
         level="26"
         name="{=aom_imladris_infantry_name}[Rivendell] Imladris Infantry"
@@ -641,6 +643,7 @@
 
     <NPCCharacter
         id="imladris_bowman"
+        race="elf"
         default_group="Ranged"
         level="26"
         name="{=aom_imladris_bowman_name}[Rivendell] Imladris Bowman"
@@ -921,6 +924,7 @@
 
     <NPCCharacter
         id="imladris_swordguard"
+        race="elf"
         default_group="Infantry"
         level="31"
         name="{=aom_imladris_swordguard_name}[Rivendell] Imladris Swordguard"
@@ -1498,6 +1502,7 @@
 
     <NPCCharacter
         id="imladris_nobleman"
+        race="elf"
         default_group="Infantry"
         level="36"
         name="{=aom_imladris_nobleman_name}[Rivendell] Imladris Nobleman"
@@ -1983,6 +1988,7 @@
 
     <NPCCharacter
         id="imladris_archer"
+        race="elf"
         default_group="Ranged"
         level="31"
         name="{=aom_imladris_archer_name}[Rivendell] Imladris Archer"
@@ -2261,6 +2267,7 @@
 
     <NPCCharacter
         id="imladris_horse_archer"
+        race="elf"
         default_group="HorseArcher"
         level="41"
         name="{=aom_imladris_horse_archer_name}[Rivendell] Imladris Horse Archer"
@@ -2552,6 +2559,7 @@
 
     <NPCCharacter
         id="imladris_outrider"
+        race="elf"
         default_group="Cavalry"
         level="41"
         name="{=aom_imladris_outrider_name}[Rivendell] Imladris Outrider"
@@ -2854,6 +2862,7 @@
 
     <NPCCharacter
         id="imladris_marksman"
+        race="elf"
         default_group="Ranged"
         level="36"
         name="{=aom_imladris_marksman_name}[Rivendell] Imladris Marksman"
@@ -3337,6 +3346,7 @@
 
     <NPCCharacter
         id="rider_of_himring"
+        race="elf"
         default_group="HorseArcher"
         level="46"
         name="{=aom_rider_of_himring_name}[Rivendell] Rider of Himring"
@@ -3695,6 +3705,7 @@
 
     <NPCCharacter
         id="noldorin_lancer"
+        race="elf"
         default_group="Cavalry"
         level="46"
         name="{=aom_noldorin_lancer_name}[Rivendell] Nõldorin Lancer"
@@ -4122,6 +4133,7 @@
 
     <NPCCharacter
         id="imladris_blademaster"
+        race="elf"
         default_group="Infantry"
         level="41"
         name="{=aom_imladris_blademaster_name}[Rivendell] Imladris Blademaster"
@@ -4385,6 +4397,7 @@
 
     <NPCCharacter
         id="battlemaster_of_the_first_age"
+        race="elf"
         default_group="Infantry"
         level="41"
         name="{=aom_battlemaster_of_the_first_age_name}[Rivendell] Battlemaster of the First Age"
@@ -4658,6 +4671,7 @@
 
     <NPCCharacter
         id="imladris_guardsman"
+        race="elf"
         default_group="Infantry"
         level="36"
         name="{=aom_imladris_guardsman_name}[Rivendell] Imladris Guardsman"
@@ -4914,6 +4928,7 @@
 
     <NPCCharacter
         id="imladris_warden"
+        race="elf"
         default_group="Infantry"
         level="41"
         name="{=aom_imladris_warden_name}[Rivendell] Imladris Warden"
@@ -5113,6 +5128,7 @@
 
     <NPCCharacter
         id="imladris_marchwarden"
+        race="elf"
         default_group="Ranged"
         level="41"
         name="{=aom_imladris_marchwarden_name}[Rivendell] Imladris Marchwarden"
@@ -5391,6 +5407,7 @@
 
     <NPCCharacter
         id="rivendell_noble"
+        race="elf"
         default_group="Cavalry"
         level="36"
         name="{=aom_rivendell_noble_name}[Rivendell] Noble"
@@ -6238,6 +6255,7 @@
 
     <NPCCharacter
         id="rivendell_royal_guard"
+        race="elf"
         default_group="Cavalry"
         level="41"
         name="{=aom_rivendell_royal_guard_name}[Rivendell] Royal Guard"
@@ -6540,6 +6558,7 @@
 
     <NPCCharacter
         id="rivendell_royal_knight"
+        race="elf"
         default_group="Cavalry"
         level="46"
         name="{=aom_rivendell_royal_knight_name}[Rivendell] Royal Knight"
@@ -6778,6 +6797,7 @@
 
     <NPCCharacter
         id="rivendell_high_captain"
+        race="elf"
         default_group="Cavalry"
         level="51"
         name="{=aom_rivendell_high_captain_name}[Rivendell] High Captain"
@@ -7045,6 +7065,7 @@
 
     <NPCCharacter
         id="rivendell_warden_gondolin"
+        race="elf"
         default_group="Infantry"
         level="51"
         name="{=aom_rivendell_warden_gondolin_name}[Rivendell] Aegedhrim Elenath"
@@ -7919,6 +7940,7 @@
 
     <NPCCharacter
         id="rivendell_knight_golden_flower"
+        race="elf"
         default_group="Infantry"
         level="51"
         name="{=aom_rivendell_knight_golden_flower_name}[Rivendell] Megil Mallenloth"
@@ -8337,6 +8359,7 @@
 
     <NPCCharacter
         id="rivendell_glorfindel_guard"
+        race="elf"
         default_group="Cavalry"
         level="51"
         name="{=aom_rivendell_glorfindel_guard_name}[Rivendell] Rochannon Elenath"
@@ -9403,6 +9426,7 @@
 
     <NPCCharacter
         id="rivendell_gondolin_battlemaster"
+        race="elf"
         default_group="Infantry"
         level="51"
         name="{=aom_rivendell_gondolin_battlemaster_name}[Rivendell] Megil-Aran Elenath"
@@ -10503,6 +10527,7 @@
 
     <NPCCharacter
         id="rivendell_militia_spearman"
+        race="elf"
         default_group="Infantry"
         level="11"
         name="{=aom_rv_militia_spear}[Rivendell] Militia Spearman"
@@ -10631,6 +10656,7 @@
 
     <NPCCharacter
         id="rivendell_militia_archer"
+        race="elf"
         default_group="Ranged"
         level="11"
         name="{=aom_rv_militia_archer}[Rivendell] Militia Archer"
@@ -10743,6 +10769,7 @@
 
     <NPCCharacter
         id="rivendell_militia_veteran_spearman"
+        race="elf"
         default_group="Infantry"
         level="16"
         name="{=aom_rv_militia_vet_spear}[Rivendell] Militia Veteran Spearman"
@@ -11098,6 +11125,7 @@
 
     <NPCCharacter
         id="rivendell_militia_veteran_archer"
+        race="elf"
         default_group="Ranged"
         level="16"
         name="{=aom_rv_militia_vet_archer}[Rivendell] Militia Veteran Archer"
