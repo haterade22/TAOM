@@ -133,12 +133,20 @@ public class WargAttackService : IWargAttackService
 
         if (warg.MovementVelocity.Y >= 4)
         {
-            boneIds = new List<sbyte> { 23 };
+            // 2026-05-24: running attack was missing 0/5 hits in user testing — the
+            // single-bone [23] sweep (mouth/head) passes through targets faster than
+            // the per-frame collision check can sample at 4+ m/s. Widening to match
+            // the stand-attack bone set [23 mouth/head, 37 + 43 likely front paws]
+            // since the warg's paws extend forward during a charge and usually hit
+            // the target FIRST. Collision radius bumped 0.4 → 0.7m to give discrete
+            // sampling more chance at high velocity. See issue #219 for diagnostic
+            // trace that drove this change.
+            boneIds = new List<sbyte> { 23, 37, 43 };
             actionName = "act_warg_attack_running";
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.1f;
             actionProgressMax = 0.7f;
-            boneCollisionRadius = 0.4f;
+            boneCollisionRadius = 0.7f;
         }
         else
         {
@@ -147,6 +155,11 @@ public class WargAttackService : IWargAttackService
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.1f;
             actionProgressMax = 0.5f;
+            // 2026-05-24: stand-attack collision radius bumped 0.3 → 0.5m for parity
+            // with the wider running-attack sweep. User-reported hit rate was 1/2 at
+            // 0.3 — bumping to 0.5 should bring it closer to 100% without false hits
+            // (target detection range is still capped at 3.5m via WargConfig).
+            boneCollisionRadius = 0.5f;
         }
 
         // Diagnostic 2026-05-24: log every WargAttack invocation so we can correlate
