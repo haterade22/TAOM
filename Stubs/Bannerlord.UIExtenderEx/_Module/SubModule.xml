@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TAOM.Dependencies passive stub module (DR3 follow-up, 2026-05-22).
+  Satisfies third-party mods declaring <DependedModule Id="Bannerlord.UIExtenderEx"/>.
+  Real Bannerlord.UIExtenderEx.dll loads via TAOM.Dependencies's SubModule.xml.
+  Version pin must track Bannerlord.UIExtenderEx PackageReference in TAOM.Dependencies.csproj.
+-->
+<Module>
+    <Id value="Bannerlord.UIExtenderEx" />
+    <Name value="UIExtenderEx (provided by TAOM.Dependencies)" />
+    <Version value="v2.13.1" />
+    <DefaultModule value="false" />
+    <ModuleCategory value="Singleplayer" />
+    <ModuleType value="Community" />
+    <DependedModules>
+        <DependedModule Id="TAOM.Dependencies" />
+    </DependedModules>
+    <DependedModuleMetadatas>
+        <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
+    </DependedModuleMetadatas>
+    <SubModules />
+</Module>

@@ -64,4 +64,22 @@
 		<Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
 	</Target>
 
+	<!-- DR3 follow-up (2026-05-22): deploy passive stub modules to the game install so that
+	     third-party mods declaring <DependedModule Id="Bannerlord.Harmony"/> etc. are no
+	     longer greyed out in the vanilla launcher's mod menu. Each stub is just a
+	     SubModule.xml that declares the standard BUTR module ID and has <SubModules />
+	     empty — no duplicate DLLs load. See docs/migration/dr3-maintenance.md "Stub
+	     modules" section. -->
+	<Target Name="DeployTAOMDependenciesStubs"
+	        AfterTargets="PostBuildCopyToModules"
+	        Condition="Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true'">
+		<ItemGroup>
+			<_TaomStubFiles Include="$(MSBuildThisFileDirectory)..\Stubs\**\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_TaomStubFiles)"
+		      DestinationFiles="@(_TaomStubFiles->'$(GameFolder)\Modules\%(RecursiveDir)%(Filename)%(Extension)')"
+		      SkipUnchangedFiles="true" />
+		<Message Importance="high" Text="TAOM.Dependencies: deployed @(_TaomStubFiles->Count()) stub-module files to $(GameFolder)\Modules\" />
+	</Target>
+
 </Project>

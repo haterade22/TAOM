@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TAOM.Dependencies passive stub module (DR3 follow-up, 2026-05-22).
+  Satisfies third-party mods declaring <DependedModule Id="Bannerlord.MBOptionScreen"/>
+  (the standard module ID for MCM — Mod Configuration Menu).
+  Real MCMv5.dll + Bannerlord.MBOptionScreen.v1.4.{0,1}.dll + ModuleLoader load via TAOM.Dependencies.
+  Version pin matches the MBOptionScreen UI version we vendor (5.11.4).
+-->
+<Module>
+    <Id value="Bannerlord.MBOptionScreen" />
+    <Name value="MBOptionScreen / MCM (provided by TAOM.Dependencies)" />
+    <Version value="v5.11.4" />
+    <DefaultModule value="false" />
+    <ModuleCategory value="Singleplayer" />
+    <ModuleType value="Community" />
+    <DependedModules>
+        <DependedModule Id="TAOM.Dependencies" />
+    </DependedModules>
+    <DependedModuleMetadatas>
+        <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
+    </DependedModuleMetadatas>
+    <SubModules />
+</Module>

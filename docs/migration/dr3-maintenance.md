@@ -180,13 +180,34 @@ Process:
 
 ## Risk scenarios + mitigations
 
+### Stub modules (third-party-mod compatibility)
+
+To preserve compatibility with third-party Bannerlord mods that declare `<DependedModule Id="Bannerlord.Harmony"/>` (or `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen`) in their `SubModule.xml`, TAOM.Dependencies ships **four passive stub modules** at the standard BUTR IDs.
+
+Each stub is a single ~20-line `SubModule.xml` at:
+- `Modules/Bannerlord.Harmony/_Module/SubModule.xml` — `<Id value="Bannerlord.Harmony"/>` v2.4.2
+- `Modules/Bannerlord.UIExtenderEx/_Module/SubModule.xml` — `<Id value="Bannerlord.UIExtenderEx"/>` v2.13.1
+- `Modules/Bannerlord.ButterLib/_Module/SubModule.xml` — `<Id value="Bannerlord.ButterLib"/>` v2.10.4
+- `Modules/Bannerlord.MBOptionScreen/_Module/SubModule.xml` — `<Id value="Bannerlord.MBOptionScreen"/>` v5.11.4
+
+Source files live in `Stubs/<ID>/_Module/SubModule.xml` and are deployed by the `DeployTAOMDependenciesStubs` MSBuild target in `Dependencies/TAOM.Dependencies.csproj` (fires `AfterTargets="PostBuildCopyToModules"`).
+
+Each stub:
+- Declares the standard BUTR `<Id>` so the vanilla launcher's `AreAllDependenciesOfModulePresent` check passes.
+- Has `<SubModules />` empty — no DLLs load from the stub, so no duplicate `0Harmony.dll` / `Bannerlord.ButterLib.dll` enters the AppDomain.
+- Declares `<DependedModule Id="TAOM.Dependencies"/>` with `<DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis"/>` so the real DLLs are loaded by TAOM.Dependencies BEFORE any third-party mod tries to consume them.
+
+**Maintenance rule:** when a `PackageReference` version in `Dependencies/TAOM.Dependencies.csproj` changes (or a vendored BUTR DLL is updated), the corresponding stub's `<Version>` must be bumped to match. Third-party mods with strict version constraints via `<DependedModuleMetadata>` will see the stub's version as the authoritative answer for "what version of Harmony is available?".
+
 ### External Bannerlord.Harmony module conflict (HIGH)
 
-**Symptom:** User has `Bannerlord.Harmony` module ALSO enabled in their launcher alongside TAOM.Dependencies. Both ship `0Harmony.dll`.
+**Symptom:** User has the external standalone `Bannerlord.Harmony` module (e.g., from Steam Workshop) installed in `Modules/Bannerlord.Harmony/` AND TAOM.Dependencies's stub module is also deployed to the same path.
 
-**Risk:** Two Harmony assemblies load into the AppDomain. `HarmonySharedState` is designed for cross-assembly compat (per `~/.claude/.../memory/harmony-fork-research.md`), but version mismatch (e.g., external is 2.2.2, ours is 2.4.2) can produce unpredictable patch behavior — patches from one Harmony may not be visible to the other's `GetAllPatchedMethods()`.
+**Risk:** Folder-name collision. The Bannerlord.BuildResources `PostBuildCopyToModules` step will OVERWRITE the external module's `SubModule.xml` with our stub's `SubModule.xml`. If the user later disables TAOM and reinstalls the external Harmony module via Workshop, that restores the external. But if both are installed concurrently (e.g., user subscribes to the Workshop Harmony module after TAOM is already deployed), Steam's update may re-overwrite our stub, breaking third-party compatibility silently.
 
-**Mitigation:** When users install TAOM, instruct them to **disable** the external `Bannerlord.Harmony` / `Bannerlord.ButterLib` / `Bannerlord.UIExtenderEx` / `Bannerlord.MBOptionScreen` modules in the launcher. TAOM.Dependencies provides them. Add this to TAOM's README or launcher tooltip.
+Additionally, if the external module folder somehow survives our stub deploy (e.g., on a non-Steam install where stubs are manually copied), both folders would claim `<Id value="Bannerlord.Harmony"/>` — the launcher's behavior for duplicate IDs is undefined (probably first-parsed wins).
+
+**Mitigation:** When users install TAOM, instruct them to **uninstall** any standalone `Bannerlord.Harmony` / `Bannerlord.ButterLib` / `Bannerlord.UIExtenderEx` / `Bannerlord.MBOptionScreen` modules from their Steam Workshop subscriptions and `Modules/` directory. TAOM.Dependencies + the four stubs provide everything those modules would. Add this to TAOM's README or launcher tooltip.
 
 ### BUTR ships behind Bannerlord (HIGH)
 

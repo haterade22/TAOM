@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TAOM.Dependencies passive stub module (DR3 follow-up, 2026-05-22).
+  Satisfies third-party mods declaring <DependedModule Id="Bannerlord.ButterLib"/>.
+  Real Bannerlord.ButterLib.dll + Implementation.1.4.{0,1}.dll load via TAOM.Dependencies.
+  Version pin matches the ButterLib version we vendor from Steam Workshop.
+-->
+<Module>
+    <Id value="Bannerlord.ButterLib" />
+    <Name value="ButterLib (provided by TAOM.Dependencies)" />
+    <Version value="v2.10.4" />
+    <DefaultModule value="false" />
+    <ModuleCategory value="Singleplayer" />
+    <ModuleType value="Community" />
+    <DependedModules>
+        <DependedModule Id="TAOM.Dependencies" />
+    </DependedModules>
+    <DependedModuleMetadatas>
+        <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
+    </DependedModuleMetadatas>
+    <SubModules />
+</Module>

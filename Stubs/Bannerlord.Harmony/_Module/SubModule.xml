@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TAOM.Dependencies passive stub module (DR3 follow-up, 2026-05-22).
+
+  Purpose: satisfy the vanilla Bannerlord launcher's dependency check for
+  third-party mods that declare <DependedModule Id="Bannerlord.Harmony"/>.
+  TAOM.Dependencies bundles Lib.Harmony 2.4.2 (`0Harmony.dll`) but registers
+  itself with `<Id value="TAOM.Dependencies"/>` — so without this stub, the
+  launcher greys out any mod that depends on the standard `Bannerlord.Harmony`
+  module ID.
+
+  This file declares the `Bannerlord.Harmony` ID, depends on TAOM.Dependencies
+  (so the real DLL is loaded first), and has an empty <SubModules /> — no
+  duplicate `0Harmony.dll` enters the AppDomain.
+
+  Version: keep aligned with the actual `Lib.Harmony` PackageReference in
+  `Dependencies/TAOM.Dependencies.csproj`. When that pin bumps, bump here too.
+
+  See docs/migration/dr3-maintenance.md "Stub modules" section.
+-->
+<Module>
+    <Id value="Bannerlord.Harmony" />
+    <Name value="Harmony (provided by TAOM.Dependencies)" />
+    <Version value="v2.4.2" />
+    <DefaultModule value="false" />
+    <ModuleCategory value="Singleplayer" />
+    <ModuleType value="Community" />
+    <DependedModules>
+        <DependedModule Id="TAOM.Dependencies" />
+    </DependedModules>
+    <DependedModuleMetadatas>
+        <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
+    </DependedModuleMetadatas>
+    <SubModules />
+</Module>

@@ -2,12 +2,33 @@
 
 ## 2026-05-24
 
+### feat(deps): four stub modules for third-party mod compatibility (Bannerlord.Harmony / .UIExtenderEx / .ButterLib / .MBOptionScreen)
+
+DR3 follow-up. After bundling all BUTR runtime DLLs inside `TAOM.Dependencies` (single `<Id value="TAOM.Dependencies"/>`), third-party Bannerlord mods that declare `<DependedModule Id="Bannerlord.Harmony"/>` (or the other standard BUTR IDs) became un-toggleable in the vanilla launcher's mod menu — the launcher's `AreAllDependenciesOfModulePresent` check does an exact string match on `m.Id` and couldn't find those module IDs anywhere.
+
+Adopted the BUTR-community-standard **stub module pattern** (used by the BetaDeps mod on Nexus). Ships four passive `SubModule.xml` files in new `Stubs/` directory:
+
+| Folder | `<Id>` | `<Version>` |
+|---|---|---|
+| `Stubs/Bannerlord.Harmony/_Module/` | `Bannerlord.Harmony` | `v2.4.2` |
+| `Stubs/Bannerlord.UIExtenderEx/_Module/` | `Bannerlord.UIExtenderEx` | `v2.13.1` |
+| `Stubs/Bannerlord.ButterLib/_Module/` | `Bannerlord.ButterLib` | `v2.10.4` |
+| `Stubs/Bannerlord.MBOptionScreen/_Module/` | `Bannerlord.MBOptionScreen` | `v5.11.4` |
+
+Each stub declares the standard BUTR ID + `<DependedModule Id="TAOM.Dependencies"/>` + `<SubModules />` empty (no DLLs load from the stub — real DLLs come from TAOM.Dependencies). New `DeployTAOMDependenciesStubs` MSBuild target in `Dependencies/TAOM.Dependencies.csproj` deploys all four to `<GameFolder>/Modules/Bannerlord.*/` after `PostBuildCopyToModules`.
+
+Updated `docs/migration/dr3-maintenance.md` with a "Stub modules" section explaining the maintenance rule (when a BUTR `PackageReference` version bumps, bump the matching stub's `<Version>` too). Replaced old "disable external Bannerlord.Harmony module" mitigation with the more accurate "uninstall any standalone BUTR modules; TAOM.Dependencies + stubs provide everything" guidance.
+
+Verification: `dotnet build` deploys 4 stub-module files (visible in MSBuild output as `DeployTAOMDependenciesStubs: deployed 4 stub-module files`); `ls $game/Modules` shows the four new `Bannerlord.*` folders. `dotnet test TAOM.Tests` remains at 2,325 passing (no production C# code touched). User in-game verification pending: third-party mods declaring the standard BUTR IDs should now be toggleable in the launcher.
+
+Research: vanilla Bannerlord launcher decompiled at `ModuleHelper.AreAllDependenciesOfModulePresent` + `LauncherModuleVM.UpdateIsDisabled` (no multi-ID alias support — exact string match only; `optional="true"` would also work but is a per-third-party-mod declaration we don't control).
+
 ### fix(gondor): clothe naked prison guard + drop `_slim` body-item variants everywhere
 
 Two XML data fixes in [`npcs_gondor.xml`](Main/_Module/ModuleData/characters/npcs_gondor.xml), [`troops_gondor.xml`](Main/_Module/ModuleData/troops/troops_gondor.xml), [`troops_umbar.xml`](Main/_Module/ModuleData/troops/troops_umbar.xml), and [`taom_wanderer_equipment.xml`](Main/_Module/ModuleData/equipmentsets/taom_wanderer_equipment.xml):
 
 1. `prison_guard_gondor` had only `Item0` (sword) + `Item1` (shield) in its inline `<EquipmentRoster civilian="true">` — engine rendered the underwear mesh. Added Head/Body/Gloves/Leg slots mirroring `guard_gondor`'s armor (Anórien helmet/bracer/greaves + Cair Andros chainmail half-b).
-2. Per user direction, stripped `_slim` suffix from every body-item reference (25 refs across the 4 files above): `gondor_noble_{coat,jerkin}_{a,b}_slim` → non-slim, and `ithilien_jerkin_{long,long_var,short,short_var}_slim` → non-slim. Women now wear the same item rows as men. All 8 non-slim equivalents verified to exist in `LOTRLOME_Armory/.../gondor/body_armors.xml`.
+2. Per user direction, stripped `_slim` suffix from every active body-item reference (27 refs total): 25 across the 4 ModuleData XML files above (`gondor_noble_{coat,jerkin}_{a,b}_slim` and `ithilien_jerkin_{long,long_var,short,short_var}_slim` → non-slim) plus 1 in [`tools/generate_batch2_wanderers.py`](tools/generate_batch2_wanderers.py) (would re-introduce `_slim` on next regen) and 5 in [`docs/features/gondor-ithilien-ranger.md`](docs/features/gondor-ithilien-ranger.md) (roster-content table + dependencies list resync to XML reality). Women now wear the same item rows as men. All 8 non-slim equivalents verified to exist in `LOTRLOME_Armory/.../gondor/body_armors.xml`. Remaining `_slim` occurrences in the repo (translation_cache JSONs, `armor_rebalance.csv`, v1.4 migration docs' unrelated `no_slim` XML *attribute*) are records about items that still exist in the Armory module — intentionally left alone.
 
 Not-tested: in-game visual pass on female meshes to check for clipping on the male-cut Body items (acknowledged risk of the slim-strip).
 
