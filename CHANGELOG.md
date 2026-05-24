@@ -2,6 +2,14 @@
 
 ## 2026-05-23
 
+### ui(career): replace career-button placeholder with themed LOTR banner art
+
+Overwrote [`Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/career_button_placeholder.png`](Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/career_button_placeholder.png) with a 1024×434 (2.36:1) photoreal banner — gilt "CAREER" lettering over weathered parchment with Tengwar-style border script, true alpha. Downsampled from a 6336×2688 source via high-quality bicubic; preserved alpha channel.
+
+Updated [`CareerButtonPrefab.cs`](Main/Features/CareerSystem/UI/CareerButtonPrefab.cs) to render the button at 295×125 (was 233×75) so the new art's natural aspect isn't squashed, and removed the overlay `<TextWidget Text="Career">` block now that "CAREER" is baked into the art. Sprite ID (`CareerSystem\career_button_placeholder`) and all C#/XML references unchanged; engine regenerates the atlas entry automatically on next game launch.
+
+Not-tested: in-game appearance — verified PNG/format/build only. Confirm with a campaign launch on any career-owning culture and `C` (CharacterDeveloper) → banner sits above the existing tabs when `@HasCareer` is true.
+
 ### Feature: AI first-draft translation pipeline + 11-language coverage
 
 Built `tools/translate_with_claude.py` and `tools/rebuild_translation_files.py` — Python tooling that produces first-draft translations via the Claude API (Sonnet 4.5) for TAOM's loc XML files. 4-tier fallback chain: hand-curated overrides → cache → LLM → English fallback. Hardened with incremental cache persistence (resumable on interruption), UTF-8 stdout for non-ASCII error messages, JSON-decode error tolerance, and a placeholder-preservation validator that drops translations breaking `{VARIABLE}` or `{?GENDER}{?}{\?}` markup.
@@ -49,6 +57,14 @@ Untranslated entries (placeholder-validation failures or credit-exhausted batche
 - Re-translation of failed entries requires either a relaxed validator (risks asymmetric translations) or per-language human curation.
 
 Pilot validation (RU, 50 entries hand-audited): 100% variable preservation, 100% gender conditional preservation, canonical Tolkien names from overrides correctly applied, natural-sounding Russian narrative tone.
+
+### docs(equipment): codify equipmentType="Civilian" schema rule + Ithilien Ranger feature doc
+
+Captures the 2026-05-23 schema discovery so the bug doesn't recur:
+
+- **`.claude/rules/xml-data.md`** — new "EquipmentRosters Schema (MANDATORY for `equipmentsets/*.xml`)" section. Documents the battle (implicit) vs civilian (`equipmentType="Civilian"` required) split, with a one-liner validator grep authors can run pre-commit. The rule loads on every `ModuleData/**/*.xml` open, so future edits to any equipment_sets file will see it. Explicitly disambiguates the standalone-roster pattern from the inline `<NPCCharacter><Equipments>...</Equipments>` pattern (which uses a different attribute, `civilian="true"` on `<EquipmentRoster>`).
+- **`docs/features/gondor-ithilien-ranger.md`** — feature doc for the T9 troop + Faramir equipment work shipped earlier in the session. Includes the full 8-roster breakdown (one per Ithilien jerkin variant + matching hood/cloak/boots/bow/arrow rotation), settlement allocation (Minas Tirith + Amonost + Erethir at weight 3 vs basic peasant at weight 7), `TaomVolunteerModel.MaxVolunteerTier=6` non-interaction proof (only gates upgrade progression, not initial slot assignment — verified via ilspycmd on `RecruitmentCampaignBehavior.UpdateVolunteersOfNotablesInSettlement`), and the "How to add a similar region-specialty troop" runbook.
+- **Memory:** new `feedback_equipmenttype_civilian_required.md` + entry in `MEMORY.md` index; `equipment-armory-system.md` got a brief schema section cross-referencing the new feedback memory. (Memory lives user-local at `~/.claude/projects/.../memory/`, not in git.)
 
 ### fix(equipment): mark all 96 civilian rosters with `equipmentType="Civilian"` (16 culture files)
 

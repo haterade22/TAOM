@@ -53,6 +53,35 @@ After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs
 
 This exact bug pattern has been caught in 5+ Codex reviews. Custom cultures happen to use LOTR names as StringIds, which makes it easy to assume ALL cultures do — but XSLT cultures inherit vanilla engine IDs.
 
+## EquipmentRosters Schema (MANDATORY for `equipmentsets/*.xml`)
+
+The standalone `<EquipmentRosters>` pattern (used by `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml`, mirroring vanilla `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml`) requires:
+
+| Roster purpose | Inner `<EquipmentSet>` opening tag |
+|---|---|
+| **Battle** (default) | `<EquipmentSet>` — implicit, no attribute |
+| **Civilian** | `<EquipmentSet equipmentType="Civilian">` — REQUIRED |
+
+Without `equipmentType="Civilian"` on a civilian roster, the engine treats it as battle equipment regardless of the roster ID containing `_civ_` / `_civ_equipment`. There is NO `equipmentType="Battle"` in vanilla (verified zero matches across SandBoxCore) — battle is the implicit default.
+
+**Why this matters:** Encyclopedia portraits, settlement-walk views, dialog scenes, and random equipment selection at hero spawn all key off this attribute, not off the roster ID. A misclassified civilian roster manifests as the wrong outfit in non-combat contexts — exactly the Faramir/Boromir bug pattern (memory: feedback_equipmenttype_civilian_required.md).
+
+**Catch list before commit** — when editing any `taom_equipment_sets_*.xml`:
+1. Grep for `<EquipmentRoster id="[^"]*_civ` matches in the file.
+2. Verify each match's next `<EquipmentSet>` line has `equipmentType="Civilian"`.
+3. Quick validator:
+   ```powershell
+   Get-ChildItem Main\_Module\ModuleData\equipmentsets\taom_equipment_sets_*.xml | ForEach-Object {
+     $x = [xml](Get-Content $_.FullName -Raw)
+     $civ = $x.SelectNodes('//EquipmentRoster[contains(@id, ''_civ'')]/EquipmentSet')
+     $t = ($civ | Where-Object { $_.equipmentType -eq 'Civilian' }).Count
+     Write-Host "$($_.Name): $t/$($civ.Count) civilian sets tagged"
+   }
+   ```
+   Should report N/N for every file.
+
+**This rule is for the STANDALONE roster pattern only.** Inline equipment under `<NPCCharacter><Equipments>...</Equipments>` (in `characters/*.xml` and `troops/troops_*.xml`) uses a different attribute (`civilian="true"` on `<EquipmentRoster>`) — that pattern is governed separately and is NOT affected by this rule.
+
 ## Formatting
 - 2-space indentation (per .editorconfig)
 - UTF-8 encoding
