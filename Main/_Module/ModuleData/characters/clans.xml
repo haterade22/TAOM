@@ -1041,7 +1041,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17047.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18000.267.171.700.700.764.764.0.0.0" />
 
   <!-- Maugdur -->
   <Faction
@@ -1053,7 +1053,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17298.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18003.212.171.700.700.764.764.0.0.0" />
 
   <!-- Dûrzan -->
   <Faction
@@ -1065,7 +1065,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17298.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19010.212.171.700.700.764.764.0.0.0" />
 
   <!-- Krâzgoth -->
   <Faction
@@ -1077,7 +1077,7 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17156.259.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19014.212.171.700.700.764.764.0.0.0" />
 
   <!-- Zûrbak -->
   <Faction
@@ -1089,5 +1089,5 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-	 banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17335.259.171.700.700.764.764.0.0.0" />
+	 banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19009.212.171.700.700.764.764.0.0.0" />
 </Factions>
