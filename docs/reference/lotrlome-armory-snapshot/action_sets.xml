@@ -59088,48 +59088,438 @@
 	</action_set>
 
 	<!--
-		TAOM 2026-05-22 — elf CC parent fix.
+		TAOM 2026-05-22 — elf CC parent fix (v2 after first in-game test).
 		LOTRLOME's monsters.xml defines `elf` with `monster_usage="human"` and action_set="as_human_warrior",
 		but never declared `as_elf_facegen` / `as_elf_female_facegen`. The engine looks up `as_<race>_facegen`
-		when rendering Character Creation parents; missing entries fall back to a default that doesn't bind
-		correctly to the human skeleton, producing the contorted-mesh bug visible on Mirkwood / Rivendell.
-		These slim entries declare the 14 CC parent action types (7 × Bannerlord 1.2 + 7 × Bannerlord 1.3)
-		and inherit everything else from as_human_warrior. See TAOM CHANGELOG.md 2026-05-22.
+		and expects EVERY CC-stage action_type (childhood / toddler / inventory / sit / stand / CC parent /
+		rider-story) declared DIRECTLY in the facegen set — it does NOT fall through `base_set` inheritance
+		for these action types. A slim entry declaring only the 14 CC parent action types fixed the parent
+		menu but broke Early Childhood and later stages (lying-down pose).
+		These two blocks are a verbatim copy of LOTRLOME's `as_dwarf_facegen` / `as_dwarf_female_facegen`
+		with ONLY the `id` and `base_set` attributes renamed. Every animation file referenced is generic
+		(anim_male_custom / anim_childhood_* / anim_father_* / anim_mother_* / anim_toddler_* / anim_rider_story_*)
+		and works on the human skeleton elves use. See TAOM CHANGELOG.md 2026-05-22 entry + memory
+		feedback_lotrlome_action_set_aliases.md addendum for the "declare everything, don't trust inheritance" rule.
 	-->
-	<action_set id="as_elf_facegen" base_set="as_human_warrior">
-		<!-- Bannerlord 1.2 action type names (legacy parent-menu lookup) -->
-		<action type="act_character_creation_male_default_0" animation="anim_father_0" />
-		<action type="act_character_creation_male_default_1" animation="anim_father_1" />
-		<action type="act_character_creation_male_default_2" animation="anim_father_2" />
-		<action type="act_character_creation_male_default_3" animation="anim_father_3" />
-		<action type="act_character_creation_male_default_4" animation="anim_father_4" />
-		<action type="act_character_creation_male_default_5" animation="anim_father_5" />
-		<action type="act_character_creation_male_default_6" animation="anim_father_6" />
-		<!-- Bannerlord 1.3 renamed action types — same animations -->
-		<action type="act_character_creation_male_default_standing" animation="anim_father_0" />
-		<action type="act_character_creation_male_default_side_to_side_1" animation="anim_father_1" />
-		<action type="act_character_creation_male_default_mother_front" animation="anim_father_2" />
-		<action type="act_character_creation_male_default_father_sitting" animation="anim_father_3" />
-		<action type="act_character_creation_male_default_side_to_side_2" animation="anim_father_4" />
-		<action type="act_character_creation_male_default_side_to_side_3" animation="anim_father_5" />
-		<action type="act_character_creation_male_default_hugging" animation="anim_father_6" />
+	<action_set
+		id="as_elf_facegen"
+		base_set="as_human_warrior">
+		<action
+			type="act_inventory_idle_start"
+			animation="anim_male_custom" />
+		<action
+			type="act_visual_test_morph_animation"
+			animation="_visual_test_morph_animation" />
+		<action
+			type="act_inventory_idle"
+			animation="anim_male_custom" />
+		<action
+			type="act_command"
+			animation="anim_male_custom_voice8" />
+		<action
+			type="act_walk_idle_unarmed"
+			animation="defend_shield_passive_bot_banner_editor_pose" />
+		<action
+			type="act_childhood_tough"
+			animation="anim_childhood_tough" />
+		<action
+			type="act_childhood_decisive"
+			animation="anim_childhood_decisive" />
+		<action
+			type="act_childhood_ready"
+			animation="anim_childhood_ready" />
+		<action
+			type="act_childhood_leader"
+			animation="anim_childhood_leader" />
+		<action
+			type="act_childhood_athlete"
+			animation="anim_childhood_athlete" />
+		<action
+			type="act_childhood_memory"
+			animation="anim_childhood_memory" />
+		<action
+			type="act_childhood_numbers"
+			animation="anim_childhood_numbers" />
+		<action
+			type="act_childhood_manners"
+			animation="anim_childhood_manners" />
+		<action
+			type="act_childhood_animals"
+			animation="anim_childhood_animals" />
+		<action
+			type="act_childhood_streets"
+			animation="anim_childhood_streets" />
+		<action
+			type="act_childhood_peddlers"
+			animation="anim_childhood_peddlers" />
+		<action
+			type="act_childhood_peddlers_2"
+			animation="anim_childhood_peddlers_2" />
+		<action
+			type="act_childhood_militia"
+			animation="anim_childhood_militia" />
+		<action
+			type="act_childhood_schooled"
+			animation="anim_childhood_schooled" />
+		<action
+			type="act_childhood_apprentice"
+			animation="anim_childhood_apprentice" />
+		<action
+			type="act_childhood_fierce"
+			animation="anim_childhood_fierce" />
+		<action
+			type="act_childhood_sharp"
+			animation="anim_childhood_sharp" />
+		<action
+			type="act_childhood_vibrant"
+			animation="anim_childhood_vibrant" />
+		<action
+			type="act_childhood_fox"
+			animation="anim_childhood_fox" />
+		<action
+			type="act_childhood_gracious"
+			animation="anim_childhood_gracious" />
+		<action
+			type="act_childhood_clever"
+			animation="anim_childhood_clever" />
+		<action
+			type="act_childhood_book"
+			animation="anim_childhood_book" />
+		<action
+			type="act_childhood_arms"
+			animation="anim_childhood_arms" />
+		<action
+			type="act_childhood_artisan"
+			animation="anim_childhood_artisan" />
+		<action
+			type="act_childhood_polearm"
+			animation="anim_childhood_polearm" />
+		<action
+			type="act_childhood_roguery"
+			animation="anim_childhood_roguery" />
+		<action
+			type="act_childhood_spotting"
+			animation="anim_childhood_spotting" />
+		<action
+			type="act_childhood_clever_2"
+			animation="anim_childhood_clever_2" />
+		<action
+			type="act_childhood_manners_2"
+			animation="anim_childhood_manners_2" />
+		<action
+			type="act_childhood_arms_2"
+			animation="anim_childhood_arms_2" />
+		<action
+			type="act_childhood_closed_tutor"
+			animation="childhood_closed_tutor" />
+		<action
+			type="act_childhood_confident_tutor"
+			animation="childhood_confident_tutor" />
+		<action
+			type="act_childhood_confident2_tutor"
+			animation="childhood_confident2_tutor" />
+		<action
+			type="act_childhood_demure_tutor"
+			animation="childhood_demure_tutor" />
+		<action
+			type="act_childhood_hip_tutor"
+			animation="childhood_hip_tutor" />
+		<action
+			type="act_childhood_ready_bow"
+			animation="anim_childhood_bowready" />
+		<action
+			type="act_childhood_guard_up_staff"
+			animation="anim_childhood_guard_up_staff" />
+		<action
+			type="act_childhood_spoiled"
+			animation="anim_childhood_spoiled" />
+		<action
+			type="act_childhood_explorer"
+			animation="anim_childhood_explorer" />
+		<action
+			type="act_childhood_explorer2"
+			animation="anim_childhood_explorer2" />
+		<action
+			type="act_childhood_manners_3"
+			animation="anim_childhood_manners_3" />
+		<action
+			type="act_childhood_play"
+			animation="anim_childhood_play" />
+		<action
+			type="act_childhood_play_2"
+			animation="anim_childhood_play_2" />
+		<action
+			type="act_childhood_genius"
+			animation="anim_childhood_genius" />
+		<action
+			type="act_childhood_honor"
+			animation="anim_childhood_honor" />
+		<action
+			type="act_childhood_hardened"
+			animation="anim_childhood_hardened" />
+		<action
+			type="act_childhood_grit"
+			animation="anim_childhood_grit" />
+		<action
+			type="act_childhood_defend"
+			animation="anim_childhood_defend" />
+		<action
+			type="act_childhood_focus"
+			animation="anim_childhood_focus" />
+		<action
+			type="act_childhood_strenght"
+			animation="anim_childhood_strenght" />
+		<action
+			type="act_childhood_leader_2"
+			animation="anim_childhood_leader_2" />
+		<action
+			type="act_childhood_contemplate"
+			animation="anim_childhood_contemplate" />
+		<action
+			type="act_childhood_tactician"
+			animation="anim_childhood_tactician" />
+		<action
+			type="act_childhood_appearances"
+			animation="anim_childhood_appearances" />
+		<action
+			type="act_childhood_sceptic"
+			animation="anim_childhood_sceptic" />
+		<action
+			type="act_childhood_ready_throw"
+			animation="anim_childhood_ready_throw" />
+		<action
+			type="act_childhood_riding_2"
+			animation="anim_childhood_rider_2" />
+		<action
+			type="act_stand_1"
+			animation="stand_female_10" />
+		<action
+			type="act_stand_2"
+			animation="anim_stand_with_baby" />
+		<action
+			type="act_sit_1"
+			animation="anim_sit_idle_female_3" />
+		<action
+			type="act_childhood_toddler_sleep"
+			animation="anim_childhood_toddler_sleep" />
+		<action
+			type="act_childhood_toddler_vigor"
+			animation="anim_childhood_toddler_vigor" />
+		<action
+			type="act_childhood_toddler_social"
+			animation="anim_childhood_toddler_social" />
+		<action
+			type="act_childhood_toddler_endurance"
+			animation="anim_childhood_toddler_endurance" />
+		<action
+			type="act_childhood_toddler_intelligence"
+			animation="anim_childhood_toddler_intelligence" />
+		<action
+			type="act_childhood_toddler_control"
+			animation="anim_childhood_toddler_control" />
+		<action
+			type="act_childhood_toddler_cunning"
+			animation="anim_childhood_toddler_cunning" />
+		<action
+			type="act_childhood_toddler_tantrum"
+			animation="anim_childhood_toddler_tantrum" />
+		<action
+			type="act_character_creation_male_default_0"
+			animation="anim_father_0" />
+		<action
+			type="act_character_creation_male_default_1"
+			animation="anim_father_1" />
+		<action
+			type="act_character_creation_male_default_2"
+			animation="anim_father_2" />
+		<action
+			type="act_character_creation_male_default_3"
+			animation="anim_father_3" />
+		<action
+			type="act_character_creation_male_default_4"
+			animation="anim_father_4" />
+		<action
+			type="act_character_creation_male_default_5"
+			animation="anim_father_5" />
+		<action
+			type="act_character_creation_male_default_6"
+			animation="anim_father_6" />
+		<!-- Bannerlord 1.3 renamed action types — aliases to the same animations -->
+		<action
+			type="act_character_creation_male_default_standing"
+			animation="anim_father_0" />
+		<action
+			type="act_character_creation_male_default_side_to_side_1"
+			animation="anim_father_1" />
+		<action
+			type="act_character_creation_male_default_mother_front"
+			animation="anim_father_2" />
+		<action
+			type="act_character_creation_male_default_father_sitting"
+			animation="anim_father_3" />
+		<action
+			type="act_character_creation_male_default_side_to_side_2"
+			animation="anim_father_4" />
+		<action
+			type="act_character_creation_male_default_side_to_side_3"
+			animation="anim_father_5" />
+		<action
+			type="act_character_creation_male_default_hugging"
+			animation="anim_father_6" />
+		<action
+			type="act_character_creation_toddler_0"
+			animation="anim_toddler_0" />
+		<action
+			type="act_character_creation_toddler_1"
+			animation="anim_toddler_1" />
+		<action
+			type="act_character_creation_toddler_2"
+			animation="anim_toddler_2" />
+		<action
+			type="act_character_creation_toddler_3"
+			animation="anim_toddler_3" />
+		<action
+			type="act_character_creation_toddler_4"
+			animation="anim_toddler_4" />
+		<action
+			type="act_character_creation_toddler_5"
+			animation="anim_toddler_5" />
+		<action
+			type="act_character_creation_toddler_6"
+			animation="anim_toddler_6" />
+		<action
+			type="act_rider_story_background_1"
+			animation="anim_rider_story_background_1" />
+		<action
+			type="act_rider_story_background_2"
+			animation="anim_rider_story_background_2" />
+		<action
+			type="act_rider_story_background_3"
+			animation="anim_rider_story_background_3" />
+		<action
+			type="act_rider_story_background_4"
+			animation="anim_rider_story_background_4" />
+		<action
+			type="act_rider_story_background_5"
+			animation="anim_rider_story_background_5" />
+		<action
+			type="act_rider_story_background_6"
+			animation="anim_rider_story_background_6" />
+		<action
+			type="act_horse_story_background_1"
+			animation="anim_rider_story_background_1" />
+		<action
+			type="act_horse_story_background_2"
+			animation="anim_rider_story_background_2" />
+		<action
+			type="act_horse_story_background_3"
+			animation="anim_rider_story_background_3" />
+		<action
+			type="act_horse_story_background_4"
+			animation="anim_rider_story_background_4" />
+		<action
+			type="act_horse_story_background_5"
+			animation="anim_rider_story_background_5" />
+		<action
+			type="act_horse_story_background_6"
+			animation="anim_rider_story_background_6" />
 	</action_set>
-	<action_set id="as_elf_female_facegen" base_set="as_elf_facegen">
-		<!-- Bannerlord 1.2 action type names -->
-		<action type="act_character_creation_female_default_0" animation="anim_mother_0" />
-		<action type="act_character_creation_female_default_1" animation="anim_mother_1" />
-		<action type="act_character_creation_female_default_2" animation="anim_mother_2" />
-		<action type="act_character_creation_female_default_3" animation="anim_mother_3" />
-		<action type="act_character_creation_female_default_4" animation="anim_mother_4" />
-		<action type="act_character_creation_female_default_5" animation="anim_mother_5" />
-		<action type="act_character_creation_female_default_6" animation="anim_mother_6" />
-		<!-- Bannerlord 1.3 renamed action types — same animations -->
-		<action type="act_character_creation_female_default_standing" animation="anim_mother_0" />
-		<action type="act_character_creation_female_default_side_to_side_1" animation="anim_mother_1" />
-		<action type="act_character_creation_female_default_mother_front" animation="anim_mother_2" />
-		<action type="act_character_creation_female_default_father_sitting" animation="anim_mother_3" />
-		<action type="act_character_creation_female_default_side_to_side_2" animation="anim_mother_4" />
-		<action type="act_character_creation_female_default_side_to_side_3" animation="anim_mother_5" />
-		<action type="act_character_creation_female_default_hugging" animation="anim_mother_6" />
+	<action_set
+		id="as_elf_female_facegen"
+		base_set="as_elf_facegen">
+		<action
+			type="act_inventory_idle_start"
+			animation="anim_female_custom_start" />
+		<action
+			type="act_inventory_idle"
+			animation="anim_female_custom" />
+		<action
+			type="act_sit_1"
+			animation="anim_sit_caretaker" />
+		<action
+			type="act_character_creation_female_default_0"
+			animation="anim_mother_0" />
+		<action
+			type="act_character_creation_female_default_1"
+			animation="anim_mother_1" />
+		<action
+			type="act_character_creation_female_default_2"
+			animation="anim_mother_2" />
+		<action
+			type="act_character_creation_female_default_3"
+			animation="anim_mother_3" />
+		<action
+			type="act_character_creation_female_default_4"
+			animation="anim_mother_4" />
+		<action
+			type="act_character_creation_female_default_5"
+			animation="anim_mother_5" />
+		<action
+			type="act_character_creation_female_default_6"
+			animation="anim_mother_6" />
+		<!-- Bannerlord 1.3 renamed action types — aliases to the same animations -->
+		<action
+			type="act_character_creation_female_default_standing"
+			animation="anim_mother_0" />
+		<action
+			type="act_character_creation_female_default_side_to_side_1"
+			animation="anim_mother_1" />
+		<action
+			type="act_character_creation_female_default_mother_front"
+			animation="anim_mother_2" />
+		<action
+			type="act_character_creation_female_default_father_sitting"
+			animation="anim_mother_3" />
+		<action
+			type="act_character_creation_female_default_side_to_side_2"
+			animation="anim_mother_4" />
+		<action
+			type="act_character_creation_female_default_side_to_side_3"
+			animation="anim_mother_5" />
+		<action
+			type="act_character_creation_female_default_hugging"
+			animation="anim_mother_6" />
+		<action
+			type="act_conversation_normal_start"
+			animation="convo_start_normal_female1" />
+		<action
+			type="act_conversation_normal_loop"
+			animation="convo_stand_normal_female1" />
+		<action
+			type="act_conversation_normal2_start"
+			animation="convo_start_normal_female2" />
+		<action
+			type="act_conversation_normal2_loop"
+			animation="convo_stand_normal_female2" />
+		<action
+			type="act_conversation_closed_start"
+			animation="convo_start_closed_female1" />
+		<action
+			type="act_conversation_closed_loop"
+			animation="convo_stand_closed_female1" />
+		<action
+			type="act_conversation_closed2_start"
+			animation="convo_start_closed_female2" />
+		<action
+			type="act_conversation_closed2_loop"
+			animation="convo_stand_closed_female2" />
+		<action
+			type="act_conversation_confident_start"
+			animation="convo_start_confident_female1" />
+		<action
+			type="act_conversation_confident_loop"
+			animation="convo_stand_confident_female1" />
+		<action
+			type="act_conversation_confident2_start"
+			animation="convo_start_confident_female2" />
+		<action
+			type="act_conversation_confident2_loop"
+			animation="convo_stand_confident_female2" />
+		<action
+			type="act_conversation_hip_start"
+			animation="convo_start_hip_female1" />
+		<action
+			type="act_conversation_hip_loop"
+			animation="convo_stand_hip_female1" />
 	</action_set>
 </action_sets>

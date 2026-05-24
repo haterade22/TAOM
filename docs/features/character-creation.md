@@ -312,6 +312,38 @@ Patching the FaceGen open instead would miss the case where the body should upda
 5. If the culture has no mounts (e.g., dwarves), ensure the CC equipment rosters omit the Horse slot. Patch20_NarrativeHorseGuard will handle the crash guard automatically.
 6. The culture must exist in `MBObjectManager` (i.e., defined in `spcultures.xml` or `taom_spcultures.xml`) or it will be skipped with a warning.
 
+## LOTRLOME `as_<race>_facegen` action_set requirement (live in LOTRLOME_Armory, not TAOM)
+
+CC parents + child preview at every narrative stage are rendered by the engine via a lookup of `as_<race>_facegen` (male) and `as_<race>_female_facegen` (female), where `<race>` is whatever name is registered for the player's race in `FaceGen.GetRaceNames()`. The lookup target lives in **LOTRLOME_Armory's `action_sets.xml`**, not in TAOM — TAOM's own `Main/_Module/ModuleData/action_sets.xml` was removed on 2026-05-04 (deliberate dead-duplicate cleanup, commit `307df40`). Any custom race a TAOM culture uses must have a matching `_facegen` action_set in LOTRLOME, fully populated.
+
+**Two failure modes that have shipped before:**
+
+1. **No `as_<race>_facegen` at all.** Engine falls back to a default that doesn't bind to the race's skeleton → contorted-mesh on the parent menu. Caught 2026-05-22: elf (Mirkwood / Rivendell) had no facegen entry in LOTRLOME despite the 2026-05-04 patch claiming to fix elves — the patch only added 1.3 action-type aliases to 12 *pre-existing* facegens (dwarf/uruk/orc/etc.) and never authored the missing elf pair.
+
+2. **Slim facegen entry (declares only the 14 CC parent action types).** Parent menu works but Early Childhood + every subsequent CC stage breaks — child agent renders lying down / T-posed. The engine does NOT fall through `base_set` for `act_childhood_*` / `act_character_creation_toddler_*` / `act_inventory_*` / `act_stand_*` / `act_sit_*` / `act_rider_story_background_*` / `act_horse_story_background_*` action types — they must be declared **directly** in the facegen action_set. Caught 2026-05-22 (same session, v1→v2 same-day iteration on the elf fix).
+
+**Canonical fix recipe** when adding any new race-bearing TAOM culture (e.g., hobbit / halfling / man-of-the-west):
+
+1. Verify LOTRLOME's `monsters.xml` defines the race id, and capture which `action_set=` its monster references (usually `as_<skeleton>_warrior` — `as_human_warrior` for human-skeleton races, `as_dwarf_warrior` for dwarf-skeleton, etc.).
+2. Copy LOTRLOME's `as_dwarf_facegen` (lines ~16812-17134) and `as_dwarf_female_facegen` (lines ~17135-17232) blocks **verbatim** from `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\action_sets.xml`.
+3. Rename two attributes per block, nothing else:
+   - Male: `id="as_dwarf_facegen"` → `id="as_<race>_facegen"`; `base_set="as_dwarf_warrior"` → `base_set="<the action_set the monster references>"`.
+   - Female: `id="as_dwarf_female_facegen"` → `id="as_<race>_female_facegen"`; `base_set="as_dwarf_facegen"` → `base_set="as_<race>_facegen"`.
+4. Append both blocks before the closing `</action_sets>` in BOTH `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml` (live) AND [`docs/reference/lotrlome-armory-snapshot/action_sets.xml`](../reference/lotrlome-armory-snapshot/action_sets.xml) (tracked snapshot — kept in lockstep).
+5. Sanity-check with `python -c "import xml.etree.ElementTree as ET; ET.parse('...')"`. Expected size after copy: 106 male actions + 31 female actions per race, matching the dwarf reference exactly.
+6. Update the per-race checklist in [`docs/reference/lotrlome-armory-snapshot/README.md`](../reference/lotrlome-armory-snapshot/README.md) so the next restore from snapshot doesn't drop the new entries.
+7. **Verify in-game at EVERY CC stage**, not just the parent menu. Parent-menu success does not imply Early Childhood success — they're separate failure modes from the same root cause class.
+
+All animation files referenced in the dwarf block (`anim_male_custom`, `anim_childhood_*`, `anim_father_*`, `anim_mother_*`, `anim_toddler_*`, `anim_rider_story_background_*`) are skeleton-flexible — they work on dwarf, human, orc, uruk, and elf skeletons identically. No re-targeting needed even for non-human-skeleton races.
+
+**Current race coverage (verified 2026-05-22):** all 10 race ids TAOM consumes (`berserker`, `cave_troll`, `dg_uruk`, `dwarf`, `elf`, `goblin`, `orc`, `pale_uruk`, `uruk`, `uruk_hai`) have complete `_facegen` entries with 106/31 action parity. `human` uses the engine default. The 3 LOTRLOME-only races TAOM doesn't consume (`nazghul`, `hill_troll`, `saruman`) are also complete and ride along in the snapshot.
+
+See:
+- Memory `feedback_lotrlome_action_set_aliases.md` — recurring-failure notes + recipe.
+- [`docs/reference/lotrlome-armory-snapshot/README.md`](../reference/lotrlome-armory-snapshot/README.md) — per-race restoration checklist + post-restore sanity grep.
+- [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](../reviews/rca-elf-cc-facegen-2026-05-22.md) — full RCA on the slim-vs-full iteration.
+
 ## GitHub Issue
 - **Race filter (Patch9_RaceFilter re-implementation):** [#107](https://github.com/haterade22/TAOM/issues/107) — closed 2026-05-06
 - **Per-culture default BodyProperties (Patch29_CCBodyProperties):** added in same session, not separately ticketed
+- **Elf CC parent + Early Childhood rendering (`as_elf_facegen`):** XML-only fix in LOTRLOME_Armory, no TAOM issue opened — see CHANGELOG 2026-05-22 + RCA above

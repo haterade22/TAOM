@@ -122,6 +122,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 1. Add the race to `race_age_config.json` with appropriate values
 2. No code changes needed — the service automatically picks up new entries
 3. The race must already exist in `monsters.xml` / `skins.xml` (see `docs/races-system` in memory)
+4. **If the race will be playable in Character Creation, it also needs `as_<race>_facegen` + `as_<race>_female_facegen` entries in LOTRLOME's `action_sets.xml`** — without these the CC parent menu and post-parent stages (Early Childhood, Youth, Adolescence, Adulthood) render the agent as a contorted / lying-down mesh. The slim "declare only the 14 CC parent action types" form is **insufficient** — Bannerlord 1.3 requires the full ~106-action surface declared directly, no inheritance through `base_set`. Copy LOTRLOME's `as_dwarf_facegen` block verbatim, rename `id` + `base_set`, and add to BOTH the live LOTRLOME file AND the tracked snapshot. Full recipe in [`docs/features/character-creation.md`](character-creation.md#lotrlome-as_race_facegen-action_set-requirement-live-in-lotrlome_armory-not-taom) + the RCA at [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](../reviews/rca-elf-cc-facegen-2026-05-22.md).
 
 ## How Pregnancy Works
 
