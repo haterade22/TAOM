@@ -63,7 +63,7 @@ LANGUAGES = {
     "KO":  ("kor-KO", "Korean"),
     "PL":  ("pol-PL", "Polish"),
     "RU":  ("rus-RU", "Russian"),
-    "SP":  ("spa-LA", "Latin American Spanish"),
+    "SP":  ("spa-LA", "Spanish (LA)"),
     "TR":  ("tur-TR", "Turkish"),
 }
 
@@ -359,20 +359,29 @@ def write_back(file_path: Path, translations: dict[str, str], language_tag: str)
         f'<tag language="{language_tag}" />',
         content,
     )
+    if not translations:
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        return 0
+    # Single-pass replacement: compile ONE regex matching any of the ids we're updating,
+    # then resolve each match via dictionary lookup. Was: N-regex compile + N subn calls
+    # which scaled badly on large files (1431-entry XSLT file × 12 langs ≈ 5min wasted).
+    escaped_translations = {
+        sid: (new_text.replace("&", "&amp;").replace('"', "&quot;")
+                       .replace("<", "&lt;").replace(">", "&gt;"))
+        for sid, new_text in translations.items()
+    }
+    id_alternation = "|".join(re.escape(sid) for sid in escaped_translations.keys())
+    pattern = re.compile(
+        r'(<string\s+id=")(' + id_alternation + r')(")(\s+text=")[^"]*(")'
+    )
     written = 0
-    for sid, new_text in translations.items():
-        # Escape for XML attribute
-        escaped = (new_text.replace("&", "&amp;").replace('"', "&quot;")
-                            .replace("<", "&lt;").replace(">", "&gt;"))
-        # Match: <string id="sid" text="..."  (preserving any whitespace) />
-        # Use a callback to avoid re-injecting backreferences
-        pattern = re.compile(
-            r'(<string\s+id=")' + re.escape(sid) + r'(")(\s+text=")[^"]*(")'
-        )
-        new_content, n = pattern.subn(lambda m: m.group(1) + sid + m.group(2) + m.group(3) + escaped + m.group(4), content)
-        if n > 0:
-            content = new_content
-            written += 1
+    def _replace(m):
+        nonlocal written
+        sid = m.group(2)
+        written += 1
+        return m.group(1) + sid + m.group(3) + m.group(4) + escaped_translations[sid] + m.group(5)
+    content = pattern.sub(_replace, content)
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(content)
     return written
