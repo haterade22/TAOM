@@ -74,7 +74,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_11"
 		name="{=aom_clan_empire_south_11_name}Îkhon"
@@ -84,7 +84,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_12"
 		name="{=aom_clan_empire_south_12_name}Akheth"
@@ -104,7 +104,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_14"
 		name="{=aom_clan_empire_south_14_name}Ûgrakhûr"
@@ -114,7 +114,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_15"
 		name="{=aom_clan_empire_south_15_name}Brughash"
@@ -124,7 +124,7 @@
 		culture="Culture.empire"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
 
   <!-- ============================================== -->
   <!-- EXTENDED VLANDIA / ROHAN CLANS                 -->
