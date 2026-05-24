@@ -140,16 +140,14 @@ public class SpiderMissionBehavior : MissionLogic
                 _logger.LogInfo($"[Spider] Attached behavior trees to {spiderCount} spiders");
             }
 
+            // v1.4.5 Agent.Tick auto-calls component.OnTick(dt) every frame
+            // (Agent.cs:4768). See WargMissionBehavior for the same fix —
+            // Codex review 2026-05-24 F1. Manual call removed; only prune dead spiders.
             for (int i = _spiderComponents.Count - 1; i >= 0; i--)
             {
-                var (spider, comp) = _spiderComponents[i];
+                var (spider, _) = _spiderComponents[i];
                 if (!spider.IsActive())
-                {
                     _spiderComponents.RemoveAt(i);
-                    continue;
-                }
-                if (comp.Tree != null)
-                    comp.OnTickAsAI(dt);
             }
         }
         catch (Exception ex)

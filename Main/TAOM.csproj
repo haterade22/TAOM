@@ -45,16 +45,11 @@
 		     migration (2026-05-22) — TAOM.Dependencies module is the single source. -->
 	</ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="BehaviorTrees">
-			<HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="BehaviorTreeWrapper">
-			<HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-	</ItemGroup>
+	<!-- BehaviorTrees + BehaviorTreeWrapper were rebuilt in-tree on 2026-05-24 and now
+	     live at Main/BehaviorTrees/ + Main/BehaviorTreeWrapper/. Both compile into TAOM.dll.
+	     The standalone BehaviorTrees.dll and BehaviorTreeWrapper.dll vendored binaries
+	     are gone — single-DLL ship surface, full source ownership. RCA:
+	     docs/reviews/rca-looter-battle-nre-2026-05-24.md. -->
 
 	<ItemGroup>
 		<Compile Remove="_Module\bin\**" />

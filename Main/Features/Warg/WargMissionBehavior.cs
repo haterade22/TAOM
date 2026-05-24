@@ -115,16 +115,18 @@ public class WargMissionBehavior : MissionLogic
 
             WargRiderHandManager.Tick();
 
+            // v1.4.5 Agent.Tick auto-calls component.OnTick(dt) on every active
+            // agent's components (Agent.cs:4768). The manual OnTick call that lived
+            // here pre-2026-05-24 was needed in v1.3.15 where component ticking was
+            // gated to AI-controlled agents (OnTickAsAI); after the v1.3->v1.4.5 rename
+            // it would have caused 2x ticks per frame (Codex review 2026-05-24 F1).
+            // The IsActive pruning still belongs to us — vanilla Tick doesn't drop
+            // dead wargs from our shadow list.
             for (int i = _wargComponents.Count - 1; i >= 0; i--)
             {
-                var (warg, comp) = _wargComponents[i];
+                var (warg, _) = _wargComponents[i];
                 if (!warg.IsActive())
-                {
                     _wargComponents.RemoveAt(i);
-                    continue;
-                }
-                if (comp.Tree != null)
-                    comp.OnTickAsAI(dt);
             }
         }
         catch (Exception ex)

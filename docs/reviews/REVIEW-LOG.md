@@ -877,3 +877,43 @@ Plus 8 Known Suspects walked: 4 DISPUTED with citations, 4 CONFIRMED (matched th
 ### Tracking issues opened from Review 39
 
 - [#120 — Extend NavigationType iteration for NavalDLC / port support](https://github.com/haterade22/TAOM/issues/120) — orthogonal to Codex findings; surfaced during the "vanilla parity audit" follow-up. Filed because TAOM currently has 0 ports and `Default`-only rebuild is correct today, but a future map with coastal settlements would need 3-way rebuild.
+
+
+## Review 40 — BehaviorTrees + BehaviorTreeWrapper Inlining (Codex caught a HIGH RCA misdiagnosis)
+
+**Scope:** Decompiled and inlined two vendored DLLs (`BehaviorTreeWrapper.dll` ~1300 LOC, `BehaviorTrees.dll` ~980 LOC) into `Main/BehaviorTreeWrapper/` + `Main/BehaviorTrees/`. Deleted both vendored binaries. Original session framed this as a fix for a user-reported NRE in `Mission.CheckMissionEnded` on every battle (looter encounter was the first crash trigger for two users on `bannerlord-1.4.5`). 7 inherited perf issues fixed in-session after `/deep-review` surfaced them.
+
+**Verdict:** 0 P1 + 2 P2 + 0 P3. Both P2 CONFIRMED — and the first one invalidated the entire RCA's root-cause story.
+
+### Findings (Review 40)
+
+| # | Severity | Title | Status |
+|---|---|---|---|
+| 1 | P2 | Stop manually ticking attached BT components | CONFIRMED, fixed (real v1.4.5 double-tick regression) |
+| 2 | P2 | RCA evidence doesn't match the deleted DLL | CONFIRMED, RCA + CHANGELOG revised — original root-cause claim was wrong |
+
+### Root Cause Analysis (Review 40)
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | `WargMissionBehavior.cs:127` + `SpiderMissionBehavior.cs:152` manually called `comp.OnTick(dt)` after the `OnTickAsAI → OnTick` rename. v1.4.5 `Agent.Tick:4768` already auto-calls `component.OnTick(dt)` on every active agent every frame, so we shipped a 2×-ticks-per-frame regression on player wargs (AI was 2× in v1.3.15 too, so no change there). | API-rename-induced regression / lifecycle gap | The deep-review's taleworlds-researcher agent confirmed the `OnTick` signature exists in v1.4.5 but did NOT trace whether vanilla auto-calls it. Verifying a method's existence isn't the same as verifying who-calls-it; the latter requires reading the consumer code (`Agent.Tick`). | AGENTS.md updated with "do not infer enum value from bug story" pattern. Manual ticks removed; vanilla auto-tick handles both player- and AI-controlled BT agents. Long-term: deep-review's Bannerlord-compat agent should ALSO check who-calls-the-method, not just whether-it-exists. |
+| 2 | RCA claimed `BehaviorTreeWrapper.dll`'s `BehaviorTreeMissionLogic` was the source of the null entry in `MissionLogics`. Codex decompiled the deleted DLL from `git show HEAD`, confirmed `BehaviorType => (MissionBehaviorType)1`, and decompiled v1.4.5 `MissionBehaviorType { Logic, Other }` — value 1 is `Other`, so the DLL would have gone to `_otherMissionBehaviors`, never to `MissionLogics`. The RCA's root cause cannot have caused the user's crash. | Enum-value-from-bug-story inference / verification gap | Claude assumed `(MissionBehaviorType)1 == Logic` because the user's crash was in `MissionLogics`-iteration and the bug pattern looked like the 2026-05-14 fix. Should have decompiled the enum first and mapped value-to-name explicitly before writing the RCA. | feedback memory `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance.md` extended with mandatory enum-value verification step. AGENTS.md updated with "infer-from-story" failure pattern. Real root cause remains unidentified — follow-up investigation opened (likely a community DLL in TAOM.Dependencies — MCM, ButterLib, UIExtenderEx). |
+
+### What this commit DOES deliver (post-Codex re-framing)
+
+The inlining was originally pitched as a bug fix. After Codex's correction, the fix-story is gone but three real wins remain:
+
+1. **Single-DLL ship surface + full source ownership** of both BT libraries (no upstream source repo for either, so this was a one-shot extraction).
+2. **Codex F1 fix**: real v1.4.5 double-tick regression eliminated.
+3. **7 inherited perf issues fixed** (E1–E7 from `/deep-review`) — would have remained latent in the vendored DLL forever.
+
+### Build & Test (Review 40)
+
+- `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` — clean.
+- `dotnet test TAOM.Tests/TAOM.Tests.csproj` — 2416 passing (was 2415; new `BehaviorTreeMissionLogicInheritanceTests` adds 1), 1 pre-existing failure unrelated (`GetVolunteerTroopId_EreborCulture_HighRoll` — Rhun recruitment in flight on this branch), 2 skipped.
+
+### Codex Quality Notes (Review 40)
+
+- **Caught Claude's framing bias.** The RCA looked plausible; only by decompiling the deleted DLL and the v1.4.5 enum did Codex find the value-mapping error. This is exactly the "verify, don't accept" stance the prompt asked for.
+- **Sandbox cleanup conflict.** Codex tried to delete its own temp directories with PowerShell `Remove-Item` and was repeatedly blocked by sandbox policy; eventually succeeded via a small Python script. Not a finding, but worth noting that PowerShell cleanup commands get denied even for Codex-created subdirectories.
+- **Stayed in scope.** Two findings, both backed by decompiled evidence. No drift into adjacent features.

@@ -14,18 +14,26 @@ Both findings stem from duplicate logic between the two Python tools (LANGUAGES 
 
 No re-translation needed — both bugs were either output-preserving (perf) or latent (mismatch not yet activated in canonical path).
 
-### Fix(battle): NRE in Mission.CheckMissionEnded on first battle — rebuild vendored BehaviorTreeWrapper + BehaviorTrees in-tree
+### Feat(behaviortrees): inline vendored BehaviorTreeWrapper + BehaviorTrees into TAOM.dll for full source ownership; fix v1.4.5 double-tick regression
 
-Two users on `bannerlord-1.4.5` reported a `System.NullReferenceException` in `TaleWorlds.MountAndBlade.Mission.CheckMissionEnded()` immediately on entering battle (looter encounter was the first hit, but the bug fires every battle). Root cause: the vendored `BehaviorTreeWrapper.dll`'s `BehaviorTreeMissionLogic` inherited `MissionBehavior` (not `MissionLogic`) while reporting `BehaviorType => Logic`. Vanilla `Mission.AddMissionBehavior` then ran `MissionLogics.Add(missionBehavior as MissionLogic)` → cast returned `null` → null slot in `_missionLogics` → NRE every tick. Same documented bug pattern as the 2026-05-14 fix for MixedFormations/SmartCavalryAI/SiegeDismount, but the 2026-05-14 audit was source-grep only and missed the vendored DLL.
+**Codex correction (must read before treating this as the looter-crash fix):** the original RCA in this entry identified the deleted `BehaviorTreeWrapper.dll` as the source of the null `MissionLogics` entry that NRE'd `CheckMissionEnded`. Codex adversarial review caught that conclusion is wrong: the deleted DLL returned `BehaviorType => (MissionBehaviorType)1`, and v1.4.5 enum is `Logic=0, Other=1`, so it was actually reporting **Other** — vanilla would have put it in `_otherMissionBehaviors`, never in `MissionLogics`. **The user's actual crash root cause is still unidentified.** See [docs/reviews/rca-looter-battle-nre-2026-05-24.md](docs/reviews/rca-looter-battle-nre-2026-05-24.md) for the post-Codex revision and the follow-up investigation plan (likely a community DLL — MCM, ButterLib, UIExtenderEx, or a TAOM class the source-grep audit missed).
 
-**Fix (no upstream source repo for either DLL, so rebuilt both in-tree for permanent ownership):**
+**What this commit DOES deliver:**
+
+Two users on `bannerlord-1.4.5` reported a `System.NullReferenceException` in `TaleWorlds.MountAndBlade.Mission.CheckMissionEnded()`. Original RCA pinned the cause on the vendored `BehaviorTreeWrapper.dll`'s `BehaviorTreeMissionLogic`. Codex confirmed this was a misdiagnosis (see above). Despite that, this commit ships three real wins:
+
+1. **Single-DLL ship surface + full source ownership** — both vendored libraries (no upstream source repo for either) decompiled and inlined into TAOM.dll. Future bugs in this code are now fixable by `Edit`.
+2. **Codex F1 fix (real v1.4.5 regression):** removed manual `comp.OnTick(dt)` from `WargMissionBehavior.cs:127` and `SpiderMissionBehavior.cs:152`. The `OnTickAsAI → OnTick` rename combined with v1.4.5 `Agent.Tick:4768` auto-calling `component.OnTick(dt)` every frame would have caused 2× ticks per frame on every warg/spider. Vanilla auto-tick now handles BT components correctly for both player- and AI-controlled agents.
+3. **7 inherited perf issues fixed** (E1–E7 from `/deep-review`). All were in the original vendored DLL; visible now that we own the source.
+
+**Detail (no upstream source repo for either DLL, so rebuilt both in-tree for permanent ownership):**
 
 1. Decompiled `Main/_Module/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll` (~1300 lines) and `BehaviorTrees.dll` (~980 lines) via `ilspycmd`.
 2. Inlined cleaned-up source into `Main/BehaviorTreeWrapper/` and `Main/BehaviorTrees/`. Both compile into `TAOM.dll` — single ship surface, no separate DLLs.
-3. Applied the inheritance fix: `BehaviorTreeMissionLogic : MissionLogic` (was `: MissionBehavior`).
-4. Reconciled v1.3 → v1.4.5 API drift surfaced by the rebuild: `AgentComponent.OnTickAsAI(float)` → `OnTick(float)` at 3 callsites (`BehaviorTreeAgentComponent`, `WargMissionBehavior.cs:127`, `SpiderMissionBehavior.cs:152`); `MBInformationManager.AddQuickInformation` now requires an `Equipment` argument.
+3. Defensive inheritance change: `BehaviorTreeMissionLogic : MissionLogic` (was `: MissionBehavior`). Originally framed as the bug fix; per Codex this is actually a no-op for the reported crash but kept as a defensive change so the wrapper participates correctly in `MissionLogics` iteration if any future TaleWorlds version reaches it there.
+4. Reconciled v1.3 → v1.4.5 API drift surfaced by the rebuild: `AgentComponent.OnTickAsAI(float)` → `OnTick(float)` in `BehaviorTreeAgentComponent`. Codex Finding 1 caught that this rename, combined with v1.4.5 `Agent.Tick` auto-calling `component.OnTick(dt)`, would cause 2× ticks per frame at the manual call sites in `WargMissionBehavior.cs:127` + `SpiderMissionBehavior.cs:152`. **Both manual calls removed** — vanilla auto-tick handles BT components every frame in v1.4.5. The IsActive-pruning loop in each behavior is preserved (vanilla doesn't prune our shadow list). Also fixed `MBInformationManager.AddQuickInformation` signature change (now requires `Equipment` arg).
 5. Deleted `Main/_Module/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll` and `BehaviorTrees.dll`; dropped both `<Reference>` entries from `Main/TAOM.csproj`. Dropped C# 12 primary-constructor syntax from the decompile down to C# 10 plain constructors. Dropped unused demo namespaces (`BehaviorTreeWrapper.Tests`, `FPSCounter`).
-6. Added regression test `TAOM.Tests/BehaviorTreeWrapper/BehaviorTreeMissionLogicInheritanceTests.cs` asserting `typeof(MissionLogic).IsAssignableFrom(typeof(BehaviorTreeMissionLogic))` so any future regression fails CI before reaching a player.
+6. Added regression test `TAOM.Tests/BehaviorTreeWrapper/BehaviorTreeMissionLogicInheritanceTests.cs` asserting `typeof(MissionLogic).IsAssignableFrom(typeof(BehaviorTreeMissionLogic))`. Codex review notes this catches a *different* class of bug than originally claimed, but remains a useful invariant for the defensive inheritance change.
 
 **Verified:** `dotnet build` clean, `dotnet test` 2416 passing (one more than before — the new regression test), 1 pre-existing failure unrelated (`GetVolunteerTroopId_EreborCulture_HighRoll` — Rhun recruitment in flight on this branch), 2 skipped.
 

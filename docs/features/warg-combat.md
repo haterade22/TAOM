@@ -18,7 +18,7 @@ The `Agent` class is sealed (cannot subclass). Warg AI must run alongside the ex
 
 ### Solution Approach
 
-- **BehaviorTreeAgentComponent** (from BehaviorTreeWrapper.dll) — attached to each warg `Agent` via `AddComponent`, manually ticked by `WargMissionBehavior.OnMissionTick`
+- **BehaviorTreeAgentComponent** (TAOM-inlined at `Main/BehaviorTreeWrapper/`, was vendored `BehaviorTreeWrapper.dll` until 2026-05-24) — attached to each warg `Agent` via `AddComponent`, manually ticked by `WargMissionBehavior.OnMissionTick`
 - **AutonomousMovementPlayerController** — `[DefaultView]` MissionView that takes over player movement during rage mode
 - **SpatialGrid** — O(1) cell-based spatial partitioning for enemy proximity queries
 - **CustomAttacksUtils** — reflection-based `Mission.RegisterBlow` access for programmatic damage
@@ -107,7 +107,7 @@ Alliance.Wargs (XML: monster, items, animations)
 
 ## Dependencies
 
-- `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` — Pre-compiled BT framework (no source)
+- `Main/BehaviorTrees/` + `Main/BehaviorTreeWrapper/` — TAOM-inlined BT framework (decompiled from formerly-vendored `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` on 2026-05-24, full source ownership; compiles into `TAOM.dll`)
 - `Alliance.Wargs` — XML module: Monster id="warg", animations, sounds, items
 - `IModLogger` (Core) — Logging
 - `IMissionAdapterFactory` (Adapters) — Agent wrapping
