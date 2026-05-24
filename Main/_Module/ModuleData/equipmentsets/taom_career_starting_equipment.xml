@@ -56,8 +56,8 @@
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
-            <Equipment slot="Horse" id="Item.charger" />
-            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -68,8 +68,8 @@
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
-            <Equipment slot="Horse" id="Item.charger" />
-            <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
         </EquipmentSet>
     </EquipmentRoster>
 

@@ -2,6 +2,20 @@
 
 ## 2026-05-24
 
+### fix(career-system): Gondor cavalry starter — low-tier horse + low-armor harness
+
+`player_career_gondor_cavalry_m/f` were spawning brand-new players on `Item.charger` (vanilla war-horse, difficulty 30, charge_damage 22) with `Item.chain_horse_harness` (28-armor chainmail). Both too good for a starter.
+
+Per user direction:
+- Horse: `charger` → `saddle_horse` (vanilla lowest mountable; difficulty 0, charge_damage 12, item_category `sumpter_horse`).
+- Harness: `chain_horse_harness` → new `starter_cavalry_gondor_horse_armor_a` ("[Gondor] Riding Caparison"). Authored in [`LOTRAOM_horses.xml`](file:///E:/Steam/steamapps/common/Mount%20%26%20Blade%20II%20Bannerlord/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml) reusing the `lrd_horse_armour_2` mesh from `gondor_horse_armor_1` (same visual as the in-game "[Gondor] Horse Armour") but `body_armor="10"` (down from 28), `weight="10"` (down from 25), `material_type="Leather"`.
+
+Existing `gondor_horse_armor_1` is unchanged — lord/troop rosters that reference it still get the 28-armor version.
+
+Files: [`taom_career_starting_equipment.xml`](Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml) (4 slot swaps across the two cavalry rosters), `LOTRAOM_horses.xml` in LOTRLOME_Armory (one new item).
+Save-compat: equipment binds from XML at character-creation finalize; no migration.
+Not-tested: in-game spawn (Gondor → Knight of Belfalas → confirm saddle horse + 10-armor caparison).
+
 ### Feat(diagnostic): MissionDiagnostic feature — comprehensive crash-investigation logging in `taom_debug_*.log`
 
 Follow-up to the BehaviorTrees inlining (#217). Two users still crashing on first battle on `bannerlord-1.4.5` with NRE in `Mission.CheckMissionEnded`, root cause still unidentified after Codex caught the original RCA was wrong. This adds in-process logging so the NEXT user crash report tells us the offender directly instead of requiring debugger inspection.
